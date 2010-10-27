@@ -1,0 +1,37 @@
+# This file is part of mingw-cross-env.
+# See doc/index.html for further information.
+
+# GTKMM
+PKG             := gtkmm
+$(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.22.0
+$(PKG)_CHECKSUM := 4a43945ecf20d0db7679daf95d504c2e97fb0a72
+$(PKG)_SUBDIR   := gtkmm-$($(PKG)_VERSION)
+$(PKG)_FILE     := gtkmm-$($(PKG)_VERSION).tar.bz2
+$(PKG)_WEBSITE  := http://www.gtkmm.org/
+$(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/gtkmm/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
+$(PKG)_DEPS     := gcc gtk libsigc++ pangomm cairomm atkmm
+
+define $(PKG)_UPDATE
+    wget -q -O- 'http://git.gnome.org/browse/gtkmm/refs/tags' | \
+    grep '<a href=' | \
+    $(SED) -n 's,.*<a[^>]*>\([0-9]*\.[0-9]*[02468]\.[^<]*\)<.*,\1,p' | \
+    grep -v '^2\.9' | \
+    head -1
+endef
+
+define $(PKG)_BUILD
+    # wine confuses the cross-compiling detection, so set it explicitly
+    $(SED) -i 's,cross_compiling=no,cross_compiling=yes,' '$(1)/configure'
+    cd '$(1)' && ./configure \
+        --host='$(TARGET)' \
+        --disable-shared \
+        --prefix='$(PREFIX)/$(TARGET)' \
+        MAKE=$(MAKE)
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+
+    '$(TARGET)-g++' \
+        -W -Wall -Werror -pedantic -std=c++0x \
+        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-gtkmm.exe' \
+        `'$(TARGET)-pkg-config' gtkmm-2.4 --cflags --libs`
+endef
