@@ -21,6 +21,11 @@ PATCH      := $(shell gpatch --help >/dev/null 2>&1 && echo g)patch
 SED        := $(shell gsed --help >/dev/null 2>&1 && echo g)sed
 VERSION    := $(shell $(SED) -n 's,^.*<span id="latest-version">\([^<]*\)</span>.*$$,\1,p' '$(TOP_DIR)/doc/index.html')
 
+REQUIREMENTS := autoconf automake bash bison bzip2 cmake flex \
+                gcc $(INSTALL) intltoolize $(LIBTOOLIZE) $(MAKE) \
+                openssl $(PATCH) $(PERL) pkg-config scons $(SED) \
+                unzip wget xz yasm
+
 # unexport any environment variables that might cause trouble
 unexport AR CC CFLAGS C_INCLUDE_PATH CPATH CPLUS_INCLUDE_PATH CPP
 unexport CPPFLAGS CROSS CXX CXXCPP CXXFLAGS EXEEXT EXTRA_CFLAGS
@@ -68,6 +73,26 @@ SOURCEFORGE_FILES = \
 .PHONY: all
 all: $(PKGS)
 
+.PHONY: check-requirements
+define CHECK_REQUIREMENT
+    @if ! $(1) --help &>/dev/null; then \
+        echo; \
+        echo 'Missing requirement: $(1)'; \
+        echo; \
+        echo 'Please have a look at "doc/index.html" to ensure'; \
+        echo 'that your system meets all requirements.'; \
+        echo; \
+        exit 1; \
+    fi
+
+endef
+check-requirements: $(PREFIX)/installed/check-requirements
+$(PREFIX)/installed/check-requirements: $(MAKEFILE)
+	@echo '[check requirements]'
+	$(foreach REQUIREMENT,$(REQUIREMENTS),$(call CHECK_REQUIREMENT,$(REQUIREMENT)))
+	@[ -d '$(PREFIX)/installed' ] || mkdir -p '$(PREFIX)/installed'
+	@touch '$@'
+
 .PHONY: download
 download: $(addprefix download-,$(PKGS))
 
@@ -84,13 +109,13 @@ $(1): $(PREFIX)/installed/$(1)
 $(PREFIX)/installed/$(1): $(TOP_DIR)/src/$(1).mk \
                           $(wildcard $(TOP_DIR)/src/$(1)-*.patch) \
                           $(wildcard $(TOP_DIR)/src/$(1)-test*) \
-                          $(addprefix $(PREFIX)/installed/,$($(1)_DEPS))
+                          $(addprefix $(PREFIX)/installed/,$($(1)_DEPS)) \
+                          | check-requirements
 	@[ -d '$(LOG_DIR)/$(TIMESTAMP)' ] || mkdir -p '$(LOG_DIR)/$(TIMESTAMP)'
 	@if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
 	    echo '[download] $(1)'; \
-	    rm -f '$(LOG_DIR)/$(1)-download'; \
-	    ln -s '$(TIMESTAMP)/$(1)-download' '$(LOG_DIR)/$(1)-download'; \
-	    ($(call DOWNLOAD_PKG_ARCHIVE,$(1))) &> '$(LOG_DIR)/$(1)-download'; \
+	    ($(call DOWNLOAD_PKG_ARCHIVE,$(1))) &> '$(LOG_DIR)/$(TIMESTAMP)/$(1)-download'; \
+	    ln -sf '$(TIMESTAMP)/$(1)-download' '$(LOG_DIR)/$(1)-download'; \
 	    if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
 	        echo; \
 	        echo 'Wrong checksum of package $(1)!'; \
@@ -105,9 +130,9 @@ $(PREFIX)/installed/$(1): $(TOP_DIR)/src/$(1).mk \
 	$(if $(value $(1)_BUILD),
 	    @echo '[build]    $(1)'
 	    ,)
-	@rm -f '$(LOG_DIR)/$(1)'
-	@ln -s '$(TIMESTAMP)/$(1)' '$(LOG_DIR)/$(1)'
-	@if ! (time $(MAKE) -f '$(MAKEFILE)' 'build-only-$(1)') &> '$(LOG_DIR)/$(1)'; then \
+	@touch '$(LOG_DIR)/$(TIMESTAMP)/$(1)'
+	@ln -sf '$(TIMESTAMP)/$(1)' '$(LOG_DIR)/$(1)'
+	@if ! (time $(MAKE) -f '$(MAKEFILE)' 'build-only-$(1)') &> '$(LOG_DIR)/$(TIMESTAMP)/$(1)'; then \
 	    echo; \
 	    echo 'Failed to build package $(1)!'; \
 	    echo '------------------------------------------------------------'; \

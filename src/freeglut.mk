@@ -3,21 +3,19 @@
 
 # freeglut
 PKG             := freeglut
-$(PKG)_IGNORE   := 2.6.0-rc3
-$(PKG)_VERSION  := 2.6.0-rc1
-$(PKG)_CHECKSUM := 0bf40f0134695a95032de8cf8305c13dc8d654e5
+$(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.6.0
+$(PKG)_CHECKSUM := 68306c4486c13d005a4e4d54035e0c0b1bdc220b
 $(PKG)_SUBDIR   := freeglut-$(word 1,$(subst -, ,$($(PKG)_VERSION)))
 $(PKG)_FILE     := freeglut-$($(PKG)_VERSION).tar.gz
 $(PKG)_WEBSITE  := http://freeglut.sourceforge.net/
-$(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/freeglut/freeglut/$(word 1,$(subst -, ,$($(PKG)_VERSION)))/$($(PKG)_FILE)
+$(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/freeglut/freeglut/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://freeglut.svn.sourceforge.net/viewvc/freeglut/tags/?sortby=date' | \
-    grep '<a name="' | \
-    $(SED) -n 's,.*<a name="FG_\([0-9][^"]*\)".*,\1,p' | \
-    $(SED) 's,_RC,-rc,g; s,_,.,g' | \
-    head -1
+    $(call SOURCEFORGE_FILES,http://sourceforge.net/projects/freeglut/files/) | \
+    $(SED) -n 's,.*freeglut-\([0-9][^>]*\)\.tar.*,\1,p' | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

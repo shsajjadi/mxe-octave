@@ -4,8 +4,8 @@
 # PostgreSQL
 PKG             := postgresql
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 9.0.0
-$(PKG)_CHECKSUM := ed2f83cd1a83c40dcbe0ba19ee3ba2a7faa0de3d
+$(PKG)_VERSION  := 9.0.1
+$(PKG)_CHECKSUM := 7adeb3c4b661115ec6eb4e5896edfee71f87245e
 $(PKG)_SUBDIR   := postgresql-$($(PKG)_VERSION)
 $(PKG)_FILE     := postgresql-$($(PKG)_VERSION).tar.bz2
 $(PKG)_WEBSITE  := http://www.postgresql.org/
@@ -14,9 +14,9 @@ $(PKG)_URL_2    := http://ftp10.us.postgresql.org/postgresql/source/v$($(PKG)_VE
 $(PKG)_DEPS     := gcc zlib openssl
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://anoncvs.postgresql.org/cvsweb.cgi/pgsql/' | \
-    grep '<option>REL' | \
-    $(SED) -n 's,.*REL\([0-9][0-9_]*\)<.*,\1,p' | \
+    wget -q -O- 'http://git.postgresql.org/gitweb?p=postgresql.git;a=tags' | \
+    grep 'refs/tags/REL[0-9_]*"' | \
+    $(SED) 's,.*refs/tags/REL\(.*\)".*,\1,g;' | \
     $(SED) 's,_,.,g' | \
     head -1
 endef
@@ -54,8 +54,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)'/src/interfaces/libpq -j '$(JOBS)' install haslibarule= shlib=
     $(MAKE) -C '$(1)'/src/port             -j '$(JOBS)'         haslibarule= shlib=
     $(MAKE) -C '$(1)'/src/bin/psql         -j '$(JOBS)' install haslibarule= shlib=
-    $(INSTALL) -m664 '$(1)/src/include/pg_config.h'    '$(PREFIX)/$(TARGET)/include/'
-    $(INSTALL) -m664 '$(1)/src/include/postgres_ext.h' '$(PREFIX)/$(TARGET)/include/'
+    $(INSTALL) -m644 '$(1)/src/include/pg_config.h'    '$(PREFIX)/$(TARGET)/include/'
+    $(INSTALL) -m644 '$(1)/src/include/postgres_ext.h' '$(PREFIX)/$(TARGET)/include/'
     # Build a native pg_config.
     cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,postgresql)
     mv '$(1)/$(postgresql_SUBDIR)' '$(1).native'

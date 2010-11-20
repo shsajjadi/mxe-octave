@@ -4,8 +4,8 @@
 # VMime
 PKG             := vmime
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.9.0
-$(PKG)_CHECKSUM := 02215e1d8ea758f486c32e7bff63a04f71a9b736
+$(PKG)_VERSION  := 0.9.1
+$(PKG)_CHECKSUM := 3e8dd8855e423db438d465777efeb523c4abb5f3
 $(PKG)_SUBDIR   := libvmime-$($(PKG)_VERSION)
 $(PKG)_FILE     := libvmime-$($(PKG)_VERSION).tar.bz2
 $(PKG)_WEBSITE  := http://vmime.sourceforge.net/
@@ -14,7 +14,7 @@ $(PKG)_DEPS     := gcc libiconv gnutls libgsasl pthreads zlib
 
 define $(PKG)_UPDATE
     $(call SOURCEFORGE_FILES,http://sourceforge.net/projects/vmime/files/) | \
-    $(SED) -n 's,.*vmime-\([0-9][^>]*\)\.tar\.bz2.*,\1,p' | \
+    $(SED) -n 's,.*vmime-\([0-9][^>]*\)\.tar.*,\1,p' | \
     tail -1
 endef
 
@@ -49,7 +49,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' install
 
     $(SED) -i 's/posix/windows/g;' '$(1)/examples/example6.cpp'
-    i686-pc-mingw32-g++ -s -o '$(1)/examples/test-vmime.exe' \
+    $(TARGET)-g++ -s -o '$(1)/examples/test-vmime.exe' \
         -I'$(PREFIX)/$(TARGET)/include' \
         '$(1)/examples/example6.cpp' \
         -L'$(PREFIX)/$(TARGET)/lib' \
