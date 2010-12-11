@@ -1,0 +1,32 @@
+# This file is part of mingw-cross-env.
+# See doc/index.html for further information.
+
+# vpx
+PKG             := libvpx
+$(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.9.5
+$(PKG)_CHECKSUM := 223965ff16737251afb3377c0800d1f8b5f84379
+$(PKG)_SUBDIR   := $(PKG)-v$($(PKG)_VERSION)
+$(PKG)_FILE     := $($(PKG)_SUBDIR).tar.bz2
+$(PKG)_WEBSITE  := http://code.google.com/p/webm/
+$(PKG)_URL      := http://webm.googlecode.com/files/$($(PKG)_FILE)
+$(PKG)_DEPS     := gcc
+
+define $(PKG)_UPDATE
+    wget -q -O- 'http://code.google.com/p/webm/downloads/list?sort=-uploaded' | \
+    $(SED) -n 's,.*libvpx-v\([0-9][^<]*\)\.tar.*,\1,p' | \
+    head -1
+endef
+
+define $(PKG)_BUILD
+    cd '$(1)' && \
+        CROSS='$(TARGET)-' \
+        ./configure \
+        --prefix='$(PREFIX)/$(TARGET)' \
+        --target=x86-win32-gcc \
+        --disable-examples \
+        --disable-install-docs
+    $(MAKE) -C '$(1)' -j '$(JOBS)'
+    $(MAKE) -C '$(1)' -j 1 install
+    $(TARGET)-ranlib $(PREFIX)/$(TARGET)/lib/libvpx.a
+endef

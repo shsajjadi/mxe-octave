@@ -1,0 +1,196 @@
+This file is part of mingw-cross-env.
+See doc/index.html for further information.
+
+Commits backported (cherry-picked) from Qt 4.7 branch.
+http://qt.gitorious.org/qt
+
+From fd085b59f5900459f946a5307999598f7e714740 Mon Sep 17 00:00:00 2001
+From: Mark Brand <mabrand@mabrand.nl>
+Date: Mon, 11 Oct 2010 17:15:44 +0200
+Subject: [PATCH 1/5] use specified pkg-config
+
+Respect the pkg-config tool specified in qmake.conf. This is
+useful when crossbuilding.
+
+Merge-request: 850
+Reviewed-by: Oswald Buddenhagen <oswald.buddenhagen@nokia.com>
+(cherry picked from commit 89a853370d94373c6ef1c9fabcfb5bf19c20f7c9)
+
+diff --git a/mkspecs/features/link_pkgconfig.prf b/mkspecs/features/link_pkgconfig.prf
+index 4c528aa..d70e5de 100644
+--- a/mkspecs/features/link_pkgconfig.prf
++++ b/mkspecs/features/link_pkgconfig.prf
+@@ -1,6 +1,7 @@
+ # handle pkg-config files
++isEmpty(PKG_CONFIG):PKG_CONFIG = pkg-config
+ for(PKGCONFIG_LIB, $$list($$unique(PKGCONFIG))) {
+-    QMAKE_CXXFLAGS += $$system(pkg-config --cflags $$PKGCONFIG_LIB)
+-    QMAKE_CFLAGS += $$system(pkg-config --cflags $$PKGCONFIG_LIB)
+-    LIBS += $$system(pkg-config --libs $$PKGCONFIG_LIB)
++    QMAKE_CXXFLAGS += $$system($$PKG_CONFIG --cflags $$PKGCONFIG_LIB)
++    QMAKE_CFLAGS += $$system($$PKG_CONFIG --cflags $$PKGCONFIG_LIB)
++    LIBS += $$system($$PKG_CONFIG --libs $$PKGCONFIG_LIB)
+ }
+-- 
+1.7.1
+
+
+From 8c882ffc1d1c50ecad255e1f9c5f174fa00f36b4 Mon Sep 17 00:00:00 2001
+From: Mark Brand <mabrand@mabrand.nl>
+Date: Fri, 15 Oct 2010 14:56:03 +0200
+Subject: [PATCH 2/5] removed obsolete -qt-gif configure option
+
+Since "-system-gif" is not offered, offering "-qt-gif" is unnecessary
+and perhaps misleading. By default the GIF handler is built from code
+included with Qt, unless suppressed by "-no-gif".
+
+Merge-request: 859
+Reviewed-by: Oswald Buddenhagen <oswald.buddenhagen@nokia.com>
+(cherry picked from commit dfe9084344d73d59f4569c8be6104ce83ae0df95)
+
+diff --git a/configure b/configure
+index 0d9df16..6110264 100755
+--- a/configure
++++ b/configure
+@@ -1543,8 +1543,7 @@ while [ "$#" -gt 0 ]; do
+         fi
+         ;;
+     gif)
+-        [ "$VAL" = "qt" ] && VAL=auto
+-        if [ "$VAL" = "auto" ] || [ "$VAL" = "no" ]; then
++        if [ "$VAL" = "no" ]; then
+             CFG_GIF="$VAL"
+         else
+             UNKNOWN_OPT=yes
+@@ -3522,7 +3521,7 @@ Usage:  $relconf [-h] [-prefix <dir>] [-prefix-install] [-bindir <dir>] [-libdir
+         [-accessibility] [-no-stl] [-stl] [-no-sql-<driver>] [-sql-<driver>]
+         [-plugin-sql-<driver>] [-system-sqlite] [-no-qt3support] [-qt3support]
+         [-platform] [-D <string>] [-I <string>] [-L <string>] [-help]
+-        [-qt-zlib] [-system-zlib] [-no-gif] [-qt-gif] [-no-libtiff] [-qt-libtiff] [-system-libtiff]
++        [-qt-zlib] [-system-zlib] [-no-gif] [-no-libtiff] [-qt-libtiff] [-system-libtiff]
+         [-no-libpng] [-qt-libpng] [-system-libpng] [-no-libmng] [-qt-libmng]
+         [-system-libmng] [-no-libjpeg] [-qt-libjpeg] [-system-libjpeg] [-make <part>]
+         [-nomake <part>] [-R <string>]  [-l <string>] [-no-rpath]  [-rpath] [-continue]
+@@ -3749,8 +3748,6 @@ Third Party Libraries:
+                          See http://www.gzip.org/zlib
+ 
+     -no-gif ............ Do not compile GIF reading support.
+- *  -qt-gif ............ Compile GIF reading support.
+-                         See also src/gui/image/qgifhandler_p.h
+ 
+     -no-libtiff ........ Do not compile TIFF support.
+     -qt-libtiff ........ Use the libtiff bundled with Qt.
+diff --git a/tools/configure/configureapp.cpp b/tools/configure/configureapp.cpp
+index 983416a..c6b0a02 100644
+--- a/tools/configure/configureapp.cpp
++++ b/tools/configure/configureapp.cpp
+@@ -590,8 +590,6 @@ void Configure::parseCmdLine()
+         // Image formats --------------------------------------------
+         else if (configCmdLine.at(i) == "-no-gif")
+             dictionary[ "GIF" ] = "no";
+-        else if (configCmdLine.at(i) == "-qt-gif")
+-            dictionary[ "GIF" ] = "plugin";
+ 
+         else if (configCmdLine.at(i) == "-no-libtiff") {
+             dictionary[ "TIFF"] = "no";
+@@ -1640,7 +1638,7 @@ bool Configure::displayHelp()
+                     "[-no-qmake] [-qmake] [-dont-process] [-process]\n"
+                     "[-no-style-<style>] [-qt-style-<style>] [-redo]\n"
+                     "[-saveconfig <config>] [-loadconfig <config>]\n"
+-                    "[-qt-zlib] [-system-zlib] [-no-gif] [-qt-gif] [-no-libpng]\n"
++                    "[-qt-zlib] [-system-zlib] [-no-gif] [-no-libpng]\n"
+                     "[-qt-libpng] [-system-libpng] [-no-libtiff] [-qt-libtiff]\n"
+                     "[-system-libtiff] [-no-libjpeg] [-qt-libjpeg] [-system-libjpeg]\n"
+                     "[-no-libmng] [-qt-libmng] [-system-libmng] [-no-qt3support] [-mmx]\n"
+@@ -1768,7 +1766,6 @@ bool Configure::displayHelp()
+         desc("ZLIB", "system",  "-system-zlib",         "Use zlib from the operating system.\nSee http://www.gzip.org/zlib\n");
+ 
+         desc("GIF", "no",       "-no-gif",              "Do not compile GIF reading support.");
+-        desc("GIF", "auto",     "-qt-gif",              "Compile GIF reading support.\nSee also src/gui/image/qgifhandler_p.h\n");
+ 
+         desc("LIBPNG", "no",    "-no-libpng",           "Do not compile PNG support.");
+         desc("LIBPNG", "qt",    "-qt-libpng",           "Use the libpng bundled with Qt.");
+-- 
+1.7.1
+
+
+From 69c2dddd8a7e51c74a79c524d4d0f01e54aa9994 Mon Sep 17 00:00:00 2001
+From: Mark Brand <mabrand@mabrand.nl>
+Date: Sat, 5 Jun 2010 23:41:04 +0200
+Subject: [PATCH 3/5] added missing INSTALLS to JavaScriptCore.pro for static libjscore
+
+For static build of Qt on win32-g++*, applications using webkit
+link to libjscore.a.
+
+diff --git a/src/3rdparty/webkit/JavaScriptCore/JavaScriptCore.pro b/src/3rdparty/webkit/JavaScriptCore/JavaScriptCore.pro
+index a805170..027eb0f 100644
+--- a/src/3rdparty/webkit/JavaScriptCore/JavaScriptCore.pro
++++ b/src/3rdparty/webkit/JavaScriptCore/JavaScriptCore.pro
+@@ -14,6 +14,12 @@ QT -= gui
+ 
+ CONFIG += depend_includepath
+ 
++static:win32-g++* {
++    # applications must link to static libjscore
++    target.path = $$[QT_INSTALL_LIBS]
++    INSTALLS += target
++}
++
+ contains(QT_CONFIG, embedded):CONFIG += embedded
+ 
+ CONFIG(QTDIR_build) {
+-- 
+1.7.1
+
+
+From de9c5f7ab3ce90e825d3dac66fea2bea377d93ff Mon Sep 17 00:00:00 2001
+From: Mark Brand <mabrand@mabrand.nl>
+Date: Tue, 9 Nov 2010 20:09:45 +0100
+Subject: [PATCH 4/5] Partially restored support for static linking of QtWebKit
+
+Support was removed by 4221d629e2cf37ee8c5ba7cb595b05ab8c82f113.
+Static QtWebkit might be supported by mingw-cross-env.
+
+diff --git a/configure b/configure
+index 6110264..abf577f 100755
+--- a/configure
++++ b/configure
+@@ -7131,12 +7131,6 @@ if [ "$CFG_GUI" = "no" ]; then
+     canBuildWebKit="no"
+ fi
+ 
+-if [ "$CFG_SHARED" = "no" ]; then
+-    echo
+-    echo "WARNING: Using static linking will disable the WebKit module."
+-    echo
+-    canBuildWebKit="no"
+-fi
+ 
+ CFG_CONCURRENT="yes"
+ if [ "$canBuildQtConcurrent" = "no" ]; then
+-- 
+1.7.1
+
+
+From 25b262ebbae41932caf39c4065de42e0a4753906 Mon Sep 17 00:00:00 2001
+From: Mark Brand <mabrand@mabrand.nl>
+Date: Tue, 16 Nov 2010 20:06:28 +0100
+Subject: [PATCH 5/5] explicitly include -llcms for -lmng (mingw-cross-env specific)
+
+
+diff --git a/src/gui/image/qmnghandler.pri b/src/gui/image/qmnghandler.pri
+index ffb98de..c213e09 100644
+--- a/src/gui/image/qmnghandler.pri
++++ b/src/gui/image/qmnghandler.pri
+@@ -3,7 +3,7 @@ INCLUDEPATH *= $$PWD
+ HEADERS += $$PWD/qmnghandler_p.h
+ SOURCES += $$PWD/qmnghandler.cpp
+ contains(QT_CONFIG, system-mng) {
+-        if(unix|win32-g++*):LIBS += -lmng
++        if(unix|win32-g++*):LIBS += -lmng -llcms
+         else:win32:         LIBS += libmng.lib
+ } else {
+     include($$PWD/../../3rdparty/libmng.pri)
+-- 
+1.7.1
+
