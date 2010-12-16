@@ -4,18 +4,17 @@
 # SQLite
 PKG             := sqlite
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.7.3
-$(PKG)_CHECKSUM := af3740819547f0dba52e096045525329f645c54f
-$(PKG)_SUBDIR   := sqlite-$($(PKG)_VERSION)
-$(PKG)_FILE     := sqlite-amalgamation-$($(PKG)_VERSION).tar.gz
+$(PKG)_VERSION  := 3070400
+$(PKG)_CHECKSUM := 43848641320cb60fb7f445bc295b9870cdc127be
+$(PKG)_SUBDIR   := $(PKG)-autoconf-$($(PKG)_VERSION)
+$(PKG)_FILE     := $(PKG)-autoconf-$($(PKG)_VERSION).tar.gz
 $(PKG)_WEBSITE  := http://www.sqlite.org/
 $(PKG)_URL      := http://www.sqlite.org/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc
 
 define $(PKG)_UPDATE
     wget -q -O- 'http://www.sqlite.org/download.html' | \
-    grep 'sqlite-amalgamation-' | \
-    $(SED) -n 's,.*sqlite-amalgamation-\([0-9][^>]*\)\.tar.*,\1,p' | \
+    $(SED) -n 's,.*sqlite-autoconf-\([0-9][^>]*\)\.tar.*,\1,p' | \
     head -1
 endef
 
