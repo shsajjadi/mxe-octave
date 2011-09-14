@@ -175,7 +175,9 @@
         whenever possible
     </li>
     <li>
-        creates libraries to be linked statically, no DLL hell
+        creates libraries to be
+        <a href="http://lists.nongnu.org/archive/html/mingw-cross-env-list/2009-09/msg00025.html">linked statically</a>,
+        no DLL hell
     </li>
     <li>
         is already
@@ -335,6 +337,12 @@ exit</pre>
     all you have to do is:
     </p>
     <pre>./configure --host=<span class="target">i686-pc-mingw32</span>
+make</pre>
+
+    <p>
+    If you build a library, you might also want to enforce a static build:
+    </p>
+    <pre>./configure --host=<span class="target">i686-pc-mingw32</span> --enable-static --disable-shared
 make</pre>
 
     <p>
