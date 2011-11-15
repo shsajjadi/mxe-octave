@@ -8,8 +8,8 @@ $(PKG)_VERSION  := 1.3
 $(PKG)_CHECKSUM := 5dd798d5fb9a75656225052aa88ceb9befbbd4a0
 $(PKG)_SUBDIR   := libntlm-$($(PKG)_VERSION)
 $(PKG)_FILE     := libntlm-$($(PKG)_VERSION).tar.gz
-$(PKG)_WEBSITE  := http://josefsson.org/libntlm/
-$(PKG)_URL      := http://www.nongnu.org/libntlm/releases//$($(PKG)_FILE)
+$(PKG)_WEBSITE  := http://www.nongnu.org/libntlm/
+$(PKG)_URL      := http://www.nongnu.org/libntlm/releases/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc
 
 define $(PKG)_UPDATE
