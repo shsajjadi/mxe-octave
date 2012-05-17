@@ -1,0 +1,29 @@
+This file is part of MXE.
+See index.html for further information.
+
+Commits backported (cherry-picked) from upstream.
+http://github.com/bagder/curl
+Also contains MXE specific fixes.
+
+From ed729805781e366b68105f074f9e3c17fb81df27 Mon Sep 17 00:00:00 2001
+From: Mark Brand <mabrand@mabrand.nl>
+Date: Thu, 24 May 2012 20:45:36 +0200
+Subject: [PATCH] define CURL_STATICLIB via pkg-config
+
+---
+ libcurl.pc.in |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libcurl.pc.in b/libcurl.pc.in
+index 2ba9c39..e0ddd8d 100644
+--- a/libcurl.pc.in
++++ b/libcurl.pc.in
+@@ -36,4 +36,4 @@ Description: Library to transfer files with ftp, http, etc.
+ Version: @CURLVERSION@
+ Libs: -L${libdir} -lcurl @LIBS@
+ Libs.private: @LIBCURL_LIBS@ @LIBS@
+-Cflags: -I${includedir}
++Cflags: -DCURL_STATICLIB -I${includedir}
+-- 
+1.7.9.2
+
