@@ -2,14 +2,14 @@
 # See index.html for further information.
 
 PKG             := suitesparse
-$(PKG)_CHECKSUM := d0eb24b43ee2f7def032e80eaa7a589f94f546fc
+$(PKG)_CHECKSUM := a453b08877980848f3a5cde242f9865a7b08faad
 $(PKG)_SUBDIR   := SuiteSparse
 $(PKG)_FILE     := SuiteSparse-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.cise.ufl.edu/research/sparse/SuiteSparse/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc blas lapack
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/' | \
+    $(WGET) -q -O- 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/' | \
     $(SED) -n 's,.*SuiteSparse-\([0-9][^"]*\)\.tar.*,\1,p' | \
     head -1
 endef
@@ -24,7 +24,7 @@ define $(PKG)_BUILD
         CC='$(TARGET)-gcc' \
         CPLUSPLUS='$(TARGET)-g++' \
         F77='$(TARGET)-gfortran' \
-        AR='$(TARGET)-ar cr' \
+        AR='$(TARGET)-ar' \
         RANLIB='$(TARGET)-ranlib' \
         BLAS='-lblas -lgfortran -lgfortranbegin' \
         CHOLMOD_CONFIG='-DNPARTITION'
