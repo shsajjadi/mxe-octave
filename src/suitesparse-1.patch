@@ -1,0 +1,42 @@
+This file is part of MXE.
+See index.html for further information.
+
+From 60ff05e30eaa435a7776b178f5f240f0c11e8f38 Mon Sep 17 00:00:00 2001
+From: Mark Brand <mabrand@mabrand.nl>
+Date: Sun, 20 May 2012 23:41:27 +0200
+Subject: [PATCH] build lib not demo
+
+---
+ CHOLMOD/Makefile |    2 +-
+ UMFPACK/Makefile |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CHOLMOD/Makefile b/CHOLMOD/Makefile
+index d27ae54..878f9d8 100644
+--- a/CHOLMOD/Makefile
++++ b/CHOLMOD/Makefile
+@@ -13,7 +13,7 @@ include ../UFconfig/UFconfig.mk
+ 
+ # Compile the C-callable libraries and the Demo programs.
+ all:
+-	( cd Demo ; $(MAKE) )
++	( cd Lib ; $(MAKE) )
+ 
+ # Compile the C-callable libraries only.
+ library:
+diff --git a/UMFPACK/Makefile b/UMFPACK/Makefile
+index 6163045..4973e55 100644
+--- a/UMFPACK/Makefile
++++ b/UMFPACK/Makefile
+@@ -13,7 +13,7 @@ include ../UFconfig/UFconfig.mk
+ # compile all C code (except hb, fortran, and fortran64), including AMD and the
+ # demos, but not the MATLAB mexFunctions
+ all:
+-	( cd Demo   ; $(MAKE) )
++	( cd Lib    ; $(MAKE) )
+ 
+ # compile just the C-callable UMFPACK library
+ library:
+-- 
+1.7.9.2
+
