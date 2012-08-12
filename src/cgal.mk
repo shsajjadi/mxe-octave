@@ -3,14 +3,14 @@
 
 PKG             := cgal
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := d1f3f328bc5cb026ddb825cb585c7ae27a8856f7
+$(PKG)_CHECKSUM := 20c58ebc021754e8be35237bcda43b0084f60617
 $(PKG)_SUBDIR   := CGAL-$($(PKG)_VERSION)
 $(PKG)_FILE     := CGAL-$($(PKG)_VERSION).tar.xz
-$(PKG)_URL      := https://gforge.inria.fr/frs/download.php/30385/$($(PKG)_FILE)
+$(PKG)_URL      := https://gforge.inria.fr/frs/download.php/31176/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc boost gmp mpfr qt
 
 define $(PKG)_UPDATE
-    wget -q --no-check-certificate -O- 'https://gforge.inria.fr/frs/?group_id=52' | \
+    $(WGET) -q -O- 'https://gforge.inria.fr/frs/?group_id=52' | \
     grep 'CGAL-' | \
     $(SED) -n 's,.*CGAL-\([0-9][^>a-z]*\)\.tar.*,\1,p' | \
     head -1
@@ -41,6 +41,7 @@ define $(PKG)_BUILD
         -DBOOST_USE_STATIC_LIBS=1 \
         -DBUILD_SHARED_LIBS=0 \
         -DCGAL_DIR:STRING="../.." .
+
     $(MAKE) -C '$(1)/examples/AABB_tree' -j $(JOBS)
     $(MAKE) -C '$(1)' -j $(JOBS) install
     $(INSTALL) '$(1)/examples/AABB_tree/AABB_polyhedron_edge_example.exe' '$(PREFIX)/$(TARGET)/bin/test-cgal.exe'

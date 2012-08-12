@@ -3,14 +3,14 @@
 
 PKG             := librsvg
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 11a2dc00c813da13532d7f16a822b414201e8b1b
+$(PKG)_CHECKSUM := 1084015373e90ff8fccbae4b27ee778bbdf14d40
 $(PKG)_SUBDIR   := librsvg-$($(PKG)_VERSION)
 $(PKG)_FILE     := librsvg-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/GNOME/sources/librsvg/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc glib libgsf cairo pango gtk2 libcroco
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://git.gnome.org/browse/librsvg/refs/tags' | \
+    $(WGET) -q -O- 'http://git.gnome.org/browse/librsvg/refs/tags' | \
     $(SED) -n 's,.*<a[^>]*>\([0-9][^<]*\).*,\1,p' | \
     head -1
 endef
