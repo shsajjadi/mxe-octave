@@ -3,23 +3,23 @@
 
 PKG             := boost
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 26a52840e9d12f829e3008589abf0a925ce88524
+$(PKG)_CHECKSUM := ee06f89ed472cf369573f8acf9819fbc7173344e
 $(PKG)_SUBDIR   := boost_$(subst .,_,$($(PKG)_VERSION))
 $(PKG)_FILE     := boost_$(subst .,_,$($(PKG)_VERSION)).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/boost/boost/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc zlib bzip2 expat
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://www.boost.org/users/download/' | \
+    $(WGET) -q -O- 'http://www.boost.org/users/download/' | \
     $(SED) -n 's,.*/boost/\([0-9][^"/]*\)/".*,\1,p' | \
     grep -v beta | \
     head -1
 endef
 
 define $(PKG)_BUILD
+    # old version appears to interfere
+    rm -rf '$(PREFIX)/$(TARGET)/include/boost/'
     echo 'using gcc : : $(TARGET)-g++ : <rc>$(TARGET)-windres <archiver>$(TARGET)-ar ;' > '$(1)/user-config.jam'
-    # make the build script generate .a library files instead of .lib
-    $(SED) -i 's,<target-os>windows : lib ;,<target-os>windows : a ;,' '$(1)/tools/build/v2/tools/types/lib.jam'
     # compile boost jam
     cd '$(1)/tools/build/v2/engine' && ./build.sh
     cd '$(1)' && tools/build/v2/engine/bin.*/bjam \
@@ -45,5 +45,8 @@ define $(PKG)_BUILD
         -W -Wall -Werror -ansi -U__STRICT_ANSI__ -pedantic \
         '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-boost.exe' \
         -DBOOST_THREAD_USE_LIB \
-        -lboost_serialization-mt -lboost_thread_win32-mt
+        -lboost_serialization-mt \
+        -lboost_thread_win32-mt \
+        -lboost_system-mt \
+        -lboost_chrono-mt
 endef

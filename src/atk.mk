@@ -3,14 +3,14 @@
 
 PKG             := atk
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 3f4daf31f99b6e0c12ce9675400f2f02dbf1b820
+$(PKG)_CHECKSUM := ca13d01660bdcd5262ef6cedb8a64542ff8aa804
 $(PKG)_SUBDIR   := atk-$($(PKG)_VERSION)
-$(PKG)_FILE     := atk-$($(PKG)_VERSION).tar.bz2
+$(PKG)_FILE     := atk-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/atk/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc glib gettext
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://git.gnome.org/browse/atk/refs/tags' | \
+    $(WGET) -q -O- 'http://git.gnome.org/browse/atk/refs/tags' | \
     grep '<a href=' | \
     $(SED) -n "s,.*<a href='[^']*/tag/?id=ATK_\\([0-9]*_[0-9]*[02468]_[^<]*\\)'.*,\\1,p" | \
     $(SED) 's,_,.,g' | \
@@ -18,9 +18,9 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(SED) -i 's,DllMain,static _disabled_DllMain,' '$(1)/atk/atkobject.c'
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
+        --build="`config.guess`" \
         --disable-shared \
         --prefix='$(PREFIX)/$(TARGET)' \
         --disable-glibtest \

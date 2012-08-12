@@ -3,14 +3,14 @@
 
 PKG             := qt
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := a074d0f605f009e23c63e0a4cb9b71c978146ffc
+$(PKG)_CHECKSUM := e1e2edef1d63ed677d6534d32800c2e1f7ad0e73
 $(PKG)_SUBDIR   := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://get.qt.nokia.com/qt/source/$($(PKG)_FILE)
+$(PKG)_URL      := http://releases.qt-project.org/qt4/source/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc libodbc++ postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://qt.gitorious.org/qt/qt/commits' | \
+    $(WGET) -q -O- 'http://qt.gitorious.org/qt/qt/commits' | \
     grep '<li><a href="/qt/qt/commit/' | \
     $(SED) -n 's,.*<a[^>]*>v\([0-9][^<-]*\)<.*,\1,p' | \
     tail -1
@@ -37,7 +37,7 @@ define $(PKG)_BUILD
         -script \
         -no-iconv \
         -opengl desktop \
-        -webkit \
+        -no-webkit \
         -no-glib \
         -no-gstreamer \
         -no-phonon \
@@ -70,6 +70,12 @@ define $(PKG)_BUILD
     $(INSTALL) -m755 '$(1)/bin/rcc'   '$(PREFIX)/bin/$(TARGET)-rcc'
     $(INSTALL) -m755 '$(1)/bin/uic'   '$(PREFIX)/bin/$(TARGET)-uic'
     $(INSTALL) -m755 '$(1)/bin/qmake' '$(PREFIX)/bin/$(TARGET)-qmake'
+
+    cd '$(1)/tools/assistant' && '$(1)/bin/qmake' assistant.pro
+    $(MAKE) -C '$(1)/tools/assistant' -j '$(JOBS)' install
+
+    cd '$(1)/tools/designer' && '$(1)/bin/qmake' designer.pro
+    $(MAKE) -C '$(1)/tools/designer' -j '$(JOBS)' install
 
     # at least some of the qdbus tools are useful on target
     cd '$(1)/tools/qdbus' && '$(1)/bin/qmake' qdbus.pro

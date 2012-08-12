@@ -3,14 +3,14 @@
 
 PKG             := wt
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 38cf20980f16b0970c42ace45fd62edb28b6358b
+$(PKG)_CHECKSUM := 6102a9a2be36cedf41aa6095de6a2a9505629fd6
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/witty/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc boost openssl libharu graphicsmagick pango postgresql sqlite
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://sourceforge.net/projects/witty/files/witty/' | \
+    $(WGET) -q -O- 'http://sourceforge.net/projects/witty/files/witty/' | \
     $(SED) -n 's,.*wt-\([0-9][^>]*\)\.tar.*,\1,p' | \
     tail -1
 endef
@@ -31,6 +31,7 @@ define $(PKG)_BUILD
         -DGM_PREFIX='$(PREFIX)/$(TARGET)' \
         -DGM_LIBS="`'$(TARGET)-pkg-config' --libs-only-l GraphicsMagick++`" \
         -DPANGO_FT2_LIBS="`'$(TARGET)-pkg-config' --libs-only-l pangoft2`" \
+        -DWT_CMAKE_FINDER_INSTALL_DIR='/lib/wt' \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DCMAKE_BUILD_TYPE:STRING="Release" \
         '$(1)'

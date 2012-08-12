@@ -3,14 +3,14 @@
 
 PKG             := lua
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 2b11c8e60306efb7f0734b747588f57995493db7
+$(PKG)_CHECKSUM := 08f84c355cdd646f617f09cebea48bd832415829
 $(PKG)_SUBDIR   := lua-$($(PKG)_VERSION)
 $(PKG)_FILE     := lua-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.lua.org/ftp/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://www.lua.org/download.html' | \
+    $(WGET) -q -O- 'http://www.lua.org/download.html' | \
     $(SED) -n 's,.*lua-\([0-9][^>]*\)\.tar.*,\1,p' | \
     head -1
 endef
@@ -29,12 +29,9 @@ define $(PKG)_BUILD
         TO_BIN='lua.h' \
         INSTALL='$(INSTALL)' \
         install
-    $(SED) -i 's,^prefix=.*,prefix=$(PREFIX)/$(TARGET),' '$(1)/etc/lua.pc'
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib/pkgconfig'
-    $(INSTALL) -m644 '$(1)/etc/lua.pc' '$(PREFIX)/$(TARGET)/lib/pkgconfig/lua.pc'
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-lua.exe' \
-        `'$(TARGET)-pkg-config' lua --cflags --libs`
+        -llua
 endef
