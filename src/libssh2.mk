@@ -3,20 +3,21 @@
 
 PKG             := libssh2
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 53428b4935ab6eb843d45f1593dc434cb287b93e
+$(PKG)_CHECKSUM := 7fc084254dabe14a9bc90fa3d569faa7ee943e19
 $(PKG)_SUBDIR   := libssh2-$($(PKG)_VERSION)
 $(PKG)_FILE     := libssh2-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.libssh2.org/download/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc libgcrypt zlib
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://www.libssh2.org/download/?C=M;O=D' | \
+    $(WGET) -q -O- 'http://www.libssh2.org/download/?C=M;O=D' | \
     grep 'libssh2-' | \
     $(SED) -n 's,.*libssh2-\([0-9][^>]*\)\.tar.*,\1,p' | \
     head -1
 endef
 
 define $(PKG)_BUILD
+    cd '$(1)' && ./buildconf
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --disable-shared \

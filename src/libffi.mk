@@ -3,14 +3,14 @@
 
 PKG             := libffi
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 97abf70e6a6d315d9259d58ac463663051d471e1
+$(PKG)_CHECKSUM := bff6a6c886f90ad5e30dee0b46676e8e0297d81d
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://sourceware.org/pub/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc
 
 define $(PKG)_UPDATE
-    wget -q --no-check-certificate -O- 'https://github.com/atgreen/libffi/tags' | \
+    $(WGET) -q -O- 'https://github.com/atgreen/libffi/tags' | \
     grep '<a href="/atgreen/libffi/tarball/' | \
     $(SED) -n 's,.*href="/atgreen/libffi/tarball/v\([0-9][^"]*\)".*,\1,p' | \
     head -1

@@ -10,7 +10,7 @@ $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/sources/$(PKG)-$(
 $(PKG)_DEPS     := gcc
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://pocoproject.org/download/' | \
+    $(WGET) -q -O- 'http://pocoproject.org/download/' | \
     $(SED) -n 's,.*poco-\([0-9][^>/]*\)\.tar.*,\1,p' | \
     head -1
 endef
@@ -20,7 +20,7 @@ define $(PKG)_BUILD
         --config=MinGW-CrossEnv \
         --static \
         --prefix='$(PREFIX)/$(TARGET)'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install CROSSENV=$(TARGET)
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
