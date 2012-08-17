@@ -1,32 +1,32 @@
 This file is part of MXE.
 See index.html for further information.
 
-From b3ade9a63e881e69b4c9cfe7b5dbad78dcc4a0e0 Mon Sep 17 00:00:00 2001
-From: Peter Stuge <peter@stuge.se>
-Date: Wed, 1 Feb 2012 09:53:44 +0100
-Subject: [PATCH] Fix undefined reference to _libssh_error in libgcrypt
- backend
+From 6b8a3edae23dc93cc02e6c9572d0796e338ddc4f Mon Sep 17 00:00:00 2001
+From: Mark Brand <mabrand@mabrand.nl>
+Date: Sat, 19 May 2012 10:40:36 +0200
+Subject: [PATCH] libgcrypt does not provide pkg-config support
 
-Commit 209de22299b4b58e582891dfba70f57e1e0492db introduced a function
-call to a non-existing function, and since then the libgcrypt backend
-has not been buildable.
+Commits 04692445d4a32430610ccf8c256e18245cbb3e06
+and e887a8bd0f043fd49e9119756858e75e82dee504 add
+'libgcrypt' to Requires.private of libssh2.pc
+file, but libgcrypt does not provide a .pc file, so
+this does not work.
 ---
- src/libgcrypt.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ configure.ac |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/src/libgcrypt.c b/src/libgcrypt.c
-index 1bda5ee..5c2787b 100644
---- a/src/libgcrypt.c
-+++ b/src/libgcrypt.c
-@@ -581,7 +581,7 @@ _libssh2_pub_priv_keyfile(LIBSSH2_SESSION *session,
-                           const char *privatekey,
-                           const char *passphrase)
- {
--    return _libssh_error(session, LIBSSH2_ERROR_FILE,
-+    return _libssh2_error(session, LIBSSH2_ERROR_FILE,
-                          "Unable to extract public key from private key file: "
-                          "Method unimplemented in libgcrypt backend");
- }
+diff --git a/configure.ac b/configure.ac
+index aa9d397..0d35a27 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -102,7 +102,6 @@ fi
+ # Look for libgcrypt
+ if test "$ac_cv_libssl" != "yes" && test "$use_libgcrypt" != "no"; then
+   AC_LIB_HAVE_LINKFLAGS([gcrypt], [], [#include <gcrypt.h>])
+-  LIBSREQUIRED=libgcrypt
+ fi
+ 
+ AC_SUBST(LIBSREQUIRED)
 -- 
-1.7.8.3
+1.7.9.2
 

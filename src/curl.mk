@@ -3,20 +3,19 @@
 
 PKG             := curl
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := f6016a24051d98806ca3ddf754592701cb66e00c
+$(PKG)_CHECKSUM := 51f563587720b71047b6e307412d49ce24ad7bfb
 $(PKG)_SUBDIR   := curl-$($(PKG)_VERSION)
 $(PKG)_FILE     := curl-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://curl.haxx.se/download/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc gnutls libidn libssh2
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://curl.haxx.se/download/?C=M;O=D' | \
+    $(WGET) -q -O- 'http://curl.haxx.se/download/?C=M;O=D' | \
     $(SED) -n 's,.*curl-\([0-9][^"]*\)\.tar.*,\1,p' | \
     head -1
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && ./buildconf
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \

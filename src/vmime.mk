@@ -10,20 +10,16 @@ $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$(call SHO
 $(PKG)_DEPS     := gcc libiconv gnutls libgsasl pthreads zlib
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://sourceforge.net/projects/vmime/files/vmime/' | \
+    $(WGET) -q -O- 'http://sourceforge.net/projects/vmime/files/vmime/' | \
     $(SED) -n 's,.*libvmime-\([0-9][^>]*\)\.tar.*,\1,p' | \
     tail -1
 endef
 
 define $(PKG)_BUILD
-    # The configure script will make the real configuration, but
-    # we need scons to generate configure.in, Makefile.am etc.
-    # ansi and pedantic are too strict for mingw.
-    # http://sourceforge.net/tracker/index.php?func=detail&aid=2373234&group_id=2435&atid=102435
-    $(SED) -i "s/'-ansi', //;"                        '$(1)/SConstruct'
-    $(SED) -i "s/'-pedantic', //;"                    '$(1)/SConstruct'
     $(SED) -i 's/pkg-config/$(TARGET)-pkg-config/g;'  '$(1)/SConstruct'
 
+    # The configure script will make the real configuration, but
+    # we need scons to generate configure.in, Makefile.am etc.
     cd '$(1)' && scons autotools \
          prefix='$(PREFIX)/$(TARGET)' \
          target='$(TARGET)' \
@@ -33,6 +29,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --prefix='$(PREFIX)/$(TARGET)' \
         --host='$(TARGET)' \
+        --build="`config.guess`" \
         --disable-shared \
         --enable-platform-windows \
         --disable-rpath \
