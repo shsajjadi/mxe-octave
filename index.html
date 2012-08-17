@@ -668,7 +668,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     <!-- http://www.debian.org/distrib/packages#search_packages -->
     <pre>aptitude install -R autoconf automake bash bison bzip2 \
                     cmake flex gettext git g++ intltool \
-                    libtool libltdl-dev openssl libssl-dev \
+                    libffi-dev libtool libltdl-dev openssl libssl-dev \
                     libxml-parser-perl make patch perl \
                     pkg-config scons sed unzip wget \
                     xz-utils yasm</pre>
@@ -683,7 +683,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     <!-- https://admin.fedoraproject.org/pkgdb/ -->
     <pre>yum install autoconf automake bash bison bzip2 cmake \
             flex gcc-c++ gettext git intltool make sed \
-            libtool openssl-devel patch perl pkgconfig \
+            libffi-devel libtool openssl-devel patch perl pkgconfig \
             scons yasm unzip wget xz</pre>
 
     <p>
@@ -695,7 +695,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
 
     <!-- http://www.freshports.org/ -->
     <pre>pkg_add -r automake111 autoconf268 bash bison cmake \
-           flex gettext git gmake gsed intltool libtool \
+           flex gettext git gmake gsed intltool libffi libtool \
            openssl patch perl p5-XML-Parser pkg-config \
            scons unzip wget yasm</pre>
 
@@ -719,7 +719,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
 
     <!-- http://www.frugalware.org/packages -->
     <pre>pacman-g2 -S autoconf automake bash bzip2 bison cmake \
-             flex gcc gettext git intltool make sed libtool \
+             flex gcc gettext git intltool make sed libffi libtool \
              openssl patch perl perl-xml-parser pkgconfig \
              scons unzip wget xz xz-lzma yasm</pre>
 
@@ -736,7 +736,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
        dev-util/cmake sys-devel/flex sys-devel/gcc \
        sys-devel/gettext dev-vcs/git \
        dev-util/intltool sys-devel/make sys-apps/sed \
-       sys-devel/libtool dev-libs/openssl sys-devel/patch \
+       dev-libs/libffi sys-devel/libtool dev-libs/openssl sys-devel/patch \
        dev-lang/perl dev-perl/XML-Parser \
        dev-util/pkgconfig dev-util/scons app-arch/unzip \
        net-misc/wget app-arch/xz-utils dev-lang/yasm</pre>
@@ -752,7 +752,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </p>
     <!-- http://www.macports.org/ports.php -->
     <pre>sudo port install autoconf automake bison cmake flex \
-                  gettext git-core gsed intltool libtool \
+                  gettext git-core gsed intltool libffi libtool \
                   openssl p5-xml-parser pkgconfig scons \
                   wget xz yasm</pre>
     <p>
@@ -764,7 +764,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     <!-- http://software.opensuse.org/113/en -->
     <pre>zypper install -R autoconf automake bash bison bzip2 \
                   cmake flex gcc-c++ gettext-tools git \
-                  intltool libtool make openssl \
+                  intltool libffi-devel libtool make openssl \
                   libopenssl-devel patch perl \
                   perl-XML-Parser pkg-config scons \
                   sed unzip wget xz yasm</pre>
@@ -914,8 +914,18 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="agg-website"><a href="http://www.antigrain.com/">Anti-Grain Geometry</a></td>
     </tr>
     <tr>
+        <td id="apr-util-package">apr-util</td>
+        <td id="apr-util-version">1.3.10</td>
+        <td id="apr-util-website"><a href="http://apr.apache.org/">APR-util</a></td>
+    </tr>
+    <tr>
+        <td id="apr-package">apr</td>
+        <td id="apr-version">1.4.2</td>
+        <td id="apr-website"><a href="http://apr.apache.org/">APR</a></td>
+    </tr>
+    <tr>
         <td id="atk-package">atk</td>
-        <td id="atk-version">2.2.0</td>
+        <td id="atk-version">2.4.0</td>
         <td id="atk-website"><a href="http://www.gtk.org/">ATK</a></td>
     </tr>
     <tr>
@@ -945,7 +955,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="boost-package">boost</td>
-        <td id="boost-version">1.49.0</td>
+        <td id="boost-version">1.50.0</td>
         <td id="boost-website"><a href="http://www.boost.org/">Boost C++ Library</a></td>
     </tr>
     <tr>
@@ -955,7 +965,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="cairo-package">cairo</td>
-        <td id="cairo-version">1.10.2</td>
+        <td id="cairo-version">1.12.2</td>
         <td id="cairo-website"><a href="http://cairographics.org/">cairo</a></td>
     </tr>
     <tr>
@@ -970,8 +980,13 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="cgal-package">cgal</td>
-        <td id="cgal-version">4.0</td>
+        <td id="cgal-version">4.0.2</td>
         <td id="cgal-website"><a href="http://www.cgal.org/">cgal</a></td>
+    </tr>
+    <tr>
+        <td id="cminpack-package">cminpack</td>
+        <td id="cminpack-version">1.2.0</td>
+        <td id="cminpack-website"><a href="http://devernay.free.fr/hacks/cminpack/cminpack.html">cminpack</a></td>
     </tr>
     <tr>
         <td id="cppunit-package">cppunit</td>
@@ -985,12 +1000,12 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="curl-package">curl</td>
-        <td id="curl-version">7.25.0</td>
+        <td id="curl-version">7.27.0</td>
         <td id="curl-website"><a href="http://curl.haxx.se/libcurl/">cURL</a></td>
     </tr>
     <tr>
         <td id="dbus-package">dbus</td>
-        <td id="dbus-version">1.5.12</td>
+        <td id="dbus-version">1.6.4</td>
         <td id="dbus-website"><a href="http://dbus.freedesktop.org/">dbus</a></td>
     </tr>
     <tr>
@@ -1025,12 +1040,12 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="ffmpeg-package">ffmpeg</td>
-        <td id="ffmpeg-version">0.10.2</td>
+        <td id="ffmpeg-version">0.11.1</td>
         <td id="ffmpeg-website"><a href="http://www.ffmpeg.org/">ffmpeg</a></td>
     </tr>
     <tr>
         <td id="fftw-package">fftw</td>
-        <td id="fftw-version">3.3.1</td>
+        <td id="fftw-version">3.3.2</td>
         <td id="fftw-website"><a href="http://www.fftw.org/">fftw</a></td>
     </tr>
     <tr>
@@ -1050,7 +1065,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="fontconfig-package">fontconfig</td>
-        <td id="fontconfig-version">2.9.0</td>
+        <td id="fontconfig-version">2.10.0</td>
         <td id="fontconfig-website"><a href="http://fontconfig.org/">fontconfig</a></td>
     </tr>
     <tr>
@@ -1070,7 +1085,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="freetype-package">freetype</td>
-        <td id="freetype-version">2.4.9</td>
+        <td id="freetype-version">2.4.10</td>
         <td id="freetype-website"><a href="http://freetype.sourceforge.net/">freetype</a></td>
     </tr>
     <tr>
@@ -1085,27 +1100,27 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="gc-package">gc</td>
-        <td id="gc-version">7.1</td>
+        <td id="gc-version">7.2d</td>
         <td id="gc-website"><a href="http://www.hpl.hp.com/personal/Hans_Boehm/gc/">gc</a></td>
     </tr>
     <tr>
         <td id="gcc-package">gcc</td>
-        <td id="gcc-version">4.7.0</td>
+        <td id="gcc-version">4.7.1</td>
         <td id="gcc-website"><a href="http://gcc.gnu.org/">GCC</a></td>
     </tr>
     <tr>
         <td id="gcc-gmp-package">gcc-gmp</td>
-        <td id="gcc-gmp-version">5.0.4</td>
+        <td id="gcc-gmp-version">5.0.5</td>
         <td id="gcc-gmp-website"><a href="http://www.gmplib.org/">GMP for GCC</a></td>
     </tr>
     <tr>
         <td id="gcc-mpc-package">gcc-mpc</td>
-        <td id="gcc-mpc-version">0.9</td>
+        <td id="gcc-mpc-version">1.0</td>
         <td id="gcc-mpc-website"><a href="http://www.multiprecision.org/">MPC for GCC</a></td>
     </tr>
     <tr>
         <td id="gcc-mpfr-package">gcc-mpfr</td>
-        <td id="gcc-mpfr-version">3.1.0</td>
+        <td id="gcc-mpfr-version">3.1.1</td>
         <td id="gcc-mpfr-website"><a href="http://www.mpfr.org/">MPFR for GCC</a></td>
     </tr>
     <tr>
@@ -1115,22 +1130,22 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="gdal-package">gdal</td>
-        <td id="gdal-version">1.9.0</td>
+        <td id="gdal-version">1.9.1</td>
         <td id="gdal-website"><a href="http://www.gdal.org/">GDAL</a></td>
     </tr>
     <tr>
         <td id="gdb-package">gdb</td>
-        <td id="gdb-version">7.4</td>
+        <td id="gdb-version">7.4.1</td>
         <td id="gdb-website"><a href="http://www.gnu.org/software/gdb/">gdb</a></td>
     </tr>
     <tr>
         <td id="gdk-pixbuf-package">gdk-pixbuf</td>
-        <td id="gdk-pixbuf-version">2.22.1</td>
+        <td id="gdk-pixbuf-version">2.26.1</td>
         <td id="gdk-pixbuf-website"><a href="http://www.gdk-pixbuf.org/">GDK-pixbuf</a></td>
     </tr>
     <tr>
         <td id="geos-package">geos</td>
-        <td id="geos-version">3.3.2</td>
+        <td id="geos-version">3.3.5</td>
         <td id="geos-website"><a href="http://trac.osgeo.org/geos/">GEOS</a></td>
     </tr>
     <tr>
@@ -1140,37 +1155,37 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="giflib-package">giflib</td>
-        <td id="giflib-version">4.1.6</td>
+        <td id="giflib-version">5.0.0</td>
         <td id="giflib-website"><a href="http://sourceforge.net/projects/libungif/">giflib</a></td>
     </tr>
     <tr>
         <td id="glew-package">glew</td>
-        <td id="glew-version">1.7.0</td>
+        <td id="glew-version">1.9.0</td>
         <td id="glew-website"><a href="http://glew.sourceforge.net/">GLEW</a></td>
     </tr>
     <tr>
         <td id="glib-package">glib</td>
-        <td id="glib-version">2.28.8</td>
+        <td id="glib-version">2.32.3</td>
         <td id="glib-website"><a href="http://www.gtk.org/">GLib</a></td>
     </tr>
     <tr>
         <td id="glibmm-package">glibmm</td>
-        <td id="glibmm-version">2.28.2</td>
+        <td id="glibmm-version">2.32.0</td>
         <td id="glibmm-website"><a href="http://www.gtkmm.org/">GLibmm</a></td>
     </tr>
     <tr>
         <td id="gmp-package">gmp</td>
-        <td id="gmp-version">5.0.4</td>
+        <td id="gmp-version">5.0.5</td>
         <td id="gmp-website"><a href="http://www.gmplib.org/">GMP</a></td>
     </tr>
     <tr>
         <td id="gnutls-package">gnutls</td>
-        <td id="gnutls-version">3.0.17</td>
+        <td id="gnutls-version">3.0.19</td>
         <td id="gnutls-website"><a href="http://www.gnu.org/software/gnutls/">GnuTLS</a></td>
     </tr>
     <tr>
         <td id="graphicsmagick-package">graphicsmagick</td>
-        <td id="graphicsmagick-version">1.3.14</td>
+        <td id="graphicsmagick-version">1.3.16</td>
         <td id="graphicsmagick-website"><a href="http://www.graphicsmagick.org/">GraphicsMagick</a></td>
     </tr>
     <tr>
@@ -1180,22 +1195,22 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="gsoap-package">gsoap</td>
-        <td id="gsoap-version">2.8.8</td>
+        <td id="gsoap-version">2.8.9</td>
         <td id="gsoap-website"><a href="http://gsoap2.sourceforge.net/">gSOAP</a></td>
     </tr>
     <tr>
         <td id="gst-plugins-base-package">gst-plugins-base</td>
-        <td id="gst-plugins-base-version">0.10.35</td>
+        <td id="gst-plugins-base-version">0.10.36</td>
         <td id="gst-plugins-base-website"><a href="http://gstreamer.freedesktop.org/">gst-plugins-base</a></td>
     </tr>
     <tr>
         <td id="gst-plugins-good-package">gst-plugins-good</td>
-        <td id="gst-plugins-good-version">0.10.30</td>
+        <td id="gst-plugins-good-version">0.10.31</td>
         <td id="gst-plugins-good-website"><a href="http://gstreamer.freedesktop.org/">gst-plugins-good</a></td>
     </tr>
     <tr>
         <td id="gstreamer-package">gstreamer</td>
-        <td id="gstreamer-version">0.10.35</td>
+        <td id="gstreamer-version">0.10.36</td>
         <td id="gstreamer-website"><a href="http://gstreamer.freedesktop.org/">gstreamer</a></td>
     </tr>
     <tr>
@@ -1205,8 +1220,13 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="gtk2-package">gtk2</td>
-        <td id="gtk2-version">2.24.4</td>
+        <td id="gtk2-version">2.24.10</td>
         <td id="gtk2-website"><a href="http://www.gtk.org/">GTK+</a></td>
+    </tr>
+    <tr>
+        <td id="gtkglarea-package">gtkGLArea</td>
+        <td id="gtkglarea-version">2.0.1</td>
+        <td id="gtkglarea-website"><a href="http://www.mono-project.com/GtkGLArea/">GtkGLArea</a></td>
     </tr>
     <tr>
         <td id="gtkglext-package">gtkglext</td>
@@ -1239,6 +1259,11 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="guile-website"><a href="http://www.gnu.org/software/guile/">GNU Guile</a></td>
     </tr>
     <tr>
+        <td id="hunspell-package">hunspell</td>
+        <td id="hunspell-version">1.3.2</td>
+        <td id="hunspell-website"><a href="http://hunspell.sourceforge.net/">Hunspell</a></td>
+    </tr>
+    <tr>
         <td id="id3lib-package">id3lib</td>
         <td id="id3lib-version">3.8.3</td>
         <td id="id3lib-website"><a href="http://id3lib.sourceforge.net/">id3lib</a></td>
@@ -1265,7 +1290,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="json-c-package">json-c</td>
-        <td id="json-c-version">0.9</td>
+        <td id="json-c-version">0.10</td>
         <td id="json-c-website"><a href="http://oss.metaparadigm.com/json-c/">json-c</a></td>
     </tr>
     <tr>
@@ -1289,6 +1314,11 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="lcms1-website"><a href="http://www.littlecms.com/">lcms1</a></td>
     </tr>
     <tr>
+        <td id="levmar-package">levmar</td>
+        <td id="levmar-version">2.6</td>
+        <td id="levmar-website"><a href="http://www.ics.forth.gr/~lourakis/levmar">levmar</a></td>
+    </tr>
+    <tr>
         <td id="libarchive-package">libarchive</td>
         <td id="libarchive-version">3.0.3</td>
         <td id="libarchive-website"><a href="http://code.google.com/p/libarchive/">Libarchive</a></td>
@@ -1310,12 +1340,17 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="libevent-package">libevent</td>
-        <td id="libevent-version">2.0.18</td>
+        <td id="libevent-version">2.0.19</td>
         <td id="libevent-website"><a href="http://libevent.org/">libevent</a></td>
     </tr>
     <tr>
+        <td id="libf2c-package">libf2c</td>
+        <td id="libf2c-version">1</td>
+        <td id="libf2c-website"><a href="http://www.netlib.org/f2c/">libf2c</a></td>
+    </tr>
+    <tr>
         <td id="libffi-package">libffi</td>
-        <td id="libffi-version">3.0.10</td>
+        <td id="libffi-version">3.0.11</td>
         <td id="libffi-website"><a href="http://sourceware.org/libffi/">libffi</a></td>
     </tr>
     <tr>
@@ -1324,14 +1359,29 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="libgcrypt-website"><a href="ftp://ftp.gnupg.org/gcrypt/libgcrypt/">libgcrypt</a></td>
     </tr>
     <tr>
+        <td id="libgda-package">libgda</td>
+        <td id="libgda-version">4.2.13</td>
+        <td id="libgda-website"><a href="http://www.gnome-db.org/">libgda</a></td>
+    </tr>
+    <tr>
+        <td id="libgdamm-package">libgdamm</td>
+        <td id="libgdamm-version">4.1.3</td>
+        <td id="libgdamm-website"><a href="https://launchpad.net/libgdamm">libgdamm</a></td>
+    </tr>
+    <tr>
         <td id="libgee-package">libgee</td>
         <td id="libgee-version">0.5.0</td>
         <td id="libgee-website"><a href="http://live.gnome.org/Libgee">libgee</a></td>
     </tr>
     <tr>
         <td id="libgeotiff-package">libgeotiff</td>
-        <td id="libgeotiff-version">1.3.0</td>
+        <td id="libgeotiff-version">1.4.0</td>
         <td id="libgeotiff-website"><a href="http://trac.osgeo.org/geotiff/">GeoTiff</a></td>
+    </tr>
+    <tr>
+        <td id="libglade-package">libglade</td>
+        <td id="libglade-version">2.6.4</td>
+        <td id="libglade-website"><a href="http://glade.gnome.org/">glade</a></td>
     </tr>
     <tr>
         <td id="libgnurx-package">libgnurx</td>
@@ -1350,12 +1400,12 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="libgsasl-package">libgsasl</td>
-        <td id="libgsasl-version">1.6.1</td>
+        <td id="libgsasl-version">1.8.0</td>
         <td id="libgsasl-website"><a href="http://www.gnu.org/software/gsasl/">Libgsasl</a></td>
     </tr>
     <tr>
         <td id="libgsf-package">libgsf</td>
-        <td id="libgsf-version">1.14.22</td>
+        <td id="libgsf-version">1.14.23</td>
         <td id="libgsf-website"><a href="http://projects.gnome.org/libgsf/">libgsf</a></td>
     </tr>
     <tr>
@@ -1380,7 +1430,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="libidn-package">libidn</td>
-        <td id="libidn-version">1.24</td>
+        <td id="libidn-version">1.25</td>
         <td id="libidn-website"><a href="http://www.gnu.org/software/libidn/">Libidn</a></td>
     </tr>
     <tr>
@@ -1409,13 +1459,18 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="libmng-website"><a href="http://www.libmng.com/">libmng</a></td>
     </tr>
     <tr>
+        <td id="libmodplug-package">libmodplug</td>
+        <td id="libmodplug-version">0.8.8.4</td>
+        <td id="libmodplug-website"><a href="http://modplug-xmms.sourceforge.net/">libmodplug</a></td>
+    </tr>
+    <tr>
         <td id="libntlm-package">libntlm</td>
         <td id="libntlm-version">1.3</td>
         <td id="libntlm-website"><a href="http://www.nongnu.org/libntlm/">Libntlm</a></td>
     </tr>
     <tr>
         <td id="liboauth-package">liboauth</td>
-        <td id="liboauth-version">0.9.6</td>
+        <td id="liboauth-version">0.9.7</td>
         <td id="liboauth-website"><a href="http://liboauth.sourceforge.net/">liboauth</a></td>
     </tr>
     <tr>
@@ -1435,18 +1490,23 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="libpaper-package">libpaper</td>
-        <td id="libpaper-version">1.1.24+nmu1</td>
+        <td id="libpaper-version">1.1.24+nmu2</td>
         <td id="libpaper-website"><a href="http://packages.debian.org/unstable/libpaper1">libpaper</a></td>
     </tr>
     <tr>
         <td id="libpng-package">libpng</td>
-        <td id="libpng-version">1.5.10</td>
+        <td id="libpng-version">1.5.12</td>
         <td id="libpng-website"><a href="http://www.libpng.org/">libpng</a></td>
     </tr>
     <tr>
         <td id="librsvg-package">librsvg</td>
-        <td id="librsvg-version">2.36.0</td>
+        <td id="librsvg-version">2.36.1</td>
         <td id="librsvg-website"><a href="http://librsvg.sourceforge.net/">librsvg</a></td>
+	</tr>
+    <tr>
+        <td id="librtmp-package">librtmp</td>
+        <td id="librtmp-version">2.4</td>
+        <td id="librtmp-website"><a href="http://rtmpdump.mplayerhq.hu/">librtmp</a></td>
     </tr>
     <tr>
         <td id="libsamplerate-package">libsamplerate</td>
@@ -1455,7 +1515,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="libshout-package">libshout</td>
-        <td id="libshout-version">2.2.2</td>
+        <td id="libshout-version">2.3.1</td>
         <td id="libshout-website"><a href="http://www.icecast.org/">libshout</a></td>
     </tr>
     <tr>
@@ -1470,7 +1530,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="libssh2-package">libssh2</td>
-        <td id="libssh2-version">1.4.0</td>
+        <td id="libssh2-version">1.4.2</td>
         <td id="libssh2-website"><a href="http://www.libssh2.org">libssh2</a></td>
     </tr>
     <tr>
@@ -1490,17 +1550,17 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="libvpx-package">libvpx</td>
-        <td id="libvpx-version">1.0.0</td>
+        <td id="libvpx-version">1.1.0</td>
         <td id="libvpx-website"><a href="http://code.google.com/p/webm/">vpx</a></td>
     </tr>
     <tr>
         <td id="libxml++-package">libxml++</td>
-        <td id="libxml++-version">2.35.2</td>
+        <td id="libxml++-version">2.35.3</td>
         <td id="libxml++-website"><a href="http://libxmlplusplus.sourceforge.net/">libxml2</a></td>
     </tr>
     <tr>
         <td id="libxml2-package">libxml2</td>
-        <td id="libxml2-version">2.7.8</td>
+        <td id="libxml2-version">2.8.0</td>
         <td id="libxml2-website"><a href="http://www.xmlsoft.org/">libxml2</a></td>
     </tr>
     <tr>
@@ -1514,8 +1574,13 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="llvm-website"><a href="http://llvm.org/">llvm</a></td>
     </tr>
     <tr>
+        <td id="log4cxx-package">log4cxx</td>
+        <td id="log4cxx-version">0.10.0</td>
+        <td id="log4cxx-website"><a href="http://logging.apache.org/log4cxx/">log4cxx</a></td>
+    </tr>
+    <tr>
         <td id="lua-package">lua</td>
-        <td id="lua-version">5.1.4</td>
+        <td id="lua-version">5.2.0</td>
         <td id="lua-website"><a href="http://www.lua.org/">Lua</a></td>
     </tr>
     <tr>
@@ -1529,23 +1594,28 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="matio-website"><a href="http://sourceforge.net/projects/matio/">matio</a></td>
     </tr>
     <tr>
+        <td id="mdbtools-package">mdbtools</td>
+        <td id="mdbtools-version">0.6pre1</td>
+        <td id="mdbtools-website"><a href="http://sourceforge.net/projects/mdbtools/">mdbtools</a></td>
+    </tr>
+    <tr>
         <td id="mingw-utils-package">mingw-utils</td>
         <td id="mingw-utils-version">0.4-1</td>
         <td id="mingw-utils-website"><a href="http://www.mingw.org/">MinGW Utilities</a></td>
     </tr>
     <tr>
         <td id="mingwrt-package">mingwrt</td>
-        <td id="mingwrt-version">3.20</td>
+        <td id="mingwrt-version">3.20-2</td>
         <td id="mingwrt-website"><a href="http://www.mingw.org/">MinGW Runtime</a></td>
     </tr>
     <tr>
         <td id="mpfr-package">mpfr</td>
-        <td id="mpfr-version">3.1.0</td>
+        <td id="mpfr-version">3.1.1</td>
         <td id="mpfr-website"><a href="http://www.mpfr.org/">mpfr</a></td>
     </tr>
     <tr>
         <td id="muparser-package">muparser</td>
-        <td id="muparser-version">1.34</td>
+        <td id="muparser-version">2.2.2</td>
         <td id="muparser-website"><a href="http://muparser.sourceforge.net/">muParser</a></td>
     </tr>
     <tr>
@@ -1554,8 +1624,13 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="mxml-website"><a href="http://www.minixml.org/">Mini-XML</a></td>
     </tr>
     <tr>
+        <td id="ncurses-package">ncurses</td>
+        <td id="ncurses-version">5.9</td>
+        <td id="ncurses-website"><a href="http://www.gnu.org/software/ncurses/">Ncurses</a></td>
+    </tr>
+    <tr>
         <td id="nettle-package">nettle</td>
-        <td id="nettle-version">2.4</td>
+        <td id="nettle-version">2.5</td>
         <td id="nettle-website"><a href="http://www.lysator.liu.se/~nisse/nettle/">nettle</a></td>
     </tr>
     <tr>
@@ -1575,7 +1650,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="openal-package">openal</td>
-        <td id="openal-version">1.13</td>
+        <td id="openal-version">1.14</td>
         <td id="openal-website"><a href="http://kcat.strangesoft.net/openal.html">openal</a></td>
     </tr>
     <tr>
@@ -1600,22 +1675,22 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="openssl-package">openssl</td>
-        <td id="openssl-version">1.0.1</td>
+        <td id="openssl-version">1.0.1c</td>
         <td id="openssl-website"><a href="http://www.openssl.org/">openssl</a></td>
     </tr>
     <tr>
         <td id="pango-package">pango</td>
-        <td id="pango-version">1.29.3</td>
+        <td id="pango-version">1.30.1</td>
         <td id="pango-website"><a href="http://www.pango.org/">Pango</a></td>
     </tr>
     <tr>
         <td id="pangomm-package">pangomm</td>
-        <td id="pangomm-version">2.28.2</td>
+        <td id="pangomm-version">2.28.4</td>
         <td id="pangomm-website"><a href="http://www.pango.org/">Pangomm</a></td>
     </tr>
     <tr>
         <td id="pcre-package">pcre</td>
-        <td id="pcre-version">8.30</td>
+        <td id="pcre-version">8.31</td>
         <td id="pcre-website"><a href="http://www.pcre.org/">PCRE</a></td>
     </tr>
     <tr>
@@ -1625,7 +1700,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="pdflib_lite-package">pdflib_lite</td>
-        <td id="pdflib_lite-version">7.0.5</td>
+        <td id="pdflib_lite-version">7.0.5p3</td>
         <td id="pdflib_lite-website"><a href="http://www.pdflib.com/download/free-software/pdflib-lite-7/">PDFlib Lite</a></td>
     </tr>
     <tr>
@@ -1640,7 +1715,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="pixman-package">pixman</td>
-        <td id="pixman-version">0.25.2</td>
+        <td id="pixman-version">0.27.2</td>
         <td id="pixman-website"><a href="http://cairographics.org/">pixman</a></td>
     </tr>
     <tr>
@@ -1659,18 +1734,23 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="poco-website"><a href="http://pocoproject.org/">POCO C++ Libraries</a></td>
     </tr>
     <tr>
+        <td id="poppler-package">poppler</td>
+        <td id="poppler-version">0.20.2</td>
+        <td id="poppler-website"><a href="http://poppler.freedesktop.org/">poppler</a></td>
+    </tr>
+    <tr>
         <td id="popt-package">popt</td>
         <td id="popt-version">1.16</td>
         <td id="popt-website"><a href="http://freshmeat.net/projects/popt/">popt</a></td>
     </tr>
     <tr>
         <td id="portaudio-package">portaudio</td>
-        <td id="portaudio-version">19_20071207</td>
+        <td id="portaudio-version">19_20111121</td>
         <td id="portaudio-website"><a href="http://www.portaudio.com/">portaudio</a></td>
     </tr>
     <tr>
         <td id="postgresql-package">postgresql</td>
-        <td id="postgresql-version">9.1.3</td>
+        <td id="postgresql-version">9.1.5</td>
         <td id="postgresql-website"><a href="http://www.postgresql.org/">PostgreSQL</a></td>
     </tr>
     <tr>
@@ -1680,8 +1760,13 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="pthreads-package">pthreads</td>
-        <td id="pthreads-version">2-8-0</td>
+        <td id="pthreads-version">2-9-1</td>
         <td id="pthreads-website"><a href="http://sourceware.org/pthreads-win32/">Pthreads-w32</a></td>
+    </tr>
+    <tr>
+        <td id="qdbm-package">qdbm</td>
+        <td id="qdbm-version">1.8.78</td>
+        <td id="qdbm-website"><a href="http://fallabs.com/qdbm/">QDBM</a></td>
     </tr>
     <tr>
         <td id="qjson-package">qjson</td>
@@ -1690,8 +1775,13 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="qt-package">qt</td>
-        <td id="qt-version">4.8.1</td>
+        <td id="qt-version">4.8.2</td>
         <td id="qt-website"><a href="http://qt.nokia.com/">Qt</a></td>
+    </tr>
+    <tr>
+        <td id="qwt-package">qwt</td>
+        <td id="qwt-version">6.0.1</td>
+        <td id="qwt-website"><a href="http://qwt.sourceforge.net/">Qwt</a></td>
     </tr>
     <tr>
         <td id="qwtplot3d-package">qwtplot3d</td>
@@ -1744,18 +1834,23 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="smpeg-website"><a href="http://icculus.org/smpeg/">smpeg</a></td>
     </tr>
     <tr>
+        <td id="sox-package">sox</td>
+        <td id="sox-version">14.4.0</td>
+        <td id="sox-website"><a href="http://sox.sourceforge.net/">SoX</a></td>
+    </tr>
+    <tr>
         <td id="speex-package">speex</td>
         <td id="speex-version">1.2rc1</td>
         <td id="speex-website"><a href="http://www.speex.org/">Speex</a></td>
     </tr>
     <tr>
         <td id="sqlite-package">sqlite</td>
-        <td id="sqlite-version">3071100</td>
+        <td id="sqlite-version">3071300</td>
         <td id="sqlite-website"><a href="http://www.sqlite.org/">SQLite</a></td>
     </tr>
     <tr>
         <td id="suitesparse-package">suitesparse</td>
-        <td id="suitesparse-version">3.7.0</td>
+        <td id="suitesparse-version">4.0.2</td>
         <td id="suitesparse-website"><a href="http://www.cise.ufl.edu/research/sparse/SuiteSparse/">SuiteSparse</a></td>
     </tr>
     <tr>
@@ -1765,7 +1860,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="taglib-package">taglib</td>
-        <td id="taglib-version">1.7.1</td>
+        <td id="taglib-version">1.7.2</td>
         <td id="taglib-website"><a href="http://developer.kde.org/~wheeler/taglib.html">TagLib</a></td>
     </tr>
     <tr>
@@ -1775,7 +1870,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="tiff-package">tiff</td>
-        <td id="tiff-version">4.0.1</td>
+        <td id="tiff-version">4.0.2</td>
         <td id="tiff-website"><a href="http://www.remotesensing.org/libtiff/">LibTIFF</a></td>
     </tr>
     <tr>
@@ -1800,7 +1895,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="vorbis-package">vorbis</td>
-        <td id="vorbis-version">1.3.2</td>
+        <td id="vorbis-version">1.3.3</td>
         <td id="vorbis-website"><a href="http://www.vorbis.com/">Vorbis</a></td>
     </tr>
     <tr>
@@ -1820,7 +1915,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="wt-package">wt</td>
-        <td id="wt-version">3.2.0</td>
+        <td id="wt-version">3.2.1</td>
         <td id="wt-website"><a href="http://witty.sourceforge.net/">Wt</a></td>
     </tr>
     <tr>
@@ -1840,12 +1935,12 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="xine-lib-package">xine-lib</td>
-        <td id="xine-lib-version">1.1.20.1</td>
+        <td id="xine-lib-version">1.1.21</td>
         <td id="xine-lib-website"><a href="http://www.xine-project.org/">xine-lib</a></td>
     </tr>
     <tr>
         <td id="xmlwrapp-package">xmlwrapp</td>
-        <td id="xmlwrapp-version">0.6.2</td>
+        <td id="xmlwrapp-version">0.6.3</td>
         <td id="xmlwrapp-website"><a href="http://sourceforge.net/projects/xmlwrapp/">xmlwrapp</a></td>
     </tr>
     <tr>
@@ -1855,12 +1950,12 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="xz-package">xz</td>
-        <td id="xz-version">5.0.3</td>
+        <td id="xz-version">5.0.4</td>
         <td id="xz-website"><a href="http://tukaani.org/xz/">XZ</a></td>
     </tr>
     <tr>
         <td id="zlib-package">zlib</td>
-        <td id="zlib-version">1.2.6</td>
+        <td id="zlib-version">1.2.7</td>
         <td id="zlib-website"><a href="http://zlib.net/">zlib</a></td>
     </tr>
     <tr>
@@ -2058,6 +2153,7 @@ https://...</pre>
             <tr><td><code>make</code></td>      <td>&rarr;</td><td><code>$(MAKE)</code></td></tr>
             <tr><td><code>patch</code></td>     <td>&rarr;</td><td><code>$(PATCH)</code></td></tr>
             <tr><td><code>sed</code></td>       <td>&rarr;</td><td><code>$(SED)</code></td></tr>
+            <tr><td><code>wget</code></td>      <td>&rarr;</td><td><code>$(WGET)</code></td></tr>
         </table>
     </li>
 
