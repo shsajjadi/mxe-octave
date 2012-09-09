@@ -1,0 +1,29 @@
+# This file is part of MXE.
+# See index.html for further information.
+
+PKG             := libsigc++
+$(PKG)_IGNORE   :=
+$(PKG)_CHECKSUM := 493d6e60c08bd8ec3688478d176e04b5713ced2a
+$(PKG)_SUBDIR   := libsigc++-$($(PKG)_VERSION)
+$(PKG)_FILE     := libsigc++-$($(PKG)_VERSION).tar.xz
+$(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/libsigc++/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
+$(PKG)_DEPS     := gcc
+
+define $(PKG)_UPDATE
+    $(WGET) -q -O- 'http://git.gnome.org/browse/libsigc++2/refs/tags' | \
+    grep '<a href=' | \
+    $(SED) -n 's,.*<a[^>]*>\([0-9][^<]*\)<.*,\1,p' | \
+    head -1
+endef
+
+define $(PKG)_BUILD
+    cd '$(1)' && ./configure \
+        --host='$(TARGET)' \
+        --build="`config.guess`" \
+        --disable-shared \
+        --prefix='$(PREFIX)/$(TARGET)' \
+        CXX='$(TARGET)-c++' \
+        PKG_CONFIG='$(PREFIX)/bin/$(TARGET)-pkg-config' \
+        MAKE=$(MAKE)
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+endef
