@@ -3,9 +3,9 @@
 
 PKG             := gtk2
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := c15a25ba49eb459b2c4cdc46baedf6cecf08cbcf
+$(PKG)_CHECKSUM := baf5c73e186352cad767392a6b55840be0326ddc
 $(PKG)_SUBDIR   := gtk+-$($(PKG)_VERSION)
-$(PKG)_FILE     := gtk+-$($(PKG)_VERSION).tar.bz2
+$(PKG)_FILE     := gtk+-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/gtk+/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc gettext libpng jpeg tiff jasper glib atk pango cairo gdk-pixbuf
 
@@ -25,18 +25,12 @@ define $(PKG)_BUILD
         --disable-shared \
         --prefix='$(PREFIX)/$(TARGET)' \
         --enable-explicit-deps \
-        --disable-gdiplus \
         --disable-glibtest \
         --disable-modules \
         --disable-cups \
         --disable-test-print-backend \
         --disable-gtk-doc \
         --disable-man \
-        --with-libpng \
-        --with-libjpeg \
-        --with-libtiff \
-        --with-libjasper \
-        --with-included-loaders \
         --with-included-immodules \
         --without-x
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=

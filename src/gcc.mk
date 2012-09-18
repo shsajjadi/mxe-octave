@@ -3,7 +3,7 @@
 
 PKG             := gcc
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 03b8241477a9f8a34f6efe7273d92b9b6dd9fe82
+$(PKG)_CHECKSUM := 3ab74e63a8f2120b4f2c5557f5ffec6907337137
 $(PKG)_SUBDIR   := gcc-$($(PKG)_VERSION)
 $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -47,7 +47,8 @@ define $(PKG)_BUILD
         --disable-libgomp \
         --disable-libmudflap \
         --with-mpfr-include='$(1)/mpfr/src' \
-        --with-mpfr-lib='$(1).build/mpfr/src/.libs'
+        --with-mpfr-lib='$(1).build/mpfr/src/.libs' \
+        $(shell [ `uname -s` == Darwin ] && echo "LDFLAGS='-Wl,-no_pie'")
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     $(MAKE) -C '$(1).build' -j 1 install
 
@@ -59,9 +60,10 @@ define $(PKG)_BUILD
 
     # create the CMake toolchain file
     [ -d '$(dir $(CMAKE_TOOLCHAIN_FILE))' ] || mkdir -p '$(dir $(CMAKE_TOOLCHAIN_FILE))'
-    (echo 'set(BUILD_SHARED_LIBS OFF)'; \
-     echo 'set(CMAKE_SYSTEM_NAME Windows)'; \
+    (echo 'set(CMAKE_SYSTEM_NAME Windows)'; \
      echo 'set(MSYS 1)'; \
+     echo 'set(BUILD_SHARED_LIBS OFF)'; \
+     echo 'set(CMAKE_BUILD_TYPE Release)'; \
      echo 'set(CMAKE_FIND_ROOT_PATH $(PREFIX)/$(TARGET))'; \
      echo 'set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)'; \
      echo 'set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)'; \
