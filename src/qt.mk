@@ -3,7 +3,7 @@
 
 PKG             := qt
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := e1e2edef1d63ed677d6534d32800c2e1f7ad0e73
+$(PKG)_CHECKSUM := bc352a283610e0cd2fe0dbedbc45613844090fcb
 $(PKG)_SUBDIR   := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://releases.qt-project.org/qt4/source/$($(PKG)_FILE)
@@ -18,7 +18,6 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && QTDIR='$(1)' ./bin/syncqt
-
     cd '$(1)' && \
         OPENSSL_LIBS="`'$(TARGET)-pkg-config' --libs-only-l openssl`" \
         PSQL_LIBS="-lpq -lsecur32 `'$(TARGET)-pkg-config' --libs-only-l openssl` -lws2_32" \
@@ -27,12 +26,14 @@ define $(PKG)_BUILD
         -opensource \
         -confirm-license \
         -fast \
-        -xplatform unsupported/win32-g++-4.6-cross \
+        -xplatform win32-g++-4.6 \
+        -device-option CROSS_COMPILE=$(TARGET)- \
+        -device-option PKG_CONFIG='$(TARGET)-pkg-config' \
         -force-pkg-config \
         -release \
         -exceptions \
         -static \
-        -prefix '$(PREFIX)/$(TARGET)' \
+        -prefix '$(PREFIX)/$(TARGET)/qt' \
         -prefix-install \
         -script \
         -no-iconv \
@@ -64,12 +65,12 @@ define $(PKG)_BUILD
         -v
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    rm -rf '$(PREFIX)/$(TARGET)/mkspecs'
+    rm -rf '$(PREFIX)/$(TARGET)/qt'
     $(MAKE) -C '$(1)' -j 1 install
-    $(INSTALL) -m755 '$(1)/bin/moc'   '$(PREFIX)/bin/$(TARGET)-moc'
-    $(INSTALL) -m755 '$(1)/bin/rcc'   '$(PREFIX)/bin/$(TARGET)-rcc'
-    $(INSTALL) -m755 '$(1)/bin/uic'   '$(PREFIX)/bin/$(TARGET)-uic'
-    $(INSTALL) -m755 '$(1)/bin/qmake' '$(PREFIX)/bin/$(TARGET)-qmake'
+    ln -fs '$(PREFIX)/$(TARGET)/qt/bin/moc' '$(PREFIX)/bin/$(TARGET)-moc'
+    ln -fs '$(PREFIX)/$(TARGET)/qt/bin/rcc' '$(PREFIX)/bin/$(TARGET)-roc'
+    ln -fs '$(PREFIX)/$(TARGET)/qt/bin/uic' '$(PREFIX)/bin/$(TARGET)-uic'
+    ln -fs '$(PREFIX)/$(TARGET)/qt/bin/qmake' '$(PREFIX)/bin/$(TARGET)-qmake'
 
     cd '$(1)/tools/assistant' && '$(1)/bin/qmake' assistant.pro
     $(MAKE) -C '$(1)/tools/assistant' -j '$(JOBS)' install
