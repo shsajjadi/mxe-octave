@@ -3,14 +3,14 @@
 
 PKG             := glibmm
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := d15bc0fed7dea6fec73746370653687f74e02592
+$(PKG)_CHECKSUM := 2928a334664433186d92d9099b9bbf3f051a2645
 $(PKG)_SUBDIR   := glibmm-$($(PKG)_VERSION)
-$(PKG)_FILE     := glibmm-$($(PKG)_VERSION).tar.bz2
+$(PKG)_FILE     := glibmm-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/glibmm/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc glib libsigc++
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://git.gnome.org/browse/glibmm/refs/tags' | \
+    $(WGET) -q -O- 'http://git.gnome.org/browse/glibmm/refs/tags' | \
     grep '<a href=' | \
     $(SED) -n 's,.*<a[^>]*>\([0-9]*\.[0-9]*[02468]\.[^<]*\)<.*,\1,p' | \
     head -1

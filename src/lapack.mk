@@ -2,7 +2,7 @@
 # See index.html for further information.
 
 PKG             := lapack
-$(PKG)_IGNORE   :=
+$(PKG)_IGNORE   := 3.4.1
 $(PKG)_CHECKSUM := 910109a931524f8dcc2734ce23fe927b00ca199f
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
@@ -11,7 +11,7 @@ $(PKG)_URL_2    := ftp://ftp.eq.uc.pt/pub/software/math/netlib/$(PKG)/$($(PKG)_F
 $(PKG)_DEPS     := gcc
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://www.netlib.org/lapack/' | \
+    $(WGET) -q -O- 'http://www.netlib.org/lapack/' | \
     $(SED) -n 's_.*>LAPACK, version \([0-9]\.[0-9]\.[0-9]\).*_\1_ip' | \
     head -1
 endef
