@@ -4,6 +4,8 @@
 JOBS               := 1
 TARGET             := i686-pc-mingw32
 SOURCEFORGE_MIRROR := freefr.dl.sourceforge.net
+PKG_MIRROR         := s3.amazonaws.com/mxe-pkg
+PKG_CDN            := d1yihgixbnrglp.cloudfront.net
 
 PWD        := $(shell pwd)
 SHELL      := bash
@@ -13,6 +15,9 @@ LIBTOOL    := $(shell glibtool --help >/dev/null 2>&1 && echo g)libtool
 LIBTOOLIZE := $(shell glibtoolize --help >/dev/null 2>&1 && echo g)libtoolize
 PATCH      := $(shell gpatch --help >/dev/null 2>&1 && echo g)patch
 SED        := $(shell gsed --help >/dev/null 2>&1 && echo g)sed
+WGET       := wget --no-check-certificate \
+                   --user-agent=$(shell wget --version | \
+                   $(SED) -n 's,GNU \(Wget\) \([0-9.]*\).*,\1/\2,p')
 
 REQUIREMENTS := autoconf automake bash bison bzip2 cmake flex \
                 gcc intltoolize $(LIBTOOL) $(LIBTOOLIZE) \
@@ -26,7 +31,7 @@ PKG_DIR    := $(PWD)/pkg
 TMP_DIR     = $(PWD)/tmp-$(1)
 MAKEFILE   := $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 TOP_DIR    := $(patsubst %/,%,$(dir $(MAKEFILE)))
-PKGS       := $(shell $(SED) -n 's/^.* id="\([^"]*\)-package".*$$/\1/p' '$(TOP_DIR)/index.html')
+PKGS       := $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html')
 PATH       := $(PREFIX)/bin:$(PATH)
 
 CMAKE_TOOLCHAIN_FILE := $(PREFIX)/$(TARGET)/share/cmake/mxe-conf.cmake
@@ -61,12 +66,29 @@ CHECK_PKG_ARCHIVE = \
 DOWNLOAD_PKG_ARCHIVE = \
     mkdir -p '$(PKG_DIR)' && \
     $(if $($(1)_URL_2), \
-        ( wget -T 30 -t 3 --no-check-certificate -O- '$($(1)_URL)' || wget --no-check-certificate -O- '$($(1)_URL_2)' ), \
-        wget --no-check-certificate -O- '$($(1)_URL)') \
+        ( $(WGET) -T 30 -t 3 -O- '$($(1)_URL)' || \
+          $(WGET) -O- '$($(1)_URL_2)' || \
+          $(WGET) -O- '$(PKG_MIRROR)/$($(1)_FILE)' || \
+          $(WGET) -O- '$(PKG_CDN)/$($(1)_FILE)' ), \
+        ( $(WGET) -O- '$($(1)_URL)' || \
+          $(WGET) -O- '$(PKG_MIRROR)/$($(1)_FILE)' || \
+          $(WGET) -O- '$(PKG_CDN)/$($(1)_FILE)' )) \
     $(if $($(1)_FIX_GZIP), \
         | gzip -d | gzip -9n, \
         ) \
-    > '$(PKG_DIR)/$($(1)_FILE)'
+    > '$(PKG_DIR)/$($(1)_FILE)' || rm -f '$(PKG_DIR)/$($(1)_FILE)'
+
+ifeq ($(IGNORE_SETTINGS),yes)
+    $(info [ignore settings.mk])
+else ifeq ($(wildcard $(PWD)/settings.mk),$(PWD)/settings.mk)
+    include $(PWD)/settings.mk
+else
+    $(info [create settings.mk])
+    $(shell { \
+        echo '#JOBS = $(JOBS)'; \
+        echo '#PKGS ='; \
+    } >'$(PWD)/settings.mk')
+endif
 
 .PHONY: all
 all: $(PKGS)

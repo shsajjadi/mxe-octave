@@ -3,19 +3,22 @@
 
 PKG             := gsoap
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 011b507e667d7bb76e30fc8a31055e8cf323311d
+$(PKG)_CHECKSUM := 18cedfdabb79ad4e006db64ffd24d72f0d1fd6ba
 $(PKG)_SUBDIR   := gsoap-$(call SHORT_PKG_VERSION,$(PKG))
 $(PKG)_FILE     := gsoap_$($(PKG)_VERSION).zip
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/gsoap2/gSOAP/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc gnutls libgcrypt libntlm
 
 define $(PKG)_UPDATE
-    wget -q -O- 'http://sourceforge.net/projects/gsoap2/files/gSOAP/' | \
+    $(WGET) -q -O- 'http://sourceforge.net/projects/gsoap2/files/gSOAP/' | \
     $(SED) -n 's,.*gsoap_\([0-9][^>]*\)\.zip.*,\1,p' | \
     head -1
 endef
 
 define $(PKG)_BUILD
+    # avoid reconfiguration
+    cd '$(1)' && touch configure config.h.in
+
     # Native build to get tools wsdl2h and soapcpp2
     cd '$(1)' && ./configure
 

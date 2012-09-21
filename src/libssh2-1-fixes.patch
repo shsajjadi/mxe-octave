@@ -1,32 +1,52 @@
 This file is part of MXE.
 See index.html for further information.
 
-From b3ade9a63e881e69b4c9cfe7b5dbad78dcc4a0e0 Mon Sep 17 00:00:00 2001
-From: Peter Stuge <peter@stuge.se>
-Date: Wed, 1 Feb 2012 09:53:44 +0100
-Subject: [PATCH] Fix undefined reference to _libssh_error in libgcrypt
- backend
+From 0e2179c67d0cd618be29b30425bda18c23a2ddf0 Mon Sep 17 00:00:00 2001
+From: Dmitry Smirnov <onlyjob@member.fsf.org>
+Date: Mon, 13 Aug 2012 23:34:51 +0200
+Subject: [PATCH 1/2] configure: gcrypt doesn't come with pkg-config support
 
-Commit 209de22299b4b58e582891dfba70f57e1e0492db introduced a function
-call to a non-existing function, and since then the libgcrypt backend
-has not been buildable.
----
- src/libgcrypt.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+... so use plain old -lgcrypt to the linker to link with it.
 
-diff --git a/src/libgcrypt.c b/src/libgcrypt.c
-index 1bda5ee..5c2787b 100644
---- a/src/libgcrypt.c
-+++ b/src/libgcrypt.c
-@@ -581,7 +581,7 @@ _libssh2_pub_priv_keyfile(LIBSSH2_SESSION *session,
-                           const char *privatekey,
-                           const char *passphrase)
- {
--    return _libssh_error(session, LIBSSH2_ERROR_FILE,
-+    return _libssh2_error(session, LIBSSH2_ERROR_FILE,
-                          "Unable to extract public key from private key file: "
-                          "Method unimplemented in libgcrypt backend");
- }
+Fixes #225
+(cherry picked from commit e470738a0cf302abfd2891b80dbac4ac3e7eedd2)
+
+diff --git a/configure.ac b/configure.ac
+index aa9d397..dfc6988 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -102,7 +102,7 @@ fi
+ # Look for libgcrypt
+ if test "$ac_cv_libssl" != "yes" && test "$use_libgcrypt" != "no"; then
+   AC_LIB_HAVE_LINKFLAGS([gcrypt], [], [#include <gcrypt.h>])
+-  LIBSREQUIRED=libgcrypt
++  LIBS="$LIBS -lgcrypt"
+ fi
+ 
+ AC_SUBST(LIBSREQUIRED)
 -- 
-1.7.8.3
+1.7.10.4
+
+
+From 75ecbf4e5ca3c977418f60db42ba03c13d0e68f9 Mon Sep 17 00:00:00 2001
+From: Mark Brand <mabrand@mabrand.nl>
+Date: Sun, 2 Sep 2012 00:55:28 +0200
+Subject: [PATCH 2/2] include gpg-error with gcrypt for static linking
+ (mxe-specific)
+
+
+diff --git a/configure.ac b/configure.ac
+index dfc6988..748dd21 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -103,6 +103,7 @@ fi
+ if test "$ac_cv_libssl" != "yes" && test "$use_libgcrypt" != "no"; then
+   AC_LIB_HAVE_LINKFLAGS([gcrypt], [], [#include <gcrypt.h>])
+   LIBS="$LIBS -lgcrypt"
++  LIBS="$LIBS `${prefix}/bin/gpg-error-config --libs`"
+ fi
+ 
+ AC_SUBST(LIBSREQUIRED)
+-- 
+1.7.10.4
 
