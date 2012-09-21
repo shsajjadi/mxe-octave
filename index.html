@@ -924,6 +924,11 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="apr-website"><a href="http://apr.apache.org/">APR</a></td>
     </tr>
     <tr>
+        <td id="armadillo-package">armadillo</td>
+        <td id="armadillo-version">3.4.1</td>
+        <td id="armadillo-website"><a href="http://armadillo.sf.net/">Armadillo C++ linear algebra library</a></td>
+    </tr>
+    <tr>
         <td id="atk-package">atk</td>
         <td id="atk-version">2.4.0</td>
         <td id="atk-website"><a href="http://www.gtk.org/">ATK</a></td>
@@ -1040,7 +1045,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="ffmpeg-package">ffmpeg</td>
-        <td id="ffmpeg-version">0.11.1</td>
+        <td id="ffmpeg-version">0.11.2</td>
         <td id="ffmpeg-website"><a href="http://www.ffmpeg.org/">ffmpeg</a></td>
     </tr>
     <tr>
@@ -1105,7 +1110,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="gcc-package">gcc</td>
-        <td id="gcc-version">4.7.1</td>
+        <td id="gcc-version">4.7.2</td>
         <td id="gcc-website"><a href="http://gcc.gnu.org/">GCC</a></td>
     </tr>
     <tr>
@@ -1180,7 +1185,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="gnutls-package">gnutls</td>
-        <td id="gnutls-version">3.0.19</td>
+        <td id="gnutls-version">3.1.1</td>
         <td id="gnutls-website"><a href="http://www.gnu.org/software/gnutls/">GnuTLS</a></td>
     </tr>
     <tr>
@@ -1595,7 +1600,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="mdbtools-package">mdbtools</td>
-        <td id="mdbtools-version">0.6pre1</td>
+        <td id="mdbtools-version">0.7</td>
         <td id="mdbtools-website"><a href="http://sourceforge.net/projects/mdbtools/">mdbtools</a></td>
     </tr>
     <tr>
@@ -1699,6 +1704,11 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="pdcurses-website"><a href="http://pdcurses.sourceforge.net/">PDcurses</a></td>
     </tr>
     <tr>
+        <td id="plibc-package">plibc</td>
+        <td id="plibc-version">0.1.7</td>
+        <td id="plibc-website"><a href="http://plibc.sourceforge.net/">Plibc</a></td>
+    </tr>
+    <tr>
         <td id="pdflib_lite-package">pdflib_lite</td>
         <td id="pdflib_lite-version">7.0.5p3</td>
         <td id="pdflib_lite-website"><a href="http://www.pdflib.com/download/free-software/pdflib-lite-7/">PDFlib Lite</a></td>
@@ -1735,7 +1745,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </tr>
     <tr>
         <td id="poppler-package">poppler</td>
-        <td id="poppler-version">0.20.2</td>
+        <td id="poppler-version">0.20.4</td>
         <td id="poppler-website"><a href="http://poppler.freedesktop.org/">poppler</a></td>
     </tr>
     <tr>
@@ -1757,6 +1767,11 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="proj-package">proj</td>
         <td id="proj-version">4.8.0</td>
         <td id="proj-website"><a href="http://trac.osgeo.org/proj/">proj</a></td>
+    </tr>
+    <tr>
+        <td id="protobuf-package">protobuf</td>
+        <td id="protobuf-version">2.4.1</td>
+        <td id="protobuf-website"><a href="http://code.google.com/p/protobuf"/>protobuf</a></td>
     </tr>
     <tr>
         <td id="pthreads-package">pthreads</td>
@@ -1929,6 +1944,11 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <td id="x264-website"><a href="http://www.videolan.org/developers/x264.html">x264</a></td>
     </tr>
     <tr>
+        <td id="xapian-core-package">xapian-core</td>
+        <td id="xapian-core-version">1.2.10</td>
+        <td id="xapian-core-website"><a href="http://xapian.org/">Xapian-Core</a></td>
+    </tr>
+    <tr>
         <td id="xerces-package">xerces</td>
         <td id="xerces-version">3.1.1</td>
         <td id="xerces-website"><a href="http://xerces.apache.org/xerces-c/">Xerces-C++</a></td>
@@ -2035,6 +2055,23 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         Always list the dependency on <code>gcc</code> explicitly:
         </p>
         <pre>$(PKG)_DEPS     := gcc ...</pre>
+    </li>
+
+    <li>
+        <p>
+            Add your package to the <a href="#packages">list of packages</a>.
+        </p>
+        <p>
+            Each package gets its own table row element with table cells having IDs
+            specifying your .mk file, package version and website:
+        </p>
+        <pre>
+&lt;tr&gt;
+    &lt;td id="gettext-package"&gt;gettext&lt;/td&gt;
+    &lt;td id="gettext-version"&gt;0.18.1.1&lt;/td&gt;
+    &lt;td id="gettext-website"&gt;&lt;a href="http://www.gnu.org/software/gettext/"&gt;gettext&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+        </pre>
     </li>
 
     <li>
