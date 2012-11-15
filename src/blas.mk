@@ -19,6 +19,14 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     cd '$(1)' && $(TARGET)-ar cr libblas.a *.o
 
+    if [ $(BUILD_SHARED) = yes ]; then \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gfortran' '$(1)/libblas.a'; \
+    fi
     $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib'
     $(INSTALL) -m644 '$(1)/libblas.a' '$(PREFIX)/$(TARGET)/lib/'
+    if [ $(BUILD_SHARED) = yes ]; then \
+      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
+      $(INSTALL) -m644 '$(1)/libblas.dll.a' '$(PREFIX)/$(TARGET)/lib/libblas.dll.a'; \
+      $(INSTALL) -m644 '$(1)/libblas.dll' '$(PREFIX)/$(TARGET)/bin/libblas.dll'; \
+    fi
 endef
