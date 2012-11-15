@@ -18,7 +18,7 @@ endef
 define $(PKG)_BUILD
 # First step: Build for host system in order to create "protoc" binary.
     cd '$(1)' && ./configure \
-        --disable-shared
+        $(ENABLE_SHARED_OR_STATIC)
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     cp '$(1)/src/protoc' '$(1)/src/protoc_host'
     $(MAKE) -C '$(1)' -j 1 distclean
@@ -26,7 +26,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --prefix='$(PREFIX)/$(TARGET)' \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --with-zlib \
         --with-protoc=src/protoc_host
     $(MAKE) -C '$(1)' -j '$(JOBS)'

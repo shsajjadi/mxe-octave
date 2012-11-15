@@ -9,6 +9,9 @@ $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := mingwrt w32api binutils gcc-gmp gcc-mpc gcc-mpfr
+ifneq ($(BUILD_SHARED),yes)
+$(PKG)_STATIC_FLAG := --static
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://ftp.gnu.org/gnu/gcc/?C=M;O=D' | \
@@ -39,7 +42,7 @@ define $(PKG)_BUILD
         --with-gnu-ld \
         --with-gnu-as \
         --disable-nls \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --disable-sjlj-exceptions \
         --without-x \
         --disable-win32-registry \
@@ -54,7 +57,7 @@ define $(PKG)_BUILD
 
     # create pkg-config script
     (echo '#!/bin/sh'; \
-     echo 'PKG_CONFIG_PATH="$$PKG_CONFIG_PATH_$(subst -,_,$(TARGET))" PKG_CONFIG_LIBDIR='\''$(PREFIX)/$(TARGET)/lib/pkgconfig'\'' exec pkg-config --static "$$@"') \
+     echo 'PKG_CONFIG_PATH="$$PKG_CONFIG_PATH_$(subst -,_,$(TARGET))" PKG_CONFIG_LIBDIR='\''$(PREFIX)/$(TARGET)/lib/pkgconfig'\'' exec pkg-config $($(PKG)_STATIC_FLAG)) "$$@"') \
              > '$(PREFIX)/bin/$(TARGET)-pkg-config'
     chmod 0755 '$(PREFIX)/bin/$(TARGET)-pkg-config'
 
@@ -62,7 +65,16 @@ define $(PKG)_BUILD
     [ -d '$(dir $(CMAKE_TOOLCHAIN_FILE))' ] || mkdir -p '$(dir $(CMAKE_TOOLCHAIN_FILE))'
     (echo 'set(CMAKE_SYSTEM_NAME Windows)'; \
      echo 'set(MSYS 1)'; \
-     echo 'set(BUILD_SHARED_LIBS OFF)'; \
+     if [ $(BUILD_SHARED) = yes ]; then \
+       echo 'set(BUILD_SHARED_LIBS ON)'; \
+     else \
+       echo 'set(BUILD_SHARED_LIBS OFF)'; \
+     fi; \
+     if [ $(BUILD_STATIC) = yes ]; then \
+       echo 'set(BUILD_STATIC_LIBS ON)'; \
+     else \
+       echo 'set(BUILD_STATIC_LIBS OFF)'; \
+     fi; \
      echo 'set(CMAKE_BUILD_TYPE Release)'; \
      echo 'set(CMAKE_FIND_ROOT_PATH $(PREFIX)/$(TARGET))'; \
      echo 'set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)'; \

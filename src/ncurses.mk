@@ -30,6 +30,6 @@ define $(PKG)_BUILD
         --without-manpages \
         --enable-pc-files \
         --with-normal \
-        --without-shared
+        $(WITH_SHARED_OR_STATIC)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef

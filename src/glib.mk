@@ -21,13 +21,13 @@ define $(PKG)_NATIVE_BUILD
     # native build of libiconv (used by glib-genmarshal)
     cd '$(1).native' && $(call UNPACK_PKG_ARCHIVE,libiconv)
     cd '$(1).native/$(libiconv_SUBDIR)' && ./configure \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --disable-nls
     $(MAKE) -C '$(1).native/$(libiconv_SUBDIR)' -j '$(JOBS)'
 
     # native build for glib-genmarshal, without pkg-config, gettext and zlib
     cd '$(1).native' && ./configure \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)' \
         --enable-regex \
         --disable-threads \
@@ -71,7 +71,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)' \
         --with-threads=win32 \
         --with-pcre=system \

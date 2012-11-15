@@ -21,8 +21,7 @@ define $(PKG)_BUILD
     cd '$(1)' && autoreconf && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --enable-static \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)' \
         --disable-modules \
         --with-included-loaders \

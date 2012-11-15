@@ -34,7 +34,7 @@ define $(PKG)_BUILD
         --with-gnu-ld \
         --with-gnu-as \
         --disable-nls \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --disable-werror
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install

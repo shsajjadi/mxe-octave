@@ -21,11 +21,11 @@ define $(PKG)_BUILD
     $(SED) -i 's,^ *case SIGTSTP:.*,,' '$(1)/signals.c'
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)' \
         --enable-multibyte \
         --without-purify \
         --with-curses \
         LIBS='-lpdcurses'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install SHARED_LIBS=
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
