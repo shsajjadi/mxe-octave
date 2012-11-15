@@ -4,8 +4,8 @@
 # Enable shared or static libs, or perhaps both.  At least one 
 # package uses --with instead of --enable.  Probably it doesn't
 # make sense to disable both...
-BUILD_SHARED := no
-BUILD_STATIC := yes
+BUILD_SHARED := yes
+BUILD_STATIC := no
 ifeq ($(BUILD_SHARED),yes)
   ifeq ($(BUILD_STATIC),yes)
     ENABLE_SHARED_OR_STATIC := --enable-shared --enable-static
