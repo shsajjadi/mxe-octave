@@ -21,8 +21,7 @@ define $(PKG)_BUILD
         --prefix='$(PREFIX)/$(TARGET)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --disable-shared \
-        --enable-static \
+        $(ENABLE_SHARED_OR_STATIC) \
         ac_cv_sizeof_off_t=4 \
         ac_cv_sizeof_pid_t=4 \
         ac_cv_sizeof_size_t=4 \

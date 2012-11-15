@@ -19,7 +19,7 @@ define $(PKG)_BUILD
     # native build
     cp -Rp '$(1)' '$(1).native'
     cd '$(1).native' && ./configure \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)'
     $(MAKE) -C '$(1).native/reimp' -j '$(JOBS)'
     $(INSTALL) -m755 '$(1).native/reimp/reimp' '$(PREFIX)/bin/$(TARGET)-reimp'
@@ -27,7 +27,7 @@ define $(PKG)_BUILD
     # cross build
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install

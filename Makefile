@@ -1,6 +1,24 @@
 # This file is part of MXE.
 # See index.html for further information.
 
+# Enable shared or static libs, or perhaps both.  At least one 
+# package uses --with instead of --enable.  Probably it doesn't
+# make sense to disable both...
+BUILD_SHARED := no
+BUILD_STATIC := yes
+ifeq ($(BUILD_SHARED),yes)
+  ifeq ($(BUILD_STATIC),yes)
+    ENABLE_SHARED_OR_STATIC := --enable-shared --enable-static
+    WITH_SHARED_OR_STATIC := --with-shared --with-static
+  else
+    ENABLE_SHARED_OR_STATIC := --enable-shared --disable-static
+    WITH_SHARED_OR_STATIC := --with-shared --without-static
+  endif
+else
+  ENABLE_SHARED_OR_STATIC := --disable-shared --enable-static
+  WITH_SHARED_OR_STATIC := --without-shared --with-static
+endif
+
 JOBS               := 1
 TARGET             := i686-pc-mingw32
 SOURCEFORGE_MIRROR := freefr.dl.sourceforge.net

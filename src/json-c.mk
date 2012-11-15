@@ -21,7 +21,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --prefix='$(PREFIX)/$(TARGET)' \
         --build="`config.guess`"\
-        --disable-shared
+        $(ENABLE_SHARED_OR_STATIC)
         CFLAGS=-Wno-error
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 	

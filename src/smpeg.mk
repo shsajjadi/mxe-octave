@@ -21,7 +21,7 @@ define $(PKG)_BUILD
         AR='$(TARGET)-ar' \
         NM='$(TARGET)-nm' \
         --host='$(TARGET)' \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --disable-debug \
         --prefix='$(PREFIX)/$(TARGET)' \
         --with-sdl-prefix='$(PREFIX)/$(TARGET)' \

@@ -19,7 +19,7 @@ define $(PKG)_BUILD
     cd '$(1)' && autoconf
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --disable-jack \
         --prefix='$(PREFIX)/$(TARGET)' \
         PYTHON='no'

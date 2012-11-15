@@ -26,7 +26,7 @@ define $(PKG)_BUILD
         --prefix='$(PREFIX)/$(TARGET)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --disable-rpath \
         --without-tcl \
         --without-perl \
@@ -53,7 +53,7 @@ define $(PKG)_BUILD
     $(SED) -i 's,-DVAL_,-D_DISABLED_VAL_,g' '$(1).native'/src/bin/pg_config/Makefile
     cd '$(1).native' && ./configure \
         --prefix='$(PREFIX)/$(TARGET)' \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --disable-rpath \
         --without-tcl \
         --without-perl \

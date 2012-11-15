@@ -24,7 +24,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         --prefix='$(PREFIX)/$(TARGET)' \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         CPPFLAGS='-D_OPEN_BINARY'
     echo 'all:' > '$(1)/doc/Makefile'
     $(MAKE) -C '$(1)/lib' -j '$(JOBS)' install

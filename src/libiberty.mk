@@ -17,8 +17,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --enable-static \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)' \
         --enable-install-libiberty
     $(MAKE) -C '$(1)' -j '$(JOBS)'

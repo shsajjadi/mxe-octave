@@ -25,8 +25,7 @@ define $(PKG)_BUILD
         --build="`config.guess`" \
         --prefix='$(PREFIX)/$(TARGET)' \
         --disable-silent-rules \
-        --disable-shared \
-        --enable-static \
+        $(ENABLE_SHARED_OR_STATIC) \
         --enable-xpdf-headers \
         --enable-poppler-qt4 \
         --enable-zlib \

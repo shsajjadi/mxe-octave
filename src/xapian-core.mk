@@ -20,6 +20,6 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         --prefix='$(PREFIX)/$(TARGET)' \
-        --enable-static
+        $(ENABLE_SHARED_OR_STATC)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef

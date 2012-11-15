@@ -24,7 +24,7 @@ define $(PKG)_BUILD
     echo 'echo $1' > '$(1)/$(ilmbase_SUBDIR)/config.sub'
     cd '$(1)/$(ilmbase_SUBDIR)' && $(SHELL) ./configure \
         --build="`config.guess`" \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(1)/ilmbase' \
         --enable-threading=no \
         --disable-posix-sem \
@@ -34,7 +34,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)' \
         --disable-threading \
         --disable-posix-sem \

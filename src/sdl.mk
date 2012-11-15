@@ -19,7 +19,7 @@ define $(PKG)_BUILD
     $(SED) -i 's,-mwindows,-lwinmm -mwindows,' '$(1)/configure'
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)' \
         --enable-threads \
         --enable-directx \

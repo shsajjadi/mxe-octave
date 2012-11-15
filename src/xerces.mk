@@ -20,7 +20,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && CONFIG_SHELL='$(SHELL)' ./configure \
         --host='$(TARGET)' \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --disable-sse2 \
         --prefix='$(PREFIX)/$(TARGET)' \
         --enable-libtool-lock \
