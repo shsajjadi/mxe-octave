@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+set -e
+
+LD=
+AR=
+infile=
+outfile=
+LIBS=
+
+topdir=$(pwd)
+tmpdir=$topdir/make-shared-from-static.$$
+
+trap "cd $topdir; rm -rf $tmpdir" 1 2 15
+
+for arg
+do
+  case "$1" in
+    --ld)
+      shift
+      if [ $# -gt 0 ]; then
+        LD="$1"
+        shift
+      else
+        echo "make-shared-from-static: expecting argument for --ld option" 1>&2
+        exit 1
+      fi
+    ;;
+    --ar)
+      shift
+      if [ $# -gt 0 ]; then
+        AR="$1"
+        shift
+      else
+        echo "make-shared-from-static: expecting argument for --ar option" 1>&2
+        exit 1
+      fi
+    ;;
+    -l*)
+      LIBS="$LIBS $1"
+      shift
+    ;;
+    *.a)
+      if [ -z "$infile" ]; then
+        case "$1" in
+          /*)
+            infile="$1"
+          ;;
+          *)
+            infile=$(pwd)/$1
+          ;;
+        esac
+        outfile=$(echo $infile | sed 's/\.a$/.dll/')
+        shift
+      else
+        echo "make-shared-from-static: only one input file allowed" 1>&2
+        exit 1
+      fi
+    ;;
+  esac
+done
+
+if [ -z "$outfile" ]; then
+  echo "make-shared-from-static: no output file specified" 1>&2
+  exit 1
+fi
+
+mkdir $tmpdir
+
+(
+  cd $tmpdir
+
+  $AR x $infile
+
+  $LD -shared -Wl,--export-all-symbols -Wl,--enable-auto-import -Wl,--enable-auto-image-base -Wl,--out-implib=$outfile.a -o $outfile *.o $LIBS
+)
+
+rm -rvf $tmpdir

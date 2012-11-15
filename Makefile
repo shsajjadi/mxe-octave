@@ -52,6 +52,8 @@ TOP_DIR    := $(patsubst %/,%,$(dir $(MAKEFILE)))
 PKGS       := $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html')
 PATH       := $(PREFIX)/bin:$(PATH)
 
+MAKE_SHARED_FROM_STATIC := $(TOP_DIR)/tools/make-shared-from-static
+
 CMAKE_TOOLCHAIN_FILE := $(PREFIX)/$(TARGET)/share/cmake/mxe-conf.cmake
 
 # unexport any environment variables that might cause trouble
