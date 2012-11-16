@@ -25,7 +25,6 @@ define $(PKG)_BUILD
         --prefix='$(PREFIX)/$(TARGET)' \
         --enable-multibyte \
         --without-purify \
-        --with-curses \
-        LIBS='-lpdcurses'
+        --with-curses
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
