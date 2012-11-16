@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := a9761cd9c3da485eb354175fcc2fe35856bc43ac
 $(PKG)_SUBDIR   := readline-$($(PKG)_VERSION)
 $(PKG)_FILE     := readline-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/readline/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc pdcurses
+$(PKG)_DEPS     := gcc ncurses
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://tiswww.case.edu/php/chet/readline/rltop.html' | \
