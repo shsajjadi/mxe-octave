@@ -24,10 +24,11 @@ define $(PKG)_BUILD
         PDCURSES_SRCDIR=. \
         WIDE=Y \
         UTF8=Y
-    $(TARGET)-ranlib '$(1)/pdcurses.a' '$(1)/panel.a'
+    mv '$(1)/pdcurses.a' '$(1)/libcurses.a'
+    $(TARGET)-ranlib '$(1)/libcurses.a' '$(1)/panel.a'
     $(INSTALL) -d '$(PREFIX)/$(TARGET)/include/'
     $(INSTALL) -m644 '$(1)/curses.h' '$(1)/panel.h' '$(1)/term.h' '$(PREFIX)/$(TARGET)/include/'
     $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib/'
-    $(INSTALL) -m644 '$(1)/pdcurses.a' '$(PREFIX)/$(TARGET)/lib/libpdcurses.a'
+    $(INSTALL) -m644 '$(1)/libcurses.a' '$(PREFIX)/$(TARGET)/lib/libcurses.a'
     $(INSTALL) -m644 '$(1)/panel.a'    '$(PREFIX)/$(TARGET)/lib/libpanel.a'
 endef
