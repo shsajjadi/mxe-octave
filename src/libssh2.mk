@@ -20,7 +20,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./buildconf
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        $(ENABLE_SHARED_OR_STATIC) \
+        --enable-static --disable-shared \
         --prefix='$(PREFIX)/$(TARGET)' \
         --without-openssl \
         --with-libgcrypt \
@@ -31,4 +31,12 @@ define $(PKG)_BUILD
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libssh2.exe' \
         `'$(TARGET)-pkg-config' --cflags --libs libssh2`
+
+    if [ "$(BUILD_SHARED)" = yes ]; then \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libssh2.a' -lgcrypt; \
+      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin/'; \
+      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libssh2.dll.a' '$(PREFIX)/$(TARGET)/lib/libssh2.dll.a'; \
+      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libssh2.dll' '$(PREFIX)/$(TARGET)/bin/libssh2.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libssh2.dll'; \
+    fi
 endef

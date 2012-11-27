@@ -19,10 +19,17 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        $(ENABLE_SHARED_OR_STATIC) \
+        --enable-static --disable-shared \
         --prefix='$(PREFIX)/$(TARGET)' \
         --disable-nls \
         --disable-languages
     $(MAKE) -C '$(1)/src' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)/src' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+    if [ "$(BUILD_SHARED)" = yes ]; then \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libgpg-error.a'; \
+      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin/'; \
+      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll.a' '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll.a'; \
+      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll' '$(PREFIX)/$(TARGET)/bin/libgpg-error.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll'; \
+    fi
 endef
