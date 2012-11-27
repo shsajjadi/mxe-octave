@@ -75,4 +75,4 @@ mkdir $tmpdir
   $LD -shared -Wl,--export-all-symbols -Wl,--enable-auto-import -Wl,--enable-auto-image-base -Wl,--out-implib=$outfile.a -o $outfile *.o $LIBS
 )
 
-rm -rvf $tmpdir
+rm -rf $tmpdir
