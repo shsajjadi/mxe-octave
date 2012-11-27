@@ -32,8 +32,25 @@ define $(PKG)_BUILD
 
     # install library files
     $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib'
-    find '$(1)' -name '*.a' \
-        -exec $(INSTALL) -m644 {} '$(PREFIX)/$(TARGET)/lib/' \;
+    for f in `find '$(1)' -name '*.a'`; do \
+      if [ $(BUILD_SHARED) = yes ]; then \
+        lib=`basename $$f .a`; \
+        dir=`dirname $$f`; \
+        case $$lib in \
+          librbio) \
+            deplibs="-lsuitesparseconfig"; \
+          ;; \
+          libumfpack) \
+            deplibs="-lcholmod -lamd -lsuitesparseconfig -lblas"; \
+          ;; \
+        esac; \
+        $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-g++' $$f $$deplibs; \
+        $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
+        $(INSTALL) -m644 $$dir/$$lib.dll.a '$(PREFIX)/$(TARGET)/lib/'; \
+        $(INSTALL) -m644 $$dir/$$lib.dll '$(PREFIX)/$(TARGET)/bin/'; \
+      fi; \
+      $(INSTALL) -m644 $$f '$(PREFIX)/$(TARGET)/lib/'; \
+    done
 
     # install include files
     $(INSTALL) -d                                '$(PREFIX)/$(TARGET)/include/suitesparse/'
