@@ -48,8 +48,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS=
 
-    '$(TARGET)-g++' \
-        -W -Wall -Werror -pedantic -std=gnu++0x \
-        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-graphicsmagick.exe' \
-        `'$(TARGET)-pkg-config' GraphicsMagick++ --cflags --libs`
+##    '$(TARGET)-g++' \
+##        -W -Wall -Werror -pedantic -std=gnu++0x \
+##        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-graphicsmagick.exe' \
+##        `'$(TARGET)-pkg-config' GraphicsMagick++ --cflags --libs`
 endef
