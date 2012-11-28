@@ -6,7 +6,7 @@ $(PKG)_IGNORE   :=
 $(PKG)_CHECKSUM := 1ea936554aaabaabb747a4fcf98ecfbbfb265656
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://jweaton.org/$($(PKG)_FILE)
-$(PKG)_DEPS     := blas curl fltk gcc graphicsmagick lapack pcre readline suitesparse zlib
+$(PKG)_DEPS     := blas curl fltk gcc glpk graphicsmagick lapack pcre readline suitesparse zlib
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package octave.' >&2;
