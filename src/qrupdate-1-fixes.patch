@@ -1,0 +1,24 @@
+diff -uNr a/Makeconf b/Makeconf
+--- a/Makeconf	2010-01-19 06:35:49.000000000 -0500
++++ b/Makeconf	2012-11-28 14:58:55.778726522 -0500
+@@ -5,6 +5,8 @@
+ # set if you need shared library
+ FPICFLAGS=-fPIC
+ 
++AR=ar
++
+ # BLAS library (only required for tests)
+ BLAS=-lblas
+ # LAPACK library (only required for tests)
+diff -uNr a/src/Makefile b/src/Makefile
+--- a/src/Makefile	2010-01-19 06:35:49.000000000 -0500
++++ b/src/Makefile	2012-11-28 14:58:45.535085046 -0500
+@@ -44,7 +44,7 @@
+ solib: ../libqrupdate$(SOEXT)
+ 
+ ../libqrupdate.a: $(OBJS)
+-	ar -cr $@ $(OBJS)
++	$(AR) -cr $@ $(OBJS)
+ 
+ ../libqrupdate.so: $(OBJS)
+ 	$(FC) $(FFLAGS) -shared -o $@ -Wl,-soname=libqrupdate.so.$(MAJOR) $(OBJS) \
