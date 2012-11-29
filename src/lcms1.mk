@@ -26,4 +26,6 @@ define $(PKG)_BUILD
         --with-tiff \
         --with-zlib
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
+
+    rm -f $(PREFIX)/$(TARGET)/lib/liblcms.la
 endef
