@@ -26,8 +26,9 @@ define $(PKG)_BUILD
     if [ $(BUILD_SHARED) = yes ]; then \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gfortran' '$(PREFIX)/$(TARGET)/lib/libarpack.a'; \
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libarpack.dll.a' '$(PREFIX)/$(TARGET)/lib/libarpack.dll.a'; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libarpack.dll' '$(PREFIX)/$(TARGET)/bin/libarpack.dll'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libarpack.dll.a' '$(PREFIX)/$(TARGET)/lib/libarpack.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libarpack.dll' '$(PREFIX)/$(TARGET)/bin/libarpack.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libarpack.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libarpack.la'; \
     fi
 endef

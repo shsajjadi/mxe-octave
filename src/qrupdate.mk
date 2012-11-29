@@ -20,7 +20,7 @@ define $(PKG)_BUILD
     if [ $(BUILD_SHARED) = yes ]; then \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gfortran' '$(1)/libqrupdate.a' -llapack -lblas; \
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-      $(INSTALL) -m644 '$(1)/libqrupdate.dll.a' '$(PREFIX)/$(TARGET)/lib/libqrupdate.dll.a'; \
-      $(INSTALL) -m644 '$(1)/libqrupdate.dll' '$(PREFIX)/$(TARGET)/bin/libqrupdate.dll'; \
+      $(INSTALL) -m755 '$(1)/libqrupdate.dll.a' '$(PREFIX)/$(TARGET)/lib/libqrupdate.dll.a'; \
+      $(INSTALL) -m755 '$(1)/libqrupdate.dll' '$(PREFIX)/$(TARGET)/bin/libqrupdate.dll'; \
     fi
 endef

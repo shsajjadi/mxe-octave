@@ -36,8 +36,8 @@ define $(PKG)_BUILD
     if [ "$(BUILD_SHARED)" = yes ]; then \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libcurl.a' -lssh2; \
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin/'; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libcurl.dll.a' '$(PREFIX)/$(TARGET)/lib/libcurl.dll.a'; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libcurl.dll' '$(PREFIX)/$(TARGET)/bin/libcurl.dll'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libcurl.dll.a' '$(PREFIX)/$(TARGET)/lib/libcurl.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libcurl.dll' '$(PREFIX)/$(TARGET)/bin/libcurl.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libcurl.dll'; \
     fi
 endef

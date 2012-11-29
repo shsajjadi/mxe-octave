@@ -26,7 +26,7 @@ define $(PKG)_BUILD
     $(INSTALL) -m644 '$(1)/libblas.a' '$(PREFIX)/$(TARGET)/lib/'
     if [ $(BUILD_SHARED) = yes ]; then \
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-      $(INSTALL) -m644 '$(1)/libblas.dll.a' '$(PREFIX)/$(TARGET)/lib/libblas.dll.a'; \
-      $(INSTALL) -m644 '$(1)/libblas.dll' '$(PREFIX)/$(TARGET)/bin/libblas.dll'; \
+      $(INSTALL) -m755 '$(1)/libblas.dll.a' '$(PREFIX)/$(TARGET)/lib/libblas.dll.a'; \
+      $(INSTALL) -m755 '$(1)/libblas.dll' '$(PREFIX)/$(TARGET)/bin/libblas.dll'; \
     fi
 endef

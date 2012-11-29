@@ -52,20 +52,20 @@ define $(PKG)_BUILD
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
  \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.a' -ljpeg -ljasper -llzma -ltiff -llcms -lpng -lfreetype -lxml2 -lm; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.dll.a' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.dll.a'; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.dll' '$(PREFIX)/$(TARGET)/bin/libGraphicsMagick.dll'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.dll.a' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.dll' '$(PREFIX)/$(TARGET)/bin/libGraphicsMagick.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.la'; \
  \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-g++' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.a' -lGraphicsMagick -ljpeg -ljasper -llzma -ltiff -llcms -lpng -lfreetype -lxml2 -lm; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.dll.a' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.dll.a'; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.dll' '$(PREFIX)/$(TARGET)/bin/libGraphicsMagick++.dll'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.dll.a' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.dll' '$(PREFIX)/$(TARGET)/bin/libGraphicsMagick++.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.la'; \
  \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.a' -lGraphicsMagick -ljpeg -ljasper -llzma -ltiff -llcms -lpng -lfreetype -lxml2 -lm; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.dll.a' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.dll.a'; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.dll' '$(PREFIX)/$(TARGET)/bin/libGraphicsMagickWand.dll'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.dll.a' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.dll' '$(PREFIX)/$(TARGET)/bin/libGraphicsMagickWand.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.la'; \
     fi

@@ -28,8 +28,8 @@ define $(PKG)_BUILD
     if [ "$(BUILD_SHARED)" = yes ]; then \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libgpg-error.a'; \
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin/'; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll.a' '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll.a'; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll' '$(PREFIX)/$(TARGET)/bin/libgpg-error.dll'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll.a' '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll' '$(PREFIX)/$(TARGET)/bin/libgpg-error.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll'; \
     fi
 endef
