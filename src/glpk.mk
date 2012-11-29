@@ -30,5 +30,6 @@ define $(PKG)_BUILD
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libglpk.dll.a' '$(PREFIX)/$(TARGET)/lib/libglpk.dll.a'; \
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libglpk.dll' '$(PREFIX)/$(TARGET)/bin/libglpk.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libglpk.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libglpk.la'; \
     fi
 endef

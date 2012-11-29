@@ -29,6 +29,9 @@ define $(PKG)_BUILD
         --prefix='$(PREFIX)/$(TARGET)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
+    rm -f $(PREFIX)/$(TARGET)/lib/libpng.la
+    rm -f $(PREFIX)/$(TARGET)/lib/libpng15.la
+
     '$(TARGET)-gcc' \
         -W -Wall -Werror -std=c99 -pedantic \
         '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libpng.exe' \
