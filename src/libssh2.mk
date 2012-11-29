@@ -38,5 +38,6 @@ define $(PKG)_BUILD
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libssh2.dll.a' '$(PREFIX)/$(TARGET)/lib/libssh2.dll.a'; \
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libssh2.dll' '$(PREFIX)/$(TARGET)/bin/libssh2.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libssh2.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libssh2.la'; \
     fi
 endef
