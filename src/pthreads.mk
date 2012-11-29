@@ -18,6 +18,16 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j 1 GC-static CROSS='$(TARGET)-'
     $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib'
     $(INSTALL) -m644 '$(1)/libpthreadGC2.a' '$(PREFIX)/$(TARGET)/lib/libpthread.a'
+
+    if [ $(BUILD_SHARED) = yes ]; then \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libpthread.a'; \
+      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libpthread.dll.a' '$(PREFIX)/$(TARGET)/lib/libpthread.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libpthread.dll' '$(PREFIX)/$(TARGET)/bin/libpthread.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libpthread.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libpthread.la'; \
+    fi
+
     $(INSTALL) -d '$(PREFIX)/$(TARGET)/include'
     $(INSTALL) -m644 '$(1)/pthread.h'   '$(PREFIX)/$(TARGET)/include/'
     $(INSTALL) -m644 '$(1)/sched.h'     '$(PREFIX)/$(TARGET)/include/'
