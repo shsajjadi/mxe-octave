@@ -39,5 +39,6 @@ define $(PKG)_BUILD
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libcurl.dll.a' '$(PREFIX)/$(TARGET)/lib/libcurl.dll.a'; \
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libcurl.dll' '$(PREFIX)/$(TARGET)/bin/libcurl.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libcurl.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libcurl.la'; \
     fi
 endef
