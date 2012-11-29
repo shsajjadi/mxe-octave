@@ -27,7 +27,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        $(ENABLE_SHARED_OR_STATIC) \
+        --enable-static --disable-shared \
         --prefix='$(PREFIX)/$(TARGET)' \
         --disable-nls \
         --disable-guile \
@@ -40,8 +40,30 @@ define $(PKG)_BUILD
         ac_cv_prog_AR='$(TARGET)-ar'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
-    '$(TARGET)-gcc' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-gnutls.exe' \
-        `'$(TARGET)-pkg-config' gnutls --cflags --libs`
+    if [ $(BUILD_SHARED) = yes ]; then \
+      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
+ \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libgnutls.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libgnutls.dll.a' '$(PREFIX)/$(TARGET)/lib/libgnutls.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libgnutls.dll' '$(PREFIX)/$(TARGET)/bin/libgnutls.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libgnutls.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libgnutls.la'; \
+ \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-g++' '$(PREFIX)/$(TARGET)/lib/libgnutlsxx.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libgnutlsxx.dll.a' '$(PREFIX)/$(TARGET)/lib/libgnutlsxx.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libgnutlsxx.dll' '$(PREFIX)/$(TARGET)/bin/libgnutlsxx.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libgnutlsxx.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libgnutlsxx.la'; \
+ \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-g++' '$(PREFIX)/$(TARGET)/lib/libgnutls-openssl.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libgnutls-openssl.dll.a' '$(PREFIX)/$(TARGET)/lib/libgnutls-openssl.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libgnutls-openssl.dll' '$(PREFIX)/$(TARGET)/bin/libgnutls-openssl.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libgnutls-openssl.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libgnutls-openssl.la'; \
+    fi
+
+##    '$(TARGET)-gcc' \
+##        -W -Wall -Werror -ansi -pedantic \
+##        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-gnutls.exe' \
+##        `'$(TARGET)-pkg-config' gnutls --cflags --libs`
 endef
