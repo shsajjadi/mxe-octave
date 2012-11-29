@@ -22,4 +22,6 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
+
+    rm -f $(PREFIX)/$(TARGET)/lib/libfreetype.la
 endef
