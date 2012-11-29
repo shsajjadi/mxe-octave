@@ -38,7 +38,7 @@ define $(PKG)_BUILD
     if [ "$(BUILD_SHARED)" = yes ]; then \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/lib/libncurses.a'; \
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin/'; \
-      $(INSTALL) -m644 '$(1)/lib/libncurses.dll.a' '$(PREFIX)/$(TARGET)/lib/libncurses.dll.a'; \
-      $(INSTALL) -m644 '$(1)/lib/libncurses.dll' '$(PREFIX)/$(TARGET)/bin/libncurses.dll'; \
+      $(INSTALL) -m755 '$(1)/lib/libncurses.dll.a' '$(PREFIX)/$(TARGET)/lib/libncurses.dll.a'; \
+      $(INSTALL) -m755 '$(1)/lib/libncurses.dll' '$(PREFIX)/$(TARGET)/bin/libncurses.dll'; \
     fi
 endef

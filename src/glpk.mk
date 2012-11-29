@@ -27,8 +27,8 @@ define $(PKG)_BUILD
     if [ $(BUILD_SHARED) = yes ]; then \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libglpk.a'; \
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libglpk.dll.a' '$(PREFIX)/$(TARGET)/lib/libglpk.dll.a'; \
-      $(INSTALL) -m644 '$(PREFIX)/$(TARGET)/lib/libglpk.dll' '$(PREFIX)/$(TARGET)/bin/libglpk.dll'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libglpk.dll.a' '$(PREFIX)/$(TARGET)/lib/libglpk.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libglpk.dll' '$(PREFIX)/$(TARGET)/bin/libglpk.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libglpk.dll'; \
     fi
 endef

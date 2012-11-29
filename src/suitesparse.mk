@@ -46,8 +46,8 @@ define $(PKG)_BUILD
         esac; \
         $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-g++' $$f $$deplibs; \
         $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-        $(INSTALL) -m644 $$dir/$$lib.dll.a '$(PREFIX)/$(TARGET)/lib/'; \
-        $(INSTALL) -m644 $$dir/$$lib.dll '$(PREFIX)/$(TARGET)/bin/'; \
+        $(INSTALL) -m755 $$dir/$$lib.dll.a '$(PREFIX)/$(TARGET)/lib/'; \
+        $(INSTALL) -m755 $$dir/$$lib.dll '$(PREFIX)/$(TARGET)/bin/'; \
       fi; \
       $(INSTALL) -m644 $$f '$(PREFIX)/$(TARGET)/lib/'; \
     done

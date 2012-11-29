@@ -37,9 +37,9 @@ define $(PKG)_BUILD
     $(INSTALL) -m644 '$(1)/panel.a'    '$(PREFIX)/$(TARGET)/lib/libpanel.a'
     if [ "$(BUILD_SHARED)" = yes ]; then \
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin/'; \
-      $(INSTALL) -m644 '$(1)/libcurses.dll.a' '$(PREFIX)/$(TARGET)/lib/libcurses.dll.a'; \
-      $(INSTALL) -m644 '$(1)/panel.dll.a'    '$(PREFIX)/$(TARGET)/lib/libpanel.dll.a'; \
-      $(INSTALL) -m644 '$(1)/libcurses.dll' '$(PREFIX)/$(TARGET)/bin/libcurses.dll'; \
-      $(INSTALL) -m644 '$(1)/panel.dll'    '$(PREFIX)/$(TARGET)/bin/libpanel.dll'; \
+      $(INSTALL) -m755 '$(1)/libcurses.dll.a' '$(PREFIX)/$(TARGET)/lib/libcurses.dll.a'; \
+      $(INSTALL) -m755 '$(1)/panel.dll.a'    '$(PREFIX)/$(TARGET)/lib/libpanel.dll.a'; \
+      $(INSTALL) -m755 '$(1)/libcurses.dll' '$(PREFIX)/$(TARGET)/bin/libcurses.dll'; \
+      $(INSTALL) -m755 '$(1)/panel.dll'    '$(PREFIX)/$(TARGET)/bin/libpanel.dll'; \
     fi
 endef

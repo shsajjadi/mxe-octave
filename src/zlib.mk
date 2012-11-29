@@ -26,7 +26,7 @@ define $(PKG)_BUILD
     if [ "$(BUILD_SHARED)" = yes ]; then \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/libz.a'; \
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin/'; \
-      $(INSTALL) -m644 '$(1)/libz.dll.a' '$(PREFIX)/$(TARGET)/lib/libz.dll.a'; \
-      $(INSTALL) -m644 '$(1)/libz.dll' '$(PREFIX)/$(TARGET)/bin/libz.dll'; \
+      $(INSTALL) -m755 '$(1)/libz.dll.a' '$(PREFIX)/$(TARGET)/lib/libz.dll.a'; \
+      $(INSTALL) -m755 '$(1)/libz.dll' '$(PREFIX)/$(TARGET)/bin/libz.dll'; \
     fi
 endef
