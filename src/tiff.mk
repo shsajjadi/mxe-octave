@@ -24,4 +24,7 @@ define $(PKG)_BUILD
         --prefix='$(PREFIX)/$(TARGET)' \
         --without-x
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+
+    rm -f $(PREFIX)/$(TARGET)/lib/libtiff.la
+    rm -f $(PREFIX)/$(TARGET)/lib/libtiffxx.la
 endef
