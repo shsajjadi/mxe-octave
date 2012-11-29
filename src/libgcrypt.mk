@@ -37,5 +37,6 @@ define $(PKG)_BUILD
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libgcrypt.dll.a' '$(PREFIX)/$(TARGET)/lib/libgcrypt.dll.a'; \
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libgcrypt.dll' '$(PREFIX)/$(TARGET)/bin/libgcrypt.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libgcrypt.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libgcrypt.la'; \
     fi
 endef
