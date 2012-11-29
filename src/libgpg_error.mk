@@ -31,5 +31,6 @@ define $(PKG)_BUILD
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll.a' '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll.a'; \
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll' '$(PREFIX)/$(TARGET)/bin/libgpg-error.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libgpg-error.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libgpg-error.la'; \
     fi
 endef
