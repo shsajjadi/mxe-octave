@@ -15,6 +15,23 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+$(PKG)_STATICLIBS_1 := \
+  SuiteSparse_config/libsuitesparseconfig.a \
+  SuiteSparse_config/xerbla/libcerbla.a \
+  AMD/Lib/libamd.a \
+  CAMD/Lib/libcamd.a \
+  COLAMD/Lib/libcolamd.a \
+  CCOLAMD/Lib/libccolamd.a \
+  CSparse/Lib/libcsparse.a \
+  CXSparse/Lib/libcxsparse.a \
+  SPQR/Lib/libspqr.a \
+  BTF/Lib/libbtf.a \
+  LDL/Lib/libldl.a \
+  KLU/Lib/libklu.a \
+  RBio/Lib/librbio.a \
+  CHOLMOD/Lib/libcholmod.a \
+  UMFPACK/Lib/libumfpack.a
+
 define $(PKG)_BUILD
     # exclude demos
     find '$(1)' -name 'Makefile' \
@@ -23,6 +40,7 @@ define $(PKG)_BUILD
     # build all
     $(MAKE) -C '$(1)' -j '$(JOBS)' \
         CC='$(TARGET)-gcc' \
+        CXX='$(TARGET)-g++' \
         CPLUSPLUS='$(TARGET)-g++' \
         F77='$(TARGET)-gfortran' \
         AR='$(TARGET)-ar' \
@@ -32,24 +50,39 @@ define $(PKG)_BUILD
 
     # install library files
     $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib'
-    for f in `find '$(1)' -name '*.a'`; do \
+
+    for f in $(addprefix $(1)/, $($(PKG)_STATICLIBS_1)); do \
       if [ $(BUILD_SHARED) = yes ]; then \
         lib=`basename $$f .a`; \
         dir=`dirname $$f`; \
+        echo "building and installing shared libraries for $$lib"; \
+        deplibs=""; \
         case $$lib in \
+          libcholmod) \
+            deplibs="-lamd -lcolamd -lsuitesparseconfig -llapack -lblas"; \
+          ;; \
+          libklu) \
+            deplibs="-lbtf -lamd -lcolamd -lsuitesparseconfig"; \
+          ;; \
           librbio) \
             deplibs="-lsuitesparseconfig"; \
+          ;; \
+	  libspqr) \
+            deplibs="-lcholmod -lsuitesparseconfig -llapack -lblas"; \
           ;; \
           libumfpack) \
             deplibs="-lcholmod -lamd -lsuitesparseconfig -lblas"; \
           ;; \
         esac; \
+        if [ -n "$deplibs" ]; then \
+          echo "  deplibs = $$deplibs"; \
+        fi; \
         $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-g++' $$f $$deplibs; \
         $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-        $(INSTALL) -m755 $$dir/$$lib.dll.a '$(PREFIX)/$(TARGET)/lib/'; \
-        $(INSTALL) -m755 $$dir/$$lib.dll '$(PREFIX)/$(TARGET)/bin/'; \
+        $(INSTALL) -m755 $$dir/$$lib.dll.a $(PREFIX)/$(TARGET)/lib/$$lib.dll.a; \
+        $(INSTALL) -m755 $$dir/$$lib.dll $(PREFIX)/$(TARGET)/bin/$$lib.dll; \
       fi; \
-      $(INSTALL) -m644 $$f '$(PREFIX)/$(TARGET)/lib/'; \
+      $(INSTALL) -m644 $$f $(PREFIX)/$(TARGET)/lib/$$lib.a; \
     done
 
     # install include files
