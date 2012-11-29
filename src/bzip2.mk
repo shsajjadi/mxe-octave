@@ -28,4 +28,14 @@ define $(PKG)_BUILD
     $(INSTALL) -m644 '$(1)/libbz2.a' '$(PREFIX)/$(TARGET)/lib/'
     $(INSTALL) -d '$(PREFIX)/$(TARGET)/include'
     $(INSTALL) -m644 '$(1)/bzlib.h' '$(PREFIX)/$(TARGET)/include/'
+
+    if [ $(BUILD_SHARED) = yes ]; then \
+      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libbz2.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libbz2.dll.a' '$(PREFIX)/$(TARGET)/lib/libbz2.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libbz2.dll' '$(PREFIX)/$(TARGET)/bin/libbz2.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libbz2.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libbz2.la'; \
+    fi
+
 endef
