@@ -3,7 +3,7 @@
 
 PKG             := octave
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 8df8e9641dc5dedd170035b0e2648c37f9c15e8e
+$(PKG)_CHECKSUM := 8ef14c395cdc734eb6db06c31a77ba2c1e6cf57f
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://jweaton.org/$($(PKG)_FILE)
@@ -15,6 +15,14 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    if [ $(BUILD_SHARED) = yes ]; then \
+      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libuuid.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libuuid.dll.a' '$(PREFIX)/$(TARGET)/lib/libuuid.dll.a'; \
+      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libuuid.dll' '$(PREFIX)/$(TARGET)/bin/libuuid.dll'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libuuid.dll'; \
+    fi
+
     mkdir '$(1)/.build'
     cd '$(1)/.build' && '$(1)/configure' \
         --host='$(TARGET)' \
