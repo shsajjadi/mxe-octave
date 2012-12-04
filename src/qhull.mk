@@ -26,7 +26,7 @@ define $(PKG)_BUILD
 
     if [ $(BUILD_SHARED) = yes ]; then \
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-g++' '$(PREFIX)/$(TARGET)/lib/libqhull.a'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libqhull.a'; \
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libqhull.dll.a' '$(PREFIX)/$(TARGET)/lib/libqhull.dll.a'; \
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libqhull.dll' '$(PREFIX)/$(TARGET)/bin/libqhull.dll'; \
       rm -f '$(PREFIX)/$(TARGET)/lib/libqhull.dll'; \
