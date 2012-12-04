@@ -3,7 +3,7 @@
 
 PKG             := octave
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 1ea936554aaabaabb747a4fcf98ecfbbfb265656
+$(PKG)_CHECKSUM := 618eda703553b79de4c83b2217ae6c26cef66b01
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://jweaton.org/$($(PKG)_FILE)
