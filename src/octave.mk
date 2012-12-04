@@ -3,11 +3,11 @@
 
 PKG             := octave
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := ff5d66986789412475d64d8ba2c30714ddfc13c4
+$(PKG)_CHECKSUM := 8df8e9641dc5dedd170035b0e2648c37f9c15e8e
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := ftp://gnu.org/gnu/octave/$($(PKG)_FILE)
-$(PKG)_DEPS     := arpack blas curl fftw fltk fontconfig freetype gcc glpk gnuplot graphicsmagick lapack pcre qhull qrupdate readline suitesparse zlib
+$(PKG)_URL      := http://jweaton.org/$($(PKG)_FILE)
+$(PKG)_DEPS     := arpack blas curl fftw fltk gcc glpk gnuplot graphicsmagick lapack pcre qhull qrupdate readline suitesparse zlib
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package octave.' >&2;
@@ -15,13 +15,13 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && autoreconf
     mkdir '$(1)/.build'
     cd '$(1)/.build' && '$(1)/configure' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         --prefix='$(PREFIX)/$(TARGET)' \
         --disable-docs \
+        --disable-gui \
         FLTK_CONFIG="$(PREFIX)/bin/$(TARGET)-fltk-config" \
         gl_cv_func_gettimeofday_clobber=no
 
