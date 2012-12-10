@@ -19,7 +19,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --enable-static --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)' \
         --with-gnutls \
         --with-libidn \
@@ -33,12 +33,4 @@ define $(PKG)_BUILD
 ##        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-curl.exe' \
 ##        `'$(TARGET)-pkg-config' libcurl --cflags --libs`
 
-    if [ "$(BUILD_SHARED)" = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libcurl.a' -lssh2; \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin/'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libcurl.dll.a' '$(PREFIX)/$(TARGET)/lib/libcurl.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libcurl.dll' '$(PREFIX)/$(TARGET)/bin/libcurl.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libcurl.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libcurl.la'; \
-    fi
 endef
