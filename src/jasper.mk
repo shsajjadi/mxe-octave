@@ -17,7 +17,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && ./configure \
+    cd '$(1)' && autoreconf && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)' \
