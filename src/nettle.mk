@@ -20,24 +20,8 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --enable-static --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' getopt.o getopt1.o
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
-
-    if [ $(BUILD_SHARED) = yes ]; then \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
- \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libnettle.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libnettle.dll.a' '$(PREFIX)/$(TARGET)/lib/libnettle.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libnettle.dll' '$(PREFIX)/$(TARGET)/bin/libnettle.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libnettle.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libnettle.la'; \
- \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libhogweed.a' -lnettle -lgmp; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libhogweed.dll.a' '$(PREFIX)/$(TARGET)/lib/libhogweed.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libhogweed.dll' '$(PREFIX)/$(TARGET)/bin/libhogweed.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libhogweed.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libhogweed.la'; \
-    fi
 endef
