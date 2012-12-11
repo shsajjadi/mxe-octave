@@ -40,8 +40,8 @@ define $(PKG)_BUILD
         ac_cv_prog_AR='$(TARGET)-ar'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
-##    '$(TARGET)-gcc' \
-##        -W -Wall -Werror -ansi -pedantic \
-##        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-gnutls.exe' \
-##        `'$(TARGET)-pkg-config' gnutls --cflags --libs`
+    '$(TARGET)-gcc' \
+        -W -Wall -Werror -ansi -pedantic \
+        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-gnutls.exe' \
+        `'$(TARGET)-pkg-config' gnutls --cflags --libs`
 endef
