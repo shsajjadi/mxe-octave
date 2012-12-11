@@ -20,24 +20,16 @@ define $(PKG)_BUILD
     cd '$(1)' && ./buildconf
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --enable-static --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)' \
         --without-openssl \
         --with-libgcrypt \
         PKG_CONFIG='$(TARGET)-pkg-config'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= html_DATA=
 
-    '$(TARGET)-gcc' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libssh2.exe' \
-        `'$(TARGET)-pkg-config' --cflags --libs libssh2`
+##    '$(TARGET)-gcc' \
+##        -W -Wall -Werror -ansi -pedantic \
+##        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libssh2.exe' \
+##        `'$(TARGET)-pkg-config' --cflags --libs libssh2`
 
-    if [ "$(BUILD_SHARED)" = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libssh2.a' -lgcrypt; \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin/'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libssh2.dll.a' '$(PREFIX)/$(TARGET)/lib/libssh2.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libssh2.dll' '$(PREFIX)/$(TARGET)/bin/libssh2.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libssh2.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libssh2.la'; \
-    fi
 endef
