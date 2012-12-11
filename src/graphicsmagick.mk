@@ -17,11 +17,11 @@ endef
 
 define $(PKG)_BUILD
     # This can be removed once the patch "graphicsmagick-1-fix-xml2-config.patch" is accepted by upstream
-    cd '$(1)' && autoconf
+    cd '$(1)' && autoreconf
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --enable-static --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)' \
         --without-modules \
         --with-threads \
@@ -48,30 +48,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS=
 
-    if [ $(BUILD_SHARED) = yes ]; then \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
- \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.a' -ljpeg -ljasper -llzma -ltiff -llcms -lpng -lfreetype -lxml2 -lm; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.dll.a' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.dll' '$(PREFIX)/$(TARGET)/bin/libGraphicsMagick.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick.la'; \
- \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-g++' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.a' -lGraphicsMagick -ljpeg -ljasper -llzma -ltiff -llcms -lpng -lfreetype -lxml2 -lm; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.dll.a' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.dll' '$(PREFIX)/$(TARGET)/bin/libGraphicsMagick++.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libGraphicsMagick++.la'; \
- \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.a' -lGraphicsMagick -ljpeg -ljasper -llzma -ltiff -llcms -lpng -lfreetype -lxml2 -lm; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.dll.a' '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.dll' '$(PREFIX)/$(TARGET)/bin/libGraphicsMagickWand.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libGraphicsMagickWand.la'; \
-    fi
-
-##    '$(TARGET)-g++' \
-##        -W -Wall -Werror -pedantic -std=gnu++0x \
-##        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-graphicsmagick.exe' \
-##        `'$(TARGET)-pkg-config' GraphicsMagick++ --cflags --libs`
+    '$(TARGET)-g++' \
+        -W -Wall -Werror -pedantic -std=gnu++0x \
+        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-graphicsmagick.exe' \
+        `'$(TARGET)-pkg-config' GraphicsMagick++ --cflags --libs`
 endef
