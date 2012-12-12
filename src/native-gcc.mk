@@ -55,7 +55,7 @@ define $(PKG)_BUILD
         --with-native-system-header-dir=$(PREFIX)/$(TARGET)/include \
         $(shell [ `uname -s` == Darwin ] && echo "LDFLAGS='-Wl,-no_pie'")
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
-    $(MAKE) -C '$(1).build' -j 1 DESTDIR='$(PREFIX)/../native' install
+    $(MAKE) -C '$(1).build' -j 1 DESTDIR='$(PREFIX)/../native-tools' install
 
     # # create pkg-config script
     # (echo '#!/bin/sh'; \

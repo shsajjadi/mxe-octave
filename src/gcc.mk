@@ -54,6 +54,7 @@ define $(PKG)_BUILD
         $(shell [ `uname -s` == Darwin ] && echo "LDFLAGS='-Wl,-no_pie'")
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     $(MAKE) -C '$(1).build' -j 1 install
+    $(MAKE) -C '$(1).build' -j 1 DESTDIR=$(PREFIX)/../cross-tools install
 
     # create pkg-config script
     (echo '#!/bin/sh'; \
