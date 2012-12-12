@@ -38,5 +38,5 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-werror
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 DESTDIR='$(PREFIX)/../native' install
+    $(MAKE) -C '$(1)' -j 1 DESTDIR='$(PREFIX)/../native-tools' install
 endef
