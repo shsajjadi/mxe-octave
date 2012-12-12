@@ -28,7 +28,6 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         --prefix='$(PREFIX)/$(TARGET)' \
-        --disable-docs \
         --disable-gui \
         FLTK_CONFIG="$(PREFIX)/bin/$(TARGET)-fltk-config" \
         gl_cv_func_gettimeofday_clobber=no
