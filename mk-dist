@@ -1,0 +1,40 @@
+#! /bin/bash
+
+set -e
+
+TOPDIR=$(pwd)
+PATH=/scratch/jwe/src/mxe-octave/usr/bin:$PATH
+TARGET=i686-pc-mingw32
+BUILD=x86_64-unwknown-linux-gnu
+STRIP=$TARGET-strip
+
+echo "deleting previous dist directory..."
+rm -rf dist
+mkdir -p dist/octave
+
+echo "building octave and dependencies..."
+make octave native-gcc native-binutils JOBS=9
+
+echo "copying files..."
+cd $TOPDIR/cross-tools/$PREFIX/$TARGET
+find . -type f -o -type l | sed "s,./,," > $TOPDIR/excluded-gcc-files
+cd $TOPDIR/usr/$TARGET
+tar -c -h -X $TOPDIR/excluded-gcc-files -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
+
+cat > $TOPDIR/excluded-native-files << EOF
+./$TARGET
+./bin/$TARGET-*.exe
+EOF
+
+cd $TOPDIR/native-tools/usr
+tar -c -h -X $TOPDIR/excluded-native-files -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
+
+cd $TOPDIR/dist/octave
+for f in $(find . -name '*.dll'); do
+  echo stripping $f...
+  $STRIP $f
+done
+
+echo "creating tar file..."
+cd $TOPDIR/dist
+tar -c -j -f octave.tar.bz2 octave
