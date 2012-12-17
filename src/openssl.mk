@@ -21,11 +21,12 @@ define $(PKG)_BUILD
     cd '$(1)' && CC='$(TARGET)-gcc' ./Configure \
         mingw \
         zlib \
-        no-shared \
+        shared \
         no-capieng \
         --prefix='$(PREFIX)/$(TARGET)'
     $(MAKE) -C '$(1)' install -j 1 \
         CC='$(TARGET)-gcc' \
         RANLIB='$(TARGET)-ranlib' \
+        CROSS_COMPILE='$(TARGET)-' \
         AR='$(TARGET)-ar rcu'
 endef
