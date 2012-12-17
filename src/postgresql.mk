@@ -26,7 +26,7 @@ define $(PKG)_BUILD
         --prefix='$(PREFIX)/$(TARGET)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        $(ENABLE_SHARED_OR_STATIC) \
+        --enable-shared \
         --disable-rpath \
         --without-tcl \
         --without-perl \
@@ -44,9 +44,9 @@ define $(PKG)_BUILD
         --with-zlib \
         --with-system-tzdata=/dev/null \
         LIBS="-lsecur32 `'$(TARGET)-pkg-config' openssl --libs`"
-    $(MAKE) -C '$(1)'/src/interfaces/libpq -j '$(JOBS)' install haslibarule= shlib=
-    $(MAKE) -C '$(1)'/src/port             -j '$(JOBS)'         haslibarule= shlib=
-    $(MAKE) -C '$(1)'/src/bin/psql         -j '$(JOBS)' install haslibarule= shlib=
+    $(MAKE) -C '$(1)'/src/interfaces/libpq -j '$(JOBS)' install haslibarule=
+    $(MAKE) -C '$(1)'/src/port             -j '$(JOBS)'         haslibarule=
+    $(MAKE) -C '$(1)'/src/bin/psql         -j '$(JOBS)' install haslibarule=
     $(INSTALL) -m644 '$(1)/src/include/pg_config.h'    '$(PREFIX)/$(TARGET)/include/'
     $(INSTALL) -m644 '$(1)/src/include/postgres_ext.h' '$(PREFIX)/$(TARGET)/include/'
     # Build a native pg_config.
