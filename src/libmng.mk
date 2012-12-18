@@ -16,14 +16,16 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(MAKE) -C '$(1)' -j '$(JOBS)' \
-        -f '$(1)'/makefiles/makefile.unix \
-        CC=$(TARGET)-gcc CFLAGS='-DMNG_BUILD_SO -DMNG_FULL_CMS'
-    $(TARGET)-ranlib '$(1)/libmng.a'
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib'
-    $(INSTALL) -m644 '$(1)/libmng.a' '$(PREFIX)/$(TARGET)/lib/'
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/include'
-    $(INSTALL) -m644 '$(1)/libmng.h' '$(1)/libmng_conf.h' '$(1)/libmng_types.h' '$(PREFIX)/$(TARGET)/include/'
+    cp '$(1)'/makefiles/Makefile.am '$(1)'
+    cp '$(1)'/makefiles/configure.in '$(1)/configure.in'
+    cd '$(1)' && autoreconf --install
+    mkdir '$(1)/.build'
+    cd '$(1)/.build' && '$(1)/configure' \
+        --host='$(TARGET)' \
+        --build="`config.guess`" \
+        --prefix='$(PREFIX)/$(TARGET)' \
+        --enable-shared
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
     $(SED) -e 's^@prefix@^$(PREFIX)/$(TARGET)^;' \
            -e 's^@VERSION@^$(libmng_VERSION)^;' \
            -e 's^@mng_libs_private@^-ljpeg^;' \
