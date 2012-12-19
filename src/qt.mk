@@ -32,8 +32,8 @@ define $(PKG)_BUILD
         -force-pkg-config \
         -release \
         -exceptions \
-        -static \
-        -prefix '$(PREFIX)/$(TARGET)/qt' \
+        -shared \
+        -prefix '$(PREFIX)/$(TARGET)' \
         -prefix-install \
         -script \
         -no-iconv \
@@ -62,28 +62,28 @@ define $(PKG)_BUILD
         -system-sqlite \
         -openssl-linked \
         -dbus-linked \
+        -no-sse2 -no-ssse3 \
         -v
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    rm -rf '$(PREFIX)/$(TARGET)/qt'
     $(MAKE) -C '$(1)' -j 1 install
     ln -fs '$(PREFIX)/$(TARGET)/qt/bin/moc' '$(PREFIX)/bin/$(TARGET)-moc'
     ln -fs '$(PREFIX)/$(TARGET)/qt/bin/rcc' '$(PREFIX)/bin/$(TARGET)-roc'
     ln -fs '$(PREFIX)/$(TARGET)/qt/bin/uic' '$(PREFIX)/bin/$(TARGET)-uic'
     ln -fs '$(PREFIX)/$(TARGET)/qt/bin/qmake' '$(PREFIX)/bin/$(TARGET)-qmake'
 
-    cd '$(1)/tools/assistant' && '$(1)/bin/qmake' assistant.pro
-    $(MAKE) -C '$(1)/tools/assistant' -j '$(JOBS)' install
+    # cd '$(1)/tools/assistant' && '$(1)/bin/qmake' assistant.pro
+    # $(MAKE) -C '$(1)/tools/assistant' -j '$(JOBS)' install
 
-    cd '$(1)/tools/designer' && '$(1)/bin/qmake' designer.pro
-    $(MAKE) -C '$(1)/tools/designer' -j '$(JOBS)' install
+    # cd '$(1)/tools/designer' && '$(1)/bin/qmake' designer.pro
+    # $(MAKE) -C '$(1)/tools/designer' -j '$(JOBS)' install
 
-    # at least some of the qdbus tools are useful on target
-    cd '$(1)/tools/qdbus' && '$(1)/bin/qmake' qdbus.pro
-    $(MAKE) -C '$(1)/tools/qdbus' -j '$(JOBS)' install
+    # # at least some of the qdbus tools are useful on target
+    # cd '$(1)/tools/qdbus' && '$(1)/bin/qmake' qdbus.pro
+    # $(MAKE) -C '$(1)/tools/qdbus' -j '$(JOBS)' install
 
-    mkdir            '$(1)/test-qt'
-    cd               '$(1)/test-qt' && '$(TARGET)-qmake' '$(PWD)/$(2).pro'
-    $(MAKE)       -C '$(1)/test-qt' -j '$(JOBS)'
-    $(INSTALL) -m755 '$(1)/test-qt/release/test-qt.exe' '$(PREFIX)/$(TARGET)/bin/'
+    # mkdir            '$(1)/test-qt'
+    # cd               '$(1)/test-qt' && '$(TARGET)-qmake' '$(PWD)/$(2).pro'
+    # $(MAKE)       -C '$(1)/test-qt' -j '$(JOBS)'
+    # $(INSTALL) -m755 '$(1)/test-qt/release/test-qt.exe' '$(PREFIX)/$(TARGET)/bin/'
 endef
