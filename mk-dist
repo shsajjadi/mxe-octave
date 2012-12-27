@@ -29,9 +29,13 @@ EOF
 cd $TOPDIR/native-tools/usr
 tar -c -h -X $TOPDIR/excluded-native-files -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
 
+echo "making all files writable by user..."
+chmod -R u+w $TOPDIR/dist/octave
+
+echo "stripping files..."
 cd $TOPDIR/dist/octave
 for f in $(find . -name '*.dll'); do
-  echo stripping $f...
+  echo "  $f"
   $STRIP $f
 done
 
