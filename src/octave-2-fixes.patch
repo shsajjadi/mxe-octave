@@ -1,0 +1,71 @@
+--- a/libinterp/octave.cc
++++ b/libinterp/octave.cc
+@@ -656,6 +656,8 @@
+ {
+   octave_process_command_line (argc, argv);
+ 
++  sysdep_init ();
++
+   install_defaults ();
+ 
+   octave_initialize_interpreter (argc, argv, embedded);
+@@ -861,8 +863,6 @@
+ 
+   init_signals ();
+ 
+-  sysdep_init ();
+-
+   octave_ieee_init ();
+ 
+   // The idea here is to force xerbla to be referenced so that we will
+diff --git a/src/Makefile.am b/src/Makefile.am
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -27,7 +27,7 @@
+   -I$(top_srcdir)/liboctave/numeric \
+   -I$(top_srcdir)/liboctave/util \
+   -I$(top_srcdir)/libinterp \
+-  -I$(top_builddir)/libinterp/interpfcn \
++  -I$(top_builddir)/libinterp/interpfcn -I$(top_srcdir)/libinterp/interpfcn \
+   -I$(top_builddir)/libgnu -I$(top_srcdir)/libgnu
+ 
+ AM_CFLAGS += $(WARN_CFLAGS)
+diff --git a/src/main-cli.cc b/src/main-cli.cc
+--- a/src/main-cli.cc
++++ b/src/main-cli.cc
+@@ -26,12 +26,15 @@
+ 
+ #include "defaults.h"
+ #include "octave.h"
++#include "sysdep.h"
+ 
+ int
+ main (int argc, char **argv)
+ {
+   octave_process_command_line (argc, argv);
+ 
++  sysdep_init ();
++
+   install_defaults ();
+ 
+   octave_initialize_interpreter (argc, argv, 0);
+diff --git a/src/main.cc b/src/main.cc
+--- a/src/main.cc
++++ b/src/main.cc
+@@ -27,6 +27,7 @@
+ #include "defaults.h"
+ #include "octave.h"
+ #include "octave-gui.h"
++#include "sysdep.h"
+ 
+ int
+ main (int argc, char **argv)
+@@ -35,6 +36,8 @@
+ 
+   octave_process_command_line (argc, argv);
+ 
++  sysdep_init ();
++
+   install_defaults ();
+ 
+   if (octave_starting_gui ())
