@@ -32,6 +32,6 @@ define $(PKG)_BUILD
         FLTK_CONFIG="$(PREFIX)/bin/$(TARGET)-fltk-config" \
         gl_cv_func_gettimeofday_clobber=no
 
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(PREFIX)/../octave install
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)'
+    $(MAKE) -C '$(1)/.build' -j 1 DESTDIR=$(PREFIX)/../octave install
 endef
