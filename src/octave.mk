@@ -3,10 +3,10 @@
 
 PKG             := octave
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 8ef14c395cdc734eb6db06c31a77ba2c1e6cf57f
+$(PKG)_CHECKSUM := 658a079ac498309d5aa5a2556f53a7856fcde938
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://jweaton.org/$($(PKG)_FILE)
+$(PKG)_URL      := ftp://alpha.gnu.org/gnu/octave/$($(PKG)_FILE)
 $(PKG)_DEPS     := arpack blas curl fftw fltk gcc glpk gnuplot graphicsmagick lapack pcre qhull qrupdate readline suitesparse zlib
 
 define $(PKG)_UPDATE
