@@ -18,11 +18,13 @@
    octave_ieee_init ();
  
    // The idea here is to force xerbla to be referenced so that we will
-diff --git a/src/Makefile.am b/src/Makefile.am
---- a/src/Makefile.am
-+++ b/src/Makefile.am
-@@ -27,7 +27,7 @@
+--- a/src/Makefile.am	2012-10-01 12:52:07.000000000 -0400
++++ b/src/Makefile.am	2013-01-04 14:38:19.879050447 -0500
+@@ -25,9 +25,10 @@
+   -I$(top_srcdir)/liboctave/array \
+   -I$(top_srcdir)/liboctave/cruft/misc \
    -I$(top_srcdir)/liboctave/numeric \
++  -I$(top_srcdir)/liboctave/system \
    -I$(top_srcdir)/liboctave/util \
    -I$(top_srcdir)/libinterp \
 -  -I$(top_builddir)/libinterp/interpfcn \
