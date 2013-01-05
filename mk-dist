@@ -37,8 +37,6 @@ mkdir -p dist/octave
 echo "building octave and dependencies..."
 make octave native-gcc native-binutils JOBS=$jobs
 
-exit 1
-
 echo "copying files..."
 cd $TOPDIR/cross-tools/$TOPDIR/$PREFIX/$TARGET
 find . -type f -o -type l | sed "s,./,," > $TOPDIR/excluded-gcc-files
