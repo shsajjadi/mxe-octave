@@ -2,8 +2,30 @@
 
 set -e
 
+jobs=9
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --jobs)
+      shift
+      if [ $# -gt 0 ]; then
+        jobs=$1
+        shift
+      else
+        echo "mk-dist: expecting argument for --jobs option" 1>&2
+        exit 1
+      fi
+    ;;
+    *)
+      echo "mk-dist: unrecognized option: $1" 1>&2
+      exit 1
+    ;;
+  esac
+done
+
 TOPDIR=$(pwd)
-PATH=/scratch/jwe/src/mxe-octave/usr/bin:$PATH
+PATH=$TOPDIR/usr/bin:$PATH
+PREFIX=/usr
 TARGET=i686-pc-mingw32
 BUILD=x86_64-unwknown-linux-gnu
 STRIP=$TARGET-strip
@@ -13,10 +35,12 @@ rm -rf dist
 mkdir -p dist/octave
 
 echo "building octave and dependencies..."
-make octave native-gcc native-binutils JOBS=9
+make octave native-gcc native-binutils JOBS=$jobs
+
+exit 1
 
 echo "copying files..."
-cd $TOPDIR/cross-tools/$PREFIX/$TARGET
+cd $TOPDIR/cross-tools/$TOPDIR/$PREFIX/$TARGET
 find . -type f -o -type l | sed "s,./,," > $TOPDIR/excluded-gcc-files
 cd $TOPDIR/usr/$TARGET
 tar -c -h -X $TOPDIR/excluded-gcc-files -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
