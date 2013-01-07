@@ -15,21 +15,12 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    # build GCC and support libraries
+    cd '$(1)' && aclocal && libtoolize && autoreconf
     mkdir '$(1)/.build'
     cd '$(1)/.build' && '$(1)/configure' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)'
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
-
-    if [ $(BUILD_SHARED) = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libglpk.a'; \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libglpk.dll.a' '$(PREFIX)/$(TARGET)/lib/libglpk.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libglpk.dll' '$(PREFIX)/$(TARGET)/bin/libglpk.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libglpk.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libglpk.la'; \
-    fi
 endef
