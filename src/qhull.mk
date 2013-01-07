@@ -15,21 +15,12 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    # build GCC and support libraries
+    cd '$(1)' && aclocal && libtoolize && autoreconf
     mkdir '$(1)/.build'
     cd '$(1)/.build' && '$(1)/configure' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --enable-static --disable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)'
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
-
-    if [ $(BUILD_SHARED) = yes ]; then \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libqhull.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libqhull.dll.a' '$(PREFIX)/$(TARGET)/lib/libqhull.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libqhull.dll' '$(PREFIX)/$(TARGET)/bin/libqhull.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libqhull.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libqhull.la'; \
-    fi
 endef
