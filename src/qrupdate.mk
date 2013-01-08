@@ -15,12 +15,12 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(MAKE) FC=$(TARGET)-gfortran AR=$(TARGET)-ar PREFIX=$(PREFIX)/$(TARGET) -C '$(1)' -j '$(JOBS)' lib install-staticlib
+    chmod a+rx '$(1)/configure'
+    mkdir '$(1)/.build'
+    cd '$(1)/.build' && '$(1)/configure' \
+        --host='$(TARGET)' \
+        --build="`config.guess`" \
+        --prefix='$(PREFIX)/$(TARGET)'
 
-    if [ $(BUILD_SHARED) = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gfortran' '$(1)/libqrupdate.a' -llapack -lblas; \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-      $(INSTALL) -m755 '$(1)/libqrupdate.dll.a' '$(PREFIX)/$(TARGET)/lib/libqrupdate.dll.a'; \
-      $(INSTALL) -m755 '$(1)/libqrupdate.dll' '$(PREFIX)/$(TARGET)/bin/libqrupdate.dll'; \
-    fi
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
 endef
