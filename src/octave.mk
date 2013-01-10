@@ -24,6 +24,7 @@ define $(PKG)_BUILD
     fi
 
     mkdir '$(1)/.build'
+    cd '$(1)' && autoreconf -W none
     cd '$(1)/.build' && '$(1)/configure' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
