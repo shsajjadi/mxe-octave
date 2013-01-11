@@ -56,11 +56,12 @@ chmod -R u+w $TOPDIR/dist/octave
 
 echo "stripping files..."
 cd $TOPDIR/dist/octave
-for f in $(find . -name '*.dll'); do
+for f in $(find . -name '*.dll' -o -name '*.exe'); do
   echo "  $f"
   $STRIP $f
 done
 
 echo "creating tar file..."
 cd $TOPDIR/dist
-tar -c -j -f octave.tar.bz2 octave
+#tar -c -j -f octave.tar.bz2 octave
+zip -q -9 -r octave.zip octave
