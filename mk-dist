@@ -35,21 +35,37 @@ rm -rf dist
 mkdir -p dist/octave
 
 echo "building octave and dependencies..."
-make octave native-gcc native-binutils JOBS=$jobs
+make octave msys-base native-gcc native-binutils JOBS=$jobs
 
-echo "copying files..."
-cd $TOPDIR/cross-tools/$TOPDIR/$PREFIX/$TARGET
-find . -type f -o -type l | sed "s,./,," > $TOPDIR/excluded-gcc-files
-cd $TOPDIR/usr/$TARGET
-tar -c -h -X $TOPDIR/excluded-gcc-files -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
+echo "generating lists of files to exclude..."
 
+echo "  native files..."
 cat > $TOPDIR/excluded-native-files << EOF
 ./$TARGET
 ./bin/$TARGET-*.exe
 EOF
 
+echo "  gcc cross compiler files..."
+cd $TOPDIR/cross-tools/$TOPDIR/$PREFIX/$TARGET
+find . -type f -o -type l | sed "s,./,," > $TOPDIR/excluded-gcc-files
+
+echo "copying files..."
+
+echo "  octave and dependencies..."
+cd $TOPDIR/usr/$TARGET
+tar -c -h -X $TOPDIR/excluded-gcc-files -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
+
+echo "  native tools..."
 cd $TOPDIR/native-tools/usr
 tar -c -h -X $TOPDIR/excluded-native-files -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
+
+echo "  libgcc_s_dw2-1.dll to bin directory"
+cd $TOPDIR/dist/octave
+cp lib/gcc/i686-pc-mingw32/libgcc_s_dw2-1.dll bin
+
+echo "  msys base files..."
+cd $TOPDIR/msys-base
+tar -c -h -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
 
 echo "making all files writable by user..."
 chmod -R u+w $TOPDIR/dist/octave
@@ -61,7 +77,10 @@ for f in $(find . -name '*.dll' -o -name '*.exe'); do
   $STRIP $f
 done
 
-echo "creating tar file..."
-cd $TOPDIR/dist
+#echo "creating tar file..."
+#cd $TOPDIR/dist
 #tar -c -j -f octave.tar.bz2 octave
+
+echo "creating zip file..."
+cd $TOPDIR/dist
 zip -q -9 -r octave.zip octave
