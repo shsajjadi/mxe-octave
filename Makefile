@@ -52,6 +52,11 @@ TOP_DIR    := $(patsubst %/,%,$(dir $(MAKEFILE)))
 PKGS       := $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html')
 PATH       := $(PREFIX)/bin:$(PATH)
 
+MSYS_BASE_URL := http://sourceforge.net/projects/mingw/files/MSYS/Base
+MSYS_BASE_VER := 1.0.13
+MSYS_BASE_DIR := $(PREFIX)/../msys-base
+MSYS_BASE_PACKAGES := $(addprefix msys-,bash coreutils diffutils file findutils gawk grep gzip less libiconv libintl libmagic make msys-core regex sed tar termcap)
+
 MAKE_SHARED_FROM_STATIC := $(TOP_DIR)/tools/make-shared-from-static
 
 CMAKE_TOOLCHAIN_FILE := $(PREFIX)/$(TARGET)/share/cmake/mxe-conf.cmake
@@ -112,6 +117,9 @@ endif
 
 .PHONY: all
 all: $(PKGS)
+
+.PHONY: msys-base
+msys-base:  $(MSYS_BASE_PACKAGES)
 
 .PHONY: check-requirements
 define CHECK_REQUIREMENT
