@@ -7,9 +7,9 @@ diff --git a/build-aux/common.mk b/build-aux/common.mk
  AWK = @AWK@
  export AWK
  
-@@ -154,6 +156,13 @@
+@@ -164,6 +166,15 @@
  
- NO_UNDEFINED_LDFLAG = @NO_UNDEFINED_LDFLAG@
+ FLIBS = @FLIBS@
  
 +MKOCTFILE_CC = @MKOCTFILE_CC@
 +MKOCTFILE_CXX = @MKOCTFILE_CXX@
@@ -18,10 +18,12 @@ diff --git a/build-aux/common.mk b/build-aux/common.mk
 +MKOCTFILE_F77 = @MKOCTFILE_F77@
 +MKOCTFILE_LD_CXX = @MKOCTFILE_LD_CXX@
 +
- # List of libraries and their special compilation flags
- 
++# List of libraries and their special compilation flags
++
  LIBOCTINTERP = @LIBOCTINTERP@
-@@ -563,7 +572,12 @@
+ LIBOCTAVE = @LIBOCTAVE@
+ LIBCRUFT = @LIBCRUFT@
+@@ -539,7 +550,12 @@
    -e "s|%OCTAVE_CONF_MAGICK_CPPFLAGS%|\"${MAGICK_CPPFLAGS}\"|" \
    -e "s|%OCTAVE_CONF_MAGICK_LDFLAGS%|\"${MAGICK_LDFLAGS}\"|" \
    -e "s|%OCTAVE_CONF_MAGICK_LIBS%|\"${MAGICK_LIBS}\"|" \
@@ -38,11 +40,10 @@ diff --git a/build-aux/common.mk b/build-aux/common.mk
 diff --git a/configure.ac b/configure.ac
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1811,6 +1811,34 @@
- AC_SUBST(LIBOCTINTERP)
- AC_SUBST(LIBOCTAVE)
+@@ -1792,6 +1792,35 @@
+ OCTAVE_CMATH_FUNC(isinf)
+ OCTAVE_CMATH_FUNC(isfinite)
  
-+
 +if test "$cross_compiling" = yes && test -n "$ac_tool_prefix"; then
 +  CROSS_TOOL_PREFIX="$ac_tool_prefix"
 +  MKOCTFILE_CC='$(shell echo $(CC) | sed "s,$(CROSS_TOOL_PREFIX),,")'
@@ -70,13 +71,15 @@ diff --git a/configure.ac b/configure.ac
 +AC_SUBST(MKOCTFILE_F77)
 +AC_SUBST(MKOCTFILE_LD_CXX)
 +
- ### Check for existence of various libraries
- 
- ## OS-specific test for dirent, opendir.
-diff --git a/src/mkoctfile.in.cc b/src/mkoctfile.in.cc
---- a/src/mkoctfile.in.cc
-+++ b/src/mkoctfile.in.cc
-@@ -202,13 +202,13 @@
++### Check for existence of various libraries
++
+ dnl Would like to get rid of this cruft, and just have
+ dnl
+ dnl   AC_CHECK_FUNCS(finite isnan isinf)
+diff --git a/src/mkoctfile.cc.in b/src/mkoctfile.cc.in
+--- a/src/mkoctfile.cc.in
++++ b/src/mkoctfile.cc.in
+@@ -201,13 +201,13 @@
  
    vars["CPPFLAGS"] = get_variable ("CPPFLAGS", %OCTAVE_CONF_CPPFLAGS%);
    vars["INCFLAGS"] = get_variable ("INCFLAGS", DEFAULT_INCFLAGS);
@@ -93,7 +96,7 @@ diff --git a/src/mkoctfile.in.cc b/src/mkoctfile.in.cc
    vars["CXXFLAGS"] = get_variable ("CXXFLAGS", %OCTAVE_CONF_CXXFLAGS%);
    vars["CXXPICFLAG"] = get_variable ("CXXPICFLAG", %OCTAVE_CONF_CXXPICFLAG%);
    vars["XTRA_CFLAGS"] = get_variable ("XTRA_CFLAGS", %OCTAVE_CONF_XTRA_CFLAGS%);
-@@ -217,7 +217,7 @@
+@@ -216,7 +216,7 @@
    vars["DEPEND_FLAGS"] = get_variable ("DEPEND_FLAGS", %OCTAVE_CONF_DEPEND_FLAGS%);
    vars["DEPEND_EXTRA_SED_PATTERN"] = get_variable ("DEPEND_EXTRA_SED_PATTERN", %OCTAVE_CONF_DEPEND_EXTRA_SED_PATTERN%);
  
@@ -111,9 +114,9 @@ diff --git a/src/mkoctfile.in.cc b/src/mkoctfile.in.cc
    vars["LDFLAGS"] = get_variable ("LDFLAGS", %OCTAVE_CONF_LDFLAGS%);
    vars["LD_STATIC_FLAG"] = get_variable ("LD_STATIC_FLAG", %OCTAVE_CONF_LD_STATIC_FLAG%);
    vars["LFLAGS"] = get_variable ("LFLAGS", DEFAULT_LFLAGS);
-diff --git a/src/mkoctfile.in.sh b/src/mkoctfile.in.sh
---- a/src/mkoctfile.in.sh
-+++ b/src/mkoctfile.in.sh
+diff --git a/src/mkoctfile.in b/src/mkoctfile.in
+--- a/src/mkoctfile.in
++++ b/src/mkoctfile.in
 @@ -67,13 +67,13 @@
  
  : ${CPPFLAGS=%OCTAVE_CONF_CPPFLAGS%}
@@ -140,7 +143,7 @@ diff --git a/src/mkoctfile.in.sh b/src/mkoctfile.in.sh
  : ${DL_LDFLAGS=%OCTAVE_CONF_MKOCTFILE_DL_LDFLAGS%}
  
  : ${RDYNAMIC_FLAG=%OCTAVE_CONF_RDYNAMIC_FLAG%}
-@@ -101,7 +101,7 @@
+@@ -102,7 +102,7 @@
  : ${OCTAVE_LINK_OPTS=%OCTAVE_CONF_OCTAVE_LINK_OPTS%}
  : ${OCT_LINK_DEPS=%OCTAVE_CONF_OCT_LINK_DEPS%}
  : ${OCT_LINK_OPTS=%OCTAVE_CONF_OCT_LINK_OPTS%}
