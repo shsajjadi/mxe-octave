@@ -4,6 +4,7 @@ set -e
 
 jobs=9
 
+OCTAVE_TARGET=octave
 while [ $# -gt 0 ]; do
   case "$1" in
     --jobs)
@@ -15,6 +16,10 @@ while [ $# -gt 0 ]; do
         echo "mk-dist: expecting argument for --jobs option" 1>&2
         exit 1
       fi
+    ;;
+    --stable)
+      OCTAVE_TARGET=stable-octave
+      shift
     ;;
     *)
       echo "mk-dist: unrecognized option: $1" 1>&2
@@ -35,7 +40,7 @@ rm -rf dist
 mkdir -p dist/octave
 
 echo "building octave and dependencies..."
-make octave msys-base native-gcc native-binutils JOBS=$jobs
+make $OCTAVE_TARGET msys-base native-gcc native-binutils octave-forge-packages JOBS=$jobs
 
 echo "generating lists of files to exclude..."
 
@@ -54,6 +59,7 @@ echo "copying files..."
 echo "  octave and dependencies..."
 cd $TOPDIR/usr/$TARGET
 tar -c -h -X $TOPDIR/excluded-gcc-files -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
+
 
 echo "  native tools..."
 cd $TOPDIR/native-tools/usr
