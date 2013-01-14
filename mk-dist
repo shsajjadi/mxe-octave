@@ -59,7 +59,7 @@ echo "copying files..."
 echo "  octave and dependencies..."
 cd $TOPDIR/usr/$TARGET
 tar -c -h -X $TOPDIR/excluded-gcc-files -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
-
+cp $TOPDIR/build_packages.m $TOPDIR/dist/octave/src
 
 echo "  native tools..."
 cd $TOPDIR/native-tools/usr

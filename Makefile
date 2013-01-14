@@ -57,6 +57,9 @@ MSYS_BASE_VER := 1.0.13
 MSYS_BASE_DIR := $(PREFIX)/../msys-base
 MSYS_BASE_PACKAGES := $(addprefix msys-,bash coreutils diffutils file findutils gawk grep gzip less libiconv libintl libmagic make msys-core regex sed tar termcap)
 
+OCTAVE_FORGE_BASE_URL := 'http://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
+OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim specfun general signal communications image io statistics control)
+
 MAKE_SHARED_FROM_STATIC := $(TOP_DIR)/tools/make-shared-from-static
 
 CMAKE_TOOLCHAIN_FILE := $(PREFIX)/$(TARGET)/share/cmake/mxe-conf.cmake
@@ -120,6 +123,9 @@ all: $(PKGS)
 
 .PHONY: msys-base
 msys-base:  $(MSYS_BASE_PACKAGES)
+
+.PHONY: octave-forge-packages
+octave-forge-packages: $(OCTAVE_FORGE_PACKAGES)
 
 .PHONY: check-requirements
 define CHECK_REQUIREMENT
