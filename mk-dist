@@ -34,10 +34,12 @@ PREFIX=/usr
 TARGET=i686-pc-mingw32
 BUILD=x86_64-unwknown-linux-gnu
 STRIP=$TARGET-strip
+DATE=$(date +%Y-%m-%d-%H-%M)
+OCTAVE_DIST_DIR=$TOPDIR/dist/$OCTAVE_TARGET-$DATE
 
 echo "deleting previous dist directory..."
-rm -rf dist
-mkdir -p dist/octave
+rm -rf $TOPDIR/dist
+mkdir -p $OCTAVE_DIST_DIR
 
 echo "building octave and dependencies..."
 make $OCTAVE_TARGET msys-base native-gcc native-binutils octave-forge-packages JOBS=$jobs
@@ -58,26 +60,26 @@ echo "copying files..."
 
 echo "  octave and dependencies..."
 cd $TOPDIR/usr/$TARGET
-tar -c -h -X $TOPDIR/excluded-gcc-files -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
-cp $TOPDIR/build_packages.m $TOPDIR/dist/octave/src
+tar -c -h -X $TOPDIR/excluded-gcc-files -f - . | ( cd $OCTAVE_DIST_DIR ; tar xpf - )
+cp $TOPDIR/build_packages.m $OCTAVE_DIST_DIR/src
 
 echo "  native tools..."
 cd $TOPDIR/native-tools/usr
-tar -c -h -X $TOPDIR/excluded-native-files -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
+tar -c -h -X $TOPDIR/excluded-native-files -f - . | ( cd $OCTAVE_DIST_DIR ; tar xpf - )
 
 echo "  libgcc_s_dw2-1.dll to bin directory"
-cd $TOPDIR/dist/octave
+cd $OCTAVE_DIST_DIR
 cp lib/gcc/i686-pc-mingw32/libgcc_s_dw2-1.dll bin
 
 echo "  msys base files..."
 cd $TOPDIR/msys-base
-tar -c -h -f - . | ( cd $TOPDIR/dist/octave ; tar xpf - )
+tar -c -h -f - . | ( cd $OCTAVE_DIST_DIR ; tar xpf - )
 
 echo "making all files writable by user..."
-chmod -R u+w $TOPDIR/dist/octave
+chmod -R u+w $OCTAVE_DIST_DIR
 
 echo "stripping files..."
-cd $TOPDIR/dist/octave
+cd $OCTAVE_DIST_DIR
 for f in $(find . -name '*.dll' -o -name '*.exe'); do
   echo "  $f"
   $STRIP $f
@@ -85,8 +87,8 @@ done
 
 #echo "creating tar file..."
 #cd $TOPDIR/dist
-#tar -c -j -f octave.tar.bz2 octave
+#tar -c -j -f $OCTAVE_TARGET-$DATE.tar.bz2 $OCTAVE_TARGET-$DATE
 
 echo "creating zip file..."
 cd $TOPDIR/dist
-zip -q -9 -r octave.zip octave
+zip -q -9 -r $OCTAVE_TARGET-$DATE.zip $OCTAVE_TARGET-$DATE
