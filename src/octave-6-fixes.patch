@@ -1,0 +1,57 @@
+diff -uNr a/scripts/miscellaneous/edit.m b/scripts/miscellaneous/edit.m
+--- a/scripts/miscellaneous/edit.m	2012-11-13 12:31:48.000000000 -0500
++++ b/scripts/miscellaneous/edit.m	2013-01-24 17:37:50.597434926 -0500
+@@ -243,10 +243,11 @@
+   if (nargin < 1)
+     if (exist (FUNCTION.HOME, "dir") == 7 && (isunix () || ! ispc ()))
+       system (cstrcat ("cd \"", FUNCTION.HOME, "\" ; ",
+-                      sprintf (FUNCTION.EDITOR, "")),
++                      sprintf (undo_string_escapes (FUNCTION.EDITOR), "")),
+               [], FUNCTION.MODE);
+     else
+-      system (sprintf (FUNCTION.EDITOR,""), [], FUNCTION.MODE);
++      system (sprintf (undo_string_escapes (FUNCTION.EDITOR), ""),
++              [], FUNCTION.MODE);
+     endif
+     return;
+   endif
+@@ -328,7 +329,8 @@
+       ## If the file exists, then edit it.
+       if (FUNCTION.EDITINPLACE)
+         ## Edit in place even if it is protected.
+-        system (sprintf (FUNCTION.EDITOR, cstrcat ("\"", fileandpath, "\"")),
++        system (sprintf (undo_string_escapes (FUNCTION.EDITOR),
++                         cstrcat ("\"", fileandpath, "\"")),
+                 [], FUNCTION.MODE);
+         return;
+       else
+@@ -345,7 +347,8 @@
+         else
+           fclose (fid);
+         endif
+-        system (sprintf (FUNCTION.EDITOR, cstrcat ("\"", fileandpath, "\"")),
++        system (sprintf (undo_string_escapes (FUNCTION.EDITOR),
++                         cstrcat ("\"", fileandpath, "\"")),
+                 [], FUNCTION.MODE);
+         return;
+       endif
+@@ -361,7 +364,8 @@
+       case {"cc", "m"}
+         0;
+       otherwise
+-        system (sprintf (FUNCTION.EDITOR, cstrcat ("\"", fileandpath, "\"")),
++        system (sprintf (undo_string_escapes (FUNCTION.EDITOR),
++                         cstrcat ("\"", fileandpath, "\"")),
+                 [], FUNCTION.MODE);
+         return;
+     endswitch
+@@ -512,7 +516,8 @@
+     fclose (fid);
+ 
+     ## Finally we are ready to edit it!
+-    system (sprintf (FUNCTION.EDITOR, cstrcat ("\"", fileandpath, "\"")),
++    system (sprintf (undo_string_escapes (FUNCTION.EDITOR),
++                     cstrcat ("\"", fileandpath, "\"")),
+             [], FUNCTION.MODE);
+             
+   endif
