@@ -63,6 +63,9 @@ cd $TOPDIR/usr/$TARGET
 tar -c -h -X $TOPDIR/excluded-gcc-files -f - . | ( cd $OCTAVE_DIST_DIR ; tar xpf - )
 cp $TOPDIR/build_packages.m $OCTAVE_DIST_DIR/src
 
+echo "  octaverc file..."
+cp $TOPDIR/octaverc $OCTAVE_DIST_DIR/share/octave/site/m/startup/octaverc
+
 echo "  native tools..."
 cd $TOPDIR/native-tools/usr
 tar -c -h -X $TOPDIR/excluded-native-files -f - . | ( cd $OCTAVE_DIST_DIR ; tar xpf - )
