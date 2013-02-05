@@ -29,18 +29,20 @@ PWD        := $(shell pwd)
 SHELL      := bash
 
 INSTALL    := $(shell ginstall --help >/dev/null 2>&1 && echo g)install
-LIBTOOL    := $(shell glibtool --help >/dev/null 2>&1 && echo g)libtool
-LIBTOOLIZE := $(shell glibtoolize --help >/dev/null 2>&1 && echo g)libtoolize
 PATCH      := $(shell gpatch --help >/dev/null 2>&1 && echo g)patch
 SED        := $(shell gsed --help >/dev/null 2>&1 && echo g)sed
 WGET       := wget --no-check-certificate \
                    --user-agent=$(shell wget --version | \
                    $(SED) -n 's,GNU \(Wget\) \([0-9.]*\).*,\1/\2,p')
 
-REQUIREMENTS := autoconf automake bash bison bzip2 cmake flex \
-                gcc intltoolize $(LIBTOOL) $(LIBTOOLIZE) \
+REQUIREMENTS :=  bash bison bzip2 flex \
+                gcc intltoolize \
                 $(MAKE) openssl $(PATCH) $(PERL) pkg-config \
                 scons $(SED) unzip wget xz yasm
+
+LIBTOOL     := libtool
+LIBTOOLIZE  := libtoolize
+BUILD_TOOLS := build-autoconf build-automake build-cmake build-libtool
 
 PREFIX     := $(PWD)/usr
 LOG_DIR    := $(PWD)/log
@@ -49,7 +51,7 @@ PKG_DIR    := $(PWD)/pkg
 TMP_DIR     = $(PWD)/tmp-$(1)
 MAKEFILE   := $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 TOP_DIR    := $(patsubst %/,%,$(dir $(MAKEFILE)))
-PKGS       := $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html')
+PKGS       := $(filter-out $(BUILD_TOOLS), $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html'))
 PATH       := $(PREFIX)/bin:$(PATH)
 
 MSYS_BASE_URL := http://sourceforge.net/projects/mingw/files/MSYS/Base
@@ -123,6 +125,8 @@ endif
 .PHONY: all
 all: $(PKGS)
 
+$(PKGS): $(BUILD_TOOLS)
+
 .PHONY: msys-base
 msys-base:  $(MSYS_BASE_PACKAGES)
 
@@ -158,8 +162,6 @@ check-requirements: $(PREFIX)/installed/check-requirements
 $(PREFIX)/installed/check-requirements: $(MAKEFILE)
 	@echo '[check requirements]'
 	$(foreach REQUIREMENT,$(REQUIREMENTS),$(call CHECK_REQUIREMENT,$(REQUIREMENT)))
-	$(call CHECK_REQUIREMENT_VERSION,autoconf,2\.6[4-9]\|2\.[7-9][0-9])
-	$(call CHECK_REQUIREMENT_VERSION,automake,1\.[1-9][0-9]\(\.[0-9]\+\)\?)
 	@[ -d '$(PREFIX)/installed' ] || mkdir -p '$(PREFIX)/installed'
 	@touch '$@'
 
@@ -173,10 +175,11 @@ $(eval $(subst #,$(newline),$(shell \
         '$(TOP_DIR)/index.html' \
 )))
 
+include $(patsubst %,$(TOP_DIR)/src/%.mk,$(BUILD_TOOLS))
 include $(patsubst %,$(TOP_DIR)/src/%.mk,$(PKGS))
 
 .PHONY: download
-download: $(addprefix download-,$(PKGS))
+download: $(addprefix download-,$(PKGS)) $(addprefix download-,$(BUILD_TOOLS))
 
 define PKG_RULE
 .PHONY: download-$(1)
@@ -244,6 +247,7 @@ build-only-$(1):
 	touch '$(PREFIX)/installed/$(1)'
 endef
 $(foreach PKG,$(PKGS),$(eval $(call PKG_RULE,$(PKG),$(call TMP_DIR,$(PKG)))))
+$(foreach TOOL,$(BUILD_TOOLS),$(eval $(call PKG_RULE,$(TOOL),$(call TMP_DIR,$(TOOL)))))
 
 .PHONY: clean
 clean:
