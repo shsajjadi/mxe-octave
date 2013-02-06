@@ -37,12 +37,12 @@ WGET       := wget --no-check-certificate \
 
 REQUIREMENTS :=  bash bison bzip2 flex \
                 gcc intltoolize \
-                $(MAKE) openssl $(PATCH) $(PERL) pkg-config \
+                $(MAKE) openssl $(PATCH) $(PERL) \
                 scons $(SED) unzip wget xz yasm
 
 LIBTOOL     := libtool
 LIBTOOLIZE  := libtoolize
-BUILD_TOOLS := build-autoconf build-automake build-cmake build-libtool
+BUILD_TOOLS := build-autoconf build-automake build-cmake build-libtool build-pkg-config
 
 PREFIX     := $(PWD)/usr
 LOG_DIR    := $(PWD)/log
