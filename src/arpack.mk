@@ -24,7 +24,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
 
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gfortran' '$(PREFIX)/$(TARGET)/lib/libarpack.a'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gfortran' '$(PREFIX)/$(TARGET)/lib/libarpack.a' -llapack -lblas; \
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libarpack.dll.a' '$(PREFIX)/$(TARGET)/lib/libarpack.dll.a'; \
       $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libarpack.dll' '$(PREFIX)/$(TARGET)/bin/libarpack.dll'; \
