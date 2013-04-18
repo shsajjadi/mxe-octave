@@ -3,7 +3,7 @@
 
 PKG             := octave
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := b80caa6ac6f206cfe06f8f7dd45650074cebac2a
+$(PKG)_CHECKSUM := 9a2310e30ec5ec160f716caedb98e16bd93b6d8b
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://alpha.gnu.org/gnu/octave/$($(PKG)_FILE)
@@ -38,3 +38,4 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(PREFIX)/../octave install
 endef
+
