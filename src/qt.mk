@@ -81,6 +81,10 @@ define $(PKG)_BUILD
     # # at least some of the qdbus tools are useful on target
     # cd '$(1)/tools/qdbus' && '$(1)/bin/qmake' qdbus.pro
     # $(MAKE) -C '$(1)/tools/qdbus' -j '$(JOBS)' install
+    
+    # lrelease (from linguist) needed by octave for GUI build
+    $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install
+    ln -fs '$(PREFIX)/$(TARGET)/bin/lrelease' '$(PREFIX)/bin/$(TARGET)-lrelease'
 
     # mkdir            '$(1)/test-qt'
     # cd               '$(1)/test-qt' && '$(TARGET)-qmake' '$(PWD)/$(2).pro'
