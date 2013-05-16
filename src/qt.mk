@@ -67,10 +67,10 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-    ln -fs '$(PREFIX)/$(TARGET)/qt/bin/moc' '$(PREFIX)/bin/$(TARGET)-moc'
-    ln -fs '$(PREFIX)/$(TARGET)/qt/bin/rcc' '$(PREFIX)/bin/$(TARGET)-roc'
-    ln -fs '$(PREFIX)/$(TARGET)/qt/bin/uic' '$(PREFIX)/bin/$(TARGET)-uic'
-    ln -fs '$(PREFIX)/$(TARGET)/qt/bin/qmake' '$(PREFIX)/bin/$(TARGET)-qmake'
+    ln -fs '$(PREFIX)/$(TARGET)/bin/moc' '$(PREFIX)/bin/$(TARGET)-moc'
+    ln -fs '$(PREFIX)/$(TARGET)/bin/rcc' '$(PREFIX)/bin/$(TARGET)-roc'
+    ln -fs '$(PREFIX)/$(TARGET)/bin/uic' '$(PREFIX)/bin/$(TARGET)-uic'
+    ln -fs '$(PREFIX)/$(TARGET)/bin/qmake' '$(PREFIX)/bin/$(TARGET)-qmake'
 
     # cd '$(1)/tools/assistant' && '$(1)/bin/qmake' assistant.pro
     # $(MAKE) -C '$(1)/tools/assistant' -j '$(JOBS)' install
