@@ -5,6 +5,8 @@ set -e
 jobs=9
 
 OCTAVE_TARGET=octave
+
+strip=yes
 while [ $# -gt 0 ]; do
   case "$1" in
     --jobs)
@@ -19,6 +21,10 @@ while [ $# -gt 0 ]; do
     ;;
     --stable)
       OCTAVE_TARGET=stable-octave
+      shift
+    ;;
+    --no-strip)
+      strip=no
       shift
     ;;
     *)
@@ -86,12 +92,14 @@ cp $TOPDIR/build_packages.m $OCTAVE_DIST_DIR/src
 echo "making all files writable by user..."
 chmod -R u+w $OCTAVE_DIST_DIR
 
-echo "stripping files..."
-cd $OCTAVE_DIST_DIR
-for f in $(find . -name '*.dll' -o -name '*.exe'); do
-  echo "  $f"
-  $STRIP $f
-done
+if [ $strip = "yes" ]; then
+  echo "stripping files..."
+  cd $OCTAVE_DIST_DIR
+  for f in $(find . -name '*.dll' -o -name '*.exe'); do
+    echo "  $f"
+    $STRIP $f
+  done
+fi
 
 #echo "creating tar file..."
 #cd $TOPDIR/dist
