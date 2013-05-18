@@ -7,6 +7,7 @@ jobs=9
 OCTAVE_TARGET=octave
 
 strip=yes
+installer=no
 while [ $# -gt 0 ]; do
   case "$1" in
     --jobs)
@@ -27,6 +28,11 @@ while [ $# -gt 0 ]; do
       strip=no
       shift
     ;;
+    --installer)
+      installer=yes
+      echo "making installer"
+      shift
+    ;;
     *)
       echo "mk-dist: unrecognized option: $1" 1>&2
       exit 1
@@ -42,13 +48,19 @@ BUILD=x86_64-unwknown-linux-gnu
 STRIP=$TARGET-strip
 DATE=$(date +%Y-%m-%d-%H-%M)
 OCTAVE_DIST_DIR=$TOPDIR/dist/$OCTAVE_TARGET-$DATE
+INSTALLER_PKG=
+
+if [ $installer = "yes" ]; then
+  echo "Adding installer to build dependancies"
+  INSTALLER_PKG="nsis"
+fi
 
 echo "deleting previous dist directory..."
 rm -rf $TOPDIR/dist
 mkdir -p $OCTAVE_DIST_DIR
 
 echo "building octave and dependencies..."
-make $OCTAVE_TARGET msys-base native-gcc native-binutils octave-forge-packages npp JOBS=$jobs
+make $OCTAVE_TARGET $INSTALLER_PKG msys-base native-gcc native-binutils octave-forge-packages npp JOBS=$jobs
 
 echo "generating lists of files to exclude..."
 
@@ -105,6 +117,20 @@ fi
 #cd $TOPDIR/dist
 #tar -c -j -f $OCTAVE_TARGET-$DATE.tar.bz2 $OCTAVE_TARGET-$DATE
 
-echo "creating zip file..."
 cd $TOPDIR/dist
-zip -q -9 -r $OCTAVE_TARGET-$DATE.zip $OCTAVE_TARGET-$DATE
+
+if [ $installer = "yes" ]; then
+  sh ../makeinst-script.sh $OCTAVE_TARGET-$DATE
+
+  echo "Generating installer ..."
+  $TOPDIR/usr/bin/$TARGET-makensis octave.nsi > /dev/null
+
+  if [ -e Octave-Installer.exe ]; then
+    rm octave.nsi
+  fi
+
+else
+  echo "creating zip file..."
+  zip -q -9 -r $OCTAVE_TARGET-$DATE.zip $OCTAVE_TARGET-$DATE
+fi
+
