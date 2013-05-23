@@ -35,14 +35,12 @@ WGET       := wget --no-check-certificate \
                    --user-agent=$(shell wget --version | \
                    $(SED) -n 's,GNU \(Wget\) \([0-9.]*\).*,\1/\2,p')
 
-REQUIREMENTS :=  bash bison bzip2 flex \
-                gcc intltoolize \
-                $(MAKE) openssl $(PATCH) $(PERL) \
-                scons $(SED) unzip wget xz yasm
+REQUIREMENTS := bash bzip2 gcc intltoolize $(MAKE) openssl \
+                $(PATCH) $(PERL) $(SED) unzip wget xz
 
 LIBTOOL     := libtool
 LIBTOOLIZE  := libtoolize
-BUILD_TOOLS := build-autoconf build-automake build-cmake build-libtool build-pkg-config
+BUILD_TOOLS := build-autoconf build-automake build-cmake build-libtool build-pkg-config build-bison build-flex
 
 PREFIX     := $(PWD)/usr
 LOG_DIR    := $(PWD)/log
