@@ -24,4 +24,9 @@ define $(PKG)_BUILD
     $(INSTALL) -m755 '$(1)/config/mingw/wgnuplot.exe' '$(PREFIX)/$(TARGET)/bin/'
     $(INSTALL) -m644 '$(1)/config/mingw/wgnuplot.mnu' '$(PREFIX)/$(TARGET)/bin/'
 
+    $(INSTALL) -d '$(PREFIX)/../gnuplot/bin'
+    $(INSTALL) -m755 '$(1)/config/mingw/gnuplot.exe' '$(PREFIX)/../gnuplot/bin/'
+    $(INSTALL) -m755 '$(1)/config/mingw/wgnuplot.exe' '$(PREFIX)/../gnuplot/bin/'
+    $(INSTALL) -m644 '$(1)/config/mingw/wgnuplot.mnu' '$(PREFIX)/../gnuplot/bin/'
+
 endef
