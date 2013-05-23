@@ -35,8 +35,8 @@ WGET       := wget --no-check-certificate \
                    --user-agent=$(shell wget --version | \
                    $(SED) -n 's,GNU \(Wget\) \([0-9.]*\).*,\1/\2,p')
 
-REQUIREMENTS := bash bzip2 gcc intltoolize $(MAKE) openssl \
-                $(PATCH) $(PERL) $(SED) unzip wget xz
+REQUIREMENTS := bash bzip2 gcc $(MAKE) openssl $(PATCH) $(PERL) \
+                $(SED) unzip wget xz
 
 LIBTOOL     := libtool
 LIBTOOLIZE  := libtoolize
