@@ -15,14 +15,6 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    if [ $(BUILD_SHARED) = yes ]; then \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libuuid.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libuuid.dll.a' '$(PREFIX)/$(TARGET)/lib/libuuid.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libuuid.dll' '$(PREFIX)/$(TARGET)/bin/libuuid.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libuuid.dll'; \
-    fi
-
     mkdir '$(1)/.build'
     cd '$(1)' && autoreconf -W none
     cd '$(1)/.build' && '$(1)/configure' \
