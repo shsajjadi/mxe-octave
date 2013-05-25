@@ -17,7 +17,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && scons \
+    cd '$(1)' && scons VERBOSE=1 \
         MINGW_CROSS_PREFIX='$(TARGET)-' \
         PREFIX='$(PREFIX)/$(TARGET)' \
         `[ -d /usr/local/include ] && echo APPEND_CPPPATH=/usr/local/include` \
