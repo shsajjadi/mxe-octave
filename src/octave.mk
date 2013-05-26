@@ -3,7 +3,7 @@
 
 PKG             := octave
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := ea33cb0613dc53971bc4c6e344fed9e955ffeb40
+$(PKG)_CHECKSUM := a51f52fa6dfef2e905d0c64f0401caab5a11faca
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://alpha.gnu.org/gnu/octave/$($(PKG)_FILE)
