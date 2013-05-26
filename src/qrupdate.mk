@@ -15,8 +15,10 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    chmod a+rx '$(1)/configure'
     mkdir '$(1)/.build'
+    touch '$(1)/NEWS' '$(1)/AUTHORS'
+    cd '$(1)' && autoreconf -W none
+    chmod a+rx '$(1)/configure'
     cd '$(1)/.build' && '$(1)/configure' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
