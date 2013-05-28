@@ -23,6 +23,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --prefix='$(PREFIX)/$(TARGET)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \

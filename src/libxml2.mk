@@ -19,6 +19,7 @@ endef
 define $(PKG)_BUILD
     $(SED) -i 's,`uname`,MinGW,g' '$(1)/xml2-config.in'
     cd '$(1)' && ./configure \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \

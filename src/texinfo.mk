@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := a1533cf8e03ea4fa6c443b73f4c85e4da04dead0
 $(PKG)_SUBDIR   := $(PKG)-4.13
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/texinfo/$($(PKG)_FILE)
-$(PKG)_DEPS     := libgnurx
+$(PKG)_DEPS     := # libgnurx
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package texinfo.' >&2;
@@ -17,6 +17,7 @@ endef
 define $(PKG)_BUILD
     mkdir '$(1)/.build'
     cd '$(1)/.build' && '$(1)/configure' \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         --prefix='$(PREFIX)/$(TARGET)'

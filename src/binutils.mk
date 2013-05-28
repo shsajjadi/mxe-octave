@@ -17,6 +17,7 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifneq ($(USE_SYSTEM_GCC),yes)
 define $(PKG)_BUILD
     # install config.guess for general use
     $(INSTALL) -d '$(PREFIX)/bin'
@@ -40,3 +41,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j 1 install
     $(MAKE) -C '$(1)' -j 1 DESTDIR=$(PREFIX)/../cross-tools install
 endef
+else
+define $(PKG)_BUILD
+endef
+endif

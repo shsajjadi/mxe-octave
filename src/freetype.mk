@@ -23,5 +23,5 @@ define $(PKG)_BUILD
         --prefix='$(PREFIX)/$(TARGET)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
-    rm -f $(PREFIX)/$(TARGET)/lib/libfreetype.la
+    rm -f $(MXE_LIBDIR)/libfreetype.la
 endef

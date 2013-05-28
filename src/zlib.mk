@@ -16,17 +16,23 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifeq ($(MXE_NATIVE_BUILD),yes)
 define $(PKG)_BUILD
-    cd '$(1)' && CHOST='$(TARGET)' ./configure \
+    cd '$(1)' && ./configure \
+      --prefix='$(PREFIX)/$(TARGET)'
+
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+endef
+else
+define $(PKG)_BUILD
+    cd '$(1)' && CHOST='$(TARGET)' $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
+        ./configure \
         --prefix='$(PREFIX)/$(TARGET)' \
         --static
-
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
     if [ "$(BUILD_SHARED)" = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/libz.a'; \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin/'; \
-      $(INSTALL) -m755 '$(1)/libz.dll.a' '$(PREFIX)/$(TARGET)/lib/libz.dll.a'; \
-      $(INSTALL) -m755 '$(1)/libz.dll' '$(PREFIX)/$(TARGET)/bin/libz.dll'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(1)/libz.a' --install '$(INSTALL)' --libdir '$(MXE_LIBDIR)' --bindir '$(MXE_BINDIR)'; \
     fi
 endef
+endif

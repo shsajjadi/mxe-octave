@@ -23,17 +23,13 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(PREFIX)/$(TARGET)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    rm -f $(PREFIX)/$(TARGET)/lib/libpng.la
-    rm -f $(PREFIX)/$(TARGET)/lib/libpng15.la
-
-    '$(TARGET)-gcc' \
-        -W -Wall -Werror -std=c99 -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libpng.exe' \
-        `'$(PREFIX)/$(TARGET)/bin/libpng-config' --static --cflags --libs`
+    rm -f $(MXE_LIBDIR)/libpng.la
+    rm -f $(MXE_LIBDIR)/libpng15.la
 endef

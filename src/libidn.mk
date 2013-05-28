@@ -18,6 +18,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -25,9 +26,4 @@ define $(PKG)_BUILD
         --prefix='$(PREFIX)/$(TARGET)' \
         --with-libiconv-prefix='$(PREFIX)/$(TARGET)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-
-    '$(TARGET)-gcc' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libidn.exe' \
-        `'$(TARGET)-pkg-config' libidn --cflags --libs`
 endef

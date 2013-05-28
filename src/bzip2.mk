@@ -16,26 +16,38 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifeq ($(MXE_SYSTEM),mingw)
 define $(PKG)_BUILD
     $(SED) -i 's,sys\\stat\.h,sys/stat.h,g' '$(1)/bzip2.c'
     $(SED) -i 's,WINAPI,,g'                 '$(1)/bzlib.h'
     $(MAKE) -C '$(1)' -j '$(JOBS)' libbz2.a \
         PREFIX='$(PREFIX)/$(TARGET)' \
-        CC='$(TARGET)-gcc' \
-        AR='$(TARGET)-ar' \
-        RANLIB='$(TARGET)-ranlib'
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib'
-    $(INSTALL) -m644 '$(1)/libbz2.a' '$(PREFIX)/$(TARGET)/lib/'
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/include'
-    $(INSTALL) -m644 '$(1)/bzlib.h' '$(PREFIX)/$(TARGET)/include/'
+        CC='$(MXE_CC)' \
+        AR='$(MXE_AR)' \
+        RANLIB='$(MXE_RANLIB)'
+    $(INSTALL) -d '$(MXE_LIBDIR)'
+    $(INSTALL) -m644 '$(1)/libbz2.a' '$(MXE_LIBDIR)/'
+    $(INSTALL) -d '$(MXE_INCDIR)'
+    $(INSTALL) -m644 '$(1)/bzlib.h' '$(MXE_INCDIR)/'
 
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libbz2.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libbz2.dll.a' '$(PREFIX)/$(TARGET)/lib/libbz2.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libbz2.dll' '$(PREFIX)/$(TARGET)/bin/libbz2.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libbz2.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libbz2.la'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(MXE_LIBDIR)/libbz2.a' --install '$(INSTALL)' --libdir '(MXE_LIBDIR)' --bindir '$(MXE_BINDIR)'; \
     fi
-
 endef
+else
+define $(PKG)_BUILD
+    $(SED) -i 's,sys\\stat\.h,sys/stat.h,g' '$(1)/bzip2.c'
+    $(SED) -i 's,WINAPI,,g'                 '$(1)/bzlib.h'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' -f Makefile-libbz2_so \
+        PREFIX='$(PREFIX)/$(TARGET)' \
+        CC='$(MXE_CC)' \
+        AR='$(MXE_AR)' \
+        RANLIB='$(MXE_RANLIB)'
+    $(INSTALL) -d '$(MXE_LIBDIR)'
+    $(INSTALL) -m755 '$(1)/libbz2.so.1.0.6' '$(MXE_LIBDIR)/'
+    rm -f '$(MXE_LIBDIR)/libbz2.so.1.0'
+    ln -s libbz2.so.1.0.6 '$(MXE_LIBDIR)/libbz2.so.1.0'
+    $(INSTALL) -d '$(MXE_INCDIR)'
+    $(INSTALL) -m644 '$(1)/bzlib.h' '$(MXE_INCDIR)/'
+endef
+endif

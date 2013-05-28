@@ -19,6 +19,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && autoreconf --install
     cd '$(1)' && ./configure \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
       --prefix='$(PREFIX)/$(TARGET)' \
       --host='$(TARGET)' \
       $(ENABLE_SHARED_OR_STATIC) \

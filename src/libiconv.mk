@@ -22,6 +22,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --prefix='$(PREFIX)/$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
+        CPPFLAGS='$(MXE_CPPFLAGS)' \
         --disable-nls
     $(MAKE) -C '$(1)/libcharset' -j '$(JOBS)' install
     $(MAKE) -C '$(1)/lib'        -j '$(JOBS)' install

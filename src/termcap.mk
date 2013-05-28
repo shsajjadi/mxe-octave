@@ -17,6 +17,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && autoreconf
     cd '$(1)' && ./configure \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --host='$(TARGET)' \
         --prefix='$(PREFIX)/$(TARGET)' \
         AR=$(TARGET)-ar
@@ -24,10 +25,6 @@ define $(PKG)_BUILD
     $(MAKE) AR=$(TARGET)-ar -C '$(1)' -j '$(JOBS)' install
 
     if [ "$(BUILD_SHARED)" = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libtermcap.a'; \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin/'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libtermcap.dll.a' '$(PREFIX)/$(TARGET)/lib/libtermcap.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libtermcap.dll' '$(PREFIX)/$(TARGET)/bin/libtermcap.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libtermcap.dll'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(MXE_LIBDIR)/libtermcap.a' --install '$(INSTALL)' --libdir '$(MXE_LIBDIR)' --bindir '$(MXE_BINDIR)'; \
     fi
 endef
