@@ -25,13 +25,11 @@ define $(PKG)_BUILD
         CC='$(MXE_CC)' \
         AR='$(MXE_AR)' \
         RANLIB='$(MXE_RANLIB)'
-    $(INSTALL) -d '$(MXE_LIBDIR)'
-    $(INSTALL) -m644 '$(1)/libbz2.a' '$(MXE_LIBDIR)/'
     $(INSTALL) -d '$(MXE_INCDIR)'
     $(INSTALL) -m644 '$(1)/bzlib.h' '$(MXE_INCDIR)/'
 
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(MXE_LIBDIR)/libbz2.a' --install '$(INSTALL)' --libdir '(MXE_LIBDIR)' --bindir '$(MXE_BINDIR)'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/libbz2.a' --install '$(INSTALL)' --libdir '$(MXE_LIBDIR)' --bindir '$(MXE_BINDIR)'; \
     fi
 endef
 else
