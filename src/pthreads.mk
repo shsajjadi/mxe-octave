@@ -14,27 +14,22 @@ define $(PKG)_UPDATE
     $(SED) -n 's/^#define PTW32_VERSION \([^,]*\),\([^,]*\),\([^,]*\),.*/\1-\2-\3/p;'
 endef
 
+ifeq ($(MXE_SYSTEM),mingw)
 define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j 1 GC-static CROSS='$(TARGET)-'
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib'
-    $(INSTALL) -m644 '$(1)/libpthreadGC2.a' '$(PREFIX)/$(TARGET)/lib/libpthread.a'
+    $(INSTALL) -d '$(MXE_LIBDIR)'
+    $(INSTALL) -m644 '$(1)/libpthreadGC2.a' '$(MXE_LIBDIR)/libpthread.a'
 
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(PREFIX)/$(TARGET)/lib/libpthread.a'; \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libpthread.dll.a' '$(PREFIX)/$(TARGET)/lib/libpthread.dll.a'; \
-      $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/libpthread.dll' '$(PREFIX)/$(TARGET)/bin/libpthread.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libpthread.dll'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libpthread.la'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(MXE_LIBDIR)/libpthread.a' --install '$(INSTALL)' --libdir '$(MXE_LIBDIR)' --bindir '$(MXE_BINDIR)'; \
     fi
 
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/include'
-    $(INSTALL) -m644 '$(1)/pthread.h'   '$(PREFIX)/$(TARGET)/include/'
-    $(INSTALL) -m644 '$(1)/sched.h'     '$(PREFIX)/$(TARGET)/include/'
-    $(INSTALL) -m644 '$(1)/semaphore.h' '$(PREFIX)/$(TARGET)/include/'
-
-    '$(TARGET)-gcc' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-pthreads.exe' \
-        -lpthread -lws2_32
+    $(INSTALL) -d '$(MXE_INCDIR)'
+    $(INSTALL) -m644 '$(1)/pthread.h'   '$(MXE_INCDIR)/'
+    $(INSTALL) -m644 '$(1)/sched.h'     '$(MXE_INCDIR)/'
+    $(INSTALL) -m644 '$(1)/semaphore.h' '$(MXE_INCDIR)/'
 endef
+else
+define $(PKG)_BUILD
+endef
+endif

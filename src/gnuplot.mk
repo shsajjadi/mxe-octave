@@ -14,6 +14,7 @@ define $(PKG)_UPDATE
     echo $(gnuplot_VERSION)
 endef
 
+ifeq ($(MXE_SYSTEM),mingw)
 define $(PKG)_BUILD
     make -C '$(1)/config/mingw' CC='$(TARGET)-gcc' CXX='$(TARGET)-g++' RC='$(TARGET)-windres' -j '$(JOBS)' TARGET=gnuplot.exe gnuplot.exe
     make -C '$(1)/config/mingw' CC='$(TARGET)-gcc' CXX='$(TARGET)-g++' RC='$(TARGET)-windres' -j '$(JOBS)' TARGET=wgnuplot.exe wgnuplot.exe
@@ -30,3 +31,9 @@ define $(PKG)_BUILD
     $(INSTALL) -m644 '$(1)/config/mingw/wgnuplot.mnu' '$(PREFIX)/../gnuplot/bin/'
 
 endef
+else
+define $(PKG)_BUILD
+    cd '$(1)' && ./configure --prefix '$(PREFIX)/$(TARGET)'
+    make -C '$(1)' -j '$(JOBS)' install
+endef
+endif

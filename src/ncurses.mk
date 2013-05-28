@@ -16,11 +16,9 @@ define $(PKG)_UPDATE
     head -1
 endef
 
-# Building with --enable-shared doesn't seem to work for MinGW systems
-# with this version of ncurses, so fake it.
-
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         --prefix=$(PREFIX)/$(TARGET) \
@@ -33,12 +31,6 @@ define $(PKG)_BUILD
         --without-manpages \
         --enable-pc-files \
         --with-normal \
-        --enable-static --disable-shared
+        $(WITH_SHARED_OR_STATIC)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
-    if [ "$(BUILD_SHARED)" = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/lib/libncurses.a'; \
-      $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin/'; \
-      $(INSTALL) -m755 '$(1)/lib/libncurses.dll.a' '$(PREFIX)/$(TARGET)/lib/libncurses.dll.a'; \
-      $(INSTALL) -m755 '$(1)/lib/libncurses.dll' '$(PREFIX)/$(TARGET)/bin/libncurses.dll'; \
-    fi
 endef

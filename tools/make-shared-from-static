@@ -4,18 +4,58 @@ set -e
 
 LD=
 AR=
+INSTALL=
 infile=
 outfile=
+libdir=
+bindir=
+install=false
+windowsdll=false
 LIBS=
 
 topdir=$(pwd)
 tmpdir=$topdir/make-shared-from-static.$$
 
-trap "cd $topdir; rm -rf $tmpdir" 1 2 15
+#trap "cd $topdir; rm -rf $tmpdir" 1 2 15
 
 for arg
 do
   case "$1" in
+    --install)
+      install=true
+      shift
+      if [ $# -gt 0 ]; then
+        INSTALL="$1"
+        shift
+      else
+        echo "make-shared-from-static: expecting argument for --install option" 1>&2
+        exit 1
+      fi
+    ;;
+    --windowsdll)
+      shift
+      windowsdll=true
+    ;;
+    --bindir)
+      shift
+      if [ $# -gt 0 ]; then
+        bindir="$1"
+        shift
+      else
+        echo "make-shared-from-static: expecting argument for --bindir option" 1>&2
+        exit 1
+      fi
+    ;;
+    --libdir)
+      shift
+      if [ $# -gt 0 ]; then
+        libdir="$1"
+        shift
+      else
+        echo "make-shared-from-static: expecting argument for --libdir option" 1>&2
+        exit 1
+      fi
+    ;;
     --ld)
       shift
       if [ $# -gt 0 ]; then
@@ -50,7 +90,6 @@ do
             infile=$(pwd)/$1
           ;;
         esac
-        outfile=$(echo $infile | sed 's/\.a$/.dll/')
         shift
       else
         echo "make-shared-from-static: only one input file allowed" 1>&2
@@ -60,8 +99,15 @@ do
   esac
 done
 
-if [ -z "$outfile" ]; then
-  echo "make-shared-from-static: no output file specified" 1>&2
+if [ -n "$infile" ]; then
+  base_infile=$(basename $infile)
+  if $windowsdll; then
+    outfile=$(echo $base_infile | sed 's/\.a$/.dll/')
+  else
+    outfile=$(echo $base_infile | sed 's/\.a$/.so/')
+  fi
+else
+  echo "make-shared-from-static: no input file specified" 1>&2
   exit 1
 fi
 
@@ -72,7 +118,28 @@ mkdir $tmpdir
 
   $AR x $infile
 
-  $LD -shared -Wl,--export-all-symbols -Wl,--enable-auto-import -Wl,--enable-auto-image-base -Wl,--out-implib=$outfile.a -o $outfile *.o $LIBS
+  LIBDIR_ARGS=
+  if [ -n "$libdir" ]; then
+    LIBDIR_ARGS="-L$libdir"
+  fi
+
+  if $windowsdll; then
+    $LD -shared -Wl,--export-all-symbols -Wl,--enable-auto-import -Wl,--enable-auto-image-base -Wl,--out-implib="$outfile.a" -o "$outfile" *.o $LIBDIR_ARGS $LIBS
+  else
+    $LD -shared -o $outfile *.o $LIBDIR_ARGS $LIBS
+  fi
+
+  if $install; then
+    if $windowsdll; then
+      $INSTALL -d "$libdir"
+      $INSTALL -d "$bindir"
+      $INSTALL -m755 "$outfile.a" "$libdir/$outfile.a"
+      $INSTALL -m755 "$outfile" "$bindir/$outfile"
+    else
+      $INSTALL -d "$libdir"
+      $INSTALL -m755 "$outfile" "$libdir/$outfile"
+    fi
+  fi
 )
 
 rm -rf $tmpdir

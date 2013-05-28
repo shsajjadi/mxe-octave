@@ -21,6 +21,7 @@ define $(PKG)_BUILD
     cd '$(1)' && autoreconf --install
     mkdir '$(1)/.build'
     cd '$(1)/.build' && '$(1)/configure' \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         --prefix='$(PREFIX)/$(TARGET)' \

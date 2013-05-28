@@ -8,7 +8,18 @@ $(PKG)_SUBDIR   := gcc-$($(PKG)_VERSION)
 $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := mingwrt w32api binutils gcc-gmp gcc-mpc gcc-mpfr
+ifeq ($(USE_SYSTEM_GCC),yes)
+  $(PKG)_DEPS :=
+else
+  ifeq ($(MXE_NATIVE_BUILD),yes)
+    $(PKG)_DEPS := binutils gcc-gmp gcc-mpc gcc-mpfr
+  else
+    ifeq ($(MXE_SYSTEM),mingw)
+      $(PKG)_DEPS := mingwrt w32api binutils gcc-gmp gcc-mpc gcc-mpfr
+    else
+    endif
+  endif
+endif
 ifneq ($(BUILD_SHARED),yes)
 $(PKG)_STATIC_FLAG := --static
 endif
@@ -20,6 +31,40 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifeq ($(USE_SYSTEM_GCC),yes)
+define $(PKG)_BUILD
+    # create the CMake toolchain file
+    [ -d '$(dir $(CMAKE_TOOLCHAIN_FILE))' ] || mkdir -p '$(dir $(CMAKE_TOOLCHAIN_FILE))'
+    (if [ $(MXE_SYSTEM) = mingw ]; then \
+       echo 'set(CMAKE_SYSTEM_NAME Windows)'; \
+       echo 'set(MSYS 1)'; \
+     fi; \
+     if [ $(BUILD_SHARED) = yes ]; then \
+       echo 'set(BUILD_SHARED_LIBS ON)'; \
+     else \
+       echo 'set(BUILD_SHARED_LIBS OFF)'; \
+     fi; \
+     if [ $(BUILD_STATIC) = yes ]; then \
+       echo 'set(BUILD_STATIC_LIBS ON)'; \
+     else \
+       echo 'set(BUILD_STATIC_LIBS OFF)'; \
+     fi; \
+     echo 'set(CMAKE_BUILD_TYPE Release)'; \
+     echo 'set(CMAKE_FIND_ROOT_PATH $(PREFIX)/$(TARGET))'; \
+     echo 'set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)'; \
+     echo 'set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)'; \
+     echo 'set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)'; \
+     echo 'set(CMAKE_C_COMPILER $(MXE_CC))'; \
+     echo 'set(CMAKE_CXX_COMPILER $(MXE_CXX))'; \
+     echo 'set(CMAKE_Fortran_COMPILER $(MXE_F77))'; \
+     echo 'set(CMAKE_RC_COMPILER $(MXE_WINDRES))'; \
+     echo 'set(PKG_CONFIG_EXECUTABLE $(MXE_PKG_CONFIG))'; \
+     echo 'set(QT_QMAKE_EXECUTABLE $(MXE_QMAKE))'; \
+     echo 'set(CMAKE_INSTALL_PREFIX $(PREFIX)/$(TARGET) CACHE PATH "Installation Prefix")'; \
+     echo 'set(CMAKE_BUILD_TYPE Release CACHE STRING "Debug|Release|RelWithDebInfo|MinSizeRel")') \
+     > '$(CMAKE_TOOLCHAIN_FILE)'
+endef
+else
 define $(PKG)_BUILD
     # unpack support libraries
     cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,gcc-gmp)
@@ -54,12 +99,12 @@ define $(PKG)_BUILD
         $(shell [ `uname -s` == Darwin ] && echo "LDFLAGS='-Wl,-no_pie'")
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     $(MAKE) -C '$(1).build' -j 1 install
-    mkdir -p $(PREFIX)/../cross-tools/$(PREFIX)/$(TARGET)/bin
+    mkdir -p $(PREFIX)/../cross-tools/$(MXE_BINDIR)
     $(MAKE) -C '$(1).build' -j 1 DESTDIR=$(PREFIX)/../cross-tools install
 
     # create pkg-config script
     (echo '#!/bin/sh'; \
-     echo 'PKG_CONFIG_PATH="$$PKG_CONFIG_PATH_$(subst -,_,$(TARGET))" PKG_CONFIG_LIBDIR='\''$(PREFIX)/$(TARGET)/lib/pkgconfig'\'' exec pkg-config $($(PKG)_STATIC_FLAG) "$$@"') \
+     echo 'PKG_CONFIG_PATH="$$PKG_CONFIG_PATH_$(subst -,_,$(TARGET))" PKG_CONFIG_LIBDIR='\''$(MXE_LIBDIR)/pkgconfig'\'' exec pkg-config $($(PKG)_STATIC_FLAG) "$$@"') \
              > '$(PREFIX)/bin/$(TARGET)-pkg-config'
     chmod 0755 '$(PREFIX)/bin/$(TARGET)-pkg-config'
 
@@ -92,3 +137,4 @@ define $(PKG)_BUILD
      echo 'set(CMAKE_BUILD_TYPE Release CACHE STRING "Debug|Release|RelWithDebInfo|MinSizeRel")') \
      > '$(CMAKE_TOOLCHAIN_FILE)'
 endef
+endif

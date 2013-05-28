@@ -39,17 +39,20 @@ define $(PKG)_BUILD
 
     # build all
     $(MAKE) -C '$(1)' -j '$(JOBS)' \
-        CC='$(TARGET)-gcc' \
-        CXX='$(TARGET)-g++' \
-        CPLUSPLUS='$(TARGET)-g++' \
-        F77='$(TARGET)-gfortran' \
-        AR='$(TARGET)-ar' \
+        CC='$(MXE_CC)' \
+        CXX='$(MXE_CXX)' \
+        CPLUSPLUS='$(MXE_CXX)' \
+        F77='$(MXE_F77)' \
+        FFLAGS='$(MXE_FFLAGS)' \
+        CFLAGS='$(MXE_CFLAGS)' \
+        CXXFLAGS='$(MXE_CXXFLAGS)' \
+        AR='$(MXE_AR)' \
         RANLIB='$(TARGET)-ranlib' \
         BLAS='-lblas -lgfortran -lgfortranbegin' \
         CHOLMOD_CONFIG='-DNPARTITION'
 
     # install library files
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib'
+    $(INSTALL) -d '$(MXE_LIBDIR)'
 
     for f in $(addprefix $(1)/, $($(PKG)_STATICLIBS_1)); do \
       if [ $(BUILD_SHARED) = yes ]; then \
@@ -77,27 +80,23 @@ define $(PKG)_BUILD
         if [ -n "$deplibs" ]; then \
           echo "  deplibs = $$deplibs"; \
         fi; \
-        $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-g++' $$f $$deplibs; \
-        $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
-        $(INSTALL) -m755 $$dir/$$lib.dll.a $(PREFIX)/$(TARGET)/lib/$$lib.dll.a; \
-        $(INSTALL) -m755 $$dir/$$lib.dll $(PREFIX)/$(TARGET)/bin/$$lib.dll; \
+        $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CXX)' $$f --install '$(INSTALL)' --libdir '$(MXE_LIBDIR)' --bindir '$(MXE_BINDIR)' $$deplibs; \
       fi; \
-      $(INSTALL) -m644 $$f $(PREFIX)/$(TARGET)/lib/$$lib.a; \
     done
 
     # install include files
-    $(INSTALL) -d                                '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/SuiteSparse_config/'*.h '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/AMD/Include/'*.h      '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/BTF/Include/'*.h      '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/CAMD/Include/'*.h     '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/CCOLAMD/Include/'*.h  '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/CHOLMOD/Include/'*.h  '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/COLAMD/Include/'*.h   '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/CSparse/Include/'*.h  '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/CXSparse/Include/'*.h '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/KLU/Include/'*.h      '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/LDL/Include/'*.h      '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/SPQR/Include/'*       '$(PREFIX)/$(TARGET)/include/suitesparse/'
-    $(INSTALL) -m644 '$(1)/UMFPACK/Include/'*.h  '$(PREFIX)/$(TARGET)/include/suitesparse/'
+    $(INSTALL) -d                                '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/SuiteSparse_config/'*.h '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/AMD/Include/'*.h      '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/BTF/Include/'*.h      '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/CAMD/Include/'*.h     '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/CCOLAMD/Include/'*.h  '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/CHOLMOD/Include/'*.h  '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/COLAMD/Include/'*.h   '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/CSparse/Include/'*.h  '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/CXSparse/Include/'*.h '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/KLU/Include/'*.h      '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/LDL/Include/'*.h      '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/SPQR/Include/'*       '$(MXE_INCDIR)/suitesparse/'
+    $(INSTALL) -m644 '$(1)/UMFPACK/Include/'*.h  '$(MXE_INCDIR)/suitesparse/'
 endef

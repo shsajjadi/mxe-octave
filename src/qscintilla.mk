@@ -14,10 +14,18 @@ define $(PKG)_UPDATE
     echo $(qscintilla_VERSION)
 endef
 
+ifneq ($(MXE_NATIVE_BUILD),yes)
+  ifeq ($(MXE_SYSTEM),mingw)
+    $(PKG)_QMAKE_SPEC_OPTION := -spec '$(PREFIX)/$(TARGET)/mkspecs/win32-g++'
+  endif
+endif
+
 define $(PKG)_BUILD
-    cd '$(1)' && '$(PREFIX)/$(TARGET)/bin/qmake' -makefile -spec '$(PREFIX)/$(TARGET)/mkspecs/win32-g++'
+    cd '$(1)' && '$(MXE_BINDIR)/qmake' -makefile $($(PKG)_QMAKE_SPEC_OPTION)
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-    $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/lib/qscintilla2.dll' '$(PREFIX)/$(TARGET)/bin/qscintilla2.dll'
+    if [ $(MXE_SYSTEM) = mingw ]; then \
+      $(INSTALL) -m755 '$(MXE_LIBDIR)/qscintilla2.dll' '$(MXE_BINDIR)/qscintilla2.dll'; \
+    fi
 endef

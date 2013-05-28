@@ -18,6 +18,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -25,6 +26,6 @@ define $(PKG)_BUILD
         --without-x
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    rm -f $(PREFIX)/$(TARGET)/lib/libtiff.la
-    rm -f $(PREFIX)/$(TARGET)/lib/libtiffxx.la
+    rm -f $(MXE_LIBDIR)/libtiff.la
+    rm -f $(MXE_LIBDIR)/lib/libtiffxx.la
 endef

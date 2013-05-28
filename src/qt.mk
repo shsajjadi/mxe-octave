@@ -7,7 +7,31 @@ $(PKG)_CHECKSUM := bc352a283610e0cd2fe0dbedbc45613844090fcb
 $(PKG)_SUBDIR   := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://releases.qt-project.org/qt4/source/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc libodbc++ postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
+ifeq ($(MXE_SYSTEM),mingw)
+  $(PKG)_DEPS   := gcc libodbc++ postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
+
+  $(PKG)_CONFIGURE_ENV := \
+    OPENSSL_LIBS="`'$(TARGET)-pkg-config' --libs-only-l openssl`" \
+    PSQL_LIBS="-lpq -lsecur32 `'$(TARGET)-pkg-config' --libs-only-l openssl` -lws2_32" \
+    SYBASE_LIBS="-lsybdb `'$(TARGET)-pkg-config' --libs-only-l gnutls` -liconv -lws2_32"
+else
+  $(PKG)_DEPS   := gcc postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
+
+  $(PKG)_CONFIGURE_ENV := \
+    CPPFLAGS='$(MXE_INCDIR)/dbus-1.0' \
+    LDFLAGS='-Wl,-rpath-link,$(MXE_LIBDIR) -L$(MXE_LIBDIR)'
+endif
+
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  $(PKG)_CONFIGURE_INCLUDE_OPTION := -I '$(MXE_INCDIR)'
+  $(PKG)_CONFIGURE_DATABASE_OPTION := -qt-sql-psql
+else
+  ifeq ($(MXE_SYSTEM),mingw)
+    $(PKG)_CONFIGURE_PLATFORM_OPTION := -xplatform win32-g++-4.6
+    $(PKG)_CONFIGURE_DATABASE_OPTION := \
+      -qt-sql-sqlite -qt-sql-odbc -qt-sql-psql -qt-sql-tds -D Q_USE_SYBASE 
+  endif
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://qt.gitorious.org/qt/qt/commits' | \
@@ -19,14 +43,13 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && QTDIR='$(1)' ./bin/syncqt
     cd '$(1)' && \
-        OPENSSL_LIBS="`'$(TARGET)-pkg-config' --libs-only-l openssl`" \
-        PSQL_LIBS="-lpq -lsecur32 `'$(TARGET)-pkg-config' --libs-only-l openssl` -lws2_32" \
-        SYBASE_LIBS="-lsybdb `'$(TARGET)-pkg-config' --libs-only-l gnutls` -liconv -lws2_32" \
+        $($(PKG)_CONFIGURE_ENV) \
         ./configure \
+        $($(PKG)_CONFIGURE_INCLUDE_OPTION) \
         -opensource \
         -confirm-license \
         -fast \
-        -xplatform win32-g++-4.6 \
+        $($(PKG)_CONFIGURE_PLATFORM_OPTION) \
         -device-option CROSS_COMPILE=$(TARGET)- \
         -device-option PKG_CONFIG='$(TARGET)-pkg-config' \
         -force-pkg-config \
@@ -50,10 +73,7 @@ define $(PKG)_BUILD
         -nomake demos \
         -nomake docs \
         -nomake examples \
-        -qt-sql-sqlite \
-        -qt-sql-odbc \
-        -qt-sql-psql \
-        -qt-sql-tds -D Q_USE_SYBASE \
+        $($(PKG)_CONFIGURE_DATABASE_OPTION) \
         -system-zlib \
         -system-libpng \
         -system-libjpeg \
@@ -67,10 +87,10 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-    ln -fs '$(PREFIX)/$(TARGET)/bin/moc' '$(PREFIX)/bin/$(TARGET)-moc'
-    ln -fs '$(PREFIX)/$(TARGET)/bin/rcc' '$(PREFIX)/bin/$(TARGET)-roc'
-    ln -fs '$(PREFIX)/$(TARGET)/bin/uic' '$(PREFIX)/bin/$(TARGET)-uic'
-    ln -fs '$(PREFIX)/$(TARGET)/bin/qmake' '$(PREFIX)/bin/$(TARGET)-qmake'
+    ln -fs '$(MXE_BINDIR)/moc' '$(PREFIX)/bin/$(TARGET)-moc'
+    ln -fs '$(MXE_BINDIR)/rcc' '$(PREFIX)/bin/$(TARGET)-roc'
+    ln -fs '$(MXE_BINDIR)/uic' '$(PREFIX)/bin/$(TARGET)-uic'
+    ln -fs '$(MXE_BINDIR)/qmake' '$(PREFIX)/bin/$(TARGET)-qmake'
 
     # cd '$(1)/tools/assistant' && '$(1)/bin/qmake' assistant.pro
     # $(MAKE) -C '$(1)/tools/assistant' -j '$(JOBS)' install
@@ -81,13 +101,13 @@ define $(PKG)_BUILD
     # # at least some of the qdbus tools are useful on target
     # cd '$(1)/tools/qdbus' && '$(1)/bin/qmake' qdbus.pro
     # $(MAKE) -C '$(1)/tools/qdbus' -j '$(JOBS)' install
-    
+
     # lrelease (from linguist) needed by octave for GUI build
     $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install
-    ln -fs '$(PREFIX)/$(TARGET)/bin/lrelease' '$(PREFIX)/bin/$(TARGET)-lrelease'
+    ln -fs '$(MXE_BINDIR)/lrelease' '$(PREFIX)/bin/$(TARGET)-lrelease'
 
     # mkdir            '$(1)/test-qt'
     # cd               '$(1)/test-qt' && '$(TARGET)-qmake' '$(PWD)/$(2).pro'
     # $(MAKE)       -C '$(1)/test-qt' -j '$(JOBS)'
-    # $(INSTALL) -m755 '$(1)/test-qt/release/test-qt.exe' '$(PREFIX)/$(TARGET)/bin/'
+    # $(INSTALL) -m755 '$(1)/test-qt/release/test-qt.exe' '$(MXE_BINDIR)/'
 endef

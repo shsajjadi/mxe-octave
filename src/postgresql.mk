@@ -9,6 +9,14 @@ $(PKG)_FILE     := postgresql-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://ftp.postgresql.org/pub/source/v$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc zlib openssl
 
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  $(PKG)_CONFIGURE_FLAGS_OPTION := $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS)
+endif
+
+ifeq ($(MXE_SYSTEM),mingw)
+  $(PKG)_LIGS := -lsecur32
+endif
+
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.postgresql.org/gitweb?p=postgresql.git;a=tags' | \
     grep 'refs/tags/REL9[0-9_]*"' | \
@@ -23,6 +31,7 @@ define $(PKG)_BUILD
     cp -Rp '$(1)' '$(1).native'
     # Since we build only client libary, use bogus tzdata to satisfy configure.
     cd '$(1)' && ./configure \
+        $($(PKG)_CONFIGURE_FLAGS_OPTION) \
         --prefix='$(PREFIX)/$(TARGET)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
@@ -43,7 +52,7 @@ define $(PKG)_BUILD
         --without-libxslt \
         --with-zlib \
         --with-system-tzdata=/dev/null \
-        LIBS="-lsecur32 `'$(TARGET)-pkg-config' openssl --libs`"
+        LIBS="$($(PKG)_LIBS) `'$(TARGET)-pkg-config' openssl --libs`"
     $(MAKE) -C '$(1)'/src/interfaces/libpq -j '$(JOBS)' install haslibarule=
     $(MAKE) -C '$(1)'/src/port             -j '$(JOBS)'         haslibarule=
     $(MAKE) -C '$(1)'/src/bin/psql         -j '$(JOBS)' install haslibarule=

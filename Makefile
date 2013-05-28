@@ -1,11 +1,36 @@
 # This file is part of MXE.
 # See index.html for further information.
 
+# Set the following configuration variables with a configure script?
+
+# Current valid values are mingw (cross) and gnu-linux (native).
+MXE_SYSTEM := mingw
+#MXE_SYSTEM := gnu-linux
+
+# Set to "no" if doing a cross compile build.
+MXE_NATIVE_BUILD := no
+#MXE_NATIVE_BUILD := yes
+
+# Set to "yes" to use the verions of GCC and binutils already
+# installed on your system.
+USE_SYSTEM_GCC := no
+#USE_SYSTEM_GCC := yes
+
+# Should match what config.guess prints for your system.
+TARGET := i686-pc-mingw32
+#TARGET := x86_64-unknown-linux-gnu
+
 # Enable shared or static libs, or perhaps both.  At least one 
 # package uses --with instead of --enable.  Probably it doesn't
 # make sense to disable both...
 BUILD_SHARED := yes
 BUILD_STATIC := no
+
+USE_PIC_FLAG := no
+#USE_PIC_FLAG := yes
+
+## end of configuration variables.
+
 ifeq ($(BUILD_SHARED),yes)
   ifeq ($(BUILD_STATIC),yes)
     ENABLE_SHARED_OR_STATIC := --enable-shared --enable-static
@@ -19,8 +44,13 @@ else
   WITH_SHARED_OR_STATIC := --without-shared --with-static
 endif
 
+ifeq ($(USE_PIC_FLAG),yes)
+  MXE_CC_PICFLAG := -fPIC
+  MXE_CXX_PICFLAG := -fPIC
+  MXE_F77_PICFLAG := -fPIC
+endif
+
 JOBS               := 1
-TARGET             := i686-pc-mingw32
 SOURCEFORGE_MIRROR := freefr.dl.sourceforge.net
 PKG_MIRROR         := s3.amazonaws.com/mxe-pkg
 PKG_CDN            := d1yihgixbnrglp.cloudfront.net
@@ -40,7 +70,7 @@ REQUIREMENTS := bash bzip2 gcc $(MAKE) openssl $(PATCH) $(PERL) \
 
 LIBTOOL     := libtool
 LIBTOOLIZE  := libtoolize
-BUILD_TOOLS := build-autoconf build-automake build-cmake build-libtool build-pkg-config build-bison build-flex
+BUILD_TOOLS := $(patsubst src/%.mk, %, $(wildcard src/build-*.mk))
 
 PREFIX     := $(PWD)/usr
 LOG_DIR    := $(PWD)/log
@@ -51,18 +81,70 @@ MAKEFILE   := $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 TOP_DIR    := $(patsubst %/,%,$(dir $(MAKEFILE)))
 PKGS       := $(filter-out $(BUILD_TOOLS), $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html'))
 PATH       := $(PREFIX)/bin:$(PATH)
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  PATH := $(PREFIX)/$(TARGET)/bin:$(PATH)
+endif
 
-MSYS_BASE_URL := http://sourceforge.net/projects/mingw/files/MSYS/Base
-MSYS_BASE_VER := 1.0.13
-MSYS_BASE_DIR := $(PREFIX)/../msys-base
-MSYS_BASE_PACKAGES := $(addprefix msys-,bash coreutils diffutils file findutils gawk grep gzip less libiconv libintl libmagic make msys-core regex sed tar termcap)
+CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(PREFIX)/$(TARGET)/include'
+CONFIGURE_LDFLAGS := LDFLAGS='-L$(PREFIX)/$(TARGET)/lib'
 
-NOTEPAD_BASE_DIR := $(PREFIX)/../notepad++
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  MXE_AR := ar
+  MXE_RANLIB := ranlib
+  MXE_CC := gcc
+  MXE_CXX := g++
+  MXE_F77 := gfortran
+  ifeq ($(MXE_SYSTEM),mingw)
+    MXE_WINDRES := windres
+  else
+    MXE_WINDRES := true
+  endif
+  MXE_PKG_CONFIG := pkg-config
+  MXE_QMAKE := qmake
+else
+  MXE_AR := '$(PREFIX)/bin/$(TARGET)-ar'
+  MXE_RANLIB := '$(PREFIX)/bin/$(TARGET)-ranlib'
+  MXE_CC := '$(PREFIX)/bin/$(TARGET)-gcc'
+  MXE_CXX := '$(PREFIX)/bin/$(TARGET)-g++'
+  MXE_F77 := '$(PREFIX)/bin/$(TARGET)-gfortran'
+  ifeq ($(MXE_SYSTEM),mingw)
+    MXE_WINDRES := '$(PREFIX)/bin/$(TARGET)-windres'
+  else
+    MXE_WINDRES := true
+  endif
+  MXE_PKG_CONFIG := '$(PREFIX)/bin/$(TARGET)-pkg-config'
+  MXE_QMAKE := '$(PREFIX)/bin/$(TARGET)-qmake'
+endif
+
+ifeq ($(MXE_SYSTEM),mingw)
+  MAKE_SHARED_FROM_STATIC_OPTIONS := --windowsdll
+endif
+
+MXE_BINDIR := '$(PREFIX)/$(TARGET)/bin'
+MXE_LIBDIR := '$(PREFIX)/$(TARGET)/lib'
+MXE_INCDIR := '$(PREFIX)/$(TARGET)/include'
+
+ifeq ($(MXE_SYSTEM),mingw)
+  ifneq ($(MXE_NATIVE_BUILD),yes)
+    MSYS_BASE_URL := http://sourceforge.net/projects/mingw/files/MSYS/Base
+    MSYS_BASE_VER := 1.0.13
+    MSYS_BASE_DIR := $(PREFIX)/../msys-base
+    MSYS_BASE_PACKAGES := $(addprefix msys-,bash coreutils diffutils file findutils gawk grep gzip less libiconv libintl libmagic make msys-core regex sed tar termcap)
+
+    NOTEPAD_BASE_DIR := $(PREFIX)/../notepad++
+  endif
+else
+  LD_LIBRARY_PATH := '$(MXE_LIBDIR)'
+  export LD_LIBRARY_PATH
+  MXE_CPPFLAGS := '-I$(MXE_INCDIR)'
+  MXE_LDFLAGS := '-L$(MXE_LIBDIR)'
+endif
 
 OCTAVE_FORGE_BASE_URL := 'http://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
 OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim specfun general signal communications image io statistics control)
 
-MAKE_SHARED_FROM_STATIC := $(TOP_DIR)/tools/make-shared-from-static
+MAKE_SHARED_FROM_STATIC := \
+  $(TOP_DIR)/tools/make-shared-from-static $(MAKE_SHARED_FROM_STATIC_OPTIONS)
 
 CMAKE_TOOLCHAIN_FILE := $(PREFIX)/$(TARGET)/share/cmake/mxe-conf.cmake
 
@@ -161,6 +243,11 @@ $(PREFIX)/installed/check-requirements: $(MAKEFILE)
 	@echo '[check requirements]'
 	$(foreach REQUIREMENT,$(REQUIREMENTS),$(call CHECK_REQUIREMENT,$(REQUIREMENT)))
 	@[ -d '$(PREFIX)/installed' ] || mkdir -p '$(PREFIX)/installed'
+	@if test "$(USE_SYSTEM_GCC)" = yes; then \
+	  $(INSTALL) -d '$(PREFIX)/bin' ; \
+	  $(INSTALL) -m 755 tools/config.guess '$(PREFIX)/bin/config.guess' ; \
+	  $(INSTALL) -m 755 tools/config.sub '$(PREFIX)/bin/config.sub' ; \
+	fi
 	@touch '$@'
 
 define newline

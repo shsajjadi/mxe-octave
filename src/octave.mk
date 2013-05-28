@@ -9,6 +9,16 @@ $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://alpha.gnu.org/gnu/octave/$($(PKG)_FILE)
 $(PKG)_DEPS     := arpack blas curl fftw fltk fontconfig gcc glpk gnuplot graphicsmagick hdf5 lapack llvm pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
 
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH="'$(LD_LIBRARY_PATH)'"
+else
+  ifeq ($(MXE_SYSTEM),mingw)
+    $(PKG)_CROSS_CONFIG_OPTIONS := \
+      FLTK_CONFIG='$(PREFIX)/bin/$(TARGET)-fltk-config' \
+      gl_cv_func_gettimeofday_clobber=no
+  endif
+endif
+
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package octave.' >&2;
     echo $(octave_VERSION)
@@ -17,12 +27,13 @@ endef
 define $(PKG)_BUILD
     mkdir '$(1)/.build'
     cd '$(1)' && autoreconf -W none
-    cd '$(1)/.build' && '$(1)/configure' \
+    cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
+        $(CONFIGURE_CPPFLAGS) \
+        LDFLAGS='-Wl,-rpath-link,$(MXE_LIBDIR) -L$(MXE_LIBDIR)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         --prefix='$(PREFIX)/$(TARGET)' \
-        FLTK_CONFIG="$(PREFIX)/bin/$(TARGET)-fltk-config" \
-        gl_cv_func_gettimeofday_clobber=no
+	$($(PKG)_CROSS_CONFIG_OPTIONS)
 
     ## We want both of these install steps so that we install in the
     ## location set by the configure --prefix option, and the other
