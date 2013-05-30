@@ -284,8 +284,9 @@ $(PREFIX)/installed/$(1): $(TOP_DIR)/src/$(1).mk \
 	@[ -d '$(LOG_DIR)/$(TIMESTAMP)' ] || mkdir -p '$(LOG_DIR)/$(TIMESTAMP)'
 	@if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
 	    echo '[download] $(1)'; \
-	    ($(call DOWNLOAD_PKG_ARCHIVE,$(1))) &> '$(LOG_DIR)/$(TIMESTAMP)/$(1)-download'; \
+	    touch '$(LOG_DIR)/$(TIMESTAMP)/$(1)-download'; \
 	    ln -sf '$(TIMESTAMP)/$(1)-download' '$(LOG_DIR)/$(1)-download'; \
+	    ($(call DOWNLOAD_PKG_ARCHIVE,$(1))) &> '$(LOG_DIR)/$(1)-download'; \
 	    if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
 	        echo; \
 	        echo 'Wrong checksum of package $(1)!'; \
@@ -302,7 +303,7 @@ $(PREFIX)/installed/$(1): $(TOP_DIR)/src/$(1).mk \
 	    ,)
 	@touch '$(LOG_DIR)/$(TIMESTAMP)/$(1)'
 	@ln -sf '$(TIMESTAMP)/$(1)' '$(LOG_DIR)/$(1)'
-	@if ! (time $(MAKE) -f '$(MAKEFILE)' 'build-only-$(1)') &> '$(LOG_DIR)/$(TIMESTAMP)/$(1)'; then \
+	@if ! (time $(MAKE) -f '$(MAKEFILE)' 'build-only-$(1)') &> '$(LOG_DIR)/$(1)'; then \
 	    echo; \
 	    echo 'Failed to build package $(1)!'; \
 	    echo '------------------------------------------------------------'; \
