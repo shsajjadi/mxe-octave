@@ -144,6 +144,17 @@ else
   MXE_LDFLAGS := '-L$(MXE_LIBDIR)'
 endif
 
+LN := ln
+LN_S := $(LN) -s
+LN_SF := $(LN_S) -f
+ifeq ($(MXE_SYSTEM),mingw)
+  ifeq ($(MXE_NATIVE_BUILD),yes)
+    LN := cp
+    LN_S := $(LN)
+    LN_SF := $(LN_S)
+  endif
+endif
+
 OCTAVE_FORGE_BASE_URL := 'http://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
 OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim specfun general signal communications image io statistics control)
 

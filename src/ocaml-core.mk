@@ -80,7 +80,7 @@ define $(PKG)_BUILD
 			 $(1)/otherlibs/win32graph \
 			 $(1)/otherlibs/bigarray \
 			 $(1)/otherlibs/systhreads; do \
-				 ln -sf Makefile.nt $$d/Makefile; \
+				 $(LN_SF) Makefile.nt $$d/Makefile; \
 	done
 	# Now clean the temporary files from the previous build.  This
 	# will also cause asmcomp/arch.ml (etc) to be linked to the 32 bit

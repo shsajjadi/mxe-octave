@@ -87,10 +87,10 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-    ln -fs '$(MXE_BINDIR)/moc' '$(PREFIX)/bin/$(TARGET)-moc'
-    ln -fs '$(MXE_BINDIR)/rcc' '$(PREFIX)/bin/$(TARGET)-roc'
-    ln -fs '$(MXE_BINDIR)/uic' '$(PREFIX)/bin/$(TARGET)-uic'
-    ln -fs '$(MXE_BINDIR)/qmake' '$(PREFIX)/bin/$(TARGET)-qmake'
+    $(LN_SF) '$(MXE_BINDIR)/moc' '$(PREFIX)/bin/$(TARGET)-moc'
+    $(LN_SF) '$(MXE_BINDIR)/rcc' '$(PREFIX)/bin/$(TARGET)-roc'
+    $(LN_SF) '$(MXE_BINDIR)/uic' '$(PREFIX)/bin/$(TARGET)-uic'
+    $(LN_SF) '$(MXE_BINDIR)/qmake' '$(PREFIX)/bin/$(TARGET)-qmake'
 
     # cd '$(1)/tools/assistant' && '$(1)/bin/qmake' assistant.pro
     # $(MAKE) -C '$(1)/tools/assistant' -j '$(JOBS)' install
@@ -104,7 +104,7 @@ define $(PKG)_BUILD
 
     # lrelease (from linguist) needed by octave for GUI build
     $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install
-    ln -fs '$(MXE_BINDIR)/lrelease' '$(PREFIX)/bin/$(TARGET)-lrelease'
+    $(LN_SF) '$(MXE_BINDIR)/lrelease' '$(PREFIX)/bin/$(TARGET)-lrelease'
 
     # mkdir            '$(1)/test-qt'
     # cd               '$(1)/test-qt' && '$(TARGET)-qmake' '$(PWD)/$(2).pro'

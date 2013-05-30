@@ -53,9 +53,9 @@ define $(PKG)_NATIVE_BUILD
 endef
 
 define $(PKG)_SYMLINK
-    ln -sf `which glib-genmarshal`        '$(PREFIX)/$(TARGET)/bin/'
-    ln -sf `which glib-compile-schemas`   '$(PREFIX)/$(TARGET)/bin/'
-    ln -sf `which glib-compile-resources` '$(PREFIX)/$(TARGET)/bin/'
+    $(LN_SF) `which glib-genmarshal`        '$(PREFIX)/$(TARGET)/bin/'
+    $(LN_SF) `which glib-compile-schemas`   '$(PREFIX)/$(TARGET)/bin/'
+    $(LN_SF) `which glib-compile-resources` '$(PREFIX)/$(TARGET)/bin/'
 endef
 
 define $(PKG)_BUILD
