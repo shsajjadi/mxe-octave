@@ -3,10 +3,10 @@
 
 PKG             := build-texinfo
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := ed5aa2b93910dde4eacd5d649329a49db701878c
-$(PKG)_SUBDIR   := texinfo-$($(PKG)_VERSION)
-$(PKG)_FILE     := texinfo-$($(PKG)_VERSION).tar.xz
-$(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/texinfo/$($(PKG)_FILE)
+$(PKG)_CHECKSUM := a1533cf8e03ea4fa6c443b73f4c85e4da04dead0
+$(PKG)_SUBDIR   := $(PKG)-4.13
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
+$(PKG)_URL      := ftp://ftp.gnu.org/gnu/texinfo/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
