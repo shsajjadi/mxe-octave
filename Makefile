@@ -17,8 +17,12 @@ USE_SYSTEM_GCC := no
 #USE_SYSTEM_GCC := yes
 
 # Should match what config.guess prints for your system.
-TARGET := i686-pc-mingw32
-#TARGET := x86_64-unknown-linux-gnu
+# If cross compiling, you must set it manually.
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  TARGET := `tools/config.guess`
+else
+  TARGET := i686-pc-mingw32
+endif
 
 # Enable shared or static libs, or perhaps both.  At least one 
 # package uses --with instead of --enable.  Probably it doesn't
