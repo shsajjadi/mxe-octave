@@ -10,7 +10,7 @@ $(PKG)_URL      := http://fltk.org/pub/fltk/$($(PKG)_VERSION)/$($(PKG)_FILE)
 ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_DEPS   := gcc zlib jpeg libpng pthreads uuid
 else
-  $(PKG)_DEPS   := gcc zlib jpeg libpng pthreads
+  $(PKG)_DEPS   := gcc zlib jpeg libpng pthreads freetype
 endif
 
 define $(PKG)_UPDATE
