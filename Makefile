@@ -19,7 +19,7 @@ USE_SYSTEM_GCC := no
 # Should match what config.guess prints for your system.
 # If cross compiling, you must set it manually.
 ifeq ($(MXE_NATIVE_BUILD),yes)
-  TARGET := `tools/config.guess`
+  TARGET := $(shell tools/config.guess)
 else
   TARGET := i686-pc-mingw32
 endif
