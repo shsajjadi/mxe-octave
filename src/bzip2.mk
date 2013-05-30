@@ -44,7 +44,7 @@ define $(PKG)_BUILD
     $(INSTALL) -d '$(MXE_LIBDIR)'
     $(INSTALL) -m755 '$(1)/libbz2.so.1.0.6' '$(MXE_LIBDIR)/'
     rm -f '$(MXE_LIBDIR)/libbz2.so.1.0'
-    ln -s libbz2.so.1.0.6 '$(MXE_LIBDIR)/libbz2.so.1.0'
+    $(LN_SF) libbz2.so.1.0.6 '$(MXE_LIBDIR)/libbz2.so.1.0'
     $(INSTALL) -d '$(MXE_INCDIR)'
     $(INSTALL) -m644 '$(1)/bzlib.h' '$(MXE_INCDIR)/'
 endef

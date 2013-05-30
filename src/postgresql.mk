@@ -81,5 +81,5 @@ define $(PKG)_BUILD
         --with-system-tzdata=/dev/null
     $(MAKE) -C '$(1).native'/src/port          -j '$(JOBS)'
     $(MAKE) -C '$(1).native'/src/bin/pg_config -j '$(JOBS)' install
-    ln -sf '$(PREFIX)/$(TARGET)/bin/pg_config' '$(PREFIX)/bin/$(TARGET)-pg_config'
+    $(LN_SF) '$(PREFIX)/$(TARGET)/bin/pg_config' '$(PREFIX)/bin/$(TARGET)-pg_config'
 endef

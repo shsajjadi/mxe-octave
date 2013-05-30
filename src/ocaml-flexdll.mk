@@ -30,7 +30,7 @@ define $(PKG)_BUILD
 		flexdll_initer_mingw.o \
 		'$(PREFIX)/$(TARGET)/lib/ocaml/flexdll'
 	# create flexdll scripts
-	cd '$(PREFIX)/bin' && ln -sf '$(PREFIX)/$(TARGET)/lib/ocaml/flexdll/flexlink'
+	cd '$(PREFIX)/bin' && $(LN_SF) '$(PREFIX)/$(TARGET)/lib/ocaml/flexdll/flexlink'
 	(echo '#!/bin/sh'; \
 	 echo 'exec flexlink -I $(PREFIX)/$(TARGET)/lib -chain mingw -nocygpath "$$@"') \
 			> '$(PREFIX)/bin/$(TARGET)-flexlink'

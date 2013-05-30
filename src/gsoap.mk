@@ -46,7 +46,7 @@ define $(PKG)_BUILD
         CPPFLAGS='-DWITH_NTLM'
 
     # Building for mingw requires native soapcpp2
-    ln -sf '$(PREFIX)/bin/$(TARGET)-soapcpp2' '$(1)/gsoap/src/soapcpp2'
+    $(LN_SF) '$(PREFIX)/bin/$(TARGET)-soapcpp2' '$(1)/gsoap/src/soapcpp2'
 
     # Work around parallel build problem
     $(MAKE) -C '$(1)'/gsoap/src -j '$(JOBS)' soapcpp2_yacc.h AR='$(TARGET)-ar'

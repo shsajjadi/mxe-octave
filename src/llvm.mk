@@ -26,5 +26,5 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/build' -j $(JOBS) llvm-tblgen
     $(MAKE) -C '$(1)/build' -j $(JOBS) intrinsics_gen
     $(MAKE) -C '$(1)/build' -j $(JOBS) install
-    ln -sf '$(PREFIX)/$(TARGET)/bin/llvm-config' '$(PREFIX)/bin/$(TARGET)-llvm-config'
+    $(LN_SF) '$(PREFIX)/$(TARGET)/bin/llvm-config' '$(PREFIX)/bin/$(TARGET)-llvm-config'
 endef
