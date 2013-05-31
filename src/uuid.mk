@@ -17,5 +17,6 @@ define $(PKG)_BUILD
     if [ $(BUILD_SHARED) = yes ]; then \
       $(INSTALL) -d '$(PREFIX)/$(TARGET)/bin'; \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/lib/libuuid.a' --install '$(INSTALL)' --libdir '$(PREFIX)/$(TARGET)/lib' --bindir '$(PREFIX)/$(TARGET)/bin'; \
+      rm -f '$(PREFIX)/$(TARGET)/lib/libuuid.dll.a'; \
     fi
 endef

@@ -28,6 +28,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > octave.nsi
 Name "Octave"
 OutFile "Octave-Installer.exe"
 InstallDir "c:\\$OCTAVE_SOURCE"
+Icon "$OCTAVE_SOURCE\\$ICON"
 ShowInstDetails show
 ShowUnInstDetails show
 

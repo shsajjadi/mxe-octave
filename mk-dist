@@ -120,12 +120,13 @@ fi
 cd $TOPDIR/dist
 
 if [ $installer = "yes" ]; then
-  sh ../makeinst-script.sh $OCTAVE_TARGET-$DATE
+  $SHELL ../makeinst-script.sh $OCTAVE_TARGET-$DATE
 
   echo "Generating installer ..."
   $TOPDIR/usr/bin/$TARGET-makensis octave.nsi > /dev/null
 
   if [ -e Octave-Installer.exe ]; then
+    echo "Installer created"
     rm octave.nsi
   fi
 
