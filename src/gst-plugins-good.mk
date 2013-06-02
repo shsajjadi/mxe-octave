@@ -23,8 +23,7 @@ define $(PKG)_BUILD
     #   http://www.videolan.org/developers/vlc/doc/doxygen/html/vlc__codecs_8h-source.html
     #   http://lists.mplayerhq.hu/pipermail/mplayer-cvslog/2004-August/019283.html
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-debug \

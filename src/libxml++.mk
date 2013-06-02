@@ -18,8 +18,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && CXX="$(TARGET)-g++ -mthreads" ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         MAKE=$(MAKE)

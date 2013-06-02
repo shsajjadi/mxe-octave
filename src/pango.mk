@@ -20,8 +20,7 @@ define $(PKG)_BUILD
     rm '$(1)'/docs/Makefile.am
     cd '$(1)' && NOCONFIGURE=1 ./autogen.sh
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --disable-gtk-doc \

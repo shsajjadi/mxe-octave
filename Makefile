@@ -29,6 +29,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
 else
   TARGET := i686-pc-mingw32
 endif
+BUILD_SYSTEM := $(shell tools/config.guess)
 
 # Enable shared or static libs, or perhaps both.  At least one 
 # package uses --with instead of --enable.  Probably it doesn't
@@ -40,6 +41,11 @@ USE_PIC_FLAG := no
 #USE_PIC_FLAG := yes
 
 ## end of configuration variables.
+
+ifneq ($(MXE_NATIVE_BUILD),yes)
+  HOST_AND_BUILD_CONFIGURE_OPTIONS := \
+    --host='$(TARGET)' --build='$(BUILD_SYSTEM)'
+endif
 
 # These can't be chosen arbitrarily.  The way things are configured now,
 # GCC expects to find cross-compiler include files in $(PREFIX)/$(TARGET).

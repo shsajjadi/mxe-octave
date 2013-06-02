@@ -18,8 +18,7 @@ define $(PKG)_BUILD
     mkdir '$(1)/.build'
     cd '$(1)/.build' && '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)'
 
     ## All we need for Octave is makeinfo.

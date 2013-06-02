@@ -78,7 +78,7 @@ define $(PKG)_BUILD
     mkdir '$(1).build'
     cd    '$(1).build' && '$(1)/configure' \
         --target='$(TARGET)' \
-        --build="`config.guess`" \
+        --build='$(BUILD_SYSTEM)' \
         --prefix='$(BUILD_TOOLS_PREFIX)' \
         --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
         --enable-languages='c,c++,fortran' \

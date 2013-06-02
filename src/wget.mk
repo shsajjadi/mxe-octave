@@ -19,8 +19,7 @@ define $(PKG)_BUILD
     $(SED) -i 's/^base64_encode /wget_base64_encode /;' '$(1)/src/utils.c'
     $(SED) -i 's/-lidn/`i686-pc-mingw32-pkg-config --libs libidn`/g;' '$(1)/configure'
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         --with-ssl=gnutls
     $(MAKE) -C '$(1)' -j '$(JOBS)' install

@@ -24,7 +24,7 @@ define $(PKG)_BUILD
     $(SED) -i 's,mv.*libpano13\.dll.*,,'                                                   '$(1)/Makefile.in'
     cd '$(1)' && ./configure \
         --prefix='$(HOST_PREFIX)' \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --with-jpeg='$(HOST_PREFIX)'/lib \
         --with-tiff='$(HOST_PREFIX)'/lib \

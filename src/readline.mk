@@ -32,7 +32,7 @@ define $(PKG)_BUILD
     $(SED) -i 's,^ *case SIGTSTP:.*,,' '$(1)/signals.c'
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --enable-multibyte \

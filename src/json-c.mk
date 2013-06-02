@@ -18,9 +18,8 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./autogen.sh
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
-        --build="`config.guess`"\
         $(ENABLE_SHARED_OR_STATIC)
         CFLAGS=-Wno-error
     $(MAKE) -C '$(1)' -j '$(JOBS)' install

@@ -18,8 +18,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && touch src/libgsasl-7.def && ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --disable-nls \

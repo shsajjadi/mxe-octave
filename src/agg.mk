@@ -19,8 +19,7 @@ define $(PKG)_BUILD
     $(SED) -i 's,aclocal,aclocal -I $(HOST_PREFIX)/share/aclocal,' '$(1)/autogen.sh'
     $(SED) -i 's,libtoolize,$(LIBTOOLIZE),'                             '$(1)/autogen.sh'
     cd '$(1)' && $(SHELL) ./autogen.sh \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --without-x

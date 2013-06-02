@@ -18,7 +18,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)/gettext-runtime' && ./configure \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --enable-threads=win32 \

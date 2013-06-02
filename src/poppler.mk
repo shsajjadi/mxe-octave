@@ -21,8 +21,7 @@ define $(PKG)_BUILD
     #       because libtiff is not found, but because some references are
     #       undefined)
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         --disable-silent-rules \
         $(ENABLE_SHARED_OR_STATIC) \

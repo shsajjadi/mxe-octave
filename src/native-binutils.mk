@@ -28,8 +28,7 @@ define $(PKG)_BUILD
 
     cd '$(1)' && ./configure \
         --target='$(TARGET)' \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='/usr' \
         --with-gcc \
         --with-gnu-ld \

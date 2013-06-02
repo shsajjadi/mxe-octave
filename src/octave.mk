@@ -30,8 +30,7 @@ define $(PKG)_BUILD
     cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) \
         LDFLAGS='-Wl,-rpath-link,$(MXE_LIBDIR) -L$(MXE_LIBDIR)' \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
 	$($(PKG)_CROSS_CONFIG_OPTIONS)
 

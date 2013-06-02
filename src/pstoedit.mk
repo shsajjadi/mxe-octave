@@ -18,8 +18,7 @@ define $(PKG)_BUILD
     cd '$(1)' && autoreconf
     mkdir '$(1)/.build'
     cd '$(1)/.build' && '$(1)/configure' \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)'
 
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install

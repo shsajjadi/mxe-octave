@@ -17,8 +17,7 @@ endef
 define $(PKG)_BUILD
     mkdir -p '$(1)/build/$(TARGET)/libgomp'
     cd       '$(1)/build/$(TARGET)/libgomp' && '$(1)/libgomp/configure' \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --target='$(TARGET)' \
         --prefix='$(BUILD_TOOLS_PREFIX)' \
         --enable-version-specific-runtime-libs \

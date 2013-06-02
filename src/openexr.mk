@@ -23,7 +23,7 @@ define $(PKG)_BUILD
         (cd '$(1)/$(ilmbase_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
     echo 'echo $1' > '$(1)/$(ilmbase_SUBDIR)/config.sub'
     cd '$(1)/$(ilmbase_SUBDIR)' && $(SHELL) ./configure \
-        --build="`config.guess`" \
+        --build='$(BUILD_SYSTEM)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(1)/ilmbase' \
         --enable-threading=no \
@@ -32,8 +32,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/$(ilmbase_SUBDIR)' -j '$(JOBS)' install \
         bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --disable-threading \

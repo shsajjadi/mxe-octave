@@ -21,7 +21,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
       --prefix='$(HOST_PREFIX)' \
-      --host='$(TARGET)' \
+      $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
       $(ENABLE_SHARED_OR_STATIC) \
       --without-tests \
       --disable-dependency-tracking

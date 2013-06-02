@@ -20,7 +20,7 @@ define $(PKG)_BUILD
     $(SED) -i 's,glib-mkenums,'$(HOST_PREFIX)/bin/glib-mkenums',g' '$(1)/libgda/sql-parser/Makefile.in'
     $(SED) -i 's,glib-mkenums,'$(HOST_PREFIX)/bin/glib-mkenums',g' '$(1)/libgda-ui/Makefile.in'
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-gtk-doc \

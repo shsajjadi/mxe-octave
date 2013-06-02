@@ -28,7 +28,7 @@ define $(PKG)_BUILD
     $(SED) -i 's,-lX11 ,,g'     '$(1)/configure'
     $(SED) -i 's,png12,png15,g' '$(1)/configure'
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --with-freetype='$(HOST_PREFIX)' \

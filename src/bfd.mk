@@ -16,7 +16,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)/bfd' && ./configure \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --target='$(TARGET)' \
         --prefix='$(HOST_PREFIX)' \
         --enable-install-libbfd \
