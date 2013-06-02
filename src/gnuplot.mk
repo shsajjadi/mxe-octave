@@ -20,10 +20,10 @@ define $(PKG)_BUILD
     make -C '$(1)/config/mingw' CC='$(TARGET)-gcc' CXX='$(TARGET)-g++' RC='$(TARGET)-windres' -j '$(JOBS)' TARGET=wgnuplot.exe wgnuplot.exe
     make -C '$(1)/config/mingw' CC='$(TARGET)-gcc' CXX='$(TARGET)-g++' RC='$(TARGET)-windres' -j '$(JOBS)' wgnuplot.mnu
 
-    $(INSTALL) -d '$(HOST_PREFIX)/bin'
-    $(INSTALL) -m755 '$(1)/config/mingw/gnuplot.exe' '$(HOST_PREFIX)/bin/'
-    $(INSTALL) -m755 '$(1)/config/mingw/wgnuplot.exe' '$(HOST_PREFIX)/bin/'
-    $(INSTALL) -m644 '$(1)/config/mingw/wgnuplot.mnu' '$(HOST_PREFIX)/bin/'
+    $(INSTALL) -d '$(HOST_BINDIR)'
+    $(INSTALL) -m755 '$(1)/config/mingw/gnuplot.exe' '$(HOST_BINDIR)'
+    $(INSTALL) -m755 '$(1)/config/mingw/wgnuplot.exe' '$(HOST_BINDIR)'
+    $(INSTALL) -m644 '$(1)/config/mingw/wgnuplot.mnu' '$(HOST_BINDIR)'
 
     $(INSTALL) -d '$(TOP_DIR)/gnuplot/bin'
     $(INSTALL) -m755 '$(1)/config/mingw/gnuplot.exe' '$(TOP_DIR)/gnuplot/bin/'

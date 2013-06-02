@@ -30,7 +30,7 @@ define $(PKG)_BUILD
 
 ##    '$(TARGET)-gcc' \
 ##        -W -Wall -Werror -ansi -pedantic \
-##        '$(2).c' -o '$(HOST_PREFIX)/bin/test-curl.exe' \
+##        '$(2).c' -o '$(HOST_BINDIR)/test-curl.exe' \
 ##        `'$(TARGET)-pkg-config' libcurl --cflags --libs`
 
 endef

@@ -20,7 +20,7 @@ define $(PKG)_BUILD
     # context switched library introduced in boost 1.51.0 does not build
     rm -r '$(1)/libs/context'
     # old version appears to interfere
-    rm -rf '$(HOST_PREFIX)/include/boost/'
+    rm -rf '$(HOST_INCDIR)/boost'
     echo 'using gcc : : $(TARGET)-g++ : <rc>$(TARGET)-windres <archiver>$(TARGET)-ar ;' > '$(1)/user-config.jam'
     # compile boost jam
     cd '$(1)/tools/build/v2/engine' && ./build.sh
@@ -36,16 +36,16 @@ define $(PKG)_BUILD
         --without-mpi \
         --without-python \
         --prefix='$(HOST_PREFIX)' \
-        --exec-prefix='$(HOST_PREFIX)/bin' \
-        --libdir='$(HOST_PREFIX)/lib' \
-        --includedir='$(HOST_PREFIX)/include' \
-        -sEXPAT_INCLUDE='$(HOST_PREFIX)/include' \
-        -sEXPAT_LIBPATH='$(HOST_PREFIX)/lib' \
+        --exec-prefix='$(HOST_BINDIR)' \
+        --libdir='$(HOST_LIBDIR)' \
+        --includedir='$(HOST_INCDIR)' \
+        -sEXPAT_INCLUDE='$(HOST_INCDIR)' \
+        -sEXPAT_LIBPATH='$(HOST_LIBDIR)' \
         stage install
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -U__STRICT_ANSI__ -pedantic \
-        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-boost.exe' \
+        '$(2).cpp' -o '$(HOST_BINDIR)/test-boost.exe' \
         -DBOOST_THREAD_USE_LIB \
         -lboost_serialization-mt \
         -lboost_thread_win32-mt \

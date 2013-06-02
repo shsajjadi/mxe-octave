@@ -27,9 +27,9 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j 1 install
 
     if [ -d $(HOST_PREFIX)/lib64 ]; then \
-      $(INSTALL) -d $(MXE_LIBDIR)/pkgconfig; \
-      mv $(HOST_PREFIX)/lib64/pkgconfig/* $(MXE_LIBDIR)/pkgconfig; \
+      $(INSTALL) -d $(HOST_LIBDIR)/pkgconfig; \
+      mv $(HOST_PREFIX)/lib64/pkgconfig/* $(HOST_LIBDIR)/pkgconfig; \
       rmdir $(HOST_PREFIX)/lib64/pkgconfig; \
-      mv $(HOST_PREFIX)/lib64/* $(MXE_LIBDIR); \
+      mv $(HOST_PREFIX)/lib64/* $(HOST_LIBDIR); \
     fi
 endef

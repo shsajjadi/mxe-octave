@@ -23,8 +23,8 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --enable-threads=win32 \
-        --with-gmp-include='$(HOST_PREFIX)/include/'
-        --with-gmp-lib='$(HOST_PREFIX)/lib/'
+        --with-gmp-include='$(HOST_INCDIR)'
+        --with-gmp-lib='$(HOST_LIBDIR)'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef

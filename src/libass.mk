@@ -27,6 +27,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libass.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-libass.exe' \
         `'$(TARGET)-pkg-config' libass --cflags --libs`
 endef

@@ -25,6 +25,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libiberty.exe' \
-        -I$(HOST_PREFIX)/include/libiberty -liberty
+        '$(2).c' -o '$(HOST_BINDIR)/test-libiberty.exe' \
+        -I$(HOST_INCDIR)/libiberty -liberty
 endef

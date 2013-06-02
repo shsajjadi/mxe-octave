@@ -95,12 +95,12 @@ define $(PKG)_BUILD
         $(shell [ `uname -s` == Darwin ] && echo "LDFLAGS='-Wl,-no_pie'")
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     $(MAKE) -C '$(1).build' -j 1 install
-    mkdir -p $(TOP_DIR)/cross-tools/$(MXE_BINDIR)
+    mkdir -p $(TOP_DIR)/cross-tools/$(HOST_BINDIR)
     $(MAKE) -C '$(1).build' -j 1 DESTDIR=$(TOP_DIR)/cross-tools install
 
     # create pkg-config script
     (echo '#!/bin/sh'; \
-     echo 'PKG_CONFIG_PATH="$$PKG_CONFIG_PATH_$(subst -,_,$(TARGET))" PKG_CONFIG_LIBDIR='\''$(MXE_LIBDIR)/pkgconfig'\'' exec pkg-config $($(PKG)_STATIC_FLAG) "$$@"') \
+     echo 'PKG_CONFIG_PATH="$$PKG_CONFIG_PATH_$(subst -,_,$(TARGET))" PKG_CONFIG_LIBDIR='\''$(HOST_LIBDIR)/pkgconfig'\'' exec pkg-config $($(PKG)_STATIC_FLAG) "$$@"') \
              > '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config'
     chmod 0755 '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config'
 

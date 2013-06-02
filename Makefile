@@ -139,9 +139,9 @@ ifeq ($(MXE_SYSTEM),mingw)
   MAKE_SHARED_FROM_STATIC_OPTIONS := --windowsdll
 endif
 
-MXE_BINDIR := '$(HOST_PREFIX)/bin'
-MXE_LIBDIR := '$(HOST_PREFIX)/lib'
-MXE_INCDIR := '$(HOST_PREFIX)/include'
+HOST_BINDIR := '$(HOST_PREFIX)/bin'
+HOST_LIBDIR := '$(HOST_PREFIX)/lib'
+HOST_INCDIR := '$(HOST_PREFIX)/include'
 
 ifeq ($(MXE_SYSTEM),mingw)
   ifneq ($(MXE_NATIVE_BUILD),yes)
@@ -153,10 +153,10 @@ ifeq ($(MXE_SYSTEM),mingw)
     NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
   endif
 else
-  LD_LIBRARY_PATH := '$(MXE_LIBDIR)'
+  LD_LIBRARY_PATH := '$(HOST_LIBDIR)'
   export LD_LIBRARY_PATH
-  MXE_CPPFLAGS := '-I$(MXE_INCDIR)'
-  MXE_LDFLAGS := '-L$(MXE_LIBDIR)'
+  MXE_CPPFLAGS := '-I$(HOST_INCDIR)'
+  MXE_LDFLAGS := '-L$(HOST_LIBDIR)'
 endif
 
 LN := ln

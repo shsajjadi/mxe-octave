@@ -33,6 +33,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -std=c99 -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-smpeg.exe' \
-        `'$(HOST_PREFIX)/bin/smpeg-config' --cflags --libs`
+        '$(2).c' -o '$(HOST_BINDIR)/test-smpeg.exe' \
+        `'$(HOST_BINDIR)/smpeg-config' --cflags --libs`
 endef

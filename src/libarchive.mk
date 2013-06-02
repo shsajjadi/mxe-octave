@@ -24,12 +24,12 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-bsdtar \
         --disable-bsdcpio \
-        XML2_CONFIG='$(HOST_PREFIX)'/bin/xml2-config
+        XML2_CONFIG='$(HOST_BINDIR)'/xml2-config
     $(MAKE) -C '$(1)' -j '$(JOBS)' man_MANS=
     $(MAKE) -C '$(1)' -j 1 install man_MANS=
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libarchive.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-libarchive.exe' \
         `'$(TARGET)-pkg-config' --libs-only-l libarchive`
 endef

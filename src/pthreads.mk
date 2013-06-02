@@ -17,17 +17,17 @@ endef
 ifeq ($(MXE_SYSTEM),mingw)
 define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j 1 GC-static CROSS='$(TARGET)-'
-    $(INSTALL) -d '$(MXE_LIBDIR)'
-    $(INSTALL) -m644 '$(1)/libpthreadGC2.a' '$(MXE_LIBDIR)/libpthread.a'
+    $(INSTALL) -d '$(HOST_LIBDIR)'
+    $(INSTALL) -m644 '$(1)/libpthreadGC2.a' '$(HOST_LIBDIR)/libpthread.a'
 
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(MXE_LIBDIR)/libpthread.a' --install '$(INSTALL)' --libdir '$(MXE_LIBDIR)' --bindir '$(MXE_BINDIR)'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(HOST_LIBDIR)/libpthread.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
     fi
 
-    $(INSTALL) -d '$(MXE_INCDIR)'
-    $(INSTALL) -m644 '$(1)/pthread.h'   '$(MXE_INCDIR)/'
-    $(INSTALL) -m644 '$(1)/sched.h'     '$(MXE_INCDIR)/'
-    $(INSTALL) -m644 '$(1)/semaphore.h' '$(MXE_INCDIR)/'
+    $(INSTALL) -d '$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/pthread.h'   '$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/sched.h'     '$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/semaphore.h' '$(HOST_INCDIR)'
 endef
 else
 define $(PKG)_BUILD

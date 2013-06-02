@@ -26,6 +26,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-liboauth.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-liboauth.exe' \
         `'$(TARGET)-pkg-config' oauth --cflags --libs`
 endef

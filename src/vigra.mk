@@ -34,7 +34,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/build' -j '$(JOBS)' install
 
     $(TARGET)-g++ \
-        '$(2).cpp' -o $(HOST_PREFIX)/bin/test-vigra.exe \
+        '$(2).cpp' -o $(HOST_BINDIR)/test-vigra.exe \
         -DVIGRA_STATIC_LIB \
         -lvigraimpex `'$(TARGET)-pkg-config' OpenEXR libtiff-4 libpng --cflags --libs` -ljpeg
 endef

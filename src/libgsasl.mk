@@ -30,6 +30,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libgsasl.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-libgsasl.exe' \
         `'$(TARGET)-pkg-config' libgsasl --cflags --libs`
 endef

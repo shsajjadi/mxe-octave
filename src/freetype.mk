@@ -22,5 +22,5 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
-    rm -f $(MXE_LIBDIR)/libfreetype.la
+    rm -f $(HOST_LIBDIR)/libfreetype.la
 endef

@@ -33,6 +33,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-guile.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-guile.exe' \
         `'$(TARGET)-pkg-config' guile-1.8 --cflags --libs`
 endef

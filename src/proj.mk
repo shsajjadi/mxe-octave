@@ -24,6 +24,6 @@ define $(PKG)_BUILD
         --with-mutex
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     # remove header which is not installed since 4.8.0
-    rm -f '$(HOST_PREFIX)'/include/projects.h
+    rm -f '$(HOST_INCDIR)/projects.h'
     $(MAKE) -C '$(1)' -j 1 install
 endef

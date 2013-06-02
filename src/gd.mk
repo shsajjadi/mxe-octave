@@ -33,14 +33,14 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --with-freetype='$(HOST_PREFIX)' \
         --without-x \
-        LIBPNG_CONFIG='$(HOST_PREFIX)/bin/libpng-config' \
-        CFLAGS='-DNONDLL -DXMD_H -L$(HOST_PREFIX)/lib' \
-        LIBS="`$(HOST_PREFIX)/bin/xml2-config --libs`"
+        LIBPNG_CONFIG='$(HOST_BINDIR)/libpng-config' \
+        CFLAGS='-DNONDLL -DXMD_H -L$(HOST_LIBDIR)' \
+        LIBS="`$(HOST_BINDIR)/xml2-config --libs`"
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-gd.exe' \
-        `'$(HOST_PREFIX)/bin/gdlib-config' --cflags` \
-        -lgd `'$(HOST_PREFIX)/bin/gdlib-config' --libs`
+        '$(2).c' -o '$(HOST_BINDIR)/test-gd.exe' \
+        `'$(HOST_BINDIR)/gdlib-config' --cflags` \
+        -lgd `'$(HOST_BINDIR)/gdlib-config' --libs`
 endef

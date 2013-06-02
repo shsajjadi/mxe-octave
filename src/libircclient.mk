@@ -24,17 +24,17 @@ define $(PKG)_BUILD
         --enable-threads \
         --disable-ipv6
     $(MAKE) -C '$(1)'/src -j '$(JOBS)' static
-    $(INSTALL) -d '$(HOST_PREFIX)/lib'
-    $(INSTALL) -m644 '$(1)/src/libircclient.a' '$(HOST_PREFIX)/lib/'
-    $(INSTALL) -d '$(HOST_PREFIX)/include/libircclient'
-    $(INSTALL) -m644 '$(1)/include/libircclient.h' '$(HOST_PREFIX)/include/libircclient'
-    $(INSTALL) -m644 '$(1)/include/libirc_errors.h' '$(HOST_PREFIX)/include/libircclient'
-    $(INSTALL) -m644 '$(1)/include/libirc_events.h' '$(HOST_PREFIX)/include/libircclient'
-    $(INSTALL) -m644 '$(1)/include/libirc_rfcnumeric.h' '$(HOST_PREFIX)/include/libircclient'
-    $(INSTALL) -m644 '$(1)/include/libirc_options.h' '$(HOST_PREFIX)/include/libircclient'
+    $(INSTALL) -d '$(HOST_LIBDIR)'
+    $(INSTALL) -m644 '$(1)/src/libircclient.a' '$(HOST_LIBDIR)'
+    $(INSTALL) -d '$(HOST_INCDIR)/libircclient'
+    $(INSTALL) -m644 '$(1)/include/libircclient.h' '$(HOST_INCDIR)/libircclient'
+    $(INSTALL) -m644 '$(1)/include/libirc_errors.h' '$(HOST_INCDIR)/libircclient'
+    $(INSTALL) -m644 '$(1)/include/libirc_events.h' '$(HOST_INCDIR)/libircclient'
+    $(INSTALL) -m644 '$(1)/include/libirc_rfcnumeric.h' '$(HOST_INCDIR)/libircclient'
+    $(INSTALL) -m644 '$(1)/include/libirc_options.h' '$(HOST_INCDIR)/libircclient'
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-libircclient.exe' \
+        '$(2).cpp' -o '$(HOST_BINDIR)/test-libircclient.exe' \
         -lircclient -lws2_32
 endef

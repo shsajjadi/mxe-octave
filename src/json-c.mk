@@ -26,6 +26,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-json-c.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-json-c.exe' \
         `'$(TARGET)-pkg-config' json --cflags --libs`
 endef

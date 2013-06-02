@@ -26,12 +26,12 @@ define $(PKG)_BUILD
         ./configure \
             $(ENABLE_SHARED_OR_STATIC) \
             --prefix='$(HOST_PREFIX)' \
-            --libdir='$(HOST_PREFIX)/lib' \
+            --libdir='$(HOST_LIBDIR)' \
             --disable-esd
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -std=c99 -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libmikmod.exe' \
-        `'$(HOST_PREFIX)/bin/libmikmod-config' --cflags --libs`
+        '$(2).c' -o '$(HOST_BINDIR)/test-libmikmod.exe' \
+        `'$(HOST_BINDIR)/libmikmod-config' --cflags --libs`
 endef

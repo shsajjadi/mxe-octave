@@ -18,7 +18,7 @@ define $(PKG)_BUILD
     mkdir '$(1).build'
     cd    '$(1).build' && '$(1)/configure' \
         --with-internal-glib \
-        --with-pc-path='$(MXE_LIBDIR)/pkgconfig' \
+        --with-pc-path='$(HOST_LIBDIR)/pkgconfig' \
         --prefix='$(BUILD_TOOLS_PREFIX)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     rm -f "$(BUILD_TOOLS_PREFIX)/bin/`config.guess`-pkg-config"

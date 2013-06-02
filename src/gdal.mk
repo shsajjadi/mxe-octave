@@ -37,8 +37,8 @@ define $(PKG)_BUILD
         --with-gif='$(HOST_PREFIX)' \
         --with-expat='$(HOST_PREFIX)' \
         --with-sqlite3='$(HOST_PREFIX)' \
-        --with-curl='$(HOST_PREFIX)/bin/curl-config' \
-        --with-geos='$(HOST_PREFIX)/bin/geos-config' \
+        --with-curl='$(HOST_BINDIR)/curl-config' \
+        --with-geos='$(HOST_BINDIR)/geos-config' \
         --with-pg='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pg_config' \
         --with-gta='$(HOST_PREFIX)' \
         --without-odbc \
@@ -81,5 +81,5 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/alg'   -j 1 install
     $(MAKE) -C '$(1)/ogr'   -j 1 install OGR_ENABLED=
     $(MAKE) -C '$(1)/apps'  -j 1 install BIN_LIST=
-    $(LN_SF) '$(HOST_PREFIX)/bin/gdal-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-gdal-config'
+    $(LN_SF) '$(HOST_BINDIR)/gdal-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-gdal-config'
 endef

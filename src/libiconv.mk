@@ -26,6 +26,6 @@ define $(PKG)_BUILD
         --disable-nls
     $(MAKE) -C '$(1)/libcharset' -j '$(JOBS)' install
     $(MAKE) -C '$(1)/lib'        -j '$(JOBS)' install
-    $(INSTALL) -d '$(HOST_PREFIX)/include'
-    $(INSTALL) -m644 '$(1)/include/iconv.h.inst' '$(HOST_PREFIX)/include/iconv.h'
+    $(INSTALL) -d '$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/include/iconv.h.inst' '$(HOST_INCDIR)/iconv.h'
 endef

@@ -20,8 +20,8 @@ define $(PKG)_BUILD
     cd '$(1)' && $(TARGET)-gcc -O3 -Iinclude -c -o libold.o lib/libold.c
     cd '$(1)' && $(TARGET)-ar cr libold.a libold.o
     $(TARGET)-ranlib '$(1)/libold.a'
-    $(INSTALL) -d '$(HOST_PREFIX)/lib'
-    $(INSTALL) -m644 '$(1)/libold.a' '$(HOST_PREFIX)/lib/'
-    $(INSTALL) -d '$(HOST_PREFIX)/include'
-    $(INSTALL) -m644 '$(1)/lib/old.h' '$(HOST_PREFIX)/include/'
+    $(INSTALL) -d '$(HOST_LIBDIR)'
+    $(INSTALL) -m644 '$(1)/libold.a' '$(HOST_LIBDIR)'
+    $(INSTALL) -d '$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/lib/old.h' '$(HOST_INCDIR)'
 endef

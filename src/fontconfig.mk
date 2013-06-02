@@ -18,7 +18,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-        FREETYPE_CFLAGS='-I$(HOST_PREFIX)/include/freetype2' \
+        FREETYPE_CFLAGS='-I$(HOST_INCDIR)/freetype2' \
         FREETYPE_LIBS='-lfreetype' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \

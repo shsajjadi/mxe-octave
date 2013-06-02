@@ -17,8 +17,8 @@ endef
 
 define $(PKG)_BUILD
     find '$(1)' -name Makefile.in \
-        -exec $(SED) -i 's,glib-mkenums,$(HOST_PREFIX)/bin/glib-mkenums,g'       {} \; \
-        -exec $(SED) -i 's,glib-genmarshal,$(HOST_PREFIX)/bin/glib-genmarshal,g' {} \;
+        -exec $(SED) -i 's,glib-mkenums,$(HOST_BINDIR)/glib-mkenums,g'       {} \; \
+        -exec $(SED) -i 's,glib-genmarshal,$(HOST_BINDIR)/glib-genmarshal,g' {} \;
     # The value for WAVE_FORMAT_DOLBY_AC3_SPDIF comes from vlc and mplayer:
     #   http://www.videolan.org/developers/vlc/doc/doxygen/html/vlc__codecs_8h-source.html
     #   http://lists.mplayerhq.hu/pipermail/mplayer-cvslog/2004-August/019283.html

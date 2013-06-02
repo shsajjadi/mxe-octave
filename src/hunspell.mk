@@ -30,6 +30,6 @@ define $(PKG)_BUILD
     # Test
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-hunspell.exe' \
+        '$(2).cpp' -o '$(HOST_BINDIR)/test-hunspell.exe' \
         `'$(TARGET)-pkg-config' hunspell --cflags --libs`
 endef

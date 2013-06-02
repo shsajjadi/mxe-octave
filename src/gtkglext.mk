@@ -38,6 +38,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-gtkglext.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-gtkglext.exe' \
         `'$(TARGET)-pkg-config' gtkglext-1.0 --cflags --libs`
 endef

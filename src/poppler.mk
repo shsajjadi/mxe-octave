@@ -52,7 +52,7 @@ define $(PKG)_BUILD
     # Test program
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).cxx' -o '$(HOST_PREFIX)/bin/test-poppler.exe' \
+        '$(2).cxx' -o '$(HOST_BINDIR)/test-poppler.exe' \
         `'$(TARGET)-pkg-config' poppler poppler-cpp --cflags --libs`
 endef
 

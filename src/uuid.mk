@@ -15,8 +15,8 @@ endef
 
 define $(PKG)_BUILD
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(INSTALL) -d '$(HOST_PREFIX)/bin'; \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/lib/libuuid.a' --install '$(INSTALL)' --libdir '$(HOST_PREFIX)/lib' --bindir '$(HOST_PREFIX)/bin'; \
-      rm -f '$(PREFIX)/$(TARGET)/lib/libuuid.dll.a'; \
+      $(INSTALL) -d '$(HOST_BINDIR)'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/lib/libuuid.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
+      rm -f '$(HOST_LIBDIR)/libuuid.dll.a'; \
     fi
 endef
