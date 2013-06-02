@@ -24,6 +24,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-poco.exe' \
+        '$(2).cpp' -o '$(HOST_BINDIR)/test-poco.exe' \
         -lPocoFoundation
 endef

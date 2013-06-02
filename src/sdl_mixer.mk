@@ -20,7 +20,7 @@ define $(PKG)_BUILD
     echo \
         'Libs.private:' \
         "`$(TARGET)-pkg-config libmodplug --libs`" \
-        "`$(HOST_PREFIX)/bin/smpeg-config     --libs`" \
+        "`$(HOST_BINDIR)/smpeg-config     --libs`" \
         >> '$(1)/SDL_mixer.pc.in'
     $(SED) -i 's,for path in /usr/local; do,for path in; do,' '$(1)/configure'
     cd '$(1)' && ./configure \
@@ -45,6 +45,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-sdl_mixer.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-sdl_mixer.exe' \
         `'$(TARGET)-pkg-config' SDL_mixer --cflags --libs`
 endef

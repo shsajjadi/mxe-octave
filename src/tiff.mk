@@ -25,6 +25,6 @@ define $(PKG)_BUILD
         --without-x
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    rm -f $(MXE_LIBDIR)/libtiff.la
-    rm -f $(MXE_LIBDIR)/lib/libtiffxx.la
+    rm -f $(HOST_LIBDIR)/libtiff.la
+    rm -f $(HOST_LIBDIR)/lib/libtiffxx.la
 endef

@@ -25,5 +25,5 @@ define $(PKG)_BUILD
         --disable-install-docs
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-    $(TARGET)-ranlib $(HOST_PREFIX)/lib/libvpx.a
+    $(TARGET)-ranlib $(HOST_LIBDIR)/libvpx.a
 endef

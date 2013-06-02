@@ -25,5 +25,5 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         LIBS="`'$(TARGET)-pkg-config' --libs libtiff-4` -ljpeg -lz"
     $(MAKE) -C '$(1)' -j 1 all install EXEEXT=.remove-me MAKE='$(MAKE)'
-    rm -fv '$(HOST_PREFIX)'/bin/*.remove-me
+    rm -fv '$(HOST_BINDIR)'/*.remove-me
 endef

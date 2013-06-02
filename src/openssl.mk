@@ -25,7 +25,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && CC='$(MXE_CC) -I$(MXE_INCDIR) -L$(MXE_LIBDIR)' \
+    cd '$(1)' && CC='$(MXE_CC) -I$(HOST_INCDIR) -L$(HOST_LIBDIR)' \
         $($(PKG)_CONFIGURE) \
         zlib \
         shared \
@@ -33,7 +33,7 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --libdir=lib
     $(MAKE) -C '$(1)' install -j 1 \
-        CC='$(MXE_CC) -I$(MXE_INCDIR) -L$(MXE_LIBDIR)' \
+        CC='$(MXE_CC) -I$(HOST_INCDIR) -L$(HOST_LIBDIR)' \
         RANLIB='$(MXE_RANLIB)' \
         $($(PKG)_CROSS_COMPILE_MAKE_ARG) \
         AR='$(MXE_AR) rcu'

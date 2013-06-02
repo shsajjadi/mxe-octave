@@ -26,5 +26,5 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/examples/sinusplot' -f 'Makefile.Release' -j '$(JOBS)'
 
     # install
-    $(INSTALL) -m755 '$(1)/examples/bin/sinusplot.exe' '$(HOST_PREFIX)/bin/test-qwt.exe'
+    $(INSTALL) -m755 '$(1)/examples/bin/sinusplot.exe' '$(HOST_BINDIR)/test-qwt.exe'
 endef

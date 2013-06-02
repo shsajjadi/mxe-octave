@@ -21,9 +21,9 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' BUILD_DIR='build' SHARED_LIB=
-    $(INSTALL) -d '$(HOST_PREFIX)/include'
-    $(INSTALL) -m644 '$(1)/../../src/xvid.h' '$(HOST_PREFIX)/include/'
-    $(INSTALL) -d '$(HOST_PREFIX)/lib'
-    $(INSTALL) -m644 '$(1)/build/xvidcore.a' '$(HOST_PREFIX)/lib/'
-    $(LN_SF) '$(HOST_PREFIX)/lib/xvidcore.a' '$(HOST_PREFIX)/lib/libxvidcore.a'
+    $(INSTALL) -d '$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/../../src/xvid.h' '$(HOST_INCDIR)'
+    $(INSTALL) -d '$(HOST_LIBDIR)'
+    $(INSTALL) -m644 '$(1)/build/xvidcore.a' '$(HOST_LIBDIR)'
+    $(LN_SF) '$(HOST_LIBDIR)/xvidcore.a' '$(HOST_LIBDIR)/libxvidcore.a'
 endef

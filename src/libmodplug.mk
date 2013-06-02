@@ -25,6 +25,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libmodplug.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-libmodplug.exe' \
         `'$(TARGET)-pkg-config' libmodplug --cflags --libs`
 endef

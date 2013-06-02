@@ -30,6 +30,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -pedantic -std=c++0x \
-        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-gtkglextmm.exe' \
+        '$(2).cpp' -o '$(HOST_BINDIR)/test-gtkglextmm.exe' \
         `'$(TARGET)-pkg-config' gtkglextmm-1.2 --cflags --libs`
 endef

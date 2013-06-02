@@ -33,6 +33,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-sox.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-sox.exe' \
         `'$(TARGET)-pkg-config' sox --cflags --libs`
 endef

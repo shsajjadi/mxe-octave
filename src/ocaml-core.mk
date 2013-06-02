@@ -27,8 +27,8 @@ define $(PKG)_BUILD
 	# match Windows' int type.	(That's what -cc and -host are for).
 	cd '$(1)' && ./configure \
 	  -prefix '$(HOST_PREFIX)' \
-	  -bindir '$(HOST_PREFIX)/bin' \
-	  -libdir '$(HOST_PREFIX)/lib/ocaml' \
+	  -bindir '$(HOST_BINDIR)' \
+	  -libdir '$(HOST_LIBDIR)/ocaml' \
 	  -no-tk \
 	  -cc "gcc -m32" \
 	  -no-shared-libs \
@@ -45,8 +45,8 @@ define $(PKG)_BUILD
 	$(MAKE) -C '$(1)' all
 	# install ocamldoc and camlp4 (non cross versions)
 	$(MAKE) -C '$(1)/ocamldoc' install
-	cd '$(1)' && BINDIR=$(HOST_PREFIX)/bin \
-				 LIBDIR=$(HOST_PREFIX)/lib/ocaml \
+	cd '$(1)' && BINDIR=$(HOST_BINDIR) \
+				 LIBDIR=$(HOST_LIBDIR)/ocaml \
 				 PREFIX=$(HOST_PREFIX) \
 				 ./build/partial-install.sh
 
@@ -113,7 +113,7 @@ define $(PKG)_BUILD
 	$(MAKE) -C '$(1)' installopt
 	# Rename all the binaries to target-binary
 	for f in ocamlc ocamlcp ocamlrun ocamldep ocamlmklib ocamlmktop ocamlopt ocamlprof camlp4prof camlp4boot camlp4 camlp4oof camlp4of camlp4o camlp4rf camlp4r camlp4orf ocamldoc ; do \
-	  cp -f $(HOST_PREFIX)/bin/$$f $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-$$f; \
+	  cp -f $(HOST_BINDIR)/$$f $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-$$f; \
 	done
 
 	# test ocamlopt

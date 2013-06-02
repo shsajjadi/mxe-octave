@@ -25,7 +25,7 @@ define $(PKG)_BUILD
 ##    $(SED) -i 's,\$$uname,MINGW,g' '$(1)/configure'
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-	DSOFLAGS='-L$(HOST_PREFIX)/lib' \
+	DSOFLAGS='-L$(HOST_LIBDIR)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
@@ -34,5 +34,5 @@ define $(PKG)_BUILD
     # enable exceptions, because disabling them doesn't make any sense on PCs
     $(SED) -i 's,-fno-exceptions,,' '$(1)/makeinclude'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install DIRS=src LIBCOMMAND='$(MXE_AR) cr'
-    $(LN_SF) '$(MXE_BINDIR)/fltk-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-fltk-config'
+    $(LN_SF) '$(HOST_BINDIR)/fltk-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-fltk-config'
 endef

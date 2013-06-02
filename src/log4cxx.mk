@@ -31,6 +31,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-log4cxx.exe' \
+        '$(2).cpp' -o '$(HOST_BINDIR)/test-log4cxx.exe' \
         `$(TARGET)-pkg-config liblog4cxx --libs`
 endef

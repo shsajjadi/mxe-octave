@@ -29,6 +29,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -pedantic -std=c++0x \
-        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-gtkmm2.exe' \
+        '$(2).cpp' -o '$(HOST_BINDIR)/test-gtkmm2.exe' \
         `'$(TARGET)-pkg-config' gtkmm-2.4 --cflags --libs`
 endef

@@ -26,10 +26,10 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
-        --with-jpeg='$(HOST_PREFIX)'/lib \
-        --with-tiff='$(HOST_PREFIX)'/lib \
-        --with-png='$(HOST_PREFIX)'/lib \
-        --with-zlib='$(HOST_PREFIX)'/lib \
+        --with-jpeg='$(HOST_LIBDIR)' \
+        --with-tiff='$(HOST_LIBDIR)' \
+        --with-png='$(HOST_LIBDIR)' \
+        --with-zlib='$(HOST_LIBDIR)' \
         LIBS="`'$(TARGET)-pkg-config' --libs libtiff-4`"
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
 endef

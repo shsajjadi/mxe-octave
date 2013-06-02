@@ -20,8 +20,8 @@ define $(PKG)_BUILD
 	# patched ocaml source to get ocamlbuild use $(TARGET)-ocamlc, $(TARGET)-ocamlfind, ...
 	cd '$(1)' && ./configure \
 		-prefix '$(HOST_PREFIX)' \
-		-bindir '$(HOST_PREFIX)/bin/ocaml-native' \
-		-libdir '$(HOST_PREFIX)/lib/ocaml-native' \
+		-bindir '$(HOST_BINDIR)/ocaml-native' \
+		-libdir '$(HOST_LIBDIR)/ocaml-native' \
 		-no-tk \
 		-no-shared-libs \
 		-verbose

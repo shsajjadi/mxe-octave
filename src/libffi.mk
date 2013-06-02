@@ -26,6 +26,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -std=c99 -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libffi.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-libffi.exe' \
         `'$(TARGET)-pkg-config' libffi --cflags --libs`
 endef

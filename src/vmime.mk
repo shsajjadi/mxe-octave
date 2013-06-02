@@ -28,11 +28,11 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' install
-    $(INSTALL) -m644 '$(1)/vmime/config.hpp' '$(HOST_PREFIX)/include/vmime/'
+    $(INSTALL) -m644 '$(1)/vmime/config.hpp' '$(HOST_INCDIR)/vmime/'
 
     $(SED) -i 's/posix/windows/g;' '$(1)/examples/example6.cpp'
     $(TARGET)-g++ -s -o '$(1)/examples/test-vmime.exe' \
         '$(1)/examples/example6.cpp' \
         `'$(TARGET)-pkg-config' libvmime --cflags --libs`
-    $(INSTALL) -m755 '$(1)/examples/test-vmime.exe' '$(HOST_PREFIX)/bin/'
+    $(INSTALL) -m755 '$(1)/examples/test-vmime.exe' '$(HOST_BINDIR)'
 endef

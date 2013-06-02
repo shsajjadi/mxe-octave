@@ -27,5 +27,5 @@ define $(PKG)_BUILD
         --with-apr='$(HOST_PREFIX)' \
         CFLAGS=-D_WIN32_WINNT=0x0500
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
-    $(LN_SF) '$(HOST_PREFIX)/bin/apu-1-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-apu-1-config'
+    $(LN_SF) '$(HOST_BINDIR)/apu-1-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-apu-1-config'
 endef

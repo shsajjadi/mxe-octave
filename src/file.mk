@@ -35,6 +35,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-file.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-file.exe' \
         -lmagic -lgnurx -lshlwapi
 endef

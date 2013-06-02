@@ -36,6 +36,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-gtk2.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-gtk2.exe' \
         `'$(TARGET)-pkg-config' gtk+-2.0 --cflags --libs`
 endef

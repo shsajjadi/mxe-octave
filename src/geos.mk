@@ -25,6 +25,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-geos.exe' \
-        -lgeos_c `'$(HOST_PREFIX)/bin/geos-config' --cflags --libs` -lstdc++
+        '$(2).c' -o '$(HOST_BINDIR)/test-geos.exe' \
+        -lgeos_c `'$(HOST_BINDIR)/geos-config' --cflags --libs` -lstdc++
 endef

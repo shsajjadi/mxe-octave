@@ -25,9 +25,9 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' alllib
     cd '$(1)' && $(TARGET)-ar cr libcblas.a src/*.o
 
-    $(INSTALL) -d                           '$(HOST_PREFIX)/lib'
-    $(INSTALL) -m644 '$(1)/libcblas.a'      '$(HOST_PREFIX)/lib/'
-    $(INSTALL) -d                           '$(HOST_PREFIX)/include'
-    $(INSTALL) -m644 '$(1)/include/cblas.h'     '$(HOST_PREFIX)/include/'
-    $(INSTALL) -m644 '$(1)/include/cblas_f77.h' '$(HOST_PREFIX)/include/'
+    $(INSTALL) -d                           '$(HOST_LIBDIR)'
+    $(INSTALL) -m644 '$(1)/libcblas.a'      '$(HOST_LIBDIR)'
+    $(INSTALL) -d                           '$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/include/cblas.h'     '$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/include/cblas_f77.h' '$(HOST_INCDIR)'
 endef

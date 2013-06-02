@@ -24,5 +24,5 @@ define $(PKG)_BUILD
         `[ -d /usr/local/lib ]     && echo APPEND_LIBPATH=/usr/local/lib` \
         SKIPUTILS='NSIS Menu' \
         install
-    $(INSTALL) -m755 '$(HOST_PREFIX)/bin/makensis' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-makensis'
+    $(INSTALL) -m755 '$(HOST_BINDIR)/makensis' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-makensis'
 endef

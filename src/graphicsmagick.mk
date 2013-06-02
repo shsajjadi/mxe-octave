@@ -42,8 +42,8 @@ define $(PKG)_BUILD
         --with-xml \
         --with-zlib \
         --without-x \
-        ac_cv_prog_xml2_config='$(HOST_PREFIX)/bin/xml2-config' \
-        ac_cv_path_xml2_config='$(HOST_PREFIX)/bin/xml2-config'
+        ac_cv_prog_xml2_config='$(HOST_BINDIR)/xml2-config' \
+        ac_cv_path_xml2_config='$(HOST_BINDIR)/xml2-config'
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS=
 endef

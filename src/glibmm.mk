@@ -23,7 +23,7 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         CXX='$(TARGET)-c++' \
         PKG_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config' \
-        GLIB_COMPILE_SCHEMAS='$(HOST_PREFIX)/bin/glib-compile-schemas' \
+        GLIB_COMPILE_SCHEMAS='$(HOST_BINDIR)/glib-compile-schemas' \
         MAKE=$(MAKE)
     $(MAKE) -C '$(1)/gio/src' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= MISC_STUFF=
     $(MAKE) -C '$(1)'         -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=

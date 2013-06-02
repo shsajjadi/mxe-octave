@@ -23,5 +23,5 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(LN_SF) '$(HOST_PREFIX)/bin/libgcrypt-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-libgcrypt-config'
+    $(LN_SF) '$(HOST_BINDIR)/libgcrypt-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-libgcrypt-config'
 endef

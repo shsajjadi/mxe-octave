@@ -27,13 +27,13 @@ define $(PKG)_BUILD
     mv '$(1)/pdcurses.a' '$(1)/libcurses.a'
     $(TARGET)-ranlib '$(1)/libcurses.a' '$(1)/panel.a'
     if [ "$(BUILD_SHARED)" = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/libcurses.a' --install '$(INSTALL)' --libdir '$(MXE_LIBDIR)' --bindir '$(MXE_BINDIR)'; \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/panel.a' --install '$(INSTALL)' --libdir '$(MXE_LIBDIR)' --bindir '$(MXE_BINDIR)'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/libcurses.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/panel.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
     fi
     if [ "$(BUILD_STATIC)" = yes ]; then \
-      $(INSTALL) -m644 '$(1)/libcurses.a' '$(MXE_LIBDIR)/libcurses.a'
-      $(INSTALL) -m644 '$(1)/panel.a'    '$(MXE_LIBDIR)/libpanel.a'
+      $(INSTALL) -m644 '$(1)/libcurses.a' '$(HOST_LIBDIR)/libcurses.a'
+      $(INSTALL) -m644 '$(1)/panel.a'    '$(HOST_LIBDIR)/libpanel.a'
     fi
-    $(INSTALL) -d '$(HOST_PREFIX)/include/'
-    $(INSTALL) -m644 '$(1)/curses.h' '$(1)/panel.h' '$(1)/term.h' '$(MXE_INCDIR)'
+    $(INSTALL) -d '$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/curses.h' '$(1)/panel.h' '$(1)/term.h' '$(HOST_INCDIR)'
 endef

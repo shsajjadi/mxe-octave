@@ -27,6 +27,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_PREFIX)/bin/test-gta.exe' \
+        '$(2).c' -o '$(HOST_BINDIR)/test-gta.exe' \
         `'$(TARGET)-pkg-config' gta --cflags --libs`
 endef

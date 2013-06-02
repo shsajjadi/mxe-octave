@@ -23,7 +23,7 @@ define $(PKG)_BUILD
     # note: don't use -Werror with GCC 4.7.0 and .1
     '$(TARGET)-g++' \
         -W -Wall \
-        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-armadillo.exe' \
+        '$(2).cpp' -o '$(HOST_BINDIR)/test-armadillo.exe' \
         -larmadillo -llapack -lblas -lgfortran
         -lboost_serialization-mt -lboost_thread_win32-mt -lboost_system-mt
 endef

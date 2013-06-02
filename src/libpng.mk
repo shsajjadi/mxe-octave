@@ -29,6 +29,6 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    rm -f $(MXE_LIBDIR)/libpng.la
-    rm -f $(MXE_LIBDIR)/libpng15.la
+    rm -f $(HOST_LIBDIR)/libpng.la
+    rm -f $(HOST_LIBDIR)/libpng15.la
 endef

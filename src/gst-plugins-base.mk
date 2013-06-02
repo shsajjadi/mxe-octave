@@ -17,8 +17,8 @@ endef
 
 define $(PKG)_BUILD
     find '$(1)' -name Makefile.in \
-        -exec $(SED) -i 's,glib-mkenums,$(HOST_PREFIX)/bin/glib-mkenums,g'       {} \; \
-        -exec $(SED) -i 's,glib-genmarshal,$(HOST_PREFIX)/bin/glib-genmarshal,g' {} \;
+        -exec $(SED) -i 's,glib-mkenums,$(HOST_BINDIR)/glib-mkenums,g'       {} \; \
+        -exec $(SED) -i 's,glib-genmarshal,$(HOST_BINDIR)/glib-genmarshal,g' {} \;
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \

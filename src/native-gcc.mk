@@ -51,14 +51,14 @@ define $(PKG)_BUILD
         --disable-libmudflap \
         --with-mpfr-include='$(1)/mpfr/src' \
         --with-mpfr-lib='$(1).build/mpfr/src/.libs' \
-        --with-native-system-header-dir=$(MXE_INCDIR) \
+        --with-native-system-header-dir=$(HOST_INCDIR) \
         $(shell [ `uname -s` == Darwin ] && echo "LDFLAGS='-Wl,-no_pie'")
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     $(MAKE) -C '$(1).build' -j 1 DESTDIR='$(TOP_DIR)/native-tools' install
 
     # # create pkg-config script
     # (echo '#!/bin/sh'; \
-    #  echo 'PKG_CONFIG_PATH="$$PKG_CONFIG_PATH_$(subst -,_,$(TARGET))" PKG_CONFIG_LIBDIR='\''$(MXE_LIBDIR)/pkgconfig'\'' exec pkg-config $($(PKG)_STATIC_FLAG) "$$@"') \
+    #  echo 'PKG_CONFIG_PATH="$$PKG_CONFIG_PATH_$(subst -,_,$(TARGET))" PKG_CONFIG_LIBDIR='\''$(HOST_LIBDIR)/pkgconfig'\'' exec pkg-config $($(PKG)_STATIC_FLAG) "$$@"') \
     #          > '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config'
     # chmod 0755 '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config'
 

@@ -21,11 +21,11 @@ ifneq ($(MXE_NATIVE_BUILD),yes)
 endif
 
 define $(PKG)_BUILD
-    cd '$(1)' && '$(MXE_BINDIR)/qmake' -makefile $($(PKG)_QMAKE_SPEC_OPTION)
+    cd '$(1)' && '$(HOST_BINDIR)/qmake' -makefile $($(PKG)_QMAKE_SPEC_OPTION)
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
     if [ $(MXE_SYSTEM) = mingw ]; then \
-      $(INSTALL) -m755 '$(MXE_LIBDIR)/qscintilla2.dll' '$(MXE_BINDIR)/qscintilla2.dll'; \
+      $(INSTALL) -m755 '$(HOST_LIBDIR)/qscintilla2.dll' '$(HOST_BINDIR)/qscintilla2.dll'; \
     fi
 endef

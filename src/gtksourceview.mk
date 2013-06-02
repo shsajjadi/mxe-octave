@@ -23,8 +23,8 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --disable-gtk-doc \
-        GLIB_GENMARSHAL='$(HOST_PREFIX)/bin/glib-genmarshal' \
-        GLIB_MKENUMS='$(HOST_PREFIX)/bin/glib-mkenums'
+        GLIB_GENMARSHAL='$(HOST_BINDIR)/glib-genmarshal' \
+        GLIB_MKENUMS='$(HOST_BINDIR)/glib-mkenums'
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef

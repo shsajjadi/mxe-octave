@@ -34,6 +34,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-protobuf.exe' \
+        '$(2).cpp' -o '$(HOST_BINDIR)/test-protobuf.exe' \
         `'$(TARGET)-pkg-config' protobuf --cflags --libs`
 endef

@@ -20,6 +20,6 @@ define $(PKG)_BUILD
         LD=$(TARGET)-ld \
         RANLIB=$(TARGET)-ranlib \
         CFLAGS='-O -DUSE_CLOCK'
-    $(INSTALL) -m644 '$(1)/libf2c.a' '$(HOST_PREFIX)/lib'
-    $(INSTALL) -m644 '$(1)/f2c.h'    '$(HOST_PREFIX)/include'
+    $(INSTALL) -m644 '$(1)/libf2c.a' '$(HOST_LIBDIR)'
+    $(INSTALL) -m644 '$(1)/f2c.h'    '$(HOST_INCDIR)'
 endef

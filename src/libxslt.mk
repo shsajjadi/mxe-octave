@@ -23,7 +23,7 @@ define $(PKG)_BUILD
         --without-debug \
         --prefix='$(HOST_PREFIX)' \
         --with-libxml-prefix='$(HOST_PREFIX)' \
-        LIBGCRYPT_CONFIG='$(HOST_PREFIX)/bin/libgcrypt-config' \
+        LIBGCRYPT_CONFIG='$(HOST_BINDIR)/libgcrypt-config' \
         --without-python \
         --without-plugins
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=

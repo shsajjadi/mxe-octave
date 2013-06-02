@@ -18,12 +18,12 @@ else
   $(PKG)_DEPS   := gcc postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
 
   $(PKG)_CONFIGURE_ENV := \
-    CPPFLAGS='$(MXE_INCDIR)/dbus-1.0' \
-    LDFLAGS='-Wl,-rpath-link,$(MXE_LIBDIR) -L$(MXE_LIBDIR)'
+    CPPFLAGS='$(HOST_INCDIR)/dbus-1.0' \
+    LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
 endif
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
-  $(PKG)_CONFIGURE_INCLUDE_OPTION := -I '$(MXE_INCDIR)'
+  $(PKG)_CONFIGURE_INCLUDE_OPTION := -I '$(HOST_INCDIR)'
   $(PKG)_CONFIGURE_DATABASE_OPTION := -qt-sql-psql
 else
   ifeq ($(MXE_SYSTEM),mingw)
@@ -87,10 +87,10 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-    $(LN_SF) '$(MXE_BINDIR)/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-moc'
-    $(LN_SF) '$(MXE_BINDIR)/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-roc'
-    $(LN_SF) '$(MXE_BINDIR)/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-uic'
-    $(LN_SF) '$(MXE_BINDIR)/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-qmake'
+    $(LN_SF) '$(HOST_BINDIR)/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-moc'
+    $(LN_SF) '$(HOST_BINDIR)/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-roc'
+    $(LN_SF) '$(HOST_BINDIR)/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-uic'
+    $(LN_SF) '$(HOST_BINDIR)/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-qmake'
 
     # cd '$(1)/tools/assistant' && '$(1)/bin/qmake' assistant.pro
     # $(MAKE) -C '$(1)/tools/assistant' -j '$(JOBS)' install
@@ -104,10 +104,10 @@ define $(PKG)_BUILD
 
     # lrelease (from linguist) needed by octave for GUI build
     $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install
-    $(LN_SF) '$(MXE_BINDIR)/lrelease' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-lrelease'
+    $(LN_SF) '$(HOST_BINDIR)/lrelease' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-lrelease'
 
     # mkdir            '$(1)/test-qt'
     # cd               '$(1)/test-qt' && '$(TARGET)-qmake' '$(PWD)/$(2).pro'
     # $(MAKE)       -C '$(1)/test-qt' -j '$(JOBS)'
-    # $(INSTALL) -m755 '$(1)/test-qt/release/test-qt.exe' '$(MXE_BINDIR)/'
+    # $(INSTALL) -m755 '$(1)/test-qt/release/test-qt.exe' '$(HOST_BINDIR)'
 endef

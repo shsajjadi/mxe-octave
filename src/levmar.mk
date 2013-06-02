@@ -20,6 +20,6 @@ define $(PKG)_BUILD
         CC=$(TARGET)-gcc \
         AR=$(TARGET)-ar \
         RANLIB=$(TARGET)-ranlib
-    $(INSTALL) -m644 '$(1)/levmar.h'    '$(HOST_PREFIX)/include/'
-    $(INSTALL) -m644 '$(1)/liblevmar.a' '$(HOST_PREFIX)/lib/'
+    $(INSTALL) -m644 '$(1)/levmar.h'    '$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/liblevmar.a' '$(HOST_LIBDIR)'
 endef

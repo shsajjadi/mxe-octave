@@ -48,19 +48,19 @@ define $(PKG)_NATIVE_BUILD
     $(MAKE) -C '$(1).native/gio/xdgmime'     -j '$(JOBS)'
     $(MAKE) -C '$(1).native/gio'     -j '$(JOBS)' glib-compile-schemas
     $(MAKE) -C '$(1).native/gio'     -j '$(JOBS)' glib-compile-resources
-    $(INSTALL) -m755 '$(1).native/gio/glib-compile-schemas' '$(HOST_PREFIX)/bin/'
-    $(INSTALL) -m755 '$(1).native/gio/glib-compile-resources' '$(HOST_PREFIX)/bin/'
+    $(INSTALL) -m755 '$(1).native/gio/glib-compile-schemas' '$(HOST_BINDIR)'
+    $(INSTALL) -m755 '$(1).native/gio/glib-compile-resources' '$(HOST_BINDIR)'
 endef
 
 define $(PKG)_SYMLINK
-    $(LN_SF) `which glib-genmarshal`        '$(HOST_PREFIX)/bin/'
-    $(LN_SF) `which glib-compile-schemas`   '$(HOST_PREFIX)/bin/'
-    $(LN_SF) `which glib-compile-resources` '$(HOST_PREFIX)/bin/'
+    $(LN_SF) `which glib-genmarshal`        '$(HOST_BINDIR)'
+    $(LN_SF) `which glib-compile-schemas`   '$(HOST_BINDIR)'
+    $(LN_SF) `which glib-compile-resources` '$(HOST_BINDIR)'
 endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./autogen.sh
-    rm -f '$(HOST_PREFIX)/bin/glib-*'
+    rm -f '$(HOST_BINDIR)/glib-*'
     $(if $(findstring y,\
             $(shell [ -x "`which glib-genmarshal`" ] && \
                     [ -x "`which glib-compile-schemas`" ] && \
@@ -78,9 +78,9 @@ define $(PKG)_BUILD
         --disable-inotify \
         CXX='$(TARGET)-c++' \
         PKG_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config' \
-        GLIB_GENMARSHAL='$(HOST_PREFIX)/bin/glib-genmarshal' \
-        GLIB_COMPILE_SCHEMAS='$(HOST_PREFIX)/bin/glib-compile-schemas' \
-        GLIB_COMPILE_RESOURCES='$(HOST_PREFIX)/bin/glib-compile-resources'
+        GLIB_GENMARSHAL='$(HOST_BINDIR)/glib-genmarshal' \
+        GLIB_COMPILE_SCHEMAS='$(HOST_BINDIR)/glib-compile-schemas' \
+        GLIB_COMPILE_RESOURCES='$(HOST_BINDIR)/glib-compile-resources'
     $(MAKE) -C '$(1)/glib'    -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)/gmodule' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)/gthread' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
