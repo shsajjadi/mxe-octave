@@ -18,8 +18,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && autoconf
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' BUILD_DIR='build' SHARED_LIB=
     $(INSTALL) -d '$(HOST_PREFIX)/include'

@@ -18,7 +18,7 @@ define $(PKG)_BUILD
     cd '$(1)' && autoreconf
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         AR=$(TARGET)-ar
 

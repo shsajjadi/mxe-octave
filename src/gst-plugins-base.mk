@@ -20,8 +20,7 @@ define $(PKG)_BUILD
         -exec $(SED) -i 's,glib-mkenums,$(HOST_PREFIX)/bin/glib-mkenums,g'       {} \; \
         -exec $(SED) -i 's,glib-genmarshal,$(HOST_PREFIX)/bin/glib-genmarshal,g' {} \;
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-debug \

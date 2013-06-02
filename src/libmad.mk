@@ -18,7 +18,7 @@ endef
 define $(PKG)_BUILD
     $(SED) -i '/-fforce-mem/d' '$(1)'/configure
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install

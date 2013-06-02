@@ -18,7 +18,7 @@ endef
 define $(PKG)_BUILD
     $(SED) -i 's,^\(Requires:.*\),\1 libtiff-4 libpng,' '$(1)/SDL_image.pc.in'
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --with-sdl-prefix='$(HOST_PREFIX)' \

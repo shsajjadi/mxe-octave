@@ -19,8 +19,7 @@ define $(PKG)_BUILD
     cd '$(1)' && aclocal -I config --install
     cd '$(1)' && autoconf
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --without-openssl \

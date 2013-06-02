@@ -69,8 +69,7 @@ define $(PKG)_BUILD
         $($(PKG)_NATIVE_BUILD))
     # cross build
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --with-threads=win32 \

@@ -20,8 +20,7 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         FREETYPE_CFLAGS='-I$(HOST_PREFIX)/include/freetype2' \
         FREETYPE_LIBS='-lfreetype' \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --with-arch='$(TARGET)' \

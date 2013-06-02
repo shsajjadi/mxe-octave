@@ -19,8 +19,7 @@ define $(PKG)_BUILD
     # This can be removed once the patch "graphicsmagick-1-fix-xml2-config.patch" is accepted by upstream
     cd '$(1)' && autoconf
     cd '$(1)' && ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --without-modules \

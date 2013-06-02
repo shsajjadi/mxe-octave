@@ -19,7 +19,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --prefix='$(HOST_PREFIX)' \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --with-apr='$(HOST_PREFIX)' \
         --with-apr-util='$(HOST_PREFIX)' \

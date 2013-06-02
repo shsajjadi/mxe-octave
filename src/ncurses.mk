@@ -19,8 +19,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix=$(HOST_PREFIX) \
         --disable-home-terminfo \
         --enable-sp-funcs \

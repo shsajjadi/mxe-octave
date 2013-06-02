@@ -20,7 +20,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         AR='$(TARGET)-ar' \
         NM='$(TARGET)-nm' \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-debug \
         --prefix='$(HOST_PREFIX)' \

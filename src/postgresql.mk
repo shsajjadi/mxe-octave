@@ -33,8 +33,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $($(PKG)_CONFIGURE_FLAGS_OPTION) \
         --prefix='$(HOST_PREFIX)' \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --enable-shared \
         --disable-rpath \
         --without-tcl \

@@ -25,8 +25,7 @@ define $(PKG)_BUILD
     # Because of the previous changes, '--disable-threading' will not disable
     # threading. It will just disable the unwanted check for pthread.
     cd '$(1)' && $(SHELL) ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --disable-threading \

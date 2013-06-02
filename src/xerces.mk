@@ -19,7 +19,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && CONFIG_SHELL='$(SHELL)' ./configure \
-        --host='$(TARGET)' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-sse2 \
         --prefix='$(HOST_PREFIX)' \

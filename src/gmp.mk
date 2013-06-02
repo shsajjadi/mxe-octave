@@ -20,8 +20,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && CC_FOR_BUILD=gcc ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --enable-cxx \

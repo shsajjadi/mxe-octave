@@ -29,7 +29,7 @@ define $(PKG)_BUILD
 
     cd '$(1)' && ./configure \
         --target='$(TARGET)' \
-        --build="`config.guess`" \
+        --build='$(BUILD_SYSTEM)' \
         --prefix='$(BUILD_TOOLS_PREFIX)' \
         --with-gcc \
         --with-gnu-ld \

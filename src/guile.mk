@@ -21,8 +21,7 @@ define $(PKG)_BUILD
     # won't try to use the "struct timespec" from <pthreads.h>,
     # which would fail because we tell Guile not to use Pthreads.
     cd '$(1)' && CC_FOR_BUILD=gcc ./configure \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --without-threads \

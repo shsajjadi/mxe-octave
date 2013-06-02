@@ -40,8 +40,7 @@ define $(PKG)_BUILD
     # http://groups.google.com/group/ikarus-users/browse_thread/thread/fd1d101eac32633f
     cd '$(1)' && ac_cv_func_malloc_0_nonnull=yes ./configure \
         --prefix='$(HOST_PREFIX)' \
-        --host='$(TARGET)' \
-        --build="`config.guess`" \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --enable-gnutls \
         CPPFLAGS='-DWITH_NTLM'
 
