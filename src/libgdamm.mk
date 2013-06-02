@@ -20,9 +20,9 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         CXX='$(TARGET)-c++' \
-        PKG_CONFIG='$(PREFIX)/bin/$(TARGET)-pkg-config' \
+        PKG_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config' \
         MAKE=$(MAKE)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef

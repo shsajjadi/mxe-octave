@@ -16,13 +16,13 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(SED) -i 's,aclocal,aclocal -I $(PREFIX)/$(TARGET)/share/aclocal,' '$(1)/autogen.sh'
+    $(SED) -i 's,aclocal,aclocal -I $(HOST_PREFIX)/share/aclocal,' '$(1)/autogen.sh'
     $(SED) -i 's,libtoolize,$(LIBTOOLIZE),'                             '$(1)/autogen.sh'
     cd '$(1)' && $(SHELL) ./autogen.sh \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --without-x
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef

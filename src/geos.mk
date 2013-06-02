@@ -21,11 +21,11 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-geos.exe' \
-        -lgeos_c `'$(PREFIX)/$(TARGET)/bin/geos-config' --cflags --libs` -lstdc++
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-geos.exe' \
+        -lgeos_c `'$(HOST_PREFIX)/bin/geos-config' --cflags --libs` -lstdc++
 endef

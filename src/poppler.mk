@@ -23,7 +23,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --disable-silent-rules \
         $(ENABLE_SHARED_OR_STATIC) \
         --enable-xpdf-headers \
@@ -46,14 +46,14 @@ define $(PKG)_BUILD
         --disable-gtk-doc-html \
         --disable-gtk-doc-pdf \
         --with-font-configuration=win32 \
-        PKG_CONFIG_PATH_$(subst -,_,$(TARGET))='$(PREFIX)/$(TARGET)/qt/lib/pkgconfig' \
+        PKG_CONFIG_PATH_$(subst -,_,$(TARGET))='$(HOST_PREFIX)/qt/lib/pkgconfig' \
         LIBS="`'$(TARGET)-pkg-config' zlib liblzma --libs` -ljpeg"
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
     # Test program
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).cxx' -o '$(PREFIX)/$(TARGET)/bin/test-poppler.exe' \
+        '$(2).cxx' -o '$(HOST_PREFIX)/bin/test-poppler.exe' \
         `'$(TARGET)-pkg-config' poppler poppler-cpp --cflags --libs`
 endef
 

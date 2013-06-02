@@ -23,7 +23,7 @@ define $(PKG)_BUILD
         --enable-cross-compile \
         --arch=i686 \
         --target-os=mingw32 \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-debug \
         --disable-doc \

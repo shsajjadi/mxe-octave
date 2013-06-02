@@ -28,7 +28,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --disable-threading \
         CONFIG_SHELL=$(SHELL)
     # do the first build step by hand, because programs are built that

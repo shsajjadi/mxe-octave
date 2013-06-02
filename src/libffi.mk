@@ -19,13 +19,13 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC)
     $(MAKE) -C '$(1)/$(TARGET)' -j '$(JOBS)'
     $(MAKE) -C '$(1)/$(TARGET)' -j 1 install
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -std=c99 -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libffi.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libffi.exe' \
         `'$(TARGET)-pkg-config' libffi --cflags --libs`
 endef

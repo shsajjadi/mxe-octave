@@ -21,7 +21,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --disable-visibility \
         --disable-nls \
         --with-expat

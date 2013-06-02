@@ -24,13 +24,13 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-shared
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
-    $(SED) -e 's^@prefix@^$(PREFIX)/$(TARGET)^;' \
+    $(SED) -e 's^@prefix@^$(HOST_PREFIX)^;' \
            -e 's^@VERSION@^$(libmng_VERSION)^;' \
            -e 's^@mng_libs_private@^-ljpeg^;' \
            -e 's^@mng_requires_private@^lcms zlib^;' \
            < '$(1)/libmng.pc.in' > '$(1)/libmng.pc'
-    $(INSTALL) -m644 '$(1)/libmng.pc' '$(PREFIX)/$(TARGET)/lib/pkgconfig/'
+    $(INSTALL) -m644 '$(1)/libmng.pc' '$(HOST_PREFIX)/lib/pkgconfig/'
 endef

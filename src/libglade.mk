@@ -20,8 +20,8 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
-        PKG_CONFIG='$(PREFIX)/bin/$(TARGET)-pkg-config'
+        --prefix='$(HOST_PREFIX)' \
+        PKG_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install-exec
 endef

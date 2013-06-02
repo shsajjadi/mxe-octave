@@ -22,7 +22,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --without-modules \
         --with-threads \
         --with-magick-plus-plus \
@@ -38,13 +38,13 @@ define $(PKG)_BUILD
         --with-png \
         --with-tiff \
         --without-trio \
-        --with-ttf='$(PREFIX)/$(TARGET)' \
+        --with-ttf='$(HOST_PREFIX)' \
         --without-wmf \
         --with-xml \
         --with-zlib \
         --without-x \
-        ac_cv_prog_xml2_config='$(PREFIX)/$(TARGET)/bin/xml2-config' \
-        ac_cv_path_xml2_config='$(PREFIX)/$(TARGET)/bin/xml2-config'
+        ac_cv_prog_xml2_config='$(HOST_PREFIX)/bin/xml2-config' \
+        ac_cv_path_xml2_config='$(HOST_PREFIX)/bin/xml2-config'
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS=
 endef

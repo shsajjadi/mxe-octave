@@ -18,7 +18,7 @@ define $(PKG)_BUILD
     cd '$(1)/bfd' && ./configure \
         --host='$(TARGET)' \
         --target='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-install-libbfd \
         $(ENABLE_SHARED_OR_STATIC)
     $(MAKE) -C '$(1)/bfd' -j '$(JOBS)'

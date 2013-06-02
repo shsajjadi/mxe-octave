@@ -34,6 +34,6 @@ define $(PKG)_BUILD
       $(INSTALL) -m644 '$(1)/libcurses.a' '$(MXE_LIBDIR)/libcurses.a'
       $(INSTALL) -m644 '$(1)/panel.a'    '$(MXE_LIBDIR)/libpanel.a'
     fi
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/include/'
+    $(INSTALL) -d '$(HOST_PREFIX)/include/'
     $(INSTALL) -m644 '$(1)/curses.h' '$(1)/panel.h' '$(1)/term.h' '$(MXE_INCDIR)'
 endef

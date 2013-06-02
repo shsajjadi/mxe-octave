@@ -20,10 +20,10 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --with-mutex
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     # remove header which is not installed since 4.8.0
-    rm -f '$(PREFIX)/$(TARGET)'/include/projects.h
+    rm -f '$(HOST_PREFIX)'/include/projects.h
     $(MAKE) -C '$(1)' -j 1 install
 endef

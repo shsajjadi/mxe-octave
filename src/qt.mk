@@ -56,7 +56,7 @@ define $(PKG)_BUILD
         -release \
         -exceptions \
         -shared \
-        -prefix '$(PREFIX)/$(TARGET)' \
+        -prefix '$(HOST_PREFIX)' \
         -prefix-install \
         -script \
         -no-iconv \
@@ -87,10 +87,10 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-    $(LN_SF) '$(MXE_BINDIR)/moc' '$(PREFIX)/bin/$(TARGET)-moc'
-    $(LN_SF) '$(MXE_BINDIR)/rcc' '$(PREFIX)/bin/$(TARGET)-roc'
-    $(LN_SF) '$(MXE_BINDIR)/uic' '$(PREFIX)/bin/$(TARGET)-uic'
-    $(LN_SF) '$(MXE_BINDIR)/qmake' '$(PREFIX)/bin/$(TARGET)-qmake'
+    $(LN_SF) '$(MXE_BINDIR)/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-moc'
+    $(LN_SF) '$(MXE_BINDIR)/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-roc'
+    $(LN_SF) '$(MXE_BINDIR)/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-uic'
+    $(LN_SF) '$(MXE_BINDIR)/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-qmake'
 
     # cd '$(1)/tools/assistant' && '$(1)/bin/qmake' assistant.pro
     # $(MAKE) -C '$(1)/tools/assistant' -j '$(JOBS)' install
@@ -104,7 +104,7 @@ define $(PKG)_BUILD
 
     # lrelease (from linguist) needed by octave for GUI build
     $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install
-    $(LN_SF) '$(MXE_BINDIR)/lrelease' '$(PREFIX)/bin/$(TARGET)-lrelease'
+    $(LN_SF) '$(MXE_BINDIR)/lrelease' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-lrelease'
 
     # mkdir            '$(1)/test-qt'
     # cd               '$(1)/test-qt' && '$(TARGET)-qmake' '$(PWD)/$(2).pro'

@@ -22,7 +22,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-compat24 \
         --enable-compat26 \
         --enable-gui \
@@ -59,7 +59,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     -$(MAKE) -C '$(1)/locale' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= allmo
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= __install_wxrc___depname=
-    $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/bin/wx-config' '$(PREFIX)/bin/$(TARGET)-wx-config'
+    $(INSTALL) -m755 '$(HOST_PREFIX)/bin/wx-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-wx-config'
 
     # build the wxWidgets variant without unicode support
     cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,wxwidgets)
@@ -71,7 +71,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-compat24 \
         --enable-compat26 \
         --enable-gui \
@@ -109,18 +109,18 @@ define $(PKG)_BUILD
 
     # backup of the unicode wx-config script
     # such that "make install" won't overwrite it
-    mv '$(PREFIX)/$(TARGET)/bin/wx-config' '$(PREFIX)/$(TARGET)/bin/wx-config-backup'
+    mv '$(HOST_PREFIX)/bin/wx-config' '$(HOST_PREFIX)/bin/wx-config-backup'
 
     $(MAKE) -C '$(1)/$(wxwidgets_SUBDIR)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= __install_wxrc___depname=
-    mv '$(PREFIX)/$(TARGET)/bin/wx-config' '$(PREFIX)/$(TARGET)/bin/wx-config-nounicode'
-    $(INSTALL) -m755 '$(PREFIX)/$(TARGET)/bin/wx-config-nounicode' '$(PREFIX)/bin/$(TARGET)-wx-config-nounicode'
+    mv '$(HOST_PREFIX)/bin/wx-config' '$(HOST_PREFIX)/bin/wx-config-nounicode'
+    $(INSTALL) -m755 '$(HOST_PREFIX)/bin/wx-config-nounicode' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-wx-config-nounicode'
 
     # restore the unicode wx-config script
-    mv '$(PREFIX)/$(TARGET)/bin/wx-config-backup' '$(PREFIX)/$(TARGET)/bin/wx-config'
+    mv '$(HOST_PREFIX)/bin/wx-config-backup' '$(HOST_PREFIX)/bin/wx-config'
 
     # build test program
     '$(TARGET)-g++' \
         -W -Wall -Werror -pedantic -std=gnu++0x \
-        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-wxwidgets.exe' \
+        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-wxwidgets.exe' \
         `'$(TARGET)-wx-config' --cflags --libs`
 endef

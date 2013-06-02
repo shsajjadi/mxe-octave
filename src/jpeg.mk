@@ -18,7 +18,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=

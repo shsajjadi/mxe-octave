@@ -20,16 +20,16 @@ define $(PKG)_BUILD
     $(SED) -i '1i#ifndef LIBARCHIVE_STATIC\n#define LIBARCHIVE_STATIC\n#endif' -i '$(1)/libarchive/archive_entry.h'
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-bsdtar \
         --disable-bsdcpio \
-        XML2_CONFIG='$(PREFIX)/$(TARGET)'/bin/xml2-config
+        XML2_CONFIG='$(HOST_PREFIX)'/bin/xml2-config
     $(MAKE) -C '$(1)' -j '$(JOBS)' man_MANS=
     $(MAKE) -C '$(1)' -j 1 install man_MANS=
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libarchive.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libarchive.exe' \
         `'$(TARGET)-pkg-config' --libs-only-l libarchive`
 endef

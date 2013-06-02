@@ -16,12 +16,12 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(SED) -i 's,glib-mkenums,'$(PREFIX)/$(TARGET)/bin/glib-mkenums',g' '$(1)/libgda/Makefile.in'
-    $(SED) -i 's,glib-mkenums,'$(PREFIX)/$(TARGET)/bin/glib-mkenums',g' '$(1)/libgda/sql-parser/Makefile.in'
-    $(SED) -i 's,glib-mkenums,'$(PREFIX)/$(TARGET)/bin/glib-mkenums',g' '$(1)/libgda-ui/Makefile.in'
+    $(SED) -i 's,glib-mkenums,'$(HOST_PREFIX)/bin/glib-mkenums',g' '$(1)/libgda/Makefile.in'
+    $(SED) -i 's,glib-mkenums,'$(HOST_PREFIX)/bin/glib-mkenums',g' '$(1)/libgda/sql-parser/Makefile.in'
+    $(SED) -i 's,glib-mkenums,'$(HOST_PREFIX)/bin/glib-mkenums',g' '$(1)/libgda-ui/Makefile.in'
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-gtk-doc \
         --without-bdb \
@@ -32,7 +32,7 @@ define $(PKG)_BUILD
         --without-java \
         --enable-binreloc \
         --disable-crypto \
-        GLIB_GENMARSHAL='$(PREFIX)/$(TARGET)/bin/glib-genmarshal'
+        GLIB_GENMARSHAL='$(HOST_PREFIX)/bin/glib-genmarshal'
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef

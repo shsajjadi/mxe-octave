@@ -20,7 +20,7 @@ define $(PKG)_BUILD
     cd '$(1)/gettext-runtime' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-threads=win32 \
         --without-libexpat-prefix \
         --without-libxml2-prefix \

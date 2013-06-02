@@ -24,14 +24,14 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --disable-nls \
         --disable-gtk-doc \
         --without-python \
         --with-zlib \
         --with-bz2 \
         --with-gio \
-        PKG_CONFIG='$(PREFIX)/bin/$(TARGET)-pkg-config'
+        PKG_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config'
     $(MAKE) -C '$(1)'     -j '$(JOBS)' install-pkgconfigDATA
     $(MAKE) -C '$(1)/gsf' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef

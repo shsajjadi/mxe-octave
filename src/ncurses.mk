@@ -21,7 +21,7 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix=$(PREFIX)/$(TARGET) \
+        --prefix=$(HOST_PREFIX) \
         --disable-home-terminfo \
         --enable-sp-funcs \
         --enable-term-driver \

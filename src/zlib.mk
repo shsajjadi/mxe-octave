@@ -19,7 +19,7 @@ endef
 ifeq ($(MXE_NATIVE_BUILD),yes)
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
-      --prefix='$(PREFIX)/$(TARGET)'
+      --prefix='$(HOST_PREFIX)'
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
@@ -27,7 +27,7 @@ else
 define $(PKG)_BUILD
     cd '$(1)' && CHOST='$(TARGET)' $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         ./configure \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --static
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 

@@ -20,7 +20,7 @@ define $(PKG)_BUILD
     # context switched library introduced in boost 1.51.0 does not build
     rm -r '$(1)/libs/context'
     # old version appears to interfere
-    rm -rf '$(PREFIX)/$(TARGET)/include/boost/'
+    rm -rf '$(HOST_PREFIX)/include/boost/'
     echo 'using gcc : : $(TARGET)-g++ : <rc>$(TARGET)-windres <archiver>$(TARGET)-ar ;' > '$(1)/user-config.jam'
     # compile boost jam
     cd '$(1)/tools/build/v2/engine' && ./build.sh
@@ -35,17 +35,17 @@ define $(PKG)_BUILD
         --layout=tagged \
         --without-mpi \
         --without-python \
-        --prefix='$(PREFIX)/$(TARGET)' \
-        --exec-prefix='$(PREFIX)/$(TARGET)/bin' \
-        --libdir='$(PREFIX)/$(TARGET)/lib' \
-        --includedir='$(PREFIX)/$(TARGET)/include' \
-        -sEXPAT_INCLUDE='$(PREFIX)/$(TARGET)/include' \
-        -sEXPAT_LIBPATH='$(PREFIX)/$(TARGET)/lib' \
+        --prefix='$(HOST_PREFIX)' \
+        --exec-prefix='$(HOST_PREFIX)/bin' \
+        --libdir='$(HOST_PREFIX)/lib' \
+        --includedir='$(HOST_PREFIX)/include' \
+        -sEXPAT_INCLUDE='$(HOST_PREFIX)/include' \
+        -sEXPAT_LIBPATH='$(HOST_PREFIX)/lib' \
         stage install
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -U__STRICT_ANSI__ -pedantic \
-        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-boost.exe' \
+        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-boost.exe' \
         -DBOOST_THREAD_USE_LIB \
         -lboost_serialization-mt \
         -lboost_thread_win32-mt \

@@ -22,15 +22,15 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' getopt.o getopt1.o
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
 
-    if [ -d $(PREFIX)/$(TARGET)/lib64 ]; then \
+    if [ -d $(HOST_PREFIX)/lib64 ]; then \
       $(INSTALL) -d $(MXE_LIBDIR)/pkgconfig; \
-      mv $(PREFIX)/$(TARGET)/lib64/pkgconfig/* $(MXE_LIBDIR)/pkgconfig; \
-      rmdir $(PREFIX)/$(TARGET)/lib64/pkgconfig; \
-      mv $(PREFIX)/$(TARGET)/lib64/* $(MXE_LIBDIR); \
+      mv $(HOST_PREFIX)/lib64/pkgconfig/* $(MXE_LIBDIR)/pkgconfig; \
+      rmdir $(HOST_PREFIX)/lib64/pkgconfig; \
+      mv $(HOST_PREFIX)/lib64/* $(MXE_LIBDIR); \
     fi
 endef

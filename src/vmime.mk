@@ -18,8 +18,8 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && cmake \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
-        -DCMAKE_AR='$(PREFIX)/bin/$(TARGET)-ar' \
-        -DCMAKE_RANLIB='$(PREFIX)/bin/$(TARGET)-ranlib' \
+        -DCMAKE_AR='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ar' \
+        -DCMAKE_RANLIB='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ranlib' \
         .
 
     # Disable VMIME_HAVE_MLANG_H
@@ -28,11 +28,11 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' install
-    $(INSTALL) -m644 '$(1)/vmime/config.hpp' '$(PREFIX)/$(TARGET)/include/vmime/'
+    $(INSTALL) -m644 '$(1)/vmime/config.hpp' '$(HOST_PREFIX)/include/vmime/'
 
     $(SED) -i 's/posix/windows/g;' '$(1)/examples/example6.cpp'
     $(TARGET)-g++ -s -o '$(1)/examples/test-vmime.exe' \
         '$(1)/examples/example6.cpp' \
         `'$(TARGET)-pkg-config' libvmime --cflags --libs`
-    $(INSTALL) -m755 '$(1)/examples/test-vmime.exe' '$(PREFIX)/$(TARGET)/bin/'
+    $(INSTALL) -m755 '$(1)/examples/test-vmime.exe' '$(HOST_PREFIX)/bin/'
 endef

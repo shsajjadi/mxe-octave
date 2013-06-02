@@ -19,17 +19,17 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-threads
     $(MAKE) -C '$(1)' -j '$(JOBS)' libmxml.a
     $(MAKE) -C '$(1)' -j 1 install-libmxml.a
-    $(INSTALL) -d                   '$(PREFIX)/$(TARGET)/include'
-    $(INSTALL) -m644 '$(1)/mxml.h'  '$(PREFIX)/$(TARGET)/include/'
-    $(INSTALL) -d                   '$(PREFIX)/$(TARGET)/lib/pkgconfig'
-    $(INSTALL) -m644 '$(1)/mxml.pc' '$(PREFIX)/$(TARGET)/lib/pkgconfig/'
+    $(INSTALL) -d                   '$(HOST_PREFIX)/include'
+    $(INSTALL) -m644 '$(1)/mxml.h'  '$(HOST_PREFIX)/include/'
+    $(INSTALL) -d                   '$(HOST_PREFIX)/lib/pkgconfig'
+    $(INSTALL) -m644 '$(1)/mxml.pc' '$(HOST_PREFIX)/lib/pkgconfig/'
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-mxml.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-mxml.exe' \
         `'$(TARGET)-pkg-config' mxml --cflags --libs`
 endef

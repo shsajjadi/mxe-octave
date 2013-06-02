@@ -20,7 +20,7 @@ define $(PKG)_BUILD
     cd '$(1)' && autoreconf && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-libjpeg \
         --disable-opengl \
         --without-x

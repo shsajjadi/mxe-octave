@@ -23,13 +23,13 @@ define $(PKG)_BUILD
         --with-warnings \
         --without-ui \
         --with-readline \
-        --prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
 
     # Test
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-hunspell.exe' \
+        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-hunspell.exe' \
         `'$(TARGET)-pkg-config' hunspell --cflags --libs`
 endef

@@ -26,7 +26,7 @@ define $(PKG)_BUILD
         --build="`config.guess`" \
         --enable-static --disable-shared \
 	$($(PKG)_CONFIGURE_PIC_OPTION) \
-        --prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)'
 
     if [ $(BUILD_STATIC) = yes ]; then \

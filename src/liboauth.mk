@@ -18,7 +18,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-curl
     $(MAKE) -C '$(1)' -j '$(JOBS)'
@@ -26,6 +26,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-liboauth.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-liboauth.exe' \
         `'$(TARGET)-pkg-config' oauth --cflags --libs`
 endef

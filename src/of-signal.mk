@@ -16,6 +16,6 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    mkdir -p '$(PREFIX)/$(TARGET)/src'
-    $(INSTALL) -m644 '$(PKG_DIR)/$($(PKG)_FILE)' '$(PREFIX)/$(TARGET)/src'
+    mkdir -p '$(HOST_PREFIX)/src'
+    $(INSTALL) -m644 '$(PKG_DIR)/$($(PKG)_FILE)' '$(HOST_PREFIX)/src'
 endef

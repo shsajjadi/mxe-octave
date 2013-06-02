@@ -18,7 +18,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC)
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install

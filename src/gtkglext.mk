@@ -22,7 +22,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --without-x \
         --with-gdktarget=win32 \
@@ -39,6 +39,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-gtkglext.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-gtkglext.exe' \
         `'$(TARGET)-pkg-config' gtkglext-1.0 --cflags --libs`
 endef

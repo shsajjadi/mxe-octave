@@ -19,12 +19,12 @@ endef
 
 define $(PKG)_BUILD
     # install config.guess for general use
-    $(INSTALL) -d '$(PREFIX)/../dist/usr/bin'
-    $(INSTALL) -m755 '$(1)/config.guess' '$(PREFIX)/../dist/usr/bin/'
+    $(INSTALL) -d '$(TOP_DIR)/dist/usr/bin'
+    $(INSTALL) -m755 '$(1)/config.guess' '$(TOP_DIR)/dist/usr/bin/'
 
     # install target-specific autotools config file
-    $(INSTALL) -d '$(PREFIX)/../dist/usr/share'
-    echo "ac_cv_build=`$(1)/config.guess`" > '$(PREFIX)/../dist/usr/share/config.site'
+    $(INSTALL) -d '$(TOP_DIR)/dist/usr/share'
+    echo "ac_cv_build=`$(1)/config.guess`" > '$(TOP_DIR)/dist/usr/share/config.site'
 
     cd '$(1)' && ./configure \
         --target='$(TARGET)' \
@@ -38,5 +38,5 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-werror
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 DESTDIR='$(PREFIX)/../native-tools' install
+    $(MAKE) -C '$(1)' -j 1 DESTDIR='$(TOP_DIR)/native-tools' install
 endef

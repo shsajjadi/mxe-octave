@@ -19,13 +19,13 @@ define $(PKG)_BUILD
     cd '$(1)' && $(TARGET)-g++ -c -O3 -Wall -Wno-unknown-pragmas -Wno-format -D TIXML_USE_STL '$(1)'/*.cpp
     cd '$(1)' && $(TARGET)-ar cr libtinyxml.a *.o
     $(TARGET)-ranlib '$(1)/libtinyxml.a'
-    $(INSTALL) -d               '$(PREFIX)/$(TARGET)/lib'
-    $(INSTALL) -m644 '$(1)'/*.a '$(PREFIX)/$(TARGET)/lib/'
-    $(INSTALL) -d               '$(PREFIX)/$(TARGET)/include'
-    $(INSTALL) -m644 '$(1)'/*.h '$(PREFIX)/$(TARGET)/include/'
+    $(INSTALL) -d               '$(HOST_PREFIX)/lib'
+    $(INSTALL) -m644 '$(1)'/*.a '$(HOST_PREFIX)/lib/'
+    $(INSTALL) -d               '$(HOST_PREFIX)/include'
+    $(INSTALL) -m644 '$(1)'/*.h '$(HOST_PREFIX)/include/'
 
     '$(TARGET)-g++' \
         -W -Wall -D TIXML_USE_STL -Werror -ansi -pedantic \
-        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-tinyxml.exe' \
+        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-tinyxml.exe' \
         -ltinyxml
 endef

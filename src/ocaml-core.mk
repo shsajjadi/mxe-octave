@@ -26,9 +26,9 @@ define $(PKG)_BUILD
 	# reduction optimizations using its internal int type, and that must
 	# match Windows' int type.	(That's what -cc and -host are for).
 	cd '$(1)' && ./configure \
-	  -prefix '$(PREFIX)/$(TARGET)' \
-	  -bindir '$(PREFIX)/$(TARGET)/bin' \
-	  -libdir '$(PREFIX)/$(TARGET)/lib/ocaml' \
+	  -prefix '$(HOST_PREFIX)' \
+	  -bindir '$(HOST_PREFIX)/bin' \
+	  -libdir '$(HOST_PREFIX)/lib/ocaml' \
 	  -no-tk \
 	  -cc "gcc -m32" \
 	  -no-shared-libs \
@@ -45,14 +45,14 @@ define $(PKG)_BUILD
 	$(MAKE) -C '$(1)' all
 	# install ocamldoc and camlp4 (non cross versions)
 	$(MAKE) -C '$(1)/ocamldoc' install
-	cd '$(1)' && BINDIR=$(PREFIX)/$(TARGET)/bin \
-				 LIBDIR=$(PREFIX)/$(TARGET)/lib/ocaml \
-				 PREFIX=$(PREFIX)/$(TARGET) \
+	cd '$(1)' && BINDIR=$(HOST_PREFIX)/bin \
+				 LIBDIR=$(HOST_PREFIX)/lib/ocaml \
+				 PREFIX=$(HOST_PREFIX) \
 				 ./build/partial-install.sh
 
 	####### patch mingw include
 	# Now patch utils/clflags.ml to hardcode mingw-specific include.
-	$(SED) -i "s,@libdir@,$(PREFIX)/$(TARGET)/lib,g" \
+	$(SED) -i "s,@libdir@,$(HOST_PREFIX)/lib,g" \
 		$(1)/hardcode_mingw_include.patch
 	cd '$(1)' && patch -p2 < hardcode_mingw_include.patch
 
@@ -64,18 +64,18 @@ define $(PKG)_BUILD
 	# config/Makefile is a custom one which we supply.
 	rm -f $(1)/config/Makefile
 	$(SED) \
-	  -e "s,@prefix@,$(PREFIX)/$(TARGET),g" \
+	  -e "s,@prefix@,$(HOST_PREFIX),g" \
 	  -e "s,@toolpref@,$(TARGET),g" \
 	  -e "s,@otherlibraries@,$(OTHER_LIBS),g" \
 	  < $(1)/Makefile-mingw.in > $(1)/config/Makefile
-	$(SED) -i "s,@libdir@,$(PREFIX)/$(TARGET)/lib,g" $(1)/otherlibs/Makefile.shared
+	$(SED) -i "s,@libdir@,$(HOST_PREFIX)/lib,g" $(1)/otherlibs/Makefile.shared
 	# We're going to build in otherlibs/win32unix and otherlibs/win32graph
 	# directories, but since they would normally only be built under
 	# Windows, they only have the Makefile.nt files.  Just symlink
 	# Makefile -> Makefile.nt for these cases.
-	$(SED) -i "s,@libdir@,$(PREFIX)/$(TARGET)/lib,g" $(1)/otherlibs/win32unix/Makefile.nt
-	$(SED) -i "s,@libdir@,$(PREFIX)/$(TARGET)/lib,g" $(1)/otherlibs/win32graph/Makefile.nt
-	$(SED) -i "s,@libdir@,$(PREFIX)/$(TARGET)/lib,g" $(1)/otherlibs/systhreads/Makefile.nt
+	$(SED) -i "s,@libdir@,$(HOST_PREFIX)/lib,g" $(1)/otherlibs/win32unix/Makefile.nt
+	$(SED) -i "s,@libdir@,$(HOST_PREFIX)/lib,g" $(1)/otherlibs/win32graph/Makefile.nt
+	$(SED) -i "s,@libdir@,$(HOST_PREFIX)/lib,g" $(1)/otherlibs/systhreads/Makefile.nt
 	for d in $(1)/otherlibs/win32unix \
 			 $(1)/otherlibs/win32graph \
 			 $(1)/otherlibs/bigarray \
@@ -113,7 +113,7 @@ define $(PKG)_BUILD
 	$(MAKE) -C '$(1)' installopt
 	# Rename all the binaries to target-binary
 	for f in ocamlc ocamlcp ocamlrun ocamldep ocamlmklib ocamlmktop ocamlopt ocamlprof camlp4prof camlp4boot camlp4 camlp4oof camlp4of camlp4o camlp4rf camlp4r camlp4orf ocamldoc ; do \
-	  cp -f $(PREFIX)/$(TARGET)/bin/$$f $(PREFIX)/bin/$(TARGET)-$$f; \
+	  cp -f $(HOST_PREFIX)/bin/$$f $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-$$f; \
 	done
 
 	# test ocamlopt

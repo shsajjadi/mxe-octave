@@ -22,8 +22,8 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         LIBS="`'$(TARGET)-pkg-config' --libs libtiff-4` -ljpeg -lz"
     $(MAKE) -C '$(1)' -j 1 all install EXEEXT=.remove-me MAKE='$(MAKE)'
-    rm -fv '$(PREFIX)/$(TARGET)'/bin/*.remove-me
+    rm -fv '$(HOST_PREFIX)'/bin/*.remove-me
 endef

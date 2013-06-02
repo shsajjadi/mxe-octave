@@ -19,12 +19,12 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --with-openssl \
         --with-libtiff \
         --with-libpng \
         --with-libxml \
-        --with-libxmlinc='$(PREFIX)/$(TARGET)' \
+        --with-libxmlinc='$(HOST_PREFIX)' \
         --with-zlib \
         --without-libwrap \
         CXX='$(TARGET)-g++' \

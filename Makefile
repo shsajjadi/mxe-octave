@@ -1,6 +1,10 @@
 # This file is part of MXE.
 # See index.html for further information.
 
+PWD := $(shell pwd)
+
+## Configuration variables.
+
 # Set the following configuration variables with a configure script?
 
 # Current valid values are mingw (cross) and gnu-linux (native).
@@ -11,8 +15,10 @@ MXE_SYSTEM := mingw
 MXE_NATIVE_BUILD := no
 #MXE_NATIVE_BUILD := yes
 
-# Set to "yes" to use the verions of GCC and binutils already
-# installed on your system.
+# Set to "yes" to use the versions of GCC and binutils already
+# installed on your system.  NOTE: building a copy of GCC for a
+# native build does not appear to work correctly yet, so for now you
+# must set USE_SYSTEM_GCC to yes if MXE_NATIVE_BUILD is set to yes.
 USE_SYSTEM_GCC := no
 #USE_SYSTEM_GCC := yes
 
@@ -34,6 +40,12 @@ USE_PIC_FLAG := no
 #USE_PIC_FLAG := yes
 
 ## end of configuration variables.
+
+# These can't be chosen arbitrarily.  The way things are configured now,
+# GCC expects to find cross-compiler include files in $(PREFIX)/$(TARGET).
+# and it's not clear to me how to change that.
+BUILD_TOOLS_PREFIX := $(PWD)/usr
+HOST_PREFIX := $(PWD)/usr/$(TARGET)
 
 ifeq ($(BUILD_SHARED),yes)
   ifeq ($(BUILD_STATIC),yes)
@@ -59,7 +71,6 @@ SOURCEFORGE_MIRROR := freefr.dl.sourceforge.net
 PKG_MIRROR         := s3.amazonaws.com/mxe-pkg
 PKG_CDN            := d1yihgixbnrglp.cloudfront.net
 
-PWD        := $(shell pwd)
 SHELL      := bash
 
 INSTALL    := $(shell ginstall --help >/dev/null 2>&1 && echo g)install
@@ -76,21 +87,19 @@ LIBTOOL     := libtool
 LIBTOOLIZE  := libtoolize
 BUILD_TOOLS := $(patsubst src/%.mk, %, $(wildcard src/build-*.mk))
 
-PREFIX     := $(PWD)/usr
+STAMP_DIR  := $(PWD)/installed-packages
+MSYS_INFO_DIR := $(PWD)/msys-info
 LOG_DIR    := $(PWD)/log
 TIMESTAMP  := $(shell date +%Y%m%d_%H%M%S)
 PKG_DIR    := $(PWD)/pkg
 TMP_DIR     = $(PWD)/tmp-$(1)
-MAKEFILE   := $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
-TOP_DIR    := $(patsubst %/,%,$(dir $(MAKEFILE)))
+TOP_DIR    := $(PWD)
+MAKEFILE   := $(TOP_DIR)/Makefile
 PKGS       := $(filter-out $(BUILD_TOOLS), $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html'))
-PATH       := $(PREFIX)/bin:$(PATH)
-ifeq ($(MXE_NATIVE_BUILD),yes)
-  PATH := $(PREFIX)/$(TARGET)/bin:$(PATH)
-endif
+PATH       := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)
 
-CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(PREFIX)/$(TARGET)/include'
-CONFIGURE_LDFLAGS := LDFLAGS='-L$(PREFIX)/$(TARGET)/lib'
+CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(HOST_PREFIX)/include'
+CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX)/lib'
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   MXE_AR := ar
@@ -106,36 +115,36 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
   MXE_PKG_CONFIG := pkg-config
   MXE_QMAKE := qmake
 else
-  MXE_AR := '$(PREFIX)/bin/$(TARGET)-ar'
-  MXE_RANLIB := '$(PREFIX)/bin/$(TARGET)-ranlib'
-  MXE_CC := '$(PREFIX)/bin/$(TARGET)-gcc'
-  MXE_CXX := '$(PREFIX)/bin/$(TARGET)-g++'
-  MXE_F77 := '$(PREFIX)/bin/$(TARGET)-gfortran'
+  MXE_AR := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ar'
+  MXE_RANLIB := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ranlib'
+  MXE_CC := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-gcc'
+  MXE_CXX := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-g++'
+  MXE_F77 := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-gfortran'
   ifeq ($(MXE_SYSTEM),mingw)
-    MXE_WINDRES := '$(PREFIX)/bin/$(TARGET)-windres'
+    MXE_WINDRES := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-windres'
   else
     MXE_WINDRES := true
   endif
-  MXE_PKG_CONFIG := '$(PREFIX)/bin/$(TARGET)-pkg-config'
-  MXE_QMAKE := '$(PREFIX)/bin/$(TARGET)-qmake'
+  MXE_PKG_CONFIG := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config'
+  MXE_QMAKE := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-qmake'
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)
   MAKE_SHARED_FROM_STATIC_OPTIONS := --windowsdll
 endif
 
-MXE_BINDIR := '$(PREFIX)/$(TARGET)/bin'
-MXE_LIBDIR := '$(PREFIX)/$(TARGET)/lib'
-MXE_INCDIR := '$(PREFIX)/$(TARGET)/include'
+MXE_BINDIR := '$(HOST_PREFIX)/bin'
+MXE_LIBDIR := '$(HOST_PREFIX)/lib'
+MXE_INCDIR := '$(HOST_PREFIX)/include'
 
 ifeq ($(MXE_SYSTEM),mingw)
   ifneq ($(MXE_NATIVE_BUILD),yes)
     MSYS_BASE_URL := http://sourceforge.net/projects/mingw/files/MSYS/Base
     MSYS_BASE_VER := 1.0.13
-    MSYS_BASE_DIR := $(PREFIX)/../msys-base
+    MSYS_BASE_DIR := $(TOP_DIR)/msys-base
     MSYS_BASE_PACKAGES := $(addprefix msys-,bash coreutils diffutils file findutils gawk grep gzip less libiconv libintl libmagic make msys-core regex sed tar termcap)
 
-    NOTEPAD_BASE_DIR := $(PREFIX)/../notepad++
+    NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
   endif
 else
   LD_LIBRARY_PATH := '$(MXE_LIBDIR)'
@@ -161,7 +170,7 @@ OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim specfun gene
 MAKE_SHARED_FROM_STATIC := \
   $(TOP_DIR)/tools/make-shared-from-static $(MAKE_SHARED_FROM_STATIC_OPTIONS)
 
-CMAKE_TOOLCHAIN_FILE := $(PREFIX)/$(TARGET)/share/cmake/mxe-conf.cmake
+CMAKE_TOOLCHAIN_FILE := $(HOST_PREFIX)/share/cmake/mxe-conf.cmake
 
 # unexport any environment variables that might cause trouble
 unexport AR CC CFLAGS C_INCLUDE_PATH CPATH CPLUS_INCLUDE_PATH CPP
@@ -253,15 +262,15 @@ define CHECK_REQUIREMENT_VERSION
     fi
 
 endef
-check-requirements: $(PREFIX)/installed/check-requirements
-$(PREFIX)/installed/check-requirements: $(MAKEFILE)
+check-requirements: $(STAMP_DIR)/check-requirements
+$(STAMP_DIR)/check-requirements: $(MAKEFILE)
 	@echo '[check requirements]'
 	$(foreach REQUIREMENT,$(REQUIREMENTS),$(call CHECK_REQUIREMENT,$(REQUIREMENT)))
-	@[ -d '$(PREFIX)/installed' ] || mkdir -p '$(PREFIX)/installed'
+	@[ -d '$(STAMP_DIR)' ] || mkdir -p '$(STAMP_DIR)'
 	@if test "$(USE_SYSTEM_GCC)" = yes; then \
-	  $(INSTALL) -d '$(PREFIX)/bin' ; \
-	  $(INSTALL) -m 755 tools/config.guess '$(PREFIX)/bin/config.guess' ; \
-	  $(INSTALL) -m 755 tools/config.sub '$(PREFIX)/bin/config.sub' ; \
+	  $(INSTALL) -d '$(BUILD_TOOLS_PREFIX)/bin' ; \
+	  $(INSTALL) -m 755 tools/config.guess '$(BUILD_TOOLS_PREFIX)/bin/config.guess' ; \
+	  $(INSTALL) -m 755 tools/config.sub '$(BUILD_TOOLS_PREFIX)/bin/config.sub' ; \
 	fi
 	@touch '$@'
 
@@ -290,11 +299,11 @@ download-$(1): $(addprefix download-,$($(1)_DEPS))
 	fi
 
 .PHONY: $(1)
-$(1): $(PREFIX)/installed/$(1)
-$(PREFIX)/installed/$(1): $(TOP_DIR)/src/$(1).mk \
+$(1): $(STAMP_DIR)/$(1)
+$(STAMP_DIR)/$(1): $(TOP_DIR)/src/$(1).mk \
                           $(wildcard $(TOP_DIR)/src/$(1)-*.patch) \
                           $(wildcard $(TOP_DIR)/src/$(1)-test*) \
-                          $(addprefix $(PREFIX)/installed/,$($(1)_DEPS)) \
+                          $(addprefix $(STAMP_DIR)/,$($(1)_DEPS)) \
                           | check-requirements
 	@[ -d '$(LOG_DIR)/$(TIMESTAMP)' ] || mkdir -p '$(LOG_DIR)/$(TIMESTAMP)'
 	@if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
@@ -344,15 +353,18 @@ build-only-$(1):
 	    (du -k -d 0 '$(2)' 2>/dev/null || du -k --max-depth 0 '$(2)') | $(SED) -n 's/^\(\S*\).*/du: \1 KiB/p'
 	    rm -rfv  '$(2)'
 	    ,)
-	[ -d '$(PREFIX)/installed' ] || mkdir -p '$(PREFIX)/installed'
-	touch '$(PREFIX)/installed/$(1)'
+	[ -d '$(STAMP_DIR)' ] || mkdir -p '$(STAMP_DIR)'
+	touch '$(STAMP_DIR)/$(1)'
 endef
 $(foreach PKG,$(PKGS),$(eval $(call PKG_RULE,$(PKG),$(call TMP_DIR,$(PKG)))))
 $(foreach TOOL,$(BUILD_TOOLS),$(eval $(call PKG_RULE,$(TOOL),$(call TMP_DIR,$(TOOL)))))
 
 .PHONY: clean
 clean:
-	rm -rf $(call TMP_DIR,*) $(PREFIX)/*
+	rm -rf $(call TMP_DIR,*) $(BUILD_TOOLS_PREFIX)
+	rm -rf $(STAMP_DIR) $(MSYS_INFO_DIR) $(LOG_DIR)
+	rm -rf $(MSYS_BASE_DIR) $(NOTEPAD_BASE_DIR)
+	rm -rf native-tools cross-tools octave gnuplot
 
 .PHONY: clean-pkg
 clean-pkg:

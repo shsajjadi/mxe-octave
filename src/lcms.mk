@@ -17,7 +17,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \

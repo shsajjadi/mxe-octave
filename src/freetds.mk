@@ -24,7 +24,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         --disable-rpath \

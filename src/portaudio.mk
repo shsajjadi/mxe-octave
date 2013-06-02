@@ -20,16 +20,16 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --with-host_os=mingw \
         --with-winapi=wmme,directx,wasapi,wdmks \
-        --with-dxdir=$(PREFIX)/$(TARGET) \
+        --with-dxdir=$(HOST_PREFIX) \
         ac_cv_path_AR=$(TARGET)-ar
     $(MAKE) -C '$(1)' -j '$(JOBS)' SHARED_FLAGS= TESTS=
     $(MAKE) -C '$(1)' -j 1 install
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-portaudio.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-portaudio.exe' \
         `'$(TARGET)-pkg-config' portaudio-2.0 --cflags --libs`
 endef

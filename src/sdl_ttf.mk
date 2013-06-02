@@ -19,9 +19,9 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
-        --with-sdl-prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
+        --with-sdl-prefix='$(HOST_PREFIX)' \
         --disable-sdltest \
-        --with-freetype-prefix='$(PREFIX)/$(TARGET)'
+        --with-freetype-prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef

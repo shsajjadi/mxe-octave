@@ -42,9 +42,8 @@ done
 
 TOPDIR=$(pwd)
 PATH=$TOPDIR/usr/bin:$PATH
-PREFIX=/usr
 TARGET=i686-pc-mingw32
-BUILD=x86_64-unwknown-linux-gnu
+PREFIX=/usr/$TARGET
 STRIP=$TARGET-strip
 DATE=$(date +%Y-%m-%d-%H-%M)
 OCTAVE_DIST_DIR=$TOPDIR/dist/$OCTAVE_TARGET-$DATE
@@ -71,13 +70,13 @@ cat > $TOPDIR/excluded-native-files << EOF
 EOF
 
 echo "  gcc cross compiler files..."
-cd $TOPDIR/cross-tools/$TOPDIR/$PREFIX/$TARGET
+cd $TOPDIR/cross-tools/$TOPDIR/$PREFIX
 find . -type f -o -type l | sed "s,./,," > $TOPDIR/excluded-gcc-files
 
 echo "copying files..."
 
 echo "  octave and dependencies..."
-cd $TOPDIR/usr/$TARGET
+cd $TOPDIR/$PREFIX
 tar -c -h -X $TOPDIR/excluded-gcc-files -f - . | ( cd $OCTAVE_DIST_DIR ; tar xpf - )
 cp $TOPDIR/build_packages.m $OCTAVE_DIST_DIR/src
 

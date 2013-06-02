@@ -21,7 +21,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install \
         bin_PROGRAMS= \
@@ -31,6 +31,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -pedantic -std=c++0x \
-        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-gtkglextmm.exe' \
+        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-gtkglextmm.exe' \
         `'$(TARGET)-pkg-config' gtkglextmm-1.2 --cflags --libs`
 endef

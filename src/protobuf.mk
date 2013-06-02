@@ -25,7 +25,7 @@ define $(PKG)_BUILD
 # Second step: Build for target system.
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --with-zlib \
         --with-protoc=src/protoc_host
@@ -34,6 +34,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-protobuf.exe' \
+        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-protobuf.exe' \
         `'$(TARGET)-pkg-config' protobuf --cflags --libs`
 endef

@@ -20,7 +20,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --disable-pixbuf-loader \
         --disable-gtk-theme \
         --disable-gtk-doc \
@@ -29,6 +29,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-librsvg.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-librsvg.exe' \
         `'$(TARGET)-pkg-config' librsvg-2.0 --cflags --libs`
 endef

@@ -21,7 +21,7 @@ define $(PKG)_BUILD
     $(SED) -i 's,sys\\stat\.h,sys/stat.h,g' '$(1)/bzip2.c'
     $(SED) -i 's,WINAPI,,g'                 '$(1)/bzlib.h'
     $(MAKE) -C '$(1)' -j '$(JOBS)' libbz2.a \
-        PREFIX='$(PREFIX)/$(TARGET)' \
+        PREFIX='$(HOST_PREFIX)' \
         CC='$(MXE_CC)' \
         AR='$(MXE_AR)' \
         RANLIB='$(MXE_RANLIB)'
@@ -37,7 +37,7 @@ define $(PKG)_BUILD
     $(SED) -i 's,sys\\stat\.h,sys/stat.h,g' '$(1)/bzip2.c'
     $(SED) -i 's,WINAPI,,g'                 '$(1)/bzlib.h'
     $(MAKE) -C '$(1)' -j '$(JOBS)' -f Makefile-libbz2_so \
-        PREFIX='$(PREFIX)/$(TARGET)' \
+        PREFIX='$(HOST_PREFIX)' \
         CC='$(MXE_CC)' \
         AR='$(MXE_AR)' \
         RANLIB='$(MXE_RANLIB)'

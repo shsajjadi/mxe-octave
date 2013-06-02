@@ -20,7 +20,7 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)'
 
     ## All we need for Octave is makeinfo.
     $(MAKE) -C '$(1)/.build/lib' -j '$(JOBS)'

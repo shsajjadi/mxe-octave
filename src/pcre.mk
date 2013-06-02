@@ -23,7 +23,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-pcre16 \
         --enable-utf \
         --enable-unicode-properties \
@@ -31,7 +31,7 @@ define $(PKG)_BUILD
         --disable-pcregrep-libz \
         --disable-pcregrep-libbz2 \
         --disable-pcretest-libreadline
-    rm -f '$(PREFIX)/$(TARGET)'/share/man/man3/pcre16*.3
+    rm -f '$(HOST_PREFIX)'/share/man/man3/pcre16*.3
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(INSTALL) -m755 $(PREFIX)/$(TARGET)/bin/pcre-config $(PREFIX)/bin/pcre-config
+    $(INSTALL) -m755 $(HOST_PREFIX)/bin/pcre-config $(BUILD_TOOLS_PREFIX)/bin/pcre-config
 endef

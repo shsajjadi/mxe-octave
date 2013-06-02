@@ -21,10 +21,10 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-threads=win32 \
-        --with-gmp-include='$(PREFIX)/$(TARGET)/include/'
-        --with-gmp-lib='$(PREFIX)/$(TARGET)/lib/'
+        --with-gmp-include='$(HOST_PREFIX)/include/'
+        --with-gmp-lib='$(HOST_PREFIX)/lib/'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef

@@ -18,6 +18,6 @@ endef
 define $(PKG)_BUILD
     mkdir -p '$(MSYS_BASE_DIR)'
     cd '$(1)' && tar cf - . | ( cd '$(MSYS_BASE_DIR)'; tar xpf - )
-    mkdir -p '$(PREFIX)'/../msys-info
-    cd '$(1)' && find . > '$(PREFIX)'/../msys-info/$(PKG).list
+    mkdir -p '$(MSYS_INFO_DIR)'
+    cd '$(1)' && find . > '$(MSYS_INFO_DIR)'/$(PKG).list
 endef

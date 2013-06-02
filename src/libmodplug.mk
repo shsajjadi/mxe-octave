@@ -20,11 +20,11 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
     '$(TARGET)-gcc' \
         -W -Wall -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libmodplug.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libmodplug.exe' \
         `'$(TARGET)-pkg-config' libmodplug --cflags --libs`
 endef

@@ -18,15 +18,15 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-        FREETYPE_CFLAGS='-I$(PREFIX)/$(TARGET)/include/freetype2' \
+        FREETYPE_CFLAGS='-I$(HOST_PREFIX)/include/freetype2' \
         FREETYPE_LIBS='-lfreetype' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --with-arch='$(TARGET)' \
         --disable-docs \
-        --with-expat='$(PREFIX)/$(TARGET)'
+        --with-expat='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install sbin_PROGRAMS= noinst_PROGRAMS=
 endef

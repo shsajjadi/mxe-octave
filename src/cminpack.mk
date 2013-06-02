@@ -20,8 +20,8 @@ define $(PKG)_BUILD
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'
     $(MAKE) -C '$(1)' -j $(JOBS)
 
-    $(INSTALL) -d                         '$(PREFIX)/$(TARGET)/lib'
-    $(INSTALL) -m644 '$(1)/libcminpack.a' '$(PREFIX)/$(TARGET)/lib/'
-    $(INSTALL) -d                         '$(PREFIX)/$(TARGET)/include'
-    $(INSTALL) -m644 '$(1)/cminpack.h'    '$(PREFIX)/$(TARGET)/include/'
+    $(INSTALL) -d                         '$(HOST_PREFIX)/lib'
+    $(INSTALL) -m644 '$(1)/libcminpack.a' '$(HOST_PREFIX)/lib/'
+    $(INSTALL) -d                         '$(HOST_PREFIX)/include'
+    $(INSTALL) -m644 '$(1)/cminpack.h'    '$(HOST_PREFIX)/include/'
 endef

@@ -19,11 +19,11 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --with-x=no \
         --without-zlib \
-        ac_cv_prog_freetype_config='$(PREFIX)/$(TARGET)/bin/freetype-config'
+        ac_cv_prog_freetype_config='$(HOST_PREFIX)/bin/freetype-config'
     $(SED) -i 's/#define MAGICKCORE_ZLIB_DELEGATE 1//g' '$(1)/magick/magick-config.h'
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS=

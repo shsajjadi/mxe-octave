@@ -18,19 +18,19 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --with-apr='$(PREFIX)/$(TARGET)' \
-        --with-apr-util='$(PREFIX)/$(TARGET)' \
+        --with-apr='$(HOST_PREFIX)' \
+        --with-apr-util='$(HOST_PREFIX)' \
         CFLAGS=-D_WIN32_WINNT=0x0500 \
         CXXFLAGS=-D_WIN32_WINNT=0x0500
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
-    mkdir -p '$(PREFIX)/$(TARGET)/share/cmake/log4cxx'
-    cp '$(1)/log4cxx-config.cmake' '$(PREFIX)/$(TARGET)/share/cmake/log4cxx/log4cxx-config.cmake'
+    mkdir -p '$(HOST_PREFIX)/share/cmake/log4cxx'
+    cp '$(1)/log4cxx-config.cmake' '$(HOST_PREFIX)/share/cmake/log4cxx/log4cxx-config.cmake'
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-log4cxx.exe' \
+        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-log4cxx.exe' \
         `$(TARGET)-pkg-config liblog4cxx --libs`
 endef

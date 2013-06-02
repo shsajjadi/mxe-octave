@@ -18,7 +18,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)/libltdl' && ./configure \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --enable-ltdl-install
     $(MAKE) -C '$(1)/libltdl' -j '$(JOBS)'
