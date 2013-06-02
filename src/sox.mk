@@ -25,7 +25,7 @@ define $(PKG)_BUILD
 
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC)
 
@@ -34,6 +34,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-sox.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-sox.exe' \
         `'$(TARGET)-pkg-config' sox --cflags --libs`
 endef

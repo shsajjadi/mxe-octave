@@ -22,13 +22,13 @@ define $(PKG)_BUILD
         CXX='$(TARGET)-g++' \
         CC='$(TARGET)-gcc' \
         AR='$(TARGET)-ar' \
-        INCDIR='$(PREFIX)/$(TARGET)/include' \
-        INSTALLDIR='$(PREFIX)/$(TARGET)/lib'
+        INCDIR='$(HOST_PREFIX)/include' \
+        INSTALLDIR='$(HOST_PREFIX)/lib'
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' -f Makefile.gnu install \
         CXX='$(TARGET)-g++' \
         CC='$(TARGET)-gcc' \
         AR='$(TARGET)-ar' \
-        INCDIR='$(PREFIX)/$(TARGET)/include' \
-        INSTALLDIR='$(PREFIX)/$(TARGET)/lib'
+        INCDIR='$(HOST_PREFIX)/include' \
+        INSTALLDIR='$(HOST_PREFIX)/lib'
 endef

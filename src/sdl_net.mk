@@ -19,14 +19,14 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
-        --with-sdl-prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
+        --with-sdl-prefix='$(HOST_PREFIX)' \
         --disable-sdltest \
         --disable-gui
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-sdl_net.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-sdl_net.exe' \
         `'$(TARGET)-pkg-config' SDL_net --cflags --libs`
 endef

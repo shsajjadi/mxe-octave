@@ -21,7 +21,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --with-gnutls \
         --with-libidn \
         --enable-sspi \
@@ -31,7 +31,7 @@ define $(PKG)_BUILD
 
 ##    '$(TARGET)-gcc' \
 ##        -W -Wall -Werror -ansi -pedantic \
-##        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-curl.exe' \
+##        '$(2).c' -o '$(HOST_PREFIX)/bin/test-curl.exe' \
 ##        `'$(TARGET)-pkg-config' libcurl --cflags --libs`
 
 endef

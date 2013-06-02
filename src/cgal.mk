@@ -43,5 +43,5 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)/examples/AABB_tree' -j $(JOBS)
     $(MAKE) -C '$(1)' -j $(JOBS) install
-    $(INSTALL) '$(1)/examples/AABB_tree/AABB_polyhedron_edge_example.exe' '$(PREFIX)/$(TARGET)/bin/test-cgal.exe'
+    $(INSTALL) '$(1)/examples/AABB_tree/AABB_polyhedron_edge_example.exe' '$(HOST_PREFIX)/bin/test-cgal.exe'
 endef

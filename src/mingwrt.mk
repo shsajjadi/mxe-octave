@@ -16,7 +16,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)'
+    $(INSTALL) -d '$(HOST_PREFIX)'
     cd '$(1)' && \
-        cp -rpv include lib '$(PREFIX)/$(TARGET)'
+        cp -rpv include lib '$(HOST_PREFIX)'
 endef

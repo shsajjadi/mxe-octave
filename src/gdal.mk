@@ -22,26 +22,26 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --with-bsb \
         --with-grib \
         --with-ogr \
         --with-vfk \
         --with-pam \
         --without-threads \
-        --with-libz='$(PREFIX)/$(TARGET)' \
-        --with-png='$(PREFIX)/$(TARGET)' \
-        --with-libtiff='$(PREFIX)/$(TARGET)' \
-        --with-geotiff='$(PREFIX)/$(TARGET)' \
-        --with-jpeg='$(PREFIX)/$(TARGET)' \
-        --with-jasper='$(PREFIX)/$(TARGET)' \
-        --with-gif='$(PREFIX)/$(TARGET)' \
-        --with-expat='$(PREFIX)/$(TARGET)' \
-        --with-sqlite3='$(PREFIX)/$(TARGET)' \
-        --with-curl='$(PREFIX)/$(TARGET)/bin/curl-config' \
-        --with-geos='$(PREFIX)/$(TARGET)/bin/geos-config' \
-        --with-pg='$(PREFIX)/bin/$(TARGET)-pg_config' \
-        --with-gta='$(PREFIX)/$(TARGET)' \
+        --with-libz='$(HOST_PREFIX)' \
+        --with-png='$(HOST_PREFIX)' \
+        --with-libtiff='$(HOST_PREFIX)' \
+        --with-geotiff='$(HOST_PREFIX)' \
+        --with-jpeg='$(HOST_PREFIX)' \
+        --with-jasper='$(HOST_PREFIX)' \
+        --with-gif='$(HOST_PREFIX)' \
+        --with-expat='$(HOST_PREFIX)' \
+        --with-sqlite3='$(HOST_PREFIX)' \
+        --with-curl='$(HOST_PREFIX)/bin/curl-config' \
+        --with-geos='$(HOST_PREFIX)/bin/geos-config' \
+        --with-pg='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pg_config' \
+        --with-gta='$(HOST_PREFIX)' \
         --without-odbc \
         --without-static-proj4 \
         --without-xerces \
@@ -82,5 +82,5 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/alg'   -j 1 install
     $(MAKE) -C '$(1)/ogr'   -j 1 install OGR_ENABLED=
     $(MAKE) -C '$(1)/apps'  -j 1 install BIN_LIST=
-    $(LN_SF) '$(PREFIX)/$(TARGET)/bin/gdal-config' '$(PREFIX)/bin/$(TARGET)-gdal-config'
+    $(LN_SF) '$(HOST_PREFIX)/bin/gdal-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-gdal-config'
 endef

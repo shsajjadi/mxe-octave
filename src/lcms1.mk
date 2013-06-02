@@ -18,7 +18,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -27,5 +27,5 @@ define $(PKG)_BUILD
         --with-zlib
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
 
-    rm -f $(PREFIX)/$(TARGET)/lib/liblcms.la
+    rm -f $(HOST_PREFIX)/lib/liblcms.la
 endef

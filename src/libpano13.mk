@@ -23,13 +23,13 @@ define $(PKG)_BUILD
     $(SED) -i 's,\(@HAVE_MINGW_TRUE@WIN_SRC = .*\),\1 ppm.c,'                              '$(1)/Makefile.in'
     $(SED) -i 's,mv.*libpano13\.dll.*,,'                                                   '$(1)/Makefile.in'
     cd '$(1)' && ./configure \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --with-jpeg='$(PREFIX)/$(TARGET)'/lib \
-        --with-tiff='$(PREFIX)/$(TARGET)'/lib \
-        --with-png='$(PREFIX)/$(TARGET)'/lib \
-        --with-zlib='$(PREFIX)/$(TARGET)'/lib \
+        --with-jpeg='$(HOST_PREFIX)'/lib \
+        --with-tiff='$(HOST_PREFIX)'/lib \
+        --with-png='$(HOST_PREFIX)'/lib \
+        --with-zlib='$(HOST_PREFIX)'/lib \
         LIBS="`'$(TARGET)-pkg-config' --libs libtiff-4`"
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
 endef

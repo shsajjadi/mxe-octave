@@ -21,16 +21,16 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-threads \
         --enable-directx \
         --disable-stdio-redirect
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(LN_SF) '$(PREFIX)/$(TARGET)/bin/sdl-config' '$(PREFIX)/bin/$(TARGET)-sdl-config'
+    $(LN_SF) '$(HOST_PREFIX)/bin/sdl-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-sdl-config'
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-sdl.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-sdl.exe' \
         `'$(TARGET)-pkg-config' sdl --cflags --libs`
 endef

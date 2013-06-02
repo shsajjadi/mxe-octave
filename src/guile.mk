@@ -23,7 +23,7 @@ define $(PKG)_BUILD
     cd '$(1)' && CC_FOR_BUILD=gcc ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --without-threads \
         scm_cv_struct_timespec=no \
@@ -34,6 +34,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-guile.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-guile.exe' \
         `'$(TARGET)-pkg-config' guile-1.8 --cflags --libs`
 endef

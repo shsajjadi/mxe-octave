@@ -23,12 +23,12 @@ define $(PKG)_BUILD
     $(SED) -i 's,packet32\.h,Packet32.h,g'                   '$(1)/configure'
     $(SED) -i 's,packet\.lib,libpacket.a,'                   '$(1)/configure'
     $(SED) -i 's,-lpacket,-lpacket -lws2_32,g'               '$(1)/configure'
-    $(SED) -i 's,/usr/include,$(PREFIX)/$(TARGET)/include,g' '$(1)/configure'
+    $(SED) -i 's,/usr/include,$(HOST_PREFIX)/include,g' '$(1)/configure'
     $(SED) -i 's,#include <Ntddndis.h>,#include <ddk/ntddndis.h>,' '$(1)/src/eth-win32.c'
     $(SED) -i 's,-mno-cygwin,,' '$(1)/configure'
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef

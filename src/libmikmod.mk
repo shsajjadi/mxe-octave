@@ -25,13 +25,13 @@ define $(PKG)_BUILD
         STRIP='$(TARGET)-strip' \
         ./configure \
             $(ENABLE_SHARED_OR_STATIC) \
-            --prefix='$(PREFIX)/$(TARGET)' \
-            --libdir='$(PREFIX)/$(TARGET)/lib' \
+            --prefix='$(HOST_PREFIX)' \
+            --libdir='$(HOST_PREFIX)/lib' \
             --disable-esd
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -std=c99 -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libmikmod.exe' \
-        `'$(PREFIX)/$(TARGET)/bin/libmikmod-config' --cflags --libs`
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libmikmod.exe' \
+        `'$(HOST_PREFIX)/bin/libmikmod-config' --cflags --libs`
 endef

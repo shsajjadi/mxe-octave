@@ -18,7 +18,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -28,5 +28,5 @@ define $(PKG)_BUILD
         ac_cv_sizeof_ssize_t=4 \
         CFLAGS=-D_WIN32_WINNT=0x0500
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
-    $(LN_SF) '$(PREFIX)/$(TARGET)/bin/apr-1-config' '$(PREFIX)/bin/$(TARGET)-apr-1-config'
+    $(LN_SF) '$(HOST_PREFIX)/bin/apr-1-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-apr-1-config'
 endef

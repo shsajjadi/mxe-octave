@@ -18,13 +18,13 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-install-libiberty
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install target_header_dir=libiberty
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libiberty.exe' \
-        -I$(PREFIX)/$(TARGET)/include/libiberty -liberty
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libiberty.exe' \
+        -I$(HOST_PREFIX)/include/libiberty -liberty
 endef

@@ -20,21 +20,21 @@ define $(PKG)_BUILD
 	$(MAKE) -C '$(1)' -j '$(JOBS)' \
 		CHAINS=mingw \
 		MINGW_PREFIX=$(TARGET) \
-		OCAMLOPT=$(PREFIX)/$(TARGET)/bin/ocaml-native/ocamlopt \
+		OCAMLOPT=$(HOST_PREFIX)/bin/ocaml-native/ocamlopt \
 		all
-	mkdir -p '$(PREFIX)/$(TARGET)/lib/ocaml/flexdll'
+	mkdir -p '$(HOST_PREFIX)/lib/ocaml/flexdll'
 	cd '$(1)' && mv flexlink.exe flexlink
 	cd '$(1)' && strip --remove-section=.comment --remove-section=.note flexlink
-	cd '$(1)' && $(INSTALL) -m 0755 flexdll.h '$(PREFIX)/$(TARGET)/include'
+	cd '$(1)' && $(INSTALL) -m 0755 flexdll.h '$(HOST_PREFIX)/include'
 	cd '$(1)' && $(INSTALL) -m 0755 flexlink flexdll_mingw.o \
 		flexdll_initer_mingw.o \
-		'$(PREFIX)/$(TARGET)/lib/ocaml/flexdll'
+		'$(HOST_PREFIX)/lib/ocaml/flexdll'
 	# create flexdll scripts
-	cd '$(PREFIX)/bin' && $(LN_SF) '$(PREFIX)/$(TARGET)/lib/ocaml/flexdll/flexlink'
+	cd '$(BUILD_TOOLS_PREFIX)/bin' && $(LN_SF) '$(HOST_PREFIX)/lib/ocaml/flexdll/flexlink'
 	(echo '#!/bin/sh'; \
-	 echo 'exec flexlink -I $(PREFIX)/$(TARGET)/lib -chain mingw -nocygpath "$$@"') \
-			> '$(PREFIX)/bin/$(TARGET)-flexlink'
-	chmod 0755 '$(PREFIX)/bin/$(TARGET)-flexlink'
+	 echo 'exec flexlink -I $(HOST_PREFIX)/lib -chain mingw -nocygpath "$$@"') \
+			> '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-flexlink'
+	chmod 0755 '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-flexlink'
 
 	echo "testing flexlink..."
 	$(MAKE) -C '$(1)/test' -j '$(JOBS)' dump.exe plug1.dll plug2.dll CC=$(TARGET)-gcc O=o FLEXLINK=$(TARGET)-flexlink

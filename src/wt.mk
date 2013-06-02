@@ -19,16 +19,16 @@ define $(PKG)_BUILD
     # build wt libraries
     mkdir '$(1).build'
     cd '$(1).build' && cmake \
-        -DCONFIGDIR='$(PREFIX)/$(TARGET)/etc/wt' \
+        -DCONFIGDIR='$(HOST_PREFIX)/etc/wt' \
         -DBUILD_EXAMPLES=OFF \
         -DBUILD_TESTS=OFF \
         -DSHARED_LIBS=OFF \
         -DBOOST_DYNAMIC=OFF \
-        -DBOOST_PREFIX='$(PREFIX)/$(TARGET)' \
+        -DBOOST_PREFIX='$(HOST_PREFIX)' \
         -DBOOST_COMPILER=_win32 \
-        -DSSL_PREFIX='$(PREFIX)/$(TARGET)' \
+        -DSSL_PREFIX='$(HOST_PREFIX)' \
         -DOPENSSL_LIBS="`'$(TARGET)-pkg-config' --libs-only-l openssl`" \
-        -DGM_PREFIX='$(PREFIX)/$(TARGET)' \
+        -DGM_PREFIX='$(HOST_PREFIX)' \
         -DGM_LIBS="`'$(TARGET)-pkg-config' --libs-only-l GraphicsMagick++`" \
         -DPANGO_FT2_LIBS="`'$(TARGET)-pkg-config' --libs-only-l pangoft2`" \
         -DWT_CMAKE_FINDER_INSTALL_DIR='/lib/wt' \

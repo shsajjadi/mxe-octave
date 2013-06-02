@@ -14,7 +14,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
 else
   ifeq ($(MXE_SYSTEM),mingw)
     $(PKG)_CROSS_CONFIG_OPTIONS := \
-      FLTK_CONFIG='$(PREFIX)/bin/$(TARGET)-fltk-config' \
+      FLTK_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-fltk-config' \
       gl_cv_func_gettimeofday_clobber=no
   endif
 endif
@@ -32,13 +32,13 @@ define $(PKG)_BUILD
         LDFLAGS='-Wl,-rpath-link,$(MXE_LIBDIR) -L$(MXE_LIBDIR)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
 	$($(PKG)_CROSS_CONFIG_OPTIONS)
 
     ## We want both of these install steps so that we install in the
     ## location set by the configure --prefix option, and the other
     ## in a directory tree that will have just Octave files.
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(PREFIX)/../octave install
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(TOP_DIR)/octave install
 endef
 

@@ -16,7 +16,7 @@ endef
 
 ifneq ($(MXE_NATIVE_BUILD),yes)
   ifeq ($(MXE_SYSTEM),mingw)
-    $(PKG)_QMAKE_SPEC_OPTION := -spec '$(PREFIX)/$(TARGET)/mkspecs/win32-g++'
+    $(PKG)_QMAKE_SPEC_OPTION := -spec '$(HOST_PREFIX)/mkspecs/win32-g++'
   endif
 endif
 

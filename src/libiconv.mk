@@ -20,12 +20,12 @@ define $(PKG)_BUILD
     $(SED) -i 's, sed , $(SED) ,g' '$(1)/windows/windres-options'
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         CPPFLAGS='$(MXE_CPPFLAGS)' \
         --disable-nls
     $(MAKE) -C '$(1)/libcharset' -j '$(JOBS)' install
     $(MAKE) -C '$(1)/lib'        -j '$(JOBS)' install
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/include'
-    $(INSTALL) -m644 '$(1)/include/iconv.h.inst' '$(PREFIX)/$(TARGET)/include/iconv.h'
+    $(INSTALL) -d '$(HOST_PREFIX)/include'
+    $(INSTALL) -m644 '$(1)/include/iconv.h.inst' '$(HOST_PREFIX)/include/iconv.h'
 endef

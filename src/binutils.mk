@@ -20,17 +20,17 @@ endef
 ifneq ($(USE_SYSTEM_GCC),yes)
 define $(PKG)_BUILD
     # install config.guess for general use
-    $(INSTALL) -d '$(PREFIX)/bin'
-    $(INSTALL) -m755 '$(1)/config.guess' '$(PREFIX)/bin/'
+    $(INSTALL) -d '$(BUILD_TOOLS_PREFIX)/bin'
+    $(INSTALL) -m755 '$(1)/config.guess' '$(BUILD_TOOLS_PREFIX)/bin/'
 
     # install target-specific autotools config file
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/share'
-    echo "ac_cv_build=`$(1)/config.guess`" > '$(PREFIX)/$(TARGET)/share/config.site'
+    $(INSTALL) -d '$(HOST_PREFIX)/share'
+    echo "ac_cv_build=`$(1)/config.guess`" > '$(HOST_PREFIX)/share/config.site'
 
     cd '$(1)' && ./configure \
         --target='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)' \
+        --prefix='$(BUILD_TOOLS_PREFIX)' \
         --with-gcc \
         --with-gnu-ld \
         --with-gnu-as \
@@ -39,7 +39,7 @@ define $(PKG)_BUILD
         --disable-werror
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-    $(MAKE) -C '$(1)' -j 1 DESTDIR=$(PREFIX)/../cross-tools install
+    $(MAKE) -C '$(1)' -j 1 DESTDIR=$(TOP_DIR)/cross-tools install
 endef
 else
 define $(PKG)_BUILD

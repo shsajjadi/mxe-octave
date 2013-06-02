@@ -17,12 +17,12 @@ endef
 
 define $(PKG)_BUILD
     find '$(1)' -name Makefile.in \
-        -exec $(SED) -i 's,glib-mkenums,$(PREFIX)/$(TARGET)/bin/glib-mkenums,g'       {} \; \
-        -exec $(SED) -i 's,glib-genmarshal,$(PREFIX)/$(TARGET)/bin/glib-genmarshal,g' {} \;
+        -exec $(SED) -i 's,glib-mkenums,$(HOST_PREFIX)/bin/glib-mkenums,g'       {} \; \
+        -exec $(SED) -i 's,glib-genmarshal,$(HOST_PREFIX)/bin/glib-genmarshal,g' {} \;
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-debug \
         --disable-examples \

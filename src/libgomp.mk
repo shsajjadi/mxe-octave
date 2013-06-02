@@ -20,7 +20,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         --target='$(TARGET)' \
-        --prefix='$(PREFIX)' \
+        --prefix='$(BUILD_TOOLS_PREFIX)' \
         --enable-version-specific-runtime-libs \
         --with-gnu-ld \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -29,6 +29,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libgomp.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libgomp.exe' \
         -fopenmp
 endef

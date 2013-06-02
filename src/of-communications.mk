@@ -17,8 +17,8 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    mkdir -p '$(PREFIX)/$(TARGET)/src'
+    mkdir -p '$(HOST_PREFIX)/src'
     cd '$(1)/..' \
       && tar czf $($(PKG)_FIXED_FILE) $($(PKG)_SUBDIR) \
-      && $(INSTALL) -m644 '$($(PKG)_FIXED_FILE)' '$(PREFIX)/$(TARGET)/src'
+      && $(INSTALL) -m644 '$($(PKG)_FIXED_FILE)' '$(HOST_PREFIX)/src'
 endef

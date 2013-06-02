@@ -17,7 +17,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --cross-prefix='$(TARGET)'- \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --enable-win32thread
     $(MAKE) -C '$(1)' -j 1 uninstall

@@ -20,15 +20,15 @@ define $(PKG)_BUILD
     cp -Rp '$(1)' '$(1).native'
     cd '$(1).native' && ./configure \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)'
+        --prefix='$(BUILD_TOOLS_PREFIX)'
     $(MAKE) -C '$(1).native/reimp' -j '$(JOBS)'
-    $(INSTALL) -m755 '$(1).native/reimp/reimp' '$(PREFIX)/bin/$(TARGET)-reimp'
+    $(INSTALL) -m755 '$(1).native/reimp/reimp' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-reimp'
 
     # cross build
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
 endef

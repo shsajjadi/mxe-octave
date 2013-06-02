@@ -19,13 +19,13 @@ define $(PKG)_BUILD
     cd '$(1)/.build' && '$(1)/configure' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)' \
-        FLTK_CONFIG="$(PREFIX)/bin/$(TARGET)-fltk-config" \
+        --prefix='$(HOST_PREFIX)' \
+        FLTK_CONFIG="$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-fltk-config" \
         gl_cv_func_gettimeofday_clobber=no
 
     ## We want both of these install steps so that we install in the
     ## location set by the configure --prefix option, and the other
     ## in a directory tree that will have just Octave files.
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(PREFIX)/../octave-stable install
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(TOP_DIR)/octave-stable install
 endef

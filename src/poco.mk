@@ -19,11 +19,11 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --config=MinGW-CrossEnv \
         --static \
-        --prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install CROSSENV=$(TARGET)
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-poco.exe' \
+        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-poco.exe' \
         -lPocoFoundation
 endef

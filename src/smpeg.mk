@@ -23,8 +23,8 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-debug \
-        --prefix='$(PREFIX)/$(TARGET)' \
-        --with-sdl-prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
+        --with-sdl-prefix='$(HOST_PREFIX)' \
         --disable-sdltest \
         --disable-gtk-player \
         --disable-opengl-player \
@@ -33,6 +33,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -std=c99 -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-smpeg.exe' \
-        `'$(PREFIX)/$(TARGET)/bin/smpeg-config' --cflags --libs`
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-smpeg.exe' \
+        `'$(HOST_PREFIX)/bin/smpeg-config' --cflags --libs`
 endef

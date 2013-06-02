@@ -19,7 +19,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-enca \
         --enable-fontconfig
@@ -28,6 +28,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-libass.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-libass.exe' \
         `'$(TARGET)-pkg-config' libass --cflags --libs`
 endef

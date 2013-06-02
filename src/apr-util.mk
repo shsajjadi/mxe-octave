@@ -18,15 +18,15 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
         --without-pgsql \
         --without-sqlite2 \
         --without-sqlite3 \
-        --with-apr='$(PREFIX)/$(TARGET)' \
+        --with-apr='$(HOST_PREFIX)' \
         CFLAGS=-D_WIN32_WINNT=0x0500
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
-    $(LN_SF) '$(PREFIX)/$(TARGET)/bin/apu-1-config' '$(PREFIX)/bin/$(TARGET)-apu-1-config'
+    $(LN_SF) '$(HOST_PREFIX)/bin/apu-1-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-apu-1-config'
 endef

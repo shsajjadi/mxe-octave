@@ -30,17 +30,17 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
-        --with-freetype='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
+        --with-freetype='$(HOST_PREFIX)' \
         --without-x \
-        LIBPNG_CONFIG='$(PREFIX)/$(TARGET)/bin/libpng-config' \
-        CFLAGS='-DNONDLL -DXMD_H -L$(PREFIX)/$(TARGET)/lib' \
-        LIBS="`$(PREFIX)/$(TARGET)/bin/xml2-config --libs`"
+        LIBPNG_CONFIG='$(HOST_PREFIX)/bin/libpng-config' \
+        CFLAGS='-DNONDLL -DXMD_H -L$(HOST_PREFIX)/lib' \
+        LIBS="`$(HOST_PREFIX)/bin/xml2-config --libs`"
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-gd.exe' \
-        `'$(PREFIX)/$(TARGET)/bin/gdlib-config' --cflags` \
-        -lgd `'$(PREFIX)/$(TARGET)/bin/gdlib-config' --libs`
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-gd.exe' \
+        `'$(HOST_PREFIX)/bin/gdlib-config' --cflags` \
+        -lgd `'$(HOST_PREFIX)/bin/gdlib-config' --libs`
 endef

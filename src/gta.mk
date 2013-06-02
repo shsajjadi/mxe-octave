@@ -22,12 +22,12 @@ define $(PKG)_BUILD
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-reference \
-        --prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install dist_doc_DATA=
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-gta.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-gta.exe' \
         `'$(TARGET)-pkg-config' gta --cflags --libs`
 endef

@@ -23,7 +23,7 @@ define $(PKG)_BUILD
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-csharp \
-        --prefix='$(PREFIX)/$(TARGET)' \
-        --with-libiconv-prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)' \
+        --with-libiconv-prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef

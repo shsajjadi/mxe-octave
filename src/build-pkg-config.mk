@@ -19,8 +19,8 @@ define $(PKG)_BUILD
     cd    '$(1).build' && '$(1)/configure' \
         --with-internal-glib \
         --with-pc-path='$(MXE_LIBDIR)/pkgconfig' \
-        --prefix='$(PREFIX)'
+        --prefix='$(BUILD_TOOLS_PREFIX)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
-    rm -f "$(PREFIX)/bin/`config.guess`-pkg-config"
+    rm -f "$(BUILD_TOOLS_PREFIX)/bin/`config.guess`-pkg-config"
     $(MAKE) -C '$(1).build' -j 1 install
 endef

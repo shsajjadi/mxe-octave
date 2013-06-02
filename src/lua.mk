@@ -17,13 +17,13 @@ endef
 
 define $(PKG)_BUILD
     $(MAKE) -C '$(1)/src' -j '$(JOBS)' \
-        INSTALL_TOP='$(PREFIX)/$(TARGET)' \
+        INSTALL_TOP='$(HOST_PREFIX)' \
         CC='$(TARGET)-gcc' \
         AR='$(TARGET)-ar rcu' \
         RANLIB='$(TARGET)-ranlib' \
         a
     $(MAKE) -C '$(1)' -j 1 \
-        INSTALL_TOP='$(PREFIX)/$(TARGET)' \
+        INSTALL_TOP='$(HOST_PREFIX)' \
         INSTALL_BIN='$(1)/noinstall' \
         INSTALL_MAN='$(1)/noinstall' \
         TO_BIN='lua.h' \
@@ -32,6 +32,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-lua.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-lua.exe' \
         -llua
 endef

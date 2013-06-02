@@ -35,11 +35,11 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --disable-threading \
         --disable-posix-sem \
         --disable-ilmbasetest \
-        PKG_CONFIG='$(PREFIX)/bin/$(TARGET)-pkg-config'
+        PKG_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config'
     # build the code generator manually
     cd '$(1)/IlmImf' && g++ \
         -I'$(1)/ilmbase/include/OpenEXR' \

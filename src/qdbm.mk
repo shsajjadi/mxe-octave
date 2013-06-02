@@ -19,7 +19,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-lzo \
         --enable-bzip \
         --enable-zlib \
@@ -30,15 +30,15 @@ define $(PKG)_BUILD
         MYLIBS=libqdbm.a \
         AR=i686-pc-mingw32-ar \
         RANLIB=i686-pc-mingw32-ranlib
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib/pkgconfig'
-    $(INSTALL) -m644 '$(1)/libqdbm.a' '$(PREFIX)/$(TARGET)/lib/'
-    $(INSTALL) -m644 '$(1)/qdbm.pc'   '$(PREFIX)/$(TARGET)/lib/pkgconfig/'
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/include'
+    $(INSTALL) -d '$(HOST_PREFIX)/lib/pkgconfig'
+    $(INSTALL) -m644 '$(1)/libqdbm.a' '$(HOST_PREFIX)/lib/'
+    $(INSTALL) -m644 '$(1)/qdbm.pc'   '$(HOST_PREFIX)/lib/pkgconfig/'
+    $(INSTALL) -d '$(HOST_PREFIX)/include'
     cd '$(1)' && $(INSTALL) -m644 depot.h curia.h relic.h hovel.h \
-        cabin.h villa.h vista.h odeum.h '$(PREFIX)/$(TARGET)/include/'
+        cabin.h villa.h vista.h odeum.h '$(HOST_PREFIX)/include/'
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-qdbm.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-qdbm.exe' \
         `'$(TARGET)-pkg-config' qdbm --cflags --libs`
 endef

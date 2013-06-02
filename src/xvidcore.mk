@@ -20,11 +20,11 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' BUILD_DIR='build' SHARED_LIB=
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/include'
-    $(INSTALL) -m644 '$(1)/../../src/xvid.h' '$(PREFIX)/$(TARGET)/include/'
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib'
-    $(INSTALL) -m644 '$(1)/build/xvidcore.a' '$(PREFIX)/$(TARGET)/lib/'
-    $(LN_SF) '$(PREFIX)/$(TARGET)/lib/xvidcore.a' '$(PREFIX)/$(TARGET)/lib/libxvidcore.a'
+    $(INSTALL) -d '$(HOST_PREFIX)/include'
+    $(INSTALL) -m644 '$(1)/../../src/xvid.h' '$(HOST_PREFIX)/include/'
+    $(INSTALL) -d '$(HOST_PREFIX)/lib'
+    $(INSTALL) -m644 '$(1)/build/xvidcore.a' '$(HOST_PREFIX)/lib/'
+    $(LN_SF) '$(HOST_PREFIX)/lib/xvidcore.a' '$(HOST_PREFIX)/lib/libxvidcore.a'
 endef

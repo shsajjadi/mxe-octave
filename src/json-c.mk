@@ -19,14 +19,14 @@ define $(PKG)_BUILD
     cd '$(1)' && ./autogen.sh
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --build="`config.guess`"\
         $(ENABLE_SHARED_OR_STATIC)
         CFLAGS=-Wno-error
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
-	
+
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-json-c.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-json-c.exe' \
         `'$(TARGET)-pkg-config' json --cflags --libs`
 endef

@@ -30,7 +30,7 @@ define $(PKG)_BUILD
         zlib \
         shared \
         no-capieng \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --libdir=lib
     $(MAKE) -C '$(1)' install -j 1 \
         CC='$(MXE_CC) -I$(MXE_INCDIR) -L$(MXE_LIBDIR)' \

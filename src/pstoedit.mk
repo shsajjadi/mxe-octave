@@ -20,7 +20,7 @@ define $(PKG)_BUILD
     cd '$(1)/.build' && '$(1)/configure' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
-        --prefix='$(PREFIX)/$(TARGET)'
+        --prefix='$(HOST_PREFIX)'
 
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
 endef

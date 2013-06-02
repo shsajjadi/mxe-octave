@@ -28,7 +28,7 @@ define $(PKG)_NATIVE_BUILD
     # native build for glib-genmarshal, without pkg-config, gettext and zlib
     cd '$(1).native' && ./configure \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-regex \
         --disable-threads \
         --disable-selinux \
@@ -48,19 +48,19 @@ define $(PKG)_NATIVE_BUILD
     $(MAKE) -C '$(1).native/gio/xdgmime'     -j '$(JOBS)'
     $(MAKE) -C '$(1).native/gio'     -j '$(JOBS)' glib-compile-schemas
     $(MAKE) -C '$(1).native/gio'     -j '$(JOBS)' glib-compile-resources
-    $(INSTALL) -m755 '$(1).native/gio/glib-compile-schemas' '$(PREFIX)/$(TARGET)/bin/'
-    $(INSTALL) -m755 '$(1).native/gio/glib-compile-resources' '$(PREFIX)/$(TARGET)/bin/'
+    $(INSTALL) -m755 '$(1).native/gio/glib-compile-schemas' '$(HOST_PREFIX)/bin/'
+    $(INSTALL) -m755 '$(1).native/gio/glib-compile-resources' '$(HOST_PREFIX)/bin/'
 endef
 
 define $(PKG)_SYMLINK
-    $(LN_SF) `which glib-genmarshal`        '$(PREFIX)/$(TARGET)/bin/'
-    $(LN_SF) `which glib-compile-schemas`   '$(PREFIX)/$(TARGET)/bin/'
-    $(LN_SF) `which glib-compile-resources` '$(PREFIX)/$(TARGET)/bin/'
+    $(LN_SF) `which glib-genmarshal`        '$(HOST_PREFIX)/bin/'
+    $(LN_SF) `which glib-compile-schemas`   '$(HOST_PREFIX)/bin/'
+    $(LN_SF) `which glib-compile-resources` '$(HOST_PREFIX)/bin/'
 endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./autogen.sh
-    rm -f '$(PREFIX)/$(TARGET)/bin/glib-*'
+    rm -f '$(HOST_PREFIX)/bin/glib-*'
     $(if $(findstring y,\
             $(shell [ -x "`which glib-genmarshal`" ] && \
                     [ -x "`which glib-compile-schemas`" ] && \
@@ -72,16 +72,16 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --with-threads=win32 \
         --with-pcre=system \
         --with-libiconv=gnu \
         --disable-inotify \
         CXX='$(TARGET)-c++' \
-        PKG_CONFIG='$(PREFIX)/bin/$(TARGET)-pkg-config' \
-        GLIB_GENMARSHAL='$(PREFIX)/$(TARGET)/bin/glib-genmarshal' \
-        GLIB_COMPILE_SCHEMAS='$(PREFIX)/$(TARGET)/bin/glib-compile-schemas' \
-        GLIB_COMPILE_RESOURCES='$(PREFIX)/$(TARGET)/bin/glib-compile-resources'
+        PKG_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config' \
+        GLIB_GENMARSHAL='$(HOST_PREFIX)/bin/glib-genmarshal' \
+        GLIB_COMPILE_SCHEMAS='$(HOST_PREFIX)/bin/glib-compile-schemas' \
+        GLIB_COMPILE_RESOURCES='$(HOST_PREFIX)/bin/glib-compile-resources'
     $(MAKE) -C '$(1)/glib'    -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)/gmodule' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)/gthread' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=

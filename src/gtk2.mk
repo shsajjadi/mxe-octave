@@ -23,7 +23,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --build="`config.guess`" \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-explicit-deps \
         --disable-glibtest \
         --disable-modules \
@@ -37,6 +37,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-gtk2.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-gtk2.exe' \
         `'$(TARGET)-pkg-config' gtk+-2.0 --cflags --libs`
 endef

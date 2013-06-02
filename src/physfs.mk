@@ -26,6 +26,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic -std=c99 \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-physfs.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-physfs.exe' \
         -lphysfs -lz
 endef

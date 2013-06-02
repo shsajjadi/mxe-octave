@@ -19,11 +19,11 @@ define $(PKG)_BUILD
     cd '$(1)' && \
         CROSS='$(TARGET)-' \
         ./configure \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --target=x86-win32-gcc \
         --disable-examples \
         --disable-install-docs
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-    $(TARGET)-ranlib $(PREFIX)/$(TARGET)/lib/libvpx.a
+    $(TARGET)-ranlib $(HOST_PREFIX)/lib/libvpx.a
 endef

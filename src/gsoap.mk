@@ -27,8 +27,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)'/gsoap -j '$(JOBS)'
 
     # Install the native tools manually
-    $(INSTALL) -m755 '$(1)'/gsoap/wsdl/wsdl2h  '$(PREFIX)/bin/$(TARGET)-wsdl2h'
-    $(INSTALL) -m755 '$(1)'/gsoap/src/soapcpp2 '$(PREFIX)/bin/$(TARGET)-soapcpp2'
+    $(INSTALL) -m755 '$(1)'/gsoap/wsdl/wsdl2h  '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-wsdl2h'
+    $(INSTALL) -m755 '$(1)'/gsoap/src/soapcpp2 '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-soapcpp2'
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' clean
 
@@ -39,14 +39,14 @@ define $(PKG)_BUILD
     # Prevent undefined reference to _rpl_malloc.
     # http://groups.google.com/group/ikarus-users/browse_thread/thread/fd1d101eac32633f
     cd '$(1)' && ac_cv_func_malloc_0_nonnull=yes ./configure \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         --enable-gnutls \
         CPPFLAGS='-DWITH_NTLM'
 
     # Building for mingw requires native soapcpp2
-    $(LN_SF) '$(PREFIX)/bin/$(TARGET)-soapcpp2' '$(1)/gsoap/src/soapcpp2'
+    $(LN_SF) '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-soapcpp2' '$(1)/gsoap/src/soapcpp2'
 
     # Work around parallel build problem
     $(MAKE) -C '$(1)'/gsoap/src -j '$(JOBS)' soapcpp2_yacc.h AR='$(TARGET)-ar'
@@ -56,5 +56,5 @@ define $(PKG)_BUILD
     # Apparently there is a tradition of compiling gsoap source files into applications.
     # Since we linked dom.cpp and dom.c into the libraries, this should not be necessary.
     # But we bend to tradition and install these sources into MXE.
-    $(INSTALL) -m644 '$(1)/gsoap/'*.c '$(1)/gsoap/'*.cpp '$(PREFIX)/$(TARGET)/share/gsoap'
+    $(INSTALL) -m644 '$(1)/gsoap/'*.c '$(1)/gsoap/'*.cpp '$(HOST_PREFIX)/share/gsoap'
 endef

@@ -32,7 +32,7 @@ define $(PKG)_BUILD
     # Since we build only client libary, use bogus tzdata to satisfy configure.
     cd '$(1)' && ./configure \
         $($(PKG)_CONFIGURE_FLAGS_OPTION) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --host='$(TARGET)' \
         --build="`config.guess`" \
         --enable-shared \
@@ -56,12 +56,12 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)'/src/interfaces/libpq -j '$(JOBS)' install haslibarule=
     $(MAKE) -C '$(1)'/src/port             -j '$(JOBS)'         haslibarule=
     $(MAKE) -C '$(1)'/src/bin/psql         -j '$(JOBS)' install haslibarule=
-    $(INSTALL) -m644 '$(1)/src/include/pg_config.h'    '$(PREFIX)/$(TARGET)/include/'
-    $(INSTALL) -m644 '$(1)/src/include/postgres_ext.h' '$(PREFIX)/$(TARGET)/include/'
+    $(INSTALL) -m644 '$(1)/src/include/pg_config.h'    '$(HOST_PREFIX)/include/'
+    $(INSTALL) -m644 '$(1)/src/include/postgres_ext.h' '$(HOST_PREFIX)/include/'
     # Build a native pg_config.
     $(SED) -i 's,-DVAL_,-D_DISABLED_VAL_,g' '$(1).native'/src/bin/pg_config/Makefile
     cd '$(1).native' && ./configure \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-rpath \
         --without-tcl \
@@ -81,5 +81,5 @@ define $(PKG)_BUILD
         --with-system-tzdata=/dev/null
     $(MAKE) -C '$(1).native'/src/port          -j '$(JOBS)'
     $(MAKE) -C '$(1).native'/src/bin/pg_config -j '$(JOBS)' install
-    $(LN_SF) '$(PREFIX)/$(TARGET)/bin/pg_config' '$(PREFIX)/bin/$(TARGET)-pg_config'
+    $(LN_SF) '$(HOST_PREFIX)/bin/pg_config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pg_config'
 endef

@@ -22,7 +22,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-sse2 \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-libtool-lock \
         --disable-pretty-make \
         --disable-threads \
@@ -39,7 +39,7 @@ define $(PKG)_BUILD
         --enable-msgloader-inmemory \
         --disable-msgloader-iconv \
         --disable-msgloader-icu \
-        --with-curl='$(PREFIX)/$(TARGET)' \
+        --with-curl='$(HOST_PREFIX)' \
         --without-icu \
         LIBS="`$(TARGET)-pkg-config --libs libcurl`"
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
@@ -47,6 +47,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-g++' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).cpp' -o '$(PREFIX)/$(TARGET)/bin/test-xerces.exe' \
+        '$(2).cpp' -o '$(HOST_PREFIX)/bin/test-xerces.exe' \
         `'$(TARGET)-pkg-config' xerces-c --cflags --libs`
 endef

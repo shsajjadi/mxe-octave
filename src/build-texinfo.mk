@@ -17,7 +17,15 @@ endef
 define $(PKG)_BUILD
     mkdir '$(1).build'
     cd    '$(1).build' && '$(1)/configure' \
-        --prefix='$(PREFIX)'
-    $(MAKE) -C '$(1).build' -j '$(JOBS)'
-    $(MAKE) -C '$(1).build' -j 1 install
+        --prefix='$(BUILD_TOOLS_PREFIX)'
+
+    $(MAKE) -C '$(1).build/gnulib/lib' -j '$(JOBS)'
+    $(MAKE) -C '$(1).build/lib' -j '$(JOBS)'
+    $(MAKE) -C '$(1).build/makeinfo' -j '$(JOBS)'
+    $(MAKE) -C '$(1).build/util' -j '$(JOBS)'
+
+    $(MAKE) -C '$(1).build/gnulib/lib' -j 1 install
+    $(MAKE) -C '$(1).build/lib' -j 1 install
+    $(MAKE) -C '$(1).build/makeinfo' -j 1 install
+    $(MAKE) -C '$(1).build/util' -j 1 install
 endef

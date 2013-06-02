@@ -20,7 +20,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(PREFIX)/$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-replace-glut \
         --disable-debug \
         --without-progs \
@@ -29,6 +29,6 @@ define $(PKG)_BUILD
 
     '$(TARGET)-gcc' \
         -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(PREFIX)/$(TARGET)/bin/test-freeglut.exe' \
+        '$(2).c' -o '$(HOST_PREFIX)/bin/test-freeglut.exe' \
         `'$(TARGET)-pkg-config' glut --cflags --libs`
 endef

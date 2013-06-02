@@ -21,9 +21,9 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --without-debug \
-        --prefix='$(PREFIX)/$(TARGET)' \
-        --with-libxml-prefix='$(PREFIX)/$(TARGET)' \
-        LIBGCRYPT_CONFIG='$(PREFIX)/$(TARGET)/bin/libgcrypt-config' \
+        --prefix='$(HOST_PREFIX)' \
+        --with-libxml-prefix='$(HOST_PREFIX)' \
+        LIBGCRYPT_CONFIG='$(HOST_PREFIX)/bin/libgcrypt-config' \
         --without-python \
         --without-plugins
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=

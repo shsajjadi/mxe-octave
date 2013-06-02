@@ -29,9 +29,9 @@ define $(PKG)_BUILD
         --def libusb0.def \
         --output-lib libusb.a
 
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/include'
-    $(INSTALL) -m644 '$(1)/src/lusb0_usb.h' '$(PREFIX)/$(TARGET)/include/'
-    $(INSTALL) -d '$(PREFIX)/$(TARGET)/lib'
-    $(INSTALL) -m644 '$(1)/libusb.a'  '$(PREFIX)/$(TARGET)/lib/'
-    $(INSTALL) -m644 '$(1)/libusbd.a' '$(PREFIX)/$(TARGET)/lib/'
+    $(INSTALL) -d '$(HOST_PREFIX)/include'
+    $(INSTALL) -m644 '$(1)/src/lusb0_usb.h' '$(HOST_PREFIX)/include/'
+    $(INSTALL) -d '$(HOST_PREFIX)/lib'
+    $(INSTALL) -m644 '$(1)/libusb.a'  '$(HOST_PREFIX)/lib/'
+    $(INSTALL) -m644 '$(1)/libusbd.a' '$(HOST_PREFIX)/lib/'
 endef
