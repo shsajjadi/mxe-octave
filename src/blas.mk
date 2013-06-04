@@ -10,12 +10,16 @@ $(PKG)_URL      := http://www.netlib.org/$(PKG)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.eq.uc.pt/pub/software/math/netlib/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc
 
+ifeq ($(ENABLE_64),yes)
+  $(PKG)_DEFAULT_INTEGER_8_FLAG := -fdefault-integer-8
+endif
+
 define $(PKG)_UPDATE
     echo 1
 endef
 
 define $(PKG)_BUILD
-    $(SED) -i 's,$$(FORTRAN),$(MXE_F77) $(MXE_F77_PICFLAG),g' '$(1)/Makefile'
+    $(SED) -i 's,$$(FORTRAN),$(MXE_F77) $(MXE_F77_PICFLAG) $($(PKG)_DEFAULT_INTEGER_8_FLAG),g' '$(1)/Makefile'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     cd '$(1)' && $(MXE_AR) cr libblas.a *.o
 

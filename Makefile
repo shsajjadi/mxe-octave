@@ -40,6 +40,10 @@ BUILD_STATIC := no
 USE_PIC_FLAG := no
 #USE_PIC_FLAG := yes
 
+# Attempt to build Octave and dependencies with 64-bit indexing enabled.
+ENABLE_64 := no
+#ENABLE_64 := yes
+
 ## end of configuration variables.
 
 ifneq ($(MXE_NATIVE_BUILD),yes)
