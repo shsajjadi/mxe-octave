@@ -13,6 +13,10 @@ ifeq ($(USE_PIC_FLAG),yes)
   $(PKG)_CONFIGURE_PIC_OPTION := --with-pic
 endif
 
+ifeq ($(ENABLE_64),yes)
+  $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := FFLAGS="-g -O2 -fdefault-integer-8"
+endif
+
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package arpack.' >&2;
     echo $(arpack_VERSION)
@@ -25,7 +29,8 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --enable-static --disable-shared \
 	$($(PKG)_CONFIGURE_PIC_OPTION) \
-        --prefix='$(HOST_PREFIX)'
+        --prefix='$(HOST_PREFIX)' \
+        $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS)
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)'
 
     if [ $(BUILD_STATIC) = yes ]; then \

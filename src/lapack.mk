@@ -9,6 +9,10 @@ $(PKG)_URL      := http://www.netlib.org/$(PKG)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.eq.uc.pt/pub/software/math/netlib/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc
 
+ifeq ($(ENABLE_64),yes)
+  $(PKG)_DEFAULT_INTEGER_8_FLAG := -fdefault-integer-8
+endif
+
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.netlib.org/lapack/' | \
     $(SED) -n 's_.*>LAPACK, version \([0-9]\.[0-9]\.[0-9]\).*_\1_ip' | \
@@ -20,6 +24,7 @@ define $(PKG)_BUILD
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DCMAKE_AR='$(MXE_AR)' \
         -DCMAKE_RANLIB='$(MXE_RANLIB)' \
+        -DCMAKE_Fortran_FLAGS='$($(PKG)_DEFAULT_INTEGER_8_FLAG)' \
         .
-    $(MAKE) -C '$(1)/SRC' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)/SRC' -j '$(JOBS)' VERBOSE=1 install
 endef

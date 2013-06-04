@@ -11,11 +11,17 @@ $(PKG)_DEPS     := arpack blas curl fftw fltk fontconfig gcc glpk gnuplot graphi
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH="'$(LD_LIBRARY_PATH)'"
+  ifeq ($(ENABLE_64),yes)
+    $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64
+  endif
 else
   ifeq ($(MXE_SYSTEM),mingw)
     $(PKG)_CROSS_CONFIG_OPTIONS := \
       FLTK_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-fltk-config' \
       gl_cv_func_gettimeofday_clobber=no
+    ifeq ($(ENABLE_64),yes)
+      $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 ax_blas_f77_func_ok=yes
+    endif
   endif
 endif
 
@@ -32,7 +38,8 @@ define $(PKG)_BUILD
         LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
-	$($(PKG)_CROSS_CONFIG_OPTIONS)
+	$($(PKG)_CROSS_CONFIG_OPTIONS) \
+        $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS)
 
     ## We want both of these install steps so that we install in the
     ## location set by the configure --prefix option, and the other
