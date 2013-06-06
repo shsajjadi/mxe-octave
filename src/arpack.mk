@@ -25,6 +25,7 @@ endef
 define $(PKG)_BUILD
     mkdir '$(1)/.build'
     cd '$(1)/.build' && '$(1)/configure' \
+        F77=$(MXE_F77) \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --enable-static --disable-shared \
