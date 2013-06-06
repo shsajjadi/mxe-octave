@@ -24,6 +24,7 @@ define $(PKG)_BUILD
     cd '$(1)' && autoreconf -W none
     chmod a+rx '$(1)/configure'
     cd '$(1)/.build' && '$(1)/configure' \
+        F77=$(MXE_F77) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS)
