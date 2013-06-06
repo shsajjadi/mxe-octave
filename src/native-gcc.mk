@@ -36,7 +36,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='/usr' \
         --libdir='/usr/lib' \
-        --enable-languages='c,c++,objc,fortran' \
+        --enable-languages='c,c++,fortran' \
         --enable-version-specific-runtime-libs \
         --with-gcc \
         --with-gnu-ld \
