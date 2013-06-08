@@ -31,6 +31,10 @@ define $(PKG)_BUILD
     if [ $(BUILD_SHARED) = yes ]; then \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/libbz2.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
     fi
+
+    if [ $(BUILD_STATIC) = yes ]; then \
+      $(INSTALL) '$(1)/libbz2.a' '$(HOST_LIBDIR)/'; \
+    fi
 endef
 else
 define $(PKG)_BUILD
