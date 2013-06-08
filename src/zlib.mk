@@ -16,6 +16,18 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+define $(PKG)_BUILD
+    cd '$(1)' && ./configure \
+      --prefix='$(HOST_PREFIX)'
+
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+
+    if [ "$(BUILD_SHARED)" = yes ]; then \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(1)/libz.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
+    fi
+endef
+else
 ifeq ($(MXE_NATIVE_BUILD),yes)
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
@@ -35,4 +47,5 @@ define $(PKG)_BUILD
       $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(1)/libz.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
     fi
 endef
+endif
 endif
