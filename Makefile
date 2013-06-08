@@ -51,6 +51,13 @@ ifneq ($(MXE_NATIVE_BUILD),yes)
     --host='$(TARGET)' --build='$(BUILD_SYSTEM)'
 endif
 
+# are we doing a native mingw build ?
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  ifeq ($(MXE_SYSTEM),mingw)
+    MXE_NATIVE_MINGW_BUILD := yes
+  endif
+endif
+
 # These can't be chosen arbitrarily.  The way things are configured now,
 # GCC expects to find cross-compiler include files in $(PREFIX)/$(TARGET).
 # and it's not clear to me how to change that.
@@ -187,6 +194,11 @@ unexport AR CC CFLAGS C_INCLUDE_PATH CPATH CPLUS_INCLUDE_PATH CPP
 unexport CPPFLAGS CROSS CXX CXXCPP CXXFLAGS EXEEXT EXTRA_CFLAGS
 unexport EXTRA_LDFLAGS LD LDFLAGS LIBRARY_PATH LIBS NM
 unexport OBJC_INCLUDE_PATH PKG_CONFIG QMAKESPEC RANLIB STRIP
+
+# mingw on windows ignores the compiled in pc-path so we need to tell pkg-config where it is
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  export PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig'
+endif
 
 SHORT_PKG_VERSION = \
     $(word 1,$(subst ., ,$($(1)_VERSION))).$(word 2,$(subst ., ,$($(1)_VERSION)))
