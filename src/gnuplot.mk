@@ -16,9 +16,9 @@ endef
 
 ifeq ($(MXE_SYSTEM),mingw)
 define $(PKG)_BUILD
-    make -C '$(1)/config/mingw' CC='$(TARGET)-gcc' CXX='$(TARGET)-g++' RC='$(TARGET)-windres' -j '$(JOBS)' TARGET=gnuplot.exe gnuplot.exe
-    make -C '$(1)/config/mingw' CC='$(TARGET)-gcc' CXX='$(TARGET)-g++' RC='$(TARGET)-windres' -j '$(JOBS)' TARGET=wgnuplot.exe wgnuplot.exe
-    make -C '$(1)/config/mingw' CC='$(TARGET)-gcc' CXX='$(TARGET)-g++' RC='$(TARGET)-windres' -j '$(JOBS)' wgnuplot.mnu
+    make -C '$(1)/config/mingw' CC='$(MXE_CC)' CXX='$(MXE_CXX)' RC='$(MXE_WINDRES)' -j '$(JOBS)' TARGET=gnuplot.exe gnuplot.exe
+    make -C '$(1)/config/mingw' CC='$(MXE_CC)' CXX='$(MXE_CXX)' RC='$(MXE_WINDRES)' -j '$(JOBS)' TARGET=wgnuplot.exe wgnuplot.exe
+    make -C '$(1)/config/mingw' CC='$(MXE_CC)' CXX='$(MXE_CXX)' RC='$(MXE_WINDRES)' -j '$(JOBS)' wgnuplot.mnu
 
     $(INSTALL) -d '$(HOST_BINDIR)'
     $(INSTALL) -m755 '$(1)/config/mingw/gnuplot.exe' '$(HOST_BINDIR)'

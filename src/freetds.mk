@@ -35,6 +35,6 @@ define $(PKG)_BUILD
         --disable-threadsafe \
         --with-tdsver=7.2 \
         --with-gnutls \
-        PKG_CONFIG='$(TARGET)-pkg-config'
+        PKG_CONFIG='$(MXE_PKG_CONFIG)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install man_MANS=
 endef
