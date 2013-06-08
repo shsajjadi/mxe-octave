@@ -103,6 +103,10 @@ REQUIREMENTS := bash bzip2 gcc $(MAKE) openssl $(PATCH) $(PERL) \
 LIBTOOL     := libtool
 LIBTOOLIZE  := libtoolize
 BUILD_TOOLS := $(patsubst src/%.mk, %, $(wildcard src/build-*.mk))
+# Building flex for native mingw fails, so disable it.
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  BUILD_TOOLS := $(filter-out build-flex, $(BUILD_TOOLS))
+endif
 
 STAMP_DIR  := $(PWD)/installed-packages
 MSYS_INFO_DIR := $(PWD)/msys-info

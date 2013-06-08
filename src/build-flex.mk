@@ -16,8 +16,9 @@ endef
 
 define $(PKG)_BUILD
     mkdir '$(1).build'
-    cd    '$(1).build' && '$(1)/configure' \
+    cd    '$(1).build' && /bin/sh -xv '$(1)/configure' \
         --prefix='$(BUILD_TOOLS_PREFIX)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     $(MAKE) -C '$(1).build' -j 1 install
+    exit 1
 endef
