@@ -9,10 +9,6 @@ $(PKG)_FILE     := libgcrypt-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnupg.org/gcrypt/libgcrypt/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc libgpg_error
 
-ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
-  $(PKG)_CONFIG_OPTS := --with-gpg-error-prefix='$(HOST_PREFIX)'
-endif
-
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'ftp://ftp.gnupg.org/gcrypt/libgcrypt/' | \
     $(SED) -n 's,.*libgcrypt-\([0-9][^>]*\)\.tar.*,\1,p' | \
@@ -22,7 +18,6 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && autoreconf && ./configure \
-        $($(PKG)_CONFIG_OPTS) \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
