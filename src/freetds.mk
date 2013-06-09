@@ -21,6 +21,10 @@ define $(PKG)_UPDATE_orig
     head -1
 endef
 
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  $(PKG)_CONFIG_OPTS := PKG_CONFIG_PATH='$(PKG_CONFIG_PATH)'
+endif
+
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
@@ -35,6 +39,7 @@ define $(PKG)_BUILD
         --disable-threadsafe \
         --with-tdsver=7.2 \
         --with-gnutls \
+        $($(PKG)_CONFIG_OPTS) \
         PKG_CONFIG='$(MXE_PKG_CONFIG)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install man_MANS=
 endef
