@@ -21,7 +21,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' install VERBOSE=1
 
     # note: don't use -Werror with GCC 4.7.0 and .1
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall \
         '$(2).cpp' -o '$(HOST_BINDIR)/test-armadillo.exe' \
         -larmadillo -llapack -lblas -lgfortran

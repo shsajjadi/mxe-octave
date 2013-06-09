@@ -22,7 +22,7 @@ define $(PKG)_BUILD
     # don't actually build the library (DLL file),
     # just create the DLL import stubs
     $(MAKE) -C '$(1)' -j '$(JOBS)' host_prefix=$(TARGET) libusbd.a
-    cd '$(1)' && $(TARGET)-dlltool \
+    cd '$(1)' && $(MXE_DLLTOOL) \
         --dllname libusb0.dll \
         --kill-at \
         --add-stdcall-underscore \

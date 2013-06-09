@@ -21,7 +21,7 @@ define $(PKG)_BUILD
     rm -r '$(1)/libs/context'
     # old version appears to interfere
     rm -rf '$(HOST_INCDIR)/boost'
-    echo 'using gcc : : $(TARGET)-g++ : <rc>$(TARGET)-windres <archiver>$(TARGET)-ar ;' > '$(1)/user-config.jam'
+    echo 'using gcc : : $(MXE_CXX) : <rc>$(MXE_WINDRES) <archiver>$(MXE_AR) ;' > '$(1)/user-config.jam'
     # compile boost jam
     cd '$(1)/tools/build/v2/engine' && ./build.sh
     cd '$(1)' && tools/build/v2/engine/bin.*/bjam \
@@ -43,7 +43,7 @@ define $(PKG)_BUILD
         -sEXPAT_LIBPATH='$(HOST_LIBDIR)' \
         stage install
 
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall -Werror -ansi -U__STRICT_ANSI__ -pedantic \
         '$(2).cpp' -o '$(HOST_BINDIR)/test-boost.exe' \
         -DBOOST_THREAD_USE_LIB \

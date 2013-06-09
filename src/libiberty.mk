@@ -23,7 +23,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install target_header_dir=libiberty
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-libiberty.exe' \
         -I$(HOST_INCDIR)/libiberty -liberty

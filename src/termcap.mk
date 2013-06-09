@@ -20,11 +20,11 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
-        AR=$(TARGET)-ar
+        AR=$(MXE_AR)
 
-    $(MAKE) AR=$(TARGET)-ar -C '$(1)' -j '$(JOBS)' install
+    $(MAKE) AR=$(MXE_AR) -C '$(1)' -j '$(JOBS)' install
 
     if [ "$(BUILD_SHARED)" = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(HOST_LIBDIR)/libtermcap.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(HOST_LIBDIR)/libtermcap.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
     fi
 endef

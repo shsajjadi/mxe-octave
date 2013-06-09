@@ -16,15 +16,15 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && $(TARGET)-g++ -c -O3 -Wall -Wno-unknown-pragmas -Wno-format -D TIXML_USE_STL '$(1)'/*.cpp
-    cd '$(1)' && $(TARGET)-ar cr libtinyxml.a *.o
-    $(TARGET)-ranlib '$(1)/libtinyxml.a'
+    cd '$(1)' && $(MXE_CXX) -c -O3 -Wall -Wno-unknown-pragmas -Wno-format -D TIXML_USE_STL '$(1)'/*.cpp
+    cd '$(1)' && $(MXE_AR) cr libtinyxml.a *.o
+    $(MXE_RANLIB) '$(1)/libtinyxml.a'
     $(INSTALL) -d               '$(HOST_LIBDIR)'
     $(INSTALL) -m644 '$(1)'/*.a '$(HOST_LIBDIR)'
     $(INSTALL) -d               '$(HOST_INCDIR)'
     $(INSTALL) -m644 '$(1)'/*.h '$(HOST_INCDIR)'
 
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall -D TIXML_USE_STL -Werror -ansi -pedantic \
         '$(2).cpp' -o '$(HOST_BINDIR)/test-tinyxml.exe' \
         -ltinyxml

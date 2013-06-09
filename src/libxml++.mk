@@ -17,7 +17,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && CXX="$(TARGET)-g++ -mthreads" ./configure \
+    cd '$(1)' && CXX="$(MXE_CXX) -mthreads" ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \

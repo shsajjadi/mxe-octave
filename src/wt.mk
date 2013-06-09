@@ -27,10 +27,10 @@ define $(PKG)_BUILD
         -DBOOST_PREFIX='$(HOST_PREFIX)' \
         -DBOOST_COMPILER=_win32 \
         -DSSL_PREFIX='$(HOST_PREFIX)' \
-        -DOPENSSL_LIBS="`'$(TARGET)-pkg-config' --libs-only-l openssl`" \
+        -DOPENSSL_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l openssl`" \
         -DGM_PREFIX='$(HOST_PREFIX)' \
-        -DGM_LIBS="`'$(TARGET)-pkg-config' --libs-only-l GraphicsMagick++`" \
-        -DPANGO_FT2_LIBS="`'$(TARGET)-pkg-config' --libs-only-l pangoft2`" \
+        -DGM_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l GraphicsMagick++`" \
+        -DPANGO_FT2_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l pangoft2`" \
         -DWT_CMAKE_FINDER_INSTALL_DIR='/lib/wt' \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         '$(1)'

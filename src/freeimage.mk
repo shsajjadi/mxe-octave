@@ -19,16 +19,16 @@ define $(PKG)_BUILD
     $(SED) -i 's,install ,$(INSTALL) ,' '$(1)'/Makefile.gnu
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' -f Makefile.gnu \
-        CXX='$(TARGET)-g++' \
-        CC='$(TARGET)-gcc' \
-        AR='$(TARGET)-ar' \
+        CXX='$(MXE_CXX)' \
+        CC='$(MXE_CC)' \
+        AR='$(MXE_AR)' \
         INCDIR='$(HOST_INCDIR)' \
         INSTALLDIR='$(HOST_LIBDIR)'
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' -f Makefile.gnu install \
-        CXX='$(TARGET)-g++' \
-        CC='$(TARGET)-gcc' \
-        AR='$(TARGET)-ar' \
+        CXX='$(MXE_CXX)' \
+        CC='$(MXE_CC)' \
+        AR='$(MXE_AR)' \
         INCDIR='$(HOST_INCDIR)' \
         INSTALLDIR='$(HOST_LIBDIR)'
 endef

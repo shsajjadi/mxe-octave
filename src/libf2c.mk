@@ -15,10 +15,10 @@ endef
 
 define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' -f makefile.u \
-        CC=$(TARGET)-gcc \
-        AR=$(TARGET)-ar \
-        LD=$(TARGET)-ld \
-        RANLIB=$(TARGET)-ranlib \
+        CC=$(MXE_CC) \
+        AR=$(MXE_AR) \
+        LD=$(MXE_LD) \
+        RANLIB=$(MXE_RANLIB) \
         CFLAGS='-O -DUSE_CLOCK'
     $(INSTALL) -m644 '$(1)/libf2c.a' '$(HOST_LIBDIR)'
     $(INSTALL) -m644 '$(1)/f2c.h'    '$(HOST_INCDIR)'

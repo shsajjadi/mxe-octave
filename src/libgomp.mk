@@ -26,7 +26,7 @@ define $(PKG)_BUILD
         LIBS='-lws2_32'
     $(MAKE) -C '$(1)/build/$(TARGET)/libgomp' -j '$(JOBS)' install
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-libgomp.exe' \
         -fopenmp

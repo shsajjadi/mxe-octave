@@ -23,8 +23,8 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-libmodplug.exe' \
-        `'$(TARGET)-pkg-config' libmodplug --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' libmodplug --cflags --libs`
 endef

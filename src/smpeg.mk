@@ -18,8 +18,8 @@ endef
 define $(PKG)_BUILD
     $(SED) -i 's,\(-lsmpeg\),\1 -lstdc++,' '$(1)/smpeg-config.in'
     cd '$(1)' && ./configure \
-        AR='$(TARGET)-ar' \
-        NM='$(TARGET)-nm' \
+        AR='$(MXE_AR)' \
+        NM='$(MXE_NM)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-debug \
@@ -31,7 +31,7 @@ define $(PKG)_BUILD
         CFLAGS='-ffriend-injection'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -std=c99 -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-smpeg.exe' \
         `'$(HOST_BINDIR)/smpeg-config' --cflags --libs`

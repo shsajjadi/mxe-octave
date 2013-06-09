@@ -33,7 +33,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS= FILE_COMPILE='$(1).native/src/file'
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-file.exe' \
         -lmagic -lgnurx -lshlwapi

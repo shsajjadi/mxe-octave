@@ -32,8 +32,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
 
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).cpp' -o '$(HOST_BINDIR)/test-protobuf.exe' \
-        `'$(TARGET)-pkg-config' protobuf --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' protobuf --cflags --libs`
 endef

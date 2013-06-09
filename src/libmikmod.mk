@@ -19,10 +19,10 @@ define $(PKG)_BUILD
     $(SED) -i 's,-Dunix,,' '$(1)/libmikmod/Makefile.in'
     $(SED) -i 's,`uname`,MinGW,g' '$(1)/configure'
     cd '$(1)' && \
-        CC='$(TARGET)-gcc' \
-        NM='$(TARGET)-nm' \
-        RANLIB='$(TARGET)-ranlib' \
-        STRIP='$(TARGET)-strip' \
+        CC='$(MXE_CC)' \
+        NM='$(MXE_NM)' \
+        RANLIB='$(MXE_RANLIB)' \
+        STRIP='$(MXE_STRIP)' \
         ./configure \
             $(ENABLE_SHARED_OR_STATIC) \
             --prefix='$(HOST_PREFIX)' \
@@ -30,7 +30,7 @@ define $(PKG)_BUILD
             --disable-esd
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -std=c99 -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-libmikmod.exe' \
         `'$(HOST_BINDIR)/libmikmod-config' --cflags --libs`

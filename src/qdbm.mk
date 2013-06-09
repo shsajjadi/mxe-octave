@@ -37,8 +37,8 @@ define $(PKG)_BUILD
     cd '$(1)' && $(INSTALL) -m644 depot.h curia.h relic.h hovel.h \
         cabin.h villa.h vista.h odeum.h '$(HOST_INCDIR)'
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-qdbm.exe' \
-        `'$(TARGET)-pkg-config' qdbm --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' qdbm --cflags --libs`
 endef

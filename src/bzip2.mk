@@ -29,7 +29,7 @@ define $(PKG)_BUILD
     $(INSTALL) -m644 '$(1)/bzlib.h' '$(HOST_INCDIR)'
 
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(1)/libbz2.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(1)/libbz2.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
     fi
 
     if [ $(BUILD_STATIC) = yes ]; then \

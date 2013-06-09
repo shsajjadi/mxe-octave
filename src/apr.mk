@@ -27,5 +27,5 @@ define $(PKG)_BUILD
         ac_cv_sizeof_ssize_t=4 \
         CFLAGS=-D_WIN32_WINNT=0x0500
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
-    $(LN_SF) '$(HOST_BINDIR)/apr-1-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-apr-1-config'
+    $(LN_SF) '$(HOST_BINDIR)/apr-1-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)apr-1-config'
 endef

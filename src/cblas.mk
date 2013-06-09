@@ -17,13 +17,13 @@ endef
 define $(PKG)_BUILD
     cp '$(1)/Makefile.LINUX' '$(1)/Makefile.MINGW32'
     $(SED) -i 's,CBDIR =.*,CBDIR = $(1),g'         '$(1)/Makefile.MINGW32'
-    $(SED) -i 's,FC =.*,FC = $(TARGET)-gfortran,g' '$(1)/Makefile.MINGW32'
+    $(SED) -i 's,FC =.*,FC = $(MXE_CXX)fortran,g' '$(1)/Makefile.MINGW32'
     $(SED) -i 's, make , $(MAKE) ,g'               '$(1)/Makefile'
     rm '$(1)/Makefile.in'
     $(LN_SF) '$(1)/Makefile.MINGW32' '$(1)/Makefile.in'
     mkdir '$(1)/MINGW32'
     $(MAKE) -C '$(1)' -j '$(JOBS)' alllib
-    cd '$(1)' && $(TARGET)-ar cr libcblas.a src/*.o
+    cd '$(1)' && $(MXE_AR) cr libcblas.a src/*.o
 
     $(INSTALL) -d                           '$(HOST_LIBDIR)'
     $(INSTALL) -m644 '$(1)/libcblas.a'      '$(HOST_LIBDIR)'

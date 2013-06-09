@@ -46,13 +46,13 @@ define $(PKG)_BUILD
         --disable-gtk-doc-pdf \
         --with-font-configuration=win32 \
         PKG_CONFIG_PATH_$(subst -,_,$(TARGET))='$(HOST_PREFIX)/qt/lib/pkgconfig' \
-        LIBS="`'$(TARGET)-pkg-config' zlib liblzma --libs` -ljpeg"
+        LIBS="`'$(MXE_PKG_CONFIG)' zlib liblzma --libs` -ljpeg"
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
     # Test program
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).cxx' -o '$(HOST_BINDIR)/test-poppler.exe' \
-        `'$(TARGET)-pkg-config' poppler poppler-cpp --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' poppler poppler-cpp --cflags --libs`
 endef
 

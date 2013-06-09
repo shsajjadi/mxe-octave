@@ -34,8 +34,8 @@ define $(PKG)_BUILD
         --without-x
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-gtk2.exe' \
-        `'$(TARGET)-pkg-config' gtk+-2.0 --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' gtk+-2.0 --cflags --libs`
 endef

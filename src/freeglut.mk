@@ -27,8 +27,8 @@ define $(PKG)_BUILD
         --without-x
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= EXPORT_FLAGS='-DFREEGLUT_STATIC'
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-freeglut.exe' \
-        `'$(TARGET)-pkg-config' glut --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' glut --cflags --libs`
 endef

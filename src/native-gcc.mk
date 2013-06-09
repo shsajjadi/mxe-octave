@@ -59,8 +59,8 @@ define $(PKG)_BUILD
     # # create pkg-config script
     # (echo '#!/bin/sh'; \
     #  echo 'PKG_CONFIG_PATH="$$PKG_CONFIG_PATH_$(subst -,_,$(TARGET))" PKG_CONFIG_LIBDIR='\''$(HOST_LIBDIR)/pkgconfig'\'' exec pkg-config $($(PKG)_STATIC_FLAG) "$$@"') \
-    #          > '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config'
-    # chmod 0755 '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config'
+    #          > '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pkg-config'
+    # chmod 0755 '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pkg-config'
 
     # # create the CMake toolchain file
     # [ -d '$(dir $(CMAKE_TOOLCHAIN_FILE))' ] || mkdir -p '$(dir $(CMAKE_TOOLCHAIN_FILE))'
@@ -81,12 +81,12 @@ define $(PKG)_BUILD
     #  echo 'set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)'; \
     #  echo 'set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)'; \
     #  echo 'set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)'; \
-    #  echo 'set(CMAKE_C_COMPILER $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-gcc)'; \
-    #  echo 'set(CMAKE_CXX_COMPILER $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-g++)'; \
-    #  echo 'set(CMAKE_Fortran_COMPILER $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-gfortran)'; \
-    #  echo 'set(CMAKE_RC_COMPILER $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-windres)'; \
-    #  echo 'set(PKG_CONFIG_EXECUTABLE $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config)'; \
-    #  echo 'set(QT_QMAKE_EXECUTABLE $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-qmake)'; \
+    #  echo 'set(CMAKE_C_COMPILER $(MXE_CC))'; \
+    #  echo 'set(CMAKE_CXX_COMPILER $(MXE_CXX))'; \
+    #  echo 'set(CMAKE_Fortran_COMPILER $(MXE_F77))'; \
+    #  echo 'set(CMAKE_RC_COMPILER $(MXE_WINDRES))'; \
+    #  echo 'set(PKG_CONFIG_EXECUTABLE $(MXE_PKG_CONFIG))'; \
+    #  echo 'set(QT_QMAKE_EXECUTABLE $(MXE_QMAKE))'; \
     #  echo 'set(CMAKE_INSTALL_PREFIX $(HOST_PREFIX) CACHE PATH "Installation Prefix")'; \
     #  echo 'set(CMAKE_BUILD_TYPE Release CACHE STRING "Debug|Release|RelWithDebInfo|MinSizeRel")') \
     #  > '$(CMAKE_TOOLCHAIN_FILE)'

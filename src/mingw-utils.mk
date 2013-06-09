@@ -22,7 +22,7 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(BUILD_TOOLS_PREFIX)'
     $(MAKE) -C '$(1).native/reimp' -j '$(JOBS)'
-    $(INSTALL) -m755 '$(1).native/reimp/reimp' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-reimp'
+    $(INSTALL) -m755 '$(1).native/reimp/reimp' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)reimp'
 
     # cross build
     cd '$(1)' && ./configure \

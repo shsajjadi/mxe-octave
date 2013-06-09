@@ -24,7 +24,7 @@ define $(PKG)_BUILD
         -DPHYSFS_BUILD_WX_TEST=FALSE
         $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic -std=c99 \
         '$(2).c' -o '$(HOST_BINDIR)/test-physfs.exe' \
         -lphysfs -lz

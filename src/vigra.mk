@@ -33,8 +33,8 @@ define $(PKG)_BUILD
         -DWITH_VALGRIND=OFF
     $(MAKE) -C '$(1)/build' -j '$(JOBS)' install
 
-    $(TARGET)-g++ \
+    $(MXE_CXX) \
         '$(2).cpp' -o $(HOST_BINDIR)/test-vigra.exe \
         -DVIGRA_STATIC_LIB \
-        -lvigraimpex `'$(TARGET)-pkg-config' OpenEXR libtiff-4 libpng --cflags --libs` -ljpeg
+        -lvigraimpex `'$(MXE_PKG_CONFIG)' OpenEXR libtiff-4 libpng --cflags --libs` -ljpeg
 endef

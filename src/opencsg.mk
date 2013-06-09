@@ -17,12 +17,12 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)/src' && '$(TARGET)-qmake' src.pro
+    cd '$(1)/src' && '$(MXE_QMAKE)' src.pro
     $(MAKE) -C '$(1)/src' -j '$(JOBS)'
     $(INSTALL) -m644 '$(1)/include/opencsg.h' '$(HOST_INCDIR)'
     $(INSTALL) -m644 '$(1)/lib/libopencsg.a' '$(HOST_LIBDIR)'
 
-    cd '$(1)/example' && '$(TARGET)-qmake' example.pro
+    cd '$(1)/example' && '$(MXE_QMAKE)' example.pro
     $(MAKE) -C '$(1)/example' -j '$(JOBS)'
     $(INSTALL) -m755 '$(1)/example/release/opencsgexample.exe' '$(HOST_BINDIR)/test-opencsg.exe'
 endef

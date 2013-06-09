@@ -28,8 +28,8 @@ define $(PKG)_BUILD
 
 
     # Test
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).cpp' -o '$(HOST_BINDIR)/test-hunspell.exe' \
-        `'$(TARGET)-pkg-config' hunspell --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' hunspell --cflags --libs`
 endef

@@ -38,7 +38,7 @@ define $(PKG)_BUILD
         LIBS="`$(HOST_BINDIR)/xml2-config --libs`"
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-gd.exe' \
         `'$(HOST_BINDIR)/gdlib-config' --cflags` \

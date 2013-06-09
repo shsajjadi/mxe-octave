@@ -22,7 +22,7 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install CROSSENV=$(TARGET)
 
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).cpp' -o '$(HOST_BINDIR)/test-poco.exe' \
         -lPocoFoundation

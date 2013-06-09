@@ -14,7 +14,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE := ./config
 else
   $(PKG)_CONFIGURE := ./Configure $(MXE_SYSTEM)
-  $(PKG)_CROSS_COMPILE_MAKE_ARG := CROSS_COMPILE='$(TARGET)-'
+  $(PKG)_CROSS_COMPILE_MAKE_ARG := CROSS_COMPILE='$(MXE_TOOL_PREFIX)'
 endif
 
 define $(PKG)_UPDATE

@@ -24,8 +24,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-liboauth.exe' \
-        `'$(TARGET)-pkg-config' oauth --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' oauth --cflags --libs`
 endef

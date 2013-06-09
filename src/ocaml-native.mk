@@ -17,7 +17,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-	# patched ocaml source to get ocamlbuild use $(TARGET)-ocamlc, $(TARGET)-ocamlfind, ...
+	# patched ocaml source to get ocamlbuild use $(MXE_TOOL_PREFIX)ocamlc, $(MXE_TOOL_PREFIX)ocamlfind, ...
 	cd '$(1)' && ./configure \
 		-prefix '$(HOST_PREFIX)' \
 		-bindir '$(HOST_BINDIR)/ocaml-native' \
@@ -29,12 +29,12 @@ define $(PKG)_BUILD
 	$(SED) -i "s,@target@,$(TARGET),g" $(1)/ocamlbuild/options.ml
 	$(SED) -i "s,@target@,$(TARGET),g" $(1)/ocamlbuild/findlib.ml
 	$(MAKE) -C '$(1)' -j '$(JOBS)' ocamlbuild.native
-	cp -f '$(1)/_build/ocamlbuild/ocamlbuild.native' $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ocamlbuild
+	cp -f '$(1)/_build/ocamlbuild/ocamlbuild.native' $(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ocamlbuild
 	$(MAKE) -C '$(1)' install
 	# the following script requires ocamlbuild with option -ocamlfind to work
 	#(echo '#!/bin/sh'; \
-	# echo 'exec $(BUILD_TOOLS_PREFIX)/bin/ocamlbuild -use-ocamlfind -ocamlfind $(TARGET)-ocamlfind "$$@"') \
-	# > '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ocamlbuild'
-	#chmod 0755 '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ocamlbuild'
+	# echo 'exec $(BUILD_TOOLS_PREFIX)/bin/ocamlbuild -use-ocamlfind -ocamlfind $(MXE_TOOL_PREFIX)ocamlfind "$$@"') \
+	# > '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ocamlbuild'
+	#chmod 0755 '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ocamlbuild'
 	# test will be done once cross ocamlopt is built
 endef

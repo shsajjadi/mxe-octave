@@ -23,7 +23,7 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-geos.exe' \
         -lgeos_c `'$(HOST_BINDIR)/geos-config' --cflags --libs` -lstdc++

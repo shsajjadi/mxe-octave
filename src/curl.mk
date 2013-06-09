@@ -28,9 +28,9 @@ define $(PKG)_BUILD
         --with-libssh2
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
-##    '$(TARGET)-gcc' \
+##    '$(MXE_CC)' \
 ##        -W -Wall -Werror -ansi -pedantic \
 ##        '$(2).c' -o '$(HOST_BINDIR)/test-curl.exe' \
-##        `'$(TARGET)-pkg-config' libcurl --cflags --libs`
+##        `'$(MXE_PKG_CONFIG)' libcurl --cflags --libs`
 
 endef

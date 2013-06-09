@@ -25,12 +25,12 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --without-openssl \
         --with-libgcrypt \
-        PKG_CONFIG='$(TARGET)-pkg-config'
+        PKG_CONFIG='$(MXE_PKG_CONFIG)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= html_DATA=
 
-##    '$(TARGET)-gcc' \
+##    '$(MXE_CC)' \
 ##        -W -Wall -Werror -ansi -pedantic \
 ##        '$(2).c' -o '$(HOST_BINDIR)/test-libssh2.exe' \
-##        `'$(TARGET)-pkg-config' --cflags --libs libssh2`
+##        `'$(MXE_PKG_CONFIG)' --cflags --libs libssh2`
 
 endef

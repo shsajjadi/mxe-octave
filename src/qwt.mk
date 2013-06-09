@@ -18,11 +18,11 @@ endef
 
 define $(PKG)_BUILD
     # build
-    cd '$(1)/src' && $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-qmake
+    cd '$(1)/src' && $(MXE_QMAKE)
     $(MAKE) -C '$(1)/src' -f 'Makefile.Release' -j '$(JOBS)' install
 
     #build sinusplot example to test linkage
-    cd '$(1)/examples/sinusplot' && $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-qmake
+    cd '$(1)/examples/sinusplot' && $(MXE_QMAKE)
     $(MAKE) -C '$(1)/examples/sinusplot' -f 'Makefile.Release' -j '$(JOBS)'
 
     # install

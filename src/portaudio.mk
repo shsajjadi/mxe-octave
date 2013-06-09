@@ -24,12 +24,12 @@ define $(PKG)_BUILD
         --with-host_os=mingw \
         --with-winapi=wmme,directx,wasapi,wdmks \
         --with-dxdir=$(HOST_PREFIX) \
-        ac_cv_path_AR=$(TARGET)-ar
+        ac_cv_path_AR=$(MXE_AR)
     $(MAKE) -C '$(1)' -j '$(JOBS)' SHARED_FLAGS= TESTS=
     $(MAKE) -C '$(1)' -j 1 install
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-portaudio.exe' \
-        `'$(TARGET)-pkg-config' portaudio-2.0 --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' portaudio-2.0 --cflags --libs`
 endef

@@ -25,8 +25,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/build' -j '$(JOBS)'
     $(MAKE) -C '$(1)/build' -j 1 install
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-libical.exe' \
-        `'$(TARGET)-pkg-config' libical --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' libical --cflags --libs`
 endef

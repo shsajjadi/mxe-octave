@@ -19,7 +19,7 @@ define $(PKG)_BUILD
     $(SED) -i 's,^\(Requires:.*\),\1 vorbisfile,' '$(1)/SDL_mixer.pc.in'
     echo \
         'Libs.private:' \
-        "`$(TARGET)-pkg-config libmodplug --libs`" \
+        "`$(MXE_PKG_CONFIG) libmodplug --libs`" \
         "`$(HOST_BINDIR)/smpeg-config     --libs`" \
         >> '$(1)/SDL_mixer.pc.in'
     $(SED) -i 's,for path in /usr/local; do,for path in; do,' '$(1)/configure'
@@ -43,8 +43,8 @@ define $(PKG)_BUILD
         LIBS='-lvorbis -logg'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-sdl_mixer.exe' \
-        `'$(TARGET)-pkg-config' SDL_mixer --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' SDL_mixer --cflags --libs`
 endef

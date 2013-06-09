@@ -16,7 +16,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-qmake'
+    cd '$(1)' && '$(MXE_QMAKE)'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(INSTALL) -d '$(HOST_LIBDIR)'
     $(INSTALL) -m644 '$(1)/lib/libqwtplot3d.a' '$(HOST_LIBDIR)'

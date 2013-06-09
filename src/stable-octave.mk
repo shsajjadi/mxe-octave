@@ -19,7 +19,7 @@ define $(PKG)_BUILD
     cd '$(1)/.build' && '$(1)/configure' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
-        FLTK_CONFIG="$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-fltk-config" \
+        FLTK_CONFIG="$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)fltk-config" \
         gl_cv_func_gettimeofday_clobber=no
 
     ## We want both of these install steps so that we install in the

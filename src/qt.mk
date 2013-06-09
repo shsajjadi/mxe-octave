@@ -11,9 +11,9 @@ ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_DEPS   := gcc libodbc++ postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
 
   $(PKG)_CONFIGURE_ENV := \
-    OPENSSL_LIBS="`'$(TARGET)-pkg-config' --libs-only-l openssl`" \
-    PSQL_LIBS="-lpq -lsecur32 `'$(TARGET)-pkg-config' --libs-only-l openssl` -lws2_32" \
-    SYBASE_LIBS="-lsybdb `'$(TARGET)-pkg-config' --libs-only-l gnutls` -liconv -lws2_32"
+    OPENSSL_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l openssl`" \
+    PSQL_LIBS="-lpq -lsecur32 `'$(MXE_PKG_CONFIG)' --libs-only-l openssl` -lws2_32" \
+    SYBASE_LIBS="-lsybdb `'$(MXE_PKG_CONFIG)' --libs-only-l gnutls` -liconv -lws2_32"
 else
   $(PKG)_DEPS   := gcc postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
 
@@ -50,8 +50,8 @@ define $(PKG)_BUILD
         -confirm-license \
         -fast \
         $($(PKG)_CONFIGURE_PLATFORM_OPTION) \
-        -device-option CROSS_COMPILE=$(TARGET)- \
-        -device-option PKG_CONFIG='$(TARGET)-pkg-config' \
+        -device-option CROSS_COMPILE=$(MXE_TOOL_PREFIX) \
+        -device-option PKG_CONFIG='$(MXE_PKG_CONFIG)' \
         -force-pkg-config \
         -release \
         -exceptions \
@@ -87,10 +87,10 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-    $(LN_SF) '$(HOST_BINDIR)/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-moc'
-    $(LN_SF) '$(HOST_BINDIR)/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-roc'
-    $(LN_SF) '$(HOST_BINDIR)/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-uic'
-    $(LN_SF) '$(HOST_BINDIR)/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-qmake'
+    $(LN_SF) '$(HOST_BINDIR)/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
+    $(LN_SF) '$(HOST_BINDIR)/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)roc'
+    $(LN_SF) '$(HOST_BINDIR)/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
+    $(LN_SF) '$(HOST_BINDIR)/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
 
     # cd '$(1)/tools/assistant' && '$(1)/bin/qmake' assistant.pro
     # $(MAKE) -C '$(1)/tools/assistant' -j '$(JOBS)' install
@@ -104,10 +104,10 @@ define $(PKG)_BUILD
 
     # lrelease (from linguist) needed by octave for GUI build
     $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install
-    $(LN_SF) '$(HOST_BINDIR)/lrelease' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-lrelease'
+    $(LN_SF) '$(HOST_BINDIR)/lrelease' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'
 
     # mkdir            '$(1)/test-qt'
-    # cd               '$(1)/test-qt' && '$(TARGET)-qmake' '$(PWD)/$(2).pro'
+    # cd               '$(1)/test-qt' && '$(MXE_QMAKE)' '$(PWD)/$(2).pro'
     # $(MAKE)       -C '$(1)/test-qt' -j '$(JOBS)'
     # $(INSTALL) -m755 '$(1)/test-qt/release/test-qt.exe' '$(HOST_BINDIR)'
 endef

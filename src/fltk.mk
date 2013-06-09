@@ -34,5 +34,5 @@ define $(PKG)_BUILD
     # enable exceptions, because disabling them doesn't make any sense on PCs
     $(SED) -i 's,-fno-exceptions,,' '$(1)/makeinclude'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install DIRS=src LIBCOMMAND='$(MXE_AR) cr'
-    $(LN_SF) '$(HOST_BINDIR)/fltk-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-fltk-config'
+    $(LN_SF) '$(HOST_BINDIR)/fltk-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)fltk-config'
 endef

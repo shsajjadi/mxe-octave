@@ -33,11 +33,11 @@ define $(PKG)_BUILD
 	cd '$(BUILD_TOOLS_PREFIX)/bin' && $(LN_SF) '$(HOST_LIBDIR)/ocaml/flexdll/flexlink'
 	(echo '#!/bin/sh'; \
 	 echo 'exec flexlink -I $(HOST_LIBDIR) -chain mingw -nocygpath "$$@"') \
-			> '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-flexlink'
-	chmod 0755 '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-flexlink'
+			> '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)flexlink'
+	chmod 0755 '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)flexlink'
 
 	echo "testing flexlink..."
-	$(MAKE) -C '$(1)/test' -j '$(JOBS)' dump.exe plug1.dll plug2.dll CC=$(TARGET)-gcc O=o FLEXLINK=$(TARGET)-flexlink
+	$(MAKE) -C '$(1)/test' -j '$(JOBS)' dump.exe plug1.dll plug2.dll CC=$(MXE_CC) O=o FLEXLINK=$(MXE_TOOL_PREFIX)flexlink
 	#works if wine is installed :
 	#cd '$(1)/test' && ./dump.exe plug1.dll plug2.dll
 endef

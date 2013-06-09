@@ -47,7 +47,7 @@ define $(PKG)_BUILD
         CFLAGS='$(MXE_CFLAGS)' \
         CXXFLAGS='$(MXE_CXXFLAGS)' \
         AR='$(MXE_AR)' \
-        RANLIB='$(TARGET)-ranlib' \
+        RANLIB='$(MXE_RANLIB)' \
         BLAS='-lblas -lgfortran -lgfortranbegin' \
         CHOLMOD_CONFIG='-DNPARTITION'
 

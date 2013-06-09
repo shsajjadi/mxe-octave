@@ -51,7 +51,7 @@ define $(PKG)_BUILD
         --without-libxslt \
         --with-zlib \
         --with-system-tzdata=/dev/null \
-        LIBS="$($(PKG)_LIBS) `'$(TARGET)-pkg-config' openssl --libs`"
+        LIBS="$($(PKG)_LIBS) `'$(MXE_PKG_CONFIG)' openssl --libs`"
     $(MAKE) -C '$(1)'/src/interfaces/libpq -j '$(JOBS)' install haslibarule=
     $(MAKE) -C '$(1)'/src/port             -j '$(JOBS)'         haslibarule=
     $(MAKE) -C '$(1)'/src/bin/psql         -j '$(JOBS)' install haslibarule=
@@ -80,5 +80,5 @@ define $(PKG)_BUILD
         --with-system-tzdata=/dev/null
     $(MAKE) -C '$(1).native'/src/port          -j '$(JOBS)'
     $(MAKE) -C '$(1).native'/src/bin/pg_config -j '$(JOBS)' install
-    $(LN_SF) '$(HOST_BINDIR)/pg_config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pg_config'
+    $(LN_SF) '$(HOST_BINDIR)/pg_config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pg_config'
 endef

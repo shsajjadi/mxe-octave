@@ -17,7 +17,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && \
-        CROSS='$(TARGET)-' \
+        CROSS='$(MXE_TOOL_PREFIX)' \
         ./configure \
         --prefix='$(HOST_PREFIX)' \
         --target=x86-win32-gcc \
@@ -25,5 +25,5 @@ define $(PKG)_BUILD
         --disable-install-docs
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-    $(TARGET)-ranlib $(HOST_LIBDIR)/libvpx.a
+    $(MXE_RANLIB) $(HOST_LIBDIR)/libvpx.a
 endef
