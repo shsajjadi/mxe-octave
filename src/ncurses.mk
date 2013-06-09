@@ -16,6 +16,12 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  $(PKG)_CONFIG_OPTS := --with-normal --without-shared
+else
+  $(PKG)_CONFIG_OPTS := --with-normal $(WITH_SHARED_OR_STATIC)
+endif
+
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
@@ -29,7 +35,7 @@ define $(PKG)_BUILD
         --without-ada \
         --without-manpages \
         --enable-pc-files \
-        --with-normal \
-        $(WITH_SHARED_OR_STATIC)
+        $($(PKG)_CONFIG_OPTS)
+
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
