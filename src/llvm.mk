@@ -16,6 +16,22 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+define $(PKG)_BUILD
+    mkdir '$(1)/build'
+    cd '$(1)/build' && ../configure  \
+      $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
+      $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+      --enable-targets='host-only' \
+      --disable-docs \
+      --without-python \
+      --disable-shared --enable-static \
+      --prefix='$(HOST_PREFIX)'
+
+    PATH='$(HOST_BINDIR):$(PATH)' $(MAKE) -C '$(1)/build' -j $(JOBS) install
+    $(LN_SF) '$(HOST_BINDIR)/llvm-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-llvm-config'
+endef
+else
 define $(PKG)_BUILD
     mkdir '$(1)/build'
     cd '$(1)/build' && cmake .. \
@@ -28,3 +44,4 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/build' -j $(JOBS) install
     $(LN_SF) '$(HOST_BINDIR)/llvm-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-llvm-config'
 endef
+endif
