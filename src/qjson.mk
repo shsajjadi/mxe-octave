@@ -16,7 +16,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    echo '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-qmake'
+    echo '$(MXE_QMAKE)'
     mkdir '$(1)/build'
     cd '$(1)/build' && cmake .. \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \

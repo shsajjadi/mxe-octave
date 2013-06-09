@@ -28,8 +28,8 @@ define $(PKG)_BUILD
         noinst_PROGRAMS= \
         INFO_DEPS=
 
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall -Werror -pedantic -std=c++0x \
         '$(2).cpp' -o '$(HOST_BINDIR)/test-gtkglextmm.exe' \
-        `'$(TARGET)-pkg-config' gtkglextmm-1.2 --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' gtkglextmm-1.2 --cflags --libs`
 endef

@@ -41,12 +41,12 @@ define $(PKG)_BUILD
         --disable-msgloader-icu \
         --with-curl='$(HOST_PREFIX)' \
         --without-icu \
-        LIBS="`$(TARGET)-pkg-config --libs libcurl`"
+        LIBS="`$(MXE_PKG_CONFIG) --libs libcurl`"
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).cpp' -o '$(HOST_BINDIR)/test-xerces.exe' \
-        `'$(TARGET)-pkg-config' xerces-c --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' xerces-c --cflags --libs`
 endef

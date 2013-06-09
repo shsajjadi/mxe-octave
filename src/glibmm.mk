@@ -21,8 +21,8 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
-        CXX='$(TARGET)-c++' \
-        PKG_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config' \
+        CXX='$(MXE_CXX)' \
+        PKG_CONFIG='$(MXE_PKG_CONFIG)' \
         GLIB_COMPILE_SCHEMAS='$(HOST_BINDIR)/glib-compile-schemas' \
         MAKE=$(MAKE)
     $(MAKE) -C '$(1)/gio/src' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= MISC_STUFF=

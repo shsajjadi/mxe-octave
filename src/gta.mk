@@ -25,8 +25,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install dist_doc_DATA=
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-gta.exe' \
-        `'$(TARGET)-pkg-config' gta --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' gta --cflags --libs`
 endef

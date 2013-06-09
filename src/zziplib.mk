@@ -23,7 +23,7 @@ define $(PKG)_BUILD
         --disable-mmap \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
-        PKG_CONFIG='$(TARGET)-pkg-config'
+        PKG_CONFIG='$(MXE_PKG_CONFIG)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef

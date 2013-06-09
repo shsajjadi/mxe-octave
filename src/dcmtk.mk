@@ -27,9 +27,9 @@ define $(PKG)_BUILD
         --with-libxmlinc='$(HOST_PREFIX)' \
         --with-zlib \
         --without-libwrap \
-        CXX='$(TARGET)-g++' \
-        RANLIB='$(TARGET)-ranlib' \
-        AR='$(TARGET)-ar' \
+        CXX='$(MXE_CXX)' \
+        RANLIB='$(MXE_RANLIB)' \
+        AR='$(MXE_AR)' \
         ARFLAGS=cru \
         LIBTOOL=$(LIBTOOL) \
         ac_cv_my_c_rightshift_unsigned=no

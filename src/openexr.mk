@@ -38,7 +38,7 @@ define $(PKG)_BUILD
         --disable-threading \
         --disable-posix-sem \
         --disable-ilmbasetest \
-        PKG_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config'
+        PKG_CONFIG='$(MXE_PKG_CONFIG)'
     # build the code generator manually
     cd '$(1)/IlmImf' && g++ \
         -I'$(1)/ilmbase/include/OpenEXR' \

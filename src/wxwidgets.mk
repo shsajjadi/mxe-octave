@@ -54,11 +54,11 @@ define $(PKG)_BUILD
         --without-hildon \
         --without-dmalloc \
         --without-odbc \
-        LIBS=" `'$(TARGET)-pkg-config' --libs-only-l libtiff-4`"
+        LIBS=" `'$(MXE_PKG_CONFIG)' --libs-only-l libtiff-4`"
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     -$(MAKE) -C '$(1)/locale' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= allmo
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= __install_wxrc___depname=
-    $(INSTALL) -m755 '$(HOST_BINDIR)/wx-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-wx-config'
+    $(INSTALL) -m755 '$(HOST_BINDIR)/wx-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)wx-config'
 
     # build the wxWidgets variant without unicode support
     cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,wxwidgets)
@@ -102,7 +102,7 @@ define $(PKG)_BUILD
         --without-hildon \
         --without-dmalloc \
         --without-odbc \
-        LIBS=" `'$(TARGET)-pkg-config' --libs-only-l libtiff-4`"
+        LIBS=" `'$(MXE_PKG_CONFIG)' --libs-only-l libtiff-4`"
     $(MAKE) -C '$(1)/$(wxwidgets_SUBDIR)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
     # backup of the unicode wx-config script
@@ -111,14 +111,14 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)/$(wxwidgets_SUBDIR)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= __install_wxrc___depname=
     mv '$(HOST_BINDIR)/wx-config' '$(HOST_BINDIR)/wx-config-nounicode'
-    $(INSTALL) -m755 '$(HOST_BINDIR)/wx-config-nounicode' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-wx-config-nounicode'
+    $(INSTALL) -m755 '$(HOST_BINDIR)/wx-config-nounicode' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)wx-config-nounicode'
 
     # restore the unicode wx-config script
     mv '$(HOST_BINDIR)/wx-config-backup' '$(HOST_BINDIR)/wx-config'
 
     # build test program
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall -Werror -pedantic -std=gnu++0x \
         '$(2).cpp' -o '$(HOST_BINDIR)/test-wxwidgets.exe' \
-        `'$(TARGET)-wx-config' --cflags --libs`
+        `'$(MXE_TOOL_PREFIX)wx-config' --cflags --libs`
 endef

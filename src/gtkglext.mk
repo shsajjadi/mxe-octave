@@ -33,11 +33,11 @@ define $(PKG)_BUILD
         sbin_PROGRAMS= \
         noinst_PROGRAMS= \
         INFO_DEPS= \
-        GDKGLEXT_DEP_CFLAGS='`'$(TARGET)-pkg-config' gtk+-2.0 --cflags`' \
-        GTKGLEXT_DEP_CFLAGS='`'$(TARGET)-pkg-config' gtk+-2.0 --cflags`'
+        GDKGLEXT_DEP_CFLAGS='`'$(MXE_PKG_CONFIG)' gtk+-2.0 --cflags`' \
+        GTKGLEXT_DEP_CFLAGS='`'$(MXE_PKG_CONFIG)' gtk+-2.0 --cflags`'
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-gtkglext.exe' \
-        `'$(TARGET)-pkg-config' gtkglext-1.0 --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' gtkglext-1.0 --cflags --libs`
 endef

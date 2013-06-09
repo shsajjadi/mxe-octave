@@ -28,8 +28,8 @@ define $(PKG)_BUILD
     $(INSTALL) -d                   '$(HOST_LIBDIR)/pkgconfig'
     $(INSTALL) -m644 '$(1)/mxml.pc' '$(HOST_LIBDIR)/pkgconfig'
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-mxml.exe' \
-        `'$(TARGET)-pkg-config' mxml --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' mxml --cflags --libs`
 endef

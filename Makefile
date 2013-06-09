@@ -123,11 +123,15 @@ CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(HOST_PREFIX)/include'
 CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX)/lib'
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
+  MXE_TOOL_PREFIX := 
   MXE_AR := ar
   MXE_RANLIB := ranlib
   MXE_CC := gcc
   MXE_CXX := g++
   MXE_F77 := gfortran
+  MXE_DLLTOOL := dlltool
+  MXE_NM := nm
+  MXE_STRIP := strip
   ifeq ($(MXE_SYSTEM),mingw)
     MXE_WINDRES := windres
   else
@@ -136,18 +140,22 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
   MXE_PKG_CONFIG := pkg-config
   MXE_QMAKE := qmake
 else
-  MXE_AR := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ar'
-  MXE_RANLIB := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ranlib'
-  MXE_CC := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-gcc'
-  MXE_CXX := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-g++'
-  MXE_F77 := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-gfortran'
+  MXE_TOOL_PREFIX := $(TARGET)-
+  MXE_AR := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ar'
+  MXE_RANLIB := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ranlib'
+  MXE_CC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)gcc'
+  MXE_CXX := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)g++'
+  MXE_F77 := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)gfortran'
+  MXE_DLLTOOL := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)dlltool'
+  MXE_NM := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)nm'
+  MXE_STRIP := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)strip'
   ifeq ($(MXE_SYSTEM),mingw)
-    MXE_WINDRES := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-windres'
+    MXE_WINDRES := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)windres'
   else
     MXE_WINDRES := true
   endif
-  MXE_PKG_CONFIG := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config'
-  MXE_QMAKE := '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-qmake'
+  MXE_PKG_CONFIG := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pkg-config'
+  MXE_QMAKE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)

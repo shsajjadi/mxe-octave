@@ -76,8 +76,8 @@ define $(PKG)_BUILD
         --with-pcre=system \
         --with-libiconv=gnu \
         --disable-inotify \
-        CXX='$(TARGET)-c++' \
-        PKG_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pkg-config' \
+        CXX='$(MXE_CXX)' \
+        PKG_CONFIG='$(MXE_PKG_CONFIG)' \
         GLIB_GENMARSHAL='$(HOST_BINDIR)/glib-genmarshal' \
         GLIB_COMPILE_SCHEMAS='$(HOST_BINDIR)/glib-compile-schemas' \
         GLIB_COMPILE_RESOURCES='$(HOST_BINDIR)/glib-compile-resources'

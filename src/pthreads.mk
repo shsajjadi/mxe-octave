@@ -33,12 +33,12 @@ endef
 else
 ifeq ($(MXE_SYSTEM),mingw)
 define $(PKG)_BUILD
-    $(MAKE) -C '$(1)' -j 1 GC-static CROSS='$(TARGET)-'
+    $(MAKE) -C '$(1)' -j 1 GC-static CROSS='$(MXE_TOOL_PREFIX)'
     $(INSTALL) -d '$(HOST_LIBDIR)'
     $(INSTALL) -m644 '$(1)/libpthreadGC2.a' '$(HOST_LIBDIR)/libpthread.a'
 
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(TARGET)-ar' --ld '$(TARGET)-gcc' '$(HOST_LIBDIR)/libpthread.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(HOST_LIBDIR)/libpthread.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
     fi
 
     $(INSTALL) -d '$(HOST_INCDIR)'

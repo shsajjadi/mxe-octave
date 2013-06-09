@@ -24,8 +24,8 @@ define $(PKG)_BUILD
         CFLAGS=-Wno-error
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-json-c.exe' \
-        `'$(TARGET)-pkg-config' json --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' json --cflags --libs`
 endef

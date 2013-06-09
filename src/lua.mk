@@ -18,9 +18,9 @@ endef
 define $(PKG)_BUILD
     $(MAKE) -C '$(1)/src' -j '$(JOBS)' \
         INSTALL_TOP='$(HOST_PREFIX)' \
-        CC='$(TARGET)-gcc' \
-        AR='$(TARGET)-ar rcu' \
-        RANLIB='$(TARGET)-ranlib' \
+        CC='$(MXE_CC)' \
+        AR='$(MXE_AR) rcu' \
+        RANLIB='$(MXE_RANLIB)' \
         a
     $(MAKE) -C '$(1)' -j 1 \
         INSTALL_TOP='$(HOST_PREFIX)' \
@@ -30,7 +30,7 @@ define $(PKG)_BUILD
         INSTALL='$(INSTALL)' \
         install
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-lua.exe' \
         -llua

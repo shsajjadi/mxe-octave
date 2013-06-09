@@ -22,8 +22,8 @@ define $(PKG)_BUILD
         -DEXAMPLES=FALSE
     $(MAKE) -C '$(1)/build' -j '$(JOBS)' install
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-openal.exe' \
-        `'$(TARGET)-pkg-config' openal --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' openal --cflags --libs`
 endef

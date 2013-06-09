@@ -17,9 +17,9 @@ endef
 
 define $(PKG)_BUILD
     # Build libGLEW
-    cd '$(1)' && $(TARGET)-gcc -O2 -DGLEW_STATIC -Iinclude -c -o glew.o src/glew.c
-    cd '$(1)' && $(TARGET)-ar cr libGLEW.a glew.o
-    $(TARGET)-ranlib '$(1)/libGLEW.a'
+    cd '$(1)' && $(MXE_CC) -O2 -DGLEW_STATIC -Iinclude -c -o glew.o src/glew.c
+    cd '$(1)' && $(MXE_AR) cr libGLEW.a glew.o
+    $(MXE_RANLIB) '$(1)/libGLEW.a'
     $(SED) \
         -e "s|@prefix@|$(HOST_PREFIX)|g" \
         -e "s|@libdir@|$(HOST_LIBDIR)|g" \
@@ -31,9 +31,9 @@ define $(PKG)_BUILD
         < '$(1)'/glew.pc.in > '$(1)'/glew.pc
 
     # Build libGLEWmx
-    cd '$(1)' && $(TARGET)-gcc -O2 -DGLEW_STATIC -DGLEW_MX -Iinclude -c -o glewmx.o src/glew.c
-    cd '$(1)' && $(TARGET)-ar cr libGLEWmx.a glewmx.o
-    $(TARGET)-ranlib '$(1)/libGLEWmx.a'
+    cd '$(1)' && $(MXE_CC) -O2 -DGLEW_STATIC -DGLEW_MX -Iinclude -c -o glewmx.o src/glew.c
+    cd '$(1)' && $(MXE_AR) cr libGLEWmx.a glewmx.o
+    $(MXE_RANLIB) '$(1)/libGLEWmx.a'
     $(SED) \
         -e "s|@prefix@|$(HOST_PREFIX)|g" \
         -e "s|@libdir@|$(HOST_LIBDIR)|g" \
@@ -57,12 +57,12 @@ define $(PKG)_BUILD
     $(INSTALL) -m644 '$(1)/include/GL/glew.h' '$(1)/include/GL/wglew.h' '$(HOST_INCDIR)/GL/'
 
     # Test
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-glew.exe' \
-        `'$(TARGET)-pkg-config' glew --cflags --libs`
-    '$(TARGET)-gcc' \
+        `'$(MXE_PKG_CONFIG)' glew --cflags --libs`
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-glewmx.exe' \
-        `'$(TARGET)-pkg-config' glewmx --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' glewmx --cflags --libs`
 endef

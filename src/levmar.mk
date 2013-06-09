@@ -17,9 +17,9 @@ endef
 
 define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' liblevmar.a \
-        CC=$(TARGET)-gcc \
-        AR=$(TARGET)-ar \
-        RANLIB=$(TARGET)-ranlib
+        CC=$(MXE_CC) \
+        AR=$(MXE_AR) \
+        RANLIB=$(MXE_RANLIB)
     $(INSTALL) -m644 '$(1)/levmar.h'    '$(HOST_INCDIR)'
     $(INSTALL) -m644 '$(1)/liblevmar.a' '$(HOST_LIBDIR)'
 endef

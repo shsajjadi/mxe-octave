@@ -25,8 +25,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-libass.exe' \
-        `'$(TARGET)-pkg-config' libass --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' libass --cflags --libs`
 endef

@@ -29,8 +29,8 @@ define $(PKG)_BUILD
     mkdir -p '$(HOST_PREFIX)/share/cmake/log4cxx'
     cp '$(1)/log4cxx-config.cmake' '$(HOST_PREFIX)/share/cmake/log4cxx/log4cxx-config.cmake'
 
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).cpp' -o '$(HOST_BINDIR)/test-log4cxx.exe' \
-        `$(TARGET)-pkg-config liblog4cxx --libs`
+        `$(MXE_PKG_CONFIG) liblog4cxx --libs`
 endef

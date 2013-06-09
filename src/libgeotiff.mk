@@ -23,7 +23,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
-        LIBS="`'$(TARGET)-pkg-config' --libs libtiff-4` -ljpeg -lz"
+        LIBS="`'$(MXE_PKG_CONFIG)' --libs libtiff-4` -ljpeg -lz"
     $(MAKE) -C '$(1)' -j 1 all install EXEEXT=.remove-me MAKE='$(MAKE)'
     rm -fv '$(HOST_BINDIR)'/*.remove-me
 endef

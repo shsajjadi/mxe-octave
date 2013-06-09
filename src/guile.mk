@@ -31,8 +31,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' schemelib_DATA=
     $(MAKE) -C '$(1)' -j 1 install schemelib_DATA=
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-guile.exe' \
-        `'$(TARGET)-pkg-config' guile-1.8 --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' guile-1.8 --cflags --libs`
 endef

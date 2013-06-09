@@ -29,7 +29,7 @@ define $(PKG)_BUILD
       --prefix='$(HOST_PREFIX)'
 
     PATH='$(HOST_BINDIR):$(PATH)' $(MAKE) -C '$(1)/build' -j $(JOBS) install
-    $(LN_SF) '$(HOST_BINDIR)/llvm-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-llvm-config'
+    $(LN_SF) '$(HOST_BINDIR)/llvm-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)llvm-config'
 endef
 else
 define $(PKG)_BUILD
@@ -42,6 +42,6 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/build' -j $(JOBS) llvm-tblgen
     $(MAKE) -C '$(1)/build' -j $(JOBS) intrinsics_gen
     $(MAKE) -C '$(1)/build' -j $(JOBS) install
-    $(LN_SF) '$(HOST_BINDIR)/llvm-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-llvm-config'
+    $(LN_SF) '$(HOST_BINDIR)/llvm-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)llvm-config'
 endef
 endif

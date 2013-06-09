@@ -15,7 +15,7 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
-        --cross-prefix='$(TARGET)'- \
+        --cross-prefix='$(MXE_TOOL_PREFIX)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \

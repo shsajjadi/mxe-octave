@@ -39,13 +39,13 @@ define $(PKG)_BUILD
         --disable-physfs \
         --disable-altcvt \
         CFLAGS='-g -O2 -fno-inline' \
-        LIBS="`'$(TARGET)-pkg-config' vorbisfile flac speex --libs` `'$(HOST_BINDIR)/libmikmod-config' --libs`"
+        LIBS="`'$(MXE_PKG_CONFIG)' vorbisfile flac speex --libs` `'$(HOST_BINDIR)/libmikmod-config' --libs`"
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -std=c99 -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-sdl_sound.exe' \
         -lSDL_sound \
-        `'$(TARGET)-pkg-config' sdl vorbisfile flac speex --cflags --libs` \
+        `'$(MXE_PKG_CONFIG)' sdl vorbisfile flac speex --cflags --libs` \
         `'$(HOST_BINDIR)/libmikmod-config' --cflags --libs`
 endef

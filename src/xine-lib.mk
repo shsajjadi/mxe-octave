@@ -53,7 +53,7 @@ define $(PKG)_BUILD
         --without-wavpack \
         CFLAGS='-I$(1)/win32/include' \
         PTHREAD_LIBS='-lpthread -lws2_32' \
-        LIBS="`$(TARGET)-pkg-config --libs libmng`"
+        LIBS="`$(MXE_PKG_CONFIG) --libs libmng`"
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
 endef

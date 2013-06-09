@@ -24,8 +24,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/$(TARGET)' -j '$(JOBS)'
     $(MAKE) -C '$(1)/$(TARGET)' -j 1 install
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -std=c99 -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-libffi.exe' \
-        `'$(TARGET)-pkg-config' libffi --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' libffi --cflags --libs`
 endef

@@ -29,8 +29,8 @@ define $(PKG)_BUILD
         LIBS='-lz'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-sdl_image.exe' \
-        `'$(TARGET)-pkg-config' SDL_image --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' SDL_image --cflags --libs`
 endef

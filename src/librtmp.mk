@@ -16,7 +16,7 @@ endef
 
 define $(PKG)_BUILD
     $(MAKE) -C '$(1)' \
-        CROSS_COMPILE='$(TARGET)-' \
+        CROSS_COMPILE='$(MXE_TOOL_PREFIX)' \
         prefix='$(HOST_PREFIX)' \
         SYS=mingw \
         CRYPTO=GNUTLS \

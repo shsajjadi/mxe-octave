@@ -27,8 +27,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= doc_install='# DISABLED: doc-install.pl'
 
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall -Werror -pedantic -std=c++0x \
         '$(2).cpp' -o '$(HOST_BINDIR)/test-gtkmm2.exe' \
-        `'$(TARGET)-pkg-config' gtkmm-2.4 --cflags --libs`
+        `'$(MXE_PKG_CONFIG)' gtkmm-2.4 --cflags --libs`
 endef

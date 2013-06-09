@@ -39,7 +39,7 @@ define $(PKG)_BUILD
         --with-sqlite3='$(HOST_PREFIX)' \
         --with-curl='$(HOST_BINDIR)/curl-config' \
         --with-geos='$(HOST_BINDIR)/geos-config' \
-        --with-pg='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-pg_config' \
+        --with-pg='$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pg_config' \
         --with-gta='$(HOST_PREFIX)' \
         --without-odbc \
         --without-static-proj4 \
@@ -72,7 +72,7 @@ define $(PKG)_BUILD
         --without-php \
         --without-ruby \
         --without-python \
-        LIBS="-ljpeg -lsecur32 `'$(TARGET)-pkg-config' --libs openssl libtiff-4`"
+        LIBS="-ljpeg -lsecur32 `'$(MXE_PKG_CONFIG)' --libs openssl libtiff-4`"
     $(MAKE) -C '$(1)'       -j 1 lib-target
     $(MAKE) -C '$(1)'       -j 1 install-lib
     $(MAKE) -C '$(1)/port'  -j 1 install
@@ -81,5 +81,5 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/alg'   -j 1 install
     $(MAKE) -C '$(1)/ogr'   -j 1 install OGR_ENABLED=
     $(MAKE) -C '$(1)/apps'  -j 1 install BIN_LIST=
-    $(LN_SF) '$(HOST_BINDIR)/gdal-config' '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-gdal-config'
+    $(LN_SF) '$(HOST_BINDIR)/gdal-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)gdal-config'
 endef

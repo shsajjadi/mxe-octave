@@ -44,6 +44,6 @@ define $(PKG)_BUILD
         --enable-svg \
         --disable-pthread \
         CFLAGS="$(CFLAGS) -DCAIRO_WIN32_STATIC_BUILD" \
-        LIBS="-lmsimg32 -lgdi32 `$(TARGET)-pkg-config pixman-1 --libs`"
+        LIBS="-lmsimg32 -lgdi32 `$(MXE_PKG_CONFIG) pixman-1 --libs`"
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef

@@ -24,6 +24,6 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --with-sdl-prefix='$(HOST_PREFIX)' \
         --disable-sdltest \
-        PKG_CONFIG='$(TARGET)-pkg-config'
+        PKG_CONFIG='$(MXE_PKG_CONFIG)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef

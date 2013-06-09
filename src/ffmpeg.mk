@@ -17,9 +17,9 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    '$(SED)' -i "s^[-]lvpx^`'$(TARGET)'-pkg-config --libs-only-l vpx`^g;" $(1)/configure
+    '$(SED)' -i "s^[-]lvpx^`'$(MXE_PKG_CONFIG)' --libs-only-l vpx`^g;" $(1)/configure
     cd '$(1)' && ./configure \
-        --cross-prefix='$(TARGET)'- \
+        --cross-prefix='$(MXE_TOOL_PREFIX)' \
         --enable-cross-compile \
         --arch=i686 \
         --target-os=mingw32 \

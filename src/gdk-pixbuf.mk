@@ -25,6 +25,6 @@ define $(PKG)_BUILD
         --disable-modules \
         --with-included-loaders \
         --without-gdiplus \
-        LIBS="`'$(TARGET)-pkg-config' --libs libtiff-4`"
+        LIBS="`'$(MXE_PKG_CONFIG)' --libs libtiff-4`"
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef

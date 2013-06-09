@@ -33,7 +33,7 @@ define $(PKG)_BUILD
     $(INSTALL) -m644 '$(1)/include/libirc_rfcnumeric.h' '$(HOST_INCDIR)/libircclient'
     $(INSTALL) -m644 '$(1)/include/libirc_options.h' '$(HOST_INCDIR)/libircclient'
 
-    '$(TARGET)-g++' \
+    '$(MXE_CXX)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).cpp' -o '$(HOST_BINDIR)/test-libircclient.exe' \
         -lircclient -lws2_32

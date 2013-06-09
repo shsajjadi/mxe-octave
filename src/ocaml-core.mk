@@ -113,16 +113,16 @@ define $(PKG)_BUILD
 	$(MAKE) -C '$(1)' installopt
 	# Rename all the binaries to target-binary
 	for f in ocamlc ocamlcp ocamlrun ocamldep ocamlmklib ocamlmktop ocamlopt ocamlprof camlp4prof camlp4boot camlp4 camlp4oof camlp4of camlp4o camlp4rf camlp4r camlp4orf ocamldoc ; do \
-	  cp -f $(HOST_BINDIR)/$$f $(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-$$f; \
+	  cp -f $(HOST_BINDIR)/$$f $(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)$$f; \
 	done
 
 	# test ocamlopt
 	cp '$(2).ml' '$(1)/test.ml'
-	cd '$(1)' && '$(TARGET)-ocamlopt' test.ml
+	cd '$(1)' && '$(MXE_TOOL_PREFIX)ocamlopt' test.ml
 	# test ocamlbuild
 	mkdir '$(1)/tmp' && cp '$(2).ml' '$(1)/tmp/test.ml'
-	cd '$(1)/tmp' && $(TARGET)-ocamlbuild test.native
+	cd '$(1)/tmp' && $(MXE_TOOL_PREFIX)ocamlbuild test.native
 	# test
 	cp '$(2).ml' '$(1)/test.ml'
-	cd '$(1)' && '$(TARGET)-ocamlopt' test.ml
+	cd '$(1)' && '$(MXE_TOOL_PREFIX)ocamlopt' test.ml
 endef

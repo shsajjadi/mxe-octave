@@ -28,8 +28,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' man_MANS=
     $(MAKE) -C '$(1)' -j 1 install man_MANS=
 
-    '$(TARGET)-gcc' \
+    '$(MXE_CC)' \
         -W -Wall -Werror -ansi -pedantic \
         '$(2).c' -o '$(HOST_BINDIR)/test-libarchive.exe' \
-        `'$(TARGET)-pkg-config' --libs-only-l libarchive`
+        `'$(MXE_PKG_CONFIG)' --libs-only-l libarchive`
 endef
