@@ -261,7 +261,10 @@ else
 endif
 
 .PHONY: all
-all: $(PKGS)
+all: octave
+
+.PHONY: all-packages
+all-packages: $(PKGS)
 
 $(PKGS): $(BUILD_TOOLS)
 
