@@ -162,9 +162,9 @@ ifeq ($(MXE_SYSTEM),mingw)
   MAKE_SHARED_FROM_STATIC_OPTIONS := --windowsdll
 endif
 
-HOST_BINDIR := '$(HOST_PREFIX)/bin'
-HOST_LIBDIR := '$(HOST_PREFIX)/lib'
-HOST_INCDIR := '$(HOST_PREFIX)/include'
+HOST_BINDIR := $(HOST_PREFIX)/bin
+HOST_LIBDIR := $(HOST_PREFIX)/lib
+HOST_INCDIR := $(HOST_PREFIX)/include
 
 ifeq ($(MXE_SYSTEM),mingw)
   ifneq ($(MXE_NATIVE_BUILD),yes)
