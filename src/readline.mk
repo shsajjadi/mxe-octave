@@ -8,17 +8,13 @@ $(PKG)_SUBDIR   := readline-$($(PKG)_VERSION)
 $(PKG)_FILE     := readline-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/readline/$($(PKG)_FILE)
 
-ifeq ($(MXE_NATIVE_BUILD),yes)
-  $(PKG)_TERMCAP_LIB := ncurses
+ifeq ($(MXE_SYSTEM),mingw)
+  $(PKG)_TERMCAP_LIB := termcap
 else
-  ifeq ($(MXE_SYSTEM),mingw)
-    $(PKG)_TERMCAP_LIB := termcap
-  else
-    $(PKG)_TERMCAP_LIB := ncurses
-  endif
+  $(PKG)_TERMCAP_LIB := ncurses
 endif
 
-$(PKG)_DEPS     := gcc $($(PKG)_TERMCAP_LIB)
+$(PKG)_DEPS := gcc $($(PKG)_TERMCAP_LIB)
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://tiswww.case.edu/php/chet/readline/rltop.html' | \
