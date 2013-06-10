@@ -1,0 +1,55 @@
+diff -uNr a/main.c b/main.c
+--- a/main.c	2013-01-22 08:11:53.000000000 -0500
++++ b/main.c	2013-06-10 13:16:55.637783224 -0400
+@@ -287,29 +287,7 @@
+ static void
+ init_pc_path (void)
+ {
+-#ifdef G_OS_WIN32
+-  char *instdir, *lpath, *shpath;
+-
+-  instdir = g_win32_get_package_installation_directory_of_module (NULL);
+-  if (instdir == NULL)
+-    {
+-      /* This only happens when GetModuleFilename() fails. If it does, that
+-       * failure should be investigated and fixed.
+-       */
+-      debug_spew ("g_win32_get_package_installation_directory_of_module failed\n");
+-      return;
+-    }
+-
+-  lpath = g_build_filename (instdir, "lib", "pkgconfig", NULL);
+-  shpath = g_build_filename (instdir, "share", "pkgconfig", NULL);
+-  pkg_config_pc_path = g_strconcat (lpath, G_SEARCHPATH_SEPARATOR_S, shpath,
+-                                    NULL);
+-  g_free (instdir);
+-  g_free (lpath);
+-  g_free (shpath);
+-#else
+   pkg_config_pc_path = PKG_CONFIG_PC_PATH;
+-#endif
+ }
+ 
+ static gboolean
+diff -uNr a/Makefile.am b/Makefile.am
+--- a/Makefile.am	2013-01-23 14:07:39.000000000 -0500
++++ b/Makefile.am	2013-06-10 12:31:32.984044807 -0400
+@@ -9,18 +9,10 @@
+ SUBDIRS = $(GLIB_SUBDIR) . check
+ DIST_SUBDIRS = $(SUBDIRS)
+ 
+-# Escape paths properly on windows
+-if NATIVE_WIN32
+ AM_CPPFLAGS = \
+ 	-DPKG_CONFIG_PC_PATH="\"$(subst /,\/,$(pc_path))\"" \
+ 	-DPKG_CONFIG_SYSTEM_INCLUDE_PATH="\"$(subst /,\/,$(system_include_path))\"" \
+ 	-DPKG_CONFIG_SYSTEM_LIBRARY_PATH="\"$(subst /,\/,$(system_library_path))\""
+-else
+-AM_CPPFLAGS = \
+-	-DPKG_CONFIG_PC_PATH="\"$(pc_path)\"" \
+-	-DPKG_CONFIG_SYSTEM_INCLUDE_PATH="\"$(system_include_path)\"" \
+-	-DPKG_CONFIG_SYSTEM_LIBRARY_PATH="\"$(system_library_path)\""
+-endif
+ 
+ AM_CFLAGS = \
+ 	$(WARN_CFLAGS) \
