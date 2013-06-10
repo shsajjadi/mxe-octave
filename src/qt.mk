@@ -27,6 +27,8 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_DATABASE_OPTION := -qt-sql-psql
 else
   ifeq ($(MXE_SYSTEM),mingw)
+    $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION := \
+      -device-option CROSS_COMPILE=$(MXE_TOOL_PREFIX)
     $(PKG)_CONFIGURE_PLATFORM_OPTION := -xplatform win32-g++-4.6
     $(PKG)_CONFIGURE_DATABASE_OPTION := \
       -qt-sql-sqlite -qt-sql-odbc -qt-sql-psql -qt-sql-tds -D Q_USE_SYBASE 
@@ -50,7 +52,7 @@ define $(PKG)_BUILD
         -confirm-license \
         -fast \
         $($(PKG)_CONFIGURE_PLATFORM_OPTION) \
-        -device-option CROSS_COMPILE=$(MXE_TOOL_PREFIX) \
+        $($(PKG)_CONFIGURE_CROSS_COMPILE_OPTION) \
         -device-option PKG_CONFIG='$(MXE_PKG_CONFIG)' \
         -force-pkg-config \
         -release \
