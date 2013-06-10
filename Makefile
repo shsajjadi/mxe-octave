@@ -117,7 +117,11 @@ TMP_DIR     = $(PWD)/tmp-$(1)
 TOP_DIR    := $(PWD)
 MAKEFILE   := $(TOP_DIR)/Makefile
 PKGS       := $(filter-out $(BUILD_TOOLS), $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html'))
-PATH       := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)
+
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  PATH := $(HOST_PREFIX)/bin:$(PATH)
+endif
+PATH := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)
 
 CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(HOST_PREFIX)/include'
 CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX)/lib'
