@@ -207,11 +207,6 @@ unexport CPPFLAGS CROSS CXX CXXCPP CXXFLAGS EXEEXT EXTRA_CFLAGS
 unexport EXTRA_LDFLAGS LD LDFLAGS LIBRARY_PATH LIBS NM
 unexport OBJC_INCLUDE_PATH PKG_CONFIG QMAKESPEC RANLIB STRIP
 
-# mingw on windows ignores the compiled in pc-path so we need to tell pkg-config where it is
-ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
-  export PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig'
-endif
-
 SHORT_PKG_VERSION = \
     $(word 1,$(subst ., ,$($(1)_VERSION))).$(word 2,$(subst ., ,$($(1)_VERSION)))
 
