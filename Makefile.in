@@ -8,19 +8,16 @@ PWD := $(shell pwd)
 # Set the following configuration variables with a configure script?
 
 # Current valid values are mingw (cross) and gnu-linux (native).
-MXE_SYSTEM := mingw
-#MXE_SYSTEM := gnu-linux
+MXE_SYSTEM := @MXE_SYSTEM@
 
 # Set to "no" if doing a cross compile build.
-MXE_NATIVE_BUILD := no
-#MXE_NATIVE_BUILD := yes
+MXE_NATIVE_BUILD := @MXE_NATIVE_BUILD@
 
 # Set to "yes" to use the versions of GCC and binutils already
 # installed on your system.  NOTE: building a copy of GCC for a
 # native build does not appear to work correctly yet, so for now you
 # must set USE_SYSTEM_GCC to yes if MXE_NATIVE_BUILD is set to yes.
-USE_SYSTEM_GCC := no
-#USE_SYSTEM_GCC := yes
+USE_SYSTEM_GCC := @USE_SYSTEM_GCC@
 
 # Should match what config.guess prints for your system.
 # If cross compiling, you must set it manually.
@@ -34,15 +31,16 @@ BUILD_SYSTEM := $(shell tools/config.guess)
 # Enable shared or static libs, or perhaps both.  At least one 
 # package uses --with instead of --enable.  Probably it doesn't
 # make sense to disable both...
-BUILD_SHARED := yes
-BUILD_STATIC := no
+BUILD_SHARED := @BUILD_SHARED@
 
-USE_PIC_FLAG := no
-#USE_PIC_FLAG := yes
+USE_PIC_FLAG := @BUILD_STATIC@
 
-# Attempt to build Octave and dependencies with 64-bit indexing enabled.
-ENABLE_64 := no
-#ENABLE_64 := yes
+# Attempt to build Octave and dependencies with 64-bit indexing
+# enabled (experimental; requires 64-bit system and compiler).
+ENABLE_64 := @ENABLE_64@
+
+# Attempt to build LLVM and enable Octave's experimental JIT compiler.
+ENABLE_JIT := @ENABLE_JIT@
 
 ## end of configuration variables.
 
