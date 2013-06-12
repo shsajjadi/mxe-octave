@@ -86,7 +86,7 @@ SOURCEFORGE_MIRROR := freefr.dl.sourceforge.net
 PKG_MIRROR         := s3.amazonaws.com/mxe-pkg
 PKG_CDN            := d1yihgixbnrglp.cloudfront.net
 
-SHELL      := bash
+SHELL := @SHELL@
 
 INSTALL    := $(shell ginstall --help >/dev/null 2>&1 && echo g)install
 PATCH      := $(shell gpatch --help >/dev/null 2>&1 && echo g)patch
