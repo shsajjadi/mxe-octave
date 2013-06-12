@@ -445,3 +445,17 @@ cleanup-style:
             rm -f $(TOP_DIR)/tmp-cleanup-style; \
         )
 
+# Files to distribute
+include dist-files.mk
+
+PACKAGE_VERSION := @PACKAGE_VERSION@
+PACKAGE_TARNAME := @PACKAGE_TARNAME@
+
+distdir := $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
+
+.PHONY: dist
+dist:
+	rm -rf $(distdir)
+	mkdir $(distdir)
+	tar cf - $(DIST_FILES) | ( cd $(distdir) ; tar xpf - )
+	tar czf $(distdir).tar.gz $(distdir)
