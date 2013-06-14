@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 841da41f2e8c212555453f7af7b5aa60d7ea4be7
 $(PKG)_SUBDIR   := giflib-$($(PKG)_VERSION)
 $(PKG)_FILE     := giflib-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/giflib/giflib-5.x/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://giflib.git.sourceforge.net/git/gitweb.cgi?p=giflib/giflib;a=tags' | \

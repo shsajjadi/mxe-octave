@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 7bd66ecc1204b296580a499fd929d77b79e6e85a
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc boost libxml2 libxslt
+$(PKG)_DEPS     := boost libxml2 libxslt
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/xmlwrapp/files/xmlwrapp/' | \

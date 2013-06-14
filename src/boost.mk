@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := cddd6b4526a09152ddc5db856463eaa1dc29c5d9
 $(PKG)_SUBDIR   := boost_$(subst .,_,$($(PKG)_VERSION))
 $(PKG)_FILE     := boost_$(subst .,_,$($(PKG)_VERSION)).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/boost/boost/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc zlib bzip2 expat
+$(PKG)_DEPS     := zlib bzip2 expat
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.boost.org/users/download/' | \

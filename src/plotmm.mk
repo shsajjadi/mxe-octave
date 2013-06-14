@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 64da0930b7c8994d59769597917cca05df989258
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc gtkmm2
+$(PKG)_DEPS     := gtkmm2
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/plotmm/files/plotmm/' | \

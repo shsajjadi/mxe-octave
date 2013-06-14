@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := cea9601b3acd1484fd98441b49a15ea1c42057ec
 $(PKG)_SUBDIR   := postgresql-$($(PKG)_VERSION)
 $(PKG)_FILE     := postgresql-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://ftp.postgresql.org/pub/source/v$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc zlib openssl
+$(PKG)_DEPS     := zlib openssl
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_FLAGS_OPTION := $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS)

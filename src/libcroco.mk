@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 4b0dd540a47f2492b1ac7cd7e3ec63c2ef4c9c2a
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://ftp.gnome.org/pub/GNOME/sources/libcroco/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc glib libxml2
+$(PKG)_DEPS     := glib libxml2
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/browse/libcroco/refs/tags' | \

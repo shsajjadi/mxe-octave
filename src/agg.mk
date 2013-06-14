@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 08f23da64da40b90184a0414369f450115cdb328
 $(PKG)_SUBDIR   := agg-$($(PKG)_VERSION)
 $(PKG)_FILE     := agg-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.antigrain.com/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc freetype sdl
+$(PKG)_DEPS     := freetype sdl
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.antigrain.com/download/index.html' | \

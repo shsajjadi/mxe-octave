@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 9653e76dd14f0fbb750d7b438415890ab9fe2f4e
 $(PKG)_SUBDIR	:= ocaml-$($(PKG)_VERSION)
 $(PKG)_FILE		:= ocaml-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL		:= http://caml.inria.fr/pub/distrib/ocaml-4.00/$($(PKG)_FILE)
-$(PKG)_DEPS		:= gcc
+$(PKG)_DEPS		:=
 
 define $(PKG)_UPDATE
 	wget -q -O- 'http://caml.inria.fr/pub/distrib/ocaml-3.12' | \

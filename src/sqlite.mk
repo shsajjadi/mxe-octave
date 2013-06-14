@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := c464e0e3efe98227c6546b9b1e786b51b8b642fc
 $(PKG)_SUBDIR   := $(PKG)-autoconf-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-autoconf-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.sqlite.org/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.sqlite.org/download.html' | \

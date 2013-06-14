@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := b43573800e27361da78f05a2e98394521cfa04fc
 $(PKG)_SUBDIR   := $(PKG)-7.2
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.hpl.hp.com/personal/Hans_Boehm/$(PKG)/$(PKG)_source/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.hpl.hp.com/personal/Hans_Boehm/gc/gc_source/?C=M;O=D' | \

@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 91dfd25bedc02759051a6b3af05e61337a575028
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/lame/files/lame/' | \

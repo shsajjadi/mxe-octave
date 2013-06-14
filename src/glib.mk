@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := f695d4d3a6ded331e4d45f077a9774d6ca8a47e4
 $(PKG)_SUBDIR   := glib-$($(PKG)_VERSION)
 $(PKG)_FILE     := glib-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/glib/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc gettext pcre libiconv zlib libffi dbus
+$(PKG)_DEPS     := gettext pcre libiconv zlib libffi dbus
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/browse/glib/refs/tags' | \

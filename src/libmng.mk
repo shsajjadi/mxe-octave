@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := c21c84b614500ae1a41c6595d5f81c596e406ca2
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)-devel/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc zlib jpeg lcms1
+$(PKG)_DEPS     := zlib jpeg lcms1
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/libmng/files/libmng-devel/' | \

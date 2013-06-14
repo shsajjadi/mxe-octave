@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 670aaecfbab41747e3a8f1d80dd757eb01ac93cb
 $(PKG)_SUBDIR   := kisli-vmime-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://github.com/kisli/vmime/tarball/$($(PKG)_VERSION)/$(PKG)_FILE
-$(PKG)_DEPS     := gcc libiconv gnutls libgsasl pthreads zlib
+$(PKG)_DEPS     := libiconv gnutls libgsasl pthreads zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://github.com/kisli/vmime/commits/master' | \

@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 902c76d2b55a22610e2227abc4fd26cbe606a51c
 $(PKG)_SUBDIR   := hunspell-$($(PKG)_VERSION)
 $(PKG)_FILE     := hunspell-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/hunspell/Hunspell/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc libiconv gettext readline pthreads
+$(PKG)_DEPS     := libiconv gettext readline pthreads
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/hunspell/files/Hunspell/' | \

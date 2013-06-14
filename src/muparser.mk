@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 830383b1bcfa706be5a6ac8b7ba43f32f16a1497
 $(PKG)_SUBDIR   := $(PKG)_v$(subst .,_,$($(PKG)_VERSION))
 $(PKG)_FILE     := $(PKG)_v$(subst .,_,$($(PKG)_VERSION)).zip
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/Version $($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/muparser/files/muparser/' | \

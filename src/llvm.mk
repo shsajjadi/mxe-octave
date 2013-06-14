@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := b683e7294fcf69887c0d709025d4640f5dca755b
 $(PKG)_SUBDIR   := llvm-$($(PKG)_VERSION).src
 $(PKG)_FILE     := llvm-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://llvm.org/releases/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://llvm.org/releases/download.html' | \

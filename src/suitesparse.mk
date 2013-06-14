@@ -7,7 +7,7 @@ $(PKG)_SUBDIR   := SuiteSparse
 $(PKG)_FILE     := SuiteSparse-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.cise.ufl.edu/research/sparse/SuiteSparse/$($(PKG)_FILE)
 $(PKG)_URL_2    := https://distfiles.macports.org/SuiteSparse/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc blas lapack
+$(PKG)_DEPS     := blas lapack
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/' | \

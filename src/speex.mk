@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 52daa72572e844e5165315e208da539b2a55c5eb
 $(PKG)_SUBDIR   := speex-$($(PKG)_VERSION)
 $(PKG)_FILE     := speex-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://downloads.xiph.org/releases/speex/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.xiph.org/?p=speex.git;a=tags' | \

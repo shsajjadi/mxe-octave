@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 27931b00eb5d50bc477e32e2dda7440f4179e7ac
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://gstreamer.freedesktop.org/src/$(PKG)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc glib libxml2
+$(PKG)_DEPS     := glib libxml2
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://cgit.freedesktop.org/gstreamer/gstreamer/refs/tags' | \

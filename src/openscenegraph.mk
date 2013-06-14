@@ -8,7 +8,7 @@ $(PKG)_SUBDIR   := OpenSceneGraph-$($(PKG)_VERSION)
 $(PKG)_FILE     := OpenSceneGraph-$($(PKG)_VERSION).zip
 $(PKG)_URL      := http://www.openscenegraph.org/downloads/stable_releases/OpenSceneGraph-$($(PKG)_VERSION)/source/$($(PKG)_FILE)
 $(PKG)_URL_2    := http://distfiles.macports.org/OpenSceneGraph/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc curl ffmpeg freetype gdal giflib jasper jpeg libpng openexr tiff xine-lib zlib dcmtk qt
+$(PKG)_DEPS     := curl ffmpeg freetype gdal giflib jasper jpeg libpng openexr tiff xine-lib zlib dcmtk qt
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.openscenegraph.org/projects/osg/browser/OpenSceneGraph/tags?order=date&desc=1' | \

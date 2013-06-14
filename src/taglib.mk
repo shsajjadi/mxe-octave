@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := e657384ccf3284db2daba32dccece74534286012
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://developer.kde.org/~wheeler/files/src/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc zlib
+$(PKG)_DEPS     := zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://developer.kde.org/~wheeler/files/src/?C=M;O=D' | \

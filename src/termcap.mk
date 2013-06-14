@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 42dd1e6beee04f336c884f96314f0c96cc2578be
 $(PKG)_SUBDIR   := termcap-$($(PKG)_VERSION)
 $(PKG)_FILE     := termcap-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/termcap/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package termcap.' >&2;

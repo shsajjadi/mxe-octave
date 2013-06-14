@@ -8,7 +8,7 @@ $(PKG)_SUBDIR   := gd-$($(PKG)_VERSION)
 $(PKG)_FILE     := gd-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://www.libgd.org/releases/$($(PKG)_FILE)
 $(PKG)_URL_2    := http://ftp.uni-magdeburg.de/aftp/mirror/linux/slackware/source/l/gd/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc freetype libpng jpeg libxml2 pthreads
+$(PKG)_DEPS     := freetype libpng jpeg libxml2 pthreads
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package gd.' >&2;

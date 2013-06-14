@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 8508f26c84001d7bc949246affa03744fa1fd22e
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$(subst ~,-,$($(PKG)_VERSION)).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/FTGL Source/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc freetype
+$(PKG)_DEPS     := freetype
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/ftgl/files/FTGL Source/' | \

@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 8a77921b21c23926042c413f4a7a187a3656025b
 $(PKG)_SUBDIR   := libodbc++-$($(PKG)_VERSION)
 $(PKG)_FILE     := libodbc++-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/libodbcxx/libodbc++/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://libodbcxx.svn.sourceforge.net/viewvc/libodbcxx/tags/?sortby=date' | \

@@ -8,7 +8,7 @@ $(PKG)_SUBDIR   := openssl-$($(PKG)_VERSION)
 $(PKG)_FILE     := openssl-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.openssl.org/source/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.openssl.org/source/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc zlib libgcrypt
+$(PKG)_DEPS     := zlib libgcrypt
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE := ./config

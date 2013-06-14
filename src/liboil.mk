@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := f9d7103a3a4a4089f56197f81871ae9129d229ed
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(PKG).freedesktop.org/download/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://cgit.freedesktop.org/liboil/refs/tags' | \

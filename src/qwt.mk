@@ -8,7 +8,7 @@ $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).zip
 $(PKG)_WEBSITE  := http://qwt.sourceforge.net/
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc qt
+$(PKG)_DEPS     := qt
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/qwt/files/qwt/' | \

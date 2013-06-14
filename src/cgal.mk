@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 20c58ebc021754e8be35237bcda43b0084f60617
 $(PKG)_SUBDIR   := CGAL-$($(PKG)_VERSION)
 $(PKG)_FILE     := CGAL-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := https://gforge.inria.fr/frs/download.php/31176/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc boost gmp mpfr qt
+$(PKG)_DEPS     := boost gmp mpfr qt
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://gforge.inria.fr/frs/?group_id=52' | \

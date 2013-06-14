@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 23d1adf1e929a3fb159345d509918ad109e925ad
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://fribidi.org/download/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc glib
+$(PKG)_DEPS     := glib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://fribidi.org/download/?C=M;O=D' | \

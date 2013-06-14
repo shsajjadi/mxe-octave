@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 3f89f861209ce81a6bab1fd1998c0ef311712002
 $(PKG)_SUBDIR   := bzip2-$($(PKG)_VERSION)
 $(PKG)_FILE     := bzip2-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.bzip.org/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.bzip.org/downloads.html' | \

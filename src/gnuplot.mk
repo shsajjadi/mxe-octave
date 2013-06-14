@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 1ea21a628223159b0297ae65fe8293afd5aab3c0
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnuplot-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://sourceforge.net/projects/gnuplot/files/gnuplot/4.6.1/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package gnuplot.' >&2;

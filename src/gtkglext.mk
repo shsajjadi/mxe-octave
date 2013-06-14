@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := db9ce38ee555fd14f55083ec7f4ae30e5338d5cc
 $(PKG)_SUBDIR   := gtkglext-$($(PKG)_VERSION)
 $(PKG)_FILE     := gtkglext-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/gtkglext/gtkglext/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc gtk2
+$(PKG)_DEPS     := gtk2
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/cgit/gtkglext/refs/tags' | \

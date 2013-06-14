@@ -6,7 +6,7 @@ $(PKG)_CHECKSUM := d3531761f2754e81f72428d482c0689f0a5e064f
 $(PKG)_SUBDIR   := gnutls-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnutls-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/gnutls/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc nettle zlib
+$(PKG)_DEPS     := nettle zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.savannah.gnu.org/gitweb/?p=gnutls.git;a=tags' | \

@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := f1ab8986af7a1ffa6760f4bacf5622924639bf4a
 $(PKG)_SUBDIR   := cppunit-$($(PKG)_VERSION)
 $(PKG)_FILE     := cppunit-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/cppunit/files/cppunit/' | \

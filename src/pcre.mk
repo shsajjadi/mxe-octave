@@ -8,7 +8,7 @@ $(PKG)_SUBDIR   := pcre-$($(PKG)_VERSION)
 $(PKG)_FILE     := pcre-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/pcre/pcre/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/pcre/files/pcre/' | \

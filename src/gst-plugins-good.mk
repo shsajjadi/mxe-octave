@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 15addda7c6322a42c904aaf1c1d0b5d5a63f908b
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://gstreamer.freedesktop.org/src/$(PKG)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc glib libxml2 gstreamer gst-plugins-base liboil libshout cairo flac gtk2 jpeg libpng speex taglib
+$(PKG)_DEPS     := glib libxml2 gstreamer gst-plugins-base liboil libshout cairo flac gtk2 jpeg libpng speex taglib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://cgit.freedesktop.org/gstreamer/gst-plugins-good/refs/tags' | \

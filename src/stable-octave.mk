@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 4563c3fdb15ac76419f78b8ad8a9b1ba3484a7aa
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
-$(PKG)_DEPS     := arpack blas curl fftw fltk fontconfig gcc glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate readline suitesparse texinfo zlib
+$(PKG)_DEPS     := arpack blas curl fftw fltk fontconfig glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate readline suitesparse texinfo zlib
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package octave.' >&2;

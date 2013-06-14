@@ -2,16 +2,16 @@
 # See index.html for further information.
 
 PKG             := bfd
-$(PKG)_IGNORE    = $(binutils_IGNORE)
-$(PKG)_CHECKSUM  = $(binutils_CHECKSUM)
-$(PKG)_SUBDIR    = $(binutils_SUBDIR)
-$(PKG)_FILE      = $(binutils_FILE)
-$(PKG)_URL       = $(binutils_URL)
-$(PKG)_URL_2     = $(binutils_URL2)
-$(PKG)_DEPS     := gcc
+$(PKG)_IGNORE    = $(build-binutils_IGNORE)
+$(PKG)_CHECKSUM  = $(build-binutils_CHECKSUM)
+$(PKG)_SUBDIR    = $(build-binutils_SUBDIR)
+$(PKG)_FILE      = $(build-binutils_FILE)
+$(PKG)_URL       = $(build-binutils_URL)
+$(PKG)_URL_2     = $(build-binutils_URL2)
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    echo $(binutils_VERSION)
+    echo $(build-binutils_VERSION)
 endef
 
 define $(PKG)_BUILD

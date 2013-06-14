@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 62fe0703fd8691e4536e1012317406bdb72594cf
 $(PKG)_SUBDIR   := brianb-mdbtools-004cc9f
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://github.com/brianb/$(PKG)/tarball/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc glib
+$(PKG)_DEPS     := glib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://github.com/brianb/mdbtools/tags' | \

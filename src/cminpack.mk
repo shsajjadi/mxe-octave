@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 8bf19ce37b486707c402a046c33d823c9e359410
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://devernay.free.fr/hacks/cminpack/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://devernay.free.fr/hacks/cminpack/index.html' | \

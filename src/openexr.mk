@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 91d0d4e69f06de956ec7e0710fc58ec0d4c4dc2b
 $(PKG)_SUBDIR   := openexr-$($(PKG)_VERSION)
 $(PKG)_FILE     := openexr-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.savannah.nongnu.org/releases/openexr/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc ilmbase pthreads zlib
+$(PKG)_DEPS     := ilmbase pthreads zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.openexr.com/downloads.html' | \

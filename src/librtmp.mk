@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := b65ce7708ae79adb51d1f43dd0b6d987076d7c42
 $(PKG)_SUBDIR   := rtmpdump-2.3
 $(PKG)_FILE     := rtmpdump-2.3.tgz
 $(PKG)_URL      := http://rtmpdump.mplayerhq.hu/download/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc gnutls
+$(PKG)_DEPS     := gnutls
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package librtmp.' >&2;

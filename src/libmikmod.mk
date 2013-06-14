@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := f16fc09ee643af295a8642f578bda97a81aaf744
 $(PKG)_SUBDIR   := libmikmod-$($(PKG)_VERSION)
 $(PKG)_FILE     := libmikmod-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://mikmod.raphnet.net/files/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc pthreads
+$(PKG)_DEPS     := pthreads
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://mikmod.raphnet.net/' | \

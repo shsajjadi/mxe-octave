@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := db12f2bb9a3d28d69834832e2e04a255acfd8a6d
 $(PKG)_SUBDIR   := gtkglarea-$($(PKG)_VERSION)
 $(PKG)_FILE     := gtkglarea-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://mirrors.ircam.fr/pub/GNOME/sources/gtkglarea/2.0/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc gtk2 freeglut
+$(PKG)_DEPS     := gtk2 freeglut
 
 define $(PKG)_UPDATE
     wget -q -O- 'mirrors.ircam.fr/pub/GNOME/sources/gtkglarea/2.0' | \

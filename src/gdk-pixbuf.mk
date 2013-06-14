@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 434dfac552fff8bc77bc2dca0e6ed8c268f8880d
 $(PKG)_SUBDIR   := gdk-pixbuf-$($(PKG)_VERSION)
 $(PKG)_FILE     := gdk-pixbuf-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/gdk-pixbuf/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc glib libpng jpeg tiff jasper libiconv
+$(PKG)_DEPS     := glib libpng jpeg tiff jasper libiconv
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/browse/gdk-pixbuf/refs/tags' | \

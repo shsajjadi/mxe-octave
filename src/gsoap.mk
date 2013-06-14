@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := b1c17d501361939c6d419eeb2aa26e7fd2b586fe
 $(PKG)_SUBDIR   := gsoap-$(call SHORT_PKG_VERSION,$(PKG))
 $(PKG)_FILE     := gsoap_$($(PKG)_VERSION).zip
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/gsoap2/gSOAP/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc gnutls libgcrypt libntlm
+$(PKG)_DEPS     := gnutls libgcrypt libntlm
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/gsoap2/files/gSOAP/' | \
