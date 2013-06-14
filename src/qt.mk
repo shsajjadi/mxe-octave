@@ -7,13 +7,25 @@ $(PKG)_CHECKSUM := bc352a283610e0cd2fe0dbedbc45613844090fcb
 $(PKG)_SUBDIR   := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://releases.qt-project.org/qt4/source/$($(PKG)_FILE)
-ifeq ($(MXE_SYSTEM),mingw)
-  $(PKG)_DEPS   := gcc libodbc++ postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
 
-  $(PKG)_CONFIGURE_ENV := \
-    OPENSSL_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l openssl`" \
-    PSQL_LIBS="-lpq -lsecur32 `'$(MXE_PKG_CONFIG)' --libs-only-l openssl` -lws2_32" \
-    SYBASE_LIBS="-lsybdb `'$(MXE_PKG_CONFIG)' --libs-only-l gnutls` -liconv -lws2_32"
+ifeq ($(MXE_SYSTEM),mingw)
+  ifeq ($(MXE_NATIVE_BUILD),yes)
+    $(PKG)_DEPS   := gcc freetds openssl zlib libpng jpeg libmng tiff dbus
+
+    $(PKG)_CONFIGURE_ENV := \
+      OPENSSL_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l openssl`" \
+      QTDIR='$(HOST_PREFIX)' 
+
+  else
+    $(PKG)_DEPS   := gcc libodbc++ postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
+
+    $(PKG)_CONFIGURE_ENV := \
+      OPENSSL_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l openssl`" \
+      PSQL_LIBS="-lpq -lsecur32 `'$(MXE_PKG_CONFIG)' --libs-only-l openssl` -lws2_32" \
+      SYBASE_LIBS="-lsybdb `'$(MXE_PKG_CONFIG)' --libs-only-l gnutls` -liconv -lws2_32"
+
+  endif
+
 else
   $(PKG)_DEPS   := gcc postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
 
@@ -22,10 +34,30 @@ else
     LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
 endif
 
-ifeq ($(MXE_NATIVE_BUILD),yes)
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  $(PKG)_CONFIGURE_CMD := configure.exe
   $(PKG)_CONFIGURE_INCLUDE_OPTION := -I '$(HOST_INCDIR)'
-  $(PKG)_CONFIGURE_DATABASE_OPTION := -qt-sql-psql
+  $(PKG)_CONFIGURE_LIBPATH_OPTION := -L '$(HOST_LIBDIR)'
+  $(PKG)_CONFIGURE_DATABASE_OPTION := 
+  $(PKG)_CONFIGURE_PLATFORM_OPTION := -platform win32-g++
+  $(PKG)_CONFIGURE_EXTRA_OPTION := 
 else
+  $(PKG)_CONFIGURE_CMD := configure
+  $(PKG)_CONFIGURE_EXTRA_OPTION := \
+      -prefix-install \
+      -make libs \
+      -openssl-linked \
+      -no-glib \
+      -no-gstreamer \
+      -no-reduce-exports \
+      -no-ssse3 \
+      -no-rpath \
+      -system-sqlite \
+      -device-option PKG_CONFIG='$(MXE_PKG_CONFIG)' \
+      -force-pkg-config  \
+      -dbus-linked \
+      -v
+
   ifeq ($(MXE_SYSTEM),mingw)
     $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION := \
       -device-option CROSS_COMPILE=$(MXE_TOOL_PREFIX)
@@ -43,35 +75,30 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    ## syncqt needs QTDIR set to find the sources
     cd '$(1)' && QTDIR='$(1)' ./bin/syncqt
     cd '$(1)' && \
         $($(PKG)_CONFIGURE_ENV) \
-        ./configure \
+        ./$($(PKG)_CONFIGURE_CMD) \
         $($(PKG)_CONFIGURE_INCLUDE_OPTION) \
+        $($(PKG)_CONFIGURE_LIBPATH_OPTION) \
         -opensource \
         -confirm-license \
         -fast \
         $($(PKG)_CONFIGURE_PLATFORM_OPTION) \
         $($(PKG)_CONFIGURE_CROSS_COMPILE_OPTION) \
-        -device-option PKG_CONFIG='$(MXE_PKG_CONFIG)' \
-        -force-pkg-config \
+        $($(PKG)_CONFIGURE_EXTRA_OPTION) \
         -release \
         -exceptions \
         -shared \
         -prefix '$(HOST_PREFIX)' \
-        -prefix-install \
         -script \
         -no-iconv \
         -opengl desktop \
         -no-webkit \
-        -no-glib \
-        -no-gstreamer \
         -no-phonon \
         -no-phonon-backend \
         -accessibility \
-        -no-reduce-exports \
-        -no-rpath \
-        -make libs \
         -nomake demos \
         -nomake docs \
         -nomake examples \
@@ -81,13 +108,14 @@ define $(PKG)_BUILD
         -system-libjpeg \
         -system-libtiff \
         -system-libmng \
-        -system-sqlite \
-        -openssl-linked \
-        -dbus-linked \
-        -no-sse2 -no-ssse3 \
-        -v
+        -no-sse2 
 
-    $(MAKE) -C '$(1)' -j '$(JOBS)'
+    # need to 'install' mkspecs for the native mingw to build during its build
+    if [ "$(MXE_NATIVE_MINGW_BUILD)" = yes ]; then \
+      cp -r '$(1)/mkspecs' '$(HOST_PREFIX)/'; \
+    fi
+
+    $(MAKE) -C '$(1)' -j '$(JOBS)' 
     $(MAKE) -C '$(1)' -j 1 install
     $(LN_SF) '$(HOST_BINDIR)/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
     $(LN_SF) '$(HOST_BINDIR)/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)roc'
