@@ -33,7 +33,7 @@ BUILD_SYSTEM := $(shell tools/config.guess)
 BUILD_SHARED := @BUILD_SHARED@
 BUILD_STATIC := @BUILD_STATIC@
 
-USE_PIC_FLAG := @BUILD_STATIC@
+USE_PIC_FLAG := @USE_PIC_FLAG@
 
 # Attempt to build Octave and dependencies with 64-bit indexing
 # enabled (experimental; requires 64-bit system and compiler).
