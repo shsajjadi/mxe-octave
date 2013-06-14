@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := d809cab382c7a9d015491c69051a9d1c1a1a44f1
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc ffmpeg flac lame libgomp libmad libsndfile vorbis
+$(PKG)_DEPS     := ffmpeg flac lame libgomp libmad libsndfile vorbis
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/sox/files/sox/' | \

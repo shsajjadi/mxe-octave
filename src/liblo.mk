@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 21942c8f19e9829b5842cb85352f98c49dfbc823
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc pthreads
+$(PKG)_DEPS     := pthreads
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/liblo/files/liblo/' | \

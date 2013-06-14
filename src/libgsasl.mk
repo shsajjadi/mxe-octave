@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 08fd5dfdd3d88154cf06cb0759a732790c47b4f7
 $(PKG)_SUBDIR   := libgsasl-$($(PKG)_VERSION)
 $(PKG)_FILE     := libgsasl-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/gsasl/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc libiconv libidn libntlm libgcrypt nettle
+$(PKG)_DEPS     := libiconv libidn libntlm libgcrypt nettle
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.savannah.gnu.org/gitweb/?p=gsasl.git;a=tags' | \

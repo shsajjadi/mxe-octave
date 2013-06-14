@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := e293a56695e7447cf5caa395932f1f0d41e13ffc
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/arma/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc boost blas lapack
+$(PKG)_DEPS     := boost blas lapack
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/arma/files/' | \

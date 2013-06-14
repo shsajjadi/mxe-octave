@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 6e4981f4ce75932ec62df6523f577c327f885ba0
 $(PKG)_SUBDIR   := vigra-$(word 1,$(subst -, ,$($(PKG)_VERSION)))
 $(PKG)_FILE     := vigra-$($(PKG)_VERSION)-src.tar.gz
 $(PKG)_URL      := http://hci.iwr.uni-heidelberg.de/vigra/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc jpeg tiff libpng openexr
+$(PKG)_DEPS     := jpeg tiff libpng openexr
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://hci.iwr.uni-heidelberg.de/vigra/' | \

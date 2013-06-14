@@ -10,14 +10,14 @@ $(PKG)_URL      := http://releases.qt-project.org/qt4/source/$($(PKG)_FILE)
 
 ifeq ($(MXE_SYSTEM),mingw)
   ifeq ($(MXE_NATIVE_BUILD),yes)
-    $(PKG)_DEPS   := gcc freetds openssl zlib libpng jpeg libmng tiff dbus
+    $(PKG)_DEPS   := freetds openssl zlib libpng jpeg libmng tiff dbus
 
     $(PKG)_CONFIGURE_ENV := \
       OPENSSL_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l openssl`" \
       QTDIR='$(HOST_PREFIX)' 
 
   else
-    $(PKG)_DEPS   := gcc libodbc++ postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
+    $(PKG)_DEPS   := libodbc++ postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
 
     $(PKG)_CONFIGURE_ENV := \
       OPENSSL_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l openssl`" \
@@ -27,7 +27,7 @@ ifeq ($(MXE_SYSTEM),mingw)
   endif
 
 else
-  $(PKG)_DEPS   := gcc postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
+  $(PKG)_DEPS   := postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
 
   $(PKG)_CONFIGURE_ENV := \
     CPPFLAGS='$(HOST_INCDIR)/dbus-1.0' \

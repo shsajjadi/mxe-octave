@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 327308c777009a41bbabb9159b18c4c0ac069537
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.bz2
 $(PKG)_URL      := http://icculus.org/physfs/downloads/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc zlib
+$(PKG)_DEPS     := zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://icculus.org/physfs/downloads/?M=D' | \

@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 4463fafb8420a91825e165da7a296aaabd70abea
 $(PKG)_SUBDIR   := $(PKG)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc qt zlib
+$(PKG)_DEPS     := qt zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/$(PKG)/files/$(PKG)/' | \

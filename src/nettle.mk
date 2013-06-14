@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 1061754feb69dd01354525fa7eb6154b28ac887d
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.lysator.liu.se/~nisse/archive/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc gmp
+$(PKG)_DEPS     := gmp
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.lysator.liu.se/~nisse/archive/' | \

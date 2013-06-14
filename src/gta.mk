@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := dffeb65b0dad66860ab62df1cf8570ea23517c2c
 $(PKG)_SUBDIR   := libgta-$($(PKG)_VERSION)
 $(PKG)_FILE     := libgta-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://download.savannah.gnu.org/releases/gta/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc zlib bzip2 xz
+$(PKG)_DEPS     := zlib bzip2 xz
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.savannah.gnu.org/gitweb/?p=gta.git;a=tags' | \

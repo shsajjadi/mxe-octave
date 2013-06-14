@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM = $(w32api_CHECKSUM)
 $(PKG)_SUBDIR   = $(w32api_SUBDIR)
 $(PKG)_FILE     = $(w32api_FILE)
 $(PKG)_URL      = $(w32api_URL)
-$(PKG)_DEPS     = gcc
+$(PKG)_DEPS     =
 
 define $(PKG)_UPDATE
     echo "$(w32api_VERSION)"

@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := f07716c470603729a55b70f5af68f4a6807097eb
 $(PKG)_SUBDIR   := portaudio
 $(PKG)_FILE     := pa_stable_v$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://www.portaudio.com/archives/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.portaudio.com/download.html' | \

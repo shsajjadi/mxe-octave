@@ -8,9 +8,9 @@ $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR)-source.tar.gz
 $(PKG)_URL      := http://fltk.org/pub/fltk/$($(PKG)_VERSION)/$($(PKG)_FILE)
 ifeq ($(MXE_SYSTEM),mingw)
-  $(PKG)_DEPS   := gcc zlib jpeg libpng pthreads uuid
+  $(PKG)_DEPS   := zlib jpeg libpng pthreads uuid
 else
-  $(PKG)_DEPS   := gcc zlib jpeg libpng pthreads freetype
+  $(PKG)_DEPS   := zlib jpeg libpng pthreads freetype
 endif
 
 define $(PKG)_UPDATE

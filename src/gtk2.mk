@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := baf5c73e186352cad767392a6b55840be0326ddc
 $(PKG)_SUBDIR   := gtk+-$($(PKG)_VERSION)
 $(PKG)_FILE     := gtk+-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/gtk+/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc gettext libpng jpeg tiff jasper glib atk pango cairo gdk-pixbuf
+$(PKG)_DEPS     := gettext libpng jpeg tiff jasper glib atk pango cairo gdk-pixbuf
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/browse/gtk+/refs/tags' | \

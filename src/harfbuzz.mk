@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := c99ed7881bbeadbb9fbeb544b28d2174ddac5910
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://www.freedesktop.org/software/$(PKG)/release/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc glib cairo freetype
+$(PKG)_DEPS     := glib cairo freetype
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://cgit.freedesktop.org/harfbuzz/refs/tags' | \

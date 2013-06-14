@@ -2,16 +2,16 @@
 # See index.html for further information.
 
 PKG             := libgomp
-$(PKG)_IGNORE    = $(gcc_IGNORE)
-$(PKG)_CHECKSUM  = $(gcc_CHECKSUM)
-$(PKG)_SUBDIR    = $(gcc_SUBDIR)
-$(PKG)_FILE      = $(gcc_FILE)
-$(PKG)_URL       = $(gcc_URL)
-$(PKG)_URL_2     = $(gcc_URL_2)
-$(PKG)_DEPS     := gcc pthreads
+$(PKG)_IGNORE    = $(build-gcc_IGNORE)
+$(PKG)_CHECKSUM  = $(build-gcc_CHECKSUM)
+$(PKG)_SUBDIR    = $(build-gcc_SUBDIR)
+$(PKG)_FILE      = $(build-gcc_FILE)
+$(PKG)_URL       = $(build-gcc_URL)
+$(PKG)_URL_2     = $(build-gcc_URL_2)
+$(PKG)_DEPS     := pthreads
 
 define $(PKG)_UPDATE
-    echo $(gcc_VERSION)
+    echo $(build-gcc_VERSION)
 endef
 
 define $(PKG)_BUILD

@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 2c4b34245107395bc9103649bb2af1c1088a3f7c
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://gstreamer.freedesktop.org/src/$(PKG)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc glib libxml2 gstreamer liboil pango ogg vorbis theora
+$(PKG)_DEPS     := glib libxml2 gstreamer liboil pango ogg vorbis theora
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://cgit.freedesktop.org/gstreamer/gst-plugins-base/refs/tags' | \

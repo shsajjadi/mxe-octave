@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := a11768b8a168ec607750842bbef406f11547b904
 $(PKG)_SUBDIR   := lzo-$($(PKG)_VERSION)
 $(PKG)_FILE     := lzo-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.oberhumer.com/opensource/lzo/download/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.oberhumer.com/opensource/lzo/download/' | \

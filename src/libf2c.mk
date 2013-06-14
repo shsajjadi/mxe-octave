@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := f71066b41695738dec2261de71eaf02a1aaffe8b
 $(PKG)_SUBDIR   :=
 $(PKG)_FILE     := $(PKG).zip
 $(PKG)_URL      := http://www.netlib.org/f2c/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     echo 1

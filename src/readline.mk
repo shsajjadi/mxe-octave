@@ -14,7 +14,7 @@ else
   $(PKG)_TERMCAP_LIB := ncurses
 endif
 
-$(PKG)_DEPS := gcc $($(PKG)_TERMCAP_LIB)
+$(PKG)_DEPS := $($(PKG)_TERMCAP_LIB)
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://tiswww.case.edu/php/chet/readline/rltop.html' | \

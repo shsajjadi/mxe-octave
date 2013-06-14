@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 19bbef24132b238e99744bb35194c6dadece98f9
 $(PKG)_SUBDIR   := $(PKG)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc qt
+$(PKG)_DEPS     := qt
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/qjson/files/qjson/' | \

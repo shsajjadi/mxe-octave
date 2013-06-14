@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := f8072177f1ffe1b9bb8759a9e3e6349e1eac1f66
 $(PKG)_SUBDIR   := libxslt-$($(PKG)_VERSION)
 $(PKG)_FILE     := libxslt-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://xmlsoft.org/libxslt/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc libxml2 libgcrypt
+$(PKG)_DEPS     := libxml2 libgcrypt
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/browse/libxslt/refs/tags' | \

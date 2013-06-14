@@ -1,7 +1,7 @@
 # This file is part of MXE.
 # See index.html for further information.
 
-PKG             := binutils
+PKG             := build-binutils
 $(PKG)_IGNORE   :=
 $(PKG)_CHECKSUM := 587fca86f6c85949576f4536a90a3c76ffc1a3e1
 $(PKG)_SUBDIR   := binutils-$($(PKG)_VERSION)
@@ -17,7 +17,6 @@ define $(PKG)_UPDATE
     head -1
 endef
 
-ifneq ($(USE_SYSTEM_GCC),yes)
 define $(PKG)_BUILD
     # install config.guess for general use
     $(INSTALL) -d '$(BUILD_TOOLS_PREFIX)/bin'
@@ -41,7 +40,3 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j 1 install
     $(MAKE) -C '$(1)' -j 1 DESTDIR=$(TOP_DIR)/cross-tools install
 endef
-else
-define $(PKG)_BUILD
-endef
-endif

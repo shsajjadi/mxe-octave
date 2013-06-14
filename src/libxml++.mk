@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 446714be0becb1d1bca914a9a545af96a24de26e
 $(PKG)_SUBDIR   := libxml++-$($(PKG)_VERSION)
 $(PKG)_FILE     := libxml++-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/GNOME/sources/libxml++/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc libxml2 glibmm
+$(PKG)_DEPS     := libxml2 glibmm
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/browse/libxml++/refs/tags' | \

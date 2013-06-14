@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := be7d67e50d72ff067b2c0291311bc283add36965
 $(PKG)_SUBDIR   := libiconv-$($(PKG)_VERSION)
 $(PKG)_FILE     := libiconv-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/pub/gnu/libiconv/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.gnu.org/software/libiconv/' | \

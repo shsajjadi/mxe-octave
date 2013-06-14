@@ -28,10 +28,10 @@ else
 endif
 BUILD_SYSTEM := $(shell tools/config.guess)
 
-# Enable shared or static libs, or perhaps both.  At least one 
-# package uses --with instead of --enable.  Probably it doesn't
+# Enable shared or static libs, or perhaps both.  Probably it doesn't
 # make sense to disable both...
 BUILD_SHARED := @BUILD_SHARED@
+BUILD_STATIC := @BUILD_STATIC@
 
 USE_PIC_FLAG := @BUILD_STATIC@
 
@@ -62,6 +62,7 @@ endif
 BUILD_TOOLS_PREFIX := $(PWD)/usr
 HOST_PREFIX := $(PWD)/usr/$(TARGET)
 
+# At least one package uses --with instead of --enable.  
 ifeq ($(BUILD_SHARED),yes)
   ifeq ($(BUILD_STATIC),yes)
     ENABLE_SHARED_OR_STATIC := --enable-shared --enable-static
@@ -95,7 +96,7 @@ WGET       := wget --no-check-certificate \
                    --user-agent=$(shell wget --version | \
                    $(SED) -n 's,GNU \(Wget\) \([0-9.]*\).*,\1/\2,p')
 
-REQUIREMENTS := bash bzip2 gcc $(MAKE) openssl $(PATCH) $(PERL) \
+REQUIREMENTS := bash bzip2 $(MAKE) openssl $(PATCH) $(PERL) \
                 $(SED) unzip wget xz
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
@@ -104,10 +105,19 @@ endif
 
 LIBTOOL     := libtool
 LIBTOOLIZE  := libtoolize
-BUILD_TOOLS := $(patsubst src/%.mk, %, $(wildcard src/build-*.mk))
+
+## Build tools are tools that we need to build everything else.
+## They run on the build system.  Some, like gcc and binutils may
+## generate output that runs on the host system (TARGET in MXE terms).
+ALL_BUILD_TOOLS := $(patsubst src/%.mk, %, $(wildcard src/build-*.mk))
+BUILD_COMPILER_TOOLS := build-gcc build-binutils
+BUILD_TOOLS := $(ALL_BUILD_TOOLS)
 # Building flex for native mingw fails, so disable it.
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   BUILD_TOOLS := $(filter-out build-flex, $(BUILD_TOOLS))
+endif
+ifeq ($(USE_SYSTEM_GCC),yes)
+  BUILD_TOOLS := $(filter-out $(BUILD_COMPILER_TOOLS), $(BUILD_TOOLS))
 endif
 
 STAMP_DIR  := $(PWD)/installed-packages
@@ -118,7 +128,7 @@ PKG_DIR    := $(PWD)/pkg
 TMP_DIR     = $(PWD)/tmp-$(1)
 TOP_DIR    := $(PWD)
 MAKEFILE   := $(TOP_DIR)/Makefile
-PKGS       := $(filter-out $(BUILD_TOOLS), $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html'))
+PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html'))
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   PATH := $(HOST_PREFIX)/bin:$(PATH)
@@ -225,7 +235,7 @@ UNPACK_ARCHIVE = \
     $(if $(filter %.tar.lzma,$(1)),xz -dc -F lzma '$(1)' | tar xf -, \
     $(if $(filter %.tar.xz,$(1)),xz -dc '$(1)' | tar xf -, \
     $(if $(filter %.zip,     $(1)),unzip -q '$(1)', \
-    $(error Unknown archive format: $(1)))))))))
+    $(error Unknown archive format for $(2): $(1)))))))))
 else
 UNPACK_ARCHIVE = \
     $(if $(filter %.tgz,     $(1)),tar xzf '$(1)', \
@@ -234,11 +244,11 @@ UNPACK_ARCHIVE = \
     $(if $(filter %.tar.lzma,$(1)),xz -dc -F lzma '$(1)' | tar xf -, \
     $(if $(filter %.tar.xz,$(1)),xz -dc '$(1)' | tar xf -, \
     $(if $(filter %.zip,     $(1)),unzip -q '$(1)', \
-    $(error Unknown archive format: $(1))))))))
+    $(error Unknown archive format for $(2): $(1))))))))
 endif
 
 UNPACK_PKG_ARCHIVE = \
-    $(call UNPACK_ARCHIVE,$(PKG_DIR)/$($(1)_FILE))
+    $(call UNPACK_ARCHIVE,$(PKG_DIR)/$($(1)_FILE),$(1))
 
 PKG_CHECKSUM = \
     openssl sha1 '$(PKG_DIR)/$($(1)_FILE)' 2>/dev/null | $(SED) -n 's,^.*\([0-9a-f]\{40\}\)$$,\1,p'
@@ -279,7 +289,7 @@ all: octave
 .PHONY: all-packages
 all-packages: $(PKGS)
 
-$(PKGS): $(BUILD_TOOLS)
+$(PKGS): $(BUILD_TOOLS) cmake-toolchain-file.stamp
 
 .PHONY: msys-base
 msys-base:  $(MSYS_BASE_PACKAGES)
@@ -334,7 +344,7 @@ $(eval $(subst #,$(newline),$(shell \
         '$(TOP_DIR)/index.html' \
 )))
 
-include $(patsubst %,$(TOP_DIR)/src/%.mk,$(BUILD_TOOLS))
+include $(patsubst %,$(TOP_DIR)/src/%.mk,$(ALL_BUILD_TOOLS))
 include $(patsubst %,$(TOP_DIR)/src/%.mk,$(PKGS))
 
 .PHONY: download
@@ -415,6 +425,7 @@ clean:
 	rm -rf $(STAMP_DIR) $(MSYS_INFO_DIR) $(LOG_DIR)
 	rm -rf $(MSYS_BASE_DIR) $(NOTEPAD_BASE_DIR)
 	rm -rf native-tools cross-tools octave gnuplot
+	rm -f Makefile cmake-toolchain-file.stamp
 
 .PHONY: clean-pkg
 clean-pkg:
@@ -460,6 +471,43 @@ cleanup-style:
                      cp $(TOP_DIR)/tmp-cleanup-style $(FILE); }; \
             rm -f $(TOP_DIR)/tmp-cleanup-style; \
         )
+
+define build-cmake-toolchain-file
+    # create the CMake toolchain file
+    [ -d '$(dir $(CMAKE_TOOLCHAIN_FILE))' ] || mkdir -p '$(dir $(CMAKE_TOOLCHAIN_FILE))'
+    (if [ $(MXE_SYSTEM) = mingw ]; then \
+       echo 'set(CMAKE_SYSTEM_NAME Windows)'; \
+       echo 'set(MSYS 1)'; \
+     fi; \
+     if [ $(BUILD_SHARED) = yes ]; then \
+       echo 'set(BUILD_SHARED_LIBS ON)'; \
+     else \
+       echo 'set(BUILD_SHARED_LIBS OFF)'; \
+     fi; \
+     if [ $(BUILD_STATIC) = yes ]; then \
+       echo 'set(BUILD_STATIC_LIBS ON)'; \
+     else \
+       echo 'set(BUILD_STATIC_LIBS OFF)'; \
+     fi; \
+     echo 'set(CMAKE_BUILD_TYPE Release)'; \
+     echo 'set(CMAKE_FIND_ROOT_PATH $(HOST_PREFIX))'; \
+     echo 'set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)'; \
+     echo 'set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)'; \
+     echo 'set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)'; \
+     echo 'set(CMAKE_C_COMPILER $(MXE_CC))'; \
+     echo 'set(CMAKE_CXX_COMPILER $(MXE_CXX))'; \
+     echo 'set(CMAKE_Fortran_COMPILER $(MXE_F77))'; \
+     echo 'set(CMAKE_RC_COMPILER $(MXE_WINDRES))'; \
+     echo 'set(PKG_CONFIG_EXECUTABLE $(MXE_PKG_CONFIG))'; \
+     echo 'set(QT_QMAKE_EXECUTABLE $(MXE_QMAKE))'; \
+     echo 'set(CMAKE_INSTALL_PREFIX $(HOST_PREFIX) CACHE PATH "Installation Prefix")'; \
+     echo 'set(CMAKE_BUILD_TYPE Release CACHE STRING "Debug|Release|RelWithDebInfo|MinSizeRel")') \
+     > '$(CMAKE_TOOLCHAIN_FILE)'
+endef
+
+cmake-toolchain-file.stamp:
+	$(build-cmake-toolchain-file)
+	touch cmake-toolchain-file.stamp
 
 # Files to distribute
 include dist-files.mk

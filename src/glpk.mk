@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 35e16d3167389b6bc75eb51b4b48590db59f789c
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := glpk-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/glpk/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package glpk.' >&2;

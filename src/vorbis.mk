@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 8dae60349292ed76db0e490dc5ee51088a84518b
 $(PKG)_SUBDIR   := libvorbis-$($(PKG)_VERSION)
 $(PKG)_FILE     := libvorbis-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://downloads.xiph.org/releases/vorbis/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc ogg
+$(PKG)_DEPS     := ogg
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.xiph.org/downloads/' | \

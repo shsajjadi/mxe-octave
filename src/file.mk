@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := df8ffe8759ec8cd85a98dc98e858563ea2555f64
 $(PKG)_SUBDIR   := file-$($(PKG)_VERSION)
 $(PKG)_FILE     := file-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.astron.com/pub/file/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc libgnurx
+$(PKG)_DEPS     := libgnurx
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'ftp://ftp.astron.com/pub/file/' | \

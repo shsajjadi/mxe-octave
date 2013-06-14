@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 92e64fd5a6428bda6ade2c3cde475b76455cd7dd
 $(PKG)_SUBDIR   := libidn-$($(PKG)_VERSION)
 $(PKG)_FILE     := libidn-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/libidn/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc gettext libiconv
+$(PKG)_DEPS     := gettext libiconv
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.savannah.gnu.org/gitweb/?p=libidn.git;a=tags' | \

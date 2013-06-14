@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := cc936a440084f159cc46dab9018f1353f8bee80a
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://liboauth.sourceforge.net/pool/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc curl openssl
+$(PKG)_DEPS     := curl openssl
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://liboauth.sourceforge.net/' | \

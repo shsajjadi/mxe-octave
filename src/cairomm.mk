@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := f08bf8a331067f0d1e876523f07238fba6b26b99
 $(PKG)_SUBDIR   := cairomm-$($(PKG)_VERSION)
 $(PKG)_FILE     := cairomm-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://cairographics.org/releases/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc cairo libsigc++
+$(PKG)_DEPS     := cairo libsigc++
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://cairographics.org/releases/?C=M;O=D' | \

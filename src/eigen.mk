@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 7e1674420a8eef7e90e1875ef5b9e828fb9db381
 $(PKG)_SUBDIR   := $(PKG)-$(PKG)-b23437e61a07
 $(PKG)_FILE     := $($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://bitbucket.org/$(PKG)/$(PKG)/get/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://eigen.tuxfamily.org/index.php?title=Main_Page#Download' | \

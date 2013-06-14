@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 2b96800280fee41eed767289620172f5226c9c4f
 $(PKG)_SUBDIR   := xapian-core-$($(PKG)_VERSION)
 $(PKG)_FILE     := xapian-core-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://oligarchy.co.uk/xapian/$($(PKG)_VERSION)/xapian-core-$($(PKG)_VERSION).tar.gz
-$(PKG)_DEPS     := gcc zlib
+$(PKG)_DEPS     := zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- http://xapian.org/download | \

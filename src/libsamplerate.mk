@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := e5fe82c4786be2fa33ca6bd4897db4868347fe70
 $(PKG)_SUBDIR   := libsamplerate-$($(PKG)_VERSION)
 $(PKG)_FILE     := libsamplerate-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.mega-nerd.com/SRC/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.mega-nerd.com/SRC/download.html' | \

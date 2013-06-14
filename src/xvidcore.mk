@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 56e065d331545ade04c63c91153b9624b51d6e1b
 $(PKG)_SUBDIR   := xvidcore/build/generic
 $(PKG)_FILE     := xvidcore-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://downloads.xvid.org/downloads/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc pthreads
+$(PKG)_DEPS     := pthreads
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.xvid.org/' | \

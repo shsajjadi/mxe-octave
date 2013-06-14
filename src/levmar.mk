@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 118bd20b55ab828d875f1b752cb5e1238258950b
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://www.ics.forth.gr/~lourakis/$(PKG)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc lapack blas libf2c
+$(PKG)_DEPS     := lapack blas libf2c
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- "http://www.ics.forth.gr/~lourakis/levmar/"  | \

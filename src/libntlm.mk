@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 5dd798d5fb9a75656225052aa88ceb9befbbd4a0
 $(PKG)_SUBDIR   := libntlm-$($(PKG)_VERSION)
 $(PKG)_FILE     := libntlm-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.nongnu.org/libntlm/releases/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.savannah.gnu.org/gitweb/?p=libntlm.git;a=tags' | \

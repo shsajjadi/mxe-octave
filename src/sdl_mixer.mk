@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := a20fa96470ad9e1052f1957b77ffa68fb090b384
 $(PKG)_SUBDIR   := SDL_mixer-$($(PKG)_VERSION)
 $(PKG)_FILE     := SDL_mixer-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.libsdl.org/projects/SDL_mixer/release/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc sdl libmodplug ogg vorbis smpeg
+$(PKG)_DEPS     := sdl libmodplug ogg vorbis smpeg
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://hg.libsdl.org/SDL_mixer/tags' | \

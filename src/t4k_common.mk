@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 626eddedee86059ccab593a226c8d98571018b46
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/tuxmath/$(PKG)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc sdl sdl_mixer sdl_image sdl_net sdl_pango sdl_ttf libpng librsvg libxml2 pthreads
+$(PKG)_DEPS     := sdl sdl_mixer sdl_image sdl_net sdl_pango sdl_ttf libpng librsvg libxml2 pthreads
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://alioth.debian.org/frs/?group_id=31080' | \

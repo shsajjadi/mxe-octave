@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 9155687ab23dbb2348e7cf93caf8a84f51e94795
 $(PKG)_SUBDIR   := winpcap
 $(PKG)_FILE     := WpcapSrc_$($(PKG)_VERSION).zip
 $(PKG)_URL      := http://www.winpcap.org/install/bin/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.winpcap.org/devel.htm' | \
