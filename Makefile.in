@@ -284,7 +284,7 @@ else
 endif
 
 .PHONY: all
-all: octave
+all: configure Makefile octave
 
 .PHONY: all-packages
 all-packages: $(PKGS)
@@ -296,6 +296,15 @@ msys-base:  $(MSYS_BASE_PACKAGES)
 
 .PHONY: octave-forge-packages
 octave-forge-packages: $(OCTAVE_FORGE_PACKAGES)
+
+configure: configure.ac
+	autoconf
+
+config.status: configure
+	$(SHELL) ./config.status --recheck
+
+Makefile: Makefile.in config.status
+	$(SHELL) ./config.status Makefile
 
 .PHONY: check-requirements
 define CHECK_REQUIREMENT
