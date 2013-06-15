@@ -10,14 +10,14 @@ $(PKG)_URL      := http://releases.qt-project.org/qt4/source/$($(PKG)_FILE)
 
 ifeq ($(MXE_SYSTEM),mingw)
   ifeq ($(MXE_NATIVE_BUILD),yes)
-    $(PKG)_DEPS   := freetds openssl zlib libpng jpeg libmng tiff dbus
+    $(PKG)_DEPS   := openssl zlib libpng jpeg libmng tiff dbus
 
     $(PKG)_CONFIGURE_ENV := \
       OPENSSL_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l openssl`" \
       QTDIR='$(HOST_PREFIX)' 
 
   else
-    $(PKG)_DEPS   := libodbc++ postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
+    $(PKG)_DEPS   := openssl zlib libpng jpeg libmng tiff dbus
 
     $(PKG)_CONFIGURE_ENV := \
       OPENSSL_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l openssl`" \
@@ -27,7 +27,7 @@ ifeq ($(MXE_SYSTEM),mingw)
   endif
 
 else
-  $(PKG)_DEPS   := postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
+  $(PKG)_DEPS   := openssl zlib libpng jpeg libmng tiff dbus
 
   $(PKG)_CONFIGURE_ENV := \
     CPPFLAGS='$(HOST_INCDIR)/dbus-1.0' \
@@ -53,7 +53,6 @@ else
       -no-reduce-exports \
       -no-ssse3 \
       -no-rpath \
-      -system-sqlite \
       -device-option PKG_CONFIG='$(MXE_PKG_CONFIG)' \
       -force-pkg-config  \
       -dbus-linked \
@@ -63,8 +62,6 @@ else
     $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION := \
       -device-option CROSS_COMPILE=$(MXE_TOOL_PREFIX)
     $(PKG)_CONFIGURE_PLATFORM_OPTION := -xplatform win32-g++-4.6
-    $(PKG)_CONFIGURE_DATABASE_OPTION := \
-      -qt-sql-sqlite -qt-sql-odbc -qt-sql-psql -qt-sql-tds -D Q_USE_SYBASE 
   endif
 endif
 
