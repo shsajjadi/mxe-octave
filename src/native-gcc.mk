@@ -8,7 +8,7 @@ $(PKG)_SUBDIR   := gcc-$($(PKG)_VERSION)
 $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := mingwrt w32api binutils-gmp gcc-mpc gcc-mpfr
+$(PKG)_DEPS     := mingwrt w32api build-binutils gcc-gmp gcc-mpc gcc-mpfr
 ifneq ($(BUILD_SHARED),yes)
 $(PKG)_STATIC_FLAG := --static
 endif
