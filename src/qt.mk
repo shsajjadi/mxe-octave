@@ -125,7 +125,7 @@ define $(PKG)_BUILD
          -e 's,\(.*\)_location=.*,\1_location=$(HOST_BINDIR)/\1,g' \
          -e 's,\(Libs:.* -l\).*[\\/]\([A-Za-z0-9]*\),\1\2,g' \
          '{}' ';' ; \
-       cp '$(1)/lib/pkgconfig/'*.pc '$(HOST_LIBDIR)/pkgconfig/';  \
+       cp -f '$(1)/lib/pkgconfig/'*.pc '$(HOST_LIBDIR)/pkgconfig/';  \
     fi
 
     $(LN_SF) '$(HOST_BINDIR)/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
