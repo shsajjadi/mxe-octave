@@ -71,7 +71,6 @@ SRC_FILES_1 := \
   freeglut-test.c \
   freeimage-1-fixes.patch \
   freeimage.mk \
-  freetds.mk \
   freetype.mk \
   fribidi-1-fixes.patch \
   fribidi.mk \
@@ -223,9 +222,6 @@ SRC_FILES_1 := \
   libntlm.mk \
   liboauth.mk \
   liboauth-test.c \
-  libodbc++-1-libtool.patch \
-  libodbc++-1-win32.patch \
-  libodbc++.mk \
   liboil.mk \
   libpano13.mk \
   libpaper.mk \
@@ -366,8 +362,6 @@ SRC_FILES_1 := \
   portaudio-1-win32.patch \
   portaudio.mk \
   portaudio-test.c \
-  postgresql-1-fixes.patch \
-  postgresql.mk \
   proj.mk \
   protobuf.mk \
   protobuf-test.cpp \
@@ -422,7 +416,6 @@ SRC_FILES_1 := \
   sox.mk \
   sox-test.c \
   speex.mk \
-  sqlite.mk \
   stable-octave.mk \
   suitesparse-1.patch \
   suitesparse.mk \
