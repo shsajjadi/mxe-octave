@@ -117,6 +117,17 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' 
     $(MAKE) -C '$(1)' -j 1 install
+
+    # native build doesnt seem to succeed with installing pkgconfig files to prefix    
+    # in addition, .pc files have the wrong paths, mangled lib names
+    if [ "$(MXE_NATIVE_MINGW_BUILD)" = yes ]; then \
+       find $(1)/lib/pkgconfig/*.pc -exec $(SED) -i \
+         -e 's,\(.*\)_location=.*,\1_location=$(HOST_BINDIR)/\1,g' \
+         -e 's,\(Libs:.* -l\).*[\\/]\([A-Za-z0-9]*\),\1\2,g' \
+         '{}' ';' ; \
+       cp '$(1)/lib/pkgconfig/'*.pc '$(HOST_LIBDIR)/pkgconfig/';  \
+    fi
+
     $(LN_SF) '$(HOST_BINDIR)/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
     $(LN_SF) '$(HOST_BINDIR)/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)roc'
     $(LN_SF) '$(HOST_BINDIR)/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
