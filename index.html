@@ -557,6 +557,7 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
         <li><a href="#requirements-frugalware">Frugalware</a></li>
         <li><a href="#requirements-gentoo">Gentoo</a></li>
         <li><a href="#requirements-macos">Mac OS X</a></li>
+        <li><a href="#requirements-mingw">MingW</a></li>
         <li><a href="#requirements-opensuse">openSUSE</a></li>
     </ul>
 
@@ -758,6 +759,20 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     <p>
     Mac OS X versions ≤ 10.6 are no longer supported.
     </p>
+
+    <h3 id="requirements-mingw">MingW</h3>
+    Make sure to update and upgrade packages as some of the default versions
+    of packages are too old to work correctly.
+    <pre>mingw-get update</pre>
+    <pre>mingw-get upgrade</pre>
+    <p>
+    And then get required packages.
+    <pre>mingw-get install autoconf bash msys-flex gcc gcc-c++ \
+	      gcc-fortran gettext msys-m4 msys-make msys-sed \
+	      libiconv msys-openssl msys-patch msys-perl \
+              msys-libarchive msys-unzip msys-wget bsdcpio
+    </pre>
+    <p>
 
     <h3 id="requirements-opensuse">openSUSE</h3>
 
