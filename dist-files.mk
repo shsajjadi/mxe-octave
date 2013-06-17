@@ -13,15 +13,16 @@ SRC_FILES_1 := \
   aubio-1-fix-pkg-config.patch \
   aubio.mk \
   bfd.mk \
-  binutils.mk \
   blas.mk \
   boost.mk \
   boost-test.cpp \
   build-autoconf.mk \
   build-automake.mk \
+  build-binutils.mk \
   build-bison.mk \
   build-cmake.mk \
   build-flex.mk \
+  build-gcc.mk \
   build-gperf.mk \
   build-libtool.mk \
   build-pkg-config-1-fixes.patch \
@@ -79,7 +80,6 @@ SRC_FILES_1 := \
   gcc-1-mingw-float.patch \
   gcc-2-darwin-no-pie.patch \
   gcc-gmp.mk \
-  gcc.mk \
   gcc-mpc.mk \
   gcc-mpfr.mk \
   gc.mk \
