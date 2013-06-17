@@ -13,7 +13,7 @@ ifeq ($(ENABLE_JIT),yes)
 endif
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
-  $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH="'$(LD_LIBRARY_PATH)'"
+  $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
   ifeq ($(ENABLE_64),yes)
     $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64
   endif
