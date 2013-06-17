@@ -129,7 +129,7 @@ define $(PKG)_BUILD
     fi
 
     $(LN_SF) '$(HOST_BINDIR)/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
-    $(LN_SF) '$(HOST_BINDIR)/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)roc'
+    $(LN_SF) '$(HOST_BINDIR)/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
     $(LN_SF) '$(HOST_BINDIR)/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
     $(LN_SF) '$(HOST_BINDIR)/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
 
