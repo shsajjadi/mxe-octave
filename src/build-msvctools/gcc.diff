@@ -1,0 +1,115 @@
+diff -ur gcc-4.7.0-orig/libgfortran/intrinsics/c99_functions.c gcc-4.7.0-new/libgfortran/intrinsics/c99_functions.c
+--- gcc-4.7.0-orig/libgfortran/intrinsics/c99_functions.c	2011-11-08 10:31:04 +0000
++++ gcc-4.7.0-new/libgfortran/intrinsics/c99_functions.c	2012-07-06 17:29:18 +0100
+@@ -1026,6 +1026,7 @@
+ }
+ #endif
+ 
++#if 0
+ #if !defined(HAVE_CLOG10L) && defined(HAVE_LOG10L) && defined(HAVE_CABSL) && defined(HAVE_CARGL)
+ #define HAVE_CLOG10L 1
+ long double complex clog10l (long double complex z);
+@@ -1039,6 +1040,7 @@
+   return v;
+ }
+ #endif
++#endif
+ 
+ 
+ /* pow(base, power) = cexp (power * clog (base))  */
+diff -ur gcc-4.7.0-orig/libgfortran/mk-kinds-h.sh gcc-4.7.0-new/libgfortran/mk-kinds-h.sh
+--- gcc-4.7.0-orig/libgfortran/mk-kinds-h.sh	2010-11-16 21:23:19 +0000
++++ gcc-4.7.0-new/libgfortran/mk-kinds-h.sh	2012-07-06 17:29:18 +0100
+@@ -6,7 +6,7 @@
+ 
+ # Possible types must be listed in ascending order
+ possible_integer_kinds="1 2 4 8 16"
+-possible_real_kinds="4 8 10 16"
++possible_real_kinds="4 8"
+ 
+ 
+ largest=""
+diff -ur gcc-4.7.0-orig/libgfortran/mk-srk-inc.sh gcc-4.7.0-new/libgfortran/mk-srk-inc.sh
+--- gcc-4.7.0-orig/libgfortran/mk-srk-inc.sh	2010-06-25 20:40:37 +0100
++++ gcc-4.7.0-new/libgfortran/mk-srk-inc.sh	2012-07-06 17:29:18 +0100
+@@ -2,7 +2,7 @@
+ 
+ compile="$1"
+ kinds=""
+-possible_kinds="4 8 10 16"
++possible_kinds="4 8"
+ c=0
+ 
+ for k in $possible_kinds; do
+diff -ur gcc-4.7.0-orig/libgfortran/runtime/backtrace.c gcc-4.7.0-new/libgfortran/runtime/backtrace.c
+--- gcc-4.7.0-orig/libgfortran/runtime/backtrace.c	2012-01-12 10:30:45 +0000
++++ gcc-4.7.0-new/libgfortran/runtime/backtrace.c	2012-07-06 19:24:45 +0100
+@@ -109,6 +109,7 @@
+ }
+ bt_state;
+ 
++#if 0
+ static _Unwind_Reason_Code
+ trace_function (struct _Unwind_Context *context, void *state_ptr)
+ {
+@@ -185,6 +186,7 @@
+   
+   return _URC_NO_REASON;
+ }
++#endif
+ 
+ 
+ /* Display the backtrace.  */
+@@ -192,6 +194,7 @@
+ void
+ show_backtrace (void)
+ {
++#if 0
+   bt_state state;
+   state.frame_number = 0;
+   state.error = 0;
+@@ -276,4 +279,5 @@
+   /* Fallback to the simple backtrace without addr2line.  */
+   state.direct_output = 1;
+   _Unwind_Backtrace (trace_function, &state);
++#endif
+ }
+diff -ur gcc-4.7.0-orig/libgfortran/runtime/main.c gcc-4.7.0-new/libgfortran/runtime/main.c
+--- gcc-4.7.0-orig/libgfortran/runtime/main.c	2012-01-12 09:58:34 +0000
++++ gcc-4.7.0-new/libgfortran/runtime/main.c	2012-07-06 23:25:20 +0100
+@@ -154,13 +154,14 @@
+ }
+ 
+ 
+-char *addr2line_path;
++char *addr2line_path = NULL;
+ 
+ /* Find addr2line and store the path.  */
+ 
+ void
+ find_addr2line (void)
+ {
++#if 0
+ #ifdef HAVE_ACCESS
+ #define A2L_LEN 10
+   char *path = getenv ("PATH");
+@@ -187,6 +188,9 @@
+ 	}
+     }
+ #endif
++#else
++  addr2line_path = NULL;
++#endif
+ }
+ 
+ 
+@@ -255,3 +259,9 @@
+ 
+   free (addr2line_path);
+ }
++
++void __msvc_free_exe_path (void)
++{
++  if (please_free_exe_path_when_done)
++    free ((char *) exe_path);
++}

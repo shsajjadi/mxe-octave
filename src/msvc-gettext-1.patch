@@ -1,0 +1,17 @@
+diff -ur gettext-0.18.2-orig/gettext-runtime/intl/export.h gettext-0.18.2/gettext-runtime/intl/export.h
+--- gettext-0.18.2-orig/gettext-runtime/intl/export.h	2012-12-04 01:28:58 -0500
++++ gettext-0.18.2/gettext-runtime/intl/export.h	2013-06-15 22:18:02 -0400
+@@ -2,5 +2,13 @@
+ #if @HAVE_VISIBILITY@ && BUILDING_LIBINTL
+ #define LIBINTL_DLL_EXPORTED __attribute__((__visibility__("default")))
+ #else
++#ifdef _MSC_VER
++#ifdef BUILDING_LIBINTL
++#define LIBINTL_DLL_EXPORTED __declspec(dllexport)
++#else
++#define LIBINTL_DLL_EXPORTED __declspec(dllimport)
++#endif
++#else
+ #define LIBINTL_DLL_EXPORTED
+ #endif
++#endif
