@@ -3,10 +3,10 @@
 
 PKG             := qscintilla
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 296c03343f5d84f0c06a16eb3fb706e0eb735ea6
+$(PKG)_CHECKSUM := 2a11fb6be2c3005bc6502f929a0a339d4303af9b
 $(PKG)_SUBDIR   := QScintilla-gpl-$($(PKG)_VERSION)/Qt4Qt5
 $(PKG)_FILE     := QScintilla-gpl-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://sourceforge.net/projects/pyqt/files/QScintilla2/QScintilla-2.7/$($(PKG)_FILE)
+$(PKG)_URL      := http://sourceforge.net/projects/pyqt/files/QScintilla2/QScintilla-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := qt
 
 define $(PKG)_UPDATE
