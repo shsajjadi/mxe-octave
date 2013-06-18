@@ -11,6 +11,9 @@ libdir=
 bindir=
 install=false
 windowsdll=false
+msvc=false
+libprefix=
+libsuffix=
 LIBS=
 
 topdir=$(pwd)
@@ -35,6 +38,10 @@ do
     --windowsdll)
       shift
       windowsdll=true
+    ;;
+    --msvc)
+      shift
+      msvc=true
     ;;
     --bindir)
       shift
@@ -76,6 +83,26 @@ do
         exit 1
       fi
     ;;
+    --libprefix)
+      shift
+      if [ $# -gt 0 ]; then
+        libprefix="$1"
+        shift
+      else
+        echo "make-shared-from-static: expecting argument for --libprefix option" 1>&2
+        exit 1
+      fi
+    ;;
+    --libsuffix)
+      shift
+      if [ $# -gt 0 ]; then
+        libsuffix="$1"
+        shift
+      else
+        echo "make-shared-from-static: expecting argument for --libsuffix option" 1>&2
+        exit 1
+      fi
+    ;;
     -l*)
       LIBS="$LIBS $1"
       shift
@@ -102,7 +129,14 @@ done
 if [ -n "$infile" ]; then
   base_infile=$(basename $infile)
   if $windowsdll; then
-    outfile=$(echo $base_infile | sed 's/\.a$/.dll/')
+    if $msvc; then
+      base_name=`echo $base_infile | sed -n -e 's/^lib\(.*\)\.a$/\1/p'`
+      outfile="${libprefix}${base_name}${libsuffix}.dll"
+      implibfile="$base_name.lib"
+    else
+      outfile=$(echo $base_infile | sed 's/\.a$/.dll/')
+      implibfile="$outfile.a"
+    fi
   else
     outfile=$(echo $base_infile | sed 's/\.a$/.so/')
   fi
@@ -110,6 +144,11 @@ else
   echo "make-shared-from-static: no input file specified" 1>&2
   exit 1
 fi
+
+NM=nm
+SED=sed
+global_symbol_pipe="sed -n -e 's/^.*[	 ]\\([ABCDGIRSTW][ABCDGIRSTW]*\\)[	 ][	 ]*_\\([_A-Za-z][_A-iZa-z0-9]*\\)\\{0,1\\}\$/\\1 _\\2 \\2/p' | sed '/ __gnu_lto/d'"
+export_symbols_cmds="\$NM \$libobjs \$convenience | \$global_symbol_pipe | \$SED -e '/^[BCDGRS][ ]/s/.*[ ]\\\\([^ ]*\\\\)/\\\\1,DATA/' | \$SED -e '/^[AITW][ ]/s/.*[ ]//' | sort | uniq >> \$export_symbols"
 
 mkdir $tmpdir
 
@@ -124,7 +163,18 @@ mkdir $tmpdir
   fi
 
   if $windowsdll; then
-    $LD -shared -Wl,--export-all-symbols -Wl,--enable-auto-import -Wl,--enable-auto-image-base -Wl,--out-implib="$outfile.a" -o "$outfile" *.o $LIBDIR_ARGS $LIBS
+    if $msvc; then
+      export_symbols="$base_name.def"
+      echo EXPORTS > $export_symbols
+      libobjs="*.o"
+      convenience=
+      eval cmd=\"$export_symbols_cmds\"
+      eval "$cmd"
+      link_args="-Wl,-def:$export_symbols"
+    else
+      link_args="-Wl,--export-all-symbols -Wl,--enable-auto-import -Wl,--enable-auto-image-base"
+    fi
+    $LD -shared $link_args -Wl,--out-implib="$implibfile" -o "$outfile" *.o $LIBDIR_ARGS $LIBS
   else
     $LD -shared -o $outfile *.o $LIBDIR_ARGS $LIBS
   fi
@@ -133,7 +183,7 @@ mkdir $tmpdir
     if $windowsdll; then
       $INSTALL -d "$libdir"
       $INSTALL -d "$bindir"
-      $INSTALL -m755 "$outfile.a" "$libdir/$outfile.a"
+      $INSTALL -m755 "$implibfile" "$libdir/$implibfile"
       $INSTALL -m755 "$outfile" "$bindir/$outfile"
     else
       $INSTALL -d "$libdir"
