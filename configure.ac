@@ -111,7 +111,11 @@ else
 fi
 AC_SUBST(MXE_SYSTEM)
 
-AC_CONFIG_FILES([Makefile])
+# set MXE_ROOTDIR for knowing the mxe root
+MXE_ROOTDIR=`cd $srcdir; pwd`
+AC_SUBST(MXE_ROOTDIR)
+
+AC_CONFIG_FILES([Makefile tools/set_mxe_env.sh])
 
 AC_OUTPUT
 
