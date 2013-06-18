@@ -22,10 +22,8 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
+	CC='$(MXE_CC)' \
         CPPFLAGS='$(MXE_CPPFLAGS)' \
-        --disable-nls
-    $(MAKE) -C '$(1)/libcharset' -j '$(JOBS)' install
-    $(MAKE) -C '$(1)/lib'        -j '$(JOBS)' install
-    $(INSTALL) -d '$(HOST_INCDIR)'
-    $(INSTALL) -m644 '$(1)/include/iconv.h.inst' '$(HOST_INCDIR)/iconv.h'
+        --disable-nls && $(CONFIGURE_POST_HOOK)
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef

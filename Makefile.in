@@ -45,6 +45,9 @@ ENABLE_JIT := @ENABLE_JIT@
 ## end of configuration variables.
 
 ifneq ($(MXE_NATIVE_BUILD),yes)
+  ifeq ($(MXE_SYSTEM),msvc)
+    $(error Cross-compiling to MSVC is not supported)
+  endif
   HOST_AND_BUILD_CONFIGURE_OPTIONS := \
     --host='$(TARGET)' --build='$(BUILD_SYSTEM)'
 endif
@@ -52,6 +55,9 @@ endif
 # are we doing a native mingw build ?
 ifeq ($(MXE_NATIVE_BUILD),yes)
   ifeq ($(MXE_SYSTEM),mingw)
+    MXE_NATIVE_MINGW_BUILD := yes
+  endif
+  ifeq ($(MXE_SYSTEM),msvc)
     MXE_NATIVE_MINGW_BUILD := yes
   endif
 endif
@@ -114,10 +120,14 @@ BUILD_COMPILER_TOOLS := build-gcc build-binutils
 BUILD_TOOLS := $(ALL_BUILD_TOOLS)
 # Building flex for native mingw fails, so disable it.
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  REQUIREMENTS += flex
   BUILD_TOOLS := $(filter-out build-flex, $(BUILD_TOOLS))
 endif
 ifeq ($(USE_SYSTEM_GCC),yes)
   BUILD_TOOLS := $(filter-out $(BUILD_COMPILER_TOOLS), $(BUILD_TOOLS))
+endif
+ifneq ($(MXE_SYSTEM),msvc)
+  BUILD_TOOLS := $(filter-out build-msvctools, $(BUILD_TOOLS))
 endif
 
 STAMP_DIR  := $(PWD)/installed-packages
@@ -137,24 +147,40 @@ PATH := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)
 
 CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(HOST_PREFIX)/include'
 CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX)/lib'
+CONFIGURE_POST_HOOK := true
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   MXE_TOOL_PREFIX := 
-  MXE_AR := ar
-  MXE_RANLIB := ranlib
-  MXE_CC := gcc
-  MXE_CXX := g++
-  MXE_F77 := gfortran
-  MXE_DLLTOOL := dlltool
-  MXE_NM := nm
-  MXE_STRIP := strip
-  ifeq ($(MXE_SYSTEM),mingw)
+  ifeq ($(MXE_SYSTEM),msvc)
+    MXE_AR := ar
+    MXE_RANLIB := ranlib
+    MXE_CC := clgcc
+    MXE_CXX := clg++
+    MXE_F77 := gfortran-msvc
+    MXE_DLLTOOL := true
+    MXE_NM := nm
+    MXE_STRIP := true
     MXE_WINDRES := windres
+    MXE_PKG_CONFIG := pkg-config
+    MXE_QMAKE := qmake
+    HOST_AND_BUILD_CONFIGURE_OPTIONS := CC='$(MXE_CC)' CXX='$(MXE_CXX)' F77='$(MXE_F77)' DLLTOOL='$(MXE_DLLTOOL)'
   else
-    MXE_WINDRES := true
+    MXE_AR := ar
+    MXE_RANLIB := ranlib
+    MXE_CC := gcc
+    MXE_CXX := g++
+    MXE_F77 := gfortran
+    MXE_DLLTOOL := dlltool
+    MXE_NM := nm
+    MXE_STRIP := strip
+    ifeq ($(MXE_SYSTEM),mingw)
+      MXE_WINDRES := windres
+    else
+      MXE_WINDRES := true
+    endif
+    MXE_PKG_CONFIG := pkg-config
+    MXE_QMAKE := qmake
   endif
-  MXE_PKG_CONFIG := pkg-config
-  MXE_QMAKE := qmake
 else
   MXE_TOOL_PREFIX := $(TARGET)-
   MXE_AR := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ar'
@@ -191,7 +217,7 @@ ifeq ($(MXE_SYSTEM),mingw)
 
     NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
   endif
-else
+else ifneq ($(MXE_SYSTEM),msvc)
   LD_LIBRARY_PATH := '$(HOST_LIBDIR)'
   export LD_LIBRARY_PATH
   MXE_CPPFLAGS := '-I$(HOST_INCDIR)'
@@ -201,12 +227,29 @@ endif
 LN := ln
 LN_S := $(LN) -s
 LN_SF := $(LN_S) -f
-ifeq ($(MXE_SYSTEM),mingw)
-  ifeq ($(MXE_NATIVE_BUILD),yes)
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  ifeq ($(MXE_SYSTEM),mingw)
     LN := cp
     LN_S := $(LN)
     LN_SF := $(LN_S)
   endif
+  ifeq ($(MXE_SYSTEM),msvc)
+    LN := cp
+    LN_S := $(LN)
+    LN_SF := $(LN_S)
+  endif
+endif
+
+LIBRARY_PREFIX :=
+LIBRARY_SUFFIX :=
+
+ifeq ($(MXE_SYSTEM),msvc)
+  CL_VERSION := $(shell cl -? 2>&1 | $(SED) -n -e 's/.*Compiler Version \([0-9]\+\).*/\1/p')
+  MSVC_VERSION := $(if $(filter 17,$(CL_VERSION)),110, \
+		  $(if $(filter 16,$(CL_VERSION)),100, \
+		  $(if $(filter 15,$(CL_VERSION)),90)))
+  LIBRARY_PREFIX := vc$(strip $(MSVC_VERSION))-lib
+  CONFIGURE_POST_HOOK := lt-postproc -p '$(LIBRARY_PREFIX)' -s '$(LIBRARY_SUFFIX)'
 endif
 
 OCTAVE_FORGE_BASE_URL := 'http://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
@@ -248,13 +291,13 @@ UNPACK_ARCHIVE = \
 endif
 
 UNPACK_PKG_ARCHIVE = \
-    $(call UNPACK_ARCHIVE,$(PKG_DIR)/$($(1)_FILE),$(1))
+    $(if $(value $(1)_FILE),$(call UNPACK_ARCHIVE,$(PKG_DIR)/$($(1)_FILE)),true)
 
 PKG_CHECKSUM = \
     openssl sha1 '$(PKG_DIR)/$($(1)_FILE)' 2>/dev/null | $(SED) -n 's,^.*\([0-9a-f]\{40\}\)$$,\1,p'
 
 CHECK_PKG_ARCHIVE = \
-    [ '$($(1)_CHECKSUM)' == "`$$(call PKG_CHECKSUM,$(1))`" ]
+    [ -z "$($(1)_CHECKSUM)" -o '$($(1)_CHECKSUM)' == "`$$(call PKG_CHECKSUM,$(1))`" ]
 
 DOWNLOAD_PKG_ARCHIVE = \
     mkdir -p '$(PKG_DIR)' && \
@@ -371,7 +414,9 @@ download-$(1): $(addprefix download-,$($(1)_DEPS))
 $(1): $(STAMP_DIR)/$(1)
 $(STAMP_DIR)/$(1): $(TOP_DIR)/src/$(1).mk \
                           $(wildcard $(TOP_DIR)/src/$(1)-*.patch) \
+                          $(wildcard $(TOP_DIR)/src/$(MXE_SYSTEM)-$(1)-*.patch) \
                           $(wildcard $(TOP_DIR)/src/$(1)-test*) \
+			  $(shell test -d $(TOPDIR)/src/$(1) && find $(TOPDIR)/src/$(1) -type f) \
                           $(addprefix $(STAMP_DIR)/,$($(1)_DEPS)) \
                           | check-requirements
 	@[ -d '$(LOG_DIR)/$(TIMESTAMP)' ] || mkdir -p '$(LOG_DIR)/$(TIMESTAMP)'
@@ -415,8 +460,11 @@ build-only-$(1):
 	    rm -rf   '$(2)'
 	    mkdir -p '$(2)'
 	    cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1))
+	    test ! -d '$(TOP_DIR)/src/$(1)' || cp -a '$(TOP_DIR)/src/$(1)' '$(2)'
 	    cd '$(2)/$($(1)_SUBDIR)'
 	    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(1)-*.patch)),
+	        (cd '$(2)/$($(1)_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
+	    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/msvc-$(1)-*.patch)),
 	        (cd '$(2)/$($(1)_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
 	    $$(call $(1)_BUILD,$(2)/$($(1)_SUBDIR),$(TOP_DIR)/src/$(1)-test)
 	    (du -k -d 0 '$(2)' 2>/dev/null || du -k --max-depth 0 '$(2)') | $(SED) -n 's/^\(\S*\).*/du: \1 KiB/p'
@@ -484,7 +532,7 @@ cleanup-style:
 define build-cmake-toolchain-file
     # create the CMake toolchain file
     [ -d '$(dir $(CMAKE_TOOLCHAIN_FILE))' ] || mkdir -p '$(dir $(CMAKE_TOOLCHAIN_FILE))'
-    (if [ $(MXE_SYSTEM) = mingw ]; then \
+    (if [ $(MXE_SYSTEM) = mingw -o $(MXE_SYSTEM) = msvc ]; then \
        echo 'set(CMAKE_SYSTEM_NAME Windows)'; \
        echo 'set(MSYS 1)'; \
      fi; \
