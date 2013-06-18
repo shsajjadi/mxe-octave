@@ -1,0 +1,19 @@
+#!/bin/bash
+MXEDIR=@MXE_ROOTDIR@
+HOST=i686-pc-mingw32
+
+if [ -z "$MXE_OCTAVE_ENV" ]; then
+
+export PATH="$MXEDIR/usr/$HOST/bin:$MXEDIR/usr/bin:$PATH"
+export CPPFLAGS="-I$MXEDIR/usr/$HOST/include"
+export LDFLAGS="-L$MXEDIR/usr/$HOST/lib"
+export LD_LIBRARY_PATH="$MXEDIR/usr/$HOST/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="$MXEDIR/usr/$HOST/lib/pkgconfig"
+export PKG_CONFIG="$MXEDIR/usr/bin/pkg-config.exe"
+
+export MXE_OCTAVE_ENV=$MXEDIR
+
+fi
+
+
+
