@@ -163,7 +163,9 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     MXE_WINDRES := windres
     MXE_PKG_CONFIG := pkg-config
     MXE_QMAKE := qmake
-    HOST_AND_BUILD_CONFIGURE_OPTIONS := CC='$(MXE_CC)' CXX='$(MXE_CXX)' F77='$(MXE_F77)' DLLTOOL='$(MXE_DLLTOOL)'
+    HOST_AND_BUILD_CONFIGURE_OPTIONS := \
+	    CC='$(MXE_CC)' CXX='$(MXE_CXX)' F77='$(MXE_F77)' DLLTOOL='$(MXE_DLLTOOL)' \
+	    CFLAGS='-O2' CXXFLAGS='-O2'
   else
     MXE_AR := ar
     MXE_RANLIB := ranlib
