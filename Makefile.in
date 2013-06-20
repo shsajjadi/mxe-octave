@@ -42,6 +42,9 @@ ENABLE_64 := @ENABLE_64@
 # Attempt to build LLVM and enable Octave's experimental JIT compiler.
 ENABLE_JIT := @ENABLE_JIT@
 
+# Use openblas for octave
+ENABLE_OPENBLAS := @ENABLE_OPENBLAS@
+
 ## end of configuration variables.
 
 ifneq ($(MXE_NATIVE_BUILD),yes)
