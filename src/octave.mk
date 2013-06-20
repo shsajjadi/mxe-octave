@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := a51f52fa6dfef2e905d0c64f0401caab5a11faca
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://alpha.gnu.org/gnu/octave/$($(PKG)_FILE)
-$(PKG)_DEPS     := arpack blas curl fftw fltk fontconfig glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
+$(PKG)_DEPS     := arpack curl fftw fltk fontconfig glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
 ifeq ($(ENABLE_JIT),yes)
   $(PKG)_DEPS += llvm
 endif
@@ -15,6 +15,8 @@ endif
 ifeq ($(ENABLE_OPENBLAS),yes)
   $(PKG)_DEPS += openblas
   $(PKG)_BLAS_OPTION := --with-blas=openblas
+else
+  $(PKG)_DEPS += blas
 endif
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
