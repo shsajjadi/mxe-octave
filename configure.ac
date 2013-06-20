@@ -101,6 +101,13 @@ AC_ARG_ENABLE([pic-flag],
   [if test "$enableval" = yes; then USE_PIC_FLAG=yes; fi], [])
 AC_SUBST(USE_PIC_FLAG)
 
+ENABLE_OPENBLAS=false
+AC_ARG_ENABLE([openblas],
+  [AS_HELP_STRING([--enable-openblas],
+    [(EXPERIMENTAL) enable use of openblas in Octave])],
+  [if test "$enableval" = yes; then ENABLE_OPENBLAS=yes; fi], [])
+AC_SUBST(ENABLE_OPENBLAS)
+
 ### Default is to cross compile for mingw.
 
 echo $host_alias

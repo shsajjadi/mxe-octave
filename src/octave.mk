@@ -12,6 +12,11 @@ ifeq ($(ENABLE_JIT),yes)
   $(PKG)_DEPS += llvm
 endif
 
+ifeq ($(ENABLE_OPENBLAS),yes)
+  $(PKG)_DEPS += openblas
+  $(PKG)_BLAS_OPTION := --with-blas=openblas
+endif
+
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
   ifeq ($(ENABLE_64),yes)
@@ -41,6 +46,7 @@ define $(PKG)_BUILD
         LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
+        $($(PKG)_BLAS_OPTION) \
 	$($(PKG)_CROSS_CONFIG_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS)
 
