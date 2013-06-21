@@ -43,7 +43,7 @@ define $(PKG)_BUILD
 	$($(PKG)_CONFIGURE_PIC_OPTION) \
         $($(PKG)_BLAS_OPTION) \
         --prefix='$(HOST_PREFIX)' \
-        $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS)
+        $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)'
 
     if [ $(BUILD_STATIC) = yes ]; then \
