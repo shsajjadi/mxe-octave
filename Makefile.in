@@ -159,7 +159,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     MXE_RANLIB := ranlib
     MXE_CC := clgcc
     MXE_CXX := clg++
-    MXE_F77 := gfortran-msvc
+    MXE_F77 := clgfortran
     MXE_DLLTOOL := true
     MXE_NM := nm
     MXE_STRIP := true
@@ -173,6 +173,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     MXE_AR := ar
     MXE_RANLIB := ranlib
     MXE_CC := gcc
+    MXE_CCAS := gcc
     MXE_CXX := g++
     MXE_F77 := gfortran
     MXE_DLLTOOL := dlltool

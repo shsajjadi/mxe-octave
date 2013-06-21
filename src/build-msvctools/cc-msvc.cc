@@ -556,10 +556,20 @@ int main(int argc, char **argv)
 		}
 		else if (arg == "-m386" || arg == "-m486" || arg == "-mpentium" ||
 			 arg == "-mpentiumpro" || arg == "-pedantic" || starts_with(arg, "-W") ||
-			 arg == "-fPIC" || arg == "-nostdlib")
+			 arg == "-fPIC" || arg == "-nostdlib" || arg == "--export-all-symbols")
 		{
 			// ignore
 		}
+                else if (arg == "--output-def")
+                {
+                        if (i < argc-1)
+                                ++i;
+                        else
+                        {
+				cerr << "ERROR: argument missing for " << arg << endl;
+				return 1;
+                        }
+                }
 		else if (arg == "-noembed")
 		{
 			mt_embed = false;

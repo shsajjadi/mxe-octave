@@ -3,6 +3,7 @@ TARGETS = \
 	cc-msvc.exe \
 	clgcc.exe \
 	clg++.exe \
+	clgfortran.exe \
 	dirent.h \
 	dirent.lib \
 	getopt.h \
@@ -111,6 +112,9 @@ math/msvcmath.h: math/msvcmath.lib
 gfortran-msvc.exe: gfortran-msvc.cc
 	cl -nologo -O2 -EHsc gfortran-msvc.cc
 
+clgfortran.exe: gfortran-msvc.exe
+	cp -a $< $@
+
 gfortran-msvc-gcc-patch.stamp:
 	(cd ../gcc-$(GCCVERSION)/ && patch -p1) < gcc.diff
 	(cd ../gcc-$(GCCVERSION)/ && \
@@ -162,6 +166,7 @@ install: all
 	$(INSTALL) clg++.exe $(DESTDIR)/bin/
 	$(INSTALL) lt-postproc $(DESTDIR)/bin/
 	$(INSTALL) gfortran-msvc.exe $(DESTDIR)/bin/
+	$(INSTALL) clgfortran.exe $(DESTDIR)/bin/
 	$(INSTALL) ranlib-msvc $(DESTDIR)/bin/
 	$(INSTALL) $(LIBRARY_PREFIX)gfortran-msvc$(LIBRARY_SUFFIX).dll $(DESTDIR)/bin/
 	$(INSTALL) -d $(DESTDIR)/include
