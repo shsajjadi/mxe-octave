@@ -16,7 +16,7 @@ define $(PKG)_UPDATE
     head -1
 endef
 
-ifeq ($(MXE_SYSTEM),mingw)
+ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
 define $(PKG)_BUILD
     $(SED) -i 's,sys\\stat\.h,sys/stat.h,g' '$(1)/bzip2.c'
     $(SED) -i 's,WINAPI,,g'                 '$(1)/bzlib.h'
