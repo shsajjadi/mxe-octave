@@ -1,11 +1,11 @@
 SRC_FILES_1 := \
   agg-1-fixes.patch \
   agg.mk \
-  apr.mk \
   apr-util.mk \
+  apr.mk \
   armadillo-1-staticlib.patch \
-  armadillo.mk \
   armadillo-test.cpp \
+  armadillo.mk \
   arpack.mk \
   atk-1-DllMain.patch \
   atk.mk \
@@ -14,8 +14,8 @@ SRC_FILES_1 := \
   aubio.mk \
   bfd.mk \
   blas.mk \
-  boost.mk \
   boost-test.cpp \
+  boost.mk \
   build-autoconf.mk \
   build-automake.mk \
   build-binutils.mk \
@@ -25,6 +25,8 @@ SRC_FILES_1 := \
   build-gcc.mk \
   build-gperf.mk \
   build-libtool.mk \
+  build-msvctools \
+  build-msvctools.mk \
   build-pkg-config-1-fixes.patch \
   build-pkg-config.mk \
   build-texinfo.mk \
@@ -39,8 +41,8 @@ SRC_FILES_1 := \
   cminpack.mk \
   cppunit.mk \
   cunit.mk \
-  curl.mk \
   curl-test.c \
+  curl.mk \
   dbus-1-fixes.patch \
   dbus.mk \
   dcmtk-1-fixes.patch \
@@ -49,53 +51,54 @@ SRC_FILES_1 := \
   devil.mk \
   eigen.mk \
   exiv2-issue847.patch \
-  exiv2.mk \
   exiv2-r2796.patch \
+  exiv2.mk \
   expat.mk \
   faad2-1-uint.patch \
   faad2.mk \
   ffmpeg.mk \
   fftw.mk \
-  file.mk \
   file-test.c \
+  file.mk \
   flac-1-win32.patch \
   flac-2-lwsock32.patch \
   flac.mk \
   fltk-1-darwin-cross-compile.patch \
   fltk-2-uuid-mod.patch \
-  fltk.mk \
   fltk-test.cpp \
+  fltk.mk \
   fontconfig.mk \
   freeglut-1-fixes.patch \
-  freeglut.mk \
   freeglut-test.c \
+  freeglut.mk \
   freeimage-1-fixes.patch \
   freeimage.mk \
+  freetds.mk \
   freetype.mk \
   fribidi-1-fixes.patch \
   fribidi.mk \
   ftgl-1-gl-m4.patch \
   ftgl.mk \
+  gc.mk \
   gcc-1-mingw-float.patch \
   gcc-2-darwin-no-pie.patch \
   gcc-gmp.mk \
   gcc-mpc.mk \
   gcc-mpfr.mk \
-  gc.mk \
   gd-1-libpng15.patch \
+  gd-test.c \
+  gd.mk \
   gdal.mk \
   gdb-1-fix-shell.patch \
   gdb.mk \
   gdk-pixbuf-1-fixes.patch \
   gdk-pixbuf.mk \
-  gd.mk \
-  gd-test.c \
-  geos.mk \
   geos-test.c \
+  geos.mk \
   gettext.mk \
   giflib.mk \
-  glew.mk \
   glew-test.c \
+  glew.mk \
   glib-1-fixes.patch \
   glib.mk \
   glibmm.mk \
@@ -105,43 +108,43 @@ SRC_FILES_1 := \
   gnuplot-1-fixes.patch \
   gnuplot.mk \
   gnutls-1-fixes.patch \
-  gnutls.mk \
   gnutls-test.c \
+  gnutls.mk \
   graphicsmagick-1-fix-xml2-config.patch \
-  graphicsmagick.mk \
   graphicsmagick-test.cpp \
-  gsl.mk \
+  graphicsmagick.mk \
   gsl-test.c \
+  gsl.mk \
   gsoap-1-fixes.patch \
   gsoap.mk \
   gst-plugins-base.mk \
   gst-plugins-good.mk \
   gstreamer.mk \
-  gta.mk \
   gta-test.c \
+  gta.mk \
   gtk2-1-fixes.patch \
-  gtk2.mk \
   gtk2-test.c \
+  gtk2.mk \
   gtkglarea-1-fixes.patch \
   gtkglarea.mk \
   gtkglext-1-fixes.patch \
+  gtkglext-test.c \
   gtkglext.mk \
   gtkglextmm-1-fixes.patch \
-  gtkglextmm.mk \
   gtkglextmm-test.cpp \
-  gtkglext-test.c \
-  gtkmm2.mk \
+  gtkglextmm.mk \
   gtkmm2-test.cpp \
+  gtkmm2.mk \
   gtksourceview.mk \
   gtksourceviewmm2.mk \
   guile-1-win32.patch \
-  guile.mk \
   guile-test.c \
+  guile.mk \
   harfbuzz.mk \
   hdf5-1-cross-fixes.patch \
   hdf5.mk \
-  hunspell.mk \
   hunspell-test.cpp \
+  hunspell.mk \
   id3lib-1-win32.patch \
   id3lib.mk \
   ilmbase-1-gcc45-include.patch \
@@ -150,36 +153,36 @@ SRC_FILES_1 := \
   imagemagick.mk \
   jasper-1-fixes.patch \
   jasper.mk \
-  jpeg.mk \
   jpeg-test.c \
+  jpeg.mk \
   json-c-1-patch-missingfile.patch \
   json-c-2-patch-remove-rpl.patch \
-  json-c.mk \
   json-c-test.c \
+  json-c.mk \
   lame.mk \
-  lapack.mk \
   lapack-test.f \
-  lcms1-1-fixes.patch \
+  lapack.mk \
   lcms-1-fixes.patch \
-  lcms1.mk \
   lcms.mk \
+  lcms1-1-fixes.patch \
+  lcms1.mk \
   levmar.mk \
   libarchive-1-fixes.patch \
-  libarchive.mk \
   libarchive-test.c \
-  libass.mk \
+  libarchive.mk \
   libass-test.c \
+  libass.mk \
   libcroco.mk \
   libdnet-1-fixes.patch \
   libdnet.mk \
   libevent.mk \
   libf2c-1.patch \
   libf2c.mk \
-  libffi.mk \
   libffi-test.c \
+  libffi.mk \
   libgcrypt-1-fixes.patch \
-  libgcrypt.mk \
   libgcrypt-test.c \
+  libgcrypt.mk \
   libgda.mk \
   libgdamm.mk \
   libgee.mk \
@@ -187,49 +190,52 @@ SRC_FILES_1 := \
   libglade.mk \
   libgnurx-1-build-static-lib.patch \
   libgnurx.mk \
-  libgomp.mk \
   libgomp-test.c \
+  libgomp.mk \
   libgpg_error-1-fixes.patch \
   libgpg_error.mk \
   libgsasl-1-fixes.patch \
-  libgsasl.mk \
   libgsasl-test.c \
+  libgsasl.mk \
   libgsf-1-fixes.patch \
   libgsf.mk \
   libharu-1-fixes.patch \
   libharu.mk \
-  libiberty.mk \
   libiberty-test.c \
-  libical.mk \
+  libiberty.mk \
   libical-test.c \
+  libical.mk \
   libiconv.mk \
   libidn-1-fixes.patch \
-  libidn.mk \
   libidn-test.c \
+  libidn.mk \
   libircclient-1-fixes.patch \
-  libircclient.mk \
   libircclient-test.cpp \
+  libircclient.mk \
   liblo.mk \
   libmad.mk \
   libmikmod-1-fixes.patch \
-  libmikmod.mk \
   libmikmod-test.c \
+  libmikmod.mk \
   libmng-1-fixes.patch \
   libmng-1-libtool.patch \
   libmng.mk \
-  libmodplug.mk \
   libmodplug-test.c \
+  libmodplug.mk \
   libntlm.mk \
-  liboauth.mk \
   liboauth-test.c \
+  liboauth.mk \
+  libodbc++-1-libtool.patch \
+  libodbc++-1-win32.patch \
+  libodbc++.mk \
   liboil.mk \
   libpano13.mk \
   libpaper.mk \
-  libpng.mk \
   libpng-test.c \
+  libpng.mk \
   librsvg-1-fixes.patch \
-  librsvg.mk \
   librsvg-test.c \
+  librsvg.mk \
   librtmp-1-v2.4.patch \
   librtmp-2-master.patch \
   librtmp.mk \
@@ -239,16 +245,16 @@ SRC_FILES_1 := \
   libsigc++.mk \
   libsndfile.mk \
   libssh2-1-fixes.patch \
-  libssh2.mk \
   libssh2-test.c \
+  libssh2.mk \
   libtool.mk \
   libunistring.mk \
   libusb.mk \
   libvpx-1-fixes.patch \
   libvpx.mk \
+  libxml++.mk \
   libxml2-1-fixes.patch \
   libxml2.mk \
-  libxml++.mk \
   libxslt.mk \
   llvm-1-fixes.patch \
   llvm.mk \
@@ -257,17 +263,19 @@ SRC_FILES_1 := \
   log4cxx-3-warnings.patch \
   log4cxx-4-mingw.definitions.patch \
   log4cxx-5-cmake.patch \
-  log4cxx.mk \
   log4cxx-test.cpp \
-  lua.mk \
+  log4cxx.mk \
   lua-test.c \
+  lua.mk \
   lzo.mk \
   matio.mk \
   mdbtools.mk \
-  mingwrt.mk \
   mingw-utils-1-portability-fix.patch \
   mingw-utils.mk \
+  mingwrt.mk \
   mpfr.mk \
+  msvc-gettext-1.patch \
+  msvc-libiconv-1.patch \
   msys-bash.mk \
   msys-coreutils.mk \
   msys-diffutils.mk \
@@ -289,8 +297,8 @@ SRC_FILES_1 := \
   msys-texinfo.mk \
   msys-xz.mk \
   muparser.mk \
-  mxml.mk \
   mxml-test.c \
+  mxml.mk \
   native-binutils.mk \
   native-gcc-1-float.patch \
   native-gcc.mk \
@@ -300,11 +308,11 @@ SRC_FILES_1 := \
   nsis-1-fixes.patch \
   nsis.mk \
   ocaml-core-1-fixes.patch \
-  ocaml-core.mk \
   ocaml-core-test.ml \
+  ocaml-core.mk \
   ocaml-flexdll-1-fixes.patch \
-  ocaml-flexdll.mk \
   ocaml-flexdll-test.c \
+  ocaml-flexdll.mk \
   ocaml-native-1-fixes.patch \
   ocaml-native.mk \
   octave.mk \
@@ -325,8 +333,9 @@ SRC_FILES_1 := \
   ogg.mk \
   old.mk \
   openal-1-fixes.patch \
-  openal.mk \
   openal-test.c \
+  openal.mk \
+  openblas.mk \
   opencore-amr.mk \
   opencsg-1-fixes.patch \
   opencsg.mk \
@@ -343,8 +352,8 @@ SRC_FILES_1 := \
   pdflib_lite-1-mingw.patch \
   pdflib_lite.mk \
   pfstools.mk \
-  physfs.mk \
   physfs-test.c \
+  physfs.mk \
   pixman.mk \
   plibc.mk \
   plotmm-1-fixes.patch \
@@ -352,26 +361,28 @@ SRC_FILES_1 := \
   plotutils-2.6-libpng-1.5.patch \
   plotutils.mk \
   poco-1-fix-mno-cygwin.patch \
-  poco.mk \
   poco-test.cpp \
+  poco.mk \
   poppler-1-win32.patch \
-  poppler.mk \
   poppler-test.cxx \
+  poppler.mk \
   popt-1-win32.patch \
   popt.mk \
   portaudio-1-win32.patch \
-  portaudio.mk \
   portaudio-test.c \
+  portaudio.mk \
+  postgresql-1-fixes.patch \
+  postgresql.mk \
   proj.mk \
-  protobuf.mk \
   protobuf-test.cpp \
+  protobuf.mk \
   pstoedit-1-fixes.patch \
   pstoedit.mk \
   pthreads-1-fixes.patch \
-  pthreads.mk \
   pthreads-test.c \
-  qdbm.mk \
+  pthreads.mk \
   qdbm-test.c \
+  qdbm.mk \
   qhull-1-fixes.patch \
   qhull-2-fixes.patch \
   qhull.mk \
@@ -379,13 +390,14 @@ SRC_FILES_1 := \
   qjson.mk \
   qrupdate-1-fixes.patch \
   qrupdate.mk \
+  qscintilla-1-matlab-blockcomments.patch \
   qscintilla.mk \
   qt-1-cherrypicks.patch \
   qt-1-pcre.patch \
-  qt.mk \
   qt-test.cpp \
   qt-test.pro \
   qt-test.ui \
+  qt.mk \
   qwt-1-fixes.patch \
   qwt.mk \
   qwtplot3d-1-fixes.patch \
@@ -396,26 +408,27 @@ SRC_FILES_1 := \
   readline-1-paste.patch \
   readline-1-sigwinch.patch \
   readline.mk \
-  sdl_image.mk \
-  sdl_image-test.c \
-  sdl_mixer.mk \
-  sdl_mixer-test.c \
+  sdl-test.c \
   sdl.mk \
+  sdl_image-test.c \
+  sdl_image.mk \
+  sdl_mixer-test.c \
+  sdl_mixer.mk \
   sdl_net-1-fixes.patch \
-  sdl_net.mk \
   sdl_net-test.c \
+  sdl_net.mk \
   sdl_pango-1-api-adds.patch \
   sdl_pango-2-static-matrices.patch \
   sdl_pango.mk \
-  sdl_sound.mk \
   sdl_sound-test.c \
-  sdl-test.c \
+  sdl_sound.mk \
   sdl_ttf.mk \
-  smpeg.mk \
   smpeg-test.c \
-  sox.mk \
+  smpeg.mk \
   sox-test.c \
+  sox.mk \
   speex.mk \
+  sqlite.mk \
   stable-octave.mk \
   suitesparse-1.patch \
   suitesparse.mk \
@@ -427,12 +440,12 @@ SRC_FILES_1 := \
   texinfo.mk \
   theora.mk \
   tiff.mk \
-  tinyxml.mk \
   tinyxml-test.cpp \
+  tinyxml.mk \
   tre.mk \
   uuid.mk \
-  vigra.mk \
   vigra-test.cpp \
+  vigra.mk \
   vmime-1-fixes.patch \
   vmime.mk \
   vorbis.mk \
@@ -451,14 +464,14 @@ SRC_FILES_1 := \
   winpcap.mk \
   wt-1-fixes.patch \
   wt.mk \
-  wxwidgets.mk \
   wxwidgets-test.cpp \
+  wxwidgets.mk \
   x264-1-fix-bin-bash.patch \
   x264.mk \
   xapian-core.mk \
   xerces-1-fix-pkgconfig.patch \
-  xerces.mk \
   xerces-test.cpp \
+  xerces.mk \
   xine-lib-1-fixes.patch \
   xine-lib.mk \
   xmlwrapp.mk \
@@ -479,7 +492,9 @@ TOOLS_FILES_1 := \
   install-sh \
   make-shared-from-static \
   patch-tool-mxe \
-  s3-fetch-and-sync
+  s3-fetch-and-sync \
+  set_mxe_env.sh \
+  set_mxe_env.sh.in
 
 TOOLS_FILES := $(addprefix tools/, $(TOOLS_FILES_1))
 
