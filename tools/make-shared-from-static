@@ -148,7 +148,11 @@ fi
 NM=nm
 SED=sed
 global_symbol_pipe="sed -n -e 's/^.*[	 ]\\([ABCDGIRSTW][ABCDGIRSTW]*\\)[	 ][	 ]*_\\([_A-Za-z][_A-iZa-z0-9]*\\)\\{0,1\\}\$/\\1 _\\2 \\2/p' | sed '/ __gnu_lto/d'"
-export_symbols_cmds="\$NM \$libobjs \$convenience | \$global_symbol_pipe | \$SED -e '/^[BCDGRS][ ]/s/.*[ ]\\\\([^ ]*\\\\)/\\\\1,DATA/' | \$SED -e '/^[AITW][ ]/s/.*[ ]//' | sort | uniq >> \$export_symbols"
+# Ignore DATA symbols for now. They should be be properly exported from
+# the source code using dllexport. They can't be re-exported manually like
+# this using MSVC.
+#export_symbols_cmds="\$NM \$libobjs \$convenience | \$global_symbol_pipe | \$SED -e '/^[BCDGRS][ ]/s/.*[ ]\\\\([^ ]*\\\\)/\\\\1,DATA/' | \$SED -e '/^[AITW][ ]/s/.*[ ]//' | sort | uniq >> \$export_symbols"
+export_symbols_cmds="\$NM \$libobjs \$convenience | \$global_symbol_pipe | \$SED -e '/^[BCDGRS][ ]/d' | \$SED -e '/^[AITW][ ]/s/.*[ ]//' | sort | uniq >> \$export_symbols"
 
 mkdir $tmpdir
 
