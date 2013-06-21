@@ -12,6 +12,7 @@ bindir=
 install=false
 windowsdll=false
 msvc=false
+msvclibmode=false
 libprefix=
 libsuffix=
 LIBS=
@@ -133,6 +134,15 @@ if [ -n "$infile" ]; then
       base_name=`echo $base_infile | sed -n -e 's/^lib\(.*\)\.a$/\1/p'`
       outfile="${libprefix}${base_name}${libsuffix}.dll"
       implibfile="$base_name.lib"
+      # Modern libtool won't create .a files, but will create directly .lib files.
+      # If the .a file does not exist, check for an existing .lib file.
+      if [ ! -f "$infile" ]; then
+        msvc_infile=`echo $infile | sed -e 's/\.a$/.lib/'`
+        if [ -f "$msvc_infile" ]; then
+          infile="$msvc_infile"
+          msvclibmode=true
+        fi
+      fi
     else
       outfile=$(echo $base_infile | sed 's/\.a$/.dll/')
       implibfile="$outfile.a"
@@ -159,7 +169,7 @@ mkdir $tmpdir
 (
   cd $tmpdir
 
-  $AR x $infile
+  $msvclibmode || $AR x $infile
 
   LIBDIR_ARGS=
   if [ -n "$libdir" ]; then
@@ -170,15 +180,19 @@ mkdir $tmpdir
     if $msvc; then
       export_symbols="$base_name.def"
       echo EXPORTS > $export_symbols
-      libobjs="*.o"
+      if $msvclibmode; then
+        libobjs="$infile"
+      else
+        libobjs="*.o"
+      fi
       convenience=
       eval cmd=\"$export_symbols_cmds\"
       eval "$cmd"
-      link_args="-Wl,-def:$export_symbols"
+      link_args="-Wl,-def:$export_symbols $libobjs"
     else
-      link_args="-Wl,--export-all-symbols -Wl,--enable-auto-import -Wl,--enable-auto-image-base"
+      link_args="-Wl,--export-all-symbols -Wl,--enable-auto-import -Wl,--enable-auto-image-base *.o"
     fi
-    $LD -shared $link_args -Wl,--out-implib="$implibfile" -o "$outfile" *.o $LIBDIR_ARGS $LIBS
+    $LD -shared $link_args -Wl,--out-implib="$implibfile" -o "$outfile" $LIBDIR_ARGS $LIBS
   else
     $LD -shared -o $outfile *.o $LIBDIR_ARGS $LIBS
   fi
