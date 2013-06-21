@@ -20,6 +20,28 @@ define $(PKG)_UPDATE
 endef
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+ifeq ($(MXE_SYSTEM),msvc)
+define $(PKG)_BUILD
+    cd '$(1)' && \
+        cp INSTALL/make.inc.gfortran make.inc && \
+        sed -i -e 's/\(FORTRAN[ ]*\)=.*/\1= $(MXE_F77)/' \
+               -e 's/\(CC[ ]*\)=.*/\1= $(MXE_CC)/' \
+               -e 's/\(CFLAGS[ ]*\)=.*/\1= -O2/' make.inc
+
+    $(MAKE) -C '$(1)' -j '$(JOBS)' VERBOSE=1 lapacklib
+
+    if [ $(BUILD_SHARED) = yes ]; then \
+        $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/liblapack.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)' -lblas; \
+    fi
+
+    $(INSTALL) -d '$(HOST_LIBDIR)/pkgconfig' 
+    $(SED) -e 's/@LAPACK_VERSION@/$($(PKG)_VERSION)/' \
+           -e 's,@prefix@,$(HOST_PREFIX),' \
+	   -e 's,@libdir@,$${prefix}/lib,' '$(1)/lapack.pc.in' > '$(1)/lapack.pc'
+    $(INSTALL) '$(1)/lapack.pc' '$(HOST_LIBDIR)/pkgconfig/'
+
+endef
+else
 define $(PKG)_BUILD
     cd '$(1)' && cmake \
         -G 'MSYS Makefiles' \
@@ -41,6 +63,7 @@ define $(PKG)_BUILD
     $(INSTALL) '$(1)/lapack.pc' '$(HOST_LIBDIR)/pkgconfig/'
 
 endef
+endif
 else
 define $(PKG)_BUILD
     cd '$(1)' && cmake \
