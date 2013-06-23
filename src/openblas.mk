@@ -28,7 +28,7 @@ endef
 
 define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' $($(PKG)_MAKE_OPTS)  
-    $(MAKE) -C '$(1)' -j 1 PREFIX='$(HOST_PREFIX)' install
+    $(MAKE) -C '$(1)' -j 1 PREFIX='$(HOST_PREFIX)' $($(PKG)_MAKE_OPTS) install
     if [ $(BUILD_SHARED) = yes ]; then \
       $(INSTALL) $(HOST_LIBDIR)/libopenblas.dll $(HOST_BINDIR)/; \
     fi
