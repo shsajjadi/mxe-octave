@@ -34,7 +34,7 @@ define $(PKG)_BUILD
         --with-included-libtasn1 \
         --with-included-libcfg \
         --without-p11-kit \
-        --disable-silent-rules
+        --disable-silent-rules && $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
