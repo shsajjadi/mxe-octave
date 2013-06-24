@@ -23,6 +23,6 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-csharp \
         --prefix='$(HOST_PREFIX)' \
-        --with-libiconv-prefix='$(HOST_PREFIX)'
+        --with-libiconv-prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef
