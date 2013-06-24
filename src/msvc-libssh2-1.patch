@@ -1,0 +1,164 @@
+diff -ur libssh2-1.4.2-orig/example/direct_tcpip.c libssh2-1.4.2/example/direct_tcpip.c
+--- libssh2-1.4.2-orig/example/direct_tcpip.c	2011-09-11 09:27:40 -0400
++++ libssh2-1.4.2/example/direct_tcpip.c	2013-06-23 23:09:22 -0400
+@@ -27,6 +27,10 @@
+ #define INADDR_NONE (in_addr_t)-1
+ #endif
+ 
++#ifdef _MSC_VER
++#define strcasecmp stricmp
++#endif
++
+ const char *keyfile1 = "/home/username/.ssh/id_rsa.pub";
+ const char *keyfile2 = "/home/username/.ssh/id_rsa";
+ const char *username = "username";
+diff -ur libssh2-1.4.2-orig/example/scp_nonblock.c libssh2-1.4.2/example/scp_nonblock.c
+--- libssh2-1.4.2-orig/example/scp_nonblock.c	2011-09-11 09:27:40 -0400
++++ libssh2-1.4.2/example/scp_nonblock.c	2013-06-23 23:13:30 -0400
+@@ -144,7 +144,9 @@
+     /* Since we have set non-blocking, tell libssh2 we are non-blocking */
+     libssh2_session_set_blocking(session, 0);
+ 
++#ifndef _MSC_VER
+     gettimeofday(&start, NULL);
++#endif
+ 
+     /* ... start it up. This will trade welcome banners, exchange keys,
+      * and setup crypto, compression, and MAC layers
+@@ -247,11 +249,13 @@
+         break;
+     }
+ 
++#ifndef _MSC_VER
+     gettimeofday(&end, NULL);
+ 
+     time_ms = tvdiff(end, start);
+     printf("Got %d bytes in %ld ms = %.1f bytes/sec spin: %d\n", total,
+            time_ms, total/(time_ms/1000.0), spin );
++#endif
+ 
+     libssh2_channel_free(channel);
+     channel = NULL;
+diff -ur libssh2-1.4.2-orig/example/sftp.c libssh2-1.4.2/example/sftp.c
+--- libssh2-1.4.2-orig/example/sftp.c	2011-09-11 09:27:40 -0400
++++ libssh2-1.4.2/example/sftp.c	2013-06-23 23:14:33 -0400
+@@ -36,6 +36,10 @@
+ #include <stdio.h>
+ #include <ctype.h>
+ 
++#ifdef _MSC_VER
++#define strcasecmp stricmp
++#endif
++
+ 
+ const char *keyfile1="~/.ssh/id_rsa.pub";
+ const char *keyfile2="~/.ssh/id_rsa";
+diff -ur libssh2-1.4.2-orig/example/sftp_nonblock.c libssh2-1.4.2/example/sftp_nonblock.c
+--- libssh2-1.4.2-orig/example/sftp_nonblock.c	2012-03-13 17:01:10 -0400
++++ libssh2-1.4.2/example/sftp_nonblock.c	2013-06-23 23:15:25 -0400
+@@ -146,7 +146,9 @@
+     /* Since we have set non-blocking, tell libssh2 we are non-blocking */
+     libssh2_session_set_blocking(session, 0);
+ 
++#ifndef _MSC_VER
+     gettimeofday(&start, NULL);
++#endif
+ 
+     /* ... start it up. This will trade welcome banners, exchange keys,
+         * and setup crypto, compression, and MAC layers
+@@ -249,10 +251,12 @@
+         }
+     } while (1);
+ 
++#ifndef _MSC_VER
+     gettimeofday(&end, NULL);
+     time_ms = tvdiff(end, start);
+     printf("Got %d bytes in %ld ms = %.1f bytes/sec spin: %d\n", total,
+            time_ms, total/(time_ms/1000.0), spin );
++#endif
+ 
+     libssh2_sftp_close(sftp_handle);
+     libssh2_sftp_shutdown(sftp_session);
+diff -ur libssh2-1.4.2-orig/example/ssh2.c libssh2-1.4.2/example/ssh2.c
+--- libssh2-1.4.2-orig/example/ssh2.c	2011-09-11 09:27:40 -0400
++++ libssh2-1.4.2/example/ssh2.c	2013-06-23 23:10:10 -0400
+@@ -36,6 +36,9 @@
+ #include <stdio.h>
+ #include <ctype.h>
+ 
++#ifdef _MSC_VER
++#define strcasecmp stricmp
++#endif
+ 
+ const char *keyfile1="~/.ssh/id_rsa.pub";
+ const char *keyfile2="~/.ssh/id_rsa";
+diff -ur libssh2-1.4.2-orig/example/ssh2_echo.c libssh2-1.4.2/example/ssh2_echo.c
+--- libssh2-1.4.2-orig/example/ssh2_echo.c	2011-09-11 09:27:40 -0400
++++ libssh2-1.4.2/example/ssh2_echo.c	2013-06-23 23:17:50 -0400
+@@ -30,7 +30,9 @@
+ # include <arpa/inet.h>
+ #endif
+ 
++#ifndef _MSC_VER
+ #include <sys/time.h>
++#endif
+ #include <sys/types.h>
+ #include <stdlib.h>
+ #include <fcntl.h>
+diff -ur libssh2-1.4.2-orig/example/ssh2_exec.c libssh2-1.4.2/example/ssh2_exec.c
+--- libssh2-1.4.2-orig/example/ssh2_exec.c	2011-12-08 04:54:46 -0500
++++ libssh2-1.4.2/example/ssh2_exec.c	2013-06-23 23:17:12 -0400
+@@ -32,7 +32,9 @@
+ # include <arpa/inet.h>
+ #endif
+ 
++#ifndef _MSC_VER
+ #include <sys/time.h>
++#endif
+ #include <sys/types.h>
+ #include <stdlib.h>
+ #include <fcntl.h>
+diff -ur libssh2-1.4.2-orig/example/subsystem_netconf.c libssh2-1.4.2/example/subsystem_netconf.c
+--- libssh2-1.4.2-orig/example/subsystem_netconf.c	2012-02-10 10:31:38 -0500
++++ libssh2-1.4.2/example/subsystem_netconf.c	2013-06-23 23:20:07 -0400
+@@ -28,6 +28,12 @@
+ #define INADDR_NONE (in_addr_t)~0
+ #endif
+ 
++#ifdef _MSC_VER
++#define __func__ __FUNCTION__
++#define snprintf _snprintf
++#define strcasecmp stricmp
++#endif
++
+ const char *keyfile1 = "/home/username/.ssh/id_rsa.pub";
+ const char *keyfile2 = "/home/username/.ssh/id_rsa";
+ const char *username = "username";
+diff -ur libssh2-1.4.2-orig/example/tcpip-forward.c libssh2-1.4.2/example/tcpip-forward.c
+--- libssh2-1.4.2-orig/example/tcpip-forward.c	2012-02-10 10:31:38 -0500
++++ libssh2-1.4.2/example/tcpip-forward.c	2013-06-23 23:21:08 -0400
+@@ -27,6 +27,10 @@
+ #define INADDR_NONE (in_addr_t)-1
+ #endif
+ 
++#ifdef _MSC_VER
++#define strcasecmp stricmp
++#endif
++
+ const char *keyfile1 = "/home/username/.ssh/id_rsa.pub";
+ const char *keyfile2 = "/home/username/.ssh/id_rsa";
+ const char *username = "username";
+diff -ur libssh2-1.4.2-orig/src/libssh2_priv.h libssh2-1.4.2/src/libssh2_priv.h
+--- libssh2-1.4.2-orig/src/libssh2_priv.h	2012-01-27 08:34:03 -0500
++++ libssh2-1.4.2/src/libssh2_priv.h	2013-06-23 23:07:02 -0400
+@@ -108,6 +108,10 @@
+ #define TRUE 1
+ #endif
+ 
++#ifdef _MSC_VER
++#define snprintf _snprintf
++#endif
++
+ /* Provide iovec / writev on WIN32 platform. */
+ #ifdef WIN32
+ 

@@ -25,7 +25,7 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --without-openssl \
         --with-libgcrypt \
-        PKG_CONFIG='$(MXE_PKG_CONFIG)'
+        PKG_CONFIG='$(MXE_PKG_CONFIG)' && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= html_DATA=
 
 ##    '$(MXE_CC)' \
