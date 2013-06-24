@@ -3,7 +3,7 @@
 
 PKG             := libgpg_error
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 95b324359627fbcb762487ab6091afbe59823b29
+$(PKG)_CHECKSUM := be209b013652add5c7e2c473ea114f58203cc6cd
 $(PKG)_SUBDIR   := libgpg-error-$($(PKG)_VERSION)
 $(PKG)_FILE     := libgpg-error-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnupg.org/gcrypt/libgpg-error/$($(PKG)_FILE)
@@ -22,7 +22,7 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --disable-nls \
-        --disable-languages
+        --disable-languages && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)/src' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)/src' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(LN_SF) '$(HOST_BINDIR)/gpg-error-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)gpg-error-config'
