@@ -25,7 +25,7 @@ define $(PKG)_BUILD
         --with-libidn \
         --enable-sspi \
         --enable-ipv6 \
-        --with-libssh2
+        --with-libssh2 && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
 ##    '$(MXE_CC)' \
