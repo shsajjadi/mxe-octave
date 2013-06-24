@@ -25,5 +25,5 @@ define $(PKG)_BUILD
         --without-libexpat-prefix \
         --without-libxml2-prefix \
         CONFIG_SHELL=$(SHELL) && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)/gettext-runtime/intl' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)/gettext-runtime' -j '$(JOBS)' install
 endef
