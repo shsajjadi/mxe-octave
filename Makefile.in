@@ -166,9 +166,13 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     MXE_WINDRES := windres
     MXE_PKG_CONFIG := pkg-config
     MXE_QMAKE := qmake
+    # Although the Fortran compiler is internally gfortran, we still
+    # want to make it look like non-GNU compiler, otherwise libtool is
+    # not playing nicely and trips over different variable values for
+    # different configuration tags.
     HOST_AND_BUILD_CONFIGURE_OPTIONS := \
 	    CC='$(MXE_CC)' CXX='$(MXE_CXX)' F77='$(MXE_F77)' DLLTOOL='$(MXE_DLLTOOL)' CCAS='gcc' \
-	    CFLAGS='-O2' CXXFLAGS='-O2'
+	    CFLAGS='-O2' CXXFLAGS='-O2' ac_cv_f77_compiler_gnu=no
   else
     MXE_AR := ar
     MXE_RANLIB := ranlib
