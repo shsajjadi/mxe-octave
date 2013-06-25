@@ -769,6 +769,16 @@ int main(int argc, char **argv)
 		clopt += (" " + sourcefile);
 	}
 
+	if (exeoutput && sourcefile.empty())
+	{
+		// It's possible all object files and libraries have been
+		// pushed into @-files, so "prog" would still be set to "cl".
+		// If there's no source file specified on the command line,
+		// it's probably safe to assume we're calling the linker.
+
+		prog = "link";
+	}
+
 	if (!exeoutput && !sourcefile.empty() && objectfile.empty())
 	{
 		// use .o suffix by default
@@ -792,6 +802,17 @@ int main(int argc, char **argv)
                 clopt += " -Fe" + exefile;
                 linkopt += " -out:" + exefile;
         }
+
+	if (exeoutput &&
+            (ends_with(exefile, ".dll") || ends_with(exefile, ".DLL"))
+            && ! doshared)
+	{
+		// Maybe "-shared" was missing on the command line.
+		// Compensate for it!
+
+		clopt += " -LD";
+		linkopt += " -DLL";
+	}
 
 	if (exeoutput && default_libs)
 	{
