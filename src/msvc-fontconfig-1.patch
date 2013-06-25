@@ -1,0 +1,102 @@
+diff -ur fontconfig-2.10.1-orig/fc-cache/fc-cache.c fontconfig-2.10.1/fc-cache/fc-cache.c
+--- fontconfig-2.10.1-orig/fc-cache/fc-cache.c	2012-07-23 22:01:32 -0400
++++ fontconfig-2.10.1/fc-cache/fc-cache.c	2013-06-25 10:47:29 -0400
+@@ -80,6 +80,17 @@
+ #endif
+ #endif
+ 
++#ifndef F_OK
++#define F_OK 0
++#define W_OK 2
++#define R_OK 4
++#define X_OK 0
++#endif
++
++#ifndef S_ISDIR
++#define S_ISDIR(x) ((x)&S_IFDIR)
++#endif
++
+ static void
+ usage (char *program, int error)
+ {
+diff -ur fontconfig-2.10.1-orig/src/Makefile.in fontconfig-2.10.1/src/Makefile.in
+--- fontconfig-2.10.1-orig/src/Makefile.in	2012-07-26 22:24:51 -0400
++++ fontconfig-2.10.1/src/Makefile.in	2013-06-25 10:47:47 -0400
+@@ -308,7 +308,7 @@
+ @OS_WIN32_TRUE@fontconfig_def_dependency = fontconfig.def
+ 
+ # Microsoft import library install/uninstall
+-@MS_LIB_AVAILABLE_TRUE@noinst_DATA = fontconfig.lib
++@MS_LIB_AVAILABLE_TRUE@#noinst_DATA = fontconfig.lib
+ INCLUDES = \
+ 	-I$(top_srcdir)					\
+ 	-I$(top_srcdir)/src				\
+@@ -754,9 +754,9 @@
+ ../fc-lang/fclang.h:
+ 	cd ../fc-lang && $(MAKE) $(AM_MAKEFLAGS) fclang.h
+ 
+-@ENABLE_SHARED_TRUE@install-data-local: install-ms-import-lib install-libtool-import-lib
++@ENABLE_SHARED_TRUE@#install-data-local: install-ms-import-lib install-libtool-import-lib
+ 
+-@ENABLE_SHARED_TRUE@uninstall-local: uninstall-ms-import-lib uninstall-libtool-import-lib
++@ENABLE_SHARED_TRUE@#uninstall-local: uninstall-ms-import-lib uninstall-libtool-import-lib
+ 
+ fcaliastail.h: fcalias.h
+ 
+@@ -772,10 +772,8 @@
+ 	echo Generating $@
+ 	(echo EXPORTS; \
+ 	(cat $(PUBLIC_FILES) $(PUBLIC_FT_FILES) || echo 'FcERROR ()' ) | \
+-	grep '^Fc[^ ]* *(' | sed -e 's/ *(.*$$//' -e 's/^/	/' | \
+-	sort; \
+-	echo LIBRARY libfontconfig-@LIBT_CURRENT_MINUS_AGE@.dll; \
+-	echo VERSION @LIBT_CURRENT@.@LIBT_REVISION@) >$@
++	grep '^Fc[^ ]* *(' | sed -e 's/ *(.*$$//' | \
++	sort) >$@
+ 	@ ! grep -q FcERROR $@ || ($(RM) $@; false)
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+diff -ur fontconfig-2.10.1-orig/src/fccache.c fontconfig-2.10.1/src/fccache.c
+--- fontconfig-2.10.1-orig/src/fccache.c	2012-07-23 22:01:32 -0400
++++ fontconfig-2.10.1/src/fccache.c	2013-06-25 10:47:29 -0400
+@@ -804,6 +804,12 @@
+ 
+ #ifdef _WIN32
+ #define mkdir(path,mode) _mkdir(path)
++#ifndef F_OK
++#define F_OK 0
++#define W_OK 2
++#define R_OK 4
++#define X_OK 0
++#endif
+ #endif
+ 
+ static FcBool
+diff -ur fontconfig-2.10.1-orig/src/fcdir.c fontconfig-2.10.1/src/fcdir.c
+--- fontconfig-2.10.1-orig/src/fcdir.c	2012-07-23 22:01:32 -0400
++++ fontconfig-2.10.1/src/fcdir.c	2013-06-25 10:47:29 -0400
+@@ -25,6 +25,10 @@
+ #include "fcint.h"
+ #include <dirent.h>
+ 
++#ifndef S_ISDIR
++#define S_ISDIR(x) ((x)&S_IFDIR)
++#endif
++
+ FcBool
+ FcFileIsDir (const FcChar8 *file)
+ {
+diff -ur fontconfig-2.10.1-orig/src/fcformat.c fontconfig-2.10.1/src/fcformat.c
+--- fontconfig-2.10.1-orig/src/fcformat.c	2012-07-23 22:01:32 -0400
++++ fontconfig-2.10.1/src/fcformat.c	2013-06-25 10:47:29 -0400
+@@ -27,6 +27,10 @@
+ #include <string.h>
+ #include <stdarg.h>
+ 
++#ifdef _MSC_VER
++#define snprintf _snprintf
++#endif
++
+ 
+ /* The language is documented in doc/fcformat.fncs
+  * These are the features implemented:

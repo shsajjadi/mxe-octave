@@ -25,7 +25,7 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --with-arch='$(TARGET)' \
         --disable-docs \
-        --with-expat='$(HOST_PREFIX)'
+        --with-expat='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install sbin_PROGRAMS= noinst_PROGRAMS=
 endef
