@@ -17,8 +17,9 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(SED) -i 's,__declspec(dllimport),,' '$(1)/pcre.h.in'
-    $(SED) -i 's,__declspec(dllimport),,' '$(1)/pcreposix.h'
+    $(if $(filter-out msvc,$(MXE_SYSTEM)),
+        $(SED) -i 's|__declspec(dllimport)||' '$(1)/pcre.h.in'
+        $(SED) -i 's|__declspec(dllimport)||' '$(1)/pcreposix.h')
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -29,7 +30,7 @@ define $(PKG)_BUILD
         --disable-cpp \
         --disable-pcregrep-libz \
         --disable-pcregrep-libbz2 \
-        --disable-pcretest-libreadline
+        --disable-pcretest-libreadline && $(CONFIGURE_POST_HOOK)
     rm -f '$(HOST_PREFIX)'/share/man/man3/pcre16*.3
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(INSTALL) -m755 $(HOST_BINDIR)/pcre-config $(BUILD_TOOLS_PREFIX)/bin/pcre-config
