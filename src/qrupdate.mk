@@ -28,7 +28,7 @@ define $(PKG)_BUILD
         $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
-        $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS)
+        $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) && $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
 endef
