@@ -19,7 +19,7 @@ define $(PKG)_BUILD
     cd '$(1)' && GNUMAKE=$(MAKE) ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(HOST_PREFIX)'
+        --prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
     rm -f $(HOST_LIBDIR)/libfreetype.la
