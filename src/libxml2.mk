@@ -7,7 +7,11 @@ $(PKG)_CHECKSUM := a43d7c0a8e463ac5a7846254f2a732a9af146fab
 $(PKG)_SUBDIR   := libxml2-$($(PKG)_VERSION)
 $(PKG)_FILE     := libxml2-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://xmlsoft.org/libxml2/$($(PKG)_FILE)
-$(PKG)_DEPS     := xz
+$(PKG)_DEPS     :=
+
+ifneq ($(MXE_SYSTEM),msvc)
+    $(PKG)_DEPS := xz
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/browse/libxml2/refs/tags' | \
@@ -25,7 +29,7 @@ define $(PKG)_BUILD
         --without-debug \
         --prefix='$(HOST_PREFIX)' \
         --without-python \
-        --without-threads
+        --without-threads && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef
