@@ -156,7 +156,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
   MXE_TOOL_PREFIX := 
   ifeq ($(MXE_SYSTEM),msvc)
     MXE_AR := ar
-    MXE_RANLIB := ranlib
+    MXE_RANLIB := true
     MXE_CC := clgcc
     MXE_CXX := clg++
     MXE_F77 := clgfortran
@@ -172,7 +172,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     # different configuration tags.
     HOST_AND_BUILD_CONFIGURE_OPTIONS := \
 	    CC='$(MXE_CC)' CXX='$(MXE_CXX)' F77='$(MXE_F77)' DLLTOOL='$(MXE_DLLTOOL)' CCAS='gcc' \
-	    CFLAGS='-O2' CXXFLAGS='-O2' ac_cv_f77_compiler_gnu=no
+	    CFLAGS='-O2' CXXFLAGS='-O2' ac_cv_f77_compiler_gnu=no RANLIB='$(MXE_RANLIB)'
   else
     MXE_AR := ar
     MXE_RANLIB := ranlib
