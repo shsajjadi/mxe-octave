@@ -48,12 +48,19 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --disable-direct-vfd \
-        $($(PKG)_CROSS_CONFIG_OPTIONS)
+        $($(PKG)_CROSS_CONFIG_OPTIONS) && $(CONFIGURE_POST_HOOK)
 
     case '$(MXE_SYSTEM)' in \
       *mingw*) \
         echo "#define H5_HAVE_WIN32_API 1" >> $(1)/.build/src/H5pubconf.h; \
         echo "#define H5_HAVE_MINGW 1" >> $(1)/.build/src/H5pubconf.h; \
+        echo "#define HAVE_WINDOWS_PATH 1" >> $(1)/.build/src/H5pubconf.h; \
+      ;; \
+      *msvc*) \
+        sed -i -e 's/^\(#define H5_SIZEOF_SSIZE_T\) .*/\1 0/' \
+	    '$(1)/.build/src/H5pubconf.h'; \
+        echo "#define H5_HAVE_WIN32_API 1" >> $(1)/.build/src/H5pubconf.h; \
+        echo "#define H5_HAVE_VISUAL_STUDIO 1" >> $(1)/.build/src/H5pubconf.h; \
         echo "#define HAVE_WINDOWS_PATH 1" >> $(1)/.build/src/H5pubconf.h; \
       ;; \
     esac
