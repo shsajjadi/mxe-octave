@@ -23,6 +23,6 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --enable-libjpeg \
         --disable-opengl \
-        --without-x
+        --without-x && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef
