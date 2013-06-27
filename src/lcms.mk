@@ -22,6 +22,6 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --with-jpeg \
         --with-tiff \
-        --with-zlib
+        --with-zlib && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
 endef
