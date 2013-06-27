@@ -8,7 +8,10 @@ $(PKG)_SUBDIR   := tiff-$($(PKG)_VERSION)
 $(PKG)_FILE     := tiff-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.osgeo.org/libtiff/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.remotesensing.org/libtiff/$($(PKG)_FILE)
-$(PKG)_DEPS     := zlib jpeg xz
+$(PKG)_DEPS     := zlib jpeg
+ifneq ($(MXE_SYSTEM),msvc)
+    $(PKG)_DEPS += xz
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.remotesensing.org/libtiff/' | \
@@ -22,7 +25,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
-        --without-x
+        --without-x && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 
     rm -f $(HOST_LIBDIR)/libtiff.la
