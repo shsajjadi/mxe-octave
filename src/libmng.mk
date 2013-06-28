@@ -32,7 +32,7 @@ define $(PKG)_BUILD
     $(SED) -e 's^@prefix@^$(HOST_PREFIX)^;' \
            -e 's^@VERSION@^$(libmng_VERSION)^;' \
            -e 's^@mng_libs_private@^-ljpeg^;' \
-           -e 's^@mng_requires_private@^lcms2 zlib^;' \
+           -e 's^@mng_requires_private@^lcms zlib^;' \
            < '$(1)/libmng.pc.in' > '$(1)/libmng.pc'
     $(INSTALL) -m644 '$(1)/libmng.pc' '$(HOST_LIBDIR)/pkgconfig/'
 endef
