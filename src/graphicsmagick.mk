@@ -7,7 +7,10 @@ $(PKG)_CHECKSUM := 6428eb4bd19635c833750ac9d56c9b89bef4c975
 $(PKG)_SUBDIR   := GraphicsMagick-$($(PKG)_VERSION)
 $(PKG)_FILE     := GraphicsMagick-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := pthreads libtool zlib bzip2 jpeg jasper lcms1 libpng tiff freetype libxml2
+$(PKG)_DEPS     := zlib bzip2 jpeg jasper lcms libpng tiff freetype libxml2
+ifneq ($(MXE_SYSTEM),msvc)
+    $(PKG)_DEPS += pthreads libtool
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/' | \
@@ -44,7 +47,8 @@ define $(PKG)_BUILD
         --with-zlib \
         --without-x \
         ac_cv_prog_xml2_config='$(HOST_BINDIR)/xml2-config' \
-        ac_cv_path_xml2_config='$(HOST_BINDIR)/xml2-config'
+        ac_cv_path_xml2_config='$(HOST_BINDIR)/xml2-config' \
+	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS=
 endef
