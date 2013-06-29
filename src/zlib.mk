@@ -21,10 +21,10 @@ define $(PKG)_BUILD
     cd '$(1)' && CC='$(MXE_CC)' ./configure \
       --prefix='$(HOST_PREFIX)'
 
-    $(MAKE) -C '$(1)' -j '$(JOBS)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install
 
-    if [ "$(BUILD_STATIC)" = yes ]; then \
-      $(MAKE) -C '$(1)' -j '$(JOBS)' install; \
+    if [ "$(BUILD_STATIC)" != yes ]; then \
+      true; \
     fi
 
     if [ "$(BUILD_SHARED)" = yes ]; then \
