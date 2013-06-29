@@ -27,6 +27,7 @@ define $(PKG)_BUILD
         --disable-asserts \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-maintainer-mode \
-        --disable-silent-rules
+        --disable-silent-rules \
+	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
