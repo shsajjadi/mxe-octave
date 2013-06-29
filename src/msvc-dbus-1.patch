@@ -1,0 +1,64 @@
+diff -ur dbus-1.6.8-orig/dbus/Makefile.in dbus-1.6.8/dbus/Makefile.in
+--- dbus-1.6.8-orig/dbus/Makefile.in	2012-09-28 15:45:15 -0400
++++ dbus-1.6.8/dbus/Makefile.in	2013-06-28 20:27:45 -0400
+@@ -614,7 +614,7 @@
+ @DBUS_WIN_FALSE@no_undefined = 
+ @DBUS_WIN_TRUE@no_undefined = -no-undefined
+ @DBUS_WIN_FALSE@export_symbols = -export-symbols-regex "^[^_].*"
+-@DBUS_WIN_TRUE@export_symbols = 
++@DBUS_WIN_TRUE@export_symbols = -export-symbols-regex "xXx"
+ @DBUS_WIN_TRUE@libdbus_1_la_DEPENDENCIES = $(dbus_res)
+ @DBUS_WIN_FALSE@intllibs = @LTLIBINTL@
+ @DBUS_WIN_TRUE@intllibs = 
+diff -ur dbus-1.6.8-orig/dbus/dbus-sysdeps-util-win.c dbus-1.6.8/dbus/dbus-sysdeps-util-win.c
+--- dbus-1.6.8-orig/dbus/dbus-sysdeps-util-win.c	2012-09-28 15:17:25 -0400
++++ dbus-1.6.8/dbus/dbus-sysdeps-util-win.c	2013-06-28 20:38:39 -0400
+@@ -105,7 +105,7 @@
+       return FALSE;
+     }
+ 
+-  if (snprintf (pidstr, sizeof (pidstr), "%lu\n", pid) < 0)
++  if (_snprintf (pidstr, sizeof (pidstr), "%lu\n", pid) < 0)
+     {
+       dbus_set_error (error, _dbus_error_from_system_errno (),
+                       "Failed to format PID for \"%s\": %s", cfilename,
+diff -ur dbus-1.6.8-orig/dbus/dbus-sysdeps-win.c dbus-1.6.8/dbus/dbus-sysdeps-win.c
+--- dbus-1.6.8-orig/dbus/dbus-sysdeps-win.c	2013-06-28 20:29:08 -0400
++++ dbus-1.6.8/dbus/dbus-sysdeps-win.c	2013-06-28 20:32:42 -0400
+@@ -1517,7 +1517,7 @@
+                                   host ? host : "*", port, _dbus_strerror_from_errno());
+                   goto failed;
+                 }
+-              snprintf( portbuf, sizeof( portbuf ) - 1, "%d", addr.AddressIn.sin_port );
++              _snprintf( portbuf, sizeof( portbuf ) - 1, "%d", addr.AddressIn.sin_port );
+               if (!_dbus_string_append(retport, portbuf))
+                 {
+                   dbus_set_error (error, DBUS_ERROR_NO_MEMORY, NULL);
+diff -ur dbus-1.6.8-orig/dbus/dbus-sysdeps.c dbus-1.6.8/dbus/dbus-sysdeps.c
+--- dbus-1.6.8-orig/dbus/dbus-sysdeps.c	2012-09-28 15:31:05 -0400
++++ dbus-1.6.8/dbus/dbus-sysdeps.c	2013-06-28 20:32:45 -0400
+@@ -59,6 +59,10 @@
+ extern char **environ;
+ #endif
+ 
++#ifdef _MSC_VER
++# define snprintf _snprintf
++#endif
++
+ /**
+  * @defgroup DBusSysdeps Internal system-dependent API
+  * @ingroup DBusInternals
+diff -ur dbus-1.6.8-orig/tools/dbus-monitor.c dbus-1.6.8/tools/dbus-monitor.c
+--- dbus-1.6.8-orig/tools/dbus-monitor.c	2012-09-28 15:17:26 -0400
++++ dbus-1.6.8/tools/dbus-monitor.c	2013-06-28 20:43:14 -0400
+@@ -39,6 +39,10 @@
+ 
+ #ifdef DBUS_WIN
+ 
++#ifdef _MSC_VER
++#define snprintf _snprintf
++#endif
++
+ /* gettimeofday is not defined on windows */
+ #define DBUS_SECONDS_SINCE_1601 11644473600LL
+ #define DBUS_USEC_IN_SEC        1000000LL
