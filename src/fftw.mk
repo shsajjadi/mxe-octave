@@ -13,6 +13,7 @@ ifeq ($(MXE_SYSTEM),msvc)
     $(PKG)_HAVE_LONG_DOUBLE := false
 else
     $(PKG)_HAVE_LONG_DOUBLE := true
+    $(PKG)_CONFIG_OPTS := --with-our-malloc
 endif
 
 define $(PKG)_UPDATE
@@ -31,6 +32,7 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --enable-threads \
         --enable-sse2 \
+        $($(PKG)_CONFIG_OPTS) \
         --enable-double && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
@@ -43,6 +45,7 @@ define $(PKG)_BUILD
             --prefix='$(HOST_PREFIX)' \
             --enable-threads \
             --enable-sse2 \
+            $($(PKG)_CONFIG_OPTS) \
             --enable-long-double && $(CONFIGURE_POST_HOOK) ; \
         $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= ; \
         $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= ; \
@@ -55,6 +58,7 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --enable-threads \
         --enable-sse2 \
+        $($(PKG)_CONFIG_OPTS) \
         --enable-float && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
