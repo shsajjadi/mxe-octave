@@ -10,8 +10,18 @@ $(PKG)_URL      := http://www.openssl.org/source/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.openssl.org/source/$($(PKG)_FILE)
 $(PKG)_DEPS     := zlib libgcrypt
 
+$(PKG)_CC := $(MXE_CC) -I$(HOST_INCDIR) -L$(HOST_LIBDIR)
 ifeq ($(MXE_NATIVE_BUILD),yes)
-  $(PKG)_CONFIGURE := ./config
+  ifeq ($(MXE_SYSTEM),msvc)
+    # Specifying -I and -L inteferes with possibly old installation
+    # because they appear before the standard -I. and -L. in the
+    # compilation/link command. These are not needed by clgcc anyway,
+    # so better discard them.
+    $(PKG)_CC := $(MXE_CC)
+    $(PKG)_CONFIGURE := ./Configure $(MXE_SYSTEM) --openssldir='$(HOST_PREFIX)/share/openssl'
+  else
+    $(PKG)_CONFIGURE := ./config
+  endif
 else
   $(PKG)_CONFIGURE := ./Configure $(MXE_SYSTEM)
   $(PKG)_CROSS_COMPILE_MAKE_ARG := CROSS_COMPILE='$(MXE_TOOL_PREFIX)'
@@ -25,16 +35,30 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && CC='$(MXE_CC) -I$(HOST_INCDIR) -L$(HOST_LIBDIR)' \
+    cd '$(1)' && CC='$($(PKG)_CC)' \
         $($(PKG)_CONFIGURE) \
         zlib \
         shared \
         no-capieng \
         --prefix='$(HOST_PREFIX)' \
         --libdir=lib
+    case $(MXE_SYSTEM) in \
+        msvc) \
+            find '$(1)' -name 'Makefile' \
+                -exec $(SED) -i -e 's,\<LIB\>,_LIB,g' -e 's,\<INCLUDE\>,_INCLUDE,g' {} \; ; \
+            for f in '$(1)/util/mkdef.pl' '$(1)/Makefile.shared' '$(1)/Makefile' \
+                     '$(1)/engines/Makefile' '$(1)/engines/ccgost/Makefile' \
+		     '$(1)/crypto/dso/dso_win32.c'; do \
+                $(SED) -i -e 's/@LIBRARY_PREFIX@/$(LIBRARY_PREFIX)/g' \
+                          -e 's/@LIBRARY_SUFFIX@/$(LIBRARY_SUFFIX)/g' "$$f"; \
+            done ; \
+            ;; \
+    esac
     $(MAKE) -C '$(1)' install -j 1 \
-        CC='$(MXE_CC) -I$(HOST_INCDIR) -L$(HOST_LIBDIR)' \
+        CC='$($(PKG)_CC)' \
         RANLIB='$(MXE_RANLIB)' \
         $($(PKG)_CROSS_COMPILE_MAKE_ARG) \
-        AR='$(MXE_AR) rcu'
+        AR='$(MXE_AR) rcu' AS='$(MXE_CCAS)' \
+	MANDIR='$(HOST_PREFIX)/share/man' \
+	HTMLDIR='$(HOST_PREFIX)/share/doc/openssl'
 endef
