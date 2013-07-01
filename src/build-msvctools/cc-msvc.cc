@@ -324,8 +324,11 @@ static void update_environment (void)
       else
         root.resize (root.size () - 4);
 
-      string include_var = getenv ("INCLUDE");
-      string lib_var = getenv ("LIB");
+      char * include_var_s = getenv ("INCLUDE");
+      char * lib_var_s = getenv ("LIB");
+
+      string include_var = (include_var_s ? include_var_s : "");
+      string lib_var = (lib_var_s ? lib_var_s : "");
 
       if (include_var.empty ())
         include_var = "INCLUDE=" + root + "\\include";
@@ -469,6 +472,11 @@ int main(int argc, char **argv)
 			// do not pass those to the linker
 			clopt += (" " + arg);
 		}
+                else if (arg == "-O3")
+                {
+                        // MSVC does not support -O3, convert to -O2 instead
+			clopt += " -O2";
+                }
 		else if (starts_with(arg, "-I"))
 		{
 			string path = arg.substr(2);
@@ -557,7 +565,8 @@ int main(int argc, char **argv)
 		}
 		else if (arg == "-m386" || arg == "-m486" || arg == "-mpentium" ||
 			 arg == "-mpentiumpro" || arg == "-pedantic" || starts_with(arg, "-W") ||
-			 arg == "-fPIC" || arg == "-nostdlib" || arg == "--export-all-symbols")
+			 arg == "-fPIC" || arg == "-nostdlib" || arg == "--export-all-symbols" ||
+                         starts_with(arg, "-march=") || arg == "-fomit-frame-pointer")
 		{
 			// ignore
 		}
@@ -716,7 +725,11 @@ int main(int argc, char **argv)
 			linkopt += " -IMPLIB:" + implib;
 		}
 		else if (arg == "--enable-auto-import"
-			 || arg == "--enable-auto-image-base")
+			 || arg == "--enable-auto-image-base"
+			 || arg == "--whole-archive"
+			 || arg == "--no-whole-archive"
+			 || arg == "-Bsymbolic"
+			 || arg == "-s")
 		{
 			// Ignore these.
 		}
@@ -725,6 +738,28 @@ int main(int argc, char **argv)
 			++it;
 			if (it == Xlinkopt.end ())
 				break;
+		}
+		else if (arg == "--image-base"
+			 || starts_with(arg, "--image-base="))
+		{
+			string base_addr;
+
+			if (arg == "--image-base")
+			{
+				++it;
+				if (it != Xlinkopt.end ())
+					base_addr = *it;
+				else
+				{
+					cerr << "WARNING: missing base address, ignored" << endl;
+					continue;
+				}
+			}
+			else
+				base_addr = arg.substr (13);
+
+			cllinkopt += " -BASE:" + base_addr;
+			linkopt += " -BASE:" + base_addr;
 		}
 		else
 		{
