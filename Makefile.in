@@ -158,6 +158,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     MXE_AR := ar
     MXE_RANLIB := true
     MXE_CC := clgcc
+    MXE_CCAS := gcc
     MXE_CXX := clg++
     MXE_F77 := clgfortran
     MXE_DLLTOOL := true
@@ -171,7 +172,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     # not playing nicely and trips over different variable values for
     # different configuration tags.
     HOST_AND_BUILD_CONFIGURE_OPTIONS := \
-	    CC='$(MXE_CC)' CXX='$(MXE_CXX)' F77='$(MXE_F77)' DLLTOOL='$(MXE_DLLTOOL)' CCAS='gcc' \
+	    CC='$(MXE_CC)' CXX='$(MXE_CXX)' F77='$(MXE_F77)' DLLTOOL='$(MXE_DLLTOOL)' CCAS='$(MXE_CCAS)' \
 	    CFLAGS='-O2' CXXFLAGS='-O2' ac_cv_f77_compiler_gnu=no RANLIB='$(MXE_RANLIB)'
   else
     MXE_AR := ar
@@ -196,6 +197,7 @@ else
   MXE_AR := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ar'
   MXE_RANLIB := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ranlib'
   MXE_CC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)gcc'
+  MXE_CCAS := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)gcc'
   MXE_CXX := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)g++'
   MXE_F77 := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)gfortran'
   MXE_DLLTOOL := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)dlltool'
