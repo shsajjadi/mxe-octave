@@ -31,18 +31,24 @@ $(PKG)_STATICLIBS_1 := \
   CCOLAMD/Lib/libccolamd.a \
   CSparse/Lib/libcsparse.a \
   CXSparse/Lib/libcxsparse.a \
+  CHOLMOD/Lib/libcholmod.a \
   SPQR/Lib/libspqr.a \
   BTF/Lib/libbtf.a \
   LDL/Lib/libldl.a \
   KLU/Lib/libklu.a \
   RBio/Lib/librbio.a \
-  CHOLMOD/Lib/libcholmod.a \
   UMFPACK/Lib/libumfpack.a
 
 define $(PKG)_BUILD
     # exclude demos
     find '$(1)' -name 'Makefile' \
         -exec $(SED) -i 's,( cd Demo,#( cd Demo,' {} \;
+
+    if test $(MXE_SYSTEM) = msvc; then \
+        (cd '$(1)'; \
+	 (cd CXSparse_newfiles && tar cfz ../CXSparse_newfiles.tar.gz .); \
+	 ./CSparse_to_CXSparse CSparse CXSparse CXSparse_newfiles.tar.gz) \
+    fi
 
     # build all
     $(MAKE) -C '$(1)' -j '$(JOBS)' \
