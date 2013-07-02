@@ -32,8 +32,16 @@ define $(PKG)_BUILD
 
 endef
 else
+ifeq ($(MXE_SYSTEM),msvc)
+define $(PKG)_BUILD
+    cd '$(1)/config/msvc' && \
+        env -u MAKE -u MAKEFLAGS nmake DESTDIR=$(shell (cd '$(HOST_PREFIX)' && pwd -W) | sed -e 's#/#\\\\#g') && \
+        env -u MAKE -u MAKEFLAGS nmake DESTDIR=$(shell (cd '$(HOST_PREFIX)' && pwd -W) | sed -e 's#/#\\\\#g') install
+endef
+else
 define $(PKG)_BUILD
     cd '$(1)' && ./configure --prefix '$(HOST_PREFIX)'
     make -C '$(1)' -j '$(JOBS)' install
 endef
+endif
 endif
