@@ -151,6 +151,7 @@ SRC_FILES_1 := \
   ilmbase-2-osx-cxxflags.patch \
   ilmbase.mk \
   imagemagick.mk \
+  itsol.mk \
   jasper-1-fixes.patch \
   jasper.mk \
   jpeg-test.c \
