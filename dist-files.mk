@@ -25,7 +25,6 @@ SRC_FILES_1 := \
   build-gcc.mk \
   build-gperf.mk \
   build-libtool.mk \
-  build-msvctools \
   build-msvctools.mk \
   build-pkg-config-1-fixes.patch \
   build-pkg-config.mk \
@@ -275,8 +274,25 @@ SRC_FILES_1 := \
   mingw-utils.mk \
   mingwrt.mk \
   mpfr.mk \
+  msvc-dbus-1.patch \
+  msvc-fftw-1.patch \
+  msvc-fltk-1.patch \
+  msvc-fontconfig-1.patch \
   msvc-gettext-1.patch \
+  msvc-gnutls-1.patch \
+  msvc-graphicsmagick-1.patch \
+  msvc-hdf5-1.patch \
+  msvc-itsol-1.patch \
+  msvc-libgcrypt-1.patch \
+  msvc-libgpg_error-1.patch \
   msvc-libiconv-1.patch \
+  msvc-libidn-1.patch \
+  msvc-libssh2-1.patch \
+  msvc-libxml2-1.patch \
+  msvc-nettle-1.patch \
+  msvc-qhull-1.patch \
+  msvc-suitesparse-1.patch \
+  msvc-tiff-1.patch \
   msys-bash.mk \
   msys-coreutils.mk \
   msys-diffutils.mk \
@@ -486,6 +502,106 @@ SRC_FILES_1 := \
 
 SRC_FILES := $(addprefix src/, $(SRC_FILES_1))
 
+SRC_MSVCTOOLS_FILES_1 := \
+  ar-msvc \
+  cc-msvc.cc \
+  fixlibtool2.in \
+  gcc.diff \
+  getopt.diff \
+  gfortran-msvc.cc \
+  libgfortran-dllinit.c \
+  libgfortran-msvcinit.c \
+  lt-postproc \
+  Makefile \
+  ranlib-msvc \
+  stdbool.h \
+  unistd.h
+
+SRC_MSVCTOOLS_FILES := $(addprefix src/build-msvctools/, $(SRC_MSVCTOOLS_FILES_1))
+
+SRC_MSVCTOOLS_COMPAT_FILES_1 := \
+  cabsf.c \
+  ccos.c \
+  ccosf.c \
+  cexp.c \
+  cexpf.c \
+  clog.c \
+  clogf.c \
+  csin.c \
+  csinf.c \
+  csqrt.c \
+  csqrtf.c \
+  gettimeofday.c \
+  Makefile \
+  mingwcompat.c \
+  mingwcompat_gcc.c \
+  usleep.c
+
+SRC_MSVCTOOLS_COMPAT_FILES := \
+  $(addprefix src/build-msvctools/compat/, $(SRC_MSVCTOOLS_COMPAT_FILES_1))
+
+SRC_MSVCTOOLS_MATH_FILES_1 := \
+  acosh.c \
+  acoshf.c \
+  asinh.c \
+  asinhf.c \
+  atanh.c \
+  atanhf.c \
+  cbrt.c \
+  cbrtf.c \
+  cephes_mconf.h \
+  exp2f.S \
+  exp2.S \
+  expm1.c \
+  expm1f.c \
+  fastmath.h \
+  finite.c \
+  finitef.c \
+  fmaf.S \
+  fma.S \
+  fpclassify.c \
+  fpclassifyf.c \
+  funx.c \
+  ilogbf.S \
+  ilogb.S \
+  isinf.c \
+  isinff.c \
+  isnan.c \
+  isnanf.c \
+  llrint.c \
+  llrintf.c \
+  log1pf.S \
+  log1p.S \
+  log2f.S \
+  log2.S \
+  logb.c \
+  logbf.c \
+  lrint.c \
+  lrintf.c \
+  lround_generic.c \
+  Makefile \
+  math.def \
+  math.h.in \
+  modff.c \
+  nan.c \
+  nearbyintf.S \
+  nearbyint.S \
+  nextafter.c \
+  nextafterf.c \
+  remainderf.S \
+  remainder.S \
+  rint.c \
+  rintf.c \
+  round_generic.c \
+  round_internal.h \
+  scalbnf.S \
+  scalbn.S \
+  trunc.c \
+  truncf.c
+
+SRC_MSVCTOOLS_MATH_FILES := \
+  $(addprefix src/build-msvctools/math/, $(SRC_MSVCTOOLS_MATH_FILES_1))
+
 TOOLS_FILES_1 := \
   config.guess \
   config.sub \
@@ -494,7 +610,6 @@ TOOLS_FILES_1 := \
   make-shared-from-static \
   patch-tool-mxe \
   s3-fetch-and-sync \
-  set_mxe_env.sh \
   set_mxe_env.sh.in
 
 TOOLS_FILES := $(addprefix tools/, $(TOOLS_FILES_1))
@@ -519,4 +634,11 @@ DOC_FILES_1 := \
 
 DOC_FILES := $(addprefix doc/, $(DOC_FILES_1))
 
-DIST_FILES := $(SRC_FILES) $(TOOLS_FILES) $(FILES) $(DOC_FILES)
+DIST_FILES := \
+  $(SRC_FILES) \
+  $(SRC_MSVCTOOLS_FILES) \
+  $(SRC_MSVCTOOLS_COMPAT_FILES) \
+  $(SRC_MSVCTOOLS_MATH_FILES) \
+  $(TOOLS_FILES) \
+  $(FILES) \
+  $(DOC_FILES)
