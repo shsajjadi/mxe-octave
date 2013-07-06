@@ -1,0 +1,22 @@
+diff -ur pstoedit-3.61-orig/configure.ac pstoedit-3.61/configure.ac
+--- pstoedit-3.61-orig/configure.ac	2012-08-28 06:46:41 -0400
++++ pstoedit-3.61/configure.ac	2013-07-05 23:29:38 -0400
+@@ -53,12 +53,12 @@
+ dnl Check Ghostscript
+ GS=""
+ AC_PATH_PROG(GS,gs)
+-if test -z "${GS}"; then
+-   AC_MSG_ERROR([** Cannot find ghostscript. If it is already installed, Check PATH.])
+-else
+-dnl Strip off // to / that causes troubles.
+-   GS=`echo $GS | sed -e 's/\/\//\//g'`	
+-fi
++dnl if test -z "${GS}"; then
++dnl    AC_MSG_ERROR([** Cannot find ghostscript. If it is already installed, Check PATH.])
++dnl else
++dnl dnl Strip off // to / that causes troubles.
++dnl    GS=`echo $GS | sed -e 's/\/\//\//g'`	
++dnl fi
+ 
+ PKG_PROG_PKG_CONFIG
+ 
