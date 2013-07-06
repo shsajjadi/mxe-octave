@@ -16,10 +16,17 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifeq ($(MXE_SYSTEM),msvc)
+  $(PKG)_CONFIG_OPTS := \
+    --without-normal \
+    --with-shared \
+    --with-libtool
+else
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   $(PKG)_CONFIG_OPTS := --with-normal --without-shared
 else
   $(PKG)_CONFIG_OPTS := --with-normal $(WITH_SHARED_OR_STATIC)
+endif
 endif
 
 define $(PKG)_BUILD
@@ -36,6 +43,14 @@ define $(PKG)_BUILD
         --without-manpages \
         --enable-pc-files \
         $($(PKG)_CONFIG_OPTS)
+
+    # MSVC generates invalid code in panel library when using -O2
+    # command-line flag. Bug is reported. Disable optimization for
+    # the time being.
+    if test x$(MXE_SYSTEM) = xmsvc; then \
+        find '$(1)' -name Makefile \
+            -exec $(SED) -i 's,-\<O2\>,,' {} \; ; \
+    fi
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
