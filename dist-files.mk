@@ -293,6 +293,7 @@ SRC_FILES_1 := \
   msvc-nettle-1.patch \
   msvc-ncurses-1.patch \
   msvc-qhull-1.patch \
+  msvc-readline-1.patch \
   msvc-suitesparse-1.patch \
   msvc-tiff-1.patch \
   msys-bash.mk \

@@ -26,6 +26,12 @@ endef
 define $(PKG)_BUILD
     $(SED) -i 's,^ *case SIGQUIT:.*,,' '$(1)/signals.c'
     $(SED) -i 's,^ *case SIGTSTP:.*,,' '$(1)/signals.c'
+    if test x$(MXE_SYSTEM) = xmsvc; then \
+        for f in '$(1)/support/shlib-install' '$(1)/support/shobj-conf'; do \
+            $(SED) -i -e 's/@@LIBRARY_PREFIX@@/$(LIBRARY_PREFIX)/g' \
+                      -e 's/@@LIBRARY_SUFFIX@@/$(LIBRARY_SUFFIX)/g' $$f; \
+        done; \
+    fi
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
