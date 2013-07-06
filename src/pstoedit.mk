@@ -20,7 +20,8 @@ define $(PKG)_BUILD
     cd '$(1)/.build' && '$(1)/configure' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-        --prefix='$(HOST_PREFIX)'
+        --prefix='$(HOST_PREFIX)' \
+	&& $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
 endef
