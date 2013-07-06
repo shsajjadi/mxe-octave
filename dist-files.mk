@@ -291,6 +291,7 @@ SRC_FILES_1 := \
   msvc-libssh2-1.patch \
   msvc-libxml2-1.patch \
   msvc-nettle-1.patch \
+  msvc-ncurses-1.patch \
   msvc-qhull-1.patch \
   msvc-suitesparse-1.patch \
   msvc-tiff-1.patch \
