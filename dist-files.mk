@@ -292,6 +292,7 @@ SRC_FILES_1 := \
   msvc-libxml2-1.patch \
   msvc-nettle-1.patch \
   msvc-ncurses-1.patch \
+  msvc-pstoedit-1.patch \
   msvc-qhull-1.patch \
   msvc-readline-1.patch \
   msvc-suitesparse-1.patch \
@@ -397,6 +398,7 @@ SRC_FILES_1 := \
   protobuf-test.cpp \
   protobuf.mk \
   pstoedit-1-fixes.patch \
+  pstoedit-2-gs.patch \
   pstoedit.mk \
   pthreads-1-fixes.patch \
   pthreads-test.c \
