@@ -280,6 +280,7 @@ SRC_FILES_1 := \
   msvc-fltk-1.patch \
   msvc-fontconfig-1.patch \
   msvc-gettext-1.patch \
+  msvc-glib-1.patch \
   msvc-gnutls-1.patch \
   msvc-graphicsmagick-1.patch \
   msvc-hdf5-1.patch \

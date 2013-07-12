@@ -3,7 +3,7 @@
 
 PKG             := glib
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := f695d4d3a6ded331e4d45f077a9774d6ca8a47e4
+$(PKG)_CHECKSUM := aafba69934b9ba77cc8cb0e5d8105aa1d8463eba
 $(PKG)_SUBDIR   := glib-$($(PKG)_VERSION)
 $(PKG)_FILE     := glib-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/glib/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
@@ -58,6 +58,22 @@ define $(PKG)_SYMLINK
     $(LN_SF) `which glib-compile-resources` '$(HOST_BINDIR)'
 endef
 
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+define $(PKG)_BUILD
+    cd '$(1)' && PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' ./configure \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        $(ENABLE_SHARED_OR_STATIC) \
+        --prefix='$(HOST_PREFIX)' \
+        --with-threads=win32 \
+        --with-pcre=system \
+        --with-libiconv=gnu \
+        --disable-modular-tests \
+	&& $(CONFIGURE_POST_HOOK)
+
+    $(MAKE) -C '$(1)' -j '$(JOBS)'
+    $(MAKE) -C '$(1)' -j 1 install
+endef
+else
 define $(PKG)_BUILD
     cd '$(1)' && ./autogen.sh
     rm -f '$(HOST_BINDIR)/glib-*'
@@ -88,3 +104,4 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/gio'     -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= MISC_STUFF=
     $(MAKE) -C '$(1)'         -j '$(JOBS)' install-pkgconfigDATA
 endef
+endif
