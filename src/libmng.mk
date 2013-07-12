@@ -27,12 +27,16 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
-        --enable-shared && $(CONFIGURE_POST_HOOK)
+	$(ENABLE_SHARED_OR_STATIC) \
+        && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
     $(SED) -e 's^@prefix@^$(HOST_PREFIX)^;' \
            -e 's^@VERSION@^$(libmng_VERSION)^;' \
            -e 's^@mng_libs_private@^-ljpeg^;' \
            -e 's^@mng_requires_private@^lcms zlib^;' \
            < '$(1)/libmng.pc.in' > '$(1)/libmng.pc'
+    if test x$(MXE_SYSTEM) = xmsvc; then \
+        $(SED) -i -e 's/lcms//' '$(1)/libmng.pc'; \
+    fi
     $(INSTALL) -m644 '$(1)/libmng.pc' '$(HOST_LIBDIR)/pkgconfig/'
 endef
