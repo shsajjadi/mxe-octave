@@ -20,12 +20,15 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
-        $(ENABLE_SHARED_OR_STATIC)
+        $(ENABLE_SHARED_OR_STATIC) \
+	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)/$(TARGET)' -j '$(JOBS)'
     $(MAKE) -C '$(1)/$(TARGET)' -j 1 install
 
-    '$(MXE_CC)' \
-        -W -Wall -Werror -std=c99 -pedantic \
-        '$(2).c' -o '$(HOST_BINDIR)/test-libffi.exe' \
-        `'$(MXE_PKG_CONFIG)' libffi --cflags --libs`
+    if [ $(MXE_SYSTEM) != msvc ]; then \
+        '$(MXE_CC)' \
+            -W -Wall -Werror -std=c99 -pedantic \
+            '$(2).c' -o '$(HOST_BINDIR)/test-libffi.exe' \
+            `'$(MXE_PKG_CONFIG)' libffi --cflags --libs`; \
+    fi
 endef

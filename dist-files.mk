@@ -284,6 +284,7 @@ SRC_FILES_1 := \
   msvc-graphicsmagick-1.patch \
   msvc-hdf5-1.patch \
   msvc-itsol-1.patch \
+  msvc-libffi-1.patch \
   msvc-libgcrypt-1.patch \
   msvc-libgpg_error-1.patch \
   msvc-libiconv-1.patch \
