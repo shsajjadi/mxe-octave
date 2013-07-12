@@ -18,14 +18,27 @@ ifneq ($(MXE_NATIVE_BUILD),yes)
   ifeq ($(MXE_SYSTEM),mingw)
     $(PKG)_QMAKE_SPEC_OPTION := -spec '$(HOST_PREFIX)/mkspecs/win32-g++'
   endif
+  ifeq ($(MXE_SYSTEM),msvc)
+    # FIXME: compute "2010" suffix dynamically
+    $(PKG)_QMAKE_SPEC_OPTION := -spec '$(HOST_LIBDIR)/qt4/mkspecs/win32-msvc2010'
+  endif
 endif
 
 define $(PKG)_BUILD
     cd '$(1)/Qt4Qt5' && '$(HOST_BINDIR)/qmake' -makefile $($(PKG)_QMAKE_SPEC_OPTION)
 
-    $(MAKE) -C '$(1)/Qt4Qt5' -j '$(JOBS)'
-    $(MAKE) -C '$(1)/Qt4Qt5' -j 1 install
-    if [ $(MXE_SYSTEM) = mingw ]; then \
-      $(INSTALL) -m755 '$(HOST_LIBDIR)/qscintilla2.dll' '$(HOST_BINDIR)/qscintilla2.dll'; \
+    if [ $(MXE_SYSTEM) = msvc ]; then \
+        cd '$(1)/Qt4Qt5' && \
+        env -u MAKE -u MAKEFLAGS nmake && \
+        env -u MAKE -u MAKEFLAGS nmake install; \
+    else \
+        $(MAKE) -C '$(1)/Qt4Qt5' -j '$(JOBS)' && \
+        $(MAKE) -C '$(1)/Qt4Qt5' -j 1 install; \
+    fi
+
+    if [ $(MXE_SYSTEM) = mingw -o $(MXE_SYSTEM) = msvc ]; then \
+        $(INSTALL) -m755 '$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' \
+            '$(HOST_BINDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
+        rm -f '$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
     fi
 endef
