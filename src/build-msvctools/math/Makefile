@@ -38,7 +38,7 @@ lround.o lroundf.o: lround_generic.c round_internal.h
 
 %.obj: %.c
 	@echo "MSC $<"
-	@cl -nologo -MD -O2 -Fo$@ -c $<
+	@cl -nologo -MD -O2 -D__CLGCC__ -Fo$@ -c $<
 
 %.o : %.S
 	@echo "AS $<"
