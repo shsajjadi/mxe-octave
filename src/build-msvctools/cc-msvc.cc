@@ -356,7 +356,7 @@ int main(int argc, char **argv)
 
 	prog = "cl";
 	// Default target is WinXP SP3
-	clopt = "-nologo -MD -DWIN32 -D_WIN32 -D__WIN32__ -DNTDDI_VERSION=0x05010300 -D_WIN32_WINNT=0x0501";
+	clopt = "-nologo -MD -DWIN32 -D__CLGCC__ -D_WIN32 -D__WIN32__ -DNTDDI_VERSION=0x05010300 -D_WIN32_WINNT=0x0501";
 	linkopt = "-nologo";
 	cllinkopt = "";
 	sourcefile = "";

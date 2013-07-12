@@ -9,6 +9,13 @@
 # error "this header can only be used with Visual C++ compiler"
 #endif
 
+#ifndef __CLGCC__
+/* Only use this header with clgcc/clg++, otherwise fall back
+ * to the default VC++ header.
+ */
+#include <@MSVCMATH@>
+#else
+
 /* Make sure math constants are defined */
 #ifndef _USE_MATH_DEFINES
 # define _USE_MATH_DEFINES
@@ -319,5 +326,7 @@ extern long double scalbnl(long double x, int exp);
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __CLGCC__ */
 
 #endif
