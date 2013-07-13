@@ -1,0 +1,141 @@
+diff -ur vala-0.20.1-orig/gobject-introspection/gidlnode.c vala-0.20.1/gobject-introspection/gidlnode.c
+--- vala-0.20.1-orig/gobject-introspection/gidlnode.c	2009-04-09 16:01:10 -0400
++++ vala-0.20.1/gobject-introspection/gidlnode.c	2013-07-12 19:28:27 -0400
+@@ -840,6 +840,11 @@
+     }
+ }
+ 
++#ifdef _MSC_VER
++#  define strtoll _strtoi64
++#  define strtoull _strtoui64
++#endif
++
+ static gint64
+ parse_int_value (const gchar *str)
+ {
+diff -ur vala-0.20.1-orig/gobject-introspection/scanner.c vala-0.20.1/gobject-introspection/scanner.c
+--- vala-0.20.1-orig/gobject-introspection/scanner.c	2012-11-11 08:05:37 -0500
++++ vala-0.20.1/gobject-introspection/scanner.c	2013-07-12 19:15:07 -0400
+@@ -775,13 +775,14 @@
+ 	       member_l = member_l->next)
+ 	    {
+ 	      CSymbol *member = member_l->data;
++	      GIdlNodeField *gifield;
+ 	      /* ignore private / reserved members */
+ 	      if (member->ident[0] == '_'
+ 		  || g_str_has_prefix (member->ident, "priv"))
+ 		{
+ 		  continue;
+ 		}
+-	      GIdlNodeField *gifield =
++	      gifield =
+ 		(GIdlNodeField *) g_idl_node_new (G_IDL_NODE_FIELD);
+ 	      node->members = g_list_append (node->members, gifield);
+ 	      gifield->node.name = member->ident;
+@@ -943,8 +944,10 @@
+   
+   if (union_type->child_list == NULL)
+     {
++      CSymbol *union_symbol;
++
+       g_assert (union_type->name != NULL);
+-      CSymbol *union_symbol =
++      union_symbol =
+ 	g_hash_table_lookup (igenerator->struct_or_union_or_enum_table,
+ 			     union_type->name);
+       if (union_symbol != NULL)
+@@ -960,9 +963,11 @@
+   type = g_hash_table_lookup (igenerator->type_map, sym->ident);
+   if (type != NULL)
+     {
+-      g_assert (type->type == G_IDL_NODE_BOXED);
+-      GIdlNodeBoxed *node = (GIdlNodeBoxed *) type;
++      GIdlNodeBoxed *node;
+       GList *member_l;
++
++      g_assert (type->type == G_IDL_NODE_BOXED);
++      node = (GIdlNodeBoxed *) type;
+       for (member_l = union_type->child_list; member_l != NULL;
+ 	   member_l = member_l->next)
+ 	{
+@@ -1333,9 +1338,10 @@
+   FILE *fmacros =
+     fdopen (g_file_open_tmp ("gen-introspect-XXXXXX.h", &tmp_name, &error),
+ 	    "w+");
++  GList *l;
++
+   g_unlink (tmp_name);
+ 
+-  GList *l;
+   for (l = igenerator->filenames; l != NULL; l = l->next)
+     {
+       FILE *f = fopen (l->data, "r");
+@@ -1513,6 +1519,16 @@
+     }
+ }		     
+ 
++#ifdef _WIN32
++/* We don't want to include <windows.h> as it clashes horribly
++ * with token names from scannerparser.h. So just declare
++ * WaitForSingleObject, GetExitCodeProcess and INFINITE here.
++ */
++extern unsigned long __stdcall WaitForSingleObject(void*, int);
++extern int __stdcall GetExitCodeProcess(void*, int*);
++#define INFINITE 0xffffffff
++#endif
++
+ static FILE *
+ g_igenerator_start_preprocessor (GIGenerator *igenerator,
+ 				 GList       *cpp_options)
+@@ -1606,14 +1622,6 @@
+ #ifndef _WIN32
+   if (waitpid (pid, &status, 0) > 0)
+ #else
+-  /* We don't want to include <windows.h> as it clashes horribly
+-   * with token names from scannerparser.h. So just declare
+-   * WaitForSingleObject, GetExitCodeProcess and INFINITE here.
+-   */
+-  extern unsigned long __stdcall WaitForSingleObject(void*, int);
+-  extern int __stdcall GetExitCodeProcess(void*, int*);
+-#define INFINITE 0xffffffff
+-
+   WaitForSingleObject (pid, INFINITE);
+ 
+   if (GetExitCodeProcess (pid, &status))
+diff -ur vala-0.20.1-orig/gobject-introspection/scannerlexer.c vala-0.20.1/gobject-introspection/scannerlexer.c
+--- vala-0.20.1-orig/gobject-introspection/scannerlexer.c	2013-04-08 08:54:29 -0400
++++ vala-0.20.1/gobject-introspection/scannerlexer.c	2013-07-12 19:23:43 -0400
+@@ -2658,13 +2658,14 @@
+ 	/* extract current filename from #line directives */
+ 	GString *filename_builder;
+ 	gboolean in_string, found_filename;
++	int c;
+ 
+ 	lineno = 0;
+ 	found_filename = FALSE;
+ 	in_string = FALSE;
+ 	filename_builder = g_string_new ("");
+ 
+-	int c = input ();
++	c = input ();
+ 	while (c != EOF && c != '\n') {
+ 		if (!in_string) {
+ 			if (c == '\"') {
+diff -ur vala-0.20.1-orig/gobject-introspection/scannerparser.c vala-0.20.1/gobject-introspection/scannerparser.c
+--- vala-0.20.1-orig/gobject-introspection/scannerparser.c	2013-04-08 08:54:29 -0400
++++ vala-0.20.1/gobject-introspection/scannerparser.c	2013-07-12 19:24:53 -0400
+@@ -3028,11 +3028,13 @@
+ /* Line 1792 of yacc.c  */
+ #line 804 "scannerparser.y"
+     {
++		CSymbol *sym;
++
+ 		(yyval.ctype) = (yyvsp[(1) - (5)].ctype);
+ 		(yyval.ctype)->name = (yyvsp[(2) - (5)].str);
+ 		(yyval.ctype)->child_list = (yyvsp[(4) - (5)].list);
+ 
+-		CSymbol *sym = csymbol_new (CSYMBOL_TYPE_INVALID);
++		sym = csymbol_new (CSYMBOL_TYPE_INVALID);
+ 		if ((yyval.ctype)->type == CTYPE_STRUCT) {
+ 			sym->type = CSYMBOL_TYPE_STRUCT;
+ 		} else if ((yyval.ctype)->type == CTYPE_UNION) {
