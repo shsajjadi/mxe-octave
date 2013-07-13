@@ -300,6 +300,7 @@ SRC_FILES_1 := \
   msvc-readline-1.patch \
   msvc-suitesparse-1.patch \
   msvc-tiff-1.patch \
+  msvc-vala-1.patch \
   msys-bash.mk \
   msys-coreutils.mk \
   msys-diffutils.mk \
