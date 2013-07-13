@@ -13,15 +13,21 @@ diff --git a/gsf/gsf-utils.c b/gsf/gsf-utils.c
 index d7a7247..cc52d99 100644
 --- a/gsf/gsf-utils.c
 +++ b/gsf/gsf-utils.c
-@@ -115,9 +115,9 @@ static GTypeModule *static_type_module = NULL;
+@@ -76,9 +76,17 @@ static GTypeModule *static_type_module = NULL;
  #include <windows.h>
  static HMODULE gsf_dll_hmodule;
  BOOL WINAPI
--DllMain (HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
++#ifdef DLL_EXPORT
+ DllMain (HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
++#else
 +static _disabled_DllMain (HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
++#endif
  BOOL WINAPI
--DllMain (HINSTANCE hinstDLL, DWORD fdwReason, G_GNUC_UNUSED LPVOID lpvReserved)
++#ifdef DLL_EXPORT
+ DllMain (HINSTANCE hinstDLL, DWORD fdwReason, G_GNUC_UNUSED LPVOID lpvReserved)
++#else
 +static _disabled_DllMain (HINSTANCE hinstDLL, DWORD fdwReason, G_GNUC_UNUSED LPVOID lpvReserved)
++#endif
  {
  	if (fdwReason == DLL_PROCESS_ATTACH) gsf_dll_hmodule = hinstDLL;
  	return TRUE;
