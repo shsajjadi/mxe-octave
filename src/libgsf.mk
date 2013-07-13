@@ -3,11 +3,15 @@
 
 PKG             := libgsf
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 4f19933342b2d42246200e3522b0797a032fdf19
+$(PKG)_CHECKSUM := b6082b71bf9d6e1cdafde9628cae58fcedc4a8fd
 $(PKG)_SUBDIR   := libgsf-$($(PKG)_VERSION)
 $(PKG)_FILE     := libgsf-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/libgsf/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
 $(PKG)_DEPS     := zlib bzip2 glib libxml2
+
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+    $(PKG)_DEPS += intltool
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/browse/libgsf/refs/tags' | \
@@ -26,11 +30,12 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --disable-nls \
         --disable-gtk-doc \
-        --without-python \
         --with-zlib \
         --with-bz2 \
-        --with-gio \
-        PKG_CONFIG='$(MXE_PKG_CONFIG)'
-    $(MAKE) -C '$(1)'     -j '$(JOBS)' install-pkgconfigDATA
-    $(MAKE) -C '$(1)/gsf' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+        PKG_CONFIG='$(MXE_PKG_CONFIG)' \
+	PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
+	&& $(CONFIGURE_POST_HOOK)
+
+    $(MAKE) -C '$(1)'     -j '$(JOBS)'
+    $(MAKE) -C '$(1)'     -j 1         install
 endef

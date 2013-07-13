@@ -288,6 +288,7 @@ SRC_FILES_1 := \
   msvc-libffi-1.patch \
   msvc-libgcrypt-1.patch \
   msvc-libgpg_error-1.patch \
+  msvc-libgsf-1.patch \
   msvc-libiconv-1.patch \
   msvc-libidn-1.patch \
   msvc-libssh2-1.patch \
