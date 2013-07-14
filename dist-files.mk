@@ -79,6 +79,7 @@ SRC_FILES_1 := \
   ftgl-1-gl-m4.patch \
   ftgl.mk \
   gc.mk \
+  gcab.mk \
   gcc-1-mingw-float.patch \
   gcc-2-darwin-no-pie.patch \
   gcc-gmp.mk \
@@ -150,6 +151,7 @@ SRC_FILES_1 := \
   ilmbase-2-osx-cxxflags.patch \
   ilmbase.mk \
   imagemagick.mk \
+  intltool.mk \
   itsol.mk \
   jasper-1-fixes.patch \
   jasper.mk \
@@ -276,10 +278,12 @@ SRC_FILES_1 := \
   mingw-utils.mk \
   mingwrt.mk \
   mpfr.mk \
+  msitools.mk \
   msvc-dbus-1.patch \
   msvc-fftw-1.patch \
   msvc-fltk-1.patch \
   msvc-fontconfig-1.patch \
+  msvc-gcab-1.patch \
   msvc-gettext-1.patch \
   msvc-glib-1.patch \
   msvc-gnutls-1.patch \
@@ -475,6 +479,7 @@ SRC_FILES_1 := \
   tinyxml.mk \
   tre.mk \
   uuid.mk \
+  vala.mk \
   vigra-test.cpp \
   vigra.mk \
   vmime-1-fixes.patch \
