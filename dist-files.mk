@@ -183,6 +183,7 @@ SRC_FILES_1 := \
   libgcrypt-1-fixes.patch \
   libgcrypt-test.c \
   libgcrypt.mk \
+  libgd.mk \
   libgda.mk \
   libgdamm.mk \
   libgee.mk \
@@ -286,6 +287,7 @@ SRC_FILES_1 := \
   msvc-hdf5-1.patch \
   msvc-itsol-1.patch \
   msvc-libffi-1.patch \
+  msvc-libgd-1.patch \
   msvc-libgcrypt-1.patch \
   msvc-libgpg_error-1.patch \
   msvc-libgsf-1.patch \

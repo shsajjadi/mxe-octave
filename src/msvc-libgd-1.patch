@@ -1,0 +1,12 @@
+diff -ur libgd-2.1.0-orig/src/Makefile.am libgd-2.1.0/src/Makefile.am
+--- libgd-2.1.0-orig/src/Makefile.am	2013-06-25 05:58:23 -0400
++++ libgd-2.1.0/src/Makefile.am	2013-07-14 16:16:20 -0400
+@@ -50,7 +50,7 @@
+                    gd_tga.c gd_tga.h gd_bmp.c bmp.h gd_color.h gd_nnquant.h gd_tga.h gd_intern.h gd_io_stream.h gd_xbm.c \
+ 		   gd_color_match.c
+ 
+-libgd_la_LDFLAGS = -version-info $(GDLIB_CURRENT):$(GDLIB_REVISION):$(GDLIB_AGE) -no-undefined
++libgd_la_LDFLAGS = -version-info $(GDLIB_CURRENT):$(GDLIB_REVISION):$(GDLIB_AGE) -no-undefined -export-symbols-regex "xXx"
+ 
+ libgd_la_LIBADD = $(LTLIBICONV)
+ 
