@@ -293,6 +293,8 @@ SRC_FILES_1 := \
   msvc-libidn-1.patch \
   msvc-libssh2-1.patch \
   msvc-libxml2-1.patch \
+  msvc-msitools-1.patch \
+  msvc-msitools-2-tests.patch \
   msvc-nettle-1.patch \
   msvc-ncurses-1.patch \
   msvc-pstoedit-1.patch \
