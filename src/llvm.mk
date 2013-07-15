@@ -3,11 +3,14 @@
 
 PKG             := llvm
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := b683e7294fcf69887c0d709025d4640f5dca755b
+$(PKG)_CHECKSUM := 234c96e73ef81aec9a54da92fc2a9024d653b059
 $(PKG)_SUBDIR   := llvm-$($(PKG)_VERSION).src
-$(PKG)_FILE     := llvm-$($(PKG)_VERSION).tar.gz
+$(PKG)_FILE     := llvm-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := http://llvm.org/releases/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
+ifeq ($(MXE_SYSTEM),msvc)
+    $(PKG)_DEPS += libffi
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://llvm.org/releases/download.html' | \
@@ -17,6 +20,25 @@ define $(PKG)_UPDATE
 endef
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+ifeq ($(MXE_SYSTEM),msvc)
+define $(PKG)_BUILD
+    mkdir '$(1)/.build'
+    cd '$(1)/.build' && cmake \
+        -G "NMake Makefiles" \
+        -DCMAKE_BUILD_TYPE="Release" \
+        "-DCMAKE_INSTALL_PREFIX:PATH=$(HOST_PREFIX)" \
+        -DLLVM_ENABLE_FFI:BOOL=ON \
+        "-DFFI_INCLUDE_DIR=$(HOST_LIBDIR)/libffi-$(libffi_VERSION)/include" \
+        ../
+    sed -i '/^	echo "/ {s/echo "/echo /;s/" >>/ >>/;}' \
+        '$(1)/.build/tools/llvm-config/CMakeFiles/llvm-config.dir/build.make'
+    cd '$(1)/.build' && \
+        env -u MAKE -u MAKEFLAGS \
+            LIB="`echo \`cd ../../../usr/i686-pc-mingw32/lib && pwd -W\` | sed -e 's,/,\\\\\\\\,g'`\;$$LIB" \
+            nmake && \
+        env -u MAKE -u MAKEFLAGS nmake install
+endef
+else
 define $(PKG)_BUILD
     mkdir '$(1)/build'
     cd '$(1)/build' && ../configure  \
@@ -31,6 +53,7 @@ define $(PKG)_BUILD
     PATH='$(HOST_BINDIR):$(PATH)' $(MAKE) -C '$(1)/build' -j $(JOBS) install
     $(LN_SF) '$(HOST_BINDIR)/llvm-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)llvm-config'
 endef
+endif
 else
 define $(PKG)_BUILD
     mkdir '$(1)/build'

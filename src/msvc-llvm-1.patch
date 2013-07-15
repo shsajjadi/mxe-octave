@@ -1,0 +1,49 @@
+diff -ur llvm-3.1.src-orig/cmake/modules/LLVM-Config.cmake llvm-3.1.src/cmake/modules/LLVM-Config.cmake
+--- llvm-3.1.src-orig/cmake/modules/LLVM-Config.cmake	2011-11-29 01:31:52 +0000
++++ llvm-3.1.src/cmake/modules/LLVM-Config.cmake	2012-08-02 09:05:16 +0100
+@@ -11,6 +11,8 @@
+ 	set(system_libs ${system_libs} pthread)
+       endif()
+     endif( MINGW )
++  else()
++    set(system_libs ${system_libs} ffi shell32)
+   endif( NOT MSVC )
+   set(${return_var} ${system_libs} PARENT_SCOPE)
+ endfunction(get_system_libs)
+diff -ur llvm-3.1.src-orig/include/llvm/Support/DataTypes.h.cmake llvm-3.1.src/include/llvm/Support/DataTypes.h.cmake
+--- llvm-3.1.src-orig/include/llvm/Support/DataTypes.h.cmake	2012-03-11 01:20:23 +0000
++++ llvm-3.1.src/include/llvm/Support/DataTypes.h.cmake	2012-08-02 09:05:41 +0100
+@@ -113,7 +113,9 @@
+ typedef unsigned short uint16_t;
+ typedef signed char int8_t;
+ typedef unsigned char uint8_t;
++#ifndef ssize_t
+ typedef signed int ssize_t;
++#endif
+ #ifndef INT8_MAX
+ # define INT8_MAX 127
+ #endif
+diff -ur llvm-3.1.src-orig/include/llvm/Support/DataTypes.h.in llvm-3.1.src/include/llvm/Support/DataTypes.h.in
+--- llvm-3.1.src-orig/include/llvm/Support/DataTypes.h.in	2011-11-05 09:45:17 +0000
++++ llvm-3.1.src/include/llvm/Support/DataTypes.h.in	2012-08-02 09:05:16 +0100
+@@ -110,7 +110,9 @@
+ typedef unsigned short uint16_t;
+ typedef signed char int8_t;
+ typedef unsigned char uint8_t;
++#ifndef ssize_t
+ typedef signed int ssize_t;
++#endif
+ #ifndef INT8_MAX
+ # define INT8_MAX 127
+ #endif
+diff -ur llvm-3.1.src-orig/tools/CMakeLists.txt llvm-3.1.src/tools/CMakeLists.txt
+--- llvm-3.1.src-orig/tools/CMakeLists.txt	2012-03-01 01:36:50 +0000
++++ llvm-3.1.src/tools/CMakeLists.txt	2012-08-02 09:05:16 +0100
+@@ -15,6 +15,7 @@
+   # on pure Win32.
+   add_subdirectory(llvm-config)
+ endif()
++add_subdirectory(llvm-config)
+ 
+ add_subdirectory(opt)
+ add_subdirectory(llvm-as)
