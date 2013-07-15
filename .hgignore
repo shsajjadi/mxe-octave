@@ -12,3 +12,8 @@
 ^config.log
 ^Makefile
 ^cmake-toolchain-file.stamp
+
+^cross-tools/
+^gnuplot/
+^octave/
+^tools/set_mxe_env.sh
