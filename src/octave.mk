@@ -10,6 +10,7 @@ $(PKG)_URL      := ftp://alpha.gnu.org/gnu/octave/$($(PKG)_FILE)
 $(PKG)_DEPS     := arpack curl fftw fltk fontconfig glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
 ifeq ($(ENABLE_JIT),yes)
   $(PKG)_DEPS += llvm
+$(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --enable-jit
 endif
 
 ifeq ($(ENABLE_OPENBLAS),yes)
@@ -35,6 +36,22 @@ else
   endif
 endif
 
+ifeq ($(MXE_SYSTEM),msvc)
+  $(PKG)_PREFIX := '$(HOST_PREFIX)/local/$($(PKG)_SUBDIR)'
+  # - Enable atomic refcount (required for QtHandles)
+  # - Skip configure test for pow and sqrt, MSVC fails to compile them
+  #   because it uses intrinsics (with -O2 flag) and bump on the fake
+  #   "char FUNC()" forward declaration.
+  $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
+    --enable-atomic-refcount \
+    ac_cv_func_pow=yes ac_cv_func_sqrt=yes
+  $(PKG)_CONFIGURE_POST_HOOK := $(CONFIGURE_POST_HOOK) -x
+else
+  $(PKG)_PREFIX := '$(HOST_PREFIX)'
+  $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
+    LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
+endif
+
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package octave.' >&2;
     echo $(octave_VERSION)
@@ -45,17 +62,23 @@ define $(PKG)_BUILD
     cd '$(1)' && autoreconf -W none
     cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) \
-        LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-        --prefix='$(HOST_PREFIX)' \
+        --prefix='$($(PKG)_PREFIX)' \
         $($(PKG)_BLAS_OPTION) \
 	$($(PKG)_CROSS_CONFIG_OPTIONS) \
-        $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS)
+        $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
+        $($(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS) \
+	$($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
+	PKG_CONFIG='$(MXE_PKG_CONFIG)' \
+	PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
+        && $($(PKG)_CONFIGURE_POST_HOOK)
 
     ## We want both of these install steps so that we install in the
     ## location set by the configure --prefix option, and the other
     ## in a directory tree that will have just Octave files.
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(TOP_DIR)/octave install
+    if [ $(MXE_SYSTEM) != msvc ]; then \
+        $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(TOP_DIR)/octave install; \
+    fi
 endef
 
