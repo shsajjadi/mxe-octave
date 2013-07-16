@@ -12,7 +12,7 @@ $(PKG)_DEPS     := openssl zlib libpng jpeg libmng tiff dbus
 $(PKG)_CONFIGURE_CMD :=
 $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION :=
 $(PKG)_CONFIGURE_DATABASE_OPTION :=
-$(PKG)_CONFIGURE_ENV :=
+$(PKG)_CONFIGURE_ENV := PKG_CONFIG_PATH='$(HOST_PREFIX)/lib/pkgconfig'
 $(PKG)_CONFIGURE_EXTRA_OPTION :=
 $(PKG)_CONFIGURE_INCLUDE_OPTION :=
 $(PKG)_CONFIGURE_LIBPATH_OPTION :=
@@ -22,9 +22,6 @@ $(PKG)_MKSPECS := '$($(PKG)_PREFIX)'
 
 ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
   ifeq ($(MXE_NATIVE_BUILD),yes)
-    $(PKG)_CONFIGURE_ENV := \
-      PKG_CONFIG_PATH='$(HOST_PREFIX)/lib/pkgconfig'
-
     ifeq ($(MXE_SYSTEM),msvc)
       # NMAKE is perturbed by the values of MAKE and MAKEFLAGS defined by GNU
       # make. These need to be unset even when running configure script, as
@@ -40,8 +37,7 @@ ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
   # compile-in generic ODBC driver under Windows
   $(PKG)_CONFIGURE_DATABASE_OPTION += -plugin-sql-odbc
 else
-  $(PKG)_CONFIGURE_ENV := \
-    CPPFLAGS='$(HOST_INCDIR)/dbus-1.0' \
+  $(PKG)_CONFIGURE_ENV += \
     LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
 endif
 
@@ -72,15 +68,12 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   # variables *before* "configure.exe" doesn't work. Also compile-in D-BUS
   # support, for what it's worth...
   $(PKG)_CONFIGURE_EXTRA_OPTION += \
-      -openssl-linked \
-      OPENSSL_LIBS="`PKG_CONFIG_PATH='$(HOST_PREFIX)/lib/pkgconfig' '$(MXE_PKG_CONFIG)' --libs-only-l openssl`" \
-      -dbus-linked
+      OPENSSL_LIBS="`PKG_CONFIG_PATH='$(HOST_PREFIX)/lib/pkgconfig' '$(MXE_PKG_CONFIG)' --libs-only-l openssl`"
 else
   $(PKG)_CONFIGURE_CMD := configure
   $(PKG)_CONFIGURE_EXTRA_OPTION := \
       -prefix-install \
       -make libs \
-      -openssl-linked \
       -no-glib \
       -no-gstreamer \
       -no-reduce-exports \
@@ -88,7 +81,6 @@ else
       -no-rpath \
       -device-option PKG_CONFIG='$(MXE_PKG_CONFIG)' \
       -force-pkg-config  \
-      -dbus-linked \
       -v
 
   ifeq ($(MXE_SYSTEM),mingw)
@@ -115,6 +107,7 @@ define $(PKG)_BUILD
         $($(PKG)_CONFIGURE_LIBPATH_OPTION) \
         -opensource \
         -confirm-license \
+        -dbus-linked \
         -fast \
         $($(PKG)_CONFIGURE_PLATFORM_OPTION) \
         $($(PKG)_CONFIGURE_CROSS_COMPILE_OPTION) \
@@ -126,6 +119,7 @@ define $(PKG)_BUILD
         -script \
         -no-iconv \
         -opengl desktop \
+        -openssl-linked \
         -no-webkit \
         -no-phonon \
         -no-phonon-backend \
