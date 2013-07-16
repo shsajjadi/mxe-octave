@@ -170,7 +170,7 @@ diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/3rdparty/zlib_dependency.pr
 diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/dbus/dbus.pro qt-everywhere-opensource-src-4.8.3/src/dbus/dbus.pro
 --- qt-everywhere-opensource-src-4.8.3-orig/src/dbus/dbus.pro	2012-09-10 21:36:52 -0400
 +++ qt-everywhere-opensource-src-4.8.3/src/dbus/dbus.pro	2013-07-08 20:27:21 -0400
-@@ -12,14 +12,15 @@
+@@ -12,7 +12,7 @@
  }
  
  # INCLUDEPATH += .
@@ -179,15 +179,6 @@ diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/dbus/dbus.pro qt-everywhere
      QMAKE_PKGCONFIG_DESCRIPTION = Qt \
          DBus \
          module
-     QMAKE_PKGCONFIG_REQUIRES = QtCore \
-         QtXml
- }
--win32 { 
-+win32 {
-+    PKGCONFIG += dbus-1
-     wince*:LIBS_PRIVATE += -lws2
-     else:LIBS_PRIVATE += -lws2_32 \
-         -ladvapi32 \
 diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/declarative/declarative.pro qt-everywhere-opensource-src-4.8.3/src/declarative/declarative.pro
 --- qt-everywhere-opensource-src-4.8.3-orig/src/declarative/declarative.pro	2012-09-10 21:36:52 -0400
 +++ qt-everywhere-opensource-src-4.8.3/src/declarative/declarative.pro	2013-07-08 20:28:02 -0400
