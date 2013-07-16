@@ -25,6 +25,12 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    if [ $(MXE_SYSTEM) = msvc ]; then \
+        for f in '$(1)/configure.in' '$(1)/src/Makefile'; do \
+            $(SED) -i -e 's/@@LIBRARY_PREFIX@@/$(LIBRARY_PREFIX)/g' \
+                      -e 's/@@LIBRARY_SUFFIX@@/$(LIBRARY_SUFFIX)/g' $$f; \
+        done; \
+    fi
     cd '$(1)' && autoconf
 ##    $(SED) -i 's,\$$uname,MINGW,g' '$(1)/configure'
     cd '$(1)' && ./configure \
@@ -39,8 +45,6 @@ define $(PKG)_BUILD
     $(SED) -i 's,-fno-exceptions,,' '$(1)/makeinclude'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install \
         DIRS=src \
-        LIBCOMMAND='$(MXE_AR) cr' \
-	LIBRARY_PREFIX='$(LIBRARY_PREFIX)' \
-	LIBRARY_SUFFIX='$(LIBRARY_SUFFIX)'
+        LIBCOMMAND='$(MXE_AR) cr'
     $(LN_SF) '$(HOST_BINDIR)/fltk-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)fltk-config'
 endef
