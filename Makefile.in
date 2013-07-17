@@ -551,9 +551,12 @@ cleanup-style:
 define build-cmake-toolchain-file
     # create the CMake toolchain file
     [ -d '$(dir $(CMAKE_TOOLCHAIN_FILE))' ] || mkdir -p '$(dir $(CMAKE_TOOLCHAIN_FILE))'
-    (if [ $(MXE_SYSTEM) = mingw -o $(MXE_SYSTEM) = msvc ]; then \
+    (if [ $(MXE_SYSTEM) = mingw ]; then \
        echo 'set(CMAKE_SYSTEM_NAME Windows)'; \
        echo 'set(MSYS 1)'; \
+     fi; \
+     if [ $(MXE_SYSTEM) = msvc ]; then \
+       echo 'set(MSVC 1)'; \
      fi; \
      if [ $(BUILD_SHARED) = yes ]; then \
        echo 'set(BUILD_SHARED_LIBS ON)'; \
@@ -566,8 +569,13 @@ define build-cmake-toolchain-file
        echo 'set(BUILD_STATIC_LIBS OFF)'; \
      fi; \
      echo 'set(CMAKE_BUILD_TYPE Release)'; \
-     echo 'set(CMAKE_FIND_ROOT_PATH $(HOST_PREFIX))'; \
-     echo 'set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)'; \
+     if [ $(MXE_SYSTEM) = msvc ]; then \
+         echo 'set(CMAKE_FIND_ROOT_PATH $(HOST_PREFIX_NATIVE))'; \
+         echo 'set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM BOTH)'; \
+     else \
+         echo 'set(CMAKE_FIND_ROOT_PATH $(HOST_PREFIX))'; \
+         echo 'set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)'; \
+     fi; \
      echo 'set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)'; \
      echo 'set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)'; \
      echo 'set(CMAKE_C_COMPILER $(MXE_CC))'; \
@@ -576,7 +584,11 @@ define build-cmake-toolchain-file
      echo 'set(CMAKE_RC_COMPILER $(MXE_WINDRES))'; \
      echo 'set(PKG_CONFIG_EXECUTABLE $(MXE_PKG_CONFIG))'; \
      echo 'set(QT_QMAKE_EXECUTABLE $(MXE_QMAKE))'; \
-     echo 'set(CMAKE_INSTALL_PREFIX $(HOST_PREFIX) CACHE PATH "Installation Prefix")'; \
+     if [ $(MXE_SYSTEM) = msvc ]; then \
+         echo 'set(CMAKE_INSTALL_PREFIX $(HOST_PREFIX_NATIVE) CACHE PATH "Installation Prefix")'; \
+     else \
+         echo 'set(CMAKE_INSTALL_PREFIX $(HOST_PREFIX) CACHE PATH "Installation Prefix")'; \
+     fi; \
      echo 'set(CMAKE_BUILD_TYPE Release CACHE STRING "Debug|Release|RelWithDebInfo|MinSizeRel")') \
      > '$(CMAKE_TOOLCHAIN_FILE)'
 endef
