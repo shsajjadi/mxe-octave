@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -x
 prefix=
 suffix=
 no_auto_export=false
@@ -21,7 +22,7 @@ fi
 
 SED_ARGS=
 if $no_auto_export; then
-	SED_ARGS="$SED_ARGS -e 's/^always_export_symbols=.*/always_export_symbols=/'"
+	SED_ARGS="$SED_ARGS -e s/^always_export_symbols=.*/always_export_symbols=/"
 fi
 
 for ltfile in $libtool_files; do
@@ -30,7 +31,7 @@ for ltfile in $libtool_files; do
 		-e "s/\.dll\.lib/\.lib/" \
 		-e "s/^\(deplibs_check_method\)=.*/\1=\"pass_all\"/" \
 		-e "s/-link\\>//" \
-		-e "/^archive_cmds=/ { s/-Wl,-dll~/&,-IMPLIB:\\\\\\\"\\\$tool_output_objdir\\\$libname.lib\\\\\\\"/; }" \
+		-e '/^archive_cmds=/ { s/-Wl,-dll~/-Wl,-dll,-IMPLIB:\\\\\\"\\$tool_output_objdir\\$libname.lib\\\\\\"~/; }' \
 		$SED_ARGS \
 		$ltfile
 done
