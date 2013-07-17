@@ -279,6 +279,7 @@ SRC_FILES_1 := \
   mingwrt.mk \
   mpfr.mk \
   msitools.mk \
+  msvc-build-cmake-1.patch \
   msvc-dbus-1.patch \
   msvc-fftw-1.patch \
   msvc-fltk-1.patch \
