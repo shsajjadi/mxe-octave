@@ -1,6 +1,6 @@
 diff -ur fltk-1.3.1-orig/FL/Fl_Device.H fltk-1.3.1/FL/Fl_Device.H
 --- fltk-1.3.1-orig/FL/Fl_Device.H	2012-11-06 15:46:14 -0500
-+++ fltk-1.3.1/FL/Fl_Device.H	2013-07-15 20:06:38 -0400
++++ fltk-1.3.1/FL/Fl_Device.H	2013-07-17 19:22:49 -0400
 @@ -213,7 +213,7 @@
    friend void fl_draw_image(Fl_Draw_Image_Cb cb, void* data, int X,int Y,int W,int H, int D);
    friend FL_EXPORT void fl_draw_image_mono(Fl_Draw_Image_Cb cb, void* data, int X,int Y,int W,int H, int D);
@@ -11,8 +11,8 @@ diff -ur fltk-1.3.1-orig/FL/Fl_Device.H fltk-1.3.1/FL/Fl_Device.H
  
    /** \brief The constructor. */
 diff -ur fltk-1.3.1-orig/configure.in fltk-1.3.1/configure.in
---- fltk-1.3.1-orig/configure.in	2013-07-15 20:06:21 -0400
-+++ fltk-1.3.1/configure.in	2013-07-15 20:06:38 -0400
+--- fltk-1.3.1-orig/configure.in	2013-07-17 19:22:33 -0400
++++ fltk-1.3.1/configure.in	2013-07-17 19:22:49 -0400
 @@ -164,6 +164,31 @@
      fi
  fi
@@ -199,8 +199,8 @@ diff -ur fltk-1.3.1-orig/configure.in fltk-1.3.1/configure.in
  	    LINKFLTKGL=""
  	    GLLIBNAME=""
 diff -ur fltk-1.3.1-orig/fltk-config.in fltk-1.3.1/fltk-config.in
---- fltk-1.3.1-orig/fltk-config.in	2013-07-15 20:06:26 -0400
-+++ fltk-1.3.1/fltk-config.in	2013-07-15 20:08:17 -0400
+--- fltk-1.3.1-orig/fltk-config.in	2013-07-17 19:22:36 -0400
++++ fltk-1.3.1/fltk-config.in	2013-07-17 19:23:21 -0400
 @@ -28,7 +28,7 @@
  ### BEGIN fltk-config
  selfdir=`dirname "$0"`
@@ -218,22 +218,20 @@ diff -ur fltk-1.3.1-orig/fltk-config.in fltk-1.3.1/fltk-config.in
 -    LDLIBS="-lfltk_forms$SHAREDSUFFIX $LDLIBS"
 -    LDSTATIC="$libdir/libfltk_forms.a $LDSTATIC"
 -fi
--if test x$use_gl = xyes; then
++#if test x$use_forms = xyes; then
++#    LDLIBS="-lfltk_forms$SHAREDSUFFIX $LDLIBS"
++#    LDSTATIC="$libdir/libfltk_forms.a $LDSTATIC"
++#fi
+ if test x$use_gl = xyes; then
 -    LDLIBS="-lfltk_gl$SHAREDSUFFIX @GLLIB@ $LDLIBS"
 -    LDSTATIC="$libdir/libfltk_gl.a @GLLIB@ $LDSTATIC"
 -fi
 -if test x$use_images = xyes; then
 -    LDLIBS="-lfltk_images$SHAREDSUFFIX $IMAGELIBS $LDLIBS"
 -    LDSTATIC="$libdir/libfltk_images.a $STATICIMAGELIBS $LDSTATIC"
--fi
-+#if test x$use_forms = xyes; then
-+#    LDLIBS="-lfltk_forms$SHAREDSUFFIX $LDLIBS"
-+#    LDSTATIC="$libdir/libfltk_forms.a $LDSTATIC"
-+#fi
-+#if test x$use_gl = xyes; then
-+#    LDLIBS="-lfltk_gl$SHAREDSUFFIX @GLLIB@ $LDLIBS"
-+#    LDSTATIC="$libdir/libfltk_gl.a @GLLIB@ $LDSTATIC"
-+#fi
++    LDLIBS="@GLLIB@ $LDLIBS"
++    LDSTATIC="@GLLIB@ $LDSTATIC"
+ fi
 +#if test x$use_images = xyes; then
 +#    LDLIBS="-lfltk_images$SHAREDSUFFIX $IMAGELIBS $LDLIBS"
 +#    LDSTATIC="$libdir/libfltk_images.a $STATICIMAGELIBS $LDSTATIC"
@@ -243,7 +241,7 @@ diff -ur fltk-1.3.1-orig/fltk-config.in fltk-1.3.1/fltk-config.in
      LDLIBS="-lfltk_cairo$SHAREDSUFFIX $CAIROLIBS $LDLIBS"
 diff -ur fltk-1.3.1-orig/fluid/factory.cxx fltk-1.3.1/fluid/factory.cxx
 --- fltk-1.3.1-orig/fluid/factory.cxx	2011-07-19 00:49:30 -0400
-+++ fltk-1.3.1/fluid/factory.cxx	2013-07-15 20:06:38 -0400
++++ fltk-1.3.1/fluid/factory.cxx	2013-07-17 19:22:49 -0400
 @@ -37,7 +37,7 @@
  
  extern Fl_Pixmap *pixmap[];
@@ -255,7 +253,7 @@ diff -ur fltk-1.3.1-orig/fluid/factory.cxx fltk-1.3.1/fluid/factory.cxx
  //
 diff -ur fltk-1.3.1-orig/makeinclude.in fltk-1.3.1/makeinclude.in
 --- fltk-1.3.1-orig/makeinclude.in	2011-07-19 00:49:30 -0400
-+++ fltk-1.3.1/makeinclude.in	2013-07-15 20:06:38 -0400
++++ fltk-1.3.1/makeinclude.in	2013-07-17 19:22:49 -0400
 @@ -50,7 +50,7 @@
  # flags for C++ compiler:
  ARCHFLAGS	= @ARCHFLAGS@
@@ -267,7 +265,7 @@ diff -ur fltk-1.3.1-orig/makeinclude.in fltk-1.3.1/makeinclude.in
  # program to make the archive:
 diff -ur fltk-1.3.1-orig/src/Makefile fltk-1.3.1/src/Makefile
 --- fltk-1.3.1-orig/src/Makefile	2012-11-06 16:13:54 -0500
-+++ fltk-1.3.1/src/Makefile	2013-07-15 20:06:38 -0400
++++ fltk-1.3.1/src/Makefile	2013-07-17 19:22:49 -0400
 @@ -459,6 +459,13 @@
  		-L. -lfltk -Wl,--exclude-libs -Wl,libfltk_png.a \
  			$(IMAGELIBS) $(LDLIBS)
@@ -319,7 +317,7 @@ diff -ur fltk-1.3.1-orig/src/Makefile fltk-1.3.1/src/Makefile
  uninstall:
 diff -ur fltk-1.3.1-orig/test/Makefile fltk-1.3.1/test/Makefile
 --- fltk-1.3.1-orig/test/Makefile	2011-07-19 00:49:30 -0400
-+++ fltk-1.3.1/test/Makefile	2013-07-15 20:06:38 -0400
++++ fltk-1.3.1/test/Makefile	2013-07-17 19:22:49 -0400
 @@ -260,7 +260,7 @@
  # FLUID file rules
  .fl.cxx .fl.h:	../fluid/fluid$(EXEEXT)
