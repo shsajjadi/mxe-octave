@@ -25,10 +25,12 @@ define $(PKG)_BUILD
     mkdir '$(1)/.build'
     cd '$(1)/.build' && cmake \
         -G "NMake Makefiles" \
-        -DCMAKE_BUILD_TYPE="Release" \
-        "-DCMAKE_INSTALL_PREFIX:PATH=$(HOST_PREFIX)" \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+        -DLIBTYPE=STATIC \
+        -DLLVM_TARGETS_TO_BUILD="X86" \
         -DLLVM_ENABLE_FFI:BOOL=ON \
         "-DFFI_INCLUDE_DIR=$(HOST_LIBDIR)/libffi-$(libffi_VERSION)/include" \
+        -DLLVM_REQUIRES_EH:BOOL=ON \
         ../
     sed -i '/^	echo "/ {s/echo "/echo /;s/" >>/ >>/;}' \
         '$(1)/.build/tools/llvm-config/CMakeFiles/llvm-config.dir/build.make'
