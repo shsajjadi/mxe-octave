@@ -1,6 +1,6 @@
 diff -ur octave-3.7.5-orig/configure.ac octave-3.7.5/configure.ac
 --- octave-3.7.5-orig/configure.ac	2013-05-14 03:12:10 -0400
-+++ octave-3.7.5/configure.ac	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/configure.ac	2013-07-18 11:27:26 -0400
 @@ -752,7 +752,7 @@
      dnl Use -isystem so we don't get warnings from llvm headers
      LLVM_CPPFLAGS="$LLVM_INCLUDE_FLAG `$LLVM_CONFIG --includedir`"
@@ -19,9 +19,22 @@ diff -ur octave-3.7.5-orig/configure.ac octave-3.7.5/configure.ac
  fi
  AC_SUBST(XTRA_CRUFT_SH_LDFLAGS)
  
+diff -ur octave-3.7.5-orig/libgui/qterminal/libqterminal/win32/QWinTerminalImpl.cpp octave-3.7.5/libgui/qterminal/libqterminal/win32/QWinTerminalImpl.cpp
+--- octave-3.7.5-orig/libgui/qterminal/libqterminal/win32/QWinTerminalImpl.cpp	2013-05-13 05:58:35 -0400
++++ octave-3.7.5/libgui/qterminal/libqterminal/win32/QWinTerminalImpl.cpp	2013-07-18 11:28:12 -0400
+@@ -40,7 +40,9 @@
+ #include <stdio.h>
+ #include <stdarg.h>
+ #define WIN32_LEAN_AND_MEAN
++#if ! defined (_WIN32_WINNT) && ! defined (NTDDI_VERSION)
+ #define _WIN32_WINNT 0x0500 
++#endif
+ #include <windows.h>
+ #include <cstring>
+ #include <csignal>
 diff -ur octave-3.7.5-orig/libgui/qterminal-module.mk octave-3.7.5/libgui/qterminal-module.mk
 --- octave-3.7.5-orig/libgui/qterminal-module.mk	2013-05-12 15:01:12 -0400
-+++ octave-3.7.5/libgui/qterminal-module.mk	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/libgui/qterminal-module.mk	2013-07-18 11:27:26 -0400
 @@ -50,7 +50,7 @@
  qterminal_libqterminal_la_MOC += \
    qterminal/libqterminal/win32/moc-QWinTerminalImpl.cc
@@ -33,7 +46,7 @@ diff -ur octave-3.7.5-orig/libgui/qterminal-module.mk octave-3.7.5/libgui/qtermi
  MOC_CPPFLAGS += -DQ_OS_WIN32
 diff -ur octave-3.7.5-orig/libgui/src/module.mk octave-3.7.5/libgui/src/module.mk
 --- octave-3.7.5-orig/libgui/src/module.mk	2013-05-12 17:21:10 -0400
-+++ octave-3.7.5/libgui/src/module.mk	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/libgui/src/module.mk	2013-07-18 11:27:26 -0400
 @@ -152,7 +152,7 @@
  
  nodist_src_libgui_src_la_SOURCES = $(octave_gui_MOC) $(octave_gui_RC)
@@ -45,7 +58,7 @@ diff -ur octave-3.7.5-orig/libgui/src/module.mk octave-3.7.5/libgui/src/module.m
    @QT_CPPFLAGS@ \
 diff -ur octave-3.7.5-orig/libinterp/Makefile.am octave-3.7.5/libinterp/Makefile.am
 --- octave-3.7.5-orig/libinterp/Makefile.am	2013-04-16 11:26:09 -0400
-+++ octave-3.7.5/libinterp/Makefile.am	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/libinterp/Makefile.am	2013-07-18 11:27:26 -0400
 @@ -185,6 +185,7 @@
    interpfcn/libinterpfcn.la \
    corefcn/libcorefcn.la \
@@ -56,7 +69,7 @@ diff -ur octave-3.7.5-orig/libinterp/Makefile.am octave-3.7.5/libinterp/Makefile
  # Increment these as needed and according to the rules in the libtool manual:
 diff -ur octave-3.7.5-orig/libinterp/corefcn/gcd.cc octave-3.7.5/libinterp/corefcn/gcd.cc
 --- octave-3.7.5-orig/libinterp/corefcn/gcd.cc	2013-02-16 18:52:27 -0500
-+++ octave-3.7.5/libinterp/corefcn/gcd.cc	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/libinterp/corefcn/gcd.cc	2013-07-18 11:27:26 -0400
 @@ -74,7 +74,7 @@
  
  template <typename FP>
@@ -223,7 +236,7 @@ diff -ur octave-3.7.5-orig/libinterp/corefcn/gcd.cc octave-3.7.5/libinterp/coref
      default:
 diff -ur octave-3.7.5-orig/libinterp/dldfcn/config-module.awk octave-3.7.5/libinterp/dldfcn/config-module.awk
 --- octave-3.7.5-orig/libinterp/dldfcn/config-module.awk	2013-02-16 18:52:27 -0500
-+++ octave-3.7.5/libinterp/dldfcn/config-module.awk	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/libinterp/dldfcn/config-module.awk	2013-07-18 11:27:26 -0400
 @@ -71,7 +71,7 @@
        }
      printf ("dldfcn_%s_la_LDFLAGS = -avoid-version -module $(NO_UNDEFINED_LDFLAG) %s $(OCT_LINK_OPTS)\n",
@@ -235,7 +248,7 @@ diff -ur octave-3.7.5-orig/libinterp/dldfcn/config-module.awk octave-3.7.5/libin
  }
 diff -ur octave-3.7.5-orig/libinterp/interpfcn/graphics.cc octave-3.7.5/libinterp/interpfcn/graphics.cc
 --- octave-3.7.5-orig/libinterp/interpfcn/graphics.cc	2013-04-16 11:26:09 -0400
-+++ octave-3.7.5/libinterp/interpfcn/graphics.cc	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/libinterp/interpfcn/graphics.cc	2013-07-18 11:27:26 -0400
 @@ -10304,7 +10304,11 @@
                      break;
                  }
@@ -250,7 +263,7 @@ diff -ur octave-3.7.5-orig/libinterp/interpfcn/graphics.cc octave-3.7.5/libinter
  
 diff -ur octave-3.7.5-orig/liboctave/array/CColVector.cc octave-3.7.5/liboctave/array/CColVector.cc
 --- octave-3.7.5-orig/liboctave/array/CColVector.cc	2013-02-16 18:52:27 -0500
-+++ octave-3.7.5/liboctave/array/CColVector.cc	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/liboctave/array/CColVector.cc	2013-07-18 11:27:26 -0400
 @@ -236,13 +236,13 @@
  ColumnVector
  ComplexColumnVector::abs (void) const
@@ -269,7 +282,7 @@ diff -ur octave-3.7.5-orig/liboctave/array/CColVector.cc octave-3.7.5/liboctave/
  // resize is the destructive equivalent for this one
 diff -ur octave-3.7.5-orig/liboctave/array/CMatrix.cc octave-3.7.5/liboctave/array/CMatrix.cc
 --- octave-3.7.5-orig/liboctave/array/CMatrix.cc	2013-04-16 11:26:09 -0400
-+++ octave-3.7.5/liboctave/array/CMatrix.cc	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/liboctave/array/CMatrix.cc	2013-07-18 11:27:26 -0400
 @@ -921,7 +921,7 @@
  ComplexMatrix
  conj (const ComplexMatrix& a)
@@ -290,7 +303,7 @@ diff -ur octave-3.7.5-orig/liboctave/array/CMatrix.cc octave-3.7.5/liboctave/arr
  ComplexMatrix
 diff -ur octave-3.7.5-orig/liboctave/array/CNDArray.cc octave-3.7.5/liboctave/array/CNDArray.cc
 --- octave-3.7.5-orig/liboctave/array/CNDArray.cc	2013-02-16 18:52:27 -0500
-+++ octave-3.7.5/liboctave/array/CNDArray.cc	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/liboctave/array/CNDArray.cc	2013-07-18 11:27:26 -0400
 @@ -720,31 +720,31 @@
  NDArray
  ComplexNDArray::abs (void) const
@@ -330,7 +343,7 @@ diff -ur octave-3.7.5-orig/liboctave/array/CNDArray.cc octave-3.7.5/liboctave/ar
  ComplexNDArray&
 diff -ur octave-3.7.5-orig/liboctave/array/CRowVector.cc octave-3.7.5/liboctave/array/CRowVector.cc
 --- octave-3.7.5-orig/liboctave/array/CRowVector.cc	2013-02-16 18:52:27 -0500
-+++ octave-3.7.5/liboctave/array/CRowVector.cc	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/liboctave/array/CRowVector.cc	2013-07-18 11:27:26 -0400
 @@ -234,7 +234,7 @@
  ComplexRowVector
  conj (const ComplexRowVector& a)
@@ -342,7 +355,7 @@ diff -ur octave-3.7.5-orig/liboctave/array/CRowVector.cc octave-3.7.5/liboctave/
  // resize is the destructive equivalent for this one
 diff -ur octave-3.7.5-orig/liboctave/array/fCColVector.cc octave-3.7.5/liboctave/array/fCColVector.cc
 --- octave-3.7.5-orig/liboctave/array/fCColVector.cc	2013-02-16 18:52:27 -0500
-+++ octave-3.7.5/liboctave/array/fCColVector.cc	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/liboctave/array/fCColVector.cc	2013-07-18 11:27:26 -0400
 @@ -236,13 +236,13 @@
  FloatColumnVector
  FloatComplexColumnVector::abs (void) const
@@ -361,7 +374,7 @@ diff -ur octave-3.7.5-orig/liboctave/array/fCColVector.cc octave-3.7.5/liboctave
  // resize is the destructive equivalent for this one
 diff -ur octave-3.7.5-orig/liboctave/array/fCMatrix.cc octave-3.7.5/liboctave/array/fCMatrix.cc
 --- octave-3.7.5-orig/liboctave/array/fCMatrix.cc	2013-04-16 11:26:09 -0400
-+++ octave-3.7.5/liboctave/array/fCMatrix.cc	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/liboctave/array/fCMatrix.cc	2013-07-18 11:27:26 -0400
 @@ -923,7 +923,7 @@
  FloatComplexMatrix
  conj (const FloatComplexMatrix& a)
@@ -382,7 +395,7 @@ diff -ur octave-3.7.5-orig/liboctave/array/fCMatrix.cc octave-3.7.5/liboctave/ar
  FloatComplexMatrix
 diff -ur octave-3.7.5-orig/liboctave/array/fCNDArray.cc octave-3.7.5/liboctave/array/fCNDArray.cc
 --- octave-3.7.5-orig/liboctave/array/fCNDArray.cc	2013-02-16 18:52:27 -0500
-+++ octave-3.7.5/liboctave/array/fCNDArray.cc	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/liboctave/array/fCNDArray.cc	2013-07-18 11:27:26 -0400
 @@ -717,31 +717,31 @@
  FloatNDArray
  FloatComplexNDArray::abs (void) const
@@ -422,7 +435,7 @@ diff -ur octave-3.7.5-orig/liboctave/array/fCNDArray.cc octave-3.7.5/liboctave/a
  FloatComplexNDArray&
 diff -ur octave-3.7.5-orig/liboctave/array/fCRowVector.cc octave-3.7.5/liboctave/array/fCRowVector.cc
 --- octave-3.7.5-orig/liboctave/array/fCRowVector.cc	2013-02-16 18:52:27 -0500
-+++ octave-3.7.5/liboctave/array/fCRowVector.cc	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/liboctave/array/fCRowVector.cc	2013-07-18 11:27:26 -0400
 @@ -234,7 +234,7 @@
  FloatComplexRowVector
  conj (const FloatComplexRowVector& a)
@@ -434,7 +447,7 @@ diff -ur octave-3.7.5-orig/liboctave/array/fCRowVector.cc octave-3.7.5/liboctave
  // resize is the destructive equivalent for this one
 diff -ur octave-3.7.5-orig/liboctave/numeric/dbleQR.cc octave-3.7.5/liboctave/numeric/dbleQR.cc
 --- octave-3.7.5-orig/liboctave/numeric/dbleQR.cc	2013-02-16 18:52:27 -0500
-+++ octave-3.7.5/liboctave/numeric/dbleQR.cc	2013-07-15 20:59:36 -0400
++++ octave-3.7.5/liboctave/numeric/dbleQR.cc	2013-07-18 11:27:26 -0400
 @@ -95,7 +95,9 @@
  #endif
  }
@@ -448,7 +461,7 @@ diff -ur octave-3.7.5-orig/liboctave/numeric/dbleQR.cc octave-3.7.5/liboctave/nu
  {
 diff -ur octave-3.7.5-orig/liboctave/numeric/dbleQR.h octave-3.7.5/liboctave/numeric/dbleQR.h
 --- octave-3.7.5-orig/liboctave/numeric/dbleQR.h	2013-02-16 18:52:27 -0500
-+++ octave-3.7.5/liboctave/numeric/dbleQR.h	2013-07-15 20:59:37 -0400
++++ octave-3.7.5/liboctave/numeric/dbleQR.h	2013-07-18 11:27:26 -0400
 @@ -40,9 +40,9 @@
    // Import them here to allow the QR:: prefix.
    typedef qr_type_t type;
@@ -464,7 +477,7 @@ diff -ur octave-3.7.5-orig/liboctave/numeric/dbleQR.h octave-3.7.5/liboctave/num
  
 diff -ur octave-3.7.5-orig/liboctave/operators/mx-inlines.cc octave-3.7.5/liboctave/operators/mx-inlines.cc
 --- octave-3.7.5-orig/liboctave/operators/mx-inlines.cc	2013-02-16 18:52:27 -0500
-+++ octave-3.7.5/liboctave/operators/mx-inlines.cc	2013-07-15 20:59:37 -0400
++++ octave-3.7.5/liboctave/operators/mx-inlines.cc	2013-07-18 11:27:27 -0400
 @@ -316,7 +316,7 @@
  { for (size_t i = 0; i < n; i++) r[i] = fun (x[i]); }
  
@@ -488,7 +501,7 @@ diff -ur octave-3.7.5-orig/liboctave/operators/mx-inlines.cc octave-3.7.5/liboct
  template <class R>
 diff -ur octave-3.7.5-orig/src/Makefile.am octave-3.7.5/src/Makefile.am
 --- octave-3.7.5-orig/src/Makefile.am	2013-04-16 11:26:10 -0400
-+++ octave-3.7.5/src/Makefile.am	2013-07-15 20:59:37 -0400
++++ octave-3.7.5/src/Makefile.am	2013-07-18 11:27:27 -0400
 @@ -49,7 +49,8 @@
  
  OCTAVE_CORE_LIBS = \
