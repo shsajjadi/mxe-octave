@@ -1547,7 +1547,7 @@ diff -ur readline-6.2-orig/support/shlib-install readline-6.2-new/support/shlib-
 +	VCLIBNAME=`echo ${LIBNAME} | sed -e 's,\.dll,\.lib,'`
  	IMPLIBNAME=`echo ${LIBNAME} \
 -		| sed -e 's,^cyg,lib,' -e 's,[0-9]*.dll$,.dll.a,'`
-+		| sed -e 's,^@@LIBRARY_PREFIX@@lib,,' -e 's,-[0-9]*@@LIBRARY_SUFFIX@@.dll$,.lib,'`
++		| sed -e 's,^@@LIBRARY_PREFIX@@,,' -e 's,-[0-9]*@@LIBRARY_SUFFIX@@.dll$,.lib,'`
  	if [ -z "$uninstall" ]; then
  		${echo} $RM ${BINDIR}/${LIBNAME}.${OLDSUFF}
  		if [ -f "$BINDIR/$LIBNAME" ]; then
@@ -1569,7 +1569,7 @@ diff -ur readline-6.2-orig/support/shobj-conf readline-6.2-new/support/shobj-con
  	SHOBJ_LD='$(CC)'
 -	SHOBJ_LDFLAGS='-shared -Wl,--enable-auto-import -Wl,--enable-auto-image-base -Wl,--export-all -Wl,--out-implib=$(@).a'
 +	SHOBJ_LDFLAGS='-shared'
-+	SHLIB_LIBPREF='@@LIBRARY_PREFIX@@lib'
++	SHLIB_LIBPREF='@@LIBRARY_PREFIX@@'
  	SHLIB_LIBSUFF='dll'
 -	SHLIB_LIBVERSION='$(SHLIB_DLLVERSION).$(SHLIB_LIBSUFF)'
 +	SHLIB_LIBVERSION='-$(SHLIB_DLLVERSION)@@LIBRARY_SUFFIX@@.$(SHLIB_LIBSUFF)'

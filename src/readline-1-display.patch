@@ -107,21 +107,3 @@ diff -uNr a/display.c b/display.c
    if (_rl_term_clrpag)
      tputs (_rl_term_clrpag, 1, _rl_output_character_function);
    else
-@@ -2353,7 +2424,7 @@
-      char *string;
-      int count, col;
- {
--#if defined (__MSDOS__) || defined (__MINGW32__)
-+#if defined (__MSDOS__) || (defined (__MINGW32__) && !defined (_MSC_VER))
-   _rl_output_some_chars (string, count);
- #else
-   /* DEBUGGING */
-@@ -2405,7 +2476,7 @@
-   if (count > _rl_screenwidth)	/* XXX */
-     return;
- 
--#if !defined (__MSDOS__) && !defined (__MINGW32__)
-+#if (!defined (__MSDOS__) && !defined (__MINGW32__)) || defined (_MSC_VER)
-   if (_rl_term_DC && *_rl_term_DC)
-     {
-       char *buffer;
