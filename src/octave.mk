@@ -20,6 +20,8 @@ else
   $(PKG)_DEPS += blas
 endif
 
+$(PKG)_CONFIGURE_POST_HOOK := $(CONFIGURE_POST_HOOK) -x
+
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
   ifeq ($(ENABLE_64),yes)
@@ -45,7 +47,6 @@ ifeq ($(MXE_SYSTEM),msvc)
   $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
     --enable-atomic-refcount \
     ac_cv_func_pow=yes ac_cv_func_sqrt=yes
-  $(PKG)_CONFIGURE_POST_HOOK := $(CONFIGURE_POST_HOOK) -x
 else
   $(PKG)_PREFIX := '$(HOST_PREFIX)'
   $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
