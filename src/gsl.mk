@@ -3,7 +3,7 @@
 
 PKG             := gsl
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := e1a600e4fe359692e6f0e28b7e12a96681efbe52
+$(PKG)_CHECKSUM := d914f84b39a5274b0a589d9b83a66f44cd17ca8e
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/$(PKG)/$($(PKG)_FILE)
@@ -16,16 +16,23 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifeq ($(MXE_SYSTEM),msvc)
+    $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
+        ac_cv_func_memcpy=yes \
+        ac_cv_c_inline=no
+endif
+
 define $(PKG)_BUILD
+    if [ $(MXE_SYSTEM) = msvc ]; then \
+        cd '$(1)' && autoreconf -i -f -v; \
+    fi
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        --enable-maintainer-mode \
         --prefix='$(HOST_PREFIX)' \
-        $(ENABLE_SHARED_OR_STATIC)
+        $(ENABLE_SHARED_OR_STATIC) \
+	$($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
+	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-
-    '$(MXE_CC)' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_BINDIR)/test-gsl.exe' \
-        -lgsl
 endef
