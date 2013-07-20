@@ -1,6 +1,5 @@
 #!/bin/bash
 
-set -x
 prefix=
 suffix=
 no_auto_export=false
