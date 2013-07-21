@@ -302,6 +302,7 @@ SRC_FILES_1 := \
   msvc-libxml2-1.patch \
   msvc-msitools-1.patch \
   msvc-msitools-2-tests.patch \
+  msvc-netcdf-1.patch \
   msvc-nettle-1.patch \
   msvc-ncurses-1.patch \
   msvc-pstoedit-1.patch \
@@ -338,6 +339,7 @@ SRC_FILES_1 := \
   native-gcc-1-float.patch \
   native-gcc.mk \
   ncurses.mk \
+  netcdf.mk \
   nettle.mk \
   npp.mk \
   nsis-1-fixes.patch \
