@@ -91,6 +91,7 @@ SRC_FILES_1 := \
   gdal.mk \
   gdb-1-fix-shell.patch \
   gdb.mk \
+  gdcm.mk \
   gdk-pixbuf-1-fixes.patch \
   gdk-pixbuf.mk \
   geos-test.c \
