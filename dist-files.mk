@@ -538,7 +538,9 @@ SRC_MSVCTOOLS_FILES_1 := \
   Makefile \
   ranlib-msvc \
   stdbool.h \
-  unistd.h
+  unistd.h \
+  Windows-clg++.cmake \
+  Windows-clgcc.cmake.in
 
 SRC_MSVCTOOLS_FILES := $(addprefix src/build-msvctools/, $(SRC_MSVCTOOLS_FILES_1))
 

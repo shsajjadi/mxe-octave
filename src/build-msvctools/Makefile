@@ -17,7 +17,8 @@ TARGETS = \
 	math/msvcmath.lib \
 	gfortran-msvc.exe \
 	gfortran-msvc.lib \
-	gfortran-msvc-static.lib
+	gfortran-msvc-static.lib \
+	Windows-clgcc.cmake
 
 MSVCSTDINT := $(shell echo '\#include <stdint.h>' > t.c; cl -nologo -showIncludes -c t.c | $(SED) -n -e 's/^Note: including file: \(.*stdint\.h\)$$/\1/p'; rm -f t.c t.obj)
 ifeq ($(MSVCSTDINT),)
@@ -157,6 +158,10 @@ gfortran-msvc.lib: gfortran-msvc-build/.libs/libgfortran.a gfortran.def gfortran
 gfortran-msvc-static.lib: gfortran-msvc-build/.libs/libgfortran.a gfortran.lst libgfortran-msvcinit.o
 	lib -out:$@ libgfortran-msvcinit.o @gfortran.lst
 
+Windows-clgcc.cmake: Windows-clgcc.cmake.in
+	$(SED) -e 's/@@LIBRARY_PREFIX@@/$(LIBRARY_PREFIX)/g' \
+	       -e 's/@@LIBRARY_SUFFIX@@/$(LIBRARY_SUFFIX)/g' $< > $@
+
 .PHONY: install
 install: all
 	$(INSTALL) -d $(DESTDIR)/bin
@@ -184,3 +189,6 @@ install: all
 	$(INSTALL) math/msvcmath.lib $(DESTDIR)/lib
 	$(INSTALL) gfortran-msvc.lib $(DESTDIR)/lib
 	$(INSTALL) gfortran-msvc-static.lib $(DESTDIR)/lib
+	$(INSTALL) -d $(CMAKE_DESTDIR)/Modules/Platform
+	$(INSTALL) Windows-clg++.cmake $(CMAKE_DESTDIR)/Modules/Platform
+	$(INSTALL) Windows-clgcc.cmake $(CMAKE_DESTDIR)/Modules/Platform
