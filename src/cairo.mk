@@ -3,17 +3,32 @@
 
 PKG             := cairo
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 56a10bf3b804367c97734d655c23a9f652d5c297
+$(PKG)_CHECKSUM := 9106ab09b2e7b9f90521b18dd4a7e9577eba6c15
 $(PKG)_SUBDIR   := cairo-$($(PKG)_VERSION)
 $(PKG)_FILE     := cairo-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://cairographics.org/releases/$($(PKG)_FILE)
-$(PKG)_DEPS     := zlib libpng fontconfig freetype pixman
+$(PKG)_DEPS     := zlib libpng fontconfig freetype pixman glib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://cairographics.org/releases/?C=M;O=D' | \
     $(SED) -n 's,.*"cairo-\([0-9][^"]*\)\.tar.*,\1,p' | \
     head -1
 endef
+
+$(PKG)_EXTRA_CONFIGURE_OPTIONS :=
+# FIXME: Not sure why i was disabled...
+#$(PKG)_EXTRA_CONFIGURE_OPTIONS += --disable-atomic
+# Add special flag for static Win32 builds
+ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
+    ifeq ($(BUILD_STATIC),yes)
+        $(PKG)_EXTRA_CONFIGURE_OPTIONS += CFLAGS="$(CFLAGS) -DCAIRO_WIN32_STATIC_BUILD"
+    endif
+endif
+
+# Configure script to detect float word endianness fails on MSVC.
+ifeq ($(MXE_SYSTEM),msvc)
+    $(PKG)_EXTRA_CONFIGURE_OPTIONS += ax_cv_c_float_words_bigendian=no
+endif
 
 define $(PKG)_BUILD
     $(SED) -i 's,libpng12,libpng,g'                          '$(1)/configure'
@@ -34,7 +49,6 @@ define $(PKG)_BUILD
         --disable-os2 \
         --disable-beos \
         --disable-directfb \
-        --disable-atomic \
         --enable-win32 \
         --enable-win32-font \
         --enable-png \
@@ -43,7 +57,10 @@ define $(PKG)_BUILD
         --enable-pdf \
         --enable-svg \
         --disable-pthread \
-        CFLAGS="$(CFLAGS) -DCAIRO_WIN32_STATIC_BUILD" \
-        LIBS="-lmsimg32 -lgdi32 `$(MXE_PKG_CONFIG) pixman-1 --libs`"
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+        $($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
+        PKG_CONFIG='$(MXE_PKG_CONFIG)' \
+        PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
+        && $(CONFIGURE_POST_HOOK)
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install noinst_PROGRAMS=
+    $(SED) -i 's,^Libs:,& -L$${libdir} -lcairo-script ,' '$(HOST_LIBDIR)/pkgconfig/cairo-script.pc'
 endef
