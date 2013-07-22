@@ -62,5 +62,4 @@ define $(PKG)_BUILD
         PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
         && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install noinst_PROGRAMS=
-    $(SED) -i 's,^Libs:,& -L$${libdir} -lcairo-script ,' '$(HOST_LIBDIR)/pkgconfig/cairo-script.pc'
 endef
