@@ -14,7 +14,6 @@ define $(PKG)_UPDATE
     echo $(gdcm_VERSION)
 endef
 
-#        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' 
 ifeq ($(MXE_SYSTEM),msvc)
 define $(PKG)_BUILD
     mkdir '$(1)/../.build'
