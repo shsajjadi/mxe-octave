@@ -16,7 +16,7 @@ endef
 $(PKG)_CMAKE_DESTDIR := $(BUILD_TOOLS_PREFIX)/share/cmake-$(call SHORT_PKG_VERSION,build-cmake)
 
 define $(PKG)_BUILD
-    make -C '$(1)' -j '$(JOBS)' \
+    make -C '$(1)' -j 1 \
 	DESTDIR='$(HOST_PREFIX)' \
 	CMAKE_DESTDIR='$($(PKG)_CMAKE_DESTDIR)' \
 	GCCVERSION='$(build-gcc_VERSION)' \
