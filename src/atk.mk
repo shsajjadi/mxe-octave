@@ -3,7 +3,7 @@
 
 PKG             := atk
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 951f9cd195dcab855c7779cfcba21153106cb754
+$(PKG)_CHECKSUM := e8a9dacd22b31a6cb733ce66fb1c220cc6720970
 $(PKG)_SUBDIR   := atk-$($(PKG)_VERSION)
 $(PKG)_FILE     := atk-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/atk/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
@@ -23,7 +23,10 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --disable-glibtest \
-        --disable-gtk-doc
+        --disable-gtk-doc \
+        PKG_CONFIG='$(MXE_PKG_CONFIG)' \
+        PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
+	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef
