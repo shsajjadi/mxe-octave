@@ -3,7 +3,7 @@
 
 PKG             := pixman
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 6bd2834e18f77b815047ec27ea8965fa26a36c2b
+$(PKG)_CHECKSUM := 9c25dd0efa2023216e82033b71fcfe1bae9ebaac
 $(PKG)_SUBDIR   := pixman-$($(PKG)_VERSION)
 $(PKG)_FILE     := pixman-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://cairographics.org/snapshots/$($(PKG)_FILE)
@@ -20,6 +20,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(HOST_PREFIX)'
+        --prefix='$(HOST_PREFIX)' \
+        && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
 endef
