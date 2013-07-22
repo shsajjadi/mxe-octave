@@ -30,7 +30,6 @@ SRC_FILES_1 := \
   build-pkg-config.mk \
   build-texinfo.mk \
   bzip2.mk \
-  cairo-1-ssize-t-defined.patch \
   cairo-2-static-init.patch \
   cairo.mk \
   cairomm.mk \
@@ -276,6 +275,7 @@ SRC_FILES_1 := \
   lzo.mk \
   matio.mk \
   mdbtools.mk \
+  mingw-cairo-1-ssize-t-defined.patch \
   mingw-utils-1-portability-fix.patch \
   mingw-utils.mk \
   mingwrt.mk \
@@ -283,6 +283,7 @@ SRC_FILES_1 := \
   msitools.mk \
   msvc-atk-1.patch \
   msvc-build-cmake-1.patch \
+  msvc-cairo-1.patch \
   msvc-dbus-1.patch \
   msvc-fftw-1.patch \
   msvc-fltk-1.patch \
