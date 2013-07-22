@@ -35,6 +35,7 @@ SRC_FILES_1 := \
   cairo.mk \
   cairomm.mk \
   cblas.mk \
+  cfitsio.mk \
   cgal-1-fixes.patch \
   cgal.mk \
   cminpack.mk \
