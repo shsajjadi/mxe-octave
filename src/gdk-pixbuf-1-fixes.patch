@@ -13,7 +13,7 @@ diff --git a/gdk-pixbuf/gdk-pixbuf-io.c b/gdk-pixbuf/gdk-pixbuf-io.c
 index 411ceb6..64db155 100644
 --- a/gdk-pixbuf/gdk-pixbuf-io.c
 +++ b/gdk-pixbuf/gdk-pixbuf-io.c
-@@ -230,12 +230,12 @@ get_file_formats (void)
+@@ -207,12 +207,16 @@ get_file_formats (void)
  
  #ifdef G_OS_WIN32
  
@@ -23,8 +23,11 @@ index 411ceb6..64db155 100644
  static HMODULE gdk_pixbuf_dll;
  
  BOOL WINAPI
--DllMain (HINSTANCE hinstDLL,
++#ifdef DLL_EXPORT
+ DllMain (HINSTANCE hinstDLL,
++#else
 +gdkpixbuf_DllMain (HINSTANCE hinstDLL,
++#endif
           DWORD     fdwReason,
           LPVOID    lpvReserved)
  {
