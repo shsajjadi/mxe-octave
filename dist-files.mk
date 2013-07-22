@@ -309,6 +309,7 @@ SRC_FILES_1 := \
   msvc-netcdf-1.patch \
   msvc-nettle-1.patch \
   msvc-ncurses-1.patch \
+  msvc-pixman-1.patch \
   msvc-pstoedit-1.patch \
   msvc-qhull-1.patch \
   msvc-qt-1.patch \
