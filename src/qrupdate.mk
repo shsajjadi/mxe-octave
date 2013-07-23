@@ -7,7 +7,15 @@ $(PKG)_CHECKSUM := f7403b646ace20f4a2b080b4933a1e9152fac526
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := qrupdate-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://sourceforge.net/projects/qrupdate/files/$($(PKG)_FILE)
-$(PKG)_DEPS     := blas lapack
+ifeq ($(ENABLE_OPENBLAS),yes)
+  $(PKG)_DEPS     := openblas lapack
+else
+  $(PKG)_DEPS     := blas lapack
+endif
+
+ifeq ($(ENABLE_OPENBLAS),yes)
+  $(PKG)_BLAS_OPTION := --with-blas=openblas
+endif
 
 ifeq ($(ENABLE_64),yes)
   $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := FFLAGS="-g -O2 -fdefault-integer-8"
@@ -28,6 +36,7 @@ define $(PKG)_BUILD
         $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
+        $($(PKG)_BLAS_OPTION) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) && $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
