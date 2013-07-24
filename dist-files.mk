@@ -294,6 +294,7 @@ SRC_FILES_1 := \
   msvc-glib-1.patch \
   msvc-gnutls-1.patch \
   msvc-graphicsmagick-1.patch \
+  msvc-harfbuzz-1.patch \
   msvc-hdf5-1.patch \
   msvc-itsol-1.patch \
   msvc-libffi-1.patch \
