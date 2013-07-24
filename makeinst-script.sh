@@ -86,7 +86,17 @@ Icon "$OCTAVE_SOURCE\\$ICON"
 ######################################################################
  
 RequestExecutionLevel admin
- 
+
+Section ""
+  Call GetJRE
+  Pop \$R0
+
+  StrCpy \$0 '"\$R0" -classpath "\${CLASSPATH}" \${CLASS}'
+
+  SetOutPath \$EXEDIR
+  Exec \$0
+SectionEnd
+
 ; file section
 Section "MainFiles"
 
@@ -148,6 +158,48 @@ EOF
  Delete "\$INSTDIR\*.*"
  RmDir "\$INSTDIR"
 SectionEnd
+
+; Function to check Java Runtime Environment
+Function GetJRE
+;  looks in:
+;  1 - .\jre directory (JRE Installed with application)
+;  2 - JAVA_HOME environment variable
+;  3 - the registry
+
+  Push \$R0
+  Push \$R1
+
+  ; use javaw.exe to avoid dosbox.
+  ; use java.exe to keep stdout/stderr
+  !define JAVAEXE "javaw.exe"
+
+  ClearErrors
+  StrCpy \$R0 "\$EXEDIR\jre\bin\\\${JAVAEXE}"
+  IfFileExists \$R0 JreFound  ;; 1) found it locally
+  StrCpy \$R0 ""
+
+  ClearErrors
+  ReadEnvStr \$R0 "JAVA_HOME"
+  StrCpy \$R0 "\$R0\bin\\\${JAVAEXE}"
+  IfErrors 0 JreFound  ;; 2) found it in JAVA_HOME
+
+  ClearErrors
+  ReadRegStr \$R1 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment" "CurrentVersion"
+  ReadRegStr \$R0 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment\\\$R1" "JavaHome"
+  StrCpy \$R0 "\$R0\bin\\\${JAVAEXE}"
+
+  IfErrors 0 JreFound  ;; 3) found it in the registry
+  IfErrors JRE_Error
+
+ JRE_Error:
+  MessageBox MB_ICONEXCLAMATION|MB_YESNO "Octave includes a Java integration component, but it seems Java is not available on this system. This component requires the Java Runtime Environment from Oracle (http://www.java.com) installed on your system. Octave can work without Java available, but the Java integration component will not be functional. Installing those components without Java available might prevent Octave from working correctly. Proceed with installation anyway?" IDYES continue
+  Abort
+ JreFound:
+  Pop \$R1
+  Exch \$R0
+  MessageBox MB_OK "Java Runtime Environment was found on your system. Octave will be able to call Java methods."
+ continue:
+FunctionEnd
 EOF
 
 echo "Generation Completed"
