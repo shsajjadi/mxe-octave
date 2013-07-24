@@ -27,6 +27,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > octave.nsi
 !define COMP_NAME "GNU Project"
 !define WEB_SITE "http://www.octave.org"
 !define VERSION "3.7.5.0"
+!define OCTAVE_VERSION "3.7.5"
 !define COPYRIGHT "Copyright © 2013 John W. Eaton and others."
 !define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
 !define LICENSE_TXT "../gpl-3.0.txt"
@@ -35,6 +36,8 @@ echo "; octave setup script $OCTAVE_SOURCE" > octave.nsi
 !define INSTALL_TYPE "SetShellVarContext current"
 !define CLASSPATH ".;lib;lib\myJar"
 !define CLASS "org.me.myProgram"
+!define PRODUCT_ROOT_KEY "HKLM"
+!define PRODUCT_KEY "Software\Octave"
 
 ######################################################################
 
@@ -87,15 +90,11 @@ Icon "$OCTAVE_SOURCE\\$ICON"
  
 RequestExecutionLevel admin
 
-Section ""
-  Call GetJRE
-  Pop \$R0
-
-  StrCpy \$0 '"\$R0" -classpath "\${CLASSPATH}" \${CLASS}'
-
-  SetOutPath \$EXEDIR
-  Exec \$0
-SectionEnd
+Function .onInit
+  Call CheckPrevVersion
+  Call CheckJRE
+  InitPluginsDir
+FunctionEnd
 
 ; file section
 Section "MainFiles"
@@ -159,8 +158,44 @@ EOF
  RmDir "\$INSTDIR"
 SectionEnd
 
+; Function to check any previously installed version of Octave in the system
+Function CheckPrevVersion
+  Push \$0
+  Push \$1
+  Push \$2
+  IfFileExists "\$INSTDIR\bin\octave-\${OCTAVE_VERSION}.exe" 0 otherver
+  MessageBox MB_OK|MB_ICONSTOP "Another Octave installation (with the same version) has been detected. Please uninstall it first."
+  Abort
+otherver:
+  StrCpy \$0 0
+  StrCpy \$2 ""
+loop:
+  EnumRegKey \$1 \${PRODUCT_ROOT_KEY} "\${PRODUCT_KEY}" \$0
+  StrCmp \$1 "" loopend
+  IntOp \$0 \$0 + 1
+  StrCmp \$2 "" 0 +2
+  StrCpy \$2 "\$1"
+  StrCpy \$2 "\$2, \$1"
+  Goto loop
+loopend:
+  ReadRegStr \$1 \${PRODUCT_ROOT_KEY} "\${PRODUCT_KEY}" "Version"
+  IfErrors finalcheck
+  StrCmp \$2 "" 0 +2
+  StrCpy \$2 "\$1"
+  StrCpy \$2 "\$2, \$1"
+finalcheck:
+  StrCmp \$2 "" done
+  MessageBox MB_YESNO|MB_ICONEXCLAMATION "Another Octave installation (version \$2) has been detected. It is recommended to uninstall it if you intend to use the same installation directory. Do you want to proceed with the installation anyway?" IDYES done IDNO 0
+  Abort
+done:
+  ClearErrors
+  Pop \$2
+  Pop \$1
+  Pop \$0
+FunctionEnd
+
 ; Function to check Java Runtime Environment
-Function GetJRE
+Function CheckJRE
 ;  looks in:
 ;  1 - .\jre directory (JRE Installed with application)
 ;  2 - JAVA_HOME environment variable
@@ -175,29 +210,25 @@ Function GetJRE
 
   ClearErrors
   StrCpy \$R0 "\$EXEDIR\jre\bin\\\${JAVAEXE}"
-  IfFileExists \$R0 JreFound  ;; 1) found it locally
+  IfFileExists \$R0 continue  ;; 1) found it locally
   StrCpy \$R0 ""
 
   ClearErrors
   ReadEnvStr \$R0 "JAVA_HOME"
   StrCpy \$R0 "\$R0\bin\\\${JAVAEXE}"
-  IfErrors 0 JreFound  ;; 2) found it in JAVA_HOME
+  IfErrors 0 continue  ;; 2) found it in JAVA_HOME
 
   ClearErrors
   ReadRegStr \$R1 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment" "CurrentVersion"
   ReadRegStr \$R0 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment\\\$R1" "JavaHome"
   StrCpy \$R0 "\$R0\bin\\\${JAVAEXE}"
 
-  IfErrors 0 JreFound  ;; 3) found it in the registry
+  IfErrors 0 continue  ;; 3) found it in the registry
   IfErrors JRE_Error
 
  JRE_Error:
   MessageBox MB_ICONEXCLAMATION|MB_YESNO "Octave includes a Java integration component, but it seems Java is not available on this system. This component requires the Java Runtime Environment from Oracle (http://www.java.com) installed on your system. Octave can work without Java available, but the Java integration component will not be functional. Installing those components without Java available might prevent Octave from working correctly. Proceed with installation anyway?" IDYES continue
   Abort
- JreFound:
-  Pop \$R1
-  Exch \$R0
-  MessageBox MB_OK "Java Runtime Environment was found on your system. Octave will be able to call Java methods."
  continue:
 FunctionEnd
 EOF
