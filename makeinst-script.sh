@@ -34,8 +34,6 @@ echo "; octave setup script $OCTAVE_SOURCE" > octave.nsi
 !define INSTALLER_NAME "octave-installer.exe"
 !define MAIN_APP_EXE "octave.exe"
 !define INSTALL_TYPE "SetShellVarContext current"
-!define CLASSPATH ".;lib;lib\myJar"
-!define CLASS "org.me.myProgram"
 !define PRODUCT_ROOT_KEY "HKLM"
 !define PRODUCT_KEY "Software\Octave"
 
@@ -197,9 +195,8 @@ FunctionEnd
 ; Function to check Java Runtime Environment
 Function CheckJRE
 ;  looks in:
-;  1 - .\jre directory (JRE Installed with application)
-;  2 - JAVA_HOME environment variable
-;  3 - the registry
+;  1 - JAVA_HOME environment variable
+;  2 - the registry
 
   Push \$R0
   Push \$R1
@@ -209,21 +206,16 @@ Function CheckJRE
   !define JAVAEXE "javaw.exe"
 
   ClearErrors
-  StrCpy \$R0 "\$EXEDIR\jre\bin\\\${JAVAEXE}"
-  IfFileExists \$R0 continue  ;; 1) found it locally
-  StrCpy \$R0 ""
-
-  ClearErrors
   ReadEnvStr \$R0 "JAVA_HOME"
   StrCpy \$R0 "\$R0\bin\\\${JAVAEXE}"
-  IfErrors 0 continue  ;; 2) found it in JAVA_HOME
+  IfErrors 0 continue  ;; 1) found it in JAVA_HOME
 
   ClearErrors
   ReadRegStr \$R1 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment" "CurrentVersion"
   ReadRegStr \$R0 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment\\\$R1" "JavaHome"
   StrCpy \$R0 "\$R0\bin\\\${JAVAEXE}"
 
-  IfErrors 0 continue  ;; 3) found it in the registry
+  IfErrors 0 continue  ;; 2) found it in the registry
   IfErrors JRE_Error
 
  JRE_Error:
