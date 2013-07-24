@@ -21,23 +21,65 @@ ICON=`find $OCTAVE_SOURCE -name octave-logo.ico -printf "%P" | head -1 | sed 's,
 # create installer script
 echo "; octave setup script $OCTAVE_SOURCE" > octave.nsi
 
-# initial installer settings
+# installer settings
   cat >> octave.nsi << EOF
+!define APP_NAME "GNU Octave"
+!define COMP_NAME "GNU Project"
+!define WEB_SITE "http://www.octave.org"
+!define VERSION "3.7.5.0"
+!define COPYRIGHT "Copyright © 2013 John W. Eaton and others."
+!define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
+!define INSTALLER_NAME "octave-installer.exe"
+!define MAIN_APP_EXE "octave.exe"
+!define INSTALL_TYPE "SetShellVarContext current"
+!define CLASSPATH ".;lib;lib\myJar"
+!define CLASS "org.me.myProgram"
 
-; installer settings
-Name "Octave"
-OutFile "Octave-Installer.exe"
-InstallDir "c:\\$OCTAVE_SOURCE"
+######################################################################
+
+VIProductVersion  "\${VERSION}"
+VIAddVersionKey "ProductName"  "\${APP_NAME}"
+VIAddVersionKey "CompanyName"  "\${COMP_NAME}"
+VIAddVersionKey "LegalCopyright"  "\${COPYRIGHT}"
+VIAddVersionKey "FileDescription"  "\${DESCRIPTION}"
+VIAddVersionKey "FileVersion"  "\${VERSION}"
+
+######################################################################
+
+SetCompressor /SOLID Lzma
+Name "\${APP_NAME}"
+Caption "\${APP_NAME}"
+OutFile "\${INSTALLER_NAME}"
+BrandingText "\${APP_NAME}"
+XPStyle on
+InstallDir "\$PROGRAMFILES\Octave"
 Icon "$OCTAVE_SOURCE\\$ICON"
-ShowInstDetails show
-ShowUnInstDetails show
 
-Page directory
-Page instfiles
+######################################################################
+!include "MUI.nsh"
 
-UninstPage uninstConfirm
-Uninstpage instfiles
+!define MUI_ABORTWARNING
+!define MUI_UNABORTWARNING
 
+!insertmacro MUI_PAGE_WELCOME
+
+!insertmacro MUI_PAGE_DIRECTORY
+
+!insertmacro MUI_PAGE_INSTFILES
+
+!define MUI_FINISHPAGE_RUN "\$INSTDIR\bin\\\${MAIN_APP_EXE}"
+!insertmacro MUI_PAGE_FINISH
+
+!insertmacro MUI_UNPAGE_CONFIRM
+
+!insertmacro MUI_UNPAGE_INSTFILES
+
+!insertmacro MUI_UNPAGE_FINISH
+
+!insertmacro MUI_LANGUAGE "English"
+
+######################################################################
+ 
 RequestExecutionLevel admin
  
 ; file section
@@ -104,4 +146,3 @@ SectionEnd
 EOF
 
 echo "Generation Completed"
-
