@@ -104,12 +104,21 @@ SED        := $(shell gsed --help >/dev/null 2>&1 && echo g)sed
 WGET       := wget --no-check-certificate \
                    --user-agent=$(shell wget --version | \
                    $(SED) -n 's,GNU \(Wget\) \([0-9.]*\).*,\1/\2,p')
+# The MSYS GNU tar does not support long uid/gid, leading to unpacking
+# errors for some archives. Bsdtar does not have that limitation, so
+# use it on Win32 platform if GNU tar fails to unpack the archive.
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+    TAR  := tar
+    TAR2 := bsdtar
+else
+    TAR  := tar
+endif
 
 REQUIREMENTS := bash bzip2 $(MAKE) openssl $(PATCH) $(PERL) \
-                $(SED) unzip wget xz
+                $(SED) tar unzip wget xz
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
-  REQUIREMENTS += bsdcpio
+  REQUIREMENTS += bsdtar
 endif
 
 LIBTOOL     := libtool
@@ -288,30 +297,17 @@ unexport OBJC_INCLUDE_PATH PKG_CONFIG QMAKESPEC RANLIB STRIP
 SHORT_PKG_VERSION = \
     $(word 1,$(subst ., ,$($(1)_VERSION))).$(word 2,$(subst ., ,$($(1)_VERSION)))
 
-ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
 UNPACK_ARCHIVE = \
-    $(if $(filter %rupdate-$(qrupdate_VERSION).tar.gz,     $(1)),bsdcpio -id < '$(1)', \
-    $(if $(filter %roj-$(proj_VERSION).tar.gz,     $(1)),bsdcpio -id < '$(1)', \
-    $(if $(filter %.tgz,     $(1)),tar xzf '$(1)', \
-    $(if $(filter %.tar.gz,  $(1)),tar xzf '$(1)', \
-    $(if $(filter %.tar.bz2, $(1)),tar xjf '$(1)', \
-    $(if $(filter %.tar.lzma,$(1)),xz -dc -F lzma '$(1)' | tar xf -, \
-    $(if $(filter %.tar.xz,$(1)),xz -dc '$(1)' | tar xf -, \
-    $(if $(filter %.zip,     $(1)),unzip -q '$(1)', \
-    $(error Unknown archive format for $(2): $(1))))))))))
-else
-UNPACK_ARCHIVE = \
-    $(if $(filter %.tgz,     $(1)),tar xzf '$(1)', \
-    $(if $(filter %.tar.gz,  $(1)),tar xzf '$(1)', \
-    $(if $(filter %.tar.bz2, $(1)),tar xjf '$(1)', \
-    $(if $(filter %.tar.lzma,$(1)),xz -dc -F lzma '$(1)' | tar xf -, \
-    $(if $(filter %.tar.xz,$(1)),xz -dc '$(1)' | tar xf -, \
+    $(if $(filter %.tgz,     $(1)),$(3) xzf '$(1)', \
+    $(if $(filter %.tar.gz,  $(1)),$(3) xzf '$(1)', \
+    $(if $(filter %.tar.bz2, $(1)),$(3) xjf '$(1)', \
+    $(if $(filter %.tar.lzma,$(1)),xz -dc -F lzma '$(1)' | $(3) xf -, \
+    $(if $(filter %.tar.xz,$(1)),xz -dc '$(1)' | $(3) xf -, \
     $(if $(filter %.zip,     $(1)),unzip -q '$(1)', \
     $(error Unknown archive format for $(2): $(1))))))))
-endif
 
 UNPACK_PKG_ARCHIVE = \
-    $(if $(value $(1)_FILE),$(call UNPACK_ARCHIVE,$(PKG_DIR)/$($(1)_FILE)),true)
+    $(if $(value $(1)_FILE),$(call UNPACK_ARCHIVE,$(PKG_DIR)/$($(1)_FILE),$(1),$(2)),true)
 
 PKG_CHECKSUM = \
     openssl sha1 '$(PKG_DIR)/$($(1)_FILE)' 2>/dev/null | $(SED) -n 's,^.*\([0-9a-f]\{40\}\)$$,\1,p'
@@ -479,7 +475,11 @@ build-only-$(1):
 	$(if $(value $(1)_BUILD),
 	    rm -rf   '$(2)'
 	    mkdir -p '$(2)'
-	    cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1))
+	    ( cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1),$(TAR)) ) || \
+		    $(if $(TAR2), \
+		         ( rm -rf '$(2)'; mkdir -p '$(2)'; \
+		           cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1),$(TAR2)) ), \
+			 false )
 	    test ! -d '$(TOP_DIR)/src/$(1)' || cp -a '$(TOP_DIR)/src/$(1)' '$(2)'
 	    cd '$(2)/$($(1)_SUBDIR)'
 	    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(1)-*.patch)),
@@ -610,5 +610,5 @@ distdir := $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
 dist:
 	rm -rf $(distdir)
 	mkdir $(distdir)
-	tar cf - $(DIST_FILES) | ( cd $(distdir) ; tar xpf - )
-	tar czf $(distdir).tar.gz $(distdir)
+	$(TAR) cf - $(DIST_FILES) | ( cd $(distdir) ; $(TAR) xpf - )
+	$(TAR) czf $(distdir).tar.gz $(distdir)
