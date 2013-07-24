@@ -276,6 +276,7 @@ SRC_FILES_1 := \
   matio.mk \
   mdbtools.mk \
   mingw-cairo-1-ssize-t-defined.patch \
+  mingw-pango-1-fixes.patch \
   mingw-utils-1-portability-fix.patch \
   mingw-utils.mk \
   mingwrt.mk \
@@ -311,6 +312,7 @@ SRC_FILES_1 := \
   msvc-netcdf-1.patch \
   msvc-nettle-1.patch \
   msvc-ncurses-1.patch \
+  msvc-pango-1.patch \
   msvc-pixman-1.patch \
   msvc-pstoedit-1.patch \
   msvc-qhull-1.patch \
@@ -388,7 +390,6 @@ SRC_FILES_1 := \
   openscenegraph.mk \
   openssl-1-winsock2.patch \
   openssl.mk \
-  pango-1-fixes.patch \
   pango.mk \
   pangomm.mk \
   pcre.mk \
