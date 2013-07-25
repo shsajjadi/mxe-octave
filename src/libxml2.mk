@@ -30,6 +30,6 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --without-python \
         --without-threads && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j '$(JOBS)' noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j 1 install noinst_PROGRAMS=
 endef
