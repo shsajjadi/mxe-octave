@@ -22,11 +22,11 @@ endef
 
 define $(PKG)_BUILD
     # unpack support libraries
-    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,gcc-gmp)
+    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,gcc-gmp,$(TAR))
     mv '$(1)/$(gcc-gmp_SUBDIR)' '$(1)/gmp'
-    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,gcc-mpc)
+    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,gcc-mpc,$(TAR))
     mv '$(1)/$(gcc-mpc_SUBDIR)' '$(1)/mpc'
-    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,gcc-mpfr)
+    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,gcc-mpfr,$(TAR))
     mv '$(1)/$(gcc-mpfr_SUBDIR)' '$(1)/mpfr'
 
     # build GCC and support libraries

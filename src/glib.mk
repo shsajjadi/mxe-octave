@@ -19,7 +19,7 @@ define $(PKG)_NATIVE_BUILD
     cp -Rp '$(1)' '$(1).native'
 
     # native build of libiconv (used by glib-genmarshal)
-    cd '$(1).native' && $(call UNPACK_PKG_ARCHIVE,libiconv)
+    cd '$(1).native' && $(call UNPACK_PKG_ARCHIVE,libiconv,$(TAR))
     cd '$(1).native/$(libiconv_SUBDIR)' && ./configure \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-nls
