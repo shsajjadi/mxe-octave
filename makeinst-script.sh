@@ -66,6 +66,8 @@ Icon "$OCTAVE_SOURCE\\$ICON"
 !insertmacro MUI_PAGE_WELCOME
 
 !ifdef LICENSE_TXT
+!define MUI_LICENSEPAGE_TEXT_BOTTOM "The source code for Octave is freely redistributable under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation."
+!define MUI_LICENSEPAGE_BUTTON "Next >"
 !insertmacro MUI_PAGE_LICENSE "\${LICENSE_TXT}"
 !endif
 
