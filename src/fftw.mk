@@ -25,6 +25,9 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    if [ $(MXE_SYSTEM) = msvc ]; then \
+        $(SED) -i -e 's,-lm\>,,' '$(1)/fftw.pc.in'; \
+    fi
     cd '$(1)' && ./configure \
         F77=$(MXE_F77) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \

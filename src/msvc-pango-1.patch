@@ -1,6 +1,18 @@
+diff -ur pango-1.34.1-orig/configure pango-1.34.1/configure
+--- pango-1.34.1-orig/configure	2013-05-13 11:34:47 -0400
++++ pango-1.34.1/configure	2013-07-25 09:47:14 -0400
+@@ -19745,7 +19745,7 @@
+ PKGCONFIG_CAIRO_REQUIRES=
+ 
+ if test $enable_explicit_deps = yes ; then
+-  PKGCONFIG_MATH_LIBS=-lm
++  PKGCONFIG_MATH_LIBS=
+ 
+   X_LIBS="$X_LIBS $X_EXTRA_LIBS"
+ 
 diff -ur pango-1.34.1-orig/pango/Makefile.in pango-1.34.1/pango/Makefile.in
 --- pango-1.34.1-orig/pango/Makefile.in	2013-05-13 11:34:50 -0400
-+++ pango-1.34.1/pango/Makefile.in	2013-07-22 22:18:27 -0400
++++ pango-1.34.1/pango/Makefile.in	2013-07-25 09:46:13 -0400
 @@ -80,7 +80,7 @@
  POST_UNINSTALL = :
  build_triplet = @build@
@@ -46,7 +58,7 @@ diff -ur pango-1.34.1-orig/pango/Makefile.in pango-1.34.1/pango/Makefile.in
  @HAVE_XFT_TRUE@am__append_35 = libpangoxft-$(PANGO_API_VERSION).la
 diff -ur pango-1.34.1-orig/pango-view/viewer-cairo.c pango-1.34.1/pango-view/viewer-cairo.c
 --- pango-1.34.1-orig/pango-view/viewer-cairo.c	2012-08-24 15:08:22 -0400
-+++ pango-1.34.1/pango-view/viewer-cairo.c	2013-07-22 22:21:37 -0400
++++ pango-1.34.1/pango-view/viewer-cairo.c	2013-07-25 09:46:13 -0400
 @@ -76,7 +76,9 @@
  #endif /* HAVE_XFT */
  #endif /* HAVE_CAIRO_XLIB */
