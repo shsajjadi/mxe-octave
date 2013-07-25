@@ -54,7 +54,7 @@ Caption "\${APP_NAME}"
 OutFile "\${INSTALLER_NAME}"
 BrandingText "\${APP_NAME}"
 XPStyle on
-InstallDir "\$PROGRAMFILES\Octave"
+InstallDir "C:\\Octave\\Octave-\${OCTAVE_VERSION}"
 Icon "$OCTAVE_SOURCE\\$ICON"
 
 ######################################################################
