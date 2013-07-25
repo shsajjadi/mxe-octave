@@ -126,6 +126,7 @@ SRC_FILES_1 := \
   gtk2-1-fixes.patch \
   gtk2-test.c \
   gtk2.mk \
+  gtk3.mk \
   gtkglarea-1-fixes.patch \
   gtkglarea.mk \
   gtkglext-1-fixes.patch \
@@ -295,6 +296,7 @@ SRC_FILES_1 := \
   msvc-glib-1.patch \
   msvc-gnutls-1.patch \
   msvc-graphicsmagick-1.patch \
+  msvc-gtk3-1.patch \
   msvc-harfbuzz-1.patch \
   msvc-hdf5-1.patch \
   msvc-itsol-1.patch \
