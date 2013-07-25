@@ -61,7 +61,7 @@ define $(PKG)_BUILD
     $(INSTALL) -m755 '$(HOST_BINDIR)/wx-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)wx-config'
 
     # build the wxWidgets variant without unicode support
-    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,wxwidgets)
+    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,wxwidgets,$(TAR))
     $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/wxwidgets-*.patch)),
     (cd '$(1)/$(wxwidgets_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
     $(SED) -i 's,png_check_sig,png_sig_cmp,g'                       '$(1)/$(wxwidgets_SUBDIR)/configure'

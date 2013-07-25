@@ -18,7 +18,7 @@ endef
 
 define $(PKG)_BUILD
     # unpack and build a native version of ilmbase
-    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,ilmbase)
+    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,ilmbase,$(TAR))
     $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/ilmbase-*.patch)),
         (cd '$(1)/$(ilmbase_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
     echo 'echo $1' > '$(1)/$(ilmbase_SUBDIR)/config.sub'
