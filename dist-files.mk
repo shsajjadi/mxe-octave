@@ -323,6 +323,7 @@ SRC_FILES_1 := \
   msvc-suitesparse-1.patch \
   msvc-tiff-1.patch \
   msvc-vala-1.patch \
+  msvc-zenity-1.patch \
   msys-bash.mk \
   msys-coreutils.mk \
   msys-diffutils.mk \
@@ -527,6 +528,7 @@ SRC_FILES_1 := \
   xvidcore-1-fixes.patch \
   xvidcore.mk \
   xz.mk \
+  zenity.mk \
   zlib-1-win32-static.patch \
   zlib.mk \
   zziplib-1-fix-fnmatch.patch \

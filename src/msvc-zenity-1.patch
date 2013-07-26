@@ -1,0 +1,112 @@
+diff -ur zenity-3.8.0-orig/src/main.c zenity-3.8.0/src/main.c
+--- zenity-3.8.0-orig/src/main.c	2011-08-16 09:52:42 -0400
++++ zenity-3.8.0/src/main.c	2013-07-25 19:58:10 -0400
+@@ -29,7 +29,9 @@
+ #include <stdlib.h>
+ #include <glib.h>
+ #include <gtk/gtk.h>
++#ifndef _MSC_VER
+ #include <langinfo.h>
++#endif
+ #ifdef HAVE_LOCALE_H
+ #include <locale.h>
+ #endif
+diff -ur zenity-3.8.0-orig/src/option.c zenity-3.8.0/src/option.c
+--- zenity-3.8.0-orig/src/option.c	2013-03-13 21:46:04 -0400
++++ zenity-3.8.0/src/option.c	2013-07-25 19:58:10 -0400
+@@ -1621,7 +1621,11 @@
+     if (zenity_calendar_date_format)
+       results->calendar_data->date_format = zenity_calendar_date_format;
+     else
++#ifdef _MSC_VER
++      results->calendar_data->date_format = "%Y-%m-%d";
++#else
+       results->calendar_data->date_format = g_locale_to_utf8 (nl_langinfo (D_FMT), -1, NULL, NULL, NULL);
++#endif
+ 
+   } else {
+     if (zenity_calendar_day > -1)
+@@ -2009,7 +2013,11 @@
+     if (zenity_forms_date_format)
+       results->forms_data->date_format = zenity_forms_date_format;
+     else
++#ifdef _MSC_VER
++      results->forms_data->date_format = "%Y-%m-%d";
++#else
+       results->forms_data->date_format = g_locale_to_utf8 (nl_langinfo (D_FMT), -1, NULL, NULL, NULL);
++#endif
+   } else {
+     if (zenity_forms_date_format)
+       zenity_option_error (zenity_option_get_name (forms_dialog_options, &zenity_forms_date_format),
+diff -ur zenity-3.8.0-orig/src/option.h zenity-3.8.0/src/option.h
+--- zenity-3.8.0-orig/src/option.h	2011-08-16 09:52:42 -0400
++++ zenity-3.8.0/src/option.h	2013-07-25 19:58:10 -0400
+@@ -27,7 +27,9 @@
+ 
+ #include "zenity.h"
+ #include <glib.h>
++#ifndef _MSC_VER
+ #include <langinfo.h>
++#endif
+ #ifdef HAVE_LOCALE_H
+ #include <locale.h>
+ #endif
+diff -ur zenity-3.8.0-orig/src/progress.c zenity-3.8.0/src/progress.c
+--- zenity-3.8.0-orig/src/progress.c	2013-03-13 21:46:04 -0400
++++ zenity-3.8.0/src/progress.c	2013-07-25 19:58:10 -0400
+@@ -327,9 +327,11 @@
+          But we want to give people the option to choose this behavior.
+          -- Monday 27, March 2006
+       */
++#ifndef _MSC_VER
+       if (autokill) {
+         kill (getppid (), 1);
+       }
++#endif
+       zen_data->exit_code = zenity_util_return_exit_code (ZENITY_CANCEL);
+       break;
+ 
+diff -ur zenity-3.8.0-orig/src/tree.c zenity-3.8.0/src/tree.c
+--- zenity-3.8.0-orig/src/tree.c	2013-03-13 21:46:04 -0400
++++ zenity-3.8.0/src/tree.c	2013-07-25 19:58:38 -0400
+@@ -643,6 +643,7 @@
+ GObject *tree_view;
+   GtkTreeSelection *selection;
+   GtkTreeModel *model;
++  GSList *tmp;
+ 
+   tree_view = gtk_builder_get_object (builder, "zenity_tree_view");
+   model = gtk_tree_view_get_model (GTK_TREE_VIEW (tree_view));
+@@ -657,8 +658,6 @@
+                                          GTK_TREE_VIEW (tree_view));
+   }
+ 
+-  GSList *tmp;
+-
+   for (tmp = selected; tmp; tmp = tmp->next) {
+     if (tmp->next != NULL) {
+         g_print ("%s%s", (gchar *) tmp->data, separator);
+diff -ur zenity-3.8.0-orig/src/util.c zenity-3.8.0/src/util.c
+--- zenity-3.8.0-orig/src/util.c	2013-03-13 21:46:04 -0400
++++ zenity-3.8.0/src/util.c	2013-07-25 19:58:10 -0400
+@@ -89,9 +89,20 @@
+   }
+ 
+   if (result == 0)
++#ifdef G_OS_WIN32
++    {
++      gchar *root = g_win32_get_package_installation_directory_of_module (NULL);
++      gchar *p = g_build_filename (root, "share/zenity/zenity.ui");
++      result = gtk_builder_add_objects_from_file (builder, p,
++                                                  objects, &error);
++      g_free (p);
++      g_free (root);
++    }
++#else
+     result = gtk_builder_add_objects_from_file (builder,
+     						ZENITY_UI_FILE_FULLPATH,
+ 						objects, &error);
++#endif
+ 
+   g_strfreev (objects);
+ 
