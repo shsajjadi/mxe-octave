@@ -1,6 +1,6 @@
 #!/bin/bash
 MXEDIR=@MXE_ROOTDIR@
-HOST=i686-pc-mingw32
+HOST=$($MXEDIR/tools/config.guess)
 
 if [ -z "$MXE_OCTAVE_ENV" ]; then
 
@@ -9,7 +9,7 @@ export CPPFLAGS="-I$MXEDIR/usr/$HOST/include"
 export LDFLAGS="-L$MXEDIR/usr/$HOST/lib"
 export LD_LIBRARY_PATH="$MXEDIR/usr/$HOST/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="$MXEDIR/usr/$HOST/lib/pkgconfig"
-export PKG_CONFIG="$MXEDIR/usr/bin/pkg-config.exe"
+export PKG_CONFIG="$MXEDIR/usr/bin/pkg-config@EXEEXT@"
 
 export MXE_OCTAVE_ENV=$MXEDIR
 
