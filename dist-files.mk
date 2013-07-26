@@ -155,6 +155,7 @@ SRC_FILES_1 := \
   imagemagick.mk \
   intltool.mk \
   itsol.mk \
+  itstool.mk \
   jasper-1-fixes.patch \
   jasper.mk \
   jpeg-test.c \
@@ -300,6 +301,7 @@ SRC_FILES_1 := \
   msvc-harfbuzz-1.patch \
   msvc-hdf5-1.patch \
   msvc-itsol-1.patch \
+  msvc-itstool-1.patch \
   msvc-libffi-1.patch \
   msvc-libgd-1.patch \
   msvc-libgcrypt-1.patch \
