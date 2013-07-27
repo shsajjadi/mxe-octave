@@ -30,7 +30,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > octave.nsi
 !define OCTAVE_VERSION "3.7.5"
 !define COPYRIGHT "Copyright © 2013 John W. Eaton and others."
 !define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
-!define LICENSE_TXT "../gpl-3.0.txt"
+!define INSTALLER_FILES "../installer_files"
 !define INSTALLER_NAME "octave-installer.exe"
 !define MAIN_APP_EXE "octave.exe"
 !define INSTALL_TYPE "SetShellVarContext current"
@@ -58,18 +58,24 @@ InstallDir "C:\\Octave\\Octave-\${OCTAVE_VERSION}"
 Icon "$OCTAVE_SOURCE\\$ICON"
 
 ######################################################################
+; MUI settings
 !include "MUI.nsh"
 
 !define MUI_ABORTWARNING
 !define MUI_UNABORTWARNING
+!define MUI_HEADERIMAGE
 
+; Theme
+!define MUI_ICON "\${INSTALLER_FILES}/octave-logo.ico"
+!define MUI_UNICON "./${OCTAVE_SOURCE}/share/nsis/Contrib/Graphics/Icons/orange-uninstall.ico"
+!define MUI_HEADERIMAGE_BITMAP "\${INSTALLER_FILES}/octave-hdr.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "\${INSTALLER_FILES}/octave.bmp"
+ 
 !insertmacro MUI_PAGE_WELCOME
 
-!ifdef LICENSE_TXT
 !define MUI_LICENSEPAGE_TEXT_BOTTOM "The source code for Octave is freely redistributable under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation."
 !define MUI_LICENSEPAGE_BUTTON "Next >"
-!insertmacro MUI_PAGE_LICENSE "\${LICENSE_TXT}"
-!endif
+!insertmacro MUI_PAGE_LICENSE "\${INSTALLER_FILES}/gpl-3.0.txt"
 
 !insertmacro MUI_PAGE_DIRECTORY
 
