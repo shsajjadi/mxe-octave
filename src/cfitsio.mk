@@ -9,6 +9,11 @@ $(PKG)_FILE     := $(PKG)$(subst .,,$($(PKG)_VERSION)).tar.gz
 $(PKG)_URL      := ftp://heasarc.gsfc.nasa.gov/software/$(PKG)/c/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
+$(PKG)_MAKE_FLAGS :=
+ifeq ($(BUILD_SHARED),yes)
+  $(PKG)_MAKE_FLAGS += shared
+endif
+
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package cfitsio.' >&2;
     echo $(cfitsio_VERSION)
@@ -40,7 +45,12 @@ define $(PKG)_BUILD
 endef
 else
 define $(PKG)_BUILD
-    echo "Building of package cfitsio not implemented yet."
-    false
+    cd '$(1)' && '$(1)/configure' \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        --prefix='$(HOST_PREFIX)' 
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $($(PKG)_MAKE_FLAGS)
+    $(MAKE) -C '$(1)' -j 1 install
+
 endef
 endif
