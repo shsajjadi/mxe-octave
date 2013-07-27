@@ -14,4 +14,5 @@ pkg install -global -auto statistics-1.1.3.tar.gz
 pkg install -global -auto geometry-1.7.0.tar.gz
 pkg install -global -auto windows-1.2.1.tar.gz
 pkg install -global -auto odepkg-0.8.4.tar.gz
+pkg install -global -auto linear-algebra-2.2.0.tar.gz
 
