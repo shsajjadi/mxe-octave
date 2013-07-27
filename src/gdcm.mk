@@ -9,6 +9,13 @@ $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG) 2.x/GDCM $($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := expat zlib
 
+$(PKG)_CMAKE_OPTS :=
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  ifeq ($(MXE_SYSTEM),mingw)
+    $(PKG)_CMAKE_OPTS := -G "MSYS Makefiles" 
+  endif
+endif
+
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package gdcm.' >&2;
     echo $(gdcm_VERSION)
@@ -30,7 +37,14 @@ define $(PKG)_BUILD
 endef
 else
 define $(PKG)_BUILD
-    echo "Building of package gdcm not implemented yet."
-    false
+    mkdir '$(1)/../.build'
+    cd '$(1)/../.build' && cmake \
+        $($(PKG)_CMAKE_OPTS) \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'  \
+        -DGDCM_BUILD_SHARED_LIBS:BOOL=TRUE \
+        ../$($(PKG)_SUBDIR)
+    make -C $(1)/../.build -j $(JOBS) 
+    make -C $(1)/../.build -j 1 install
 endef
+
 endif
