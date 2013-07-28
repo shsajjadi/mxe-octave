@@ -174,7 +174,7 @@ Function DetectWinVer
 is_winnt:
   StrCpy \$1 \$0 1
   StrCmp \$1 4 is_error ; Aborting installation for Windows versions older than Windows 2000
-  StrCmp \$0 "5.0" is_winnt_2000
+  StrCmp \$0 "5.0" is_error ; Removing Windows 2000 as supported Windows version
   StrCmp \$0 "5.1" is_winnt_XP
   StrCmp \$0 "5.2" is_winnt_2003
   StrCmp \$0 "6.0" is_winnt_vista
@@ -186,7 +186,6 @@ is_winnt:
 is_winnt_8:
   MessageBox MB_YESNO|MB_ICONEXCLAMATION "Setup has detected Windows 8 installed on your system. Octave is currently not fully supported on Windows 8. If you choose to continue with the installation, you might not be able to access Octave GUI. Do you want to proceed with the installation anyway?" IDYES done IDNO 0
   Abort
-is_winnt_2000:
 is_winnt_XP:
 is_winnt_2003:
 is_winnt_vista:
