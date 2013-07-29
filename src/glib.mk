@@ -15,43 +15,6 @@ define $(PKG)_UPDATE
     head -1
 endef
 
-define $(PKG)_NATIVE_BUILD
-    cp -Rp '$(1)' '$(1).native'
-
-    # native build of libiconv (used by glib-genmarshal)
-    cd '$(1).native' && $(call UNPACK_PKG_ARCHIVE,libiconv,$(TAR))
-    cd '$(1).native/$(libiconv_SUBDIR)' && ./configure \
-        $(ENABLE_SHARED_OR_STATIC) \
-        --disable-nls
-    $(MAKE) -C '$(1).native/$(libiconv_SUBDIR)' -j '$(JOBS)'
-
-    # native build for glib-genmarshal, without pkg-config, gettext and zlib
-    cd '$(1).native' && ./configure \
-        $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(HOST_PREFIX)' \
-        --enable-regex \
-        --disable-threads \
-        --disable-selinux \
-        --disable-inotify \
-        --disable-fam \
-        --disable-xattr \
-        --disable-dtrace \
-        --with-libiconv=gnu \
-        --with-pcre=internal \
-        CPPFLAGS='-I$(1).native/$(libiconv_SUBDIR)/include' \
-        LDFLAGS='-L$(1).native/$(libiconv_SUBDIR)/lib/.libs'
-    $(SED) -i 's,#define G_ATOMIC.*,,' '$(1).native/config.h'
-    $(MAKE) -C '$(1).native/glib'    -j '$(JOBS)'
-    $(MAKE) -C '$(1).native/gthread' -j '$(JOBS)'
-    $(MAKE) -C '$(1).native/gmodule' -j '$(JOBS)'
-    $(MAKE) -C '$(1).native/gobject' -j '$(JOBS)' lib_LTLIBRARIES= install-exec
-    $(MAKE) -C '$(1).native/gio/xdgmime'     -j '$(JOBS)'
-    $(MAKE) -C '$(1).native/gio'     -j '$(JOBS)' glib-compile-schemas
-    $(MAKE) -C '$(1).native/gio'     -j '$(JOBS)' glib-compile-resources
-    $(INSTALL) -m755 '$(1).native/gio/glib-compile-schemas' '$(HOST_BINDIR)'
-    $(INSTALL) -m755 '$(1).native/gio/glib-compile-resources' '$(HOST_BINDIR)'
-endef
-
 define $(PKG)_SYMLINK
     $(LN_SF) `which glib-genmarshal`        '$(HOST_BINDIR)'
     $(LN_SF) `which glib-compile-schemas`   '$(HOST_BINDIR)'
@@ -60,6 +23,7 @@ endef
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
 define $(PKG)_BUILD
+    cd $(1) && ./autogen.sh
     cd '$(1)' && PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -75,33 +39,24 @@ define $(PKG)_BUILD
 endef
 else
 define $(PKG)_BUILD
-    cd '$(1)' && ./autogen.sh
+    cd '$(1)' && NOCONFIGURE=true ./autogen.sh
     rm -f '$(HOST_BINDIR)/glib-*'
-    $(if $(findstring y,\
-            $(shell [ -x "`which glib-genmarshal`" ] && \
-                    [ -x "`which glib-compile-schemas`" ] && \
-                    [ -x "`which glib-compile-resources`" ] && echo y)), \
-        $($(PKG)_SYMLINK), \
-        $($(PKG)_NATIVE_BUILD))
     # cross build
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --prefix='$(HOST_PREFIX)' \
         --with-threads=win32 \
         --with-pcre=system \
         --with-libiconv=gnu \
         --disable-inotify \
-        CXX='$(MXE_CXX)' \
+        --disable-modular-tests \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
-        GLIB_GENMARSHAL='$(HOST_BINDIR)/glib-genmarshal' \
-        GLIB_COMPILE_SCHEMAS='$(HOST_BINDIR)/glib-compile-schemas' \
-        GLIB_COMPILE_RESOURCES='$(HOST_BINDIR)/glib-compile-resources'
-    $(MAKE) -C '$(1)/glib'    -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(MAKE) -C '$(1)/gmodule' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(MAKE) -C '$(1)/gthread' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(MAKE) -C '$(1)/gobject' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(MAKE) -C '$(1)/gio'     -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= MISC_STUFF=
-    $(MAKE) -C '$(1)'         -j '$(JOBS)' install-pkgconfigDATA
+        PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' 
+
+    $(MAKE) -C '$(1)'    -j '$(JOBS)' 
+    $(MAKE) -C '$(1)'    -j 1 install 
 endef
+
 endif
