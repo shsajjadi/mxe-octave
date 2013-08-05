@@ -115,7 +115,7 @@ else
 endif
 
 REQUIREMENTS := bash bzip2 $(MAKE) openssl $(PATCH) $(PERL) \
-                $(SED) tar unzip wget xz
+                $(SED) tar unzip wget
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   REQUIREMENTS += bsdtar

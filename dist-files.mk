@@ -29,6 +29,7 @@ SRC_FILES_1 := \
   build-pkg-config-1-fixes.patch \
   build-pkg-config.mk \
   build-texinfo.mk \
+  build-xz.mk \
   bzip2.mk \
   cairo-2-static-init.patch \
   cairo.mk \
