@@ -101,7 +101,6 @@ SRC_FILES_1 := \
   giflib.mk \
   glew-test.c \
   glew.mk \
-  glib-1-fixes.patch \
   glib.mk \
   glibmm.mk \
   glpk-1-fixes.patch \
@@ -264,7 +263,6 @@ SRC_FILES_1 := \
   libxml2-1-fixes.patch \
   libxml2.mk \
   libxslt.mk \
-  llvm-1-fixes.patch \
   llvm.mk \
   log4cxx-1-gcc.4.4.patch \
   log4cxx-2-pkgconfig.patch \
@@ -279,6 +277,9 @@ SRC_FILES_1 := \
   matio.mk \
   mdbtools.mk \
   mingw-cairo-1-ssize-t-defined.patch \
+  mingw-cfitsio-1-fixes.patch \
+  mingw-glib-1-fixes.patch \
+  mingw-glib-2-fixes.patch \
   mingw-pango-1-fixes.patch \
   mingw-utils-1-portability-fix.patch \
   mingw-utils.mk \
@@ -296,34 +297,41 @@ SRC_FILES_1 := \
   msvc-gdk-pixbuf-1.patch \
   msvc-gettext-1.patch \
   msvc-glib-1.patch \
+  msvc-gnuplot-1.patch \
   msvc-gnutls-1.patch \
   msvc-graphicsmagick-1.patch \
+  msvc-gsl-1.patch \
   msvc-gtk3-1.patch \
   msvc-harfbuzz-1.patch \
   msvc-hdf5-1.patch \
   msvc-itsol-1.patch \
   msvc-itstool-1.patch \
   msvc-libffi-1.patch \
-  msvc-libgd-1.patch \
   msvc-libgcrypt-1.patch \
+  msvc-libgd-1.patch \
   msvc-libgpg_error-1.patch \
   msvc-libgsf-1.patch \
   msvc-libiconv-1.patch \
   msvc-libidn-1.patch \
   msvc-libssh2-1.patch \
   msvc-libxml2-1.patch \
+  msvc-llvm-1.patch \
   msvc-msitools-1.patch \
   msvc-msitools-2-tests.patch \
+  msvc-ncurses-1.patch \
   msvc-netcdf-1.patch \
   msvc-nettle-1.patch \
-  msvc-ncurses-1.patch \
+  msvc-octave-1.patch \
+  msvc-openssl-1.patch \
   msvc-pango-1.patch \
   msvc-pixman-1.patch \
+  msvc-proj-1.patch \
   msvc-pstoedit-1.patch \
   msvc-qhull-1.patch \
   msvc-qt-1.patch \
   msvc-readline-1.patch \
   msvc-suitesparse-1.patch \
+  msvc-texinfo-1.patch \
   msvc-tiff-1.patch \
   msvc-vala-1.patch \
   msvc-zenity-1.patch \
@@ -446,6 +454,7 @@ SRC_FILES_1 := \
   qscintilla.mk \
   qt-1-cherrypicks.patch \
   qt-1-pcre.patch \
+  qt-2-dbus.patch \
   qt-test.cpp \
   qt-test.pro \
   qt-test.ui \
