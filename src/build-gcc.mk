@@ -3,14 +3,12 @@
 
 PKG             := build-gcc
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := a464ba0f26eef24c29bcd1e7489421117fb9ee35
+$(PKG)_CHECKSUM := 4e655032cda30e1928fcc3f00962f4238b502169
 $(PKG)_SUBDIR   := gcc-$($(PKG)_VERSION)
 $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
-ifeq ($(MXE_NATIVE_BUILD),yes)
-  $(PKG)_DEPS := build-binutils
-else
+ifneq ($(MXE_NATIVE_BUILD),yes)
   ifeq ($(MXE_SYSTEM),mingw)
     $(PKG)_DEPS := mingwrt w32api build-binutils
   endif
