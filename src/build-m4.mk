@@ -1,13 +1,13 @@
 # This file is part of MXE.
 # See index.html for further information.
 
-PKG             := build-autoconf
+PKG             := build-m4
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := e891c3193029775e83e0534ac0ee0c4c711f6d23
-$(PKG)_SUBDIR   := autoconf-$($(PKG)_VERSION)
-$(PKG)_FILE     := autoconf-$($(PKG)_VERSION).tar.xz
-$(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/autoconf/$($(PKG)_FILE)
-$(PKG)_DEPS     := build-xz build-m4
+$(PKG)_CHECKSUM := 44b3ed8931f65cdab02aee66ae1e49724d2551a4
+$(PKG)_SUBDIR   := m4-$($(PKG)_VERSION)
+$(PKG)_FILE     := m4-$($(PKG)_VERSION).tar.gz
+$(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/m4/$($(PKG)_FILE)
+$(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
