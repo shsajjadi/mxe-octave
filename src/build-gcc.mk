@@ -22,7 +22,6 @@ endif
 
 ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_SYSDEP_CONFIGURE_OPTIONS := \
-    --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
     --enable-version-specific-runtime-libs \
     --with-gcc \
     --with-gnu-ld \
@@ -49,7 +48,9 @@ define $(PKG)_BUILD
         --target='$(TARGET)' \
         --build='$(BUILD_SYSTEM)' \
         --prefix='$(BUILD_TOOLS_PREFIX)' \
+        --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
         --enable-languages='c,c++,fortran' \
+        --disable-multilib \
         $(ENABLE_SHARED_OR_STATIC) \
         $($(PKG)_SYSDEP_CONFIGURE_OPTIONS) \
         --disable-libgomp \
