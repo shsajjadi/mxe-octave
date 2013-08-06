@@ -13,6 +13,10 @@ else
   $(PKG)_DEPS     := blas lapack
 endif
 
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
+endif
+
 ifeq ($(USE_PIC_FLAG),yes)
   $(PKG)_CONFIGURE_PIC_OPTION := --with-pic
 endif
@@ -35,7 +39,7 @@ endef
 
 define $(PKG)_BUILD
     mkdir '$(1)/.build'
-    cd '$(1)/.build' && '$(1)/configure' \
+    cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
         F77=$(MXE_F77) \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
