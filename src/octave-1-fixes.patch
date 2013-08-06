@@ -1,0 +1,41 @@
+# HG changeset patch
+# User Torsten <ttl@justmail.de>
+# Date 1373569992 -7200
+# Node ID eefcfeb37446788e15df5621acca3e4c88c3056f
+# Parent  9c971fa62a770329f4146492bee781a5abfdff5b
+make ctrl-c abort the actual octave command in linux (bug #37672)
+
+* main-window.cc(construct_edit_menu): set ctrl-c and ctrl-v for copy and paste
+* TerminalView.cc(copyClipboard): remove FIXME comment
+
+diff --git a/libgui/qterminal/libqterminal/unix/TerminalView.cpp b/libgui/qterminal/libqterminal/unix/TerminalView.cpp
+--- a/libgui/qterminal/libqterminal/unix/TerminalView.cpp
++++ b/libgui/qterminal/libqterminal/unix/TerminalView.cpp
+@@ -2267,9 +2267,6 @@
+ 
+   if (text.isEmpty ())
+     {
+-      // FIXME -- interrupt is only appropriate here if CTRL-C is bound
+-      // to the copy action.  How can we determine that?
+-
+       ::raise (SIGINT);
+     }
+   else
+diff --git a/libgui/src/main-window.cc b/libgui/src/main-window.cc
+--- a/libgui/src/main-window.cc
++++ b/libgui/src/main-window.cc
+@@ -1051,12 +1051,12 @@
+   _copy_action
+     = edit_menu->addAction (QIcon (":/actions/icons/editcopy.png"),
+                             tr ("Copy"), this, SLOT (copyClipboard ()));
+-  _copy_action->setShortcut (ctrl_shift + Qt::Key_C);
++  _copy_action->setShortcut (QKeySequence::Copy);
+ 
+   _paste_action
+     = edit_menu->addAction (QIcon (":/actions/icons/editpaste.png"),
+                             tr ("Paste"), this, SLOT (pasteClipboard ()));
+-  _paste_action->setShortcut (ctrl_shift + Qt::Key_V);
++  _paste_action->setShortcut (QKeySequence::Paste);
+ 
+   edit_menu->addSeparator ();
+ 
