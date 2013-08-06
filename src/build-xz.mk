@@ -20,5 +20,5 @@ define $(PKG)_BUILD
         --prefix='$(BUILD_TOOLS_PREFIX)' \
         --disable-threads \
         --disable-nls
-    $(MAKE) -C '$(1)'/src/liblzma -j '$(JOBS)' install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
