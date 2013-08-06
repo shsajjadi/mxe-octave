@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 00ab1b32d864622077c311e4f5420d4e2931fdc8
 $(PKG)_SUBDIR   := bison-$($(PKG)_VERSION)
 $(PKG)_FILE     := bison-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/bison/$($(PKG)_FILE)
-$(PKG)_DEPS     := 
+$(PKG)_DEPS     := build-xz
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
