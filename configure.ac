@@ -87,11 +87,18 @@ AC_ARG_ENABLE([native-build],
   [if test "$enableval" = yes; then MXE_NATIVE_BUILD=yes; fi], [])
 AC_SUBST(MXE_NATIVE_BUILD)
 
+USE_SYSTEM_FONTCONFIG=$MXE_NATIVE_BUILD
+AC_ARG_ENABLE([system-fontconfig],
+  [AS_HELP_STRING([--enable-system-fontconfig],
+    [Use fontconfig already installed on system])],
+  [if test "$enableval" = yes; then USE_SYSTEM_FONTCONFIG=yes; else USE_SYSTEM_FONTCONFIG=no; fi], [])
+AC_SUBST(USE_SYSTEM_FONTCONFIG)
+
 USE_SYSTEM_GCC=$MXE_NATIVE_BUILD
 AC_ARG_ENABLE([system-gcc],
   [AS_HELP_STRING([--enable-system-gcc],
     [Use GCC already installed on system])],
-  [if test "$enableval" = yes; then USE_SYSTEM_GCC=yes; fi], [])
+  [if test "$enableval" = yes; then USE_SYSTEM_GCC=yes; else USE_SYSTEM_GCC=no; fi], [])
 AC_SUBST(USE_SYSTEM_GCC)
 
 USE_PIC_FLAG=no
