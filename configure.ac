@@ -65,7 +65,7 @@ AC_SUBST(ENABLE_64)
 BUILD_SHARED=yes
 AC_ARG_ENABLE(shared,
   [AS_HELP_STRING([--disable-shared], [Disable shared libraries])],
-  [], [if test "$enableval" = no; then BUILD_SHARED=no; fi])
+  [if test "$enableval" = no; then BUILD_SHARED=no; fi], [])
 AC_SUBST(BUILD_SHARED)
 
 BUILD_STATIC=no
@@ -76,9 +76,8 @@ AC_SUBST(BUILD_STATIC)
 
 ENABLE_JIT=yes
 AC_ARG_ENABLE([jit],
-  [AS_HELP_STRING([--enable-jit],
-    [(EXPERIMENTAL) enable Octave JIT compiler])],
-  [if test "$enableval" = yes; then ENABLE_JIT=yes; fi], [])
+  [AS_HELP_STRING([--disable-jit], [Disable Octave JIT compiler])],
+  [if test "$enableval" = no; then ENABLE_JIT=no; fi], [])
 AC_SUBST(ENABLE_JIT)
 
 MXE_NATIVE_BUILD=false
