@@ -25,6 +25,7 @@ SRC_FILES_1 := \
   build-gcc.mk \
   build-gperf.mk \
   build-libtool.mk \
+  build-m4-fixes.patch \
   build-m4.mk \
   build-msvctools.mk \
   build-pkg-config-1-fixes.patch \
