@@ -42,7 +42,7 @@ define $(PKG)_BUILD
         --without-ada \
         --without-manpages \
         --enable-pc-files \
-        CONFIG_CACHE=/dev/null \
+        CONFIG_SITE=/dev/null \
         $($(PKG)_CONFIG_OPTS)
 
     # MSVC generates invalid code in panel library when using -O2
