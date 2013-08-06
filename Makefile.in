@@ -70,8 +70,14 @@ endif
 # These can't be chosen arbitrarily.  The way things are configured now,
 # GCC expects to find cross-compiler include files in $(PREFIX)/$(TARGET).
 # and it's not clear to me how to change that.
+#
+# For native builds, dump everything all together in one directory tree.
 BUILD_TOOLS_PREFIX := $(PWD)/usr
-HOST_PREFIX := $(PWD)/usr/$(TARGET)
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  HOST_PREFIX := $(PWD)/usr/$(TARGET)
+else
+  HOST_PREFIX := $(BUILD_TOOLS_PREFIX)
+endif
 
 # At least one package uses --with instead of --enable.  
 ifeq ($(BUILD_SHARED),yes)
@@ -154,9 +160,6 @@ TOP_DIR    := $(PWD)
 MAKEFILE   := $(TOP_DIR)/Makefile
 PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html'))
 
-ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
-  PATH := $(HOST_PREFIX)/bin:$(PATH)
-endif
 PATH := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)
 
 CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(HOST_PREFIX)/include'
@@ -188,7 +191,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     # Use native paths for compiler flags. Note: at this point, we can't
     # rely on the existence of HOST_PREFIX directory, so recompute the
     # native path from $(PWD) instead.
-    HOST_PREFIX_NATIVE := $(shell cd $(PWD) && pwd -W)/usr/$(TARGET)
+    HOST_PREFIX_NATIVE := $(shell cd $(PWD) && pwd -W)/usr
     CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(HOST_PREFIX_NATIVE)/include'
     CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX_NATIVE)/lib'
   else
