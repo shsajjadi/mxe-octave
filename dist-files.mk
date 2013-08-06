@@ -652,6 +652,7 @@ SRC_MSVCTOOLS_MATH_FILES := \
   $(addprefix src/build-msvctools/math/, $(SRC_MSVCTOOLS_MATH_FILES_1))
 
 TOOLS_FILES_1 := \
+  build-make.sh \
   config.guess \
   config.sub \
   create-screenshot-for-doc \
