@@ -615,3 +615,4 @@ dist:
 
 build-autoconf build-bison: build-xz
 build-automake: build-autoconf
+build-binutils: build-gcc
