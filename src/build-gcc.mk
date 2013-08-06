@@ -8,7 +8,9 @@ $(PKG)_SUBDIR   := gcc-$($(PKG)_VERSION)
 $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
-ifneq ($(MXE_NATIVE_BUILD),yes)
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  $(PKG)_DEPS := build-cmake
+else
   ifeq ($(MXE_SYSTEM),mingw)
     $(PKG)_DEPS := mingwrt w32api build-binutils
   endif

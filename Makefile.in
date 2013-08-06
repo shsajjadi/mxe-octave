@@ -612,8 +612,3 @@ dist:
 	mkdir $(distdir)
 	$(TAR) cf - $(DIST_FILES) | ( cd $(distdir) ; $(TAR) xpf - )
 	$(TAR) czf $(distdir).tar.gz $(distdir)
-
-build-autoconf build-bison: build-xz
-build-automake: build-autoconf
-build-binutils: build-gcc
-build-gcc: build-cmake
