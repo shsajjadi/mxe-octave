@@ -14,10 +14,12 @@ MXE_SYSTEM := @MXE_SYSTEM@
 MXE_NATIVE_BUILD := @MXE_NATIVE_BUILD@
 
 # Set to "yes" to use the versions of GCC and binutils already
-# installed on your system.  NOTE: building a copy of GCC for a
-# native build does not appear to work correctly yet, so for now you
-# must set USE_SYSTEM_GCC to yes if MXE_NATIVE_BUILD is set to yes.
+# installed on your system (default is yes if doing native build).
 USE_SYSTEM_GCC := @USE_SYSTEM_GCC@
+
+# Set to "yes" to use the version of fontconfig already installed
+# on your system (default is yes if doing native build). 
+USE_SYSTEM_FONTCONFIG := @USE_SYSTEM_FONTCONFIG@
 
 # Should match what config.guess prints for your system.
 # If cross compiling, you must set it manually.
