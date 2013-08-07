@@ -1,6 +1,11 @@
 #!/bin/bash
 MXEDIR=@MXE_ROOTDIR@
-HOST=$($MXEDIR/tools/config.guess)
+
+if [ "@MXE_NATIVE_BUILD@" = "yes" ]; then
+  HOST=""
+else
+  HOST=$($MXEDIR/tools/config.guess)
+fi
 
 if [ -z "$MXE_OCTAVE_ENV" ]; then
 
