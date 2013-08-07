@@ -238,6 +238,7 @@ endif
 
 HOST_BINDIR := $(HOST_PREFIX)/bin
 HOST_LIBDIR := $(HOST_PREFIX)/lib
+HOST_LIB64DIR := $(HOST_PREFIX)/lib64
 HOST_INCDIR := $(HOST_PREFIX)/include
 
 ifeq ($(MXE_SYSTEM),mingw)
@@ -250,7 +251,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
   endif
 else ifneq ($(MXE_SYSTEM),msvc)
-  LD_LIBRARY_PATH := '$(HOST_LIBDIR)'
+  LD_LIBRARY_PATH := $(HOST_LIBDIR):$(HOST_LIB64DIR)
   export LD_LIBRARY_PATH
   MXE_CPPFLAGS := '-I$(HOST_INCDIR)'
   MXE_LDFLAGS := '-L$(HOST_LIBDIR)'
