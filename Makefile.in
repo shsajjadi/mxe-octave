@@ -74,9 +74,9 @@ endif
 # For native builds, dump everything all together in one directory tree.
 BUILD_TOOLS_PREFIX := $(PWD)/usr
 ifeq ($(MXE_NATIVE_BUILD),yes)
-  HOST_PREFIX := $(PWD)/usr/$(TARGET)
-else
   HOST_PREFIX := $(BUILD_TOOLS_PREFIX)
+else
+  HOST_PREFIX := $(PWD)/usr/$(TARGET)
 endif
 
 # At least one package uses --with instead of --enable.  
