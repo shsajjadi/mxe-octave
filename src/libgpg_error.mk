@@ -25,5 +25,7 @@ define $(PKG)_BUILD
         --disable-languages && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)/src' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)/src' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(LN_SF) '$(HOST_BINDIR)/gpg-error-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)gpg-error-config'
+    if [ $(MXE_NATIVE_BUILD) = no ]; then \
+      $(INSTALL) -m755 '$(HOST_BINDIR)/gpg-error-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)gpg-error-config'; \
+    fi
 endef

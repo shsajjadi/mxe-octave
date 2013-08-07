@@ -46,5 +46,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' install \
         DIRS=src \
         LIBCOMMAND='$(MXE_AR) cr'
-    $(LN_SF) '$(HOST_BINDIR)/fltk-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)fltk-config'
+    if [ $(MXE_NATIVE_BUILD) = no ]; then \
+      $(INSTALL) -m755 '$(HOST_BINDIR)/fltk-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)fltk-config'; \
+    fi
 endef

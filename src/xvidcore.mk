@@ -25,5 +25,5 @@ define $(PKG)_BUILD
     $(INSTALL) -m644 '$(1)/../../src/xvid.h' '$(HOST_INCDIR)'
     $(INSTALL) -d '$(HOST_LIBDIR)'
     $(INSTALL) -m644 '$(1)/build/xvidcore.a' '$(HOST_LIBDIR)'
-    $(LN_SF) '$(HOST_LIBDIR)/xvidcore.a' '$(HOST_LIBDIR)/libxvidcore.a'
+    $(INSTALL) -m644 '$(HOST_LIBDIR)/xvidcore.a' '$(HOST_LIBDIR)/libxvidcore.a'
 endef

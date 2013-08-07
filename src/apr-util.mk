@@ -27,5 +27,7 @@ define $(PKG)_BUILD
         --with-apr='$(HOST_PREFIX)' \
         CFLAGS=-D_WIN32_WINNT=0x0500
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
-    $(LN_SF) '$(HOST_BINDIR)/apu-1-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)apu-1-config'
+    if [ $(MXE_NATIVE_BUILD) = no ]; then \
+      $(INSTALL) -m755 '$(HOST_BINDIR)/apu-1-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)apu-1-config'; \
+    fi
 endef
