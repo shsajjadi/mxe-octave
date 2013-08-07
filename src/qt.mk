@@ -171,30 +171,18 @@ define $(PKG)_BUILD
        cp -f '$(1)/lib/pkgconfig/'*.pc '$(HOST_LIBDIR)/pkgconfig/';  \
     fi
 
-    # using if-function, this allows to keep the code structure untouched,
-    # including the comments, however one must make sure there is no comma
-    $(if $(filter-out msvc,$(MXE_SYSTEM)),
-        $(LN_SF) '$($(PKG)_PREFIX)/bin/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
-        $(LN_SF) '$($(PKG)_PREFIX)/bin/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
-        $(LN_SF) '$($(PKG)_PREFIX)/bin/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
-        $(LN_SF) '$($(PKG)_PREFIX)/bin/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
+    if [ $(MXE_SYSTEM) != msvc ]; then \
+      if [ $(MXE_NATIVE_BUILD) = no ]; then \
+        $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'; \
+        $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'; \
+        $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'; \
+        $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'; \
+      fi
 
-        # cd '$(1)/tools/assistant' && '$(1)/bin/qmake' assistant.pro
-        # $(MAKE) -C '$(1)/tools/assistant' -j '$(JOBS)' install
-
-        # cd '$(1)/tools/designer' && '$(1)/bin/qmake' designer.pro
-        # $(MAKE) -C '$(1)/tools/designer' -j '$(JOBS)' install
-
-        # # at least some of the qdbus tools are useful on target
-        # cd '$(1)/tools/qdbus' && '$(1)/bin/qmake' qdbus.pro
-        # $(MAKE) -C '$(1)/tools/qdbus' -j '$(JOBS)' install
-
-        # lrelease (from linguist) needed by octave for GUI build
-        $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install
-        $(LN_SF) '$($(PKG)_PREFIX)/bin/lrelease' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'
-
-        # mkdir            '$(1)/test-qt'
-        # cd               '$(1)/test-qt' && '$(MXE_QMAKE)' '$(PWD)/$(2).pro'
-        # $(MAKE)       -C '$(1)/test-qt' -j '$(JOBS)'
-        # $(INSTALL) -m755 '$(1)/test-qt/release/test-qt.exe' '$(HOST_BINDIR)')
+      # lrelease (from linguist) needed by octave for GUI build
+      $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install
+      if [ $(MXE_NATIVE_BUILD) = no ]; then \
+        $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/lrelease' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'); \
+      fi
+    fi
 endef

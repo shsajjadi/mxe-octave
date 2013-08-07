@@ -81,5 +81,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/alg'   -j 1 install
     $(MAKE) -C '$(1)/ogr'   -j 1 install OGR_ENABLED=
     $(MAKE) -C '$(1)/apps'  -j 1 install BIN_LIST=
-    $(LN_SF) '$(HOST_BINDIR)/gdal-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)gdal-config'
+    if [ $(MXE_NATIVE_BUILD) = no ]; then \
+      $(INSTALL) -m755 '$(HOST_BINDIR)/gdal-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)gdal-config'; \
+    fi
 endef

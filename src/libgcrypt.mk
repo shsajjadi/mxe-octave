@@ -25,5 +25,7 @@ define $(PKG)_BUILD
     $(if $(filter msvc,$(MXE_SYSTEM)), \
         $(SED) -i -e '/^LTCPPASCOMPILE/ {s/$$(LIBTOOL)/& --tag=CC/;}' '$(1)/mpi/Makefile')
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(LN_SF) '$(HOST_BINDIR)/libgcrypt-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)libgcrypt-config'
+    if [ $(MXE_NATIVE_BUILD) = no ]; then \
+      $(INSTALL) -m755 '$(HOST_BINDIR)/libgcrypt-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)libgcrypt-config'; \
+    fi
 endef

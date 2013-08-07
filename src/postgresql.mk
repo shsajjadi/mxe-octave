@@ -80,5 +80,7 @@ define $(PKG)_BUILD
         --with-system-tzdata=/dev/null
     $(MAKE) -C '$(1).native'/src/port          -j '$(JOBS)'
     $(MAKE) -C '$(1).native'/src/bin/pg_config -j '$(JOBS)' install
-    $(LN_SF) '$(HOST_BINDIR)/pg_config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pg_config'
+    if [ $(MXE_NATIVE_BUILD) = no ]; then \
+      $(INSTALL) -m755 '$(HOST_BINDIR)/pg_config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pg_config'; \
+    fi
 endef
