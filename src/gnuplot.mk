@@ -40,7 +40,9 @@ define $(PKG)_BUILD
 endef
 else
 define $(PKG)_BUILD
-    cd '$(1)' && ./configure --prefix '$(HOST_PREFIX)'
+    cd '$(1)' && ./configure \
+      $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) LIBS=-liconv \
+      --prefix '$(HOST_PREFIX)'
     make -C '$(1)' -j '$(JOBS)' install
 endef
 endif
