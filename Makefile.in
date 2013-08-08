@@ -259,7 +259,7 @@ ifeq ($(MXE_SYSTEM),mingw)
   endif
 else ifneq ($(MXE_SYSTEM),msvc)
   MXE_CPPFLAGS := '-I$(HOST_INCDIR)'
-  ifeq ($MXE_USE_LIB64_DIRECTORY)
+  ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
     MXE_LDFLAGS := '-L$(HOST_LIBDIR) -L$(HOST_LIB64DIR)'
     LD_LIBRARY_PATH := $(HOST_LIBDIR):$(HOST_LIB64DIR)
   else
