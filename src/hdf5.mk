@@ -33,6 +33,10 @@ ifeq ($(MXE_SYSTEM),mingw)
   endif
 endif
 
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
+endif
+
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package hdf5.' >&2;
     echo $(hdf5_VERSION)
@@ -42,7 +46,7 @@ define $(PKG)_BUILD
     # build GCC and support libraries
     cd '$(1)' && autoreconf
     mkdir '$(1)/.build'
-    cd '$(1)/.build' && '$(1)/configure' \
+    cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
