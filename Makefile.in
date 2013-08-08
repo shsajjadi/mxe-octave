@@ -47,6 +47,9 @@ ENABLE_JIT := @ENABLE_JIT@
 # Use openblas for octave
 ENABLE_OPENBLAS := @ENABLE_OPENBLAS@
 
+# Look in lib64 directory.
+MXE_USE_LIB64_DIRECTORY := @ENABLE_LIB64_DIRECTORY@
+
 ## end of configuration variables.
 
 ifneq ($(MXE_NATIVE_BUILD),yes)
@@ -163,7 +166,11 @@ PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* id="\([^
 PATH := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)
 
 CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(HOST_PREFIX)/include'
-CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX)/lib'
+ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
+  CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX)/lib -L$(HOST_PREFIX)/lib64'
+else
+  CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX)/lib'
+endif
 CONFIGURE_POST_HOOK := true
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
@@ -251,10 +258,15 @@ ifeq ($(MXE_SYSTEM),mingw)
     NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
   endif
 else ifneq ($(MXE_SYSTEM),msvc)
-  LD_LIBRARY_PATH := $(HOST_LIBDIR):$(HOST_LIB64DIR)
-  export LD_LIBRARY_PATH
   MXE_CPPFLAGS := '-I$(HOST_INCDIR)'
-  MXE_LDFLAGS := '-L$(HOST_LIBDIR)'
+  ifeq ($MXE_USE_LIB64_DIRECTORY)
+    MXE_LDFLAGS := '-L$(HOST_LIBDIR) -L$(HOST_LIB64DIR)'
+    LD_LIBRARY_PATH := $(HOST_LIBDIR):$(HOST_LIB64DIR)
+  else
+    MXE_LDFLAGS := '-L$(HOST_LIBDIR)'
+    LD_LIBRARY_PATH := $(HOST_LIBDIR)
+  endif
+  export LD_LIBRARY_PATH
 endif
 
 LN := ln

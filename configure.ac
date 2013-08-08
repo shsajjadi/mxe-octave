@@ -101,6 +101,13 @@ AC_ARG_ENABLE([system-gcc],
   [if test "$enableval" = yes; then USE_SYSTEM_GCC=yes; else USE_SYSTEM_GCC=no; fi], [])
 AC_SUBST(USE_SYSTEM_GCC)
 
+ENABLE_LIB64_DIRECTORY=no
+AC_ARG_ENABLE(lib64-directory,
+  [AS_HELP_STRING([--enable-lib64-directory],
+    [Search lib64 directory for libraries])],
+  [if test "$enableval" = yes; then ENABLE_LIB64_DIRECTORY=yes; fi], [])
+AC_SUBST(ENABLE_LIB64_DIRECTORY)
+
 USE_PIC_FLAG=no
 AC_ARG_ENABLE([pic-flag],
   [AS_HELP_STRING([--enable-pic-flag], [Compile with PIC flag])],
