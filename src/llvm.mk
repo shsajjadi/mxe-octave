@@ -53,7 +53,6 @@ define $(PKG)_BUILD
       --prefix='$(HOST_PREFIX)'
 
     PATH='$(HOST_BINDIR):$(PATH)' $(MAKE) -C '$(1)/build' -j $(JOBS) install
-    $(INSTALL) -m755 '$(HOST_BINDIR)/llvm-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)llvm-config'
 endef
 endif
 else
