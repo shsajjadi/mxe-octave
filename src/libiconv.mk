@@ -23,7 +23,7 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
 	CC='$(MXE_CC)' \
-        CPPFLAGS='$(MXE_CPPFLAGS)' \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --disable-nls && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
