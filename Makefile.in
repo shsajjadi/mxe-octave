@@ -235,7 +235,7 @@ else
   else
     MXE_WINDRES := true
   endif
-  MXE_PKG_CONFIG := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pkg-config'
+  MXE_PKG_CONFIG := '$(BUILD_TOOLS_PREFIX)/bin/pkg-config'
   MXE_QMAKE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
 endif
 
