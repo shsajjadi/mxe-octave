@@ -80,7 +80,7 @@ AC_ARG_ENABLE([jit],
   [if test "$enableval" = no; then ENABLE_JIT=no; fi], [])
 AC_SUBST(ENABLE_JIT)
 
-MXE_NATIVE_BUILD=false
+MXE_NATIVE_BUILD=no
 AC_ARG_ENABLE([native-build],
   [AS_HELP_STRING([--enable-native-build],
     [Enable native build (default is cross compile)])],
@@ -114,7 +114,7 @@ AC_ARG_ENABLE([pic-flag],
   [if test "$enableval" = yes; then USE_PIC_FLAG=yes; fi], [])
 AC_SUBST(USE_PIC_FLAG)
 
-ENABLE_OPENBLAS=false
+ENABLE_OPENBLAS=no
 AC_ARG_ENABLE([openblas],
   [AS_HELP_STRING([--enable-openblas],
     [(EXPERIMENTAL) enable use of openblas in Octave])],
