@@ -177,7 +177,7 @@ define $(PKG)_BUILD
         $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
         $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
         $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
-      fi)
+      )
 
       # lrelease (from linguist) needed by octave for GUI build
       $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install
