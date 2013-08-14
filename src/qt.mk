@@ -6,7 +6,7 @@ $(PKG)_IGNORE   :=
 $(PKG)_CHECKSUM := bc352a283610e0cd2fe0dbedbc45613844090fcb
 $(PKG)_SUBDIR   := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://releases.qt-project.org/qt4/source/$($(PKG)_FILE)
+$(PKG)_URL      := http://download.qt-project.org/archives/qt/4.8/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := openssl zlib libpng jpeg libmng tiff dbus
 
 $(PKG)_CONFIGURE_CMD :=
