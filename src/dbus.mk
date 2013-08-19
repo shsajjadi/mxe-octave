@@ -28,6 +28,7 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-maintainer-mode \
         --disable-silent-rules \
+        --disable-doxygen-docs \
 	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
