@@ -377,7 +377,6 @@ SRC_FILES_1 := \
   ocaml-flexdll.mk \
   ocaml-native-1-fixes.patch \
   ocaml-native.mk \
-  octave-1-fixes.patch \
   octave.mk \
   of-communications-1-fixes.patch \
   of-communications.mk \
