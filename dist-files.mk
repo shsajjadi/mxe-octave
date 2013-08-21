@@ -145,7 +145,6 @@ SRC_FILES_1 := \
   guile-test.c \
   guile.mk \
   harfbuzz.mk \
-  hdf5-1-cross-fixes.patch \
   hdf5.mk \
   hunspell-test.cpp \
   hunspell.mk \
@@ -282,6 +281,7 @@ SRC_FILES_1 := \
   mingw-cfitsio-1-fixes.patch \
   mingw-glib-1-fixes.patch \
   mingw-glib-2-fixes.patch \
+  mingw-hdf5-1.patch \
   mingw-pango-1-fixes.patch \
   mingw-utils-1-portability-fix.patch \
   mingw-utils.mk \
