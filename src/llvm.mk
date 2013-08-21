@@ -67,7 +67,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/build' -j $(JOBS) intrinsics_gen
     $(MAKE) -C '$(1)/build' -j $(JOBS) install
     if [ $(MXE_NATIVE_BUILD) = no ]; then \
-      $(INSTALL) -m755 '$(HOST_BINDIR)/llvm-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)llvm-config'; \
+      $(MAKE) -C $(1)/build/native/tools/llvm-config; \
+      $(INSTALL) -m755 '$(1)/build/native/bin/llvm-config' '$(BUILD_TOOLS_PREFIX)/bin/llvm-config'; \
     fi
 endef
 endif
