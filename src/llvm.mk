@@ -48,11 +48,23 @@ define $(PKG)_BUILD
       $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
       --enable-targets='host-only' \
       --disable-docs \
-      --without-python \
-      --disable-shared --enable-static \
+      $(ENABLE_SHARED_OR_STATIC) \
       --prefix='$(HOST_PREFIX)'
 
     PATH='$(HOST_BINDIR):$(PATH)' $(MAKE) -C '$(1)/build' -j $(JOBS) install
+
+    # create import lib for the dll
+    $(if $(filter yes, $(BUILD_SHARED)),
+      cd '$(1)/build/tools/llvm-shlib/Release+Asserts' && \
+        $(MXE_DLLTOOL) \
+         --dllname "LLVM-`$(HOST_BINDIR)/llvm-config --version`.dll" \
+         --def "LLVM-`$(HOST_BINDIR)/llvm-config --version`.def" \
+         --output-lib "libLLVM-`$(HOST_BINDIR)/llvm-config --version`.a"
+      cd '$(1)/build/tools/llvm-shlib/Release+Asserts' && \
+        $(INSTALL) -m644 \
+         "libLLVM-`$(HOST_BINDIR)/llvm-config --version`.a" \
+         "$(HOST_LIBDIR)"
+    )
 endef
 endif
 else
