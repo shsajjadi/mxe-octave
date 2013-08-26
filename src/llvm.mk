@@ -49,7 +49,7 @@ define $(PKG)_BUILD
       --enable-targets='host-only' \
       --disable-docs \
       --without-python \
-      --disable-shared --enable-static \
+      $(ENABLE_SHARED_OR_STATIC) \
       --prefix='$(HOST_PREFIX)'
 
     PATH='$(HOST_BINDIR):$(PATH)' $(MAKE) -C '$(1)/build' -j $(JOBS) install
@@ -60,7 +60,7 @@ define $(PKG)_BUILD
     mkdir '$(1)/build'
     cd '$(1)/build' && cmake .. \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
-        -DLIBTYPE=STATIC \
+        -DBUILD_SHARED_LIBS=ON \
         -DLLVM_TARGETS_TO_BUILD="X86" \
         -DLLVM_BUILD_TOOLS=OFF
     $(MAKE) -C '$(1)/build' -j $(JOBS) llvm-tblgen
