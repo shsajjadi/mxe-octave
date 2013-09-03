@@ -1,24 +1,28 @@
 #!/bin/bash
 MXEDIR=@MXE_ROOTDIR@
 
-if [ "@MXE_NATIVE_BUILD@" = "yes" ]; then
-  HOST=""
-else
-  HOST=$($MXEDIR/tools/config.guess)
-fi
-
 if [ -z "$MXE_OCTAVE_ENV" ]; then
 
-export PATH="$MXEDIR/usr/$HOST/bin:$MXEDIR/usr/bin:$PATH"
-export CPPFLAGS="-I$MXEDIR/usr/$HOST/include"
-export LDFLAGS="-L$MXEDIR/usr/$HOST/lib"
-export LD_LIBRARY_PATH="$MXEDIR/usr/$HOST/lib:$LD_LIBRARY_PATH"
-export PKG_CONFIG_PATH="$MXEDIR/usr/$HOST/lib/pkgconfig"
-export PKG_CONFIG="$MXEDIR/usr/bin/pkg-config@EXEEXT@"
+  if [ "@MXE_NATIVE_BUILD@" = "yes" ]; then
+    MXE_PATH="$MXEDIR/usr/bin"
+    MXE_INC_PATH="$MXEDIR/usr/include"
+    MXE_LIB_PATH="$MXEDIR/usr/lib"
+  else
+    HOST=$($MXEDIR/tools/config.guess)
 
-export MXE_OCTAVE_ENV=$MXEDIR
+    MXE_PATH="$MXEDIR/usr/$HOST/bin:$MXEDIR/usr/bin"
+    MXE_INC_PATH="$MXEDIR/usr/$HOST/include"
+    MXE_LIB_PATH="$MXEDIR/usr/$HOST/lib"
+  fi
+
+  export PATH="$MXE_PATH:$PATH"
+  export CPPFLAGS="-I$MXE_INC_PATH"
+  export LDFLAGS="-L$MXE_LIB_PATH"
+  export LD_LIBRARY_PATH="$MXE_LIB_PATH:$LD_LIBRARY_PATH"
+  export PKG_CONFIG_PATH="$MXE_LIB_PATH/pkgconfig"
+  export PKG_CONFIG="$MXEDIR/usr/bin/pkg-config@EXEEXT@"
+
+  export MXE_OCTAVE_ENV=$MXEDIR
 
 fi
-
-
 
