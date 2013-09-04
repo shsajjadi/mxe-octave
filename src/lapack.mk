@@ -9,6 +9,16 @@ $(PKG)_URL      := http://www.netlib.org/$(PKG)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.eq.uc.pt/pub/software/math/netlib/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
+ifeq ($(ENABLE_OPENBLAS),yes)
+  $(PKG)_DEPS     += openblas
+
+  ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+    $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES=$(HOST_BINDIR)/libopenblas.dll
+  else
+    $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES=openblas
+  endif
+endif
+
 ifeq ($(ENABLE_64),yes)
   $(PKG)_DEFAULT_INTEGER_8_FLAG := -fdefault-integer-8
 endif
@@ -47,6 +57,7 @@ define $(PKG)_BUILD
         -G 'MSYS Makefiles' \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DCMAKE_Fortran_FLAGS='$($(PKG)_DEFAULT_INTEGER_8_FLAG)' \
+        $($(PKG)_BLAS_CONFIG_OPTS) \
         .
     $(MAKE) -C '$(1)/SRC' -j '$(JOBS)' VERBOSE=1 install
 
@@ -71,6 +82,7 @@ define $(PKG)_BUILD
         -DCMAKE_AR='$(MXE_AR)' \
         -DCMAKE_RANLIB='$(MXE_RANLIB)' \
         -DCMAKE_Fortran_FLAGS='$($(PKG)_DEFAULT_INTEGER_8_FLAG)' \
+        $($(PKG)_BLAS_CONFIG_OPTS) \
         .
     $(MAKE) -C '$(1)/SRC' -j '$(JOBS)' VERBOSE=1 install
 endef
