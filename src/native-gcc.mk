@@ -3,7 +3,7 @@
 
 PKG             := native-gcc
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := a464ba0f26eef24c29bcd1e7489421117fb9ee35
+$(PKG)_CHECKSUM := 4e655032cda30e1928fcc3f00962f4238b502169
 $(PKG)_SUBDIR   := gcc-$($(PKG)_VERSION)
 $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
