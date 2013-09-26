@@ -354,6 +354,7 @@ SRC_FILES_1 := \
   msys-regex.mk \
   msys-sed.mk \
   msys-tar.mk \
+  msys-unzip.mk \
   msys-termcap.mk \
   msys-texinfo.mk \
   msys-xz.mk \
