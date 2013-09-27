@@ -14,6 +14,11 @@ define $(PKG)_UPDATE
     echo $($(PKG)_VERSION)
 endef
 
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+define $(PKG)_BUILD
+    echo "Ignoring build-m4  for native mingw build"
+endef
+else
 define $(PKG)_BUILD
     mkdir '$(1).build'
     cd    '$(1).build' && '$(1)/configure' \
@@ -21,3 +26,4 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     $(MAKE) -C '$(1).build' -j 1 install
 endef
+endif

@@ -132,6 +132,11 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   REQUIREMENTS += bsdtar
 endif
 
+# if we want jit (llvm) we need python
+ifeq ($(ENABLE_JIT),yes)
+  REQUIREMENTS += python
+endif
+
 LIBTOOL     := libtool
 LIBTOOLIZE  := libtoolize
 
@@ -146,6 +151,18 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   REQUIREMENTS += flex
   BUILD_TOOLS := $(filter-out build-flex, $(BUILD_TOOLS))
 endif
+# Building bison for native mingw creates a bison that doesnt  
+# allow push-pull mode so disable
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  REQUIREMENTS += bison
+  BUILD_TOOLS := $(filter-out build-bison, $(BUILD_TOOLS))
+endif
+# use the msys m4 in native mingw
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  REQUIREMENTS += m4
+endif
+
+
 ifeq ($(USE_SYSTEM_GCC),yes)
   BUILD_TOOLS := $(filter-out $(BUILD_COMPILER_TOOLS), $(BUILD_TOOLS))
 endif
