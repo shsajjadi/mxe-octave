@@ -120,6 +120,7 @@ define $(PKG)_BUILD
         -no-iconv \
         -opengl desktop \
         -openssl-linked \
+        -no-webkit \
         -no-phonon \
         -no-phonon-backend \
         -accessibility \
