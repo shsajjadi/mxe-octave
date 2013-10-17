@@ -3,11 +3,11 @@
 
 PKG             := libmng
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := c21c84b614500ae1a41c6595d5f81c596e406ca2
+$(PKG)_CHECKSUM := 7dd35369ff5916e1823cbacef984ab1b87714b69
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)-devel/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := zlib jpeg
+$(PKG)_DEPS     := zlib jpeg lcms
 ifneq ($(MXE_SYSTEM),msvc)
     $(PKG)_DEPS += lcms1
 endif
@@ -19,24 +19,15 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cp '$(1)'/makefiles/Makefile.am '$(1)'
-    cp '$(1)'/makefiles/configure.in '$(1)/configure.in'
-    cd '$(1)' && autoreconf --install
     mkdir '$(1)/.build'
-    cd '$(1)/.build' && '$(1)/configure' \
+    cd '$(1)' && autoreconf --install && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
 	$(ENABLE_SHARED_OR_STATIC) \
         && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
-    $(SED) -e 's^@prefix@^$(HOST_PREFIX)^;' \
-           -e 's^@VERSION@^$(libmng_VERSION)^;' \
-           -e 's^@mng_libs_private@^-ljpeg^;' \
-           -e 's^@mng_requires_private@^lcms zlib^;' \
-           < '$(1)/libmng.pc.in' > '$(1)/libmng.pc'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install
     if test x$(MXE_SYSTEM) = xmsvc; then \
         $(SED) -i -e 's/lcms//' '$(1)/libmng.pc'; \
     fi
-    $(INSTALL) -m644 '$(1)/libmng.pc' '$(HOST_LIBDIR)/pkgconfig/'
 endef
