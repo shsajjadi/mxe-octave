@@ -2,11 +2,11 @@
 # See index.html for further information.
 
 PKG             := gnutls
-$(PKG)_CHECKSUM := d3531761f2754e81f72428d482c0689f0a5e064f
+$(PKG)_CHECKSUM := 18f5fffd1a0384944cb76cbedc0720c4726470f4
 $(PKG)_SUBDIR   := gnutls-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnutls-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/gnutls/$($(PKG)_FILE)
-$(PKG)_DEPS     := nettle zlib
+$(PKG)_DEPS     := gettext nettle pcre zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.savannah.gnu.org/gitweb/?p=gnutls.git;a=tags' | \
@@ -22,6 +22,9 @@ define $(PKG)_BUILD
     cd '$(1)' && aclocal -I m4 -I gl/m4 -I src/libopts/m4 --install
     cd '$(1)' && autoconf
     cd '$(1)' && automake --add-missing
+    if [ "$(MXE_NATIVE_BUILD)" = no ]; then \
+      $(SED) -i 's/libopts_cv_with_libregex=no/libopts_cv_with_libregex=yes/g;' '$(1)/configure'; \
+    fi
     # AI_ADDRCONFIG referenced by src/serv.c but not provided by mingw.
     # Value taken from http://msdn.microsoft.com/en-us/library/windows/desktop/ms737530%28v=vs.85%29.aspx
     cd '$(1)' && ./configure \
@@ -31,10 +34,18 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --disable-nls \
         --disable-guile \
+        --disable-doc \
         --with-included-libtasn1 \
+        --with-libregex='$(HOST_PREFIX)' \
+        --with-regex-header=pcreposix.h \
+        --with-libregex-cflags="`'$(TARGET)-pkg-config' libpcreposix --cflags`" \
+        --with-libregex-libs="`'$(TARGET)-pkg-config' libpcreposix --libs`" \
         --with-included-libcfg \
         --without-p11-kit \
-        --disable-silent-rules && $(CONFIGURE_POST_HOOK)
+        --disable-silent-rules \
+        CPPFLAGS='-DWINVER=0x0501 -DAI_ADDRCONFIG=0x0400 -DIPV6_V6ONLY=27' \
+        LIBS='-lws2_32' \
+        ac_cv_prog_AR='$(TARGET)-ar' && $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
