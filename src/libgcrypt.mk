@@ -3,7 +3,7 @@
 
 PKG             := libgcrypt
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := c9998383532ba3e8bcaf690f2f0d65e814b48d2f
+$(PKG)_CHECKSUM := 2c6553cc17f2a1616d512d6870fe95edf6b0e26e
 $(PKG)_SUBDIR   := libgcrypt-$($(PKG)_VERSION)
 $(PKG)_FILE     := libgcrypt-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnupg.org/gcrypt/libgcrypt/$($(PKG)_FILE)
@@ -16,12 +16,21 @@ define $(PKG)_UPDATE
     tail -1
 endef
 
+ifeq ($(TARGET),x86_64-w64-mingw32)
+  $(PKG)_TARGET_CONFIGURE_OPTIONS := ac_cv_sys_symbol_underscore=no
+else
+  $(PKG)_TARGET_CONFIGURE_OPTIONS :=
+endif
+
 define $(PKG)_BUILD
-    cd '$(1)' && autoreconf && ./configure \
+    sed -i -e '/^ *;/d' -e '/^ *$$/d' '$(1)/src/libgcrypt.def'
+    cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
+        --prefix='$(HOST_PREFIX)' \
+        --with-gpg-error-prefix='$(HOST_PREFIX)' \
+        $($(PKG)_TARGET_CONFIGURE_OPTIONS) && $(CONFIGURE_POST_HOOK)
     $(if $(filter msvc,$(MXE_SYSTEM)), \
         $(SED) -i -e '/^LTCPPASCOMPILE/ {s/$$(LIBTOOL)/& --tag=CC/;}' '$(1)/mpi/Makefile')
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
