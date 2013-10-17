@@ -3,14 +3,13 @@
 
 PKG             := openssl
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 91b684de947cb021ac61b8c51027cc4b63d894ce
+$(PKG)_CHECKSUM := 3f1b1223c9e8189bfe4e186d86449775bd903460
 $(PKG)_SUBDIR   := openssl-$($(PKG)_VERSION)
 $(PKG)_FILE     := openssl-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.openssl.org/source/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.openssl.org/source/$($(PKG)_FILE)
 $(PKG)_DEPS     := zlib libgcrypt
 
-$(PKG)_CC := $(MXE_CC) -I$(HOST_INCDIR) -L$(HOST_LIBDIR)
 ifeq ($(MXE_NATIVE_BUILD),yes)
   ifeq ($(MXE_SYSTEM),msvc)
     # Specifying -I and -L inteferes with possibly old installation
@@ -20,11 +19,17 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     $(PKG)_CC := $(MXE_CC)
     $(PKG)_CONFIGURE := ./Configure $(MXE_SYSTEM) --openssldir='$(HOST_PREFIX)/share/openssl'
   else
+    $(PKG)_CC := $(MXE_CC) -I$(HOST_INCDIR) -L$(HOST_LIBDIR)
     $(PKG)_CONFIGURE := ./config
   endif
 else
-  $(PKG)_CONFIGURE := ./Configure $(MXE_SYSTEM)
   $(PKG)_CROSS_COMPILE_MAKE_ARG := CROSS_COMPILE='$(MXE_TOOL_PREFIX)'
+  $(PKG)_CC := $(MXE_CC)
+  ifeq ($(TARGET),x86_64-w64-mingw32)
+    $(PKG)_CONFIGURE := ./Configure mingw64
+  else
+    $(PKG)_CONFIGURE := ./Configure $(MXE_SYSTEM)
+  endif
 endif
 
 define $(PKG)_UPDATE
@@ -40,8 +45,7 @@ define $(PKG)_BUILD
         zlib \
         shared \
         no-capieng \
-        --prefix='$(HOST_PREFIX)' \
-        --libdir=lib
+        --prefix='$(HOST_PREFIX)'
     case $(MXE_SYSTEM) in \
         msvc) \
             find '$(1)' -name 'Makefile' \
@@ -56,8 +60,8 @@ define $(PKG)_BUILD
     esac
     $(MAKE) -C '$(1)' install -j 1 \
         CC='$($(PKG)_CC)' \
-        RANLIB='$(MXE_RANLIB)' \
         $($(PKG)_CROSS_COMPILE_MAKE_ARG) \
+        RANLIB='$(MXE_RANLIB)' \
         AR='$(MXE_AR) rcu' AS='$(MXE_CCAS)' \
 	MANDIR='$(HOST_PREFIX)/share/man' \
 	HTMLDIR='$(HOST_PREFIX)/share/doc/openssl'
