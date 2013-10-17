@@ -3,7 +3,7 @@
 
 PKG             := dbus
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := d9634807d1de9b64727ae2178e3af2227fca0fca
+$(PKG)_CHECKSUM := 3b2b5375251408c524519ef8a418ad5681832876
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(PKG).freedesktop.org/releases/$(PKG)/$($(PKG)_FILE)
@@ -28,7 +28,10 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-maintainer-mode \
         --disable-silent-rules \
+        --disable-launchd \
         --disable-doxygen-docs \
+        --disable-xml-docs \
+        CFLAGS='-DPROCESS_QUERY_LIMITED_INFORMATION=0x1000' \
 	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
