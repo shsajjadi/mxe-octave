@@ -1,0 +1,35 @@
+diff -ur libgcrypt-1.5.3.orig/random/rndw32.c libgcrypt-1.5.3/random/rndw32.c
+--- libgcrypt-1.5.3.orig/random/rndw32.c	2013-10-18 11:40:06 -0400
++++ libgcrypt-1.5.3/random/rndw32.c	2013-10-18 11:42:15 -0400
+@@ -78,7 +78,9 @@
+ #include <stdint.h>
+ #endif
+ 
++#define WIN32_LEAN_AND_MEAN
+ #include <windows.h>
++#include <winperf.h>
+ 
+ 
+ #include "types.h"
+diff -ur libgcrypt-1.5.3.orig/src/ath.h libgcrypt-1.5.3/src/ath.h
+--- libgcrypt-1.5.3.orig/src/ath.h	2013-10-18 11:40:06 -0400
++++ libgcrypt-1.5.3/src/ath.h	2013-10-18 11:40:33 -0400
+@@ -24,6 +24,7 @@
+ #include <config.h>
+ 
+ #ifdef _WIN32
++# define WIN32_LEAN_AND_MEAN
+ # include <windows.h>
+ #else /* !_WIN32 */
+ # ifdef HAVE_SYS_SELECT_H
+diff -ur libgcrypt-1.5.3.orig/tests/benchmark.c libgcrypt-1.5.3/tests/benchmark.c
+--- libgcrypt-1.5.3.orig/tests/benchmark.c	2013-10-18 11:40:07 -0400
++++ libgcrypt-1.5.3/tests/benchmark.c	2013-10-18 11:40:33 -0400
+@@ -25,6 +25,7 @@
+ #include <time.h>
+ #include <stdarg.h>
+ #ifdef _WIN32
++#define WIN32_LEAN_AND_MEAN
+ #include <windows.h>
+ #else
+ #include <sys/times.h>
