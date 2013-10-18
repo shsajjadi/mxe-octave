@@ -38,14 +38,14 @@ define $(PKG)_BUILD
         --with-included-libtasn1 \
         --with-libregex='$(HOST_PREFIX)' \
         --with-regex-header=pcreposix.h \
-        --with-libregex-cflags="`'$(TARGET)-pkg-config' libpcreposix --cflags`" \
-        --with-libregex-libs="`'$(TARGET)-pkg-config' libpcreposix --libs`" \
+        --with-libregex-cflags="`$(MXE_PKG_CONFIG) libpcreposix --cflags`" \
+        --with-libregex-libs="`$(MXE_PKG_CONFIG) libpcreposix --libs`" \
         --with-included-libcfg \
         --without-p11-kit \
         --disable-silent-rules \
         CPPFLAGS='-DWINVER=0x0501 -DAI_ADDRCONFIG=0x0400 -DIPV6_V6ONLY=27' \
         LIBS='-lws2_32' \
-        ac_cv_prog_AR='$(TARGET)-ar' && $(CONFIGURE_POST_HOOK)
+        ac_cv_prog_AR='$(MXE_AR)' && $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' install
 endef
