@@ -10,7 +10,7 @@ $(PKG)_URL      := ftp://alpha.gnu.org/gnu/octave/$($(PKG)_FILE)
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := arpack curl fftw fltk $($(PKG)_FONTCONFIG) glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
+$(PKG)_DEPS     := arpack curl fftw fltk $($(PKG)_FONTCONFIG) gl2ps glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
 ifeq ($(ENABLE_JIT),yes)
   $(PKG)_DEPS += llvm
 $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --enable-jit
