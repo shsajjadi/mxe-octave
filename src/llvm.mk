@@ -94,7 +94,7 @@ define $(PKG)_BUILD
          --output-lib "libLLVM-`$(BUILD_TOOLS_PREFIX)/bin/llvm-config --version`.a"; \
       cd '$(1)/build/tools/llvm-shlib/Release+Asserts' && \
         $(INSTALL) -m644 \
-         "libLLVM-`$(BUILD_TOOL_PREFIX)/bin/llvm-config --version`.a" \
+         "libLLVM-`$(BUILD_TOOLS_PREFIX)/bin/llvm-config --version`.a" \
          "$(HOST_LIBDIR)"; \
     fi
 
