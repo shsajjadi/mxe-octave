@@ -3,7 +3,7 @@
 
 PKG             := llvm
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 234c96e73ef81aec9a54da92fc2a9024d653b059
+$(PKG)_CHECKSUM := c6c22d5593419e3cb47cbcf16d967640e5cce133
 $(PKG)_SUBDIR   := llvm-$($(PKG)_VERSION).src
 $(PKG)_FILE     := llvm-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := http://llvm.org/releases/$($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -70,17 +70,33 @@ endif
 else
 define $(PKG)_BUILD
     mkdir '$(1)/build'
-    cd '$(1)/build' && cmake .. \
-        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
-        -DBUILD_SHARED_LIBS=ON \
-        -DLLVM_TARGETS_TO_BUILD="X86" \
-        -DLLVM_BUILD_TOOLS=OFF
-    $(MAKE) -C '$(1)/build' -j $(JOBS) llvm-tblgen
-    $(MAKE) -C '$(1)/build' -j $(JOBS) intrinsics_gen
-    $(MAKE) -C '$(1)/build' -j $(JOBS) install
+    cd '$(1)/build' && ../configure  \
+      $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
+      $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+      --enable-targets='x86' \
+      --disable-docs \
+      $(ENABLE_SHARED_OR_STATIC) \
+      --prefix='$(HOST_PREFIX)'
+
+    $(MAKE) -C '$(1)/build' -j $(JOBS)
+    $(MAKE) -C '$(1)/build' -j 1 install
+
     if [ $(MXE_NATIVE_BUILD) = no ]; then \
-      $(MAKE) -C $(1)/build/native/tools/llvm-config; \
-      $(INSTALL) -m755 '$(1)/build/native/bin/llvm-config' '$(BUILD_TOOLS_PREFIX)/bin/llvm-config'; \
+      $(INSTALL) -m755 '$(HOST_BINDIR)/llvm-config-host' '$(BUILD_TOOLS_PREFIX)/bin/llvm-config'; \
     fi
+
+    # create import lib for the dll
+    if [ $(MXE_SYSTEM) = mingw -a $(BUILD_SHARED) = yes ]; then \
+      cd '$(1)/build/tools/llvm-shlib/Release+Asserts' && \
+        $(MXE_DLLTOOL) \
+         --dllname "LLVM-`$(BUILD_TOOLS_PREFIX)/bin/llvm-config --version`.dll" \
+         --def "LLVM-`$(BUILD_TOOLS_PREFIX)/bin/llvm-config --version`.def" \
+         --output-lib "libLLVM-`$(BUILD_TOOLS_PREFIX)/bin/llvm-config --version`.a"; \
+      cd '$(1)/build/tools/llvm-shlib/Release+Asserts' && \
+        $(INSTALL) -m644 \
+         "libLLVM-`$(BUILD_TOOL_PREFIX)/bin/llvm-config --version`.a" \
+         "$(HOST_LIBDIR)"; \
+    fi
+
 endef
 endif
