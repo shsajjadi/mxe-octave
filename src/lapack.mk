@@ -35,6 +35,7 @@ define $(PKG)_BUILD
     cd '$(1)' && \
         cp INSTALL/make.inc.gfortran make.inc && \
         sed -i -e 's/\(FORTRAN[ ]*\)=.*/\1= $(MXE_F77)/' \
+               -e 's/\(LOADER[ ]*\)=.*/\1= $(MXE_F77)/' \
                -e 's/\(CC[ ]*\)=.*/\1= $(MXE_CC)/' \
                -e 's/\(CFLAGS[ ]*\)=.*/\1= -O2/' make.inc
 
