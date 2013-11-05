@@ -160,6 +160,12 @@ endif
 # use the msys m4 in native mingw
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   REQUIREMENTS += m4
+  BUILD_TOOLS := $(filter-out build-m4, $(BUILD_TOOLS))
+endif
+# Use msys xz under MSVC.
+ifeq ($(MXE_SYSTEM),msvc)
+  REQUIREMENTS += xz
+  BUILD_TOOLS := $(filter-out build-xz, $(BUILD_TOOLS))
 endif
 
 
