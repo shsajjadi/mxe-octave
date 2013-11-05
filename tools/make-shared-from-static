@@ -137,11 +137,15 @@ if [ -n "$infile" ]; then
       # Modern libtool won't create .a files, but will create directly .lib files.
       # If the .a file does not exist, check for an existing .lib file.
       if [ ! -f "$infile" ]; then
-        msvc_infile=`echo $infile | sed -e 's/\.a$/.lib/'`
-        if [ -f "$msvc_infile" ]; then
-          infile="$msvc_infile"
-          msvclibmode=true
-        fi
+        msvc_infiles="`echo $infile | sed -e 's/\.a$/.lib/'` \
+`dirname \"$infile\"`/`echo $base_infile | sed -e 's/\.a$/.lib/' -e 's/^lib//'`"
+        for msvc_infile in $msvc_infiles; do
+          if [ -f "$msvc_infile" ]; then
+            infile="$msvc_infile"
+            msvclibmode=true
+            break
+          fi
+        done
       fi
     else
       outfile=$(echo $base_infile | sed 's/\.a$/.dll/')
