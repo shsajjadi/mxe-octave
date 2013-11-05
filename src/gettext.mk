@@ -26,4 +26,17 @@ define $(PKG)_BUILD
         --without-libxml2-prefix \
         CONFIG_SHELL=$(SHELL) && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)/gettext-runtime' -j '$(JOBS)' install
+
+    $(if $(filter msvc,$(MXE_SYSTEM)),
+        cd '$(1)/gettext-tools' && ./configure \
+            $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+            $(ENABLE_SHARED_OR_STATIC) \
+            --prefix='$(HOST_PREFIX)' \
+            --enable-threads=win32 \
+            --without-libexpat-prefix \
+            --without-libxml2-prefix \
+	    ac_cv_func_memset=yes \
+            CONFIG_SHELL=$(SHELL) && $(CONFIGURE_POST_HOOK)
+        $(MAKE) -C '$(1)/gettext-tools' -j '$(JOBS)' install
+    )
 endef
