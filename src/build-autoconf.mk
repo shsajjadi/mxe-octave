@@ -7,7 +7,14 @@ $(PKG)_CHECKSUM := e891c3193029775e83e0534ac0ee0c4c711f6d23
 $(PKG)_SUBDIR   := autoconf-$($(PKG)_VERSION)
 $(PKG)_FILE     := autoconf-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/autoconf/$($(PKG)_FILE)
-$(PKG)_DEPS     := build-xz build-m4
+$(PKG)_DEPS     :=
+
+ifneq ($(MXE_SYSTEM),msvc)
+    ifneq ($(MXE_NATIVE_MINGW_BUILD),yes)
+        $(PKG)_DEPS += build-m4
+    endif
+    $(PKG)_DEPS += build-xz
+endif
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
