@@ -1,6 +1,6 @@
-diff -ur gnutls-3.1.4-orig/extra/Makefile.am gnutls-3.1.4/extra/Makefile.am
---- gnutls-3.1.4-orig/extra/Makefile.am	2012-09-25 10:46:28 -0400
-+++ gnutls-3.1.4/extra/Makefile.am	2013-06-23 14:17:33 -0400
+diff -ur gnutls-3.2.3-orig/extra/Makefile.am gnutls-3.2.3/extra/Makefile.am
+--- gnutls-3.2.3-orig/extra/Makefile.am	2013-06-06 17:13:52 -0400
++++ gnutls-3.2.3/extra/Makefile.am	2013-11-06 09:39:56 -0500
 @@ -45,7 +45,9 @@
  
  # OpenSSL
@@ -21,19 +21,28 @@ diff -ur gnutls-3.1.4-orig/extra/Makefile.am gnutls-3.1.4/extra/Makefile.am
  endif
  endif
  
-diff -ur gnutls-3.1.4-orig/lib/Makefile.am gnutls-3.1.4/lib/Makefile.am
---- gnutls-3.1.4-orig/lib/Makefile.am	2012-10-02 14:03:02 -0400
-+++ gnutls-3.1.4/lib/Makefile.am	2013-06-23 14:17:21 -0400
-@@ -27,7 +27,7 @@
+diff -ur gnutls-3.2.3-orig/lib/Makefile.am gnutls-3.2.3/lib/Makefile.am
+--- gnutls-3.2.3-orig/lib/Makefile.am	2013-07-29 03:53:00 -0400
++++ gnutls-3.2.3/lib/Makefile.am	2013-11-06 14:10:20 -0500
+@@ -37,7 +37,7 @@
+ 	-I$(srcdir)/includes			\
+ 	-I$(builddir)/includes			\
+ 	-I$(srcdir)/x509			\
+-	$(LIBTASN1_CFLAGS)			\
++	$(LIBTASN1_CFLAGS) -DASN1_STATIC	\
+ 	$(P11_KIT_CFLAGS)
  
- localedir = $(datadir)/locale
+ if ENABLE_OPENPGP
+@@ -108,6 +108,8 @@
  
--AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS)
-+AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS) -DGNUTLS_BUILDING
- AM_CPPFLAGS = \
- 	-DLOCALEDIR=\"$(localedir)\"		\
- 	-I$(srcdir)/../gl			\
-@@ -151,7 +151,7 @@
+ # Separate so we can create the documentation
+ 
++libgnutls_la_CPPFLAGS = $(AM_CPPFLAGS) -DGNUTLS_BUILDING
++
+ libgnutls_la_SOURCES = $(HFILES) $(COBJECTS) $(SRP_COBJECTS)	\
+ 	$(PSK_COBJECTS) \
+ 	gnutls.asn pkix.asn libgnutls.map
+@@ -149,7 +151,7 @@
  libgnutls_la_LDFLAGS += -Wl,--output-def,libgnutls-$(DLL_VERSION).def
  libgnutls-$(DLL_VERSION).def: libgnutls.la
  defexecdir = $(bindir)
@@ -42,7 +51,7 @@ diff -ur gnutls-3.1.4-orig/lib/Makefile.am gnutls-3.1.4/lib/Makefile.am
  DISTCLEANFILES += $(defexec_DATA)
  endif
  
-@@ -164,7 +164,7 @@
+@@ -162,7 +164,7 @@
  # C++ library
  
  if ENABLE_CXX
@@ -51,31 +60,42 @@ diff -ur gnutls-3.1.4-orig/lib/Makefile.am gnutls-3.1.4/lib/Makefile.am
  
  AM_CXXFLAGS = \
  	-I$(srcdir)/includes	\
-diff -ur gnutls-3.1.4-orig/lib/accelerated/Makefile.am gnutls-3.1.4/lib/accelerated/Makefile.am
---- gnutls-3.1.4-orig/lib/accelerated/Makefile.am	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/accelerated/Makefile.am	2013-06-23 14:16:47 -0400
+@@ -198,7 +200,8 @@
+ 
+ if HAVE_LD_OUTPUT_DEF
+ libgnutls_xssl_la_LDFLAGS += \
+-	-Wl,--output-def,libgnutls-xssl-$(DLL_VERSION).def
++	-Wl,--output-def,libgnutls-xssl-$(DLL_VERSION).def \
++	-export-symbols-regex '^(xssl_).*'
+ libgnutls-xssl-$(DLL_VERSION).def: libgnutls-xssl.la
+-defexec_DATA += libgnutls-xssl-$(DLL_VERSION).def
++#defexec_DATA += libgnutls-xssl-$(DLL_VERSION).def
+ endif
+diff -ur gnutls-3.2.3-orig/lib/accelerated/Makefile.am gnutls-3.2.3/lib/accelerated/Makefile.am
+--- gnutls-3.2.3-orig/lib/accelerated/Makefile.am	2013-06-06 17:13:52 -0400
++++ gnutls-3.2.3/lib/accelerated/Makefile.am	2013-11-06 09:39:57 -0500
 @@ -21,6 +21,7 @@
- AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS)
+ AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS) $(NETTLE_CFLAGS)
  SUBDIRS = 
  AM_CPPFLAGS = \
 +	-DGNUTLS_BUILDING		\
  	-I$(srcdir)/../../gl		\
  	-I$(builddir)/../../gl		\
  	-I$(srcdir)/../includes		\
-diff -ur gnutls-3.1.4-orig/lib/accelerated/x86/Makefile.am gnutls-3.1.4/lib/accelerated/x86/Makefile.am
---- gnutls-3.1.4-orig/lib/accelerated/x86/Makefile.am	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/accelerated/x86/Makefile.am	2013-06-23 14:16:47 -0400
+diff -ur gnutls-3.2.3-orig/lib/accelerated/x86/Makefile.am gnutls-3.2.3/lib/accelerated/x86/Makefile.am
+--- gnutls-3.2.3-orig/lib/accelerated/x86/Makefile.am	2013-06-06 17:13:52 -0400
++++ gnutls-3.2.3/lib/accelerated/x86/Makefile.am	2013-11-06 09:39:57 -0500
 @@ -21,6 +21,7 @@
  AM_LIBTOOLFLAGS=--tag=CC
- AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS)
+ AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS) $(NETTLE_CFLAGS)
  AM_CPPFLAGS = -I$(srcdir)/../../../gl		\
 +	-DGNUTLS_BUILDING		\
  	-I$(builddir)/../../../gl		\
  	-I$(srcdir)/../../includes	\
  	-I$(builddir)/../../includes	\
-diff -ur gnutls-3.1.4-orig/lib/accelerated/x86/aes-gcm-padlock.c gnutls-3.1.4/lib/accelerated/x86/aes-gcm-padlock.c
---- gnutls-3.1.4-orig/lib/accelerated/x86/aes-gcm-padlock.c	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/accelerated/x86/aes-gcm-padlock.c	2013-06-23 14:16:47 -0400
+diff -ur gnutls-3.2.3-orig/lib/accelerated/x86/aes-gcm-padlock.c gnutls-3.2.3/lib/accelerated/x86/aes-gcm-padlock.c
+--- gnutls-3.2.3-orig/lib/accelerated/x86/aes-gcm-padlock.c	2013-02-10 05:29:54 -0500
++++ gnutls-3.2.3/lib/accelerated/x86/aes-gcm-padlock.c	2013-11-06 09:39:57 -0500
 @@ -153,14 +153,15 @@
  }
  
@@ -100,9 +120,9 @@ diff -ur gnutls-3.1.4-orig/lib/accelerated/x86/aes-gcm-padlock.c gnutls-3.1.4/li
  };
  
  #endif
-diff -ur gnutls-3.1.4-orig/lib/accelerated/x86/aes-gcm-x86.c gnutls-3.1.4/lib/accelerated/x86/aes-gcm-x86.c
---- gnutls-3.1.4-orig/lib/accelerated/x86/aes-gcm-x86.c	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/accelerated/x86/aes-gcm-x86.c	2013-06-23 14:16:47 -0400
+diff -ur gnutls-3.2.3-orig/lib/accelerated/x86/aes-gcm-x86.c gnutls-3.2.3/lib/accelerated/x86/aes-gcm-x86.c
+--- gnutls-3.2.3-orig/lib/accelerated/x86/aes-gcm-x86.c	2013-02-10 05:29:54 -0500
++++ gnutls-3.2.3/lib/accelerated/x86/aes-gcm-x86.c	2013-11-06 09:39:57 -0500
 @@ -259,12 +259,13 @@
  }
  
@@ -125,9 +145,9 @@ diff -ur gnutls-3.1.4-orig/lib/accelerated/x86/aes-gcm-x86.c gnutls-3.1.4/lib/ac
 +  aes_gcm_deinit,
 +  NULL
  };
-diff -ur gnutls-3.1.4-orig/lib/accelerated/x86/aes-padlock.c gnutls-3.1.4/lib/accelerated/x86/aes-padlock.c
---- gnutls-3.1.4-orig/lib/accelerated/x86/aes-padlock.c	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/accelerated/x86/aes-padlock.c	2013-06-23 14:16:47 -0400
+diff -ur gnutls-3.2.3-orig/lib/accelerated/x86/aes-padlock.c gnutls-3.2.3/lib/accelerated/x86/aes-padlock.c
+--- gnutls-3.2.3-orig/lib/accelerated/x86/aes-padlock.c	2013-02-10 05:29:54 -0500
++++ gnutls-3.2.3/lib/accelerated/x86/aes-padlock.c	2013-11-06 09:39:57 -0500
 @@ -159,12 +159,15 @@
  }
  
@@ -150,9 +170,9 @@ diff -ur gnutls-3.1.4-orig/lib/accelerated/x86/aes-padlock.c gnutls-3.1.4/lib/ac
  };
  
  static int
-diff -ur gnutls-3.1.4-orig/lib/accelerated/x86/aes-x86.c gnutls-3.1.4/lib/accelerated/x86/aes-x86.c
---- gnutls-3.1.4-orig/lib/accelerated/x86/aes-x86.c	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/accelerated/x86/aes-x86.c	2013-06-23 14:16:47 -0400
+diff -ur gnutls-3.2.3-orig/lib/accelerated/x86/aes-x86.c gnutls-3.2.3/lib/accelerated/x86/aes-x86.c
+--- gnutls-3.2.3-orig/lib/accelerated/x86/aes-x86.c	2013-02-10 05:29:54 -0500
++++ gnutls-3.2.3/lib/accelerated/x86/aes-x86.c	2013-11-06 09:39:57 -0500
 @@ -114,12 +114,15 @@
  }
  
@@ -175,51 +195,51 @@ diff -ur gnutls-3.1.4-orig/lib/accelerated/x86/aes-x86.c gnutls-3.1.4/lib/accele
  };
  
  static unsigned
-diff -ur gnutls-3.1.4-orig/lib/accelerated/x86/hmac-padlock.c gnutls-3.1.4/lib/accelerated/x86/hmac-padlock.c
---- gnutls-3.1.4-orig/lib/accelerated/x86/hmac-padlock.c	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/accelerated/x86/hmac-padlock.c	2013-06-23 14:16:47 -0400
-@@ -351,23 +351,23 @@
+diff -ur gnutls-3.2.3-orig/lib/accelerated/x86/hmac-padlock.c gnutls-3.2.3/lib/accelerated/x86/hmac-padlock.c
+--- gnutls-3.2.3-orig/lib/accelerated/x86/hmac-padlock.c	2013-05-25 04:52:07 -0400
++++ gnutls-3.2.3/lib/accelerated/x86/hmac-padlock.c	2013-11-06 10:05:17 -0500
+@@ -333,23 +333,23 @@
  }
  
  const gnutls_crypto_mac_st hmac_sha_padlock_struct = {
 -    .init = NULL,
 -    .setkey = NULL,
+-    .setnonce = NULL,
 -    .hash = NULL,
--    .reset = NULL,
 -    .output = NULL,
 -    .deinit = NULL,
 -    .fast = wrap_padlock_hmac_fast
-+    NULL,
-+    NULL,
-+    NULL,
-+    NULL,
-+    NULL,
-+    NULL,
-+    wrap_padlock_hmac_fast
++    /*.init =*/ NULL,
++    /*.setkey =*/ NULL,
++    /*.setnonce =*/ NULL,
++    /*.hash =*/ NULL,
++    /*.output =*/ NULL,
++    /*.deinit =*/ NULL,
++    /*.fast =*/ wrap_padlock_hmac_fast
  };
  
  const gnutls_crypto_mac_st hmac_sha_padlock_nano_struct = {
 -    .init = wrap_padlock_hmac_init,
 -    .setkey = wrap_padlock_hmac_setkey,
+-    .setnonce = NULL,
 -    .hash = wrap_padlock_hmac_update,
--    .reset = wrap_padlock_hmac_reset,
 -    .output = wrap_padlock_hmac_output,
 -    .deinit = wrap_padlock_hmac_deinit,
 -    .fast = wrap_padlock_hmac_fast,
-+    wrap_padlock_hmac_init,
-+    wrap_padlock_hmac_setkey,
-+    wrap_padlock_hmac_reset,
-+    wrap_padlock_hmac_update,
-+    wrap_padlock_hmac_output,
-+    wrap_padlock_hmac_deinit,
-+    wrap_padlock_hmac_fast,
++    /*.init =*/ wrap_padlock_hmac_init,
++    /*.setkey =*/ wrap_padlock_hmac_setkey,
++    /*.setnonce =*/ NULL,
++    /*.hash =*/ wrap_padlock_hmac_update,
++    /*.output =*/ wrap_padlock_hmac_output,
++    /*.deinit =*/ wrap_padlock_hmac_deinit,
++    /*.fast =*/ wrap_padlock_hmac_fast,
  };
  
  #endif /* HAVE_LIBNETTLE */
-diff -ur gnutls-3.1.4-orig/lib/accelerated/x86/sha-padlock.c gnutls-3.1.4/lib/accelerated/x86/sha-padlock.c
---- gnutls-3.1.4-orig/lib/accelerated/x86/sha-padlock.c	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/accelerated/x86/sha-padlock.c	2013-06-23 14:16:47 -0400
-@@ -373,20 +373,21 @@
+diff -ur gnutls-3.2.3-orig/lib/accelerated/x86/sha-padlock.c gnutls-3.2.3/lib/accelerated/x86/sha-padlock.c
+--- gnutls-3.2.3-orig/lib/accelerated/x86/sha-padlock.c	2013-05-08 14:32:30 -0400
++++ gnutls-3.2.3/lib/accelerated/x86/sha-padlock.c	2013-11-06 10:03:49 -0500
+@@ -374,19 +374,19 @@
  const struct nettle_hash padlock_sha512 = _NETTLE_HASH(sha512, SHA512);
  
  const gnutls_crypto_digest_st sha_padlock_struct = {
@@ -228,45 +248,42 @@ diff -ur gnutls-3.1.4-orig/lib/accelerated/x86/sha-padlock.c gnutls-3.1.4/lib/ac
 -  .output = NULL,
 -  .deinit = NULL,
 -  .fast = wrap_padlock_hash_fast
-+  NULL,
-+  NULL,
-+  NULL,
-+  NULL,
-+  NULL,
-+  wrap_padlock_hash_fast
++  /*.init =*/ NULL,
++  /*.hash =*/ NULL,
++  /*.output =*/ NULL,
++  /*.deinit =*/ NULL,
++  /*.fast =*/ wrap_padlock_hash_fast
  };
  
  const gnutls_crypto_digest_st sha_padlock_nano_struct = {
 -  .init = wrap_padlock_hash_init,
 -  .hash = wrap_padlock_hash_update,
--  .reset = wrap_padlock_hash_reset,
 -  .output = wrap_padlock_hash_output,
 -  .deinit = wrap_padlock_hash_deinit,
 -  .fast = wrap_padlock_hash_fast,
-+  wrap_padlock_hash_init,
-+  wrap_padlock_hash_reset,
-+  wrap_padlock_hash_update,
-+  wrap_padlock_hash_output,
-+  wrap_padlock_hash_deinit,
-+  wrap_padlock_hash_fast,
++  /*.init =*/ wrap_padlock_hash_init,
++  /*.hash =*/ wrap_padlock_hash_update,
++  /*.output =*/ wrap_padlock_hash_output,
++  /*.deinit =*/ wrap_padlock_hash_deinit,
++  /*.fast =*/ wrap_padlock_hash_fast,
  };
  
  #endif /* HAVE_LIBNETTLE */
-diff -ur gnutls-3.1.4-orig/lib/algorithms/Makefile.am gnutls-3.1.4/lib/algorithms/Makefile.am
---- gnutls-3.1.4-orig/lib/algorithms/Makefile.am	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/algorithms/Makefile.am	2013-06-23 14:16:47 -0400
+diff -ur gnutls-3.2.3-orig/lib/algorithms/Makefile.am gnutls-3.2.3/lib/algorithms/Makefile.am
+--- gnutls-3.2.3-orig/lib/algorithms/Makefile.am	2013-06-06 17:13:52 -0400
++++ gnutls-3.2.3/lib/algorithms/Makefile.am	2013-11-06 09:39:57 -0500
 @@ -20,6 +20,7 @@
  
- AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS)
+ AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS) $(NETTLE_CFLAGS)
  AM_CPPFLAGS = \
 +	-DGNUTLS_BUILDING		\
  	-I$(srcdir)/../../gl		\
  	-I$(builddir)/../../gl		\
  	-I$(srcdir)/../includes		\
-diff -ur gnutls-3.1.4-orig/lib/algorithms/ecc.c gnutls-3.1.4/lib/algorithms/ecc.c
---- gnutls-3.1.4-orig/lib/algorithms/ecc.c	2012-09-19 17:13:58 -0400
-+++ gnutls-3.1.4/lib/algorithms/ecc.c	2013-06-23 14:16:47 -0400
-@@ -31,69 +31,69 @@
+diff -ur gnutls-3.2.3-orig/lib/algorithms/ecc.c gnutls-3.2.3/lib/algorithms/ecc.c
+--- gnutls-3.2.3-orig/lib/algorithms/ecc.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/algorithms/ecc.c	2013-11-06 10:01:19 -0500
+@@ -31,39 +31,39 @@
  
  static const gnutls_ecc_curve_entry_st ecc_curves[] = {
    {
@@ -275,23 +292,11 @@ diff -ur gnutls-3.1.4-orig/lib/algorithms/ecc.c gnutls-3.1.4/lib/algorithms/ecc.
 -    .id = GNUTLS_ECC_CURVE_SECP192R1,
 -    .tls_id = 19,
 -    .size = 24,
--    .prime = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFF",
--    .A = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFC",
--    .B = "64210519E59C80E70FA7E9AB72243049FEB8DEECC146B9B1",
--    .order = "FFFFFFFFFFFFFFFFFFFFFFFF99DEF836146BC9B1B4D22831",
--    .Gx =    "188DA80EB03090F67CBF20EB43A18800F4FF0AFD82FF1012",
--    .Gy =    "07192B95FFC8DA78631011ED6B24CDD573F977A11E794811"
-+    "SECP192R1", 
-+    "1.2.840.10045.3.1.1",
-+    GNUTLS_ECC_CURVE_SECP192R1,
-+    19,
-+    24,
-+    "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFF",
-+    "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFC",
-+    "64210519E59C80E70FA7E9AB72243049FEB8DEECC146B9B1",
-+    "FFFFFFFFFFFFFFFFFFFFFFFF99DEF836146BC9B1B4D22831",
-+    "188DA80EB03090F67CBF20EB43A18800F4FF0AFD82FF1012",
-+    "07192B95FFC8DA78631011ED6B24CDD573F977A11E794811"
++    /*.name =*/ "SECP192R1", 
++    /*.oid =*/ "1.2.840.10045.3.1.1",
++    /*.id =*/ GNUTLS_ECC_CURVE_SECP192R1,
++    /*.tls_id =*/ 19,
++    /*.size =*/ 24,
    },
    {
 -    .name = "SECP224R1", 
@@ -299,23 +304,11 @@ diff -ur gnutls-3.1.4-orig/lib/algorithms/ecc.c gnutls-3.1.4/lib/algorithms/ecc.
 -    .id = GNUTLS_ECC_CURVE_SECP224R1,
 -    .tls_id = 21,
 -    .size = 28,
--    .prime = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000000000000001",
--    .A = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFE",
--    .B = "B4050A850C04B3ABF54132565044B0B7D7BFD8BA270B39432355FFB4",
--    .order = "FFFFFFFFFFFFFFFFFFFFFFFFFFFF16A2E0B8F03E13DD29455C5C2A3D",
--    .Gx =    "B70E0CBD6BB4BF7F321390B94A03C1D356C21122343280D6115C1D21",
--    .Gy =    "BD376388B5F723FB4C22DFE6CD4375A05A07476444D5819985007E34",
-+    "SECP224R1", 
-+    "1.3.132.0.33",
-+    GNUTLS_ECC_CURVE_SECP224R1,
-+    21,
-+    28,
-+    "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000000000000001",
-+    "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFE",
-+    "B4050A850C04B3ABF54132565044B0B7D7BFD8BA270B39432355FFB4",
-+    "FFFFFFFFFFFFFFFFFFFFFFFFFFFF16A2E0B8F03E13DD29455C5C2A3D",
-+    "B70E0CBD6BB4BF7F321390B94A03C1D356C21122343280D6115C1D21",
-+    "BD376388B5F723FB4C22DFE6CD4375A05A07476444D5819985007E34",
++    /*.name =*/ "SECP224R1", 
++    /*.oid =*/ "1.3.132.0.33",
++    /*.id =*/ GNUTLS_ECC_CURVE_SECP224R1,
++    /*.tls_id =*/ 21,
++    /*.size =*/ 28,
    },
    {
 -    .name = "SECP256R1", 
@@ -323,23 +316,11 @@ diff -ur gnutls-3.1.4-orig/lib/algorithms/ecc.c gnutls-3.1.4/lib/algorithms/ecc.
 -    .id = GNUTLS_ECC_CURVE_SECP256R1,
 -    .tls_id = 23,
 -    .size = 32,
--    .prime = "FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF",
--    .A = "FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFC",
--    .B = "5AC635D8AA3A93E7B3EBBD55769886BC651D06B0CC53B0F63BCE3C3E27D2604B",
--    .order = "FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551",
--    .Gx = "6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296",
--    .Gy = "4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5",
-+    "SECP256R1", 
-+    "1.2.840.10045.3.1.7",
-+    GNUTLS_ECC_CURVE_SECP256R1,
-+    23,
-+    32,
-+    "FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF",
-+    "FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFC",
-+    "5AC635D8AA3A93E7B3EBBD55769886BC651D06B0CC53B0F63BCE3C3E27D2604B",
-+    "FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551",
-+    "6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296",
-+    "4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5",
++    /*.name =*/ "SECP256R1", 
++    /*.oid =*/ "1.2.840.10045.3.1.7",
++    /*.id =*/ GNUTLS_ECC_CURVE_SECP256R1,
++    /*.tls_id =*/ 23,
++    /*.size =*/ 32,
    },
    {
 -    .name = "SECP384R1",
@@ -347,23 +328,11 @@ diff -ur gnutls-3.1.4-orig/lib/algorithms/ecc.c gnutls-3.1.4/lib/algorithms/ecc.
 -    .id = GNUTLS_ECC_CURVE_SECP384R1,
 -    .tls_id = 24,
 -    .size = 48,
--    .prime = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFF0000000000000000FFFFFFFF",
--    .A = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFF0000000000000000FFFFFFFC",
--    .B = "B3312FA7E23EE7E4988E056BE3F82D19181D9C6EFE8141120314088F5013875AC656398D8A2ED19D2A85C8EDD3EC2AEF",
--    .order = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC7634D81F4372DDF581A0DB248B0A77AECEC196ACCC52973",
--    .Gx = "AA87CA22BE8B05378EB1C71EF320AD746E1D3B628BA79B9859F741E082542A385502F25DBF55296C3A545E3872760AB7",
--    .Gy = "3617DE4A96262C6F5D9E98BF9292DC29F8F41DBD289A147CE9DA3113B5F0B8C00A60B1CE1D7E819D7A431D7C90EA0E5F"
-+    "SECP384R1",
-+    "1.3.132.0.34",
-+    GNUTLS_ECC_CURVE_SECP384R1,
-+    24,
-+    48,
-+    "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFF0000000000000000FFFFFFFF",
-+    "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFF0000000000000000FFFFFFFC",
-+    "B3312FA7E23EE7E4988E056BE3F82D19181D9C6EFE8141120314088F5013875AC656398D8A2ED19D2A85C8EDD3EC2AEF",
-+    "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC7634D81F4372DDF581A0DB248B0A77AECEC196ACCC52973",
-+    "AA87CA22BE8B05378EB1C71EF320AD746E1D3B628BA79B9859F741E082542A385502F25DBF55296C3A545E3872760AB7",
-+    "3617DE4A96262C6F5D9E98BF9292DC29F8F41DBD289A147CE9DA3113B5F0B8C00A60B1CE1D7E819D7A431D7C90EA0E5F"
++    /*.name =*/ "SECP384R1",
++    /*.oid =*/ "1.3.132.0.34",
++    /*.id =*/ GNUTLS_ECC_CURVE_SECP384R1,
++    /*.tls_id =*/ 24,
++    /*.size =*/ 48,
    },
    {
 -    .name = "SECP521R1",
@@ -371,51 +340,67 @@ diff -ur gnutls-3.1.4-orig/lib/algorithms/ecc.c gnutls-3.1.4/lib/algorithms/ecc.
 -    .id = GNUTLS_ECC_CURVE_SECP521R1,
 -    .tls_id = 25,
 -    .size = 66,
--    .prime = "01FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
--    .A = "01FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC",
--    .B = "0051953EB9618E1C9A1F929A21A0B68540EEA2DA725B99B315F3B8B489918EF109E156193951EC7E937B1652C0BD3BB1BF073573DF883D2C34F1EF451FD46B503F00",
--    .order = "01FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA51868783BF2F966B7FCC0148F709A5D03BB5C9B8899C47AEBB6FB71E91386409",
--    .Gx =    "00C6858E06B70404E9CD9E3ECB662395B4429C648139053FB521F828AF606B4D3DBAA14B5E77EFE75928FE1DC127A2FFA8DE3348B3C1856A429BF97E7E31C2E5BD66",
--    .Gy =    "011839296A789A3BC0045C8A5FB42C7D1BD998F54449579B446817AFBD17273E662C97EE72995EF42640C550B9013FAD0761353C7086A272C24088BE94769FD16650",
-+    "SECP521R1",
-+    "1.3.132.0.35",
-+    GNUTLS_ECC_CURVE_SECP521R1,
-+    25,
-+    66,
-+    "01FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-+    "01FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC",
-+    "0051953EB9618E1C9A1F929A21A0B68540EEA2DA725B99B315F3B8B489918EF109E156193951EC7E937B1652C0BD3BB1BF073573DF883D2C34F1EF451FD46B503F00",
-+    "01FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA51868783BF2F966B7FCC0148F709A5D03BB5C9B8899C47AEBB6FB71E91386409",
-+    "00C6858E06B70404E9CD9E3ECB662395B4429C648139053FB521F828AF606B4D3DBAA14B5E77EFE75928FE1DC127A2FFA8DE3348B3C1856A429BF97E7E31C2E5BD66",
-+    "011839296A789A3BC0045C8A5FB42C7D1BD998F54449579B446817AFBD17273E662C97EE72995EF42640C550B9013FAD0761353C7086A272C24088BE94769FD16650",
++    /*.name =*/ "SECP521R1",
++    /*.oid =*/ "1.3.132.0.35",
++    /*.id =*/ GNUTLS_ECC_CURVE_SECP521R1,
++    /*.tls_id =*/ 25,
++    /*.size =*/ 66,
    },
    {0, 0, 0}
  };
-diff -ur gnutls-3.1.4-orig/lib/auth/Makefile.am gnutls-3.1.4/lib/auth/Makefile.am
---- gnutls-3.1.4-orig/lib/auth/Makefile.am	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/auth/Makefile.am	2013-06-23 14:16:48 -0400
+diff -ur gnutls-3.2.3-orig/lib/auth/Makefile.am gnutls-3.2.3/lib/auth/Makefile.am
+--- gnutls-3.2.3-orig/lib/auth/Makefile.am	2013-06-06 17:13:52 -0400
++++ gnutls-3.2.3/lib/auth/Makefile.am	2013-11-06 14:26:44 -0500
+@@ -20,6 +20,8 @@
+ 
+ AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS) $(NETTLE_CFLAGS)
+ AM_CPPFLAGS = \
++	-DGNUTLS_BUILDING		\
++	-DASN1_STATIC			\
+ 	-I$(srcdir)/../../gl		\
+ 	-I$(builddir)/../../gl		\
+ 	-I$(srcdir)/../includes		\
+diff -ur gnutls-3.2.3-orig/lib/ext/Makefile.am gnutls-3.2.3/lib/ext/Makefile.am
+--- gnutls-3.2.3-orig/lib/ext/Makefile.am	2013-06-06 17:13:52 -0400
++++ gnutls-3.2.3/lib/ext/Makefile.am	2013-11-06 09:39:57 -0500
 @@ -20,6 +20,7 @@
  
- AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS)
+ AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS) $(NETTLE_CFLAGS)
  AM_CPPFLAGS = \
 +	-DGNUTLS_BUILDING		\
  	-I$(srcdir)/../../gl		\
  	-I$(builddir)/../../gl		\
  	-I$(srcdir)/../includes		\
-diff -ur gnutls-3.1.4-orig/lib/ext/Makefile.am gnutls-3.1.4/lib/ext/Makefile.am
---- gnutls-3.1.4-orig/lib/ext/Makefile.am	2012-11-05 15:43:12 -0500
-+++ gnutls-3.1.4/lib/ext/Makefile.am	2013-06-23 14:16:48 -0400
-@@ -20,6 +20,7 @@
+diff -ur gnutls-3.2.3-orig/lib/ext/alpn.c gnutls-3.2.3/lib/ext/alpn.c
+--- gnutls-3.2.3-orig/lib/ext/alpn.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/ext/alpn.c	2013-11-06 12:50:34 -0500
+@@ -38,15 +38,15 @@
  
- AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS)
- AM_CPPFLAGS = \
-+	-DGNUTLS_BUILDING		\
- 	-I$(srcdir)/../../gl		\
- 	-I$(builddir)/../../gl		\
- 	-I$(srcdir)/../includes		\
-diff -ur gnutls-3.1.4-orig/lib/ext/cert_type.c gnutls-3.1.4/lib/ext/cert_type.c
---- gnutls-3.1.4-orig/lib/ext/cert_type.c	2012-09-19 17:13:58 -0400
-+++ gnutls-3.1.4/lib/ext/cert_type.c	2013-06-23 14:16:48 -0400
+ 
+ extension_entry_st ext_mod_alpn = {
+-  .name = "ALPN",
+-  .type = GNUTLS_EXTENSION_ALPN,
+-  .parse_type = GNUTLS_EXT_APPLICATION,
++  /*.name =*/ "ALPN",
++  /*.type =*/ GNUTLS_EXTENSION_ALPN,
++  /*.parse_type =*/ GNUTLS_EXT_APPLICATION,
+ 
+-  .recv_func = _gnutls_alpn_recv_params,
+-  .send_func = _gnutls_alpn_send_params,
+-  .pack_func = _gnutls_alpn_pack,
+-  .unpack_func = _gnutls_alpn_unpack,
+-  .deinit_func = _gnutls_alpn_deinit_data,
++  /*.recv_func =*/ _gnutls_alpn_recv_params,
++  /*.send_func =*/ _gnutls_alpn_send_params,
++  /*.deinit_func =*/ _gnutls_alpn_deinit_data,
++  /*.pack_func =*/ _gnutls_alpn_pack,
++  /*.unpack_func =*/ _gnutls_alpn_unpack,
+ };
+ 
+ static int
+diff -ur gnutls-3.2.3-orig/lib/ext/cert_type.c gnutls-3.2.3/lib/ext/cert_type.c
+--- gnutls-3.2.3-orig/lib/ext/cert_type.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/ext/cert_type.c	2013-11-06 09:39:57 -0500
 @@ -43,15 +43,15 @@
                                            gnutls_buffer_st * extdata);
  
@@ -440,9 +425,9 @@ diff -ur gnutls-3.1.4-orig/lib/ext/cert_type.c gnutls-3.1.4/lib/ext/cert_type.c
  };
  
  /* 
-diff -ur gnutls-3.1.4-orig/lib/ext/ecc.c gnutls-3.1.4/lib/ext/ecc.c
---- gnutls-3.1.4-orig/lib/ext/ecc.c	2012-09-19 17:13:58 -0400
-+++ gnutls-3.1.4/lib/ext/ecc.c	2013-06-23 14:16:48 -0400
+diff -ur gnutls-3.2.3-orig/lib/ext/ecc.c gnutls-3.2.3/lib/ext/ecc.c
+--- gnutls-3.2.3-orig/lib/ext/ecc.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/ext/ecc.c	2013-11-06 09:39:57 -0500
 @@ -49,27 +49,27 @@
                                            gnutls_buffer_st * extdata);
  
@@ -487,11 +472,11 @@ diff -ur gnutls-3.1.4-orig/lib/ext/ecc.c gnutls-3.1.4/lib/ext/ecc.c
  };
  
  /* 
-diff -ur gnutls-3.1.4-orig/lib/ext/heartbeat.c gnutls-3.1.4/lib/ext/heartbeat.c
---- gnutls-3.1.4-orig/lib/ext/heartbeat.c	2012-09-26 14:19:33 -0400
-+++ gnutls-3.1.4/lib/ext/heartbeat.c	2013-06-23 14:16:48 -0400
-@@ -512,13 +512,13 @@
- 
+diff -ur gnutls-3.2.3-orig/lib/ext/heartbeat.c gnutls-3.2.3/lib/ext/heartbeat.c
+--- gnutls-3.2.3-orig/lib/ext/heartbeat.c	2013-06-08 02:50:45 -0400
++++ gnutls-3.2.3/lib/ext/heartbeat.c	2013-11-06 09:39:57 -0500
+@@ -484,15 +484,15 @@
+ }
  
  extension_entry_st ext_mod_heartbeat = {
 -  .name = "HEARTBEAT",
@@ -512,9 +497,11 @@ diff -ur gnutls-3.1.4-orig/lib/ext/heartbeat.c gnutls-3.1.4/lib/ext/heartbeat.c
 +  _gnutls_heartbeat_pack,
 +  _gnutls_heartbeat_unpack
  };
-diff -ur gnutls-3.1.4-orig/lib/ext/max_record.c gnutls-3.1.4/lib/ext/max_record.c
---- gnutls-3.1.4-orig/lib/ext/max_record.c	2012-09-28 11:47:46 -0400
-+++ gnutls-3.1.4/lib/ext/max_record.c	2013-06-23 14:16:48 -0400
+ 
+ #else
+diff -ur gnutls-3.2.3-orig/lib/ext/max_record.c gnutls-3.2.3/lib/ext/max_record.c
+--- gnutls-3.2.3-orig/lib/ext/max_record.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/ext/max_record.c	2013-11-06 09:39:57 -0500
 @@ -48,15 +48,15 @@
  
  
@@ -539,9 +526,38 @@ diff -ur gnutls-3.1.4-orig/lib/ext/max_record.c gnutls-3.1.4/lib/ext/max_record.
  };
  
  /* 
-diff -ur gnutls-3.1.4-orig/lib/ext/safe_renegotiation.c gnutls-3.1.4/lib/ext/safe_renegotiation.c
---- gnutls-3.1.4-orig/lib/ext/safe_renegotiation.c	2012-09-21 19:26:49 -0400
-+++ gnutls-3.1.4/lib/ext/safe_renegotiation.c	2013-06-23 14:16:48 -0400
+diff -ur gnutls-3.2.3-orig/lib/ext/new_record_padding.c gnutls-3.2.3/lib/ext/new_record_padding.c
+--- gnutls-3.2.3-orig/lib/ext/new_record_padding.c	2013-07-28 03:31:47 -0400
++++ gnutls-3.2.3/lib/ext/new_record_padding.c	2013-11-06 12:54:19 -0500
+@@ -37,16 +37,16 @@
+ static int new_record_padding_before_epoch_change(gnutls_session_t session);
+ 
+ extension_entry_st ext_mod_new_record_padding = {
+-  .name = "NEW_RECORD_PADDING",
+-  .type = GNUTLS_EXTENSION_NEW_RECORD_PADDING,
+-  .parse_type = GNUTLS_EXT_TLS,
++  /*.name =*/ "NEW_RECORD_PADDING",
++  /*.type =*/ GNUTLS_EXTENSION_NEW_RECORD_PADDING,
++  /*.parse_type =*/ GNUTLS_EXT_TLS,
+ 
+-  .recv_func = new_record_padding_recv_params,
+-  .send_func = new_record_padding_send_params,
+-  .pack_func = NULL,
+-  .unpack_func = NULL,
+-  .deinit_func = NULL,
+-  .epoch_func = new_record_padding_before_epoch_change
++  /*.recv_func =*/ new_record_padding_recv_params,
++  /*.send_func =*/ new_record_padding_send_params,
++  /*.deinit_func =*/ NULL,
++  /*.pack_func =*/ NULL,
++  /*.unpack_func =*/ NULL,
++  /*.epoch_func =*/ new_record_padding_before_epoch_change
+ };
+ 
+ static int
+diff -ur gnutls-3.2.3-orig/lib/ext/safe_renegotiation.c gnutls-3.2.3/lib/ext/safe_renegotiation.c
+--- gnutls-3.2.3-orig/lib/ext/safe_renegotiation.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/ext/safe_renegotiation.c	2013-11-06 09:39:57 -0500
 @@ -31,15 +31,15 @@
  static void _gnutls_sr_deinit_data (extension_priv_data_t priv);
  
@@ -566,9 +582,9 @@ diff -ur gnutls-3.1.4-orig/lib/ext/safe_renegotiation.c gnutls-3.1.4/lib/ext/saf
  };
  
  int
-diff -ur gnutls-3.1.4-orig/lib/ext/server_name.c gnutls-3.1.4/lib/ext/server_name.c
---- gnutls-3.1.4-orig/lib/ext/server_name.c	2012-10-31 13:36:34 -0400
-+++ gnutls-3.1.4/lib/ext/server_name.c	2013-06-23 14:16:48 -0400
+diff -ur gnutls-3.2.3-orig/lib/ext/server_name.c gnutls-3.2.3/lib/ext/server_name.c
+--- gnutls-3.2.3-orig/lib/ext/server_name.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/ext/server_name.c	2013-11-06 09:39:57 -0500
 @@ -40,15 +40,15 @@
  
  
@@ -593,9 +609,9 @@ diff -ur gnutls-3.1.4-orig/lib/ext/server_name.c gnutls-3.1.4/lib/ext/server_nam
  };
  
  /*
-diff -ur gnutls-3.1.4-orig/lib/ext/session_ticket.c gnutls-3.1.4/lib/ext/session_ticket.c
---- gnutls-3.1.4-orig/lib/ext/session_ticket.c	2012-09-30 06:52:54 -0400
-+++ gnutls-3.1.4/lib/ext/session_ticket.c	2013-06-23 14:16:48 -0400
+diff -ur gnutls-3.2.3-orig/lib/ext/session_ticket.c gnutls-3.2.3/lib/ext/session_ticket.c
+--- gnutls-3.2.3-orig/lib/ext/session_ticket.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/ext/session_ticket.c	2013-11-06 09:39:57 -0500
 @@ -52,15 +52,15 @@
  static void session_ticket_deinit_data (extension_priv_data_t priv);
  
@@ -620,9 +636,9 @@ diff -ur gnutls-3.1.4-orig/lib/ext/session_ticket.c gnutls-3.1.4/lib/ext/session
  };
  
  #define SESSION_KEY_SIZE (SESSION_TICKET_KEY_NAME_SIZE+SESSION_TICKET_KEY_SIZE+SESSION_TICKET_MAC_SECRET_SIZE)
-diff -ur gnutls-3.1.4-orig/lib/ext/signature.c gnutls-3.1.4/lib/ext/signature.c
---- gnutls-3.1.4-orig/lib/ext/signature.c	2012-09-19 17:13:58 -0400
-+++ gnutls-3.1.4/lib/ext/signature.c	2013-06-23 14:16:48 -0400
+diff -ur gnutls-3.2.3-orig/lib/ext/signature.c gnutls-3.2.3/lib/ext/signature.c
+--- gnutls-3.2.3-orig/lib/ext/signature.c	2013-06-10 03:19:30 -0400
++++ gnutls-3.2.3/lib/ext/signature.c	2013-11-06 09:39:57 -0500
 @@ -46,15 +46,15 @@
                                          extension_priv_data_t * _priv);
  
@@ -647,9 +663,9 @@ diff -ur gnutls-3.1.4-orig/lib/ext/signature.c gnutls-3.1.4/lib/ext/signature.c
  };
  
  typedef struct
-diff -ur gnutls-3.1.4-orig/lib/ext/srp.c gnutls-3.1.4/lib/ext/srp.c
---- gnutls-3.1.4-orig/lib/ext/srp.c	2012-10-10 02:29:58 -0400
-+++ gnutls-3.1.4/lib/ext/srp.c	2013-06-23 14:16:48 -0400
+diff -ur gnutls-3.2.3-orig/lib/ext/srp.c gnutls-3.2.3/lib/ext/srp.c
+--- gnutls-3.2.3-orig/lib/ext/srp.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/ext/srp.c	2013-11-06 09:39:57 -0500
 @@ -42,15 +42,15 @@
  static int _gnutls_srp_send_params (gnutls_session_t state, gnutls_buffer_st * extdata);
  
@@ -674,10 +690,10 @@ diff -ur gnutls-3.1.4-orig/lib/ext/srp.c gnutls-3.1.4/lib/ext/srp.c
  };
  
  
-diff -ur gnutls-3.1.4-orig/lib/ext/srtp.c gnutls-3.1.4/lib/ext/srtp.c
---- gnutls-3.1.4-orig/lib/ext/srtp.c	2012-11-06 17:19:19 -0500
-+++ gnutls-3.1.4/lib/ext/srtp.c	2013-06-23 14:16:48 -0400
-@@ -41,15 +41,15 @@
+diff -ur gnutls-3.2.3-orig/lib/ext/srtp.c gnutls-3.2.3/lib/ext/srtp.c
+--- gnutls-3.2.3-orig/lib/ext/srtp.c	2013-07-13 05:42:56 -0400
++++ gnutls-3.2.3/lib/ext/srtp.c	2013-11-06 09:39:57 -0500
+@@ -40,15 +40,15 @@
  
  
  extension_entry_st ext_mod_srtp = {
@@ -701,10 +717,10 @@ diff -ur gnutls-3.1.4-orig/lib/ext/srtp.c gnutls-3.1.4/lib/ext/srtp.c
  };
  
  typedef struct
-diff -ur gnutls-3.1.4-orig/lib/ext/status_request.c gnutls-3.1.4/lib/ext/status_request.c
---- gnutls-3.1.4-orig/lib/ext/status_request.c	2012-10-10 02:30:07 -0400
-+++ gnutls-3.1.4/lib/ext/status_request.c	2013-06-23 14:16:48 -0400
-@@ -500,14 +500,14 @@
+diff -ur gnutls-3.2.3-orig/lib/ext/status_request.c gnutls-3.2.3/lib/ext/status_request.c
+--- gnutls-3.2.3-orig/lib/ext/status_request.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/ext/status_request.c	2013-11-06 09:39:57 -0500
+@@ -508,14 +508,14 @@
  }
  
  extension_entry_st ext_mod_status_request = {
@@ -727,21 +743,30 @@ diff -ur gnutls-3.1.4-orig/lib/ext/status_request.c gnutls-3.1.4/lib/ext/status_
  };
  
  /* Functions to be called from handshake */
-diff -ur gnutls-3.1.4-orig/lib/extras/Makefile.am gnutls-3.1.4/lib/extras/Makefile.am
---- gnutls-3.1.4-orig/lib/extras/Makefile.am	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/extras/Makefile.am	2013-06-23 14:16:48 -0400
+diff -ur gnutls-3.2.3-orig/lib/extras/Makefile.am gnutls-3.2.3/lib/extras/Makefile.am
+--- gnutls-3.2.3-orig/lib/extras/Makefile.am	2013-06-06 17:13:52 -0400
++++ gnutls-3.2.3/lib/extras/Makefile.am	2013-11-06 09:39:57 -0500
 @@ -20,6 +20,7 @@
  
- AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS)
+ AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS) $(NETTLE_CFLAGS)
  AM_CPPFLAGS = \
 +	-DGNUTLS_BUILDING		\
  	-I$(srcdir)/../../gl		\
  	-I$(builddir)/../../gl		\
  	-I$(srcdir)/../includes		\
-diff -ur gnutls-3.1.4-orig/lib/gnutls_cipher.c gnutls-3.1.4/lib/gnutls_cipher.c
---- gnutls-3.1.4-orig/lib/gnutls_cipher.c	2012-09-19 17:13:58 -0400
-+++ gnutls-3.1.4/lib/gnutls_cipher.c	2013-06-23 14:16:48 -0400
-@@ -463,7 +463,7 @@
+diff -ur gnutls-3.2.3-orig/lib/gnutls_cipher.c gnutls-3.2.3/lib/gnutls_cipher.c
+--- gnutls-3.2.3-orig/lib/gnutls_cipher.c	2013-07-28 03:51:38 -0400
++++ gnutls-3.2.3/lib/gnutls_cipher.c	2013-11-06 13:18:32 -0500
+@@ -659,7 +659,7 @@
+        */
+       if (explicit_iv && _gnutls_auth_cipher_is_aead(&params->read.cipher_state))
+         {
+-          uint8_t nonce[blocksize];
++          uint8_t *nonce = _alloca(blocksize * sizeof(uint8_t));
+           /* Values in AEAD are pretty fixed in TLS 1.2 for 128-bit block
+            */
+           if (unlikely(params->read.IV.data == NULL || params->read.IV.size != 4))
+@@ -855,7 +855,7 @@
         */
        if (explicit_iv && _gnutls_auth_cipher_is_aead(&params->read.cipher_state))
          {
@@ -750,25 +775,52 @@ diff -ur gnutls-3.1.4-orig/lib/gnutls_cipher.c gnutls-3.1.4/lib/gnutls_cipher.c
            /* Values in AEAD are pretty fixed in TLS 1.2 for 128-bit block
             */
            if (params->read.IV.data == NULL || params->read.IV.size != 4)
-@@ -472,6 +472,7 @@
-           if (ciphertext->size < tag_size+AEAD_EXPLICIT_DATA_SIZE)
+@@ -864,6 +864,7 @@
+           if (ciphertext->size < tag_size+AEAD_EXPLICIT_DATA_SIZE + 2)
              return gnutls_assert_val(GNUTLS_E_UNEXPECTED_PACKET_LENGTH);
  
 +          nonce = (uint8_t *) malloc (sizeof (uint8_t) * blocksize);
            memcpy(nonce, params->read.IV.data, AEAD_IMPLICIT_DATA_SIZE);
            memcpy(&nonce[AEAD_IMPLICIT_DATA_SIZE], ciphertext->data, AEAD_EXPLICIT_DATA_SIZE);
            
-@@ -481,6 +482,7 @@
+@@ -873,6 +874,7 @@
            ciphertext->size -= AEAD_EXPLICIT_DATA_SIZE;
            
            length_to_decrypt = ciphertext->size - tag_size;
 +          free (nonce);
          }
-       else
-         {
-diff -ur gnutls-3.1.4-orig/lib/gnutls_mpi.h gnutls-3.1.4/lib/gnutls_mpi.h
---- gnutls-3.1.4-orig/lib/gnutls_mpi.h	2012-09-19 17:13:58 -0400
-+++ gnutls-3.1.4/lib/gnutls_mpi.h	2013-06-23 14:16:48 -0400
+       else if (iv_size > 0) 
+         { /* a stream cipher with explicit IV */
+diff -ur gnutls-3.2.3-orig/lib/gnutls_global.h gnutls-3.2.3/lib/gnutls_global.h
+--- gnutls-3.2.3-orig/lib/gnutls_global.h	2013-03-27 12:58:30 -0400
++++ gnutls-3.2.3/lib/gnutls_global.h	2013-11-06 13:48:03 -0500
+@@ -28,8 +28,8 @@
+ 
+ int gnutls_is_secure_memory (const void *mem);
+ 
+-extern ASN1_TYPE _gnutls_pkix1_asn;
+-extern ASN1_TYPE _gnutls_gnutls_asn;
++extern GNUTLS_EXPORTED ASN1_TYPE _gnutls_pkix1_asn;
++extern GNUTLS_EXPORTED ASN1_TYPE _gnutls_gnutls_asn;
+ 
+ /* removed const from node_asn* to
+  * prevent warnings, since libtasn1 doesn't
+@@ -38,9 +38,9 @@
+ #define _gnutls_get_gnutls_asn() ((ASN1_TYPE) _gnutls_gnutls_asn)
+ #define _gnutls_get_pkix() ((ASN1_TYPE) _gnutls_pkix1_asn)
+ 
+-extern gnutls_log_func _gnutls_log_func;
+-extern gnutls_audit_log_func _gnutls_audit_log_func;
+-extern int _gnutls_log_level;
++extern GNUTLS_EXPORTED gnutls_log_func _gnutls_log_func;
++extern GNUTLS_EXPORTED gnutls_audit_log_func _gnutls_audit_log_func;
++extern GNUTLS_EXPORTED int _gnutls_log_level;
+ extern int gnutls_crypto_init (void);
+ extern void gnutls_crypto_deinit (void);
+ void _gnutls_priority_prefer_aes_gcm(void);
+diff -ur gnutls-3.2.3-orig/lib/gnutls_mpi.h gnutls-3.2.3/lib/gnutls_mpi.h
+--- gnutls-3.2.3-orig/lib/gnutls_mpi.h	2013-03-27 12:58:30 -0400
++++ gnutls-3.2.3/lib/gnutls_mpi.h	2013-11-06 09:39:58 -0500
 @@ -28,7 +28,7 @@
  #include <crypto-backend.h>
  
@@ -778,10 +830,28 @@ diff -ur gnutls-3.1.4-orig/lib/gnutls_mpi.h gnutls-3.1.4/lib/gnutls_mpi.h
  
  bigint_t _gnutls_mpi_randomize (bigint_t, unsigned int bits,
                                  gnutls_rnd_level_t level);
-diff -ur gnutls-3.1.4-orig/lib/gnutls_x509.c gnutls-3.1.4/lib/gnutls_x509.c
---- gnutls-3.1.4-orig/lib/gnutls_x509.c	2012-11-09 11:21:05 -0500
-+++ gnutls-3.1.4/lib/gnutls_x509.c	2013-06-23 14:16:48 -0400
-@@ -1591,8 +1591,10 @@
+diff -ur gnutls-3.2.3-orig/lib/gnutls_range.c gnutls-3.2.3/lib/gnutls_range.c
+--- gnutls-3.2.3-orig/lib/gnutls_range.c	2013-07-26 01:58:21 -0400
++++ gnutls-3.2.3/lib/gnutls_range.c	2013-11-06 13:15:31 -0500
+@@ -186,11 +186,13 @@
+         }
+       else
+         {
++          ssize_t this_pad;
++
+           ret = _gnutls_range_max_lh_pad (session, orig_low, max_frag);
+           if (ret < 0)
+             return gnutls_assert_val(ret);
+ 
+-          ssize_t this_pad = MIN (ret, orig_high - orig_low);
++          this_pad = MIN (ret, orig_high - orig_low);
+ 
+           _gnutls_set_range (next, orig_low, orig_low + this_pad);
+           _gnutls_set_range (remainder, 0,
+diff -ur gnutls-3.2.3-orig/lib/gnutls_x509.c gnutls-3.2.3/lib/gnutls_x509.c
+--- gnutls-3.2.3-orig/lib/gnutls_x509.c	2013-07-19 04:44:08 -0400
++++ gnutls-3.2.3/lib/gnutls_x509.c	2013-11-06 09:39:58 -0500
+@@ -1725,8 +1725,10 @@
                                     int ca_list_size)
  {
    int ret, i, j;
@@ -793,7 +863,7 @@ diff -ur gnutls-3.1.4-orig/lib/gnutls_x509.c gnutls-3.1.4/lib/gnutls_x509.c
    for (i = 0; i < ca_list_size; i++)
      {
        ret = gnutls_x509_crt_init (&new_list[i]);
-@@ -1623,12 +1625,16 @@
+@@ -1757,12 +1759,16 @@
        goto cleanup;
      }
  
@@ -810,7 +880,7 @@ diff -ur gnutls-3.1.4-orig/lib/gnutls_x509.c gnutls-3.1.4/lib/gnutls_x509.c
    return ret;
  }
  
-@@ -1856,7 +1862,10 @@
+@@ -1988,7 +1994,10 @@
                                   int crl_list_size)
  {
    int ret, i, j;
@@ -822,7 +892,7 @@ diff -ur gnutls-3.1.4-orig/lib/gnutls_x509.c gnutls-3.1.4/lib/gnutls_x509.c
  
    for (i = 0; i < crl_list_size; i++)
      {
-@@ -1882,12 +1891,16 @@
+@@ -2014,12 +2023,16 @@
        goto cleanup;
      }
  
@@ -839,9 +909,9 @@ diff -ur gnutls-3.1.4-orig/lib/gnutls_x509.c gnutls-3.1.4/lib/gnutls_x509.c
    return ret;
  }
  
-diff -ur gnutls-3.1.4-orig/lib/includes/gnutls/gnutls.h.in gnutls-3.1.4/lib/includes/gnutls/gnutls.h.in
---- gnutls-3.1.4-orig/lib/includes/gnutls/gnutls.h.in	2012-11-08 11:54:29 -0500
-+++ gnutls-3.1.4/lib/includes/gnutls/gnutls.h.in	2013-06-23 14:16:48 -0400
+diff -ur gnutls-3.2.3-orig/lib/includes/gnutls/gnutls.h.in gnutls-3.2.3/lib/includes/gnutls/gnutls.h.in
+--- gnutls-3.2.3-orig/lib/includes/gnutls/gnutls.h.in	2013-07-25 07:33:02 -0400
++++ gnutls-3.2.3/lib/includes/gnutls/gnutls.h.in	2013-11-06 09:39:58 -0500
 @@ -36,6 +36,16 @@
  #ifndef GNUTLS_H
  #define GNUTLS_H
@@ -859,7 +929,7 @@ diff -ur gnutls-3.1.4-orig/lib/includes/gnutls/gnutls.h.in gnutls-3.1.4/lib/incl
  /* Get size_t. */
  #include <stddef.h>
  /* Get ssize_t. */
-@@ -1316,13 +1326,13 @@
+@@ -1436,13 +1446,13 @@
    void gnutls_global_set_time_function (gnutls_time_func time_func);
  
  /* For use in callbacks */
@@ -879,7 +949,7 @@ diff -ur gnutls-3.1.4-orig/lib/includes/gnutls/gnutls.h.in gnutls-3.1.4/lib/incl
  
    typedef void (*gnutls_log_func) (int, const char *);
    typedef void (*gnutls_audit_log_func) (gnutls_session_t, const char *);
-@@ -1474,20 +1484,20 @@
+@@ -1603,20 +1613,20 @@
  /* The static parameters defined in draft-ietf-tls-srp-05
   * Those should be used as input to gnutls_srp_verifier().
   */
@@ -910,9 +980,9 @@ diff -ur gnutls-3.1.4-orig/lib/includes/gnutls/gnutls.h.in gnutls-3.1.4/lib/incl
  
    typedef int gnutls_srp_server_credentials_function (gnutls_session_t,
                                                        const char *username,
-diff -ur gnutls-3.1.4-orig/lib/includes/gnutls/gnutlsxx.h gnutls-3.1.4/lib/includes/gnutls/gnutlsxx.h
---- gnutls-3.1.4-orig/lib/includes/gnutls/gnutlsxx.h	2012-04-25 06:03:29 -0400
-+++ gnutls-3.1.4/lib/includes/gnutls/gnutlsxx.h	2013-06-23 14:16:48 -0400
+diff -ur gnutls-3.2.3-orig/lib/includes/gnutls/gnutlsxx.h gnutls-3.2.3/lib/includes/gnutls/gnutlsxx.h
+--- gnutls-3.2.3-orig/lib/includes/gnutls/gnutlsxx.h	2013-02-10 05:29:54 -0500
++++ gnutls-3.2.3/lib/includes/gnutls/gnutlsxx.h	2013-11-06 09:39:58 -0500
 @@ -27,10 +27,20 @@
  #include <vector>
  #include <gnutls/gnutls.h>
@@ -1093,9 +1163,9 @@ diff -ur gnutls-3.1.4-orig/lib/includes/gnutls/gnutlsxx.h gnutls-3.1.4/lib/inclu
    {
    public:
      psk_client_credentials ();
-diff -ur gnutls-3.1.4-orig/lib/minitasn1/Makefile.am gnutls-3.1.4/lib/minitasn1/Makefile.am
---- gnutls-3.1.4-orig/lib/minitasn1/Makefile.am	2012-10-08 10:36:07 -0400
-+++ gnutls-3.1.4/lib/minitasn1/Makefile.am	2013-06-23 14:16:48 -0400
+diff -ur gnutls-3.2.3-orig/lib/minitasn1/Makefile.am gnutls-3.2.3/lib/minitasn1/Makefile.am
+--- gnutls-3.2.3-orig/lib/minitasn1/Makefile.am	2012-12-03 14:36:50 -0500
++++ gnutls-3.2.3/lib/minitasn1/Makefile.am	2013-11-06 09:39:58 -0500
 @@ -21,6 +21,8 @@
  # MA 02110-1301, USA
  
@@ -1105,21 +1175,91 @@ diff -ur gnutls-3.1.4-orig/lib/minitasn1/Makefile.am gnutls-3.1.4/lib/minitasn1/
  	-I$(srcdir)/../../gl		\
  	-I$(builddir)/../../gl          \
  	-I$(srcdir)/..
-diff -ur gnutls-3.1.4-orig/lib/nettle/Makefile.am gnutls-3.1.4/lib/nettle/Makefile.am
---- gnutls-3.1.4-orig/lib/nettle/Makefile.am	2012-09-02 15:08:16 -0400
-+++ gnutls-3.1.4/lib/nettle/Makefile.am	2013-06-23 14:16:48 -0400
-@@ -20,6 +20,7 @@
+diff -ur gnutls-3.2.3-orig/lib/minitasn1/coding.c gnutls-3.2.3/lib/minitasn1/coding.c
+--- gnutls-3.2.3-orig/lib/minitasn1/coding.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/minitasn1/coding.c	2013-11-06 13:11:34 -0500
+@@ -519,28 +519,44 @@
  
- AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS)
+ const tag_and_class_st _asn1_tags[] =
+ {
+-  [ASN1_ETYPE_GENERALSTRING] = {ASN1_TAG_GENERALSTRING, ASN1_CLASS_UNIVERSAL, "type:GENERALSTRING"},
+-  [ASN1_ETYPE_NUMERIC_STRING] = {ASN1_TAG_NUMERIC_STRING, ASN1_CLASS_UNIVERSAL, "type:NUMERIC_STR"},
+-  [ASN1_ETYPE_IA5_STRING] =     {ASN1_TAG_IA5_STRING, ASN1_CLASS_UNIVERSAL, "type:IA5_STR"},
+-  [ASN1_ETYPE_TELETEX_STRING] = {ASN1_TAG_TELETEX_STRING, ASN1_CLASS_UNIVERSAL, "type:TELETEX_STR"},
+-  [ASN1_ETYPE_PRINTABLE_STRING] = {ASN1_TAG_PRINTABLE_STRING, ASN1_CLASS_UNIVERSAL, "type:PRINTABLE_STR"},
+-  [ASN1_ETYPE_UNIVERSAL_STRING] = {ASN1_TAG_UNIVERSAL_STRING, ASN1_CLASS_UNIVERSAL, "type:UNIVERSAL_STR"},
+-  [ASN1_ETYPE_BMP_STRING] =       {ASN1_TAG_BMP_STRING, ASN1_CLASS_UNIVERSAL, "type:BMP_STR"},
+-  [ASN1_ETYPE_UTF8_STRING] =      {ASN1_TAG_UTF8_STRING, ASN1_CLASS_UNIVERSAL, "type:UTF8_STR"},
+-  [ASN1_ETYPE_VISIBLE_STRING] =   {ASN1_TAG_VISIBLE_STRING, ASN1_CLASS_UNIVERSAL, "type:VISIBLE_STR"},
+-  [ASN1_ETYPE_OCTET_STRING] =    {ASN1_TAG_OCTET_STRING, ASN1_CLASS_UNIVERSAL, "type:OCT_STR"},
+-  [ASN1_ETYPE_BIT_STRING] = {ASN1_TAG_BIT_STRING, ASN1_CLASS_UNIVERSAL, "type:BIT_STR"},
+-  [ASN1_ETYPE_OBJECT_ID] =  {ASN1_TAG_OBJECT_ID, ASN1_CLASS_UNIVERSAL, "type:OBJ_ID"},
+-  [ASN1_ETYPE_NULL] =       {ASN1_TAG_NULL, ASN1_CLASS_UNIVERSAL, "type:NULL"},
+-  [ASN1_ETYPE_BOOLEAN] =    {ASN1_TAG_BOOLEAN, ASN1_CLASS_UNIVERSAL, "type:BOOLEAN"},
+-  [ASN1_ETYPE_INTEGER] =    {ASN1_TAG_INTEGER, ASN1_CLASS_UNIVERSAL, "type:INTEGER"},
+-  [ASN1_ETYPE_ENUMERATED] = {ASN1_TAG_ENUMERATED, ASN1_CLASS_UNIVERSAL, "type:ENUMERATED"},
+-  [ASN1_ETYPE_SEQUENCE] =   {ASN1_TAG_SEQUENCE, ASN1_CLASS_UNIVERSAL | ASN1_CLASS_STRUCTURED, "type:SEQUENCE"},
+-  [ASN1_ETYPE_SEQUENCE_OF] ={ASN1_TAG_SEQUENCE, ASN1_CLASS_UNIVERSAL | ASN1_CLASS_STRUCTURED, "type:SEQ_OF"},
+-  [ASN1_ETYPE_SET] =        {ASN1_TAG_SET, ASN1_CLASS_UNIVERSAL | ASN1_CLASS_STRUCTURED, "type:SET"},
+-  [ASN1_ETYPE_SET_OF] =     {ASN1_TAG_SET, ASN1_CLASS_UNIVERSAL | ASN1_CLASS_STRUCTURED, "type:SET_OF"},
+-  [ASN1_ETYPE_GENERALIZED_TIME] = {ASN1_TAG_GENERALIZEDTime, ASN1_CLASS_UNIVERSAL, "type:GENERALIZED_TIME"},
+-  [ASN1_ETYPE_UTC_TIME] = {ASN1_TAG_UTCTime, ASN1_CLASS_UNIVERSAL, "type:UTC_TIME"},
++  { 0, 0, NULL },
++  { 0, 0, NULL },
++  { 0, 0, NULL },
++  /*[ASN1_ETYPE_INTEGER] =*/    {ASN1_TAG_INTEGER, ASN1_CLASS_UNIVERSAL, "type:INTEGER"},
++  /*[ASN1_ETYPE_BOOLEAN] =*/    {ASN1_TAG_BOOLEAN, ASN1_CLASS_UNIVERSAL, "type:BOOLEAN"},
++  /*[ASN1_ETYPE_SEQUENCE] =*/   {ASN1_TAG_SEQUENCE, ASN1_CLASS_UNIVERSAL | ASN1_CLASS_STRUCTURED, "type:SEQUENCE"},
++  /*[ASN1_ETYPE_BIT_STRING] =*/ {ASN1_TAG_BIT_STRING, ASN1_CLASS_UNIVERSAL, "type:BIT_STR"},
++  /*[ASN1_ETYPE_OCTET_STRING] =*/    {ASN1_TAG_OCTET_STRING, ASN1_CLASS_UNIVERSAL, "type:OCT_STR"},
++  { 0, 0, NULL },
++  { 0, 0, NULL },
++  { 0, 0, NULL },
++  /*[ASN1_ETYPE_SEQUENCE_OF] =*/{ASN1_TAG_SEQUENCE, ASN1_CLASS_UNIVERSAL | ASN1_CLASS_STRUCTURED, "type:SEQ_OF"},
++  /*[ASN1_ETYPE_OBJECT_ID] =*/  {ASN1_TAG_OBJECT_ID, ASN1_CLASS_UNIVERSAL, "type:OBJ_ID"},
++  { 0, 0, NULL },
++  /*[ASN1_ETYPE_SET] =*/        {ASN1_TAG_SET, ASN1_CLASS_UNIVERSAL | ASN1_CLASS_STRUCTURED, "type:SET"},
++  /*[ASN1_ETYPE_SET_OF] =*/     {ASN1_TAG_SET, ASN1_CLASS_UNIVERSAL | ASN1_CLASS_STRUCTURED, "type:SET_OF"},
++  { 0, 0, NULL },
++  { 0, 0, NULL },
++  { 0, 0, NULL },
++  { 0, 0, NULL },
++  /*[ASN1_ETYPE_NULL] =*/       {ASN1_TAG_NULL, ASN1_CLASS_UNIVERSAL, "type:NULL"},
++  /*[ASN1_ETYPE_ENUMERATED] =*/ {ASN1_TAG_ENUMERATED, ASN1_CLASS_UNIVERSAL, "type:ENUMERATED"},
++  { 0, 0, NULL },
++  { 0, 0, NULL },
++  { 0, 0, NULL },
++  { 0, 0, NULL },
++  { 0, 0, NULL },
++  /*[ASN1_ETYPE_GENERALSTRING] =*/ {ASN1_TAG_GENERALSTRING, ASN1_CLASS_UNIVERSAL, "type:GENERALSTRING"},
++  /*[ASN1_ETYPE_NUMERIC_STRING] =*/ {ASN1_TAG_NUMERIC_STRING, ASN1_CLASS_UNIVERSAL, "type:NUMERIC_STR"},
++  /*[ASN1_ETYPE_IA5_STRING] =*/     {ASN1_TAG_IA5_STRING, ASN1_CLASS_UNIVERSAL, "type:IA5_STR"},
++  /*[ASN1_ETYPE_TELETEX_STRING] =*/ {ASN1_TAG_TELETEX_STRING, ASN1_CLASS_UNIVERSAL, "type:TELETEX_STR"},
++  /*[ASN1_ETYPE_PRINTABLE_STRING] =*/ {ASN1_TAG_PRINTABLE_STRING, ASN1_CLASS_UNIVERSAL, "type:PRINTABLE_STR"},
++  /*[ASN1_ETYPE_UNIVERSAL_STRING] =*/ {ASN1_TAG_UNIVERSAL_STRING, ASN1_CLASS_UNIVERSAL, "type:UNIVERSAL_STR"},
++  /*[ASN1_ETYPE_BMP_STRING] =*/       {ASN1_TAG_BMP_STRING, ASN1_CLASS_UNIVERSAL, "type:BMP_STR"},
++  /*[ASN1_ETYPE_UTF8_STRING] =*/      {ASN1_TAG_UTF8_STRING, ASN1_CLASS_UNIVERSAL, "type:UTF8_STR"},
++  /*[ASN1_ETYPE_VISIBLE_STRING] =*/   {ASN1_TAG_VISIBLE_STRING, ASN1_CLASS_UNIVERSAL, "type:VISIBLE_STR"},
++  /*[ASN1_ETYPE_UTC_TIME] =*/ {ASN1_TAG_UTCTime, ASN1_CLASS_UNIVERSAL, "type:UTC_TIME"},
++  /*[ASN1_ETYPE_GENERALIZED_TIME] =*/ {ASN1_TAG_GENERALIZEDTime, ASN1_CLASS_UNIVERSAL, "type:GENERALIZED_TIME"},
+ };
+ 
+ unsigned int _asn1_tags_size = sizeof(_asn1_tags)/sizeof(_asn1_tags[0]);
+diff -ur gnutls-3.2.3-orig/lib/nettle/Makefile.am gnutls-3.2.3/lib/nettle/Makefile.am
+--- gnutls-3.2.3-orig/lib/nettle/Makefile.am	2013-06-19 13:05:19 -0400
++++ gnutls-3.2.3/lib/nettle/Makefile.am	2013-11-06 09:39:58 -0500
+@@ -24,6 +24,7 @@
+ 	$(GMP_CFLAGS)
+ 
  AM_CPPFLAGS = \
 +	-DGNUTLS_BUILDING		\
  	-I$(srcdir)/../../gl		\
  	-I$(builddir)/../../gl		\
  	-I$(srcdir)/../includes		\
-diff -ur gnutls-3.1.4-orig/lib/nettle/cipher.c gnutls-3.1.4/lib/nettle/cipher.c
---- gnutls-3.1.4-orig/lib/nettle/cipher.c	2012-09-19 17:13:58 -0400
-+++ gnutls-3.1.4/lib/nettle/cipher.c	2013-06-23 14:16:48 -0400
-@@ -369,13 +369,13 @@
+diff -ur gnutls-3.2.3-orig/lib/nettle/cipher.c gnutls-3.2.3/lib/nettle/cipher.c
+--- gnutls-3.2.3-orig/lib/nettle/cipher.c	2013-05-27 18:19:21 -0400
++++ gnutls-3.2.3/lib/nettle/cipher.c	2013-11-06 09:39:58 -0500
+@@ -394,13 +394,13 @@
  }
  
  gnutls_crypto_cipher_st _gnutls_cipher_ops = {
@@ -1142,51 +1282,49 @@ diff -ur gnutls-3.1.4-orig/lib/nettle/cipher.c gnutls-3.1.4/lib/nettle/cipher.c
 +  wrap_nettle_cipher_close,
 +  wrap_nettle_cipher_exists
  };
-diff -ur gnutls-3.1.4-orig/lib/nettle/mac.c gnutls-3.1.4/lib/nettle/mac.c
---- gnutls-3.1.4-orig/lib/nettle/mac.c	2012-09-19 17:13:58 -0400
-+++ gnutls-3.1.4/lib/nettle/mac.c	2013-06-23 14:16:48 -0400
-@@ -424,22 +424,22 @@
- 
+diff -ur gnutls-3.2.3-orig/lib/nettle/mac.c gnutls-3.2.3/lib/nettle/mac.c
+--- gnutls-3.2.3-orig/lib/nettle/mac.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/nettle/mac.c	2013-11-06 09:49:12 -0500
+@@ -448,21 +448,21 @@
+ }
  
  gnutls_crypto_mac_st _gnutls_mac_ops = {
--  .init = wrap_nettle_hmac_init,
--  .setkey = wrap_nettle_hmac_setkey,
--  .hash = wrap_nettle_hmac_update,
--  .reset = wrap_nettle_hmac_reset,
--  .output = wrap_nettle_hmac_output,
--  .deinit = wrap_nettle_hmac_deinit,
--  .fast = wrap_nettle_hmac_fast,
--  .exists = wrap_nettle_hmac_exists,
-+  wrap_nettle_hmac_init,
-+  wrap_nettle_hmac_setkey,
-+  wrap_nettle_hmac_reset,
-+  wrap_nettle_hmac_update,
-+  wrap_nettle_hmac_output,
-+  wrap_nettle_hmac_deinit,
-+  wrap_nettle_hmac_fast,
-+  wrap_nettle_hmac_exists
+-  .init = wrap_nettle_mac_init,
+-  .setkey = wrap_nettle_mac_set_key,
+-  .setnonce = wrap_nettle_mac_set_nonce,
+-  .hash = wrap_nettle_mac_update,
+-  .output = wrap_nettle_mac_output,
+-  .deinit = wrap_nettle_mac_deinit,
+-  .fast = wrap_nettle_mac_fast,
+-  .exists = wrap_nettle_mac_exists,
++  /*.init =*/ wrap_nettle_mac_init,
++  /*.setkey =*/ wrap_nettle_mac_set_key,
++  /*.setnonce =*/ wrap_nettle_mac_set_nonce,
++  /*.hash =*/ wrap_nettle_mac_update,
++  /*.output =*/ wrap_nettle_mac_output,
++  /*.deinit =*/ wrap_nettle_mac_deinit,
++  /*.fast =*/ wrap_nettle_mac_fast,
++  /*.exists =*/ wrap_nettle_mac_exists,
  };
  
  gnutls_crypto_digest_st _gnutls_digest_ops = {
 -  .init = wrap_nettle_hash_init,
 -  .hash = wrap_nettle_hash_update,
--  .reset = wrap_nettle_hash_reset,
 -  .output = wrap_nettle_hash_output,
 -  .deinit = wrap_nettle_hash_deinit,
 -  .fast = wrap_nettle_hash_fast,
 -  .exists = wrap_nettle_hash_exists,
-+  wrap_nettle_hash_init,
-+  wrap_nettle_hash_reset,
-+  wrap_nettle_hash_update,
-+  wrap_nettle_hash_output,
-+  wrap_nettle_hash_deinit,
-+  wrap_nettle_hash_fast,
-+  wrap_nettle_hash_exists
++  /*.init =*/ wrap_nettle_hash_init,
++  /*.hash =*/ wrap_nettle_hash_update,
++  /*.output =*/ wrap_nettle_hash_output,
++  /*.deinit =*/ wrap_nettle_hash_deinit,
++  /*.fast =*/ wrap_nettle_hash_fast,
++  /*.exists =*/ wrap_nettle_hash_exists,
  };
-diff -ur gnutls-3.1.4-orig/lib/nettle/mpi.c gnutls-3.1.4/lib/nettle/mpi.c
---- gnutls-3.1.4-orig/lib/nettle/mpi.c	2012-09-19 17:13:58 -0400
-+++ gnutls-3.1.4/lib/nettle/mpi.c	2013-06-23 14:16:48 -0400
-@@ -616,27 +616,27 @@
+diff -ur gnutls-3.2.3-orig/lib/nettle/mpi.c gnutls-3.2.3/lib/nettle/mpi.c
+--- gnutls-3.2.3-orig/lib/nettle/mpi.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/nettle/mpi.c	2013-11-06 09:55:25 -0500
+@@ -625,28 +625,28 @@
  int crypto_bigint_prio = INT_MAX;
  
  gnutls_crypto_bigint_st _gnutls_mpi_ops = {
@@ -1210,37 +1348,39 @@ diff -ur gnutls-3.1.4-orig/lib/nettle/mpi.c gnutls-3.1.4/lib/nettle/mpi.c
 -  .bigint_div = wrap_nettle_mpi_div,
 -  .bigint_prime_check = wrap_nettle_prime_check,
 -  .bigint_release = wrap_nettle_mpi_release,
+-  .bigint_clear = wrap_nettle_mpi_clear,
 -  .bigint_print = wrap_nettle_mpi_print,
 -  .bigint_scan = wrap_nettle_mpi_scan,
 -  .bigint_generate_group = wrap_nettle_generate_group
-+  wrap_nettle_mpi_new,
-+  wrap_nettle_mpi_release,
-+  wrap_nettle_mpi_cmp,
-+  wrap_nettle_mpi_cmp_ui,
-+  wrap_nettle_mpi_mod,
-+  wrap_nettle_mpi_set,
-+  wrap_nettle_mpi_set_ui,
-+  wrap_nettle_mpi_get_nbits,
-+  wrap_nettle_mpi_powm,
-+  wrap_nettle_mpi_addm,
-+  wrap_nettle_mpi_subm,
-+  wrap_nettle_mpi_mulm,
-+  wrap_nettle_mpi_add,
-+  wrap_nettle_mpi_sub,
-+  wrap_nettle_mpi_mul,
-+  wrap_nettle_mpi_add_ui,
-+  wrap_nettle_mpi_sub_ui,
-+  wrap_nettle_mpi_mul_ui,
-+  wrap_nettle_mpi_div,
-+  wrap_nettle_prime_check,
-+  wrap_nettle_generate_group,
-+  wrap_nettle_mpi_scan,
-+  wrap_nettle_mpi_print
++  /*.bigint_new =*/ wrap_nettle_mpi_new,
++  /*.bigint_release =*/ wrap_nettle_mpi_release,
++  /*.bigint_clear =*/ wrap_nettle_mpi_clear,
++  /*.bigint_cmp =*/ wrap_nettle_mpi_cmp,
++  /*.bigint_cmp_ui =*/ wrap_nettle_mpi_cmp_ui,
++  /*.bigint_mod =*/ wrap_nettle_mpi_mod,
++  /*.bigint_set =*/ wrap_nettle_mpi_set,
++  /*.bigint_set_ui =*/ wrap_nettle_mpi_set_ui,
++  /*.bigint_get_nbits =*/ wrap_nettle_mpi_get_nbits,
++  /*.bigint_powm =*/ wrap_nettle_mpi_powm,
++  /*.bigint_addm =*/ wrap_nettle_mpi_addm,
++  /*.bigint_subm =*/ wrap_nettle_mpi_subm,
++  /*.bigint_mulm =*/ wrap_nettle_mpi_mulm,
++  /*.bigint_add =*/ wrap_nettle_mpi_add,
++  /*.bigint_sub =*/ wrap_nettle_mpi_sub,
++  /*.bigint_mul =*/ wrap_nettle_mpi_mul,
++  /*.bigint_add_ui =*/ wrap_nettle_mpi_add_ui,
++  /*.bigint_sub_ui =*/ wrap_nettle_mpi_sub_ui,
++  /*.bigint_mul_ui =*/ wrap_nettle_mpi_mul_ui,
++  /*.bigint_div =*/ wrap_nettle_mpi_div,
++  /*.bigint_prime_check =*/ wrap_nettle_prime_check,
++  /*.bigint_generate_group =*/ wrap_nettle_generate_group,
++  /*.bigint_scan =*/ wrap_nettle_mpi_scan,
++  /*.bigint_print =*/ wrap_nettle_mpi_print
  };
-diff -ur gnutls-3.1.4-orig/lib/nettle/pk.c gnutls-3.1.4/lib/nettle/pk.c
---- gnutls-3.1.4-orig/lib/nettle/pk.c	2012-09-21 19:38:14 -0400
-+++ gnutls-3.1.4/lib/nettle/pk.c	2013-06-23 14:16:49 -0400
-@@ -1134,13 +1134,13 @@
+diff -ur gnutls-3.2.3-orig/lib/nettle/pk.c gnutls-3.2.3/lib/nettle/pk.c
+--- gnutls-3.2.3-orig/lib/nettle/pk.c	2013-05-26 06:01:21 -0400
++++ gnutls-3.2.3/lib/nettle/pk.c	2013-11-06 09:39:58 -0500
+@@ -1158,13 +1158,13 @@
  int crypto_pk_prio = INT_MAX;
  
  gnutls_crypto_pk_st _gnutls_pk_ops = {
@@ -1263,57 +1403,102 @@ diff -ur gnutls-3.1.4-orig/lib/nettle/pk.c gnutls-3.1.4/lib/nettle/pk.c
 +  wrap_nettle_pk_fixup,
 +  _wrap_nettle_pk_derive
  };
-diff -ur gnutls-3.1.4-orig/lib/nettle/rnd.c gnutls-3.1.4/lib/nettle/rnd.c
---- gnutls-3.1.4-orig/lib/nettle/rnd.c	2012-09-19 17:13:58 -0400
-+++ gnutls-3.1.4/lib/nettle/rnd.c	2013-06-23 14:16:49 -0400
-@@ -471,7 +471,7 @@
+diff -ur gnutls-3.2.3-orig/lib/nettle/rnd.c gnutls-3.2.3/lib/nettle/rnd.c
+--- gnutls-3.2.3-orig/lib/nettle/rnd.c	2013-05-25 06:12:26 -0400
++++ gnutls-3.2.3/lib/nettle/rnd.c	2013-11-06 09:56:48 -0500
+@@ -485,8 +485,8 @@
  int crypto_rnd_prio = INT_MAX;
  
  gnutls_crypto_rnd_st _gnutls_rnd_ops = {
 -  .init = wrap_nettle_rnd_init,
 -  .deinit = wrap_nettle_rnd_deinit,
 -  .rnd = wrap_nettle_rnd,
-+  wrap_nettle_rnd_init,
-+  wrap_nettle_rnd,
-+  wrap_nettle_rnd_deinit
+-  .rnd_refresh = wrap_nettle_rnd_refresh,
++  /*.init =*/ wrap_nettle_rnd_init,
++  /*.rnd =*/ wrap_nettle_rnd,
++  /*.rnd_refresh =*/ wrap_nettle_rnd_refresh,
++  /*.deinit =*/ wrap_nettle_rnd_deinit
  };
-diff -ur gnutls-3.1.4-orig/lib/opencdk/Makefile.am gnutls-3.1.4/lib/opencdk/Makefile.am
---- gnutls-3.1.4-orig/lib/opencdk/Makefile.am	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/opencdk/Makefile.am	2013-06-23 14:16:49 -0400
-@@ -19,6 +19,7 @@
- # along with this program.  If not, see <http://www.gnu.org/licenses/>
+diff -ur gnutls-3.2.3-orig/lib/opencdk/Makefile.am gnutls-3.2.3/lib/opencdk/Makefile.am
+--- gnutls-3.2.3-orig/lib/opencdk/Makefile.am	2013-06-06 17:13:52 -0400
++++ gnutls-3.2.3/lib/opencdk/Makefile.am	2013-11-06 09:39:58 -0500
+@@ -21,6 +21,7 @@
+ AM_CFLAGS = $(NETTLE_CFLAGS)
  
  AM_CPPFLAGS = \
 +	-DGNUTLS_BUILDING		\
  	-I$(srcdir)/../../gl		\
  	-I$(builddir)/../../gl		\
  	-I$(srcdir)/../includes		\
-diff -ur gnutls-3.1.4-orig/lib/openpgp/Makefile.am gnutls-3.1.4/lib/openpgp/Makefile.am
---- gnutls-3.1.4-orig/lib/openpgp/Makefile.am	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/lib/openpgp/Makefile.am	2013-06-23 14:16:49 -0400
+diff -ur gnutls-3.2.3-orig/lib/openpgp/Makefile.am gnutls-3.2.3/lib/openpgp/Makefile.am
+--- gnutls-3.2.3-orig/lib/openpgp/Makefile.am	2013-06-06 17:13:52 -0400
++++ gnutls-3.2.3/lib/openpgp/Makefile.am	2013-11-06 09:39:58 -0500
 @@ -20,6 +20,7 @@
  
- AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS)
+ AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS) $(NETTLE_CFLAGS)
  AM_CPPFLAGS = \
 +	-DGNUTLS_BUILDING		\
  	-I$(srcdir)/../../gl		\
  	-I$(builddir)/../../gl		\
  	-I$(srcdir)/../includes		\
-diff -ur gnutls-3.1.4-orig/lib/x509/Makefile.am gnutls-3.1.4/lib/x509/Makefile.am
---- gnutls-3.1.4-orig/lib/x509/Makefile.am	2012-06-28 16:12:15 -0400
-+++ gnutls-3.1.4/lib/x509/Makefile.am	2013-06-23 14:16:49 -0400
-@@ -18,6 +18,7 @@
+diff -ur gnutls-3.2.3-orig/lib/tpm.c gnutls-3.2.3/lib/tpm.c
+--- gnutls-3.2.3-orig/lib/tpm.c	2013-05-25 06:09:44 -0400
++++ gnutls-3.2.3/lib/tpm.c	2013-11-06 13:25:56 -0500
+@@ -27,10 +27,10 @@
+  * Carolin Latze <latze@angry-red-pla.net> and Tobias Soder
+  */
  
- AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS)
++#include <gnutls_int.h>
+ #include <gnutls/gnutls.h>
+ #include <gnutls/abstract.h>
+ #include <gnutls/tpm.h>
+-#include <gnutls_int.h>
+ 
+ #ifdef HAVE_TROUSERS
+ 
+diff -ur gnutls-3.2.3-orig/lib/x509/Makefile.am gnutls-3.2.3/lib/x509/Makefile.am
+--- gnutls-3.2.3-orig/lib/x509/Makefile.am	2013-06-06 17:13:52 -0400
++++ gnutls-3.2.3/lib/x509/Makefile.am	2013-11-06 13:34:31 -0500
+@@ -18,6 +18,8 @@
+ 
+ AM_CFLAGS = $(WERROR_CFLAGS) $(WSTACK_CFLAGS) $(WARN_CFLAGS) $(NETTLE_CFLAGS)
  AM_CPPFLAGS = \
 +	-DGNUTLS_BUILDING		\
++	-DASN1_STATIC			\
  	-I$(srcdir)/../../gl		\
  	-I$(builddir)/../../gl		\
  	-I$(srcdir)/../includes		\
-diff -ur gnutls-3.1.4-orig/src/libopts/autoopts/options.h gnutls-3.1.4/src/libopts/autoopts/options.h
---- gnutls-3.1.4-orig/src/libopts/autoopts/options.h	2012-05-14 11:35:38 -0400
-+++ gnutls-3.1.4/src/libopts/autoopts/options.h	2013-06-23 14:16:49 -0400
-@@ -52,7 +52,7 @@
+diff -ur gnutls-3.2.3-orig/src/benchmark-cipher.c gnutls-3.2.3/src/benchmark-cipher.c
+--- gnutls-3.2.3-orig/src/benchmark-cipher.c	2013-05-08 14:32:30 -0400
++++ gnutls-3.2.3/src/benchmark-cipher.c	2013-11-06 14:39:15 -0500
+@@ -201,9 +201,10 @@
+ 
+ void benchmark_cipher (int init, int debug_level)
+ {
++  int size = 16;
++
+   gnutls_global_set_log_function (tls_log_func);
+   gnutls_global_set_log_level (debug_level);
+-  int size = 16;
+ 
+   if (init)
+     {
+diff -ur gnutls-3.2.3-orig/src/cli.c gnutls-3.2.3/src/cli.c
+--- gnutls-3.2.3-orig/src/cli.c	2013-06-10 13:24:12 -0400
++++ gnutls-3.2.3/src/cli.c	2013-11-06 14:43:12 -0500
+@@ -668,7 +668,7 @@
+     {
+       unsigned proto_n = STACKCT_OPT(ALPN);
+       char** protos  = (void*)STACKLST_OPT(ALPN);
+-      gnutls_datum_t p[proto_n];
++      gnutls_datum_t* p = _alloca(proto_n * sizeof(gnutls_datum_t));
+       
+       for (i=0;i<proto_n;i++)
+         {
+diff -ur gnutls-3.2.3-orig/src/libopts/autoopts/options.h gnutls-3.2.3/src/libopts/autoopts/options.h
+--- gnutls-3.2.3-orig/src/libopts/autoopts/options.h	2013-05-08 14:32:30 -0400
++++ gnutls-3.2.3/src/libopts/autoopts/options.h	2013-11-06 09:39:58 -0500
+@@ -64,7 +64,7 @@
  
  #  if defined(HAVE_STDBOOL_H)
  #    include <stdbool.h>
@@ -1322,30 +1507,35 @@ diff -ur gnutls-3.1.4-orig/src/libopts/autoopts/options.h gnutls-3.1.4/src/libop
       typedef enum { false = 0, true = 1 } _Bool;
  #    define bool _Bool
  
-diff -ur gnutls-3.1.4-orig/src/libopts/autoopts.c gnutls-3.1.4/src/libopts/autoopts.c
---- gnutls-3.1.4-orig/src/libopts/autoopts.c	2012-05-14 11:35:38 -0400
-+++ gnutls-3.1.4/src/libopts/autoopts.c	2013-06-23 14:16:49 -0400
-@@ -105,8 +105,15 @@
+diff -ur gnutls-3.2.3-orig/src/libopts/autoopts.c gnutls-3.2.3/src/libopts/autoopts.c
+--- gnutls-3.2.3-orig/src/libopts/autoopts.c	2013-05-08 14:32:30 -0400
++++ gnutls-3.2.3/src/libopts/autoopts.c	2013-11-06 10:12:59 -0500
+@@ -96,10 +96,18 @@
  #  include "compat/pathfind.c"
  #endif
  
 +#ifdef _MSC_VER
 +#  define fprintf _fprintf_p
 +#  define snprintf _sprintf_p
++#  define vsnprintf _vsprintf_p
 +#endif
 +
  #ifndef HAVE_SNPRINTF
+-#  define vsnprintf       option_vsnprintf
+-#  define snprintf        option_snprintf
 -#  include "compat/snprintf.c"
 +#  ifndef _MSC_VER
++#    define vsnprintf       option_vsnprintf
++#    define snprintf        option_snprintf
 +#    include "compat/snprintf.c"
 +#  endif
  #endif
  
  #ifndef HAVE_STRDUP
-diff -ur gnutls-3.1.4-orig/src/libopts/compat/compat.h gnutls-3.1.4/src/libopts/compat/compat.h
---- gnutls-3.1.4-orig/src/libopts/compat/compat.h	2012-05-14 11:35:38 -0400
-+++ gnutls-3.1.4/src/libopts/compat/compat.h	2013-06-23 14:16:49 -0400
-@@ -77,7 +77,9 @@
+diff -ur gnutls-3.2.3-orig/src/libopts/compat/compat.h gnutls-3.2.3/src/libopts/compat/compat.h
+--- gnutls-3.2.3-orig/src/libopts/compat/compat.h	2013-05-08 14:32:30 -0400
++++ gnutls-3.2.3/src/libopts/compat/compat.h	2013-11-06 09:39:58 -0500
+@@ -59,7 +59,9 @@
  #ifdef HAVE_SYS_MMAN_H
  #  include <sys/mman.h>
  #endif
@@ -1356,7 +1546,7 @@ diff -ur gnutls-3.1.4-orig/src/libopts/compat/compat.h gnutls-3.1.4/src/libopts/
  #if HAVE_SYS_PROCSET_H
  #  include <sys/procset.h>
  #endif
-@@ -346,7 +348,9 @@
+@@ -328,7 +330,9 @@
  # define  HAVE_WINT_T           1
  #endif
  #ifndef HAVE_PID_T
@@ -1366,10 +1556,10 @@ diff -ur gnutls-3.1.4-orig/src/libopts/compat/compat.h gnutls-3.1.4/src/libopts/
  # define  HAVE_PID_T            1
  #endif
  
-diff -ur gnutls-3.1.4-orig/src/libopts/compat/pathfind.c gnutls-3.1.4/src/libopts/compat/pathfind.c
---- gnutls-3.1.4-orig/src/libopts/compat/pathfind.c	2012-05-14 11:35:38 -0400
-+++ gnutls-3.1.4/src/libopts/compat/pathfind.c	2013-06-23 14:16:49 -0400
-@@ -11,6 +11,11 @@
+diff -ur gnutls-3.2.3-orig/src/libopts/compat/pathfind.c gnutls-3.2.3/src/libopts/compat/pathfind.c
+--- gnutls-3.2.3-orig/src/libopts/compat/pathfind.c	2013-05-08 14:32:30 -0400
++++ gnutls-3.2.3/src/libopts/compat/pathfind.c	2013-11-06 09:39:58 -0500
+@@ -13,6 +13,11 @@
  
  #include "compat.h"
  #ifndef HAVE_PATHFIND
@@ -1379,13 +1569,13 @@ diff -ur gnutls-3.1.4-orig/src/libopts/compat/pathfind.c gnutls-3.1.4/src/libopt
 +# define R_OK 4
 +#endif
  #if defined(__windows__) && !defined(__CYGWIN__)
- char*
- pathfind( char const*  path,
-diff -ur gnutls-3.1.4-orig/src/libopts/configfile.c gnutls-3.1.4/src/libopts/configfile.c
---- gnutls-3.1.4-orig/src/libopts/configfile.c	2012-05-14 11:35:38 -0400
-+++ gnutls-3.1.4/src/libopts/configfile.c	2013-06-23 14:16:49 -0400
-@@ -26,6 +26,11 @@
-  *  66a5cedaf62c4b2637025f049f9b826f pkg/libopts/COPYING.mbsd
+ static char *
+ pathfind( char const * path,
+diff -ur gnutls-3.2.3-orig/src/libopts/configfile.c gnutls-3.2.3/src/libopts/configfile.c
+--- gnutls-3.2.3-orig/src/libopts/configfile.c	2013-05-08 14:32:30 -0400
++++ gnutls-3.2.3/src/libopts/configfile.c	2013-11-06 09:39:58 -0500
+@@ -28,6 +28,11 @@
+  *  13aa749a5b0a454917a944ed8fffc530b784f5ead522b1aacaf4ec8aa55a6239  COPYING.mbsd
   */
  
 +#ifndef S_ISDIR
@@ -1396,60 +1586,24 @@ diff -ur gnutls-3.1.4-orig/src/libopts/configfile.c gnutls-3.1.4/src/libopts/con
  /* = = = START-STATIC-FORWARD = = = */
  static void
  file_preset(tOptions * opts, char const * fname, int dir);
-diff -ur gnutls-3.1.4-orig/src/libopts/enum.c gnutls-3.1.4/src/libopts/enum.c
---- gnutls-3.1.4-orig/src/libopts/enum.c	2012-05-14 11:35:38 -0400
-+++ gnutls-3.1.4/src/libopts/enum.c	2013-06-23 14:16:49 -0400
-@@ -249,9 +249,9 @@
- char const *
- optionKeywordName(tOptDesc * pOD, unsigned int enum_val)
- {
--    tOptDesc od = {
--        .optArg.argEnum = enum_val };
-+    tOptDesc od = { 0 };
+diff -ur gnutls-3.2.3-orig/src/libopts/m4/libopts.m4 gnutls-3.2.3/src/libopts/m4/libopts.m4
+--- gnutls-3.2.3-orig/src/libopts/m4/libopts.m4	2013-05-21 14:26:32 -0400
++++ gnutls-3.2.3/src/libopts/m4/libopts.m4	2013-11-06 11:31:21 -0500
+@@ -72,7 +72,7 @@
+   ${lo_have_typ_hdr} || \
+     ]AC_MSG_ERROR([you must have inttypes.h or stdint.h on your system])[
  
-+    od.optArg.argEnum = enum_val;
-     (*(pOD->pOptProc))(OPTPROC_RETURN_VALNAME, &od );
-     return od.optArg.argString;
- }
-diff -ur gnutls-3.1.4-orig/src/tests.c gnutls-3.1.4/src/tests.c
---- gnutls-3.1.4-orig/src/tests.c	2012-09-02 15:08:16 -0400
-+++ gnutls-3.1.4/src/tests.c	2013-06-23 14:16:49 -0400
-@@ -180,7 +180,7 @@
+-  for f in sys_types sys_param sys_stat \
++  for f in sys_types sys_stat \
+            string errno stdlib memory setjmp
+   do eval as_ac_var=\${ac_cv_header_${f}_h}
+      test "X${as_ac_var}" = Xyes || {
+diff -ur gnutls-3.2.3-orig/tests/cert-tests/dane gnutls-3.2.3/tests/cert-tests/dane
+--- gnutls-3.2.3-orig/tests/cert-tests/dane	2013-02-27 11:28:17 -0500
++++ gnutls-3.2.3/tests/cert-tests/dane	2013-11-06 09:39:58 -0500
+@@ -27,6 +27,10 @@
  
- 
- static int export_true = 0;
--static gnutls_datum_t exp = { NULL, 0 }, mod =
-+static gnutls_datum_t _exp = { NULL, 0 }, mod =
- 
- {
- NULL, 0};
-@@ -202,7 +202,7 @@
-   if (ret == TEST_SUCCEED)
-     {
-       export_true = 1;
--      gnutls_rsa_export_get_pubkey (session, &exp, &mod);
-+      gnutls_rsa_export_get_pubkey (session, &_exp, &mod);
-     }
- 
-   return ret;
-@@ -242,9 +242,9 @@
-           if (print)
-             printf (" Modulus [%d bits]: %s\n", mod2.size * 8, print);
- 
--          if (mod2.size != mod.size || exp2.size != exp.size ||
-+          if (mod2.size != mod.size || exp2.size != _exp.size ||
-               memcmp (mod2.data, mod.data, mod.size) != 0 ||
--              memcmp (exp2.data, exp.data, exp.size) != 0)
-+              memcmp (exp2.data, _exp.data, _exp.size) != 0)
-             {
-               printf
-                 (" (server uses different public keys per connection)\n");
-diff -ur gnutls-3.1.4-orig/tests/cert-tests/dane gnutls-3.1.4/tests/cert-tests/dane
---- gnutls-3.1.4-orig/tests/cert-tests/dane	2012-11-09 18:54:04 -0500
-+++ gnutls-3.1.4/tests/cert-tests/dane	2013-06-23 14:16:49 -0400
-@@ -25,6 +25,10 @@
- srcdir=${srcdir:-.}
- DANETOOL=${DANETOOL:-../../src/danetool$EXEEXT}
+ test -e $DANETOOL || exit 77
  
 +if test ! -x "$DANETOOL"; then
 +  exit 77
@@ -1458,9 +1612,9 @@ diff -ur gnutls-3.1.4-orig/tests/cert-tests/dane gnutls-3.1.4/tests/cert-tests/d
  $DANETOOL --tlsa-rr --load-certificate $srcdir/cert-ecc256.pem --host www.example.com --outfile tmp-dane.rr 2>/dev/null
  
  diff $srcdir/dane-test.rr tmp-dane.rr
-diff -ur gnutls-3.1.4-orig/tests/chainverify.c gnutls-3.1.4/tests/chainverify.c
---- gnutls-3.1.4-orig/tests/chainverify.c	2012-11-08 11:54:59 -0500
-+++ gnutls-3.1.4/tests/chainverify.c	2013-06-23 14:16:49 -0400
+diff -ur gnutls-3.2.3-orig/tests/chainverify.c gnutls-3.2.3/tests/chainverify.c
+--- gnutls-3.2.3-orig/tests/chainverify.c	2013-05-08 14:32:30 -0400
++++ gnutls-3.2.3/tests/chainverify.c	2013-11-06 09:39:58 -0500
 @@ -803,6 +803,8 @@
     * systems only. Disable it on windows.
     */
@@ -1470,10 +1624,10 @@ diff -ur gnutls-3.1.4-orig/tests/chainverify.c gnutls-3.1.4/tests/chainverify.c
    exit(77);
  #endif
  
-diff -ur gnutls-3.1.4-orig/tests/openpgp-auth.c gnutls-3.1.4/tests/openpgp-auth.c
---- gnutls-3.1.4-orig/tests/openpgp-auth.c	2012-08-17 16:50:06 -0400
-+++ gnutls-3.1.4/tests/openpgp-auth.c	2013-06-23 14:16:49 -0400
-@@ -277,6 +277,8 @@
+diff -ur gnutls-3.2.3-orig/tests/openpgp-auth.c gnutls-3.2.3/tests/openpgp-auth.c
+--- gnutls-3.2.3-orig/tests/openpgp-auth.c	2013-05-08 14:32:30 -0400
++++ gnutls-3.2.3/tests/openpgp-auth.c	2013-11-06 09:39:58 -0500
+@@ -309,6 +309,8 @@
  void
  doit ()
  {
@@ -1482,9 +1636,9 @@ diff -ur gnutls-3.1.4-orig/tests/openpgp-auth.c gnutls-3.1.4/tests/openpgp-auth.
    exit (77);
  }
  #endif
-diff -ur gnutls-3.1.4-orig/tests/openpgp-auth2.c gnutls-3.1.4/tests/openpgp-auth2.c
---- gnutls-3.1.4-orig/tests/openpgp-auth2.c	2012-07-21 08:14:24 -0400
-+++ gnutls-3.1.4/tests/openpgp-auth2.c	2013-06-23 14:16:49 -0400
+diff -ur gnutls-3.2.3-orig/tests/openpgp-auth2.c gnutls-3.2.3/tests/openpgp-auth2.c
+--- gnutls-3.2.3-orig/tests/openpgp-auth2.c	2013-05-08 14:32:30 -0400
++++ gnutls-3.2.3/tests/openpgp-auth2.c	2013-11-06 09:39:59 -0500
 @@ -23,12 +23,13 @@
  #include <config.h>
  #endif
@@ -1510,9 +1664,9 @@ diff -ur gnutls-3.1.4-orig/tests/openpgp-auth2.c gnutls-3.1.4/tests/openpgp-auth
    exit (77);
  }
  #endif
-diff -ur gnutls-3.1.4-orig/tests/rng-fork.c gnutls-3.1.4/tests/rng-fork.c
---- gnutls-3.1.4-orig/tests/rng-fork.c	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/tests/rng-fork.c	2013-06-23 14:16:49 -0400
+diff -ur gnutls-3.2.3-orig/tests/rng-fork.c gnutls-3.2.3/tests/rng-fork.c
+--- gnutls-3.2.3-orig/tests/rng-fork.c	2013-05-08 14:32:30 -0400
++++ gnutls-3.2.3/tests/rng-fork.c	2013-11-06 09:39:59 -0500
 @@ -107,6 +107,8 @@
  void
  doit (void)
@@ -1522,9 +1676,9 @@ diff -ur gnutls-3.1.4-orig/tests/rng-fork.c gnutls-3.1.4/tests/rng-fork.c
    exit (77);
  }
  #endif
-diff -ur gnutls-3.1.4-orig/tests/slow/cipher-test.c gnutls-3.1.4/tests/slow/cipher-test.c
---- gnutls-3.1.4-orig/tests/slow/cipher-test.c	2012-04-12 16:05:11 -0400
-+++ gnutls-3.1.4/tests/slow/cipher-test.c	2013-06-23 14:16:49 -0400
+diff -ur gnutls-3.2.3-orig/tests/slow/cipher-test.c gnutls-3.2.3/tests/slow/cipher-test.c
+--- gnutls-3.2.3-orig/tests/slow/cipher-test.c	2013-05-08 14:32:30 -0400
++++ gnutls-3.2.3/tests/slow/cipher-test.c	2013-11-06 09:39:59 -0500
 @@ -1,3 +1,7 @@
 +#ifdef HAVE_CONFIG_H
 +#include <config.h>
@@ -1533,7 +1687,7 @@ diff -ur gnutls-3.1.4-orig/tests/slow/cipher-test.c gnutls-3.1.4/tests/slow/ciph
  #include <stdint.h>
  #include <stdio.h>
  #include <string.h>
-@@ -44,75 +48,74 @@
+@@ -45,75 +49,74 @@
       "\x58\xe2\xfc\xce\xfa\x7e\x30\x61\x36\x7f\x1d\x57\xa4\xe7\x45\x5a"},
  #endif
      {
@@ -1639,7 +1793,7 @@ diff -ur gnutls-3.1.4-orig/tests/slow/cipher-test.c gnutls-3.1.4/tests/slow/ciph
       "\x9b\xa4\xa9\x14\x3f\x4e\x5d\x40\x48\x52\x1c\x4f\x88\x77\xd8\x8e",
       },
  };
-@@ -351,128 +354,121 @@
+@@ -352,128 +355,121 @@
  } hash_vectors[] =
  {
      {
