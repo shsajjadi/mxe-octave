@@ -435,6 +435,12 @@ int main(int argc, char **argv)
 		else if (arg == "-P")
 		{
 			clopt += " -EP";
+			exeoutput = false;
+		}
+                else if (arg == "-E")
+		{
+			clopt += " -E";
+			exeoutput = false;
 		}
 		else if (arg == "-ansi")
 		{
