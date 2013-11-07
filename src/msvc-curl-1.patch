@@ -1,0 +1,12 @@
+diff -ur curl-7.33.0-orig/configure curl-7.33.0/configure
+--- curl-7.33.0-orig/configure	2013-10-12 16:24:48 -0400
++++ curl-7.33.0/configure	2013-11-06 18:27:28 -0500
+@@ -17798,7 +17798,7 @@
+ 
+     { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+-    as_fn_error $? "compiler does not halt on function prototype mismatch." "$LINENO" 5
++    #as_fn_error $? "compiler does not halt on function prototype mismatch." "$LINENO" 5
+ 
+ else
+ 
