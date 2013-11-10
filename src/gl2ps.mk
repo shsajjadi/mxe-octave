@@ -10,7 +10,11 @@ $(PKG)_DEPS     :=
 
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
-    $(PKG)_CMAKE_FLAGS := -G 'MSYS Makefiles'
+    ifeq ($(MXE_SYSTEM),msvc)
+        $(PKG)_CMAKE_FLAGS := -G 'NMake Makefiles'
+    else
+        $(PKG)_CMAKE_FLAGS := -G 'MSYS Makefiles'
+    endif
 else
     $(PKG)_CMAKE_FLAGS := \
         -DCMAKE_AR='$(MXE_AR)' \
@@ -22,6 +26,17 @@ define $(PKG)_UPDATE
     echo $(gl2ps_VERSION)
 endef
 
+ifeq ($(MXE_SYSTEM),msvc)
+define $(PKG)_BUILD
+    cd '$(1)' && cmake \
+        $($(PKG)_CMAKE_FLAGS) \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+        -DPNG_NAMES=png16 \
+        .
+    cd '$(1)' && env -u MAKE -u MAKEFLAGS nmake
+    cd '$(1)' && env -u MAKE -u MAKEFLAGS nmake DESTDIR='$(3)' install
+endef
+else
 define $(PKG)_BUILD
     cd '$(1)' && cmake \
         $($(PKG)_CMAKE_FLAGS) \
@@ -32,15 +47,16 @@ define $(PKG)_BUILD
     # native mingw build doesnt want to install the files, even
     # though it logs that it did
     if [ x$(MXE_NATIVE_MINGW_BUILD) = xyes ]; then \
-      $(INSTALL) -m644 '$(1)/libgl2ps.a' '$(HOST_LIBDIR)'; \
-      $(INSTALL) -m644 '$(1)/libgl2ps.dll.a' '$(HOST_LIBDIR)'; \
-      $(INSTALL) -m644 '$(1)/libgl2ps.dll' '$(HOST_BINDIR)'; \
-      $(INSTALL) -m644 '$(1)/gl2ps.h' '$(HOST_INCDIR)'; \
+      $(INSTALL) -m644 '$(1)/libgl2ps.a' '$(3)$(HOST_LIBDIR)'; \
+      $(INSTALL) -m644 '$(1)/libgl2ps.dll.a' '$(3)$(HOST_LIBDIR)'; \
+      $(INSTALL) -m644 '$(1)/libgl2ps.dll' '$(3)$(HOST_BINDIR)'; \
+      $(INSTALL) -m644 '$(1)/gl2ps.h' '$(3)$(HOST_INCDIR)'; \
     else \
-      $(MAKE) -C '$(1)' -j 1 VERBOSE=1 install; \
+      $(MAKE) -C '$(1)' -j 1 VERBOSE=1 DESTDIR='$(3)' install; \
       if [ $(MXE_SYSTEM) = mingw ]; then \
         echo "Install dll"; \
-        $(INSTALL) '$(1)/libgl2ps.dll' '$(HOST_BINDIR)/'; \
+        $(INSTALL) '$(1)/libgl2ps.dll' '$(3)$(HOST_BINDIR)/'; \
       fi; \
     fi
 endef
+endif
