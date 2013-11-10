@@ -8,9 +8,6 @@ $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)-devel/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := zlib jpeg lcms
-ifneq ($(MXE_SYSTEM),msvc)
-    $(PKG)_DEPS += lcms1
-endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/libmng/files/libmng-devel/' | \
@@ -26,8 +23,5 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
 	$(ENABLE_SHARED_OR_STATIC) \
         && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
-    if test x$(MXE_SYSTEM) = xmsvc; then \
-        $(SED) -i -e 's/lcms//' '$(1)/libmng.pc'; \
-    fi
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 endef
