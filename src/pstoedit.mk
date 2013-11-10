@@ -23,5 +23,5 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
 	&& $(CONFIGURE_POST_HOOK)
 
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
 endef

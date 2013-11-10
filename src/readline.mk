@@ -39,5 +39,5 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --enable-multibyte \
         --without-purify
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 endef

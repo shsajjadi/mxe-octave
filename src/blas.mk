@@ -24,11 +24,11 @@ define $(PKG)_BUILD
     cd '$(1)' && $(MXE_AR) cr libblas.a *.o
 
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/libblas.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/libblas.a' --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)'; \
     fi
 
     if [ $(BUILD_STATIC) = yes ]; then \
-      $(INSTALL) -d '$(HOST_LIBDIR)'; \
-      $(INSTALL) '$(1)/libblas.a' '$(HOST_LIBDIR)/'; \
+      $(INSTALL) -d '$(3)$(HOST_LIBDIR)'; \
+      $(INSTALL) '$(1)/libblas.a' '$(3)$(HOST_LIBDIR)/'; \
     fi
 endef

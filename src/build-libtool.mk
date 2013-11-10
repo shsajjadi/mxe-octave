@@ -32,5 +32,5 @@ define $(PKG)_BUILD
     if test x$(MXE_SYSTEM) = xmsvc; then \
         cd '$(1).build' && $(CONFIGURE_POST_HOOK); \
     fi
-    $(MAKE) -C '$(1).build' -j 1 install
+    $(MAKE) -C '$(1).build' -j 1 install DESTDIR='$(3)'
 endef

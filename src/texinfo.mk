@@ -24,5 +24,5 @@ define $(PKG)_BUILD
     ## All we need for Octave is makeinfo.
     $(MAKE) -C '$(1)/.build/lib' -j '$(JOBS)'
     $(MAKE) -C '$(1)/.build/gnulib/lib' -j '$(JOBS)'
-    $(MAKE) -C '$(1)/.build/makeinfo' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)/.build/makeinfo' -j '$(JOBS)' install DESTDIR='$(3)'
 endef

@@ -23,5 +23,5 @@ define $(PKG)_BUILD
         --with-jpeg \
         --with-tiff \
         --with-zlib && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS=
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS= DESTDIR='$(3)'
 endef

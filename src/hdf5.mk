@@ -69,5 +69,5 @@ define $(PKG)_BUILD
       ;; \
     esac
 
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
 endef

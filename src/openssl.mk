@@ -64,5 +64,6 @@ define $(PKG)_BUILD
         RANLIB='$(MXE_RANLIB)' \
         AR='$(MXE_AR) rcu' AS='$(MXE_CCAS)' \
 	MANDIR='$(HOST_PREFIX)/share/man' \
-	HTMLDIR='$(HOST_PREFIX)/share/doc/openssl'
+	HTMLDIR='$(HOST_PREFIX)/share/doc/openssl' \
+	INSTALL_PREFIX='$(3)'
 endef

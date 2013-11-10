@@ -47,5 +47,5 @@ define $(PKG)_BUILD
         LIBS='-lws2_32' \
         ac_cv_prog_AR='$(MXE_AR)' && $(CONFIGURE_POST_HOOK)
 
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 endef

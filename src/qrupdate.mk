@@ -39,5 +39,5 @@ define $(PKG)_BUILD
         $($(PKG)_BLAS_OPTION) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) && $(CONFIGURE_POST_HOOK)
 
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
 endef

@@ -33,12 +33,12 @@ define $(PKG)_BUILD
         --install '$(INSTALL)' --libdir '$(1)' --bindir '$(1)' -lnettle -lgmp
     $(MAKE) -C '$(1)' -j '$(JOBS)'
 
-    $(MAKE) -C '$(1)' -j 1 install-info install-headers install-pkgconfig
-    $(MAKE) -C '$(1)/tools' -j 1 install
+    $(MAKE) -C '$(1)' -j 1 install-info install-headers install-pkgconfig DESTDIR='$(3)'
+    $(MAKE) -C '$(1)/tools' -j 1 install DESTDIR='$(3)'
     $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/libnettle.a' \
-        --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)' -lgmp
+        --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)' -lgmp
     $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/libhogweed.a' \
-        --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)' -lnettle -lgmp
+        --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)' -lnettle -lgmp
 endef
 else
 define $(PKG)_BUILD
@@ -48,6 +48,6 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install
+    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
 endef
 endif

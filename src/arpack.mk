@@ -51,10 +51,10 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)'
 
     if [ $(BUILD_STATIC) = yes ]; then \
-      $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install; \
+      $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'; \
     fi
 
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/.build/.libs/libarpack.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)' -llapack -l$($(PKG)_BLAS_LIB); \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/.build/.libs/libarpack.a' --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)' -llapack -l$($(PKG)_BLAS_LIB); \
     fi
 endef

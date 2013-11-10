@@ -29,5 +29,5 @@ define $(PKG)_BUILD
         --prefix='$(BUILD_TOOLS_PREFIX)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     rm -f "$(BUILD_TOOLS_PREFIX)/bin/`config.guess`-pkg-config"
-    $(MAKE) -C '$(1).build' -j 1 install
+    $(MAKE) -C '$(1).build' -j 1 install DESTDIR='$(3)'
 endef

@@ -28,17 +28,30 @@ define $(PKG)_BUILD
     cd '$(1)/Qt4Qt5' && '$(HOST_BINDIR)/qmake' -makefile $($(PKG)_QMAKE_SPEC_OPTION)
 
     if [ $(MXE_SYSTEM) = msvc ]; then \
+        mkdir -p '$(3)' && \
         cd '$(1)/Qt4Qt5' && \
         env -u MAKE -u MAKEFLAGS nmake && \
-        env -u MAKE -u MAKEFLAGS nmake install; \
+        env -u MAKE -u MAKEFLAGS nmake \
+            INSTALL_ROOT=`cd $(3) && pwd -W | sed -e 's,^[a-zA-Z]:,,' -e 's,/,\\\\,g'` install; \
     else \
         $(MAKE) -C '$(1)/Qt4Qt5' -j '$(JOBS)' && \
-        $(MAKE) -C '$(1)/Qt4Qt5' -j 1 install; \
+        $(MAKE) -C '$(1)/Qt4Qt5' -j 1 install DESTDIR='$(3)'; \
     fi
 
-    if [ $(MXE_SYSTEM) = mingw -o $(MXE_SYSTEM) = msvc ]; then \
-        $(INSTALL) -m755 '$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' \
-            '$(HOST_BINDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
-        rm -f '$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
+    if [ $(MXE_SYSTEM) = mingw ]; then \
+        $(INSTALL) -d '$(3)$(HOST_BINDIR)'; \
+        $(INSTALL) -m755 '$(3)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' \
+            '$(3)$(HOST_BINDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
+        rm -f '$(3)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
+    fi
+
+    # Qmake under MSVC uses Win32 paths. When combining this with
+    # DESTDIR usage (or equivalent), the real Win32 directory hierarchy
+    # is recreated under DESTDIR, not the MSYS hierarchy.
+    if [ $(MXE_SYSTEM) = msvc ]; then \
+        $(INSTALL) -d '$(3)$(CMAKE_HOST_PREFIX)/bin'; \
+        $(INSTALL) -m755 '$(3)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' \
+            '$(3)$(CMAKE_HOST_PREFIX)/bin/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
+        rm -f '$(3)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
     fi
 endef

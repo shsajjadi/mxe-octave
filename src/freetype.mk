@@ -20,7 +20,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 
-    rm -f $(HOST_LIBDIR)/libfreetype.la
+    rm -f '$(3)$(HOST_LIBDIR)/libfreetype.la'
 endef
