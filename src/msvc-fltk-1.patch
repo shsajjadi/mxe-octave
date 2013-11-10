@@ -142,7 +142,7 @@ diff -ur fltk-1.3.1-orig/configure.in fltk-1.3.1/configure.in
  syspnginc_ok=no
  if test x$enable_localpng != xyes; then
 -  AC_CHECK_LIB(png, png_read_info, 
-+  AC_CHECK_LIB(png15, png_read_info, 
++  AC_CHECK_LIB(png16, png_read_info, 
      [AC_CHECK_HEADER(png.h, 
  	AC_DEFINE(HAVE_PNG_H)
  	syspnginc_ok=yes)
@@ -152,13 +152,13 @@ diff -ur fltk-1.3.1-orig/configure.in fltk-1.3.1/configure.in
      PNG=""
 -    IMAGELIBS="-lpng $IMAGELIBS"
 -    STATICIMAGELIBS="-lpng $STATICIMAGELIBS"
-+    IMAGELIBS="-lpng15 $IMAGELIBS"
-+    STATICIMAGELIBS="-lpng15 $STATICIMAGELIBS"
++    IMAGELIBS="-lpng16 $IMAGELIBS"
++    STATICIMAGELIBS="-lpng16 $STATICIMAGELIBS"
      AC_DEFINE(HAVE_LIBPNG)
 -    AC_CHECK_LIB(png,png_get_valid, AC_DEFINE(HAVE_PNG_GET_VALID))
 -    AC_CHECK_LIB(png,png_set_tRNS_to_alpha, AC_DEFINE(HAVE_PNG_SET_TRNS_TO_ALPHA))
-+    AC_CHECK_LIB(png15,png_get_valid, AC_DEFINE(HAVE_PNG_GET_VALID))
-+    AC_CHECK_LIB(png15,png_set_tRNS_to_alpha, AC_DEFINE(HAVE_PNG_SET_TRNS_TO_ALPHA))
++    AC_CHECK_LIB(png16,png_get_valid, AC_DEFINE(HAVE_PNG_GET_VALID))
++    AC_CHECK_LIB(png16,png_set_tRNS_to_alpha, AC_DEFINE(HAVE_PNG_SET_TRNS_TO_ALPHA))
  fi
  
  AC_SUBST(JPEG)
