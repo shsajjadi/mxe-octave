@@ -33,8 +33,8 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
 	$($(PKG)_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
 
-    rm -f $(HOST_LIBDIR)/libpng.la
-    rm -f $(HOST_LIBDIR)/libpng15.la
+    rm -f '$(3)$(HOST_LIBDIR)/libpng.la'
+    rm -f '$(3)$(HOST_LIBDIR)/libpng15.la'
 endef

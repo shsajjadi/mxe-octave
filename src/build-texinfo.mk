@@ -24,8 +24,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1).build/makeinfo' -j '$(JOBS)'
     $(MAKE) -C '$(1).build/util' -j '$(JOBS)'
 
-    $(MAKE) -C '$(1).build/gnulib/lib' -j 1 install
-    $(MAKE) -C '$(1).build/lib' -j 1 install
-    $(MAKE) -C '$(1).build/makeinfo' -j 1 install
-    $(MAKE) -C '$(1).build/util' -j 1 install
+    $(MAKE) -C '$(1).build/gnulib/lib' -j 1 install DESTDIR='$(3)'
+    $(MAKE) -C '$(1).build/lib' -j 1 install DESTDIR='$(3)'
+    $(MAKE) -C '$(1).build/makeinfo' -j 1 install DESTDIR='$(3)'
+    $(MAKE) -C '$(1).build/util' -j 1 install DESTDIR='$(3)'
 endef

@@ -19,11 +19,12 @@ define $(PKG)_BUILD
     make -C '$(1)/config/mingw' CC='$(MXE_CC)' CXX='$(MXE_CXX)' RC='$(MXE_WINDRES)' -j '$(JOBS)' TARGET=gnuplot.exe gnuplot.exe
     make -C '$(1)/config/mingw' CC='$(MXE_CC)' CXX='$(MXE_CXX)' RC='$(MXE_WINDRES)' -j '$(JOBS)' TARGET=wgnuplot.exe wgnuplot.exe
 
-    $(INSTALL) -d '$(HOST_BINDIR)'
-    $(INSTALL) -m755 '$(1)/config/mingw/gnuplot.exe' '$(HOST_BINDIR)'
-    $(INSTALL) -m755 '$(1)/config/mingw/wgnuplot.exe' '$(HOST_BINDIR)'
-    $(INSTALL) -m644 '$(1)/src/win/wgnuplot.mnu' '$(HOST_BINDIR)'
+    $(INSTALL) -d '$(3)$(HOST_BINDIR)'
+    $(INSTALL) -m755 '$(1)/config/mingw/gnuplot.exe' '$(3)$(HOST_BINDIR)'
+    $(INSTALL) -m755 '$(1)/config/mingw/wgnuplot.exe' '$(3)$(HOST_BINDIR)'
+    $(INSTALL) -m644 '$(1)/src/win/wgnuplot.mnu' '$(3)$(HOST_BINDIR)'
 
+    ## MG: not sure what to do with these and how to integrate with DESTDIR
     $(INSTALL) -d '$(TOP_DIR)/gnuplot/bin'
     $(INSTALL) -m755 '$(1)/config/mingw/gnuplot.exe' '$(TOP_DIR)/gnuplot/bin/'
     $(INSTALL) -m755 '$(1)/config/mingw/wgnuplot.exe' '$(TOP_DIR)/gnuplot/bin/'
@@ -33,16 +34,17 @@ endef
 else
 ifeq ($(MXE_SYSTEM),msvc)
 define $(PKG)_BUILD
+    $(INSTALL) -d '$(3)$(HOST_PREFIX)'
     cd '$(1)/config/msvc' && \
         env -u MAKE -u MAKEFLAGS nmake DESTDIR=$(shell (cd '$(HOST_PREFIX)' && pwd -W) | sed -e 's#/#\\\\#g') && \
-        env -u MAKE -u MAKEFLAGS nmake DESTDIR=$(shell (cd '$(HOST_PREFIX)' && pwd -W) | sed -e 's#/#\\\\#g') install
+        env -u MAKE -u MAKEFLAGS nmake DESTDIR=$(shell (cd '$(3)$(HOST_PREFIX)' && pwd -W) | sed -e 's#/#\\\\#g') install
 endef
 else
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
       $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) LIBS=-liconv \
       --prefix '$(HOST_PREFIX)'
-    make -C '$(1)' -j '$(JOBS)' install
+    make -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 endef
 endif
 endif

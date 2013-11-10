@@ -42,14 +42,14 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' VERBOSE=1 lapacklib
 
     if [ $(BUILD_SHARED) = yes ]; then \
-        $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/liblapack.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)' -lblas; \
+        $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/liblapack.a' --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)' -lblas; \
     fi
 
-    $(INSTALL) -d '$(HOST_LIBDIR)/pkgconfig' 
+    $(INSTALL) -d '$(3)$(HOST_LIBDIR)/pkgconfig' 
     $(SED) -e 's/@LAPACK_VERSION@/$($(PKG)_VERSION)/' \
            -e 's,@prefix@,$(HOST_PREFIX),' \
 	   -e 's,@libdir@,$${prefix}/lib,' '$(1)/lapack.pc.in' > '$(1)/lapack.pc'
-    $(INSTALL) '$(1)/lapack.pc' '$(HOST_LIBDIR)/pkgconfig/'
+    $(INSTALL) '$(1)/lapack.pc' '$(3)$(HOST_LIBDIR)/pkgconfig/'
 
 endef
 else
@@ -60,19 +60,19 @@ define $(PKG)_BUILD
         -DCMAKE_Fortran_FLAGS='$($(PKG)_DEFAULT_INTEGER_8_FLAG)' \
         $($(PKG)_BLAS_CONFIG_OPTS) \
         .
-    $(MAKE) -C '$(1)/SRC' -j '$(JOBS)' VERBOSE=1 install
+    $(MAKE) -C '$(1)/SRC' -j '$(JOBS)' VERBOSE=1 install DESTDIR='$(3)'
 
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(INSTALL) '$(1)/lib/liblapack.dll.a' '$(HOST_LIBDIR)/'; \
-      $(INSTALL) '$(1)/lib/liblapack.lib' '$(HOST_LIBDIR)/'; \
-      $(INSTALL) '$(1)/bin/liblapack.dll' '$(HOST_BINDIR)/'; \
+      $(INSTALL) '$(1)/lib/liblapack.dll.a' '$(3)$(HOST_LIBDIR)/'; \
+      $(INSTALL) '$(1)/lib/liblapack.lib' '$(3)$(HOST_LIBDIR)/'; \
+      $(INSTALL) '$(1)/bin/liblapack.dll' '$(3)$(HOST_BINDIR)/'; \
     fi
     if [ $(BUILD_STATIC) = yes ]; then \
-      $(INSTALL) '$(1)/lib/liblapack.a' '$(HOST_LIBDIR)/'; \
+      $(INSTALL) '$(1)/lib/liblapack.a' '$(3)$(HOST_LIBDIR)/'; \
     fi
 
-    $(INSTALL) -d '$(HOST_LIBDIR)/pkgconfig' 
-    $(INSTALL) '$(1)/lapack.pc' '$(HOST_LIBDIR)/pkgconfig/'
+    $(INSTALL) -d '$(3)$(HOST_LIBDIR)/pkgconfig' 
+    $(INSTALL) '$(1)/lapack.pc' '$(3)$(HOST_LIBDIR)/pkgconfig/'
 
 endef
 endif
@@ -85,6 +85,6 @@ define $(PKG)_BUILD
         -DCMAKE_Fortran_FLAGS='$($(PKG)_DEFAULT_INTEGER_8_FLAG)' \
         $($(PKG)_BLAS_CONFIG_OPTS) \
         .
-    $(MAKE) -C '$(1)/SRC' -j '$(JOBS)' VERBOSE=1 install
+    $(MAKE) -C '$(1)/SRC' -j '$(JOBS)' VERBOSE=1 install DESTDIR='$(3)'
 endef
 endif

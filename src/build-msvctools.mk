@@ -17,7 +17,7 @@ $(PKG)_CMAKE_DESTDIR := $(BUILD_TOOLS_PREFIX)/share/cmake-$(call SHORT_PKG_VERSI
 
 define $(PKG)_BUILD
     make -C '$(1)' -j 1 \
-	DESTDIR='$(HOST_PREFIX)' \
+	DESTDIR='$(3)$(HOST_PREFIX)' \
 	CMAKE_DESTDIR='$($(PKG)_CMAKE_DESTDIR)' \
 	GCCVERSION='$(build-gcc_VERSION)' \
 	INSTALL='$(INSTALL)' \

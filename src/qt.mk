@@ -152,13 +152,15 @@ define $(PKG)_BUILD
     # support the -j option flag and is perturbed by GNU make values for
     # MAKE and MAKEFLAGS; also remove unnecessary DLL installed in lib/
     if test x$(MXE_SYSTEM) = xmsvc; then \
+      mkdir -p '$(3)' && \
       cd '$(1)' && \
       env -u MAKE -u MAKEFLAGS PKG_CONFIG_PATH='$(HOST_PREFIX)/lib/pkgconfig' nmake && \
-      env -u MAKE -u MAKEFLAGS PKG_CONFIG_PATH='$(HOST_PREFIX)/lib/pkgconfig' nmake install && \
-      rm -f $(HOST_PREFIX)/lib/$(LIBRARY_PREFIX)Qt*.dll; \
+      env -u MAKE -u MAKEFLAGS PKG_CONFIG_PATH='$(HOST_PREFIX)/lib/pkgconfig' nmake \
+          INSTALL_ROOT=`cd $(3) && pwd -W | sed -e 's,^[a-zA-Z]:,,' -e 's,/,\\\\,g'` install && \
+      rm -f $(3)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)Qt*.dll; \
     else \
       make -C '$(1)' -j '$(JOBS)' && \
-      make -C '$(1)' -j 1 install; \
+      make -C '$(1)' -j 1 install DESTDIR='$(3)'; \
     fi
 
     # native build doesnt seem to succeed with installing pkgconfig files to prefix    
@@ -168,19 +170,19 @@ define $(PKG)_BUILD
          -e 's,\(.*\)_location=.*,\1_location=$${prefix}/bin/\1,g' \
          -e 's,\(Libs:.* -l\).*[\\/]\([A-Za-z0-9]*\),\1\2,g' \
          '{}' ';' ; \
-       cp -f '$(1)/lib/pkgconfig/'*.pc '$(HOST_LIBDIR)/pkgconfig/';  \
+       cp -f '$(1)/lib/pkgconfig/'*.pc '$(3)$(HOST_LIBDIR)/pkgconfig/';  \
     fi
 
     $(if $(filter-out msvc, $(MXE_SYSTEM)),
       $(if $(filter-out yes, $(MXE_NATIVE_BUILD)),
-        $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
-        $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
-        $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
-        $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
+        $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/moc' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
+        $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/rcc' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
+        $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/uic' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
+        $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/qmake' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
       )
 
       # lrelease (from linguist) needed by octave for GUI build
-      $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install
+      $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install DESTDIR='$(3)'
       $(if $(filter-out yes, $(MXE_NATIVE_BUILD)),
-        $(INSTALL) -m755 '$($(PKG)_PREFIX)/bin/lrelease' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'))
+        $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/lrelease' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'))
 endef

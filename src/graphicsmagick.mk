@@ -50,5 +50,5 @@ define $(PKG)_BUILD
         ac_cv_path_xml2_config='$(HOST_BINDIR)/xml2-config' \
 	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS=
-    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS=
+    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= DESTDIR='$(3)'
 endef

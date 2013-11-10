@@ -21,14 +21,14 @@ define $(PKG)_BUILD
     cd '$(1)' && CC='$(MXE_CC)' ./configure \
       --prefix='$(HOST_PREFIX)'
 
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 
     if [ "$(BUILD_STATIC)" != yes ]; then \
       true; \
     fi
 
     if [ "$(BUILD_SHARED)" = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(1)/libz.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(1)/libz.a' --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)'; \
     fi
 endef
 else
@@ -37,7 +37,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
       --prefix='$(HOST_PREFIX)'
 
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 endef
 else
 define $(PKG)_BUILD
@@ -45,10 +45,10 @@ define $(PKG)_BUILD
         ./configure \
         --prefix='$(HOST_PREFIX)' \
         --static
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 
     if [ "$(BUILD_SHARED)" = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(1)/libz.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(1)/libz.a' --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)'; \
     fi
 endef
 endif

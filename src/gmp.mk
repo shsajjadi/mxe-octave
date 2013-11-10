@@ -36,5 +36,5 @@ define $(PKG)_BUILD
         --enable-cxx \
         --without-readline && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install
+    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
 endef

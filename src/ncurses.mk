@@ -53,5 +53,5 @@ define $(PKG)_BUILD
             -exec $(SED) -i 's,-\<O2\>,,' {} \; ; \
     fi
 
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 endef

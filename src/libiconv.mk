@@ -25,5 +25,5 @@ define $(PKG)_BUILD
 	CC='$(MXE_CC)' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --disable-nls && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 endef

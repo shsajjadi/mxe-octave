@@ -31,5 +31,5 @@ define $(PKG)_BUILD
         --without-python \
         --without-threads && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' noinst_PROGRAMS=
-    $(MAKE) -C '$(1)' -j 1 install noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j 1 install noinst_PROGRAMS= DESTDIR='$(3)'
 endef

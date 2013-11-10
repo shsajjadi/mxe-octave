@@ -38,7 +38,7 @@ define $(PKG)_BUILD
         $($(PKG)_CONFIG_OPTS) \
         --enable-double && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
 
     if $($(PKG)_HAVE_LONG_DOUBLE); then \
         cd '$(1)' && ./configure \
@@ -51,7 +51,7 @@ define $(PKG)_BUILD
             $($(PKG)_CONFIG_OPTS) \
             --enable-long-double && $(CONFIGURE_POST_HOOK) ; \
         $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= ; \
-        $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= ; \
+        $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)' ; \
     fi
 
     cd '$(1)' && ./configure \
@@ -64,5 +64,5 @@ define $(PKG)_BUILD
         $($(PKG)_CONFIG_OPTS) \
         --enable-float && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
 endef

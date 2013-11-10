@@ -25,15 +25,15 @@ define $(PKG)_BUILD
         CC='$(MXE_CC)' \
         AR='$(MXE_AR)' \
         RANLIB='$(MXE_RANLIB)'
-    $(INSTALL) -d '$(HOST_INCDIR)'
-    $(INSTALL) -m644 '$(1)/bzlib.h' '$(HOST_INCDIR)'
+    $(INSTALL) -d '$(3)$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/bzlib.h' '$(3)$(HOST_INCDIR)'
 
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(1)/libbz2.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(1)/libbz2.a' --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)'; \
     fi
 
     if [ $(BUILD_STATIC) = yes ]; then \
-      $(INSTALL) '$(1)/libbz2.a' '$(HOST_LIBDIR)/'; \
+      $(INSTALL) '$(1)/libbz2.a' '$(3)$(HOST_LIBDIR)/'; \
     fi
 endef
 else
@@ -45,11 +45,11 @@ define $(PKG)_BUILD
         CC='$(MXE_CC)' \
         AR='$(MXE_AR)' \
         RANLIB='$(MXE_RANLIB)'
-    $(INSTALL) -d '$(HOST_LIBDIR)'
-    $(INSTALL) -m755 '$(1)/libbz2.so.1.0.6' '$(HOST_LIBDIR)'
-    rm -f '$(HOST_LIBDIR)/libbz2.so.1.0'
-    $(LN_SF) libbz2.so.1.0.6 '$(HOST_LIBDIR)/libbz2.so.1.0'
-    $(INSTALL) -d '$(HOST_INCDIR)'
-    $(INSTALL) -m644 '$(1)/bzlib.h' '$(HOST_INCDIR)'
+    $(INSTALL) -d '$(3)$(HOST_LIBDIR)'
+    $(INSTALL) -m755 '$(1)/libbz2.so.1.0.6' '$(3)$(HOST_LIBDIR)'
+    rm -f '$(3)$(HOST_LIBDIR)/libbz2.so.1.0'
+    $(LN_SF) libbz2.so.1.0.6 '$(3)$(HOST_LIBDIR)/libbz2.so.1.0'
+    $(INSTALL) -d '$(3)$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/bzlib.h' '$(3)$(HOST_INCDIR)'
 endef
 endif
