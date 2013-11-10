@@ -75,12 +75,18 @@ endif
 # and it's not clear to me how to change that.
 #
 # For native builds, dump everything all together in one directory tree.
-BUILD_TOOLS_PREFIX := $(PWD)/usr
+ROOT_PREFIX := $(PWD)/usr
+BUILD_TOOLS_PREFIX := $(ROOT_PREFIX)
 ifeq ($(MXE_NATIVE_BUILD),yes)
-  HOST_PREFIX := $(BUILD_TOOLS_PREFIX)
+  HOST_PREFIX := $(ROOT_PREFIX)
 else
-  HOST_PREFIX := $(PWD)/usr/$(TARGET)
+  HOST_PREFIX := $(ROOT_PREFIX)/$(TARGET)
 endif
+
+# Make sure the root installation directories exists
+$(shell mkdir -p $(ROOT_PREFIX))
+$(shell mkdir -p $(BUILD_TOOLS_PREFIX))
+$(shell mkdir -p $(HOST_PREFIX))
 
 # At least one package uses --with instead of --enable.  
 ifeq ($(BUILD_SHARED),yes)
@@ -198,6 +204,17 @@ CONFIGURE_POST_HOOK := true
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   MXE_TOOL_PREFIX := 
+  ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+    # The installation directories have been created previously. So we
+    # can rely on their existence to compute their Win32 equivalent.
+    HOST_PREFIX_NATIVE := $(shell cd $(HOST_PREFIX) && pwd -W)
+    ROOT_PREFIX_NATIVE := $(shell cd $(ROOT_PREFIX) && pwd -W)
+    # CMake uses Win32 paths, not MSYS paths. When using a MSYS path as
+    # DESTDIR, CMake translates it into a Win32 path and strip the
+    # drive letter from it.
+    CMAKE_HOST_PREFIX := $(shell echo $(HOST_PREFIX_NATIVE) | $(SED) -e 's/^[a-zA-Z]://')
+    CMAKE_ROOT_PREFIX := $(shell echo $(ROOT_PREFIX_NATIVE) | $(SED) -e 's/^[a-zA-Z]://')
+  endif
   ifeq ($(MXE_SYSTEM),msvc)
     MXE_AR := ar
     MXE_RANLIB := true
@@ -218,10 +235,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     HOST_AND_BUILD_CONFIGURE_OPTIONS := \
 	    CC='$(MXE_CC)' CXX='$(MXE_CXX)' F77='$(MXE_F77)' DLLTOOL='$(MXE_DLLTOOL)' CCAS='$(MXE_CCAS)' \
 	    CFLAGS='-O2' CXXFLAGS='-O2' ac_cv_f77_compiler_gnu=no RANLIB='$(MXE_RANLIB)'
-    # Use native paths for compiler flags. Note: at this point, we can't
-    # rely on the existence of HOST_PREFIX directory, so recompute the
-    # native path from $(PWD) instead.
-    HOST_PREFIX_NATIVE := $(shell cd $(PWD) && pwd -W)/usr
+    # Use native paths for compiler flags. 
     CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(HOST_PREFIX_NATIVE)/include'
     CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX_NATIVE)/lib'
   else
@@ -463,6 +477,36 @@ include $(patsubst %,$(TOP_DIR)/src/%.mk,$(PKGS))
 .PHONY: download
 download: $(addprefix download-,$(PKGS)) $(addprefix download-,$(BUILD_TOOLS))
 
+GENERATE_DIR_FILE_LIST = \
+    cd '$(1)' && find . -mindepth 1 -printf '%M %P\n'
+
+define GENERATE_FILE_LIST
+    [ -d '$(STAMP_DIR)' ] || mkdir -p '$(STAMP_DIR)'; \
+    echo -n > '$(STAMP_DIR)/$(1).files'; \
+    echo -n > '$(STAMP_DIR)/$(1).pkg'; \
+    if [ -d '$(2)$(HOST_PREFIX)' ]; then \
+        ($(call GENERATE_DIR_FILE_LIST,$(2)$(HOST_PREFIX))) >> '$(STAMP_DIR)/$(1).files'; \
+    fi; \
+    if [ "$(HOST_PREFIX)" != "$(CMAKE_HOST_PREFIX)" ] && [ -d '$(2)$(CMAKE_HOST_PREFIX)' ]; then \
+        ($(call GENERATE_DIR_FILE_LIST,$(2)$(CMAKE_HOST_PREFIX))) >> '$(STAMP_DIR)/$(1).files'; \
+    fi; \
+    if [ -d '$(2)$(ROOT_PREFIX)' ]; then \
+        ($(call GENERATE_DIR_FILE_LIST,$(2)$(ROOT_PREFIX))) >> '$(STAMP_DIR)/$(1).pkg'; \
+    fi; \
+    if [ "$(ROOT_PREFIX)" != "$(CMAKE_ROOT_PREFIX)" ] && [ -d '$(2)$(CMAKE_ROOT_PREFIX)' ]; then \
+        ($(call GENERATE_DIR_FILE_LIST,$(2)$(CMAKE_ROOT_PREFIX))) >> '$(STAMP_DIR)/$(1).pkg'; \
+    fi
+endef
+
+define INSTALL_DESTDIR
+    if [ -d '$(1)$(ROOT_PREFIX)' ]; then \
+        (cd '$(1)$(ROOT_PREFIX)' && tar c .) | (cd '$(ROOT_PREFIX)' && tar x -p); \
+    fi; \
+    if [ "$(ROOT_PREFIX)" != "$(CMAKE_ROOT_PREFIX)" ] && [ -d '$(1)$(CMAKE_ROOT_PREFIX)' ]; then \
+        (cd '$(1)$(CMAKE_ROOT_PREFIX)' && tar c .) | (cd '$(ROOT_PREFIX)' && tar x -p); \
+    fi
+endef
+
 define PKG_RULE
 .PHONY: download-$(1)
 download-$(1): $(addprefix download-,$($(1)_DEPS))
@@ -518,7 +562,7 @@ $(STAMP_DIR)/$(1): $(TOP_DIR)/src/$(1).mk \
 build-only-$(1): PKG = $(1)
 build-only-$(1):
 	$(if $(value $(1)_BUILD),
-	    rm -rf   '$(2)'
+	    rm -rf   '$(2)' '$(2)-install'
 	    mkdir -p '$(2)'
 	    ( cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1),$(TAR)) ) || \
 		    $(if $(TAR2), \
@@ -531,12 +575,19 @@ build-only-$(1):
 	        (cd '$(2)/$($(1)_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
 	    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(MXE_SYSTEM)-$(1)-*.patch)),
 	        (cd '$(2)/$($(1)_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
-	    $$(call $(1)_BUILD,$(2)/$($(1)_SUBDIR),$(TOP_DIR)/src/$(1)-test)
+	    $$(call $(1)_BUILD,$(2)/$($(1)_SUBDIR),$(TOP_DIR)/src/$(1)-test,$(2)-install)
+	    if [ -d '$(2)-install' ]; then \
+                $(call GENERATE_FILE_LIST,$(1),$(2)-install); \
+                $(call INSTALL_DESTDIR,$(2)-install); \
+		(du -k -d 0 '$(2)-install' 2>/dev/null || du -k --max-depth 0 '$(2)-install') | \
+			$(SED) -n 's/^\(\S*\).*/du: \1 KiB/p'; \
+		rm -rfv  '$(2)-install'; \
+	    fi
 	    (du -k -d 0 '$(2)' 2>/dev/null || du -k --max-depth 0 '$(2)') | $(SED) -n 's/^\(\S*\).*/du: \1 KiB/p'
 	    rm -rfv  '$(2)'
 	    ,)
 	[ -d '$(STAMP_DIR)' ] || mkdir -p '$(STAMP_DIR)'
-	touch '$(STAMP_DIR)/$(1)'
+	echo $($(1)_VERSION) > '$(STAMP_DIR)/$(1)'
 endef
 $(foreach PKG,$(PKGS),$(eval $(call PKG_RULE,$(PKG),$(call TMP_DIR,$(PKG)))))
 $(foreach TOOL,$(BUILD_TOOLS),$(eval $(call PKG_RULE,$(TOOL),$(call TMP_DIR,$(TOOL)))))
