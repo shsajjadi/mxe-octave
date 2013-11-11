@@ -17,8 +17,8 @@ $(PKG)_CONFIGURE_EXTRA_OPTION :=
 $(PKG)_CONFIGURE_INCLUDE_OPTION :=
 $(PKG)_CONFIGURE_LIBPATH_OPTION :=
 $(PKG)_CONFIGURE_PLATFORM_OPTION :=
-$(PKG)_PREFIX := '$(HOST_PREFIX)'
-$(PKG)_MKSPECS := '$($(PKG)_PREFIX)'
+$(PKG)_PREFIX := $(HOST_PREFIX)
+$(PKG)_MKSPECS := $($(PKG)_PREFIX)
 
 ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
   ifeq ($(MXE_NATIVE_BUILD),yes)
@@ -160,7 +160,7 @@ define $(PKG)_BUILD
       rm -f $(3)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)Qt*.dll; \
     else \
       make -C '$(1)' -j '$(JOBS)' && \
-      make -C '$(1)' -j 1 install DESTDIR='$(3)'; \
+      make -C '$(1)' -j 1 install INSTALL_ROOT='$(3)'; \
     fi
 
     # native build doesnt seem to succeed with installing pkgconfig files to prefix    
@@ -170,6 +170,7 @@ define $(PKG)_BUILD
          -e 's,\(.*\)_location=.*,\1_location=$${prefix}/bin/\1,g' \
          -e 's,\(Libs:.* -l\).*[\\/]\([A-Za-z0-9]*\),\1\2,g' \
          '{}' ';' ; \
+       $(INSTALL) -d '$(3)$(HOST_LIBDIR)/pkgconfig'; \
        cp -f '$(1)/lib/pkgconfig/'*.pc '$(3)$(HOST_LIBDIR)/pkgconfig/';  \
     fi
 
@@ -183,7 +184,7 @@ define $(PKG)_BUILD
       )
 
       # lrelease (from linguist) needed by octave for GUI build
-      $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install DESTDIR='$(3)'
+      $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install INSTALL_ROOT='$(3)'
       $(if $(filter-out yes, $(MXE_NATIVE_BUILD)),
         $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/lrelease' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'))
 endef
