@@ -47,9 +47,12 @@ define $(PKG)_BUILD
     # native mingw build doesnt want to install the files, even
     # though it logs that it did
     if [ x$(MXE_NATIVE_MINGW_BUILD) = xyes ]; then \
+      $(INSTALL) -d '$(3)$(HOST_LIBDIR)'; \
       $(INSTALL) -m644 '$(1)/libgl2ps.a' '$(3)$(HOST_LIBDIR)'; \
       $(INSTALL) -m644 '$(1)/libgl2ps.dll.a' '$(3)$(HOST_LIBDIR)'; \
+      $(INSTALL) -d '$(3)$(HOST_BINDIR)'; \
       $(INSTALL) -m644 '$(1)/libgl2ps.dll' '$(3)$(HOST_BINDIR)'; \
+      $(INSTALL) -d '$(3)$(HOST_INCDIR)'; \
       $(INSTALL) -m644 '$(1)/gl2ps.h' '$(3)$(HOST_INCDIR)'; \
     else \
       $(MAKE) -C '$(1)' -j 1 VERBOSE=1 DESTDIR='$(3)' install; \
