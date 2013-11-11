@@ -23,12 +23,13 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
 	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)/$(TARGET)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)/$(TARGET)' -j 1 install
+    $(MAKE) -C '$(1)/$(TARGET)' -j 1 install DESTDIR='$(3)'
 
     if [ $(MXE_SYSTEM) != msvc ]; then \
+        PKG_CONFIG_PATH='$(3)$(HOST_PREFIX)/lib/pkgconfig' \
         '$(MXE_CC)' \
             -W -Wall -Werror -std=c99 -pedantic \
-            '$(2).c' -o '$(HOST_BINDIR)/test-libffi.exe' \
+            '$(2).c' -o '$(3)$(HOST_BINDIR)/test-libffi.exe' \
             `'$(MXE_PKG_CONFIG)' libffi --cflags --libs`; \
     fi
 endef
