@@ -14,6 +14,8 @@ $(PKG)_DEPS     := arpack curl fftw fltk $($(PKG)_FONTCONFIG) gl2ps glpk gnuplot
 ifeq ($(ENABLE_JIT),yes)
   $(PKG)_DEPS += llvm
 $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --enable-jit
+else
+$(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --disable-jit
 endif
 
 ifeq ($(ENABLE_OPENBLAS),yes)
