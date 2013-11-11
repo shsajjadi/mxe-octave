@@ -34,6 +34,7 @@ define $(PKG)_BUILD
     rm -f '$(HOST_PREFIX)'/share/man/man3/pcre16*.3
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
     if [ $(MXE_NATIVE_BUILD) = no ]; then \
-      $(INSTALL) -m755 '$(3)$(HOST_BINDIR)/pcre-config' '$(BUILD_TOOLS_PREFIX)/bin/pcre-config'; \
+      $(INSTALL) -d '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
+      $(INSTALL) -m755 '$(3)$(HOST_BINDIR)/pcre-config' '$(3)$(BUILD_TOOLS_PREFIX)/bin/pcre-config'; \
     fi
 endef
