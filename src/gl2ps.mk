@@ -55,6 +55,7 @@ define $(PKG)_BUILD
       $(MAKE) -C '$(1)' -j 1 VERBOSE=1 DESTDIR='$(3)' install; \
       if [ $(MXE_SYSTEM) = mingw ]; then \
         echo "Install dll"; \
+        $(INSTALL) -d '$(3)$(HOST_BINDIR)'; \
         $(INSTALL) '$(1)/libgl2ps.dll' '$(3)$(HOST_BINDIR)/'; \
       fi; \
     fi
