@@ -175,6 +175,7 @@ define $(PKG)_BUILD
 
     $(if $(filter-out msvc, $(MXE_SYSTEM)),
       $(if $(filter-out yes, $(MXE_NATIVE_BUILD)),
+        $(INSTALL) -d '$(3)$(BUILD_TOOLS_PREFIX)/bin'
         $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/moc' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
         $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/rcc' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
         $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/uic' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
