@@ -48,6 +48,7 @@ define $(PKG)_BUILD
         LIBCOMMAND='$(MXE_AR) cr' \
         DESTDIR='$(3)'
     if [ $(MXE_NATIVE_BUILD) = no ]; then \
+      $(INSTALL) -d '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
       $(INSTALL) -m755 '$(3)$(HOST_BINDIR)/fltk-config' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)fltk-config'; \
     fi
 endef
