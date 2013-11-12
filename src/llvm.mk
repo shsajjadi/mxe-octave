@@ -82,7 +82,7 @@ define $(PKG)_BUILD
 
     if [ $(MXE_NATIVE_BUILD) = no ]; then \
       $(INSTALL) -d '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
-      $(INSTALL) -m755 '$(HOST_BINDIR)/llvm-config-host' '$(BUILD_TOOLS_PREFIX)/bin/llvm-config'; \
+      $(INSTALL) -m755 '$(3)$(HOST_BINDIR)/llvm-config-host' '$(3)$(BUILD_TOOLS_PREFIX)/bin/llvm-config'; \
     fi
 
     # create import lib for the dll
