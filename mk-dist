@@ -2,7 +2,8 @@
 
 set -e
 
-jobs=9
+## Override with --jobs option or set JOBS variable in settings.mk
+jobs=0
 
 OCTAVE_TARGET=octave
 
@@ -59,7 +60,11 @@ rm -rf $TOPDIR/dist
 mkdir -p $OCTAVE_DIST_DIR
 
 echo "building octave and dependencies..."
-make $OCTAVE_TARGET $INSTALLER_PKG msys-base native-gcc native-binutils octave-forge-packages npp units JOBS=$jobs
+if [ $jobs -gt 0 ]; then
+  make $OCTAVE_TARGET $INSTALLER_PKG msys-base native-gcc native-binutils octave-forge-packages npp units JOBS=$jobs
+else
+  make $OCTAVE_TARGET $INSTALLER_PKG msys-base native-gcc native-binutils octave-forge-packages npp units
+fi
 
 echo "generating lists of files to exclude..."
 
