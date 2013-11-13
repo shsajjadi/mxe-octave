@@ -3,7 +3,7 @@
 
 PKG             := octave
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 9f874295fcbf885714f6026018eb29619d1fc0a4
+$(PKG)_CHECKSUM := aafffd56ebc002fb6e9c1a58dee1741c86b34cbf
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://alpha.gnu.org/gnu/octave/$($(PKG)_FILE)
@@ -77,6 +77,7 @@ define $(PKG)_BUILD
 	$($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
 	PKG_CONFIG='$(MXE_PKG_CONFIG)' \
 	PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
+        --disable-java \
         && $($(PKG)_CONFIGURE_POST_HOOK)
 
     ## We want both of these install steps so that we install in the
