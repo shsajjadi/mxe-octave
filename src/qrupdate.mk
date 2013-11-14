@@ -35,6 +35,7 @@ define $(PKG)_BUILD
         F77=$(MXE_F77) \
         $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+	$(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         $($(PKG)_BLAS_OPTION) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) && $(CONFIGURE_POST_HOOK)
