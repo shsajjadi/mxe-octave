@@ -49,9 +49,12 @@ ifeq ($(MXE_SYSTEM),msvc)
   # - Skip configure test for pow and sqrt, MSVC fails to compile them
   #   because it uses intrinsics (with -O2 flag) and bump on the fake
   #   "char FUNC()" forward declaration.
+  # - Override CFLAGS and CXXFLAGS to disable some warnings.
   $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
     --enable-atomic-refcount \
-    ac_cv_func_pow=yes ac_cv_func_sqrt=yes
+    ac_cv_func_pow=yes ac_cv_func_sqrt=yes \
+    CFLAGS='-O2 -wd4244 -wd4003 -wd4005 -wd4068' \
+    CXXFLAGS='-O2 -wd4244 -wd4003 -wd4005 -wd4068'
 else
   $(PKG)_PREFIX := '$(HOST_PREFIX)'
   $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
