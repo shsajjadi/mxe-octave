@@ -35,13 +35,12 @@ define $(PKG)_BUILD
             INSTALL_ROOT=`cd $(3) && pwd -W | sed -e 's,^[a-zA-Z]:,,' -e 's,/,\\\\,g'` install; \
     else \
         $(MAKE) -C '$(1)/Qt4Qt5' -j '$(JOBS)' && \
-        $(MAKE) -C '$(1)/Qt4Qt5' -j 1 install DESTDIR='$(3)'; \
+        $(MAKE) -C '$(1)/Qt4Qt5' -j 1 install INSTALL_ROOT='$(3)'; \
     fi
 
     if [ $(MXE_SYSTEM) = mingw ]; then \
         $(INSTALL) -d '$(3)$(HOST_BINDIR)'; \
-        $(INSTALL) -m755 '$(3)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' \
-            '$(3)$(HOST_BINDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
+        $(INSTALL) -m755 '$(3)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' '$(3)$(HOST_BINDIR)/'; \
         rm -f '$(3)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
     fi
 
@@ -50,8 +49,7 @@ define $(PKG)_BUILD
     # is recreated under DESTDIR, not the MSYS hierarchy.
     if [ $(MXE_SYSTEM) = msvc ]; then \
         $(INSTALL) -d '$(3)$(CMAKE_HOST_PREFIX)/bin'; \
-        $(INSTALL) -m755 '$(3)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' \
-            '$(3)$(CMAKE_HOST_PREFIX)/bin/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
+        $(INSTALL) -m755 '$(3)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' '$(3)$(CMAKE_HOST_PREFIX)/bin/'; \
         rm -f '$(3)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
     fi
 endef
