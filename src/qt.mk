@@ -161,9 +161,12 @@ define $(PKG)_BUILD
     else \
       make -C '$(1)' -j '$(JOBS)' && \
       make -C '$(1)' -j 1 install INSTALL_ROOT='$(3)'; \
+      if [ "$(MXE_SYSTEM)" = mingw ]; then \
+        rm -f $(3)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)Qt*$(LIBRARY_SUFFIX).dll; \
+      fi \
     fi
 
-    # native build doesnt seem to succeed with installing pkgconfig files to prefix    
+    # native build doesn't seem to succeed when installing pkgconfig files to prefix    
     # in addition, .pc files have the wrong paths, mangled lib names
     if [ "$(MXE_NATIVE_MINGW_BUILD)" = yes -a "$(MXE_SYSTEM)" != msvc ]; then \
        find $(1)/lib/pkgconfig/*.pc -exec $(SED) -i \
