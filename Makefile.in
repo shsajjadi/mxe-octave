@@ -50,6 +50,10 @@ ENABLE_OPENBLAS := @ENABLE_OPENBLAS@
 # Look in lib64 directory.
 MXE_USE_LIB64_DIRECTORY := @ENABLE_LIB64_DIRECTORY@
 
+# Do not remove the temporary build directories. Set to 1 to keep them
+# around after the build step.
+KEEP_BUILD :=
+
 ## end of configuration variables.
 
 ifneq ($(MXE_NATIVE_BUILD),yes)
@@ -584,7 +588,7 @@ build-only-$(1):
 		rm -rfv  '$(2)-install'; \
 	    fi
 	    (du -k -d 0 '$(2)' 2>/dev/null || du -k --max-depth 0 '$(2)') | $(SED) -n 's/^\(\S*\).*/du: \1 KiB/p'
-	    rm -rfv  '$(2)'
+	    [ '$(KEEP_BUILD)' = '1' ] || rm -rfv  '$(2)'
 	    ,)
 	[ -d '$(STAMP_DIR)' ] || mkdir -p '$(STAMP_DIR)'
 	echo $($(1)_VERSION) > '$(STAMP_DIR)/$(1)'
