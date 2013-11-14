@@ -71,12 +71,12 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$($(PKG)_PREFIX)' \
         $($(PKG)_BLAS_OPTION) \
-	$($(PKG)_CROSS_CONFIG_OPTIONS) \
+        $($(PKG)_CROSS_CONFIG_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS) \
-	$($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
-	PKG_CONFIG='$(MXE_PKG_CONFIG)' \
-	PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
+        $($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
+        PKG_CONFIG='$(MXE_PKG_CONFIG)' \
+        PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
         && $($(PKG)_CONFIGURE_POST_HOOK)
 
     ## We want both of these install steps so that we install in the
