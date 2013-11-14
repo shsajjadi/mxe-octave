@@ -59,7 +59,8 @@ define $(PKG)_BUILD
       if [ $(MXE_SYSTEM) = mingw ]; then \
         echo "Install dll"; \
         $(INSTALL) -d '$(3)$(HOST_BINDIR)'; \
-        $(INSTALL) '$(1)/libgl2ps.dll' '$(3)$(HOST_BINDIR)/'; \
+        $(INSTALL) '$(3)$(HOST_LIBDIR)/libgl2ps.dll' '$(3)$(HOST_BINDIR)/'; \
+        rm -f '$(3)$(HOST_LIBDIR)/libgl2ps.dll'; \
       fi; \
     fi
 endef
