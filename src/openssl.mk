@@ -52,7 +52,7 @@ define $(PKG)_BUILD
                 -exec $(SED) -i -e 's,\<LIB\>,_LIB,g' -e 's,\<INCLUDE\>,_INCLUDE,g' {} \; ; \
             for f in '$(1)/util/mkdef.pl' '$(1)/Makefile.shared' '$(1)/Makefile' \
                      '$(1)/engines/Makefile' '$(1)/engines/ccgost/Makefile' \
-		     '$(1)/crypto/dso/dso_win32.c'; do \
+                     '$(1)/crypto/dso/dso_win32.c'; do \
                 $(SED) -i -e 's/@LIBRARY_PREFIX@/$(LIBRARY_PREFIX)/g' \
                           -e 's/@LIBRARY_SUFFIX@/$(LIBRARY_SUFFIX)/g' "$$f"; \
             done ; \
@@ -63,7 +63,10 @@ define $(PKG)_BUILD
         $($(PKG)_CROSS_COMPILE_MAKE_ARG) \
         RANLIB='$(MXE_RANLIB)' \
         AR='$(MXE_AR) rcu' AS='$(MXE_CCAS)' \
-	MANDIR='$(HOST_PREFIX)/share/man' \
-	HTMLDIR='$(HOST_PREFIX)/share/doc/openssl' \
-	INSTALL_PREFIX='$(3)'
+        MANDIR='$(HOST_PREFIX)/share/man' \
+        HTMLDIR='$(HOST_PREFIX)/share/doc/openssl' \
+        INSTALL_PREFIX='$(3)'
+
+    # Remove duplicate man page to "bn_internal.3"
+    rm -f $(3)$(HOST_PREFIX)/share/man/man3/bn_print.3 
 endef
