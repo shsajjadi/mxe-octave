@@ -16,7 +16,7 @@ echo "Generating installer script ... "
 cd $TOPDIR
 
 # find icon
-ICON=`find $OCTAVE_SOURCE -name octave-logo.ico -printf "%P" | sed 's,/,\\\\,g'`
+ICON=`find $OCTAVE_SOURCE -name octave-logo.ico -printf "%P" | head -1 | sed 's,/,\\\\,g'`
 
 # create installer script
 echo "; octave setup script $OCTAVE_SOURCE" > octave.nsi
@@ -37,6 +37,8 @@ Page instfiles
 
 UninstPage uninstConfirm
 Uninstpage instfiles
+
+RequestExecutionLevel admin
  
 ; file section
 Section "MainFiles"
