@@ -13,9 +13,13 @@ endif
 $(PKG)_DEPS     := arpack curl fftw fltk $($(PKG)_FONTCONFIG) gl2ps glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
 ifeq ($(ENABLE_JIT),yes)
   $(PKG)_DEPS += llvm
-$(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --enable-jit
+  $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --enable-jit
 else
-$(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --disable-jit
+   Remove $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --disable-jit
+endif
+
+ifeq ($(ENABLE_JAVA),no)
+  $(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS := --disable-java
 endif
 
 ifeq ($(ENABLE_OPENBLAS),yes)
@@ -76,6 +80,7 @@ define $(PKG)_BUILD
         $($(PKG)_BLAS_OPTION) \
         $($(PKG)_CROSS_CONFIG_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
+        $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS) \
         $($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
