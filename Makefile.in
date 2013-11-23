@@ -41,6 +41,9 @@ USE_PIC_FLAG := @USE_PIC_FLAG@
 # enabled (experimental; requires 64-bit system and compiler).
 ENABLE_64 := @ENABLE_64@
 
+# Attempt to build with support for Java.
+ENABLE_JAVA := @ENABLE_JAVA@
+
 # Attempt to build LLVM and enable Octave's experimental JIT compiler.
 ENABLE_JIT := @ENABLE_JIT@
 

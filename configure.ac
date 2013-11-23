@@ -80,6 +80,12 @@ AC_ARG_ENABLE([jit],
   [if test "$enableval" = no; then ENABLE_JIT=no; fi], [])
 AC_SUBST(ENABLE_JIT)
 
+ENABLE_JAVA=yes
+AC_ARG_ENABLE([java],
+  [AS_HELP_STRING([--disable-java], [Disable Java])],
+  [if test "$enableval" = no; then ENABLE_JAVA=no; fi], [])
+AC_SUBST(ENABLE_JAVA)
+
 MXE_NATIVE_BUILD=no
 AC_ARG_ENABLE([native-build],
   [AS_HELP_STRING([--enable-native-build],
