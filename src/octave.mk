@@ -15,7 +15,7 @@ ifeq ($(ENABLE_JIT),yes)
   $(PKG)_DEPS += llvm
   $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --enable-jit
 else
-   Remove $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --disable-jit
+  $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --disable-jit
 endif
 
 ifeq ($(ENABLE_JAVA),no)
