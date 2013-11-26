@@ -4,4 +4,4 @@
 ## time Octave starts for every user at this site.
 EXEC_PATH (cstrcat (fullfile (OCTAVE_HOME, 'notepad++'), pathsep, EXEC_PATH));
 EXEC_PATH (cstrcat (fullfile (OCTAVE_HOME, 'bin'), pathsep, EXEC_PATH));
-edit ("editor", cstrcat (fullfile (OCTAVE_HOME, 'notepad++', 'notepad++.exe'), ' %s'));
+EDITOR (fullfile (OCTAVE_HOME, 'notepad++', 'notepad++.exe'));
