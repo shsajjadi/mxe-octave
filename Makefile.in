@@ -242,9 +242,9 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     HOST_AND_BUILD_CONFIGURE_OPTIONS := \
 	    CC='$(MXE_CC)' CXX='$(MXE_CXX)' F77='$(MXE_F77)' DLLTOOL='$(MXE_DLLTOOL)' CCAS='$(MXE_CCAS)' \
 	    CFLAGS='-O2' CXXFLAGS='-O2' ac_cv_f77_compiler_gnu=no RANLIB='$(MXE_RANLIB)'
-    # Use native paths for compiler flags. 
-    CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(HOST_PREFIX_NATIVE)/include'
-    CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX_NATIVE)/lib'
+    # CLGCC wrappers automatically adjust INCLUDE and LIB variables.
+    CONFIGURE_CPPFLAGS :=
+    CONFIGURE_LDFLAGS :=
   else
     MXE_AR := ar
     MXE_RANLIB := ranlib
