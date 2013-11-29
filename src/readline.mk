@@ -24,8 +24,6 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(SED) -i 's,^ *case SIGQUIT:.*,,' '$(1)/signals.c'
-    $(SED) -i 's,^ *case SIGTSTP:.*,,' '$(1)/signals.c'
     if test x$(MXE_SYSTEM) = xmsvc; then \
         for f in '$(1)/support/shlib-install' '$(1)/support/shobj-conf'; do \
             $(SED) -i -e 's/@@LIBRARY_PREFIX@@/$(LIBRARY_PREFIX)/g' \
