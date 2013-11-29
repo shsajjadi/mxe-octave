@@ -556,7 +556,6 @@ SRC_MSVCTOOLS_FILES_1 := \
   cc-msvc.cc \
   fixlibtool2.in \
   gcc.diff \
-  getopt.diff \
   gfortran-msvc.cc \
   libgfortran-dllinit.c \
   libgfortran-msvcinit.c \
