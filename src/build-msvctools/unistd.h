@@ -6,6 +6,7 @@
 #include <direct.h>
 #include <process.h>
 #include <io.h>
+#include <getopt.h>
 
 #ifndef PATH_MAX
 # define PATH_MAX 260

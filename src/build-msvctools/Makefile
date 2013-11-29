@@ -5,9 +5,8 @@ TARGETS = \
 	clg++.exe \
 	clgfortran.exe \
 	dirent.h \
-	dirent.lib \
 	getopt.h \
-	getopt.lib \
+	posixcompat.lib \
 	inttypes.h \
 	lt-postproc \
 	ranlib-msvc \
@@ -83,23 +82,17 @@ wdirent.obj: dirent.c dirent.h
 		-D_ttelldir=_wtelldir \
 		-c dirent.c -Fo$@
 
-dirent.lib: dirent.obj wdirent.obj
-	lib -out:$@ $^
-
 getopt.h:
-	$(WGET) -O $@ 'http://sourceforge.net/p/mingw/mingw-org-wsl/ci/master/tree/include/getopt.h?format=raw'
-	$(SED) -i -e 's/__MINGW_NOTHROW//g' \
-		-e 's,^.*_mingw\.h.*$$,/*&*/,' \
-		getopt.h
+	$(WGET) -O $@ 'http://sourceforge.net/p/mingw-w64/code/HEAD/tree/trunk/mingw-w64-headers/crt/getopt.h?format=raw'
+	$(SED) -i -e 's,^.*crtdefs\.h.*$$,/*&*/,' $@
 
-getopt.c: getopt.diff
-	$(WGET) -O $@ 'http://sourceforge.net/p/mingw/mingw-org-wsl/ci/master/tree/src/libcrt/misc/getopt.c?format=raw'
-	$(PATCH) -p0 < getopt.diff
+getopt.c:
+	$(WGET) -O $@ 'http://sourceforge.net/p/mingw-w64/code/HEAD/tree/trunk/mingw-w64-crt/misc/getopt.c?format=raw'
 
 getopt.obj: getopt.c getopt.h
 	cl -nologo -O2 -MD -I. -c $< -Fo$@
 
-getopt.lib: getopt.obj
+posixcompat.lib: dirent.obj wdirent.obj getopt.obj
 	lib -out:$@ $^
 
 compat/mingwcompat.lib:
@@ -183,8 +176,7 @@ install: all
 	$(INSTALL) getopt.h $(DESTDIR)/include
 	$(INSTALL) math/msvcmath.h $(DESTDIR)/include/math.h
 	$(INSTALL) -d $(DESTDIR)/lib
-	$(INSTALL) dirent.lib $(DESTDIR)/lib
-	$(INSTALL) getopt.lib $(DESTDIR)/lib
+	$(INSTALL) posixcompat.lib $(DESTDIR)/lib
 	$(INSTALL) compat/mingwcompat.lib $(DESTDIR)/lib
 	$(INSTALL) math/msvcmath.lib $(DESTDIR)/lib
 	$(INSTALL) gfortran-msvc.lib $(DESTDIR)/lib

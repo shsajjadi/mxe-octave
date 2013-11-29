@@ -857,8 +857,8 @@ int main(int argc, char **argv)
 
 	if (exeoutput && default_libs)
 	{
-		cllinkopt += " dirent.lib msvcmath.lib shell32.lib advapi32.lib user32.lib kernel32.lib";
-		linkopt += " dirent.lib msvcmath.lib shell32.lib advapi32.lib user32.lib kernel32.lib";
+		cllinkopt += " posixcompat.lib msvcmath.lib shell32.lib advapi32.lib user32.lib kernel32.lib";
+		linkopt += " posixcompat.lib msvcmath.lib shell32.lib advapi32.lib user32.lib kernel32.lib";
 	}
 
 	string opts;
