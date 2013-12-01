@@ -29,8 +29,6 @@ else
   $(PKG)_DEPS += blas
 endif
 
-$(PKG)_CONFIGURE_POST_HOOK := $(CONFIGURE_POST_HOOK) -x
-
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
   ifeq ($(ENABLE_64),yes)
@@ -85,7 +83,7 @@ define $(PKG)_BUILD
         $($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
         PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
-        && $($(PKG)_CONFIGURE_POST_HOOK)
+        && $(CONFIGURE_POST_HOOK)
 
     ## We want both of these install steps so that we install in the
     ## location set by the configure --prefix option, and the other
