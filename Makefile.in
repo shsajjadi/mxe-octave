@@ -514,6 +514,25 @@ define INSTALL_DESTDIR
     fi
 endef
 
+ifeq ($(MXE_SYSTEM),msvc)
+define OCTAVE_FORGE_PKG_BUILD
+    $(INSTALL) -d '$(3)$(HOST_PREFIX)/local/octave-$(octave_VERSION)/share/octave'
+    $(INSTALL) -d '$(3)$(HOST_PREFIX)/local/octave-$(octave_VERSION)/lib/octave'
+    cd '$(1)/..' && tar cvfz $($(PKG)_FILE) $($(PKG)_SUBDIR)
+    cd '$(1)/..' && $(HOST_PREFIX)/local/octave-$(octave_VERSION)/bin/octave-cli.exe -H -f -q \
+        --eval "more off;" \
+        --eval "pkg('prefix', '`cd "$(3)" && pwd -W`$(HOST_PREFIX)/local/octave-$(octave_VERSION)/share/octave/packages', '`cd "$(3)" && pwd -W`$(HOST_PREFIX)/local/octave-$(octave_VERSION)/lib/octave/packages');" \
+	--eval "pkg('install', '-verbose', '$($(PKG)_FILE)');"
+endef
+else
+define OCTAVE_FORGE_PKG_BUILD
+    mkdir -p '$(3)$(HOST_PREFIX)/src'
+    cd '$(1)/..' \
+      && tar cvfz $($(PKG)_FILE) $($(PKG)_SUBDIR) \
+      && $(INSTALL) -m644 '$(PKG_DIR)/$($(PKG)_FILE)' '$(3)$(HOST_PREFIX)/src'
+endef
+endif
+
 define PKG_RULE
 .PHONY: download-$(1)
 download-$(1): $(addprefix download-,$($(1)_DEPS))

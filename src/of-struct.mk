@@ -5,7 +5,7 @@ PKG             := of-struct
 $(PKG)_IGNORE   :=
 $(PKG)_CHECKSUM := 4703b20612c9e5ec48765af15c28e7a1fc90d427
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := 
+$(PKG)_SUBDIR   := struct-$($(PKG)_VERSION)
 $(PKG)_FILE     := struct-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
@@ -16,6 +16,5 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    mkdir -p '$(HOST_PREFIX)/src'
-    $(INSTALL) -m644 '$(PKG_DIR)/$($(PKG)_FILE)' '$(HOST_PREFIX)/src'
+    $(OCTAVE_FORGE_PKG_BUILD)
 endef
