@@ -5,7 +5,7 @@ PKG             := of-general
 $(PKG)_IGNORE   :=
 $(PKG)_CHECKSUM := 1662d97f0bf1be957e1a30a287d9c0aff7b5ecdd
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := 
+$(PKG)_SUBDIR   := general
 $(PKG)_FILE     := general-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
@@ -16,6 +16,5 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    mkdir -p '$(HOST_PREFIX)/src'
-    $(INSTALL) -m644 '$(PKG_DIR)/$($(PKG)_FILE)' '$(HOST_PREFIX)/src'
+    $(OCTAVE_FORGE_PKG_BUILD)
 endef

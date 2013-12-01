@@ -17,8 +17,5 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    mkdir -p '$(HOST_PREFIX)/src'
-    cd '$(1)/..' \
-      && tar czf $($(PKG)_FIXED_FILE) $($(PKG)_SUBDIR) \
-      && $(INSTALL) -m644 '$($(PKG)_FIXED_FILE)' '$(HOST_PREFIX)/src'
+    $(OCTAVE_FORGE_PKG_BUILD)
 endef

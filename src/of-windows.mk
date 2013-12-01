@@ -5,7 +5,7 @@ PKG             := of-windows
 $(PKG)_IGNORE   :=
 $(PKG)_CHECKSUM := 2270f3d64cf69d030e6825303158c18b9b94a871
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := 
+$(PKG)_SUBDIR   := Windows
 $(PKG)_FILE     := windows-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
@@ -16,6 +16,5 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    mkdir -p '$(HOST_PREFIX)/src'
-    $(INSTALL) -m644 '$(PKG_DIR)/$($(PKG)_FILE)' '$(HOST_PREFIX)/src'
+    $(OCTAVE_FORGE_PKG_BUILD)
 endef

@@ -9,7 +9,7 @@ $(PKG)_SUBDIR   := communications
 $(PKG)_FILE     := communications-$($(PKG)_VERSION).tar.gz
 $(PKG)_FIXED_FILE := communications-$($(PKG)_VERSION)a.tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
-$(PKG)_DEPS     := 
+$(PKG)_DEPS     := of-signal
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
@@ -17,8 +17,5 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    mkdir -p '$(HOST_PREFIX)/src'
-    cd '$(1)/..' \
-      && tar czf $($(PKG)_FIXED_FILE) $($(PKG)_SUBDIR) \
-      && $(INSTALL) -m644 '$($(PKG)_FIXED_FILE)' '$(HOST_PREFIX)/src'
+    $(OCTAVE_FORGE_PKG_BUILD)
 endef
