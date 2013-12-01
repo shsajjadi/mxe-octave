@@ -20,5 +20,5 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) 
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' 
-    $(MAKE) -C '$(1)' -j 1 install
+    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
 endef
