@@ -1,0 +1,371 @@
+diff -ur gcab-0.4-orig/Makefile.in gcab-0.4/Makefile.in
+--- gcab-0.4-orig/Makefile.in	2013-02-08 10:38:12 -0500
++++ gcab-0.4/Makefile.in	2013-07-13 17:02:16 -0400
+@@ -474,8 +474,8 @@
+ libgcab_1_0_la_LIBADD = -lz $(GLIB_LIBS)
+ libgcab_1_0_la_LDFLAGS = \
+ 	-version-info 0:0:0				\
+-	-Wl,--version-script=${srcdir}/libgcab.syms	\
+ 	-no-undefined					\
++	-export-symbols-regex "gcab_.*"			\
+ 	$(NULL)
+ 
+ libgcab_1_0_la_DEPENDENCIES = libgcab.syms
+diff -ur gcab-0.4-orig/gcab.c gcab-0.4/gcab.c
+--- gcab-0.4-orig/gcab.c	2013-02-08 10:34:05 -0500
++++ gcab-0.4/gcab.c	2013-07-13 16:40:01 -0400
+@@ -94,6 +94,14 @@
+         { NULL }
+     };
+ 
++    gchar *s;
++    GCancellable *cancellable;
++    GCabCabinet *cabinet;
++    GCabFolder *folder;
++    GFile *outputfile;
++    GOutputStream *output;
++    GFile *cwd;
++
+     setlocale (LC_ALL, "");
+     textdomain (GETTEXT_PACKAGE);
+     bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+@@ -105,7 +113,7 @@
+     g_set_prgname (PACKAGE_NAME);
+ 
+     context = g_option_context_new (_("- create a Cabinet file"));
+-    gchar *s = g_strdup_printf (_("Report bugs to <%s>"), PACKAGE_BUGREPORT);
++    s = g_strdup_printf (_("Report bugs to <%s>"), PACKAGE_BUGREPORT);
+     g_option_context_set_description (context, s);
+     g_free(s);
+     g_option_context_set_summary (context, _("\
+@@ -129,12 +137,8 @@
+     if (!args || args[0] == NULL)
+         gcab_error (_("cabinet file must be specified."));
+ 
+-    GCancellable *cancellable = g_cancellable_new ();
+-    GCabCabinet *cabinet = gcab_cabinet_new ();
+-    GCabFolder *folder;
+-    GFile *outputfile;
+-    GOutputStream *output;
+-    GFile *cwd;
++    cancellable = g_cancellable_new ();
++    cabinet = gcab_cabinet_new ();
+ 
+     if (list || extract) {
+         GFile *file = g_file_new_for_commandline_arg (args[0]);
+diff -ur gcab-0.4-orig/libgcab/cabinet.c gcab-0.4/libgcab/cabinet.c
+--- gcab-0.4-orig/libgcab/cabinet.c	2013-02-08 10:12:17 -0500
++++ gcab-0.4/libgcab/cabinet.c	2013-07-13 16:58:14 -0400
+@@ -388,12 +388,15 @@
+              guint8 *data, size_t size, gsize *bytes_written,
+              GCancellable *cancellable, GError **error)
+ {
++    CHECKSUM datacsum;
++    GOutputStream *stream;
++
+     if (!cdata_set(cd, type, data, size))
+         return FALSE;
+ 
+-    CHECKSUM datacsum = compute_checksum(cd->in, cd->ncbytes, 0);
++    datacsum = compute_checksum(cd->in, cd->ncbytes, 0);
+     cd->checksum = compute_checksum ((guint8*)&cd->ncbytes, 4, datacsum);
+-    GOutputStream *stream = g_filter_output_stream_get_base_stream (G_FILTER_OUTPUT_STREAM (out));
++    stream = g_filter_output_stream_get_base_stream (G_FILTER_OUTPUT_STREAM (out));
+ 
+     *bytes_written = 0;
+ 
+@@ -482,10 +485,12 @@
+     }
+ 
+     if (compression == GCAB_COMPRESSION_MSZIP) {
++        z_stream *z;
++
+         if (cd->in[0] != 'C' || cd->in[1] != 'K')
+             goto end;
+ 
+-        z_stream *z = &cd->z;
++        z = &cd->z;
+ 
+         z->avail_in = cd->ncbytes - 2;
+         z->next_in = cd->in + 2;
+diff -ur gcab-0.4-orig/libgcab/gcab-cabinet.c gcab-0.4/libgcab/gcab-cabinet.c
+--- gcab-0.4-orig/libgcab/gcab-cabinet.c	2013-02-08 10:10:26 -0500
++++ gcab-0.4/libgcab/gcab-cabinet.c	2013-07-13 16:49:56 -0400
+@@ -62,8 +62,10 @@
+ static void
+ gcab_cabinet_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
+ {
++    GCabCabinet *self;
++
+     g_return_if_fail (GCAB_IS_CABINET (object));
+-    GCabCabinet *self = GCAB_CABINET (object);
++    self = GCAB_CABINET (object);
+ 
+     switch (prop_id) {
+     case PROP_RESERVED:
+@@ -80,8 +82,10 @@
+ static void
+ gcab_cabinet_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
+ {
++    GCabCabinet *self;
++
+     g_return_if_fail (GCAB_IS_CABINET (object));
+-    GCabCabinet *self = GCAB_CABINET (object);
++    self = GCAB_CABINET (object);
+ 
+     switch (prop_id) {
+     case PROP_RESERVED:
+@@ -178,22 +182,16 @@
+                     GError **error)
+ {
+     cheader_t header = {
+-        .offsetfiles = CFI_START, // CFHEADER + 1 * CFFOLDER
+-        .nfolders = 1, // a single CAB folder is enough
++        0, 0, 0,
++        /* .offsetfiles =*/ CFI_START, // CFHEADER + 1 * CFFOLDER
++        0, 0, 0,
++        /* .nfolders =*/ 1, // a single CAB folder is enough
+     };
+     cfolder_t folder = { 0, };
+ 
+-    g_return_val_if_fail (GCAB_IS_CABINET (self), FALSE);
+-    g_return_val_if_fail (G_IS_OUTPUT_STREAM (out), FALSE);
+-    g_return_val_if_fail (G_IS_SEEKABLE (out), FALSE);
+-    g_return_val_if_fail (!cancellable || G_IS_CANCELLABLE (cancellable), FALSE);
+-    g_return_val_if_fail (!error || *error == NULL, FALSE);
+-    /* FIXME: current limitation of 1 folder */
+-    g_return_val_if_fail (self->folders->len == 1, FALSE);
+-
+-    GCabFolder *cabfolder = g_ptr_array_index (self->folders, 0);
++    GCabFolder *cabfolder;
+     GCabFile *file;
+-    gsize nfiles = gcab_folder_get_nfiles (cabfolder);
++    gsize nfiles;
+     GInputStream *in = NULL;
+     GDataOutputStream *dstream = NULL;
+     gboolean success = FALSE;
+@@ -206,6 +204,17 @@
+     cfile_t *prevf = NULL;
+     int i;
+ 
++    g_return_val_if_fail (GCAB_IS_CABINET (self), FALSE);
++    g_return_val_if_fail (G_IS_OUTPUT_STREAM (out), FALSE);
++    g_return_val_if_fail (G_IS_SEEKABLE (out), FALSE);
++    g_return_val_if_fail (!cancellable || G_IS_CANCELLABLE (cancellable), FALSE);
++    g_return_val_if_fail (!error || *error == NULL, FALSE);
++    /* FIXME: current limitation of 1 folder */
++    g_return_val_if_fail (self->folders->len == 1, FALSE);
++
++    cabfolder = g_ptr_array_index (self->folders, 0);
++    nfiles = gcab_folder_get_nfiles (cabfolder);
++
+     dstream = g_data_output_stream_new (out);
+     g_data_output_stream_set_byte_order (dstream, G_DATA_STREAM_BYTE_ORDER_LITTLE_ENDIAN);
+ 
+@@ -342,20 +351,23 @@
+                    GCancellable *cancellable,
+                    GError **error)
+ {
++    gboolean success = FALSE;
++    cheader_t cheader;
++    int i;
++    GDataInputStream *in;
++    GPtrArray *folders;
++
+     g_return_val_if_fail (GCAB_IS_CABINET (self), FALSE);
+     g_return_val_if_fail (G_IS_INPUT_STREAM (stream), FALSE);
+     g_return_val_if_fail (!cancellable || G_IS_CANCELLABLE (cancellable), FALSE);
+     g_return_val_if_fail (!error || *error == NULL, FALSE);
+     g_return_val_if_fail (self->folders->len == 0, FALSE);
+ 
+-    gboolean success = FALSE;
+-    cheader_t cheader;
+-    int i;
+-    GDataInputStream *in = g_data_input_stream_new (stream);
++    in = g_data_input_stream_new (stream);
+     g_filter_input_stream_set_close_base_stream (G_FILTER_INPUT_STREAM (in), FALSE);
+     g_data_input_stream_set_byte_order (in, G_DATA_STREAM_BYTE_ORDER_LITTLE_ENDIAN);
+ 
+-    GPtrArray *folders = self->folders;
++    folders = self->folders;
+ 
+     if (!cheader_read (&cheader, in, cancellable, error))
+         goto end;
+@@ -367,10 +379,12 @@
+ 
+     for (i = 0; i < cheader.nfolders; i++) {
+         cfolder_t cfolder = { 0, };
++        GCabFolder *folder;
++
+         if (!cfolder_read (&cfolder, cheader.res_folder, in, cancellable, error))
+             goto end;
+ 
+-        GCabFolder *folder = gcab_folder_new_with_cfolder (&cfolder, stream);
++        folder = gcab_folder_new_with_cfolder (&cfolder, stream);
+         if (cfolder.reserved)
+             g_object_set (folder, "reserved",
+                           g_byte_array_new_take (cfolder.reserved, cheader.res_folder),
+@@ -381,11 +395,14 @@
+ 
+     for (i = 0; i < cheader.nfiles; i++) {
+         cfile_t cfile = { 0, };
++        GCabFile *file;
++        GCabFolder *folder;
++
+         if (!cfile_read (&cfile, in, cancellable, error))
+             goto end;
+ 
+-        GCabFile *file = gcab_file_new_with_cfile (&cfile);
+-        GCabFolder *folder = g_ptr_array_index (folders, cfile.index);
++        file = gcab_file_new_with_cfile (&cfile);
++        folder = g_ptr_array_index (folders, cfile.index);
+         if (!gcab_folder_add_file (folder, file, FALSE, cancellable, error)) {
+             g_object_unref (file);
+             goto end;
+diff -ur gcab-0.4-orig/libgcab/gcab-file.c gcab-0.4/libgcab/gcab-file.c
+--- gcab-0.4-orig/libgcab/gcab-file.c	2013-01-17 21:20:09 -0500
++++ gcab-0.4/libgcab/gcab-file.c	2013-07-13 16:56:03 -0400
+@@ -69,8 +69,10 @@
+ static void
+ gcab_file_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
+ {
++    GCabFile *self;
++
+     g_return_if_fail (GCAB_IS_FILE (object));
+-    GCabFile *self = GCAB_FILE (object);
++    self = GCAB_FILE (object);
+ 
+     switch (prop_id) {
+     case PROP_NAME:
+@@ -88,8 +90,10 @@
+ static void
+ gcab_file_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
+ {
++    GCabFile *self;
++
+     g_return_if_fail (GCAB_IS_FILE (object));
+-    GCabFile *self = GCAB_FILE(object);
++    self = GCAB_FILE(object);
+ 
+     switch (prop_id) {
+     case PROP_NAME:
+@@ -220,11 +224,13 @@
+ G_GNUC_INTERNAL GCabFile *
+ gcab_file_new_with_cfile (const cfile_t *cfile)
+ {
++    GCabFile *file;
++
+     g_return_val_if_fail (cfile != NULL, NULL);
+ 
+-    GCabFile *file = g_object_new (GCAB_TYPE_FILE,
+-                                   "name", cfile->name,
+-                                   NULL);
++    file = g_object_new (GCAB_TYPE_FILE,
++                         "name", cfile->name,
++                         NULL);
+     file->cfile = *cfile;
+ 
+     return file;
+diff -ur gcab-0.4-orig/libgcab/gcab-folder.c gcab-0.4/libgcab/gcab-folder.c
+--- gcab-0.4-orig/libgcab/gcab-folder.c	2013-02-08 10:27:33 -0500
++++ gcab-0.4/libgcab/gcab-folder.c	2013-07-13 16:54:39 -0400
+@@ -60,8 +60,10 @@
+ static void
+ gcab_folder_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
+ {
++    GCabFolder *self;
++
+     g_return_if_fail (GCAB_IS_FOLDER (object));
+-    GCabFolder *self = GCAB_FOLDER (object);
++    self = GCAB_FOLDER (object);
+ 
+     switch (prop_id) {
+     case PROP_COMPTYPE:
+@@ -81,8 +83,10 @@
+ static void
+ gcab_folder_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
+ {
++    GCabFolder *self;
++
+     g_return_if_fail (GCAB_IS_FOLDER (object));
+-    GCabFolder *self = GCAB_FOLDER (object);
++    self = GCAB_FOLDER (object);
+ 
+     switch (prop_id) {
+     case PROP_COMPRESSION:
+@@ -164,10 +168,12 @@
+     GFileType file_type = g_file_info_get_file_type (info);
+ 
+     if (file_type == G_FILE_TYPE_DIRECTORY) {
++        GFileEnumerator *dir;
++
+         if (!recurse)
+             return TRUE;
+ 
+-        GFileEnumerator *dir = g_file_enumerate_children (file->file, FILE_ATTRS, 0, NULL, error);
++        dir = g_file_enumerate_children (file->file, FILE_ATTRS, 0, NULL, error);
+         if (*error) {
+             g_warning ("Couldn't enumerate directory %s: %s", name, (*error)->message);
+             g_clear_error (error);
+@@ -227,16 +233,19 @@
+                       GError **error)
+ {
+     gboolean success;
++    GFile *gfile;
+ 
+     g_return_val_if_fail (GCAB_IS_FOLDER (self), FALSE);
+     g_return_val_if_fail (GCAB_IS_FILE (file), FALSE);
+     g_return_val_if_fail (!error || *error == NULL, FALSE);
+ 
+-    GFile *gfile = gcab_file_get_file (file);
++    gfile = gcab_file_get_file (file);
+     if (gfile) {
++        GFileInfo *info;
++
+         g_return_val_if_fail (G_IS_FILE (gfile), FALSE);
+ 
+-        GFileInfo *info = g_file_query_info (gfile, FILE_ATTRS, 0, NULL, error);
++        info = g_file_query_info (gfile, FILE_ATTRS, 0, NULL, error);
+         if (*error)
+             return FALSE;
+ 
+@@ -351,18 +360,24 @@
+ 
+     for (f = files; f != NULL; f = f->next) {
+         GCabFile *file = f->data;
++        gchar *fname;
++        int i = 0, len;
++        GFile *gfile;
++        GFile *parent;
++        u4 usize;
++        u4 uoffset;
+ 
+         if (file_callback && !file_callback (file, callback_data))
+             continue;
+ 
+-        gchar *fname = g_strdup (gcab_file_get_extract_name (file));
+-        int i = 0, len = strlen (fname);
++        fname = g_strdup (gcab_file_get_extract_name (file));
++        len = strlen (fname);
+         for (i = 0; i < len; i++)
+             if (fname[i] == '\\')
+                 fname[i] = '/';
+ 
+-        GFile *gfile = g_file_resolve_relative_path (path, fname);
+-        GFile *parent = g_file_get_parent (gfile);
++        gfile = g_file_resolve_relative_path (path, fname);
++        parent = g_file_get_parent (gfile);
+         g_free (fname);
+ 
+         if (!g_file_make_directory_with_parents (parent, cancellable, &my_error)) {
+@@ -383,8 +398,8 @@
+         if (!out)
+             goto end;
+ 
+-        u4 usize = file->cfile.usize;
+-        u4 uoffset = file->cfile.uoffset;
++        usize = file->cfile.usize;
++        uoffset = file->cfile.uoffset;
+         do {
+             if ((nubytes + cdata.nubytes) <= uoffset) {
+                 nubytes += cdata.nubytes;

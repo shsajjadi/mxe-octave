@@ -1,0 +1,459 @@
+diff -ur glib-2.36.3-orig/Makefile.in glib-2.36.3/Makefile.in
+--- glib-2.36.3-orig/Makefile.in	2013-06-09 18:53:44 -0400
++++ glib-2.36.3/Makefile.in	2013-07-12 14:13:58 -0400
+@@ -686,7 +686,7 @@
+ 	gio-unix-2.0.pc.in gio-windows-2.0.pc.in check-abis.sh
+ TEST_PROGS = 
+ ACLOCAL_AMFLAGS = -I m4macros ${ACLOCAL_FLAGS}
+-SUBDIRS = . m4macros glib gmodule gthread gobject gio po docs \
++SUBDIRS = . m4macros glib gmodule gthread gobject gio po \
+ 	$(am__append_1)
+ DIST_SUBDIRS = $(SUBDIRS) build $(am__append_2)
+ bin_SCRIPTS = glib-gettextize
+diff -ur glib-2.36.3-orig/configure glib-2.36.3/configure
+--- glib-2.36.3-orig/configure	2013-06-09 18:53:42 -0400
++++ glib-2.36.3/configure	2013-07-12 11:53:11 -0400
+@@ -28768,7 +28768,7 @@
+ case "$host" in
+   *-*-mingw*)
+ 
+-$as_echo "#define _GLIB_EXTERN __attribute__((visibility(\"default\"))) __declspec(dllexport) extern" >>confdefs.h
++$as_echo "#define _GLIB_EXTERN __declspec(dllexport)" >>confdefs.h
+ 
+-    CFLAGS="${CFLAGS} -fvisibility=hidden"
++    #CFLAGS="${CFLAGS} -fvisibility=hidden"
+     ;;
+diff -ur glib-2.36.3-orig/depcomp glib-2.36.3/depcomp
+--- glib-2.36.3-orig/depcomp	2013-06-09 18:53:47 -0400
++++ glib-2.36.3/depcomp	2013-07-12 12:51:38 -0400
+@@ -542,7 +542,7 @@
+   s//\1/
+   s/\\/\\\\/g
+   p
+-}' | $cygpath_u | sort -u | sed -n '
++}' | $cygpath_u | /bin/sort -u | sed -n '
+ s/ /\\ /g
+ s/\(.*\)/'"$tab"'\1 \\/p
+ s/.\(.*\) \\/\1:/
+@@ -751,7 +751,7 @@
+     esac
+   done
+   "$@" -E 2>/dev/null |
+-  sed -n '/^#line [0-9][0-9]* "\([^"]*\)"/ s::\1:p' | $cygpath_u | sort -u > "$tmpdepfile"
++  sed -n '/^#line [0-9][0-9]* "\([^"]*\)"/ s::\1:p' | $cygpath_u | /bin/sort -u > "$tmpdepfile"
+   rm -f "$depfile"
+   echo "$object : \\" > "$depfile"
+   sed < "$tmpdepfile" -n -e 's% %\\ %g' -e '/^\(.*\)$/ s::'"$tab"'\1 \\:p' >> "$depfile"
+diff -ur glib-2.36.3-orig/gio/Makefile.in glib-2.36.3/gio/Makefile.in
+--- glib-2.36.3-orig/gio/Makefile.in	2013-06-09 18:53:45 -0400
++++ glib-2.36.3/gio/Makefile.in	2013-07-12 13:09:58 -0400
+@@ -861,9 +861,9 @@
+ SUBDIRS = gdbus-2.0/codegen $(am__append_1) $(am__append_4) \
+ 	$(am__append_7) $(am__append_11) $(am__append_14) . \
+ 	$(am__append_17) $(am__append_24)
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@noinst_DATA = gio-2.0.lib
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@install_ms_lib_cmd = $(INSTALL) gio-2.0.lib $(DESTDIR)$(libdir)
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/gio-2.0.lib
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#noinst_DATA = gio-2.0.lib
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#install_ms_lib_cmd = $(INSTALL) gio-2.0.lib $(DESTDIR)$(libdir)
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/gio-2.0.lib
+ AM_CPPFLAGS = -DG_LOG_DOMAIN=\"GLib-GIO\" $(gmodule_INCLUDES) \
+ 	$(GLIB_DEBUG_FLAGS) -DGIO_COMPILATION \
+ 	-DGIO_MODULE_DIR=\"$(GIO_MODULE_DIR)\" $(am__append_10)
+@@ -1215,7 +1215,7 @@
+ 	$(NULL)
+ 
+ libgio_2_0_la_CPPFLAGS = $(ZLIB_CFLAGS) $(AM_CPPFLAGS)
+-@PLATFORM_WIN32_TRUE@no_undefined = -no-undefined
++@PLATFORM_WIN32_TRUE@no_undefined = -no-undefined -export-symbols-regex "xXx"
+ @OS_WIN32_AND_DLL_COMPILATION_TRUE@gio_win32_res = gio-win32-res.o
+ @OS_WIN32_AND_DLL_COMPILATION_TRUE@gio_win32_res_ldflag = -Wl,$(gio_win32_res)
+ libgio_2_0_la_CFLAGS = $(AM_CFLAGS) $(GLIB_HIDDEN_VISIBILITY_CFLAGS) \
+diff -ur glib-2.36.3-orig/gio/tests/filter-cat.c glib-2.36.3/gio/tests/filter-cat.c
+--- glib-2.36.3-orig/gio/tests/filter-cat.c	2013-06-02 19:20:53 -0400
++++ glib-2.36.3/gio/tests/filter-cat.c	2013-07-12 13:27:31 -0400
+@@ -30,6 +30,15 @@
+ #include <glib.h>
+ #include <gio/gio.h>
+ 
++#ifdef _MSC_VER
++#  ifndef ssize_t
++     typedef int ssize_t;
++#  endif
++#  ifndef STDOUT_FILENO
++#    define STDOUT_FILENO 1
++#  endif
++#endif
++
+ static gchar **locations = NULL;
+ static char *from_charset = NULL;
+ static char *to_charset = NULL;
+diff -ur glib-2.36.3-orig/gio/tests/gdbus-connection-loss.c glib-2.36.3/gio/tests/gdbus-connection-loss.c
+--- glib-2.36.3-orig/gio/tests/gdbus-connection-loss.c	2013-06-09 18:03:17 -0400
++++ glib-2.36.3/gio/tests/gdbus-connection-loss.c	2013-07-12 13:58:40 -0400
+@@ -124,7 +124,7 @@
+   g_assert (g_spawn_command_line_async ("./gdbus-testserver", NULL));
+ 
+   /* wait for the service to come up */
+-  usleep (500 * 1000);
++  g_usleep (500 * 1000);
+ 
+   /* Create the connection in the main thread */
+   error = NULL;
+diff -ur glib-2.36.3-orig/gio/tests/gdbus-threading.c glib-2.36.3/gio/tests/gdbus-threading.c
+--- glib-2.36.3-orig/gio/tests/gdbus-threading.c	2013-06-09 18:03:17 -0400
++++ glib-2.36.3/gio/tests/gdbus-threading.c	2013-07-12 13:57:58 -0400
+@@ -590,7 +590,7 @@
+   g_assert (g_spawn_command_line_async ("./gdbus-testserver", NULL));
+ 
+   /* wait for the service to come up */
+-  usleep (500 * 1000);
++  g_usleep (500 * 1000);
+ 
+   /* Create the connection in the main thread */
+   error = NULL;
+diff -ur glib-2.36.3-orig/glib/Makefile.in glib-2.36.3/glib/Makefile.in
+--- glib-2.36.3-orig/glib/Makefile.in	2013-06-09 18:53:46 -0400
++++ glib-2.36.3/glib/Makefile.in	2013-07-12 13:09:16 -0400
+@@ -669,8 +669,7 @@
+ 	$(pcre_inc) 			\
+ 	-DG_LOG_DOMAIN=\"GLib\" 	\
+ 	$(GLIB_DEBUG_FLAGS) 		\
+-	-DGLIB_COMPILATION 		\
+-	-DPCRE_STATIC
++	-DGLIB_COMPILATION
+ 
+ AM_CFLAGS = $(GLIB_WARN_CFLAGS)
+ MIRRORING_TAB_SOURCE = \
+@@ -687,9 +686,9 @@
+ 	glib.rc
+ 
+ lib_LTLIBRARIES = libglib-2.0.la
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@noinst_DATA = glib-2.0.lib
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@install_ms_lib_cmd = $(INSTALL) glib-2.0.lib $(DESTDIR)$(libdir)
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/glib-2.0.lib
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#noinst_DATA = glib-2.0.lib
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#install_ms_lib_cmd = $(INSTALL) glib-2.0.lib $(DESTDIR)$(libdir)
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/glib-2.0.lib
+ deprecated_sources = \
+ 	deprecated/gallocator.c		\
+ 	deprecated/gcache.c		\
+@@ -817,7 +816,7 @@
+ 	gwin32.h	\
+ 	gprintf.h
+ 
+-@PLATFORM_WIN32_TRUE@no_undefined = -no-undefined
++@PLATFORM_WIN32_TRUE@no_undefined = -no-undefined -export-symbols-regex "xXx"
+ @OS_WIN32_AND_DLL_COMPILATION_TRUE@glib_win32_res = glib-win32-res.o
+ @OS_WIN32_AND_DLL_COMPILATION_TRUE@glib_win32_res_ldflag = -Wl,$(glib_win32_res)
+ @USE_SYSTEM_PCRE_FALSE@pcre_lib = pcre/libpcre.la
+diff -ur glib-2.36.3-orig/glib/glib-init.c glib-2.36.3/glib/glib-init.c
+--- glib-2.36.3-orig/glib/glib-init.c	2013-06-09 18:03:17 -0400
++++ glib-2.36.3/glib/glib-init.c	2013-07-12 12:01:48 -0400
+@@ -31,6 +31,10 @@
+ #include <stdio.h>
+ #include <ctype.h>
+ 
++#if defined(_MSC_VER) && !defined(strcasecmp)
++#  define strcasecmp _stricmp
++#endif
++
+ /**
+  * g_mem_gc_friendly:
+  *
+diff -ur glib-2.36.3-orig/glib/tests/gvariant.c glib-2.36.3/glib/tests/gvariant.c
+--- glib-2.36.3-orig/glib/tests/gvariant.c	2013-06-09 18:03:18 -0400
++++ glib-2.36.3/glib/tests/gvariant.c	2013-07-12 12:22:21 -0400
+@@ -32,8 +32,8 @@
+  * pointers.  it is necessary to have special support in the tests
+  * because on most machines malloc() is 8-aligned.
+  */
+-#define ALIGN_BITS (sizeof (struct { char a; union {                       \
+-                      guint64 x; void *y; gdouble z; } b; }) - 9)
++typedef struct { char a; union { guint64 x; void *y; gdouble z; } b; } ALIGN_BITS_STRUCT;
++#define ALIGN_BITS (sizeof (ALIGN_BITS_STRUCT) - 9)
+ 
+ static gboolean
+ randomly (gdouble prob)
+@@ -2195,7 +2195,7 @@
+ serialise_tree (TreeInstance       *tree,
+                 GVariantSerialised *serialised)
+ {
+-  GVariantSerialised empty = {  };
++  GVariantSerialised empty = { 0, 0, 0 };
+ 
+   *serialised = empty;
+   tree_filler (serialised, tree);
+diff -ur glib-2.36.3-orig/glib/tests/mappedfile.c glib-2.36.3/glib/tests/mappedfile.c
+--- glib-2.36.3-orig/glib/tests/mappedfile.c	2013-06-09 18:03:18 -0400
++++ glib-2.36.3/glib/tests/mappedfile.c	2013-07-12 12:24:52 -0400
+@@ -11,6 +11,10 @@
+ #include <sys/types.h>
+ #include <fcntl.h>
+ 
++#if defined(_MSC_VER) && !defined(W_OK)
++#  define W_OK 2
++#endif
++
+ static void
+ test_basic (void)
+ {
+diff -ur glib-2.36.3-orig/glib/tests/mem-overflow.c glib-2.36.3/glib/tests/mem-overflow.c
+--- glib-2.36.3-orig/glib/tests/mem-overflow.c	2013-06-09 18:03:18 -0400
++++ glib-2.36.3/glib/tests/mem-overflow.c	2013-07-12 12:29:07 -0400
+@@ -126,6 +126,7 @@
+   g_free (q);
+ }
+ 
++#ifndef _MSC_VER
+ typedef struct
+ {
+ } Empty;
+@@ -147,6 +148,7 @@
+     }
+   g_test_trap_assert_passed ();
+ }
++#endif
+ 
+ int
+ main (int   argc,
+@@ -157,7 +159,9 @@
+   g_test_bug_base ("http://bugzilla.gnome.org/");
+ 
+   g_test_add_func ("/mem/overflow", mem_overflow);
++#ifndef _MSC_VER
+   g_test_add_func ("/mem/empty-alloc", empty_alloc);
++#endif
+ 
+   return g_test_run();
+ }
+diff -ur glib-2.36.3-orig/glib/tests/strfuncs.c glib-2.36.3/glib/tests/strfuncs.c
+--- glib-2.36.3-orig/glib/tests/strfuncs.c	2013-06-02 19:20:53 -0400
++++ glib-2.36.3/glib/tests/strfuncs.c	2013-07-12 12:34:53 -0400
+@@ -983,11 +983,13 @@
+   check_strtod_string ("-infinity", -our_inf, FALSE, 0);
+   check_strtod_string ("-.75,0", -0.75, TRUE, 4);
+   
++#ifndef _MSC_VER
+   d = 179769313486231570814527423731704356798070567525844996598917476803157260780028538760589558632766878171540458953514382464234321326889464182768467546703537516986049910576551282076245490090389328944075868508455133942304583236903222948165808559332123348274797826204144723168738177180919299881250404026184124858368.0;
+   g_assert (d == g_ascii_strtod (g_ascii_dtostr (buffer, sizeof (buffer), d), NULL));
+ 
+   d = -179769313486231570814527423731704356798070567525844996598917476803157260780028538760589558632766878171540458953514382464234321326889464182768467546703537516986049910576551282076245490090389328944075868508455133942304583236903222948165808559332123348274797826204144723168738177180919299881250404026184124858368.0;
+   g_assert (d == g_ascii_strtod (g_ascii_dtostr (buffer, sizeof (buffer), d), NULL));
++#endif
+   
+   d = pow (2.0, -1024.1);
+   g_assert (d == g_ascii_strtod (g_ascii_dtostr (buffer, sizeof (buffer), d), NULL));
+diff -ur glib-2.36.3-orig/gmodule/Makefile.in glib-2.36.3/gmodule/Makefile.in
+--- glib-2.36.3-orig/gmodule/Makefile.in	2013-06-09 18:53:46 -0400
++++ glib-2.36.3/gmodule/Makefile.in	2013-07-12 13:10:55 -0400
+@@ -479,10 +479,10 @@
+ libglib = $(top_builddir)/glib/libglib-2.0.la
+ top_builddir_full = `cd \$(top_builddir); pwd`
+ lib_LTLIBRARIES = libgmodule-2.0.la
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@noinst_DATA = gmodule-2.0.lib
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@install_ms_lib_cmd = $(INSTALL) gmodule-2.0.lib $(DESTDIR)$(libdir)
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/gmodule-2.0.lib
+-@PLATFORM_WIN32_TRUE@no_undefined = -no-undefined
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#noinst_DATA = gmodule-2.0.lib
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#install_ms_lib_cmd = $(INSTALL) gmodule-2.0.lib $(DESTDIR)$(libdir)
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/gmodule-2.0.lib
++@PLATFORM_WIN32_TRUE@no_undefined = -no-undefined -export-symbols-regex "xXx"
+ @OS_WIN32_AND_DLL_COMPILATION_TRUE@gmodule_win32_res = gmodule-win32-res.o
+ @OS_WIN32_AND_DLL_COMPILATION_TRUE@gmodule_win32_res_ldflag = -Wl,$(gmodule_win32_res)
+ libgmodule_2_0_la_CFLAGS = $(AM_CFLAGS) $(GLIB_HIDDEN_VISIBILITY_CFLAGS)
+diff -ur glib-2.36.3-orig/gobject/Makefile.in glib-2.36.3/gobject/Makefile.in
+--- glib-2.36.3-orig/gobject/Makefile.in	2013-06-09 18:53:46 -0400
++++ glib-2.36.3/gobject/Makefile.in	2013-07-12 13:11:17 -0400
+@@ -558,10 +558,10 @@
+ 
+ # libraries to compile and install
+ lib_LTLIBRARIES = libgobject-2.0.la
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@noinst_DATA = gobject-2.0.lib
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@install_ms_lib_cmd = $(INSTALL) gobject-2.0.lib $(DESTDIR)$(libdir)
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/gobject-2.0.lib
+-@PLATFORM_WIN32_TRUE@no_undefined = -no-undefined
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#noinst_DATA = gobject-2.0.lib
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#install_ms_lib_cmd = $(INSTALL) gobject-2.0.lib $(DESTDIR)$(libdir)
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/gobject-2.0.lib
++@PLATFORM_WIN32_TRUE@no_undefined = -no-undefined -export-symbols-regex "xXx"
+ @OS_WIN32_AND_DLL_COMPILATION_TRUE@gobject_win32_res = gobject-win32-res.o
+ @OS_WIN32_AND_DLL_COMPILATION_TRUE@gobject_win32_res_ldflag = -Wl,$(gobject_win32_res)
+ libgobjectincludedir = $(includedir)/glib-2.0/gobject
+diff -ur glib-2.36.3-orig/gobject/tests/param.c glib-2.36.3/gobject/tests/param.c
+--- glib-2.36.3-orig/gobject/tests/param.c	2013-06-09 18:03:18 -0400
++++ glib-2.36.3/gobject/tests/param.c	2013-07-12 13:06:13 -0400
+@@ -535,56 +535,56 @@
+ 
+ static gint valid_impl_types[48][4] = {
+                     /* a    b    c    GObject */
+-    /* 'a-' */       { },
++    /* 'a-' */       { 0 },
+     /* 'a-r' */      { 'v', 'v', '<', '<' },
+     /* 'a-w' */      { 'v', '>', '>', 'v' },
+     /* 'a-rw' */     { 'v', '=', '=', '=' },
+-    /* 'a-c */       { },
+-    /* 'a-rc' */     { },
++    /* 'a-c */       { 0 },
++    /* 'a-rc' */     { 0 },
+     /* 'a-wc' */     { 'v', '>', '>', 'v' },
+     /* 'a-rwc' */    { 'v', '=', '=', '=' },
+-    /* 'a-C */       { },
+-    /* 'a-rC' */     { },
++    /* 'a-C */       { 0 },
++    /* 'a-rC' */     { 0 },
+     /* 'a-wC' */     { 'v', '>', '>', 'v' },
+     /* 'a-rwC' */    { 'v', '=', '=', '=' },
+-    /* 'a-cC */      { },
+-    /* 'a-rcC' */    { },
+-    /* 'a-wcC' */    { },
+-    /* 'a-rwcC' */   { },
++    /* 'a-cC */      { 0 },
++    /* 'a-rcC' */    { 0 },
++    /* 'a-wcC' */    { 0 },
++    /* 'a-rwcC' */   { 0 },
+ 
+-    /* 'b-' */       { },
++    /* 'b-' */       { 0 },
+     /* 'b-r' */      { '<', 'v', '<', '<' },
+     /* 'b-w' */      { 'v', 'v', '>', 'v' },
+     /* 'b-rw' */     { '=', 'v', '=', '=' },
+-    /* 'b-c */       { },
+-    /* 'b-rc' */     { },
++    /* 'b-c */       { 0 },
++    /* 'b-rc' */     { 0 },
+     /* 'b-wc' */     { 'v', 'v', '>', 'v' },
+     /* 'b-rwc' */    { '=', 'v', '=', '=' },
+-    /* 'b-C */       { },
+-    /* 'b-rC' */     { },
++    /* 'b-C */       { 0 },
++    /* 'b-rC' */     { 0 },
+     /* 'b-wC' */     { 'v', 'v', '>', 'v' },
+     /* 'b-rwC' */    { '=', 'v', '=', '=' },
+-    /* 'b-cC */      { },
+-    /* 'b-rcC' */    { },
+-    /* 'b-wcC' */    { },
+-    /* 'b-rwcC' */   { },
++    /* 'b-cC */      { 0 },
++    /* 'b-rcC' */    { 0 },
++    /* 'b-wcC' */    { 0 },
++    /* 'b-rwcC' */   { 0 },
+ 
+-    /* 'c-' */       { },
++    /* 'c-' */       { 0 },
+     /* 'c-r' */      { '<', '<', 'v', '<' },
+     /* 'c-w' */      { '>', '>', 'v', 'v' },
+     /* 'c-rw' */     { '=', '=', 'v', '=' },
+-    /* 'c-c */       { },
+-    /* 'c-rc' */     { },
++    /* 'c-c */       { 0 },
++    /* 'c-rc' */     { 0 },
+     /* 'c-wc' */     { '>', '>', 'v', 'v' },
+     /* 'c-rwc' */    { '=', '=', 'v', '=' },
+-    /* 'c-C */       { },
+-    /* 'c-rC' */     { },
++    /* 'c-C */       { 0 },
++    /* 'c-rC' */     { 0 },
+     /* 'c-wC' */     { '>', '>', 'v', 'v' },
+     /* 'c-rwC' */    { '=', '=', 'v', '=' },
+-    /* 'c-cC */      { },
+-    /* 'c-rcC' */    { },
+-    /* 'c-wcC' */    { },
+-    /* 'c-rwcC' */   { }
++    /* 'c-cC */      { 0 },
++    /* 'c-rcC' */    { 0 },
++    /* 'c-wcC' */    { 0 },
++    /* 'c-rwcC' */   { 0 }
+ };
+ 
+ /* We also try to change the flags.  We must ensure that all
+@@ -624,16 +624,16 @@
+  */
+ static gint valid_impl_flags[16][16] = {
+                  /* ''   r    w    rw   c    rc   wc   rwc  C    rC   wC   rwC  cC   rcC  wcC  rwcC */
+-    /* '*-' */    { },
++    /* '*-' */    { 0 },
+     /* '*-r' */   { 'i', 'v', 'f', 'v', 'i', 'i', 'f', 'v', 'i', 'i', 'f', 'v', 'i', 'i', 'i', 'i' },
+     /* '*-w' */   { 'i', 'f', 'v', 'v', 'i', 'i', 'v', 'v', 'i', 'i', 'r', 'r', 'i', 'i', 'i', 'i' },
+     /* '*-rw' */  { 'i', 'f', 'f', 'v', 'i', 'i', 'f', 'v', 'i', 'i', 'f', 'r', 'i', 'i', 'i', 'i' },
+-    /* '*-c */    { },
+-    /* '*-rc' */  { },
++    /* '*-c */    { 0 },
++    /* '*-rc' */  { 0 },
+     /* '*-wc' */  { 'i', 'f', 'v', 'v', 'i', 'i', 'v', 'v', 'i', 'i', 'r', 'r', 'i', 'i', 'i', 'i' },
+     /* '*-rwc' */ { 'i', 'f', 'f', 'v', 'i', 'i', 'f', 'v', 'i', 'i', 'f', 'r', 'i', 'i', 'i', 'i' },
+-    /* '*-C */    { },
+-    /* '*-rC' */  { },
++    /* '*-C */    { 0 },
++    /* '*-rC' */  { 0 },
+     /* '*-wC' */  { 'i', 'f', 'v', 'v', 'i', 'i', 'v', 'v', 'i', 'i', 'v', 'v', 'i', 'i', 'i', 'i' },
+     /* '*-rwC' */ { 'i', 'f', 'f', 'v', 'i', 'i', 'f', 'v', 'i', 'i', 'f', 'v', 'i', 'i', 'i', 'i' },
+ };
+diff -ur glib-2.36.3-orig/gthread/Makefile.in glib-2.36.3/gthread/Makefile.in
+--- glib-2.36.3-orig/gthread/Makefile.in	2013-06-09 18:53:47 -0400
++++ glib-2.36.3/gthread/Makefile.in	2013-07-12 12:55:10 -0400
+@@ -468,9 +468,9 @@
+ libglib = $(top_builddir)/glib/libglib-2.0.la
+ top_builddir_full = `cd \$(top_builddir); pwd`
+ lib_LTLIBRARIES = libgthread-2.0.la
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@noinst_DATA = gthread-2.0.lib
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@install_ms_lib_cmd = $(INSTALL) gthread-2.0.lib $(DESTDIR)$(libdir)
+-@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/gthread-2.0.lib
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#noinst_DATA = gthread-2.0.lib
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#install_ms_lib_cmd = $(INSTALL) gthread-2.0.lib $(DESTDIR)$(libdir)
++@MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@#uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/gthread-2.0.lib
+ @PLATFORM_WIN32_TRUE@no_undefined = -no-undefined
+ @OS_WIN32_AND_DLL_COMPILATION_TRUE@export_symbols = -export-symbols $(srcdir)/gthread.def
+ @OS_WIN32_AND_DLL_COMPILATION_TRUE@gthread_def = gthread.def
+diff -ur glib-2.36.3-orig/gthread/gthread.def glib-2.36.3/gthread/gthread.def
+--- glib-2.36.3-orig/gthread/gthread.def	2011-08-15 20:51:30 -0400
++++ glib-2.36.3/gthread/gthread.def	2013-07-12 12:59:25 -0400
+@@ -1,3 +1,3 @@
+ EXPORTS
+-	g_thread_init
+-	g_thread_init_with_errorcheck_mutexes
++g_thread_init
++g_thread_init_with_errorcheck_mutexes
+diff -ur glib-2.36.3-orig/tests/libmoduletestplugin_a.c glib-2.36.3/tests/libmoduletestplugin_a.c
+--- glib-2.36.3-orig/tests/libmoduletestplugin_a.c	2013-06-02 19:20:49 -0400
++++ glib-2.36.3/tests/libmoduletestplugin_a.c	2013-07-12 14:19:02 -0400
+@@ -30,11 +30,11 @@
+ #include	<gmodule.h>
+ #include	<stdlib.h>
+ 
+-void gplugin_a_func (void);
+-void gplugin_clash_func (void);
+-void g_clash_func (void);
+-void gplugin_say_boo_func (void);
+-void gplugin_a_module_func (GModule *module);
++G_MODULE_EXPORT void gplugin_a_func (void);
++G_MODULE_EXPORT void gplugin_clash_func (void);
++G_MODULE_EXPORT void g_clash_func (void);
++G_MODULE_EXPORT void gplugin_say_boo_func (void);
++G_MODULE_EXPORT void gplugin_a_module_func (GModule *module);
+ 
+ G_MODULE_EXPORT gchar* gplugin_a_state;
+ 
+diff -ur glib-2.36.3-orig/tests/libmoduletestplugin_b.c glib-2.36.3/tests/libmoduletestplugin_b.c
+--- glib-2.36.3-orig/tests/libmoduletestplugin_b.c	2013-06-02 19:20:49 -0400
++++ glib-2.36.3/tests/libmoduletestplugin_b.c	2013-07-12 14:20:00 -0400
+@@ -31,13 +31,13 @@
+ 
+ G_MODULE_EXPORT gchar* gplugin_b_state;
+ 
+-const gchar* g_module_check_init (GModule *module);
+-void   g_module_unload (GModule *module);
++G_MODULE_EXPORT const gchar* g_module_check_init (GModule *module);
++G_MODULE_EXPORT void   g_module_unload (GModule *module);
+ 
+-void gplugin_b_func (void);
+-void gplugin_clash_func (void);
+-void g_clash_func (void);
+-void gplugin_say_boo_func (void);
++G_MODULE_EXPORT void gplugin_b_func (void);
++G_MODULE_EXPORT void gplugin_clash_func (void);
++G_MODULE_EXPORT void g_clash_func (void);
++G_MODULE_EXPORT void gplugin_say_boo_func (void);
+ 
+ G_MODULE_EXPORT const gchar*
+ g_module_check_init (GModule *module)

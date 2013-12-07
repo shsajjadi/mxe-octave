@@ -1,0 +1,179 @@
+diff -ur GraphicsMagick-1.3.17-orig/Magick++/lib/Image.cpp GraphicsMagick-1.3.17/Magick++/lib/Image.cpp
+--- GraphicsMagick-1.3.17-orig/Magick++/lib/Image.cpp	2012-04-28 15:45:16 -0400
++++ GraphicsMagick-1.3.17/Magick++/lib/Image.cpp	2013-07-18 08:44:20 -0400
+@@ -2675,7 +2675,7 @@
+ }
+ 
+ // Image file size
+-off_t Magick::Image::fileSize ( void ) const
++MagickLib::magick_off_t Magick::Image::fileSize ( void ) const
+ {
+   return GetBlobSize( constImage() );
+ }
+diff -ur GraphicsMagick-1.3.17-orig/Magick++/lib/Magick++/Image.h GraphicsMagick-1.3.17/Magick++/lib/Magick++/Image.h
+--- GraphicsMagick-1.3.17-orig/Magick++/lib/Magick++/Image.h	2012-04-28 15:45:16 -0400
++++ GraphicsMagick-1.3.17/Magick++/lib/Magick++/Image.h	2013-07-18 08:44:35 -0400
+@@ -890,7 +890,7 @@
+     std::string     fileName ( void ) const;
+ 
+     // Number of bytes of the image on disk
+-    off_t          fileSize ( void ) const;
++    MagickLib::magick_off_t          fileSize ( void ) const;
+ 
+     // Color to use when filling drawn objects
+     void            fillColor ( const Color &fillColor_ );
+diff -ur GraphicsMagick-1.3.17-orig/Makefile.in GraphicsMagick-1.3.17/Makefile.in
+--- GraphicsMagick-1.3.17-orig/Makefile.in	2012-10-13 17:32:10 -0400
++++ GraphicsMagick-1.3.17/Makefile.in	2013-07-18 08:43:30 -0400
+@@ -3399,7 +3399,7 @@
+ @WITH_MODULES_TRUE@magick_libGraphicsMagick_la_LIBADD = $(MAGICK_DEP_LIBS) $(MAGICK_LIBLTDL)
+ magick_libGraphicsMagick_la_CPPFLAGS = -I$(top_builddir)/ltdl -I$(top_srcdir)/ltdl $(LIBRARY_EXTRA_CPPFLAGS)
+ magick_libGraphicsMagick_la_LDFLAGS = \
+-	-no-undefined -export-symbols-regex ".*" \
++	-no-undefined -export-symbols-regex "xXx" \
+ 	$(MAGICK_LT_RELEASE_OPTS) \
+ 	-version-info $(MAGICK_LIBRARY_CURRENT):$(MAGICK_LIBRARY_REVISION):$(MAGICK_LIBRARY_AGE)
+ 
+@@ -3811,7 +3811,7 @@
+ 
+ # -no-undefined -export-symbols-regex ".*"
+ Magick___lib_libGraphicsMagick___la_LDFLAGS = -no-undefined \
+-	$(MAGICK_LT_RELEASE_OPTS) \
++	$(MAGICK_LT_RELEASE_OPTS) -export-symbols-regex "xXx" \
+ 	-version-info $(MAGICK_PLUS_PLUS_LIBRARY_CURRENT):$(MAGICK_PLUS_PLUS_LIBRARY_REVISION):$(MAGICK_PLUS_PLUS_LIBRARY_AGE)
+ 
+ Magick___lib_libGraphicsMagick___la_LIBADD = $(LIBMAGICK)
+@@ -3967,7 +3967,7 @@
+ 
+ LIBWAND = wand/libGraphicsMagickWand.la
+ wand_libGraphicsMagickWand_la_SOURCES = $(WAND_SOURCES)
+-wand_libGraphicsMagickWand_la_LDFLAGS = -no-undefined -export-symbols-regex ".*" \
++wand_libGraphicsMagickWand_la_LDFLAGS = -no-undefined -export-symbols-regex "xXx" \
+ 	$(MAGICK_LT_RELEASE_OPTS) \
+ 	-version-info $(MAGICK_WAND_LIBRARY_CURRENT):$(MAGICK_WAND_LIBRARY_REVISION):$(MAGICK_WAND_LIBRARY_AGE)
+ 
+@@ -9764,3 +9764,5 @@
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:
++
++$(wand_libGraphicsMagickWand_la_OBJECTS): CPPFLAGS := $(CPPFLAGS) -D_WANDLIB_
+diff -ur GraphicsMagick-1.3.17-orig/coders/msl.c GraphicsMagick-1.3.17/coders/msl.c
+--- GraphicsMagick-1.3.17-orig/coders/msl.c	2012-10-13 17:30:21 -0400
++++ GraphicsMagick-1.3.17/coders/msl.c	2013-07-18 08:43:30 -0400
+@@ -63,8 +63,6 @@
+ #if defined(MSWINDOWS)
+ #  if defined(__MINGW32__)
+ #    define _MSC_VER
+-#  else
+-#    include <win32config.h>
+ #  endif
+ #endif
+ #include <libxml/parser.h>
+diff -ur GraphicsMagick-1.3.17-orig/coders/svg.c GraphicsMagick-1.3.17/coders/svg.c
+--- GraphicsMagick-1.3.17-orig/coders/svg.c	2012-10-13 17:30:21 -0400
++++ GraphicsMagick-1.3.17/coders/svg.c	2013-07-18 08:43:30 -0400
+@@ -50,8 +50,6 @@
+ #  if defined(MSWINDOWS)
+ #    if defined(__MINGW32__)
+ #      define _MSC_VER
+-#    else
+-#      include <win32config.h>
+ #    endif
+ #  endif
+ #  include <libxml/parser.h>
+diff -ur GraphicsMagick-1.3.17-orig/coders/url.c GraphicsMagick-1.3.17/coders/url.c
+--- GraphicsMagick-1.3.17-orig/coders/url.c	2011-12-24 14:34:17 -0500
++++ GraphicsMagick-1.3.17/coders/url.c	2013-07-18 08:43:30 -0400
+@@ -46,8 +46,6 @@
+ #if defined(MSWINDOWS)
+ #  if defined(__MINGW32__)
+ #    define _MSC_VER
+-#  else
+-#    include <win32config.h>
+ #  endif
+ #endif
+ #include <libxml/parser.h>
+diff -ur GraphicsMagick-1.3.17-orig/magick/common.h GraphicsMagick-1.3.17/magick/common.h
+--- GraphicsMagick-1.3.17-orig/magick/common.h	2012-10-13 17:30:22 -0400
++++ GraphicsMagick-1.3.17/magick/common.h	2013-07-18 08:43:30 -0400
+@@ -10,6 +10,10 @@
+ #ifndef _MAGICK_COMMON_H
+ #define _MAGICK_COMMON_H
+ 
++#ifdef _MSC_VER
++#  define _VISUALC_
++#endif
++
+ #if defined(__cplusplus) || defined(c_plusplus)
+ extern "C" {
+ #endif
+diff -ur GraphicsMagick-1.3.17-orig/magick/nt_base.c GraphicsMagick-1.3.17/magick/nt_base.c
+--- GraphicsMagick-1.3.17-orig/magick/nt_base.c	2011-12-24 14:34:17 -0500
++++ GraphicsMagick-1.3.17/magick/nt_base.c	2013-07-18 08:43:30 -0400
+@@ -67,6 +67,7 @@
+   DllMain(HINSTANCE hinstDLL,DWORD fdwReason,LPVOID lpvReserved);
+ #endif
+ 
++#ifndef HAVE_DIRENT_H
+ /*
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %                                                                             %
+@@ -98,6 +99,7 @@
+   MagickFreeMemory(entry);
+   return 0;
+ }
++#endif
+ 
+ /*
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@@ -2091,6 +2093,7 @@
+   return(0);
+ }
+ 
++#ifndef HAVE_DIRENT_H
+ /*
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %                                                                             %
+@@ -2261,3 +2264,4 @@
+   return(0);
+ }
+ #endif
++#endif
+diff -ur GraphicsMagick-1.3.17-orig/magick/static.c GraphicsMagick-1.3.17/magick/static.c
+--- GraphicsMagick-1.3.17-orig/magick/static.c	2012-10-13 17:30:22 -0400
++++ GraphicsMagick-1.3.17/magick/static.c	2013-07-18 08:43:30 -0400
+@@ -255,9 +255,6 @@
+   RegisterXCImage();
+   RegisterXCFImage();
+   RegisterXPMImage();
+-#if defined(_VISUALC_)
+-  RegisterXTRNImage();
+-#endif /* defined(_VISUALC_) */
+ #if defined(HasX11)
+   RegisterXWDImage();
+ #endif /* defined(HasX11) */
+@@ -410,9 +407,6 @@
+   UnregisterXCImage();
+   UnregisterXCFImage();
+   UnregisterXPMImage();
+-#if defined(_VISUALC_)
+-  UnregisterXTRNImage();
+-#endif /* defined(_VISUALC_) */
+ #if defined(HasX11)
+   UnregisterXWDImage();
+ #endif /* defined(HasX11) */
+diff -ur GraphicsMagick-1.3.17-orig/magick/studio.h GraphicsMagick-1.3.17/magick/studio.h
+--- GraphicsMagick-1.3.17-orig/magick/studio.h	2012-10-13 17:30:22 -0400
++++ GraphicsMagick-1.3.17/magick/studio.h	2013-07-18 08:43:30 -0400
+@@ -164,6 +164,10 @@
+ #  include <pwd.h>
+ #endif
+ 
++#if defined(_MSC_VER) && defined(HAVE_DIRENT_H)
++#  include <dirent.h>
++#endif
++
+ #if !defined(S_ISDIR)
+ #  define S_ISDIR(mode) (((mode) & S_IFMT) == S_IFDIR)
+ #endif

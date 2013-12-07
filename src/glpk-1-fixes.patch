@@ -1,0 +1,23 @@
+diff -ur glpk-4.52.1.orig/configure.ac glpk-4.52.1/configure.ac
+--- glpk-4.52.1.orig/configure.ac	2013-10-18 07:53:54 -0400
++++ glpk-4.52.1/configure.ac	2013-10-18 08:00:53 -0400
+@@ -54,7 +54,7 @@
+ dnl Check for programs
+ AC_PROG_CC
+ AC_PROG_INSTALL
+-AC_PROG_LIBTOOL
++LT_INIT([win32-dll])
+ 
+ dnl Check for math library
+ AC_CHECK_LIB([m], [exp])
+diff -ur glpk-4.52.1.orig/src/Makefile.am glpk-4.52.1/src/Makefile.am
+--- glpk-4.52.1.orig/src/Makefile.am	2013-10-18 07:53:54 -0400
++++ glpk-4.52.1/src/Makefile.am	2013-10-18 08:02:15 -0400
+@@ -17,6 +17,7 @@
+ -I$(srcdir)/zlib
+ 
+ libglpk_la_LDFLAGS = \
++-no-undefined \
+ -version-info 36:1:0 \
+ -export-symbols-regex '^glp_*'
+ 

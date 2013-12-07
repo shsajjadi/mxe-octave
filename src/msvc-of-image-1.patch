@@ -1,0 +1,28 @@
+diff -ur image/src/bwlabeln.cc image-new/src/bwlabeln.cc
+--- image/src/bwlabeln.cc	2012-10-23 19:42:12 +0100
++++ image-new/src/bwlabeln.cc	2013-01-15 03:54:03 +0000
+@@ -54,13 +54,13 @@
+   if (na > nb)
+     return false;
+   octave_idx_type i = 0;
+-  while (a(i) == b(i) and i < na)
++  while (a(i) == b(i) && i < na)
+     {
+       i++;
+     }
+ 
+   if (i == na          //They're equal, but this is strict order
+-      or a(i) > b(i) )
++      || a(i) > b(i) )
+     return false;
+ 
+   return true;
+@@ -145,7 +145,7 @@
+           //The zero coordinates are the centre, and the negative ones
+           //are the ones reflected about the centre, and we don't need
+           //to consider those.
+-          if( aidx == zero or neighbours.find(-aidx) != neighbours.end() )
++          if( aidx == zero || neighbours.find(-aidx) != neighbours.end() )
+             continue;
+ 
+           neighbours.insert (aidx);

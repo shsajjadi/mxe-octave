@@ -1,0 +1,72 @@
+diff -ur pango-1.34.1-orig/configure pango-1.34.1/configure
+--- pango-1.34.1-orig/configure	2013-05-13 11:34:47 -0400
++++ pango-1.34.1/configure	2013-07-25 09:47:14 -0400
+@@ -19745,7 +19745,7 @@
+ PKGCONFIG_CAIRO_REQUIRES=
+ 
+ if test $enable_explicit_deps = yes ; then
+-  PKGCONFIG_MATH_LIBS=-lm
++  PKGCONFIG_MATH_LIBS=
+ 
+   X_LIBS="$X_LIBS $X_EXTRA_LIBS"
+ 
+diff -ur pango-1.34.1-orig/pango/Makefile.in pango-1.34.1/pango/Makefile.in
+--- pango-1.34.1-orig/pango/Makefile.in	2013-05-13 11:34:50 -0400
++++ pango-1.34.1/pango/Makefile.in	2013-07-25 09:46:13 -0400
+@@ -80,7 +80,7 @@
+ POST_UNINSTALL = :
+ build_triplet = @build@
+ host_triplet = @host@
+-@PLATFORM_WIN32_TRUE@am__append_1 = -export-symbols $(srcdir)/pango.def -Wl,pango-win32-res.o
++@PLATFORM_WIN32_TRUE@am__append_1 = -export-symbols-regex "xXx" -Wl,$(srcdir)/pango.def -Wl,pango-win32-res.o
+ @PLATFORM_WIN32_TRUE@am__append_2 = pango-win32-res.o pango.def
+ @HAVE_CAIRO_FREETYPE_TRUE@am__append_3 = freetype2
+ 
+@@ -88,21 +88,21 @@
+ @HAVE_FREETYPE_TRUE@am__append_4 = $(pangoft2_headers)
+ @HAVE_FREETYPE_TRUE@am__append_5 = libpangoft2-1.0.la
+ @HAVE_FREETYPE_TRUE@am__append_6 = PangoFT2-1.0.gir
+-@PLATFORM_WIN32_TRUE@am__append_7 = -export-symbols $(srcdir)/pangoft2.def -Wl,pangoft2-win32-res.o
++@PLATFORM_WIN32_TRUE@am__append_7 = -export-symbols-regex "xXx" -Wl,$(srcdir)/pangoft2.def -Wl,pangoft2-win32-res.o
+ @PLATFORM_WIN32_TRUE@am__append_8 = pangoft2-win32-res.o pangoft2.def
+ 
+ # ------------------- libpangoxft -------------------
+ @HAVE_XFT_TRUE@am__append_9 = $(pangoxft_headers)
+ @HAVE_XFT_TRUE@am__append_10 = libpangoxft-1.0.la
+ @HAVE_XFT_TRUE@am__append_11 = PangoXft-1.0.gir
+-@PLATFORM_WIN32_TRUE@am__append_12 = -export-symbols $(srcdir)/pangoxft.def -Wl,pangoxft-win32-res.o
++@PLATFORM_WIN32_TRUE@am__append_12 = -export-symbols-regex "xXx" -Wl,$(srcdir)/pangoxft.def -Wl,pangoxft-win32-res.o
+ @PLATFORM_WIN32_TRUE@am__append_13 = pangoxft-win32-res.o pangoxft.def
+ 
+ # ------------------- libpangocairo -------------------
+ @HAVE_CAIRO_TRUE@am__append_14 = $(pangocairo_headers)
+ @HAVE_CAIRO_TRUE@am__append_15 = libpangocairo-1.0.la
+ @HAVE_CAIRO_TRUE@am__append_16 = PangoCairo-1.0.gir
+-@HAVE_CAIRO_WIN32_TRUE@@PLATFORM_WIN32_TRUE@am__append_17 = -export-symbols $(srcdir)/pangocairo.def -Wl,pangocairo-win32-res.o
++@HAVE_CAIRO_WIN32_TRUE@@PLATFORM_WIN32_TRUE@am__append_17 = -export-symbols-regex "xXx" -Wl,$(srcdir)/pangocairo.def -Wl,pangocairo-win32-res.o
+ @HAVE_CAIRO_WIN32_TRUE@@PLATFORM_WIN32_TRUE@am__append_18 = pangocairo-win32-res.o pangocairo.def
+ @HAVE_CAIRO_WIN32_TRUE@am__append_19 = libpangowin32-$(PANGO_API_VERSION).la $(WIN32_LIBS)
+ @HAVE_CAIRO_WIN32_TRUE@am__append_20 = libpangowin32-$(PANGO_API_VERSION).la 
+@@ -135,7 +135,7 @@
+ # ------------------- libpangowin32 -------------------
+ @HAVE_WIN32_TRUE@am__append_31 = pangowin32.h
+ @HAVE_WIN32_TRUE@am__append_32 = libpangowin32-1.0.la
+-@PLATFORM_WIN32_TRUE@am__append_33 = -export-symbols $(srcdir)/pangowin32.def -Wl,pangowin32-win32-res.o
++@PLATFORM_WIN32_TRUE@am__append_33 = -export-symbols-regex "xXx" -Wl,$(srcdir)/pangowin32.def -Wl,pangowin32-win32-res.o
+ @PLATFORM_WIN32_TRUE@am__append_34 = pangowin32-win32-res.o pangowin32.def
+ bin_PROGRAMS = pango-querymodules$(EXEEXT)
+ @HAVE_XFT_TRUE@am__append_35 = libpangoxft-$(PANGO_API_VERSION).la
+diff -ur pango-1.34.1-orig/pango-view/viewer-cairo.c pango-1.34.1/pango-view/viewer-cairo.c
+--- pango-1.34.1-orig/pango-view/viewer-cairo.c	2012-08-24 15:08:22 -0400
++++ pango-1.34.1/pango-view/viewer-cairo.c	2013-07-25 09:46:13 -0400
+@@ -76,7 +76,9 @@
+ #endif /* HAVE_XFT */
+ #endif /* HAVE_CAIRO_XLIB */
+ 
+-
++#if defined (_MSC_VER) && ! defined (strcasecmp)
++#  define strcasecmp stricmp
++#endif
+ 
+ 
+ static cairo_surface_t *

@@ -1,0 +1,83 @@
+diff -ur proj-4.8.0-orig/src/Makefile.am proj-4.8.0/src/Makefile.am
+--- proj-4.8.0-orig/src/Makefile.am	2012-03-07 00:58:49 -0500
++++ proj-4.8.0/src/Makefile.am	2013-07-20 11:32:41 -0400
+@@ -22,7 +22,8 @@
+ 
+ lib_LTLIBRARIES = libproj.la
+ 
+-libproj_la_LDFLAGS = -no-undefined -version-info 7:0:7
++libproj_la_CPPFLAGS = -DBUILDING_PROJ
++libproj_la_LDFLAGS = -no-undefined -version-info 7:0:7 -Wl,proj.def -export-symbols-regex "xXx"
+ 
+ libproj_la_SOURCES = \
+ 	projects.h pj_list.h \
+diff -ur proj-4.8.0-orig/src/emess.h proj-4.8.0/src/emess.h
+--- proj-4.8.0-orig/src/emess.h	2010-12-05 11:06:29 -0500
++++ proj-4.8.0/src/emess.h	2013-07-20 11:35:24 -0400
+@@ -11,7 +11,7 @@
+ 
+ #ifdef EMESS_ROUTINE	/* use type */
+ /* for emess procedure */
+-struct EMESS emess_dat = { (char *)0, (char *)0, 0 };
++PROJ_EXPORT struct EMESS emess_dat = { (char *)0, (char *)0, 0 };
+ 
+ #ifdef sun /* Archaic SunOs 4.1.1, etc. */
+ extern char *sys_errlist[];
+@@ -20,7 +20,7 @@
+ 
+ #else	/* for for calling procedures */
+ 
+-extern struct EMESS emess_dat;
++extern PROJ_EXPORT struct EMESS emess_dat;
+ void emess(int, char *, ...);
+ 
+ #endif /* use type */
+diff -ur proj-4.8.0-orig/src/proj.def proj-4.8.0/src/proj.def
+--- proj-4.8.0-orig/src/proj.def	2011-05-04 14:50:18 -0400
++++ proj-4.8.0/src/proj.def	2013-07-20 11:38:20 -0400
+@@ -53,4 +53,8 @@
+ 	pj_ctx_set_app_data       @51
+ 	pj_ctx_get_app_data       @52
+ 	pj_log 			  @53
+-	pj_clear_initcache @54
++	pj_clear_initcache 	  @54
++
++	emess			  @55
++	nad_init		  @56
++	nad_cvt			  @57
+diff -ur proj-4.8.0-orig/src/proj_api.h proj-4.8.0/src/proj_api.h
+--- proj-4.8.0-orig/src/proj_api.h	2012-02-20 20:11:24 -0500
++++ proj-4.8.0/src/proj_api.h	2013-07-20 11:35:01 -0400
+@@ -31,6 +31,16 @@
+ #ifndef PROJ_API_H
+ #define PROJ_API_H
+ 
++#ifdef _MSC_VER
++#  ifdef BUILDING_PROJ
++#    define PROJ_EXPORT __declspec(dllexport)
++#  else
++#    define PROJ_EXPORT __declspec(dllimport)
++#  endif
++#else
++#  define PROJ_EXPORT
++#endif
++
+ /* standard inclusions */
+ #include <math.h>
+ #include <stdlib.h>
+@@ -42,13 +52,13 @@
+ /* Try to update this every version! */
+ #define PJ_VERSION 480
+ 
+-extern char const pj_release[]; /* global release id string */
++extern PROJ_EXPORT char const pj_release[]; /* global release id string */
+ 
+ #define RAD_TO_DEG	57.29577951308232
+ #define DEG_TO_RAD	.0174532925199432958
+ 
+ 
+-extern int pj_errno;	/* global error return code */
++extern PROJ_EXPORT int pj_errno;	/* global error return code */
+ 
+ #if !defined(PROJECTS_H)
+     typedef struct { double u, v; } projUV;

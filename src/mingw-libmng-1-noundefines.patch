@@ -1,0 +1,11 @@
+--- libmng-2.0.2/Makefile.am.orig	2013-10-18 22:28:44 -0400
++++ libmng-2.0.2/Makefile.am	2013-10-18 22:27:11 -0400
+@@ -8,7 +8,7 @@
+ 
+ 
+ # libmng release @VERSION@
+-libmng_la_LDFLAGS = \
++libmng_la_LDFLAGS = -no-undefined \
+ 	-version-number @MNG_MAJOR_NR@:@MNG_MINOR_NR@:@MNG_RELEASE_NR@
+ 
+ lib_LTLIBRARIES = libmng.la
