@@ -74,7 +74,7 @@ Section "Shortcuts"
  CreateDirectory "\$SMPROGRAMS\\Octave"
  CreateShortCut "\$SMPROGRAMS\\Octave\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
  CreateShortCut "\$SMPROGRAMS\Octave\\Octave.lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
- CreateShortCut "\$SMPROGRAMS\Octave\\Octave (No GUI).lnk" "\$INSTDIR\\bin\\octave-cli.exe" "" "\$INSTDIR\\$ICON" 0
+ CreateShortCut "\$SMPROGRAMS\Octave\\Octave (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
   
 SectionEnd
 
