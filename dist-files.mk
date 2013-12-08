@@ -284,6 +284,7 @@ SRC_FILES_1 := \
   mingw-hdf5-1.patch \
   mingw-pango-1-fixes.patch \
   mingw-utils-1-portability-fix.patch \
+  mingw-units-1-fixes.patch \
   mingw-utils.mk \
   mingwrt.mk \
   mpfr.mk \
@@ -453,7 +454,7 @@ SRC_FILES_1 := \
   qjson.mk \
   qrupdate-1-fixes.patch \
   qrupdate.mk \
-  qscintilla-1-matlab-blockcomments.patch \
+  qscintilla-1-fixes.patch \
   qscintilla.mk \
   qt-1-cherrypicks.patch \
   qt-1-pcre.patch \
@@ -507,6 +508,8 @@ SRC_FILES_1 := \
   tinyxml-test.cpp \
   tinyxml.mk \
   tre.mk \
+  units-1-fixes.patch \
+  units.mk \
   uuid.mk \
   vala.mk \
   vigra-test.cpp \
