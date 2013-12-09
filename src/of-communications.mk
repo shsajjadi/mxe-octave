@@ -3,11 +3,10 @@
 
 PKG             := of-communications
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 8c358c02ddd84047db62d5f36125630ea940e41b
+$(PKG)_CHECKSUM := 66ffa1bf7a9a6c0642be8ff92f712ab087b47c90
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := communications
 $(PKG)_FILE     := communications-$($(PKG)_VERSION).tar.gz
-$(PKG)_FIXED_FILE := communications-$($(PKG)_VERSION)a.tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := of-signal
 

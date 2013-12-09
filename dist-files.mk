@@ -380,7 +380,6 @@ SRC_FILES_1 := \
   ocaml-native-1-fixes.patch \
   ocaml-native.mk \
   octave.mk \
-  of-communications-1-fixes.patch \
   of-communications.mk \
   of-control.mk \
   of-general.mk \
