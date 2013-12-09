@@ -129,7 +129,7 @@ if [ $installer = "yes" ]; then
   echo "Generating installer ..."
   $TOPDIR/usr/bin/$TARGET-makensis octave.nsi > /dev/null
 
-  if [ -e Octave-Installer.exe ]; then
+  if [ -e octave-installer.exe ]; then
     echo "Installer created"
     rm octave.nsi
   fi
