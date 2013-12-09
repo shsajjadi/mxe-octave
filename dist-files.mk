@@ -687,6 +687,13 @@ DOC_FILES_1 := \
 
 DOC_FILES := $(addprefix doc/, $(DOC_FILES_1))
 
+INSTALL_FILES_1 := \
+  gpl-3.0.txt \
+  octave.bmp \
+  octave-hdr.bmp \
+  octave-logo.ico
+INSTALL_FILES := $(addprefix installer_files/, $(INSTALL_FILES_1))
+
 DIST_FILES := \
   $(SRC_FILES) \
   $(SRC_MSVCTOOLS_FILES) \
@@ -694,4 +701,5 @@ DIST_FILES := \
   $(SRC_MSVCTOOLS_MATH_FILES) \
   $(TOOLS_FILES) \
   $(FILES) \
-  $(DOC_FILES)
+  $(DOC_FILES) \
+  $(INSTALL_FILES)
