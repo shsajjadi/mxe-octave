@@ -22,6 +22,10 @@ ifeq ($(ENABLE_JAVA),no)
   $(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS := --disable-java
 endif
 
+ifeq ($(ENABLE_DOCS),yes)
+  $(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS := --enable-docs
+endif
+
 ifeq ($(ENABLE_OPENBLAS),yes)
   $(PKG)_DEPS += openblas
   $(PKG)_BLAS_OPTION := --with-blas=openblas
@@ -80,6 +84,7 @@ define $(PKG)_BUILD
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS) \
+        $($(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS) \
         $($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
         PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
@@ -89,6 +94,11 @@ define $(PKG)_BUILD
     ## location set by the configure --prefix option, and the other
     ## in a directory tree that will have just Octave files.
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
+
+    if [ "x$(ENABLE_DOCS)" == "xyes" ]; then \
+        $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(3) install-pdf install-html; \
+    fi
+
     if [ $(MXE_SYSTEM) != msvc ]; then \
         $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(TOP_DIR)/octave install; \
     fi

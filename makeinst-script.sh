@@ -15,7 +15,7 @@ echo "Generating installer script ... "
 
 cd $TOPDIR
 
-# find icon
+# find octave shortcut icon
 ICON=`find $OCTAVE_SOURCE -name octave-logo.ico -printf "%P" | head -1 | sed 's,/,\\\\,g'`
 
 # extract version number
@@ -39,7 +39,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > octave.nsi
 !define MAIN_APP_EXE "octave.exe"
 !define INSTALL_TYPE "SetShellVarContext current"
 !define PRODUCT_ROOT_KEY "HKLM"
-!define PRODUCT_KEY "Software\Octave"
+!define PRODUCT_KEY "Software\\Octave"
 
 ######################################################################
 
@@ -59,7 +59,7 @@ OutFile "\${INSTALLER_NAME}"
 BrandingText "\${APP_NAME}"
 XPStyle on
 InstallDir "C:\\Octave\\Octave-\${OCTAVE_VERSION}"
-Icon "$OCTAVE_SOURCE\\$ICON"
+Icon "\${INSTALLER_FILES}/octave-logo.ico"
 
 ######################################################################
 ; MUI settings
@@ -85,7 +85,7 @@ Icon "$OCTAVE_SOURCE\\$ICON"
 
 !insertmacro MUI_PAGE_INSTFILES
 
-!define MUI_FINISHPAGE_RUN "\$INSTDIR\bin\\\${MAIN_APP_EXE}"
+!define MUI_FINISHPAGE_RUN "\$INSTDIR\\bin\\\${MAIN_APP_EXE}"
 !insertmacro MUI_PAGE_FINISH
 
 !insertmacro MUI_UNPAGE_CONFIRM
@@ -129,7 +129,7 @@ Section make_uninstaller
  ; Write the uninstall keys for Windows
  SetOutPath "\$INSTDIR"
  WriteRegStr HKLM "Software\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave" "DisplayName" "Octave"
- WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave" "UninstallString" "\$INSTDIR\uninstall.exe"
+ WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave" "UninstallString" "\$INSTDIR\\uninstall.exe"
  WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave" "NoModify" 1
  WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave" "NoRepair" 1
  WriteUninstaller "uninstall.exe"
@@ -140,19 +140,34 @@ Section "Shortcuts"
 
  CreateDirectory "\$SMPROGRAMS\\Octave"
  CreateShortCut "\$SMPROGRAMS\\Octave\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
- CreateShortCut "\$SMPROGRAMS\Octave\\Octave.lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
- CreateShortCut "\$SMPROGRAMS\Octave\\Octave (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
-  
+ CreateShortCut "\$SMPROGRAMS\\Octave\\Octave.lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
+ CreateShortCut "\$SMPROGRAMS\\Octave\\Octave (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
+EOF
+  # if we have documentation files, create shortcuts
+  if [ -d $OCTAVE_SOURCE/share/doc/octave ]; then
+    cat >> octave.nsi << EOF
+    CreateDirectory "\$SMPROGRAMS\\Octave\\Documentation"
+    CreateShortCut "\$SMPROGRAMS\\Octave\\Documentation\\Octave C++ Classes (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.pdf" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\Octave\\Documentation\\Octave C++ Classes (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.html\\index.html" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\Octave\\Documentation\\Octave (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\octave.pdf" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\Octave\\Documentation\\Octave (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\octave.html\\index.html" "" "" 0
+EOF
+  fi
+ 
+  cat >> octave.nsi << EOF
 SectionEnd
 
 Section "Uninstall"
 
- DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Octave"
- DeleteRegKey HKLM "Software\Octave"
+ DeleteRegKey HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave"
+ DeleteRegKey HKLM "Software\\Octave"
 
  ; Remove shortcuts
- Delete "\$SMPROGRAMS\Octave\*.*"
- RMDir "\$SMPROGRAMS\Octave"
+ Delete "\$SMPROGRAMS\\Octave\\Documentation\\*.*"
+ RMDir "\$SMPROGRAMS\\Octave\\Documentation"
+
+ Delete "\$SMPROGRAMS\\Octave\\*.*"
+ RMDir "\$SMPROGRAMS\\Octave"
 
 EOF
 
@@ -197,9 +212,9 @@ is_winnt_7:
   Goto done
 is_error:
   StrCpy \$1 \$0
-  ReadRegStr \$0 HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" ProductName
+  ReadRegStr \$0 HKLM "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion" ProductName
   IfErrors 0 +4
-  ReadRegStr \$0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion" Version
+  ReadRegStr \$0 HKLM "SOFTWARE\\Microsoft\\Windows\\CurrentVersion" Version
   IfErrors 0 +2
   StrCpy \$0 "Unknown"
   MessageBox MB_ICONSTOP|MB_OK "This version of Octave cannot be installed on this system. Octave is supported only on Windows NT systems. Current system: \$0 (version: \$1)"
@@ -214,7 +229,7 @@ Function CheckPrevVersion
   Push \$0
   Push \$1
   Push \$2
-  IfFileExists "\$INSTDIR\bin\octave-\${OCTAVE_VERSION}.exe" 0 otherver
+  IfFileExists "\$INSTDIR\\bin\\octave-\${OCTAVE_VERSION}.exe" 0 otherver
   MessageBox MB_OK|MB_ICONSTOP "Another Octave installation (with the same version) has been detected. Please uninstall it first."
   Abort
 otherver:
@@ -260,13 +275,13 @@ Function CheckJRE
 
   ClearErrors
   ReadEnvStr \$R0 "JAVA_HOME"
-  StrCpy \$R0 "\$R0\bin\\\${JAVAEXE}"
+  StrCpy \$R0 "\$R0\\bin\\\${JAVAEXE}"
   IfErrors 0 continue  ;; 1) found it in JAVA_HOME
 
   ClearErrors
-  ReadRegStr \$R1 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment" "CurrentVersion"
-  ReadRegStr \$R0 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment\\\$R1" "JavaHome"
-  StrCpy \$R0 "\$R0\bin\\\${JAVAEXE}"
+  ReadRegStr \$R1 HKLM "SOFTWARE\\JavaSoft\\Java Runtime Environment" "CurrentVersion"
+  ReadRegStr \$R0 HKLM "SOFTWARE\\JavaSoft\\Java Runtime Environment\\\$R1" "JavaHome"
+  StrCpy \$R0 "\$R0\\bin\\\${JAVAEXE}"
 
   IfErrors 0 continue  ;; 2) found it in the registry
   IfErrors JRE_Error

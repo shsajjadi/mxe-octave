@@ -86,6 +86,12 @@ AC_ARG_ENABLE([java],
   [if test "$enableval" = no; then ENABLE_JAVA=no; fi], [])
 AC_SUBST(ENABLE_JAVA)
 
+ENABLE_DOCS=yes
+AC_ARG_ENABLE([docs],
+  [AS_HELP_STRING([--disable-docs], [Disable Octave docs])],
+  [if test "$enableval" = no; then ENABLE_DOCS=no; fi], [])
+AC_SUBST(ENABLE_DOCS)
+
 MXE_NATIVE_BUILD=no
 AC_ARG_ENABLE([native-build],
   [AS_HELP_STRING([--enable-native-build],

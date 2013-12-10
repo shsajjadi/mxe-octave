@@ -47,6 +47,9 @@ ENABLE_JAVA := @ENABLE_JAVA@
 # Attempt to build LLVM and enable Octave's experimental JIT compiler.
 ENABLE_JIT := @ENABLE_JIT@
 
+# Build octave docs 
+ENABLE_DOCS := @ENABLE_DOCS@
+
 # Use openblas for octave
 ENABLE_OPENBLAS := @ENABLE_OPENBLAS@
 
