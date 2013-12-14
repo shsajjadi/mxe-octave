@@ -20,6 +20,14 @@ endif
 
 ifeq ($(ENABLE_JAVA),no)
   $(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS := --disable-java
+else
+  ifeq ($(MXE_SYSTEM),mingw)
+    ifeq ($(MXE_NATIVE_BUILD),no)
+      $(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS := \
+	--with-java-homedir="$(HOST_INCDIR)/java" \
+    	--with-java-includedir="$(HOST_INCDIR)/java"
+     endif
+  endif
 endif
 
 ifeq ($(ENABLE_DOCS),yes)
@@ -73,6 +81,17 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+
+    # jni install
+    if [[ "$(MXE_SYSTEM)" == "mingw" && "$(MXE_NATIVE_BUILD)" == "no" ]]; then \
+      mkdir -p '$(HOST_INCDIR)/java/include'; \
+      $(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/share/javavm/export/jni.h \
+        -O $(HOST_INCDIR)/java/include/jni.h; \
+      mkdir -p '$(HOST_INCDIR)/java/include/win32'; \
+      $(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/windows/javavm/export/jni_md.h \
+        -O $(HOST_INCDIR)/java/include/win32/jni_md.h; \
+    fi
+
     mkdir '$(1)/.build'
     cd '$(1)' && autoreconf -W none
     cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
