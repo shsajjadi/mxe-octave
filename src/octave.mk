@@ -3,7 +3,7 @@
 
 PKG             := octave
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 030648fde42548f28a33e8bad0a281a4dd1141c8
+$(PKG)_CHECKSUM := 01bcd6522652bbe9c80d47b9d050228571ede9d7
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://alpha.gnu.org/gnu/octave/$($(PKG)_FILE)
@@ -24,8 +24,8 @@ else
   ifeq ($(MXE_SYSTEM),mingw)
     ifeq ($(MXE_NATIVE_BUILD),no)
       $(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS := \
-	--with-java-homedir="$(HOST_INCDIR)/java" \
-    	--with-java-includedir="$(HOST_INCDIR)/java"
+       --with-java-homedir="$(HOST_INCDIR)/java" \
+       --with-java-includedir="$(HOST_INCDIR)/java"
      endif
   endif
 endif
