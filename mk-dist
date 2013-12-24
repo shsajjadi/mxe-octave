@@ -100,6 +100,11 @@ echo "  msys base files..."
 cd $TOPDIR/msys-base
 tar -c -h -f - . | ( cd $OCTAVE_DIST_DIR ; tar xpf - )
 
+echo "  msys extension files..."
+cd $TOPDIR/msys-extension
+tar -c -h -f - . | ( cd $OCTAVE_DIST_DIR ; tar xpf - )
+
+
 echo "  notepad++..."
 cd $TOPDIR
 tar -c -h -f - notepad++ | ( cd $OCTAVE_DIST_DIR ; tar xpf - )
