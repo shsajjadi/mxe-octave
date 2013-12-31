@@ -61,9 +61,9 @@ mkdir -p $OCTAVE_DIST_DIR
 
 echo "building octave and dependencies..."
 if [ $jobs -gt 0 ]; then
-  make $OCTAVE_TARGET $INSTALLER_PKG msys-base native-gcc native-binutils octave-forge-packages npp units JOBS=$jobs
+  make $OCTAVE_TARGET $INSTALLER_PKG msys-base native-gcc native-binutils octave-forge-packages npp units transfig JOBS=$jobs
 else
-  make $OCTAVE_TARGET $INSTALLER_PKG msys-base native-gcc native-binutils octave-forge-packages npp units
+  make $OCTAVE_TARGET $INSTALLER_PKG msys-base native-gcc native-binutils octave-forge-packages npp units transfig
 fi
 
 echo "generating lists of files to exclude..."
