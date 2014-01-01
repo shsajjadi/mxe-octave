@@ -14,13 +14,14 @@ OCTAVE_SOURCE=`basename $ARG1`
 echo "Generating installer script ... "
 
 cd $TOPDIR
+MXEDIR=`cd ..; pwd`
 
 # find octave shortcut icon
 ICON=`find $OCTAVE_SOURCE -name octave-logo.ico -printf "%P" | head -1 | sed 's,/,\\\\,g'`
 
 # extract version number
-VERSION=`sed -n 's,.*id=\"octave-version\">\([0-9\.]*\).*,\1,p' < ../index.html`
-OCTAVE_VERSION=`sed -n 's,.*id=\"octave-version\">\([^<]*\).*,\1,p' < ../index.html`
+OCTAVE_VERSION=`head -1 $MXEDIR/octave/octave-version`
+VERSION=`echo $OCTAVE_VERSION | sed -n 's,\([0-9\.]*\).*,\1,p'`
 
 # create installer script
 echo "; octave setup script $OCTAVE_SOURCE" > octave.nsi
@@ -140,8 +141,10 @@ Section "Shortcuts"
 
  CreateDirectory "\$SMPROGRAMS\\Octave"
  CreateShortCut "\$SMPROGRAMS\\Octave\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
+ SetOutPath "\$INSTDIR\\bin"
  CreateShortCut "\$SMPROGRAMS\\Octave\\Octave.lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
- CreateShortCut "\$SMPROGRAMS\\Octave\\Octave (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
+ CreateShortCut "\$SMPROGRAMS\\Octave\\Octave (Experimental GUI).lnk" "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
+ SetOutPath "\$INSTDIR"
 EOF
   # if we have documentation files, create shortcuts
   if [ -d $OCTAVE_SOURCE/share/doc/octave ]; then

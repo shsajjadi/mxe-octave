@@ -1,0 +1,93 @@
+
+# HG changeset patch
+# User John W. Eaton <jwe@octave.org>
+# Date 1387845274 18000
+# Node ID 65e4e0569ed4ed2aa368f0048561f0b9c19d1f81
+# Parent  bce3a82a4a8de81b81a0d0f26dd8a837932b2bbb
+install octave-gui binary in libexec directory
+
+* src/Makefile.am (archlib_PROGRAMS): New variable.  List octave-gui
+* here, not in OCTAVE_BINARIES (and, ultimately, bin_PROGRAMS).
+* src/main.in.cc (OCTAVE_ARCHLIBDIR): New macro.
+(get_octave_archlibdir): New function.
+(main): New variable octave_archlibdir.  If HAVE_OCTAVE_GUI, set file
+to octave-gui in the octave_archlibdir directory.
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -52,7 +52,7 @@
+ OCTAVE_VERSION_LINKS = octave-cli-$(version)$(EXEEXT)
+ 
+ if AMCOND_BUILD_GUI
+-  OCTAVE_BINARIES += octave-gui
++  archlib_PROGRAMS = octave-gui
+   OCTAVE_VERSION_LINKS += octave-gui-$(version)$(EXEEXT)
+ endif
+ 
+diff --git a/src/main.in.cc b/src/main.in.cc
+--- a/src/main.in.cc
++++ b/src/main.in.cc
+@@ -46,6 +46,10 @@
+ #define OCTAVE_VERSION %OCTAVE_VERSION%
+ #endif
+ 
++#ifndef OCTAVE_ARCHLIBDIR
++#define OCTAVE_ARCHLIBDIR %OCTAVE_ARCHLIBDIR%
++#endif
++
+ #ifndef OCTAVE_BINDIR
+ #define OCTAVE_BINDIR %OCTAVE_BINDIR%
+ #endif
+@@ -439,6 +443,20 @@
+   return obd.empty () ? subst_octave_home (std::string (OCTAVE_BINDIR)) : obd;
+ }
+ 
++static std::string
++get_octave_archlibdir (void)
++{
++  // Accept value from the environment literally, but substitute
++  // OCTAVE_HOME in the configuration value OCTAVE_ARCHLIBDIR in case
++  // Octave has been relocated to some installation directory other than
++  // the one originally configured.
++
++  std::string dir = octave_getenv ("OCTAVE_ARCHLIBDIR");
++
++  return dir.empty ()
++    ? subst_octave_home (std::string (OCTAVE_ARCHLIBDIR)) : dir;
++}
++
+ // Adapted from libtool wrapper.
+ #if defined (__WIN32__) && ! defined (__CYGWIN__)
+ 
+@@ -593,6 +611,7 @@
+   bool gui_libs = false;
+ 
+   std::string octave_bindir = get_octave_bindir ();
++  std::string octave_archlibdir = get_octave_archlibdir ();
+ 
+   std::string file
+     = octave_bindir + dir_sep_char + "octave-cli-" OCTAVE_VERSION;;
+@@ -609,12 +628,15 @@
+         {
+           start_gui = true;
+           gui_libs = true;
+-          file = octave_bindir + dir_sep_char;
+-          #if defined (HAVE_OCTAVE_GUI)
+-            file += "octave-gui-" OCTAVE_VERSION;
+-          #else
+-            file += "octave-cli-" OCTAVE_VERSION;
+-          #endif
++#if defined (HAVE_OCTAVE_GUI)
++          // The Octave version number is already embedded in the
++          // octave_archlibdir directory name so we don't need to
++          // append it to the octave-gui file name.
++
++          file = octave_archlibdir + dir_sep_char + "octave-gui";
++#else
++          file = octave_bindir + dir_sep_char + "octave-cli-" OCTAVE_VERSION;
++#endif
+           new_argv[k++] = argv[i];
+         }
+       else if (! strcmp (argv[i], "--no-gui-libs"))
+
