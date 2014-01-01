@@ -3,7 +3,7 @@
 
 PKG             := of-control
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 5647cdd705f62d752b6e838217d8b45cf6a5f0cf
+$(PKG)_CHECKSUM := b05d69b523423ed98bf63175e21d769ed32293e3
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := control
 $(PKG)_FILE     := control-$($(PKG)_VERSION).tar.gz
