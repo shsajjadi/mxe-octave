@@ -11,3 +11,6 @@ pkg install -global -auto communications-1.2.0.tar.gz
 pkg install -global -auto image-2.0.0.tar.gz
 pkg install -global -auto io-1.2.0.tar.gz
 pkg install -global -auto statistics-1.1.3.tar.gz
+pkg install -global -auto geometry-1.7.0.tar.gz
+pkg install -global -auto windows-1.2.1.tar.gz
+
