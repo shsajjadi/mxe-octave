@@ -304,7 +304,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     MSYS_EXTENSION_VER := 1.0.13
     MSYS_BASE_DIR := $(TOP_DIR)/msys-base
     MSYS_EXTENSION_DIR := $(TOP_DIR)/msys-extension
-    MSYS_BASE_PACKAGES := $(addprefix msys-,bash coreutils diffutils dos2unix file findutils gawk grep gzip less libiconv libintl libmagic make msys-core regex sed tar termcap unzip wget)
+    MSYS_BASE_PACKAGES := $(addprefix msys-,bash coreutils diffutils dos2unix file findutils gawk grep gzip less libiconv libintl libmagic make msys-core patch regex sed tar termcap unzip wget)
 
     NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
   endif
