@@ -396,6 +396,7 @@ SRC_FILES_1 := \
   of-statistics.mk \
   of-struct.mk \
   of-windows.mk \
+  of-zenity.mk \
   ogg.mk \
   old.mk \
   openal-1-fixes.patch \
