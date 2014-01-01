@@ -1,0 +1,12 @@
+diff -ur sockets.orig/src/Makefile sockets/src/Makefile
+--- sockets.orig/src/Makefile	2013-12-31 22:17:49.000000000 -0500
++++ sockets/src/Makefile	2013-12-31 22:25:31.000000000 -0500
+@@ -14,7 +14,7 @@
+ all: $(OCT)
+ 
+ %.oct: %.cc
+-	mkoctfile $(VFLAGS) -s $<
++	mkoctfile $(VFLAGS) -s $< -lws2_32
+ 
+ test: $(OCT)
+ 	test_octave_sockets

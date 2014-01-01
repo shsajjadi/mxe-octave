@@ -282,6 +282,7 @@ SRC_FILES_1 := \
   mingw-glib-1-fixes.patch \
   mingw-glib-2-fixes.patch \
   mingw-hdf5-1.patch \
+  mingw-of-sockets-1-winsock.patch \
   mingw-pango-1-fixes.patch \
   mingw-utils-1-portability-fix.patch \
   mingw-units-1-fixes.patch \
@@ -390,6 +391,7 @@ SRC_FILES_1 := \
   of-optim-1-fixes.patch \
   of-optim.mk \
   of-signal.mk \
+  of-sockets.mk \
   of-specfun.mk \
   of-statistics.mk \
   of-struct.mk \

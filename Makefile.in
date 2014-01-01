@@ -350,7 +350,7 @@ ifeq ($(MXE_SYSTEM),msvc)
 endif
 
 OCTAVE_FORGE_BASE_URL := 'http://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
-OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim specfun general signal communications image io statistics control geometry windows odepkg linear-algebra)
+OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim specfun general signal communications image io statistics control geometry windows odepkg linear-algebra sockets)
 
 MAKE_SHARED_FROM_STATIC := \
   $(TOP_DIR)/tools/make-shared-from-static $(MAKE_SHARED_FROM_STATIC_OPTIONS)
@@ -532,7 +532,7 @@ define OCTAVE_FORGE_PKG_BUILD
     mkdir -p '$(3)$(HOST_PREFIX)/src'
     cd '$(1)/..' \
       && tar cvfz $($(PKG)_FILE) $($(PKG)_SUBDIR) \
-      && $(INSTALL) -m644 '$(PKG_DIR)/$($(PKG)_FILE)' '$(3)$(HOST_PREFIX)/src'
+      && $(INSTALL) -m644 '$($(PKG)_FILE)' '$(3)$(HOST_PREFIX)/src'
 endef
 endif
 
