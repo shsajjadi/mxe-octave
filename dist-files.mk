@@ -352,6 +352,7 @@ SRC_FILES_1 := \
   msys-libmagic.mk \
   msys-make.mk \
   msys-msys-core.mk \
+  msys-patch.mk \
   msys-regex.mk \
   msys-sed.mk \
   msys-tar.mk \
