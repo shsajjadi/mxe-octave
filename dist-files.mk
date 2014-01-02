@@ -387,6 +387,7 @@ SRC_FILES_1 := \
   of-communications.mk \
   of-control.mk \
   of-general.mk \
+  of-geometry.mk \
   of-image.mk \
   of-io.mk \
   of-miscellaneous.mk \
