@@ -17,4 +17,5 @@ pkg install -global -auto odepkg-0.8.4.tar.gz
 pkg install -global -auto linear-algebra-2.2.0.tar.gz
 pkg install -global -auto sockets-1.0.8.tar.gz
 pkg install -global -auto zenity-0.5.7.tar.gz
+pkg install -global -auto actuarial-1.1.0.tar.gz
 
