@@ -15,7 +15,6 @@ DATE=$(date +%Y-%m-%d-%H-%M)
 OCTAVE_DIST_DIR=$TOPDIR/dist/octave-$DATE
 INSTALLER_PKG=
 
-OCTAVE_VERSION=`head -1 $TOPDIR/octave/octave-version`
 
 strip=yes
 installer=no
@@ -34,7 +33,6 @@ while [ $# -gt 0 ]; do
     --stable)
       # for stable, use octave-version as the folder
       OCTAVE_TARGET=stable-octave
-      OCTAVE_DIST_DIR=$TOPDIR/dist/octave-$OCTAVE_VERSION
       shift
     ;;
     --no-strip)
@@ -60,7 +58,6 @@ fi
 
 echo "deleting previous dist directory..."
 rm -rf $TOPDIR/dist
-mkdir -p $OCTAVE_DIST_DIR
 
 echo "building octave and dependencies..."
 if [ $jobs -gt 0 ]; then
@@ -68,6 +65,16 @@ if [ $jobs -gt 0 ]; then
 else
   make $OCTAVE_TARGET $INSTALLER_PKG msys-base native-gcc native-binutils octave-forge-packages npp units transfig
 fi
+
+OCTAVE_VERSION=`head -1 $TOPDIR/octave/octave-version`
+
+if [ "$OCTAVE_TARGET" = "stable-octave" ]; then
+  # if building stable version, use the octave version number aspart of
+  # the dist name
+  OCTAVE_DIST_DIR=$TOPDIR/dist/octave-$OCTAVE_VERSION
+fi
+# make dist folder
+mkdir -p $OCTAVE_DIST_DIR
 
 echo "generating lists of files to exclude..."
 
