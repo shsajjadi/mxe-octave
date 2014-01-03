@@ -45,7 +45,6 @@ SRC_FILES_1 := \
   cunit.mk \
   curl-test.c \
   curl.mk \
-  dbus-1-fixes.patch \
   dbus.mk \
   dcmtk-1-fixes.patch \
   dcmtk.mk \
@@ -101,6 +100,7 @@ SRC_FILES_1 := \
   geos.mk \
   gettext.mk \
   giflib.mk \
+  gl2ps.mk \
   glew-test.c \
   glew.mk \
   glib.mk \
@@ -186,7 +186,6 @@ SRC_FILES_1 := \
   libf2c.mk \
   libffi-test.c \
   libffi.mk \
-  libgcrypt-1-fixes.patch \
   libgcrypt-test.c \
   libgcrypt.mk \
   libgd.mk \
@@ -225,8 +224,6 @@ SRC_FILES_1 := \
   libmikmod-1-fixes.patch \
   libmikmod-test.c \
   libmikmod.mk \
-  libmng-1-fixes.patch \
-  libmng-1-libtool.patch \
   libmng.mk \
   libmodplug-test.c \
   libmodplug.mk \
@@ -341,6 +338,7 @@ SRC_FILES_1 := \
   msys-bash.mk \
   msys-coreutils.mk \
   msys-diffutils.mk \
+  msys-dos2unix.mk \
   msys-file.mk \
   msys-findutils.mk \
   msys-gawk.mk \
@@ -359,6 +357,7 @@ SRC_FILES_1 := \
   msys-unzip.mk \
   msys-termcap.mk \
   msys-texinfo.mk \
+  msys-wget.mk \
   msys-xz.mk \
   muparser.mk \
   mxml-test.c \
@@ -383,13 +382,16 @@ SRC_FILES_1 := \
   octave.mk \
   octave-1-links.patch \
   octave-2-libexec.patch \
+  of-actuarial.mk \
   of-communications.mk \
   of-control.mk \
   of-general.mk \
   of-geometry.mk \
   of-image.mk \
   of-io.mk \
+  of-linear-algebra.mk \
   of-miscellaneous.mk \
+  of-odepkg.mk \
   of-optim-1-fixes.patch \
   of-optim.mk \
   of-signal.mk \
@@ -513,6 +515,7 @@ SRC_FILES_1 := \
   tiff.mk \
   tinyxml-test.cpp \
   tinyxml.mk \
+  transfig.mk \
   tre.mk \
   units-1-fixes.patch \
   units.mk \
@@ -686,14 +689,6 @@ FILES := \
   mk-dist \
   octaverc
 
-DOC_FILES_1 := \
-  screenshot-4th-compile.png \
-  screenshot-4th-compile-small.png \
-  screenshot-4th-run.png \
-  screenshot-4th-run-small.png
-
-DOC_FILES := $(addprefix doc/, $(DOC_FILES_1))
-
 INSTALL_FILES_1 := \
   gpl-3.0.txt \
   octave.bmp \
@@ -708,5 +703,4 @@ DIST_FILES := \
   $(SRC_MSVCTOOLS_MATH_FILES) \
   $(TOOLS_FILES) \
   $(FILES) \
-  $(DOC_FILES) \
   $(INSTALL_FILES)
