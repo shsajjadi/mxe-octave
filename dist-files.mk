@@ -386,6 +386,7 @@ SRC_FILES_1 := \
   of-communications.mk \
   of-control.mk \
   of-data-smoothing.mk \
+  of-fuzzy-logic-toolkit.mk \
   of-general.mk \
   of-geometry.mk \
   of-image.mk \
