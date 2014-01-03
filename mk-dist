@@ -6,6 +6,16 @@ set -e
 jobs=0
 
 OCTAVE_TARGET=octave
+TOPDIR=$(pwd)
+PATH=$TOPDIR/usr/bin:$PATH
+TARGET=i686-pc-mingw32
+PREFIX=/usr/$TARGET
+STRIP=$TARGET-strip
+DATE=$(date +%Y-%m-%d-%H-%M)
+OCTAVE_DIST_DIR=$TOPDIR/dist/octave-$DATE
+INSTALLER_PKG=
+
+OCTAVE_VERSION=`head -1 $TOPDIR/octave/octave-version`
 
 strip=yes
 installer=no
@@ -22,7 +32,9 @@ while [ $# -gt 0 ]; do
       fi
     ;;
     --stable)
+      # for stable, use octave-version as the folder
       OCTAVE_TARGET=stable-octave
+      OCTAVE_DIST_DIR=$TOPDIR/dist/octave-$OCTAVE_VERSION
       shift
     ;;
     --no-strip)
@@ -40,15 +52,6 @@ while [ $# -gt 0 ]; do
     ;;
   esac
 done
-
-TOPDIR=$(pwd)
-PATH=$TOPDIR/usr/bin:$PATH
-TARGET=i686-pc-mingw32
-PREFIX=/usr/$TARGET
-STRIP=$TARGET-strip
-DATE=$(date +%Y-%m-%d-%H-%M)
-OCTAVE_DIST_DIR=$TOPDIR/dist/$OCTAVE_TARGET-$DATE
-INSTALLER_PKG=
 
 if [ $installer = "yes" ]; then
   echo "Adding installer to build dependancies"
@@ -129,18 +132,18 @@ fi
 cd $TOPDIR/dist
 
 if [ $installer = "yes" ]; then
-  ../makeinst-script.sh $OCTAVE_TARGET-$DATE
+  ../makeinst-script.sh $OCTAVE_DIST_DIR
 
   echo "Generating installer ..."
   $TOPDIR/usr/bin/$TARGET-makensis octave.nsi > /dev/null
 
-  if [ -e octave-installer.exe ]; then
+  if [ -e octave-$OCTAVE_VERSION-installer.exe ]; then
     echo "Installer created"
     rm octave.nsi
   fi
 
 else
   echo "creating zip file..."
-  zip -q -9 -r $OCTAVE_TARGET-$DATE.zip $OCTAVE_TARGET-$DATE
+  zip -q -9 -r $OCTAVE_DIST_DIR.zip $OCTAVE_DIST_DIR
 fi
 
