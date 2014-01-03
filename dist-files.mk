@@ -385,6 +385,7 @@ SRC_FILES_1 := \
   of-actuarial.mk \
   of-communications.mk \
   of-control.mk \
+  of-data-smoothing.mk \
   of-general.mk \
   of-geometry.mk \
   of-image.mk \
