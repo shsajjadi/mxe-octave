@@ -8,7 +8,7 @@ $(PKG)_REMOTE_SUBDIR :=
 $(PKG)_SUBDIR   := data-smoothing
 $(PKG)_FILE     := data-smoothing-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/octave/$($(PKG)_FILE)?download
-$(PKG)_DEPS     := optim
+$(PKG)_DEPS     := of-optim
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
