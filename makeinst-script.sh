@@ -36,7 +36,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > octave.nsi
 !define COPYRIGHT "Copyright © 2013 John W. Eaton and others."
 !define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
 !define INSTALLER_FILES "../installer_files"
-!define INSTALLER_NAME "octave-installer.exe"
+!define INSTALLER_NAME "octave-$OCTAVE_VERSION-installer.exe"
 !define MAIN_APP_EXE "octave.exe"
 !define INSTALL_TYPE "SetShellVarContext current"
 !define PRODUCT_ROOT_KEY "HKLM"
@@ -85,6 +85,18 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 !insertmacro MUI_PAGE_DIRECTORY
 
 !insertmacro MUI_PAGE_INSTFILES
+
+; set up checkbox to create desktop icon
+Function finishpage_desktopshortcut
+  SetOutPath "\$INSTDIR\\bin"
+  CreateShortCut "\$desktop\\Octave-$VERSION.lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
+  CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
+FunctionEnd
+
+!define MUI_FINISHPAGE_SHOWREADME ""
+!define MUI_FINISHPAGE_SHOWREADME_CHECKED
+!define MUI_FINISHPAGE_SHOWREADME_TEXT "Create Desktop Shortcut"
+!define MUI_FINISHPAGE_SHOWREADME_FUNCTION finishpage_desktopshortcut
 
 !define MUI_FINISHPAGE_RUN "\$INSTDIR\\bin\\\${MAIN_APP_EXE}"
 !insertmacro MUI_PAGE_FINISH
@@ -172,6 +184,8 @@ Section "Uninstall"
  Delete "\$SMPROGRAMS\\Octave\\*.*"
  RMDir "\$SMPROGRAMS\\Octave"
 
+ Delete "\$desktop\\Octave-$VERSION.lnk" 
+ Delete "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" 
 EOF
 
 # insert dir list (backwards order) for uninstall files
