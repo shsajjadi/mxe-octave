@@ -3,7 +3,7 @@
 
 PKG             := postgresql
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := cea9601b3acd1484fd98441b49a15ea1c42057ec
+$(PKG)_CHECKSUM := 75b53c884cb10ed9404747b51677358f12082152
 $(PKG)_SUBDIR   := postgresql-$($(PKG)_VERSION)
 $(PKG)_FILE     := postgresql-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://ftp.postgresql.org/pub/source/v$($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -34,7 +34,7 @@ define $(PKG)_BUILD
         $($(PKG)_CONFIGURE_FLAGS_OPTION) \
         --prefix='$(HOST_PREFIX)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-        --enable-shared \
+        $(ENABLE_SHARED_OR_STATIC) \
         --disable-rpath \
         --without-tcl \
         --without-perl \
@@ -57,6 +57,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)'/src/bin/psql         -j '$(JOBS)' install haslibarule=
     $(INSTALL) -m644 '$(1)/src/include/pg_config.h'    '$(HOST_INCDIR)'
     $(INSTALL) -m644 '$(1)/src/include/postgres_ext.h' '$(HOST_INCDIR)'
+    $(INSTALL) -d    '$(HOST_INCDIR)/libpq'
+    $(INSTALL) -m644 '$(1)'/src/include/libpq/*        '$(HOST_INCDIR)/libpq/'
     # Build a native pg_config.
     $(SED) -i 's,-DVAL_,-D_DISABLED_VAL_,g' '$(1).native'/src/bin/pg_config/Makefile
     cd '$(1).native' && ./configure \
