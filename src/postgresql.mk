@@ -14,7 +14,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)
-  $(PKG)_LIGS := -lsecur32
+  $(PKG)_LIBS := -lsecur32
 endif
 
 define $(PKG)_UPDATE
@@ -52,17 +52,18 @@ define $(PKG)_BUILD
         --with-zlib \
         --with-system-tzdata=/dev/null \
         LIBS="$($(PKG)_LIBS) `'$(MXE_PKG_CONFIG)' openssl --libs`"
-    $(MAKE) -C '$(1)'/src/interfaces/libpq -j '$(JOBS)' install haslibarule=
+    $(MAKE) -C '$(1)'/src/interfaces/libpq -j '$(JOBS)' install haslibarule= DESTDIR='$(3)'
     $(MAKE) -C '$(1)'/src/port             -j '$(JOBS)'         haslibarule=
-    $(MAKE) -C '$(1)'/src/bin/psql         -j '$(JOBS)' install haslibarule=
-    $(INSTALL) -m644 '$(1)/src/include/pg_config.h'    '$(HOST_INCDIR)'
-    $(INSTALL) -m644 '$(1)/src/include/postgres_ext.h' '$(HOST_INCDIR)'
-    $(INSTALL) -d    '$(HOST_INCDIR)/libpq'
-    $(INSTALL) -m644 '$(1)'/src/include/libpq/*        '$(HOST_INCDIR)/libpq/'
+    $(MAKE) -C '$(1)'/src/bin/psql         -j '$(JOBS)' install haslibarule= DESTDIR='$(3)'
+    $(MAKE) -C '$(1)'/src/bin/pg_config    -j '$(JOBS)' install haslibarule= DESTDIR='$(3)'
+    $(INSTALL) -m644 '$(1)/src/include/pg_config.h'    '$(3)$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/src/include/postgres_ext.h' '$(3)$(HOST_INCDIR)'
+    $(INSTALL) -d    '$(3)$(HOST_INCDIR)/libpq'
+    $(INSTALL) -m644 '$(1)'/src/include/libpq/*        '$(3)$(HOST_INCDIR)/libpq/'
     # Build a native pg_config.
     $(SED) -i 's,-DVAL_,-D_DISABLED_VAL_,g' '$(1).native'/src/bin/pg_config/Makefile
     cd '$(1).native' && ./configure \
-        --prefix='$(HOST_PREFIX)' \
+        --prefix='$(BUILD_TOOLS_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-rpath \
         --without-tcl \
@@ -81,8 +82,8 @@ define $(PKG)_BUILD
         --without-zlib \
         --with-system-tzdata=/dev/null
     $(MAKE) -C '$(1).native'/src/port          -j '$(JOBS)'
-    $(MAKE) -C '$(1).native'/src/bin/pg_config -j '$(JOBS)' install
+    $(MAKE) -C '$(1).native'/src/bin/pg_config -j '$(JOBS)' install DESTDIR=$(3)
     if [ $(MXE_NATIVE_BUILD) = no ]; then \
-      $(INSTALL) -m755 '$(HOST_BINDIR)/pg_config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pg_config'; \
+      $(INSTALL) -m755 '$(3)$(BUILD_TOOLS_PREFIX)/bin/pg_config' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pg_config'; \
     fi
 endef
