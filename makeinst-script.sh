@@ -40,7 +40,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > octave.nsi
 !define MAIN_APP_EXE "octave.exe"
 !define INSTALL_TYPE "SetShellVarContext current"
 !define PRODUCT_ROOT_KEY "HKLM"
-!define PRODUCT_KEY "Software\\Octave"
+!define PRODUCT_KEY "Software\\Octave-$VERSION"
 
 ######################################################################
 
@@ -82,6 +82,7 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 !define MUI_LICENSEPAGE_BUTTON "Next >"
 !insertmacro MUI_PAGE_LICENSE "\${INSTALLER_FILES}/gpl-3.0.txt"
 
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE CheckPrevInstall
 !insertmacro MUI_PAGE_DIRECTORY
 
 !insertmacro MUI_PAGE_INSTFILES
@@ -115,7 +116,7 @@ RequestExecutionLevel admin
 
 Function .onInit
   Call DetectWinVer
-  Call CheckPrevVersion
+  Call CheckCurrVersion
   Call CheckJRE
   InitPluginsDir
 FunctionEnd
@@ -141,31 +142,32 @@ SectionEnd
 Section make_uninstaller
  ; Write the uninstall keys for Windows
  SetOutPath "\$INSTDIR"
- WriteRegStr HKLM "Software\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave" "DisplayName" "Octave"
- WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave" "UninstallString" "\$INSTDIR\\uninstall.exe"
- WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave" "NoModify" 1
- WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave" "NoRepair" 1
+ WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "DisplayName" "Octave"
+ WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "DisplayVersion" "$VERSION"
+ WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "UninstallString" "\$INSTDIR\\uninstall.exe"
+ WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "NoModify" 1
+ WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "NoRepair" 1
  WriteUninstaller "uninstall.exe"
 SectionEnd
 
 ; start menu (currently hardcoded)
 Section "Shortcuts"
 
- CreateDirectory "\$SMPROGRAMS\\Octave"
- CreateShortCut "\$SMPROGRAMS\\Octave\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
+ CreateDirectory "\$SMPROGRAMS\\Octave-$VERSION"
+ CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
  SetOutPath "\$INSTDIR\\bin"
- CreateShortCut "\$SMPROGRAMS\\Octave\\Octave.lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
- CreateShortCut "\$SMPROGRAMS\\Octave\\Octave (Experimental GUI).lnk" "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave.lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
+ CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Experimental GUI).lnk" "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
  SetOutPath "\$INSTDIR"
 EOF
   # if we have documentation files, create shortcuts
   if [ -d $OCTAVE_SOURCE/share/doc/octave ]; then
     cat >> octave.nsi << EOF
-    CreateDirectory "\$SMPROGRAMS\\Octave\\Documentation"
-    CreateShortCut "\$SMPROGRAMS\\Octave\\Documentation\\Octave C++ Classes (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.pdf" "" "" 0
-    CreateShortCut "\$SMPROGRAMS\\Octave\\Documentation\\Octave C++ Classes (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.html\\index.html" "" "" 0
-    CreateShortCut "\$SMPROGRAMS\\Octave\\Documentation\\Octave (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\octave.pdf" "" "" 0
-    CreateShortCut "\$SMPROGRAMS\\Octave\\Documentation\\Octave (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\octave.html\\index.html" "" "" 0
+    CreateDirectory "\$SMPROGRAMS\\Octave-$VERSION\\Documentation"
+    CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Documentation\\Octave C++ Classes (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.pdf" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Documentation\\Octave C++ Classes (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.html\\index.html" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Documentation\\Octave (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\octave.pdf" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Documentation\\Octave (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\octave.html\\index.html" "" "" 0
 EOF
   fi
  
@@ -174,15 +176,15 @@ SectionEnd
 
 Section "Uninstall"
 
- DeleteRegKey HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave"
- DeleteRegKey HKLM "Software\\Octave"
+ DeleteRegKey HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION"
+ DeleteRegKey HKLM "Software\\Octave-$VERSION"
 
  ; Remove shortcuts
- Delete "\$SMPROGRAMS\\Octave\\Documentation\\*.*"
- RMDir "\$SMPROGRAMS\\Octave\\Documentation"
+ Delete "\$SMPROGRAMS\\Octave-$VERSION\\Documentation\\*.*"
+ RMDir "\$SMPROGRAMS\\Octave-$VERSION\\Documentation"
 
- Delete "\$SMPROGRAMS\\Octave\\*.*"
- RMDir "\$SMPROGRAMS\\Octave"
+ Delete "\$SMPROGRAMS\\Octave-$VERSION\\*.*"
+ RMDir "\$SMPROGRAMS\\Octave-$VERSION"
 
  Delete "\$desktop\\Octave-$VERSION.lnk" 
  Delete "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" 
@@ -205,7 +207,7 @@ SectionEnd
 Function DetectWinVer
   Push \$0
   Push \$1
-  ReadRegStr \$0 HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
+  ReadRegStr \$0 HKLM "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion" CurrentVersion
   IfErrors is_error is_winnt
 is_winnt:
   StrCpy \$1 \$0 1
@@ -241,40 +243,25 @@ done:
   Pop \$0
 FunctionEnd
 
-; Function to check any previously installed version of Octave in the system
-Function CheckPrevVersion
+; Function to check whether already installed this version
+Function CheckCurrVersion
   Push \$0
-  Push \$1
-  Push \$2
-  IfFileExists "\$INSTDIR\\bin\\octave-\${OCTAVE_VERSION}.exe" 0 otherver
+  ClearErrors
+  ReadRegStr \$0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "DisplayName"
+  IfErrors curr_check_ok
   MessageBox MB_OK|MB_ICONSTOP "Another Octave installation (with the same version) has been detected. Please uninstall it first."
   Abort
-otherver:
-  StrCpy \$0 0
-  StrCpy \$2 ""
-loop:
-  EnumRegKey \$1 \${PRODUCT_ROOT_KEY} "\${PRODUCT_KEY}" \$0
-  StrCmp \$1 "" loopend
-  IntOp \$0 \$0 + 1
-  StrCmp \$2 "" 0 +2
-  StrCpy \$2 "\$1"
-  StrCpy \$2 "\$2, \$1"
-  Goto loop
-loopend:
-  ReadRegStr \$1 \${PRODUCT_ROOT_KEY} "\${PRODUCT_KEY}" "Version"
-  IfErrors finalcheck
-  StrCmp \$2 "" 0 +2
-  StrCpy \$2 "\$1"
-  StrCpy \$2 "\$2, \$1"
-finalcheck:
-  StrCmp \$2 "" done
-  MessageBox MB_YESNO|MB_ICONEXCLAMATION "Another Octave installation (version \$2) has been detected. It is recommended to uninstall it if you intend to use the same installation directory. Do you want to proceed with the installation anyway?" IDYES done IDNO 0
-  Abort
-done:
-  ClearErrors
-  Pop \$2
-  Pop \$1
+curr_check_ok:
   Pop \$0
+FunctionEnd
+
+; Check whether prev install is here
+Function CheckPrevInstall 
+  IfFileExists "\$INSTDIR\\bin\\octave.exe" inst_exists  inst_none
+inst_exists:
+  MessageBox MB_YESNO|MB_ICONEXCLAMATION "Another Octave installation has been detected at that destination. It is recommended to uninstall it if you intend to use the same installation directory. Do you want to proceed with the installation anyway?" IDYES inst_none IDNO 0
+  Abort 
+inst_none:
 FunctionEnd
 
 ; Function to check Java Runtime Environment
@@ -307,6 +294,8 @@ Function CheckJRE
   MessageBox MB_ICONEXCLAMATION|MB_YESNO "Octave includes a Java integration component, but it seems Java is not available on this system. This component requires the Java Runtime Environment from Oracle (http://www.java.com) installed on your system. Octave can work without Java available, but the Java integration component will not be functional. Installing those components without Java available might prevent Octave from working correctly. Proceed with installation anyway?" IDYES continue
   Abort
  continue:
+  Pop \$R1
+  Pop \$R0
 FunctionEnd
 EOF
 
