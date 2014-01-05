@@ -15,7 +15,6 @@ DATE=$(date +%Y-%m-%d-%H-%M)
 OCTAVE_DIST_NAME=octave-$DATE
 INSTALLER_PKG=
 
-
 strip=yes
 installer=no
 while [ $# -gt 0 ]; do
@@ -132,10 +131,6 @@ if [ $strip = "yes" ]; then
     $STRIP $f
   done
 fi
-
-#echo "creating tar file..."
-#cd $TOPDIR/dist
-#tar -c -j -f $OCTAVE_TARGET-$DATE.tar.bz2 $OCTAVE_TARGET-$DATE
 
 cd $TOPDIR/dist
 
