@@ -20,4 +20,5 @@ pkg install -global -auto zenity-0.5.7.tar.gz
 pkg install -global -auto actuarial-1.1.0.tar.gz
 pkg install -global -auto data-smoothing-1.3.0.tar.gz
 pkg install -global fuzzy-logic-toolkit-0.4.2.tar.gz
+pkg install -global quaternion-2.2.0.tar.gz
 

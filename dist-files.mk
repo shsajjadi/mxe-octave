@@ -396,6 +396,7 @@ SRC_FILES_1 := \
   of-odepkg.mk \
   of-optim-1-fixes.patch \
   of-optim.mk \
+  of-quaternion.mk \
   of-signal.mk \
   of-sockets.mk \
   of-sockets-1-fixes.patch \
