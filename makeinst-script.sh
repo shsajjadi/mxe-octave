@@ -91,7 +91,7 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 Function finishpage_desktopshortcut
   SetOutPath "\$INSTDIR\\bin"
   CreateShortCut "\$desktop\\Octave-$VERSION.lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
-  CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+  CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
 FunctionEnd
 
 !define MUI_FINISHPAGE_SHOWREADME ""
@@ -157,7 +157,7 @@ Section "Shortcuts"
  CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
  SetOutPath "\$INSTDIR\\bin"
  CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave.lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Experimental GUI).lnk" "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Experimental GUI).lnk" "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
  SetOutPath "\$INSTDIR"
 EOF
   # if we have documentation files, create shortcuts
