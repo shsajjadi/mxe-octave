@@ -3,7 +3,7 @@
 
 PKG             := of-image
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 30f33db706e8892f120f2d79e030c3f21dea4563
+$(PKG)_CHECKSUM := b4781831cf14ec71cc220776ab14672d335c55ed
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := image
 $(PKG)_FILE     := image-$($(PKG)_VERSION).tar.gz
