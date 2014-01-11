@@ -63,6 +63,10 @@ InstallDir "C:\\Octave\\Octave-\${OCTAVE_VERSION}"
 Icon "\${INSTALLER_FILES}/octave-logo.ico"
 
 ######################################################################
+; StrFunc usage
+!include "StrFunc.nsh"
+\${StrRep}
+######################################################################
 ; MUI settings
 !include "MUI.nsh"
 
@@ -137,6 +141,12 @@ EOF
 
   cat >> octave.nsi << EOF
 
+ ; add qt.conf
+ Push \$0
+ \${StrRep} '\$0' '\$INSTDIR' '\\' '/'
+ WriteINIStr "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\qt.conf" "Paths" "Prefix" "\$0"
+ WriteINIStr "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\qt.conf" "Paths" "Translations" "translations"
+ Pop \$0
 SectionEnd
 
 Section make_uninstaller
@@ -188,6 +198,9 @@ Section "Uninstall"
 
  Delete "\$desktop\\Octave-$VERSION.lnk" 
  Delete "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" 
+
+ ; delete generated qt.conf file
+ Delete "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\qt.conf"
 EOF
 
 # insert dir list (backwards order) for uninstall files
@@ -199,7 +212,7 @@ EOF
 
 # last bit of the uninstaller
   cat >> octave.nsi << EOF
- Delete "\$INSTDIR\*.*"
+ Delete "\$INSTDIR\\*.*"
  RmDir "\$INSTDIR"
 SectionEnd
 

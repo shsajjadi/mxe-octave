@@ -79,6 +79,8 @@ else
       -no-reduce-exports \
       -no-ssse3 \
       -no-rpath \
+      -make translations \
+      -translationdir '$($(PKG)_PREFIX)/translations' \
       -device-option PKG_CONFIG='$(MXE_PKG_CONFIG)' \
       -force-pkg-config  \
       -v
