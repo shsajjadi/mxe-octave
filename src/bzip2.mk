@@ -20,7 +20,7 @@ ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
 define $(PKG)_BUILD
     $(SED) -i 's,sys\\stat\.h,sys/stat.h,g' '$(1)/bzip2.c'
     $(SED) -i 's,WINAPI,,g'                 '$(1)/bzlib.h'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' libbz2.a \
+    $(MAKE) -C '$(1)' -j '$(JOBS)' libbz2.a bzip2 \
         PREFIX='$(HOST_PREFIX)' \
         CC='$(MXE_CC)' \
         AR='$(MXE_AR)' \
@@ -35,6 +35,10 @@ define $(PKG)_BUILD
     if [ $(BUILD_STATIC) = yes ]; then \
       $(INSTALL) '$(1)/libbz2.a' '$(3)$(HOST_LIBDIR)/'; \
     fi
+
+    $(INSTALL) -d '$(3)$(HOST_BINDIR)'
+    $(INSTALL) '$(1)/bzip2' '$(3)$(HOST_BINDIR)/bzip2.exe' 
+
 endef
 else
 define $(PKG)_BUILD
