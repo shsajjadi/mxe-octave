@@ -384,6 +384,8 @@ SRC_FILES_1 := \
   of-communications.mk \
   of-control.mk \
   of-data-smoothing.mk \
+  of-fits.mk \
+  of-fits-1-fixes.patch \
   of-fuzzy-logic-toolkit.mk \
   of-general.mk \
   of-geometry.mk \

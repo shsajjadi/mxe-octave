@@ -21,4 +21,5 @@ pkg install actuarial-1.1.0.tar.gz
 pkg install data-smoothing-1.3.0.tar.gz
 pkg install fuzzy-logic-toolkit-0.4.2.tar.gz
 pkg install quaternion-2.2.0.tar.gz
+pkg install fits-1.0.3.tar.gz
 
