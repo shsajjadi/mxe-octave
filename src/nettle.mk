@@ -47,7 +47,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)'
-    $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' SUBDIRS=
+    $(MAKE) -C '$(1)' -j 1 SUBDIRS= install DESTDIR='$(3)'
 endef
 endif
