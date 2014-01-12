@@ -17,6 +17,17 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+$(PKG)_WINDOWS_CONFIGURE_OPTIONS := \
+   CPPFLAGS='-DWINVER=0x0501 -DAI_ADDRCONFIG=0x0400 -DIPV6_V6ONLY=27' \
+   LIBS='-lws2_32'
+
+ifeq ($(MXE_SYSTEM),mingw)
+  $(PKG)_CONFIGURE_OPTIONS := $($(PKG)_WINDOWS_CONFIGURE_OPTIONS)
+endif
+ifeq ($(MXE_SYSTEM),msvc)
+  $(PKG)_CONFIGURE_OPTIONS := $($(PKG)_WINDOWS_CONFIGURE_OPTIONS)
+endif
+
 define $(PKG)_BUILD
     $(SED) -i 's, sed , $(SED) ,g' '$(1)/gl/tests/Makefile.am'
     cd '$(1)' && aclocal -I m4 -I gl/m4 -I src/libopts/m4 --install
@@ -43,8 +54,7 @@ define $(PKG)_BUILD
         --with-included-libcfg \
         --without-p11-kit \
         --disable-silent-rules \
-        CPPFLAGS='-DWINVER=0x0501 -DAI_ADDRCONFIG=0x0400 -DIPV6_V6ONLY=27' \
-        LIBS='-lws2_32' \
+        $($(PKG)_CONFIGURE_OPTIONS) \
         ac_cv_prog_AR='$(MXE_AR)' && $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
