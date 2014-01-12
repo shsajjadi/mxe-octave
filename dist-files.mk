@@ -427,6 +427,7 @@ SRC_FILES_1 := \
   physfs-test.c \
   physfs.mk \
   pixman.mk \
+  pkg-config.mk \
   plibc.mk \
   plotmm-1-fixes.patch \
   plotmm.mk \
