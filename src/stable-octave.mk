@@ -83,7 +83,7 @@ endef
 
 define $(PKG)_BUILD
     # jni install
-    if [[ "$(MXE_SYSTEM)" == "mingw" && "$(MXE_NATIVE_BUILD)" == "no" ]]; then \
+    if [[ "$(MXE_SYSTEM)" == "mingw" && "$(MXE_NATIVE_BUILD)" == "no" && "$(ENABLE_JAVA)" == "yes" ]]; then \
       mkdir -p '$(HOST_INCDIR)/java/include'; \
       $(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/share/javavm/export/jni.h \
         -O $(HOST_INCDIR)/java/include/jni.h; \
