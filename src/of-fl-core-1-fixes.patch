@@ -1,0 +1,17 @@
+--- Makefile.sf	2014-01-12 21:32:17 -0500
++++ Makefile	2014-01-12 21:40:00 -0500
+@@ -3,10 +3,14 @@
+ BASE := $(OCT:.oct=)
+ 
+ ifdef COMSPEC 
++ifneq (,$(findstring mingw,$(shell octave-config -p CANONICAL_HOST_TYPE)))
++	ADDPARAM := -lpthread
++else
+ ifneq ($(shell uname -o),Cygwin)
+ 	ADDPARAM := -lpthreadVC2
+ endif
+ endif
++endif
+ 
+ .phony: all
+ all: $(OCT)
