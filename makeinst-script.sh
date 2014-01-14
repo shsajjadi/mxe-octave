@@ -94,7 +94,7 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 ; set up checkbox to create desktop icon
 Function finishpage_desktopshortcut
   SetOutPath "\$INSTDIR\\bin"
-  CreateShortCut "\$desktop\\Octave-$VERSION.lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
+  CreateShortCut "\$desktop\\Octave-$VERSION (Command Line).lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
   CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
 FunctionEnd
 
@@ -166,7 +166,7 @@ Section "Shortcuts"
  CreateDirectory "\$SMPROGRAMS\\Octave-$VERSION"
  CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
  SetOutPath "\$INSTDIR\\bin"
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave.lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
+ CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Command Line).lnk" "\$INSTDIR\\bin\\octave.exe" "" "\$INSTDIR\\$ICON" 0
  CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Experimental GUI).lnk" "\$INSTDIR\\libexec\\octave\\$OCTAVE_VERSION\\exec\\i686-pc-mingw32\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
  SetOutPath "\$INSTDIR"
 EOF
@@ -196,7 +196,7 @@ Section "Uninstall"
  Delete "\$SMPROGRAMS\\Octave-$VERSION\\*.*"
  RMDir "\$SMPROGRAMS\\Octave-$VERSION"
 
- Delete "\$desktop\\Octave-$VERSION.lnk" 
+ Delete "\$desktop\\Octave-$VERSION (Command Line).lnk" 
  Delete "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" 
 
  ; delete generated qt.conf file
