@@ -3,7 +3,7 @@
 
 PKG             := of-fl-core
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 6aecd4611879acaae1918025148cc09e197e0e82
+$(PKG)_CHECKSUM := 15c22155457f2eaf3d2531cd8a652732d9b7ebce
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := fl-core
 $(PKG)_FILE     := fl-core-$($(PKG)_VERSION).tar.gz

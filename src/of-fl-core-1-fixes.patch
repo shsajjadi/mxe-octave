@@ -1,17 +1,18 @@
---- Makefile.sf	2014-01-12 21:32:17 -0500
-+++ Makefile	2014-01-12 21:40:00 -0500
-@@ -3,10 +3,14 @@
+diff -ur fl-core.orig/src/Makefile fl-core/src/Makefile
+--- fl-core.orig/src/Makefile	2014-01-13 21:23:20.000000000 -0500
++++ fl-core/src/Makefile	2014-01-13 21:24:15.000000000 -0500
+@@ -1,8 +1,13 @@
+ OCT = fl_compose.oct
+ SRC := $(OCT:.oct=.cc)
  BASE := $(OCT:.oct=)
- 
- ifdef COMSPEC 
+-ifdef COMSPEC 
++
 +ifneq (,$(findstring mingw,$(shell octave-config -p CANONICAL_HOST_TYPE)))
 +	ADDPARAM := -lpthread
 +else
- ifneq ($(shell uname -o),Cygwin)
++ ifdef COMSPEC 
  	ADDPARAM := -lpthreadVC2
++ endif
  endif
- endif
-+endif
  
  .phony: all
- all: $(OCT)

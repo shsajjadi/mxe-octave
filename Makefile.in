@@ -350,7 +350,7 @@ ifeq ($(MXE_SYSTEM),msvc)
 endif
 
 OCTAVE_FORGE_BASE_URL := 'http://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
-OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim specfun general signal communications image io statistics control geometry windows odepkg linear-algebra sockets zenity actuarial data-smoothing fuzzy-logic-toolkit quaternion fits)
+OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim specfun general signal communications image io statistics control geometry windows odepkg linear-algebra sockets zenity actuarial data-smoothing fuzzy-logic-toolkit quaternion fits fl-core)
 
 MAKE_SHARED_FROM_STATIC := \
   $(TOP_DIR)/tools/make-shared-from-static $(MAKE_SHARED_FROM_STATIC_OPTIONS)
