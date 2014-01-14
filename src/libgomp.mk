@@ -19,15 +19,16 @@ define $(PKG)_BUILD
     cd       '$(1)/build/$(TARGET)/libgomp' && '$(1)/libgomp/configure' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --target='$(TARGET)' \
-        --prefix='$(BUILD_TOOLS_PREFIX)' \
+        --prefix='$(HOST_PREFIX)' \
         --enable-version-specific-runtime-libs \
         --with-gnu-ld \
         $(ENABLE_SHARED_OR_STATIC) \
         LIBS='-lws2_32'
-    $(MAKE) -C '$(1)/build/$(TARGET)/libgomp' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)/build/$(TARGET)/libgomp' -j '$(JOBS)'
+    $(MAKE) -C '$(1)/build/$(TARGET)/libgomp' -j '1' install DESTDIR='$(3)'
 
-    '$(MXE_CC)' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_BINDIR)/test-libgomp.exe' \
-        -fopenmp
+    #'$(MXE_CC)' \
+    #    -W -Wall -Werror -ansi -pedantic \
+    #    '$(2).c' -o '$(HOST_BINDIR)/test-libgomp.exe' \
+    #    -fopenmp
 endef

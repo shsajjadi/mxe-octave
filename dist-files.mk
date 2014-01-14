@@ -405,6 +405,7 @@ SRC_FILES_1 := \
   of-specfun.mk \
   of-statistics.mk \
   of-struct.mk \
+  of-tsa.mk \
   of-windows.mk \
   of-zenity.mk \
   ogg.mk \
