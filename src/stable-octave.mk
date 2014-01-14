@@ -114,6 +114,10 @@ define $(PKG)_BUILD
     ## in a directory tree that will have just Octave files.
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
 
+    if [ "x$(MXE_SYSTEM)" == "xmingw" ]; then \
+      cp '$(1)/.build/src/.libs/octave-gui.exe' '$(3)$(HOST_BINDIR)'; \
+    fi
+
     if [ "x$(ENABLE_DOCS)" == "xyes" ]; then \
         $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(3) install-pdf install-html; \
     fi
