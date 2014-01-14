@@ -1,0 +1,12 @@
+diff -ur a/engines/ccgost/Makefile b/engines/ccgost/Makefile
+--- a/engines/ccgost/Makefile	2013-02-11 10:26:04.000000000 -0500
++++ b/engines/ccgost/Makefile	2013-10-14 13:38:18.595806411 -0400
+@@ -32,7 +32,7 @@
+ 		$(MAKE) -f $(TOP)/Makefile.shared -e \
+ 			LIBNAME=$(LIBNAME) \
+ 			LIBEXTRAS='$(LIBOBJ)' \
+-			LIBDEPS='-L$(TOP) -lcrypto' \
++			LIBDEPS='-L$(TOP) -lcrypto -lgdi32' \
+ 			link_o.$(SHLIB_TARGET); \
+ 	else \
+ 		$(AR) $(LIB) $(LIBOBJ); \
