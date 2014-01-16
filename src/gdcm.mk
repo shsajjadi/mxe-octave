@@ -3,7 +3,7 @@
 
 PKG             := gdcm
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 83b9ff0744a37b4bf8f687ed198aabea7a9dfc70
+$(PKG)_CHECKSUM := ffbf5c1d040ec12d34fd7a7576633dfe0a1ff7b3
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG) 2.x/GDCM $($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -44,7 +44,7 @@ define $(PKG)_BUILD
         -DGDCM_BUILD_SHARED_LIBS:BOOL=TRUE \
         ../$($(PKG)_SUBDIR)
     make -C $(1)/../.build -j $(JOBS) 
-    make -C $(1)/../.build -j 1 install
+    make -C $(1)/../.build -j 1 install DESTDIR=$(3)
 endef
 
 endif
