@@ -384,6 +384,7 @@ SRC_FILES_1 := \
   of-communications.mk \
   of-control.mk \
   of-data-smoothing.mk \
+  of-dicom.mk \
   of-fits.mk \
   of-fits-1-fixes.patch \
   of-fl-core.mk \

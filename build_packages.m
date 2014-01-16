@@ -24,4 +24,5 @@ pkg install quaternion-2.2.0.tar.gz
 pkg install fits-1.0.3.tar.gz
 pkg install fl-core-1.0.0.tar.gz
 pkg install tsa-4.2.7.tar.gz
+pkg install dicom-0.1.1.tar.gz
 
