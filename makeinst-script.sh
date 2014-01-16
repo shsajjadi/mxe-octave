@@ -1,15 +1,14 @@
 #! /bin/bash
 set -e
 
-if [ $# != 1 ]; then
-  echo "Expected octave folder"
-  exit
+if [ $# != 2 ]; then
+  echo "usage: makeinst-script.sh dist-dir output-script-name" 1>&2
+  exit 1
 fi
 
-ARG1=$1
-
-TOPDIR=`dirname $ARG1`
-OCTAVE_SOURCE=`basename $ARG1`
+OUTFILE="$2"
+TOPDIR=`dirname $1`
+OCTAVE_SOURCE=`basename $1`
 
 echo "Generating installer script ... "
 
@@ -24,10 +23,10 @@ OCTAVE_VERSION=`head -1 $MXEDIR/octave/octave-version`
 VERSION=`echo $OCTAVE_VERSION | sed -n 's,\([0-9\.]*\).*,\1,p'`
 
 # create installer script
-echo "; octave setup script $OCTAVE_SOURCE" > octave.nsi
+echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
 
 # installer settings
-  cat >> octave.nsi << EOF
+  cat >> $OUTFILE << EOF
 !define APP_NAME "GNU Octave"
 !define COMP_NAME "GNU Project"
 !define WEB_SITE "http://www.octave.org"
@@ -134,12 +133,12 @@ EOF
   IFS=$'\n'
   for f in $(find $OCTAVE_SOURCE -type d -printf "%P\n"); do
     winf=`echo $f | sed 's,/,\\\\,g'`
-    echo " CreateDirectory \"\$INSTDIR\\$winf\"" >> octave.nsi
-    echo " SetOutPath \"\$INSTDIR\\$winf\"" >> octave.nsi
-    find "$OCTAVE_SOURCE/$f" -maxdepth 1 -type f -printf " File \"%p\"\n" >> octave.nsi 
+    echo " CreateDirectory \"\$INSTDIR\\$winf\"" >> $OUTFILE
+    echo " SetOutPath \"\$INSTDIR\\$winf\"" >> $OUTFILE
+    find "$OCTAVE_SOURCE/$f" -maxdepth 1 -type f -printf " File \"%p\"\n" >> $OUTFILE 
   done
 
-  cat >> octave.nsi << EOF
+  cat >> $OUTFILE << EOF
 
  ; add qt.conf
  Push \$0
@@ -172,7 +171,7 @@ Section "Shortcuts"
 EOF
   # if we have documentation files, create shortcuts
   if [ -d $OCTAVE_SOURCE/share/doc/octave ]; then
-    cat >> octave.nsi << EOF
+    cat >> $OUTFILE << EOF
     CreateDirectory "\$SMPROGRAMS\\Octave-$VERSION\\Documentation"
     CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Documentation\\Octave C++ Classes (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.pdf" "" "" 0
     CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Documentation\\Octave C++ Classes (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.html\\index.html" "" "" 0
@@ -181,7 +180,7 @@ EOF
 EOF
   fi
  
-  cat >> octave.nsi << EOF
+  cat >> $OUTFILE << EOF
 SectionEnd
 
 Section "Uninstall"
@@ -206,12 +205,12 @@ EOF
 # insert dir list (backwards order) for uninstall files
   for f in $(find $OCTAVE_SOURCE -depth -type d -printf "%P\n"); do
     winf=`echo $f | sed 's,/,\\\\,g'`
-    echo " Delete \"\$INSTDIR\\$winf\\*.*\"" >> octave.nsi
-    echo " RmDir \"\$INSTDIR\\$winf\"" >> octave.nsi
+    echo " Delete \"\$INSTDIR\\$winf\\*.*\"" >> $OUTFILE
+    echo " RmDir \"\$INSTDIR\\$winf\"" >> $OUTFILE
   done
 
 # last bit of the uninstaller
-  cat >> octave.nsi << EOF
+  cat >> $OUTFILE << EOF
  Delete "\$INSTDIR\\*.*"
  RmDir "\$INSTDIR"
 SectionEnd

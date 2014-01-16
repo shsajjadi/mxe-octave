@@ -3,6 +3,12 @@
 
 PWD := $(shell pwd)
 
+STRIP_DIST_FILES := @STRIP_DIST_FILES@
+
+STABLE_BUILD := no
+
+DATE := $(shell date +%Y-%m-%d-%H-%M)
+
 ## Configuration variables.
 
 # Set the following configuration variables with a configure script?
@@ -740,3 +746,5 @@ dist:
 	mkdir $(distdir)
 	$(TAR) cf - $(DIST_FILES) | ( cd $(distdir) ; $(TAR) xpf - )
 	$(TAR) czf $(distdir).tar.gz $(distdir)
+
+include binary-dist-rules.mk

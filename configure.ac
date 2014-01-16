@@ -126,6 +126,12 @@ AC_ARG_ENABLE([pic-flag],
   [if test "$enableval" = yes; then USE_PIC_FLAG=yes; fi], [])
 AC_SUBST(USE_PIC_FLAG)
 
+STRIP_DIST_FILES=yes
+AC_ARG_ENABLE([strip-dist-files],
+  [AS_HELP_STRING([--disable-strip-dist-files], [Don't strip distributed files])],
+  [if test "$enableval" = no; then STRIP_DIST_FILES=no; fi], [])
+AC_SUBST(STRIP_DIST_FILES)
+
 ENABLE_OPENBLAS=no
 AC_ARG_ENABLE([openblas],
   [AS_HELP_STRING([--enable-openblas],
