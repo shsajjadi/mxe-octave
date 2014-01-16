@@ -718,7 +718,7 @@ INSTALL_FILES_1 := \
   octave.bmp \
   octave-hdr.bmp \
   octave-logo.ico
-INSTALL_FILES := $(addprefix installer_files/, $(INSTALL_FILES_1))
+INSTALL_FILES := $(addprefix installer-files/, $(INSTALL_FILES_1))
 
 DIST_FILES := \
   $(SRC_FILES) \
