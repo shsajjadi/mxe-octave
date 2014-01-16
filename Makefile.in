@@ -630,6 +630,7 @@ clean:
 	rm -rf $(MSYS_BASE_DIR) $(NOTEPAD_BASE_DIR)
 	rm -rf native-tools cross-tools octave gnuplot
 	rm -f Makefile cmake-toolchain-file.stamp
+	rm -f tools/set-mxe-env.sh
 
 .PHONY: clean-pkg
 clean-pkg:
