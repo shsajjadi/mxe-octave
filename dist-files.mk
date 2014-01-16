@@ -68,6 +68,7 @@ SRC_FILES_1 := \
   fltk-2-uuid-mod.patch \
   fltk-test.cpp \
   fltk.mk \
+  fontconfig-1.patch \
   fontconfig.mk \
   freeglut-1-fixes.patch \
   freeglut-test.c \
@@ -100,6 +101,7 @@ SRC_FILES_1 := \
   geos.mk \
   gettext.mk \
   giflib.mk \
+  gl2ps-1-fixes.patch \
   gl2ps.mk \
   glew-test.c \
   glew.mk \
@@ -111,9 +113,11 @@ SRC_FILES_1 := \
   gnuplot-1-fixes.patch \
   gnuplot.mk \
   gnutls-1-fixes.patch \
+  gnutls-2-ldadd.patch \
   gnutls-test.c \
   gnutls.mk \
   graphicsmagick-1-fix-xml2-config.patch \
+  graphicsmagick-2-fix-png16-config.patch \
   graphicsmagick-test.cpp \
   graphicsmagick.mk \
   gsl-test.c \
@@ -279,9 +283,12 @@ SRC_FILES_1 := \
   mingw-glib-1-fixes.patch \
   mingw-glib-2-fixes.patch \
   mingw-hdf5-1.patch \
+  mingw-libgcrypt-1-fixes.patch \
+  mingw-libmng-1-noundefines.patch \
   mingw-pango-1-fixes.patch \
-  mingw-utils-1-portability-fix.patch \
+  mingw-transfig-1-configure.patch \
   mingw-units-1-fixes.patch \
+  mingw-utils-1-portability-fix.patch \
   mingw-utils.mk \
   mingwrt.mk \
   mpfr.mk \
@@ -289,6 +296,7 @@ SRC_FILES_1 := \
   msvc-atk-1.patch \
   msvc-build-cmake-1.patch \
   msvc-cairo-1.patch \
+  msvc-curl-1.patch \
   msvc-dbus-1.patch \
   msvc-fftw-1.patch \
   msvc-fltk-1.patch \
@@ -296,6 +304,7 @@ SRC_FILES_1 := \
   msvc-gcab-1.patch \
   msvc-gdk-pixbuf-1.patch \
   msvc-gettext-1.patch \
+  msvc-gl2ps-1.patch \
   msvc-glib-1.patch \
   msvc-gnuplot-1.patch \
   msvc-gnutls-1.patch \
@@ -313,6 +322,7 @@ SRC_FILES_1 := \
   msvc-libgsf-1.patch \
   msvc-libiconv-1.patch \
   msvc-libidn-1.patch \
+  msvc-libmng-1.patch \
   msvc-libssh2-1.patch \
   msvc-libxml2-1.patch \
   msvc-llvm-1.patch \
@@ -322,6 +332,8 @@ SRC_FILES_1 := \
   msvc-netcdf-1.patch \
   msvc-nettle-1.patch \
   msvc-octave-1.patch \
+  msvc-of-image-1.patch \
+  msvc-of-miscellaneous-1.patch \
   msvc-openssl-1.patch \
   msvc-pango-1.patch \
   msvc-pixman-1.patch \
@@ -354,9 +366,9 @@ SRC_FILES_1 := \
   msys-regex.mk \
   msys-sed.mk \
   msys-tar.mk \
-  msys-unzip.mk \
   msys-termcap.mk \
   msys-texinfo.mk \
+  msys-unzip.mk \
   msys-wget.mk \
   msys-xz.mk \
   muparser.mk \
@@ -367,6 +379,7 @@ SRC_FILES_1 := \
   native-gcc.mk \
   ncurses.mk \
   netcdf.mk \
+  nettle-1-fixes.patch \
   nettle.mk \
   npp.mk \
   nsis-1-fixes.patch \
@@ -385,10 +398,10 @@ SRC_FILES_1 := \
   of-control.mk \
   of-data-smoothing.mk \
   of-dicom.mk \
-  of-fits.mk \
   of-fits-1-fixes.patch \
-  of-fl-core.mk \
+  of-fits.mk \
   of-fl-core-1-fixes.patch \
+  of-fl-core.mk \
   of-fuzzy-logic-toolkit.mk \
   of-general.mk \
   of-geometry.mk \
@@ -401,8 +414,8 @@ SRC_FILES_1 := \
   of-optim.mk \
   of-quaternion.mk \
   of-signal.mk \
-  of-sockets.mk \
   of-sockets-1-fixes.patch \
+  of-sockets.mk \
   of-specfun.mk \
   of-statistics.mk \
   of-struct.mk \
@@ -422,6 +435,8 @@ SRC_FILES_1 := \
   openexr.mk \
   openscenegraph.mk \
   openssl-1-winsock2.patch \
+  openssl-2-pod.patch \
+  openssl-3-libdeps.patch \
   openssl.mk \
   pango.mk \
   pangomm.mk \
@@ -488,6 +503,7 @@ SRC_FILES_1 := \
   readline-1-input.patch \
   readline-1-paste.patch \
   readline-1-sigwinch.patch \
+  readline-2-event-hook.patch \
   readline.mk \
   sdl-test.c \
   sdl.mk \
@@ -686,8 +702,8 @@ TOOLS_FILES_1 := \
 TOOLS_FILES := $(addprefix tools/, $(TOOLS_FILES_1))
 
 FILES := \
-  build_packages.m \
   CNAME \
+  build_packages.m \
   configure \
   configure.ac \
   dist-files.mk \
