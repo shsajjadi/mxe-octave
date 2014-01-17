@@ -135,7 +135,7 @@ zip-dist: binary-dist-files
 define make-tar-dist
   echo "generating tar file..."
   cd $(TOP_DIR)/dist \
-    && tar -c -z -f $(OCTAVE_DIST_NAME).zip $(OCTAVE_DIST_NAME)
+    && tar -c -z -f $(OCTAVE_DIST_NAME).tgz $(OCTAVE_DIST_NAME)
 endef
 
 .PHONY: tar-dist
