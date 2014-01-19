@@ -13,10 +13,10 @@ OCTAVE_NSI_FILE := $(TOP_DIR)/dist/octave.nsi
 
 ## FIXME: We need a way to ask "is this a windows build?"
 ifeq ($(MXE_SYSTEM), mingw)
-  WINDOWS_BINARY_DIST_DEPS := msys-base npp
+  WINDOWS_BINARY_DIST_FILES := msys-base npp
 endif
 ifeq ($(MXE_SYSTEM), msvc)
-  WINDOWS_BINARY_DIST_DEPS := msys-base npp
+  WINDOWS_BINARY_DIST_FILES := msys-base npp
 endif
 
 BINARY_DIST_DEPS := \
