@@ -426,7 +426,7 @@ else
 endif
 
 .PHONY: all
-all: configure Makefile $(OCTAVE_PACKAGE)
+all: configure Makefile $(OCTAVE_TARGET)
 
 .PHONY: all-packages
 all-packages: $(PKGS)
