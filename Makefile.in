@@ -1,11 +1,17 @@
 # This file is part of MXE.
 # See index.html for further information.
 
+STABLE_BUILD := yes
+
+ifeq ($(STABLE_BUILD),yes)
+  OCTAVE_TARGET := stable-octave
+else
+  OCTAVE_TARGET := octave
+endif
+
 PWD := $(shell pwd)
 
 STRIP_DIST_FILES := @STRIP_DIST_FILES@
-
-STABLE_BUILD := no
 
 DATE := $(shell date +%Y-%m-%d-%H-%M)
 
@@ -420,7 +426,7 @@ else
 endif
 
 .PHONY: all
-all: configure Makefile octave
+all: configure Makefile $(OCTAVE_PACKAGE)
 
 .PHONY: all-packages
 all-packages: $(PKGS)

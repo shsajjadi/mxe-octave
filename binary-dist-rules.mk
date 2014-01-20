@@ -1,9 +1,7 @@
 
 ifeq ($(STABLE_BUILD),yes)
-  OCTAVE_TARGET := stable-octave
   OCTAVE_DIST_NAME := octave-$($(OCTAVE_TARGET)_VERSION)
 else
-  OCTAVE_TARGET := octave
   OCTAVE_DIST_NAME := octave-$(DATE)
 endif
 
@@ -13,10 +11,10 @@ OCTAVE_NSI_FILE := $(TOP_DIR)/dist/octave.nsi
 
 ## FIXME: We need a way to ask "is this a windows build?"
 ifeq ($(MXE_SYSTEM), mingw)
-  WINDOWS_BINARY_DIST_FILES := msys-base npp
+  WINDOWS_BINARY_DIST_DEPS := msys-base npp
 endif
 ifeq ($(MXE_SYSTEM), msvc)
-  WINDOWS_BINARY_DIST_FILES := msys-base npp
+  WINDOWS_BINARY_DIST_DEPS := msys-base npp
 endif
 
 BINARY_DIST_DEPS := \
@@ -26,7 +24,7 @@ BINARY_DIST_DEPS := \
   octave-forge-packages \
   units \
   transfig \
-  $(WINDOWS_BINARY_DIST_FILES)
+  $(WINDOWS_BINARY_DIST_DEPS)
 
 define delete-dist-directory
   echo "deleting previous dist directory..."
@@ -34,11 +32,6 @@ define delete-dist-directory
 endef
 
 define make-dist-directory
-  echo "creating dist directory..."
-  mkdir -p $(TOP_DIR)/dist/octave-$(DATE)
-endef
-
-define make-stable-dist-directory
   echo "creating dist directory..."
   mkdir -p $(OCTAVE_DIST_DIR)
 endef
