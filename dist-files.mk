@@ -285,6 +285,7 @@ SRC_FILES_1 := \
   mingw-hdf5-1.patch \
   mingw-libgcrypt-1-fixes.patch \
   mingw-libmng-1-noundefines.patch \
+  mingw-openssl-3-libdeps.patch \
   mingw-pango-1-fixes.patch \
   mingw-transfig-1-configure.patch \
   mingw-units-1-fixes.patch \
@@ -335,6 +336,7 @@ SRC_FILES_1 := \
   msvc-of-image-1.patch \
   msvc-of-miscellaneous-1.patch \
   msvc-openssl-1.patch \
+  msvc-openssl-3-libdeps.patch \
   msvc-pango-1.patch \
   msvc-pixman-1.patch \
   msvc-proj-1.patch \
@@ -436,7 +438,6 @@ SRC_FILES_1 := \
   openscenegraph.mk \
   openssl-1-winsock2.patch \
   openssl-2-pod.patch \
-  openssl-3-libdeps.patch \
   openssl.mk \
   pango.mk \
   pangomm.mk \
@@ -698,12 +699,13 @@ TOOLS_FILES_1 := \
   make-shared-from-static \
   patch-tool-mxe \
   s3-fetch-and-sync \
-  set_mxe_env.sh.in
+  set-mxe-env.sh.in
 
 TOOLS_FILES := $(addprefix tools/, $(TOOLS_FILES_1))
 
 FILES := \
   CNAME \
+  binary-dist-rules.mk \
   build_packages.m \
   configure \
   configure.ac \
@@ -711,7 +713,6 @@ FILES := \
   index.html \
   Makefile.in \
   makeinst-script.sh \
-  mk-dist \
   octaverc
 
 INSTALL_FILES_1 := \
