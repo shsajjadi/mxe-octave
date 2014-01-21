@@ -93,7 +93,6 @@ define $(PKG)_BUILD
     fi
 
     mkdir '$(1)/.build'
-    cd '$(1)' && autoreconf -W none
     cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
