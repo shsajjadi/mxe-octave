@@ -9,18 +9,16 @@ OCTAVE_DIST_DIR := $(TOP_DIR)/dist/$(OCTAVE_DIST_NAME)
 
 OCTAVE_NSI_FILE := $(TOP_DIR)/dist/octave.nsi
 
-## FIXME: We need a way to ask "is this a windows build?"
-ifeq ($(MXE_SYSTEM), mingw)
-  WINDOWS_BINARY_DIST_DEPS := msys-base npp
-endif
-ifeq ($(MXE_SYSTEM), msvc)
-  WINDOWS_BINARY_DIST_DEPS := msys-base npp
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  WINDOWS_BINARY_DIST_DEPS := \
+    msys-base \
+    native-gcc \
+    native-binutils \
+    npp
 endif
 
 BINARY_DIST_DEPS := \
   $(OCTAVE_TARGET) \
-  native-gcc \
-  native-binutils \
   octave-forge-packages \
   units \
   transfig \
@@ -54,6 +52,12 @@ define copy-dist-files
   echo "  octaverc file..."
   cp $(TOP_DIR)/build_packages.m $(OCTAVE_DIST_DIR)/src \
     && cp $(TOP_DIR)/octaverc $(OCTAVE_DIST_DIR)/share/octave/site/m/startup/octaverc
+  echo "  build_packages.m..."
+  cp $(TOP_DIR)/build_packages.m $(OCTAVE_DIST_DIR)/src
+endef
+
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+define copy-windows-dist-files
   echo "  native tools..."
   cd $(TOP_DIR)/native-tools/usr \
     && tar -c -h -X $(TOP_DIR)/excluded-native-files -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
@@ -69,9 +73,8 @@ define copy-dist-files
   echo "  notepad++..."
   cd $(TOP_DIR) \
     && tar -c -h -f - notepad++ | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
-  echo "  build_packages.m..."
-  cp $(TOP_DIR)/build_packages.m $(OCTAVE_DIST_DIR)/src
 endef
+endif
 
 define make-dist-files-writable
   echo "making all dist files writable by user..."
@@ -79,15 +82,51 @@ define make-dist-files-writable
 endef
 
 ifeq ($(STRIP_DIST_FILES),yes)
-define strip-dist-files
-  echo "stripping files..."
-  for f in $$(find $(OCTAVE_DIST_DIR) -name '*.dll' -o -name '*.exe'); do \
-    $(MXE_STRIP) $$f; \
+  ifeq ($(MXE_WINDOWS_BUILD),yes)
+    define strip-dist-files
+      echo "stripping files..."
+      for f in $(shell find $(OCTAVE_DIST_DIR) -name '*.dll' -o -name '*.exe'); do \
+	$(MXE_STRIP) $$f; \
+      done
+    endef
+  else
+    define strip-dist-files
+      echo "stripping files..."
+      for f in $(shell find $(OCTAVE_DIST_DIR) -type f -a -executable); do \
+        case "`file $$f`" in \
+          *script*) \
+          ;; \
+          *executable* | *archive* | *"shared object"*) \
+            $(MXE_STRIP) $$f; \
+          ;; \
+        esac; \
+      done
+    endef
+  endif
+else
+  define strip-dist-files
+    echo "not stripping files..."
+  endef
+endif
+
+OCTAVE_WRAPPER_SCRIPTS = octave octave-cli octave-config
+
+ifeq ($(MXE_SYSTEM), gnu-linux)
+define install-octave-wrapper-scripts
+  echo "installing octave wrapper scripts..."
+  for f in $(OCTAVE_WRAPPER_SCRIPTS); do \
+    mv $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION) \
+       $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION).real; \
+    $(SED) < octave-wrapper.in \
+      -e "s|@OCTAVE_VERSION@|\"$($(OCTAVE_TARGET)_VERSION)\"|" \
+      -e "s|@GNUPLOT_MAJOR_MINOR_VERSION@|\"$(shell echo $(gnuplot_VERSION) | $(SED) -e 's/\(^[0-9]+\.[0-9]+\)/\1/')\"|" \
+      -e "s|@PROGRAM_NAME@|\"$$f\"|" > $$f-t \
+    && mv $$f-t $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION); \
   done
 endef
 else
-define strip-dist-files
-  echo "not stripping files..."
+define install-octave-wrapper-scripts
+  echo "no octave wrapper scripts to install for this system..."
 endef
 endif
 
@@ -97,8 +136,10 @@ binary-dist-files: $(BINARY_DIST_DEPS)
 	@$(make-dist-directory)
 	@$(generate-dist-exclude-list)
 	@$(copy-dist-files)
+	@$(copy-windows-dist-files)
 	@$(make-dist-files-writable)
 	@$(strip-dist-files)
+	@$(install-octave-wrapper-scripts)
 
 define make-installer-file
   echo "generating installer script..."
