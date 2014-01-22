@@ -15,7 +15,7 @@ define $(PKG)_UPDATE
 endef
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
-  $(PKG)_SYSDEP_CONFIGURE_OPTIONS = LIBS='-lws2_32'
+  $(PKG)_SYSDEP_CONFIGURE_OPTIONS := LIBS='-lws2_32'
 endif
 
 define $(PKG)_BUILD
