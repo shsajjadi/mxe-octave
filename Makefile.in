@@ -323,8 +323,10 @@ ifeq ($(MXE_SYSTEM),mingw)
 
     NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
   endif
-else ifneq ($(MXE_SYSTEM),msvc)
+else ifeq ($(MXE_SYSTEM),msvc)
   MXE_WINDOWS_BUILD := yes
+else
+  MXE_WINDOWS_BUILD := no
   MXE_CPPFLAGS := '-I$(HOST_INCDIR)'
   ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
     MXE_LDFLAGS := '-L$(HOST_LIBDIR) -L$(HOST_LIB64DIR)'

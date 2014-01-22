@@ -25,9 +25,10 @@ define $(PKG)_BUILD
     cd '$(1).build' && '$(1)/configure' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --with-internal-glib \
+        --with-libiconv=gnu \
         $($(PKG)_CONFIG_OPTS) \
         --with-pc_path='$(HOST_LIBDIR)/pkgconfig' \
         --prefix='$(HOST_PREFIX)'
-    $(MAKE) -C '$(1).build' -j '$(JOBS)'
+    $(MAKE) -C '$(1).build' V=1 -j 1
     $(MAKE) -C '$(1).build' -j 1 install DESTDIR='$(3)'
 endef
