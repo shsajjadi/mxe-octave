@@ -92,7 +92,7 @@ ifeq ($(STRIP_DIST_FILES),yes)
   else
     define strip-dist-files
       echo "stripping files..."
-      for f in $(shell find $(OCTAVE_DIST_DIR) -type f -a -executable); do \
+      for f in $(shell find $(OCTAVE_DIST_DIR) -type f -a -perm /a+x); do \
         case "`file $$f`" in \
           *script*) \
           ;; \

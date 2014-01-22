@@ -393,6 +393,7 @@ SRC_FILES_1 := \
   ocaml-flexdll.mk \
   ocaml-native-1-fixes.patch \
   ocaml-native.mk \
+  octave-1-docinstall.patch \
   octave.mk \
   of-actuarial.mk \
   of-communications.mk \
@@ -527,6 +528,7 @@ SRC_FILES_1 := \
   sox.mk \
   speex.mk \
   sqlite.mk \
+  stable-octave-1-docinstall.patch \
   stable-octave.mk \
   suitesparse-1.patch \
   suitesparse.mk \
@@ -713,6 +715,7 @@ FILES := \
   index.html \
   Makefile.in \
   makeinst-script.sh \
+  octave-wrapper.in \
   octaverc
 
 INSTALL_FILES_1 := \
