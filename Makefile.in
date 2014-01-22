@@ -310,6 +310,7 @@ HOST_LIB64DIR := $(HOST_PREFIX)/lib64
 HOST_INCDIR := $(HOST_PREFIX)/include
 
 ifeq ($(MXE_SYSTEM),mingw)
+  MXE_WINDOWS_BUILD := yes
   ifneq ($(MXE_NATIVE_BUILD),yes)
     MSYS_URL := http://sourceforge.net/projects/mingw/files/MSYS
     MSYS_BASE_URL := $(MSYS_URL)/Base
@@ -323,6 +324,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
   endif
 else ifneq ($(MXE_SYSTEM),msvc)
+  MXE_WINDOWS_BUILD := yes
   MXE_CPPFLAGS := '-I$(HOST_INCDIR)'
   ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
     MXE_LDFLAGS := '-L$(HOST_LIBDIR) -L$(HOST_LIB64DIR)'
