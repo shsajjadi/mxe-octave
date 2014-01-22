@@ -9545,7 +9545,7 @@ diff -urN transfig.3.2.5e/fig2dev/Makefile.am transfig.3.2.5e.fix/fig2dev/Makefi
 +	cp fig2ps2tex.script fig2ps2tex
 +
 +fig2dev_CPPFLAGS = -I$(top_srcdir)/sysdeps -DRGB_FILE=\"@RGB_FILE@\"
-+fig2dev_LDADD = -Ldev -ltransfig -L$(top_builddir)/sysdeps -lsysdeps
++fig2dev_LDADD = -Ldev -ltransfig -L$(top_builddir)/sysdeps -lsysdeps -lm
 +fig2dev_SOURCES = \
 + arrow.c \
 + bound.c \
@@ -9873,7 +9873,7 @@ diff -urN transfig.3.2.5e/fig2dev/Makefile.in transfig.3.2.5e.fix/fig2dev/Makefi
 +SUBDIRS = dev 
 +bin_SCRIPTS = fig2ps2tex
 +fig2dev_CPPFLAGS = -I$(top_srcdir)/sysdeps -DRGB_FILE=\"@RGB_FILE@\"
-+fig2dev_LDADD = -Ldev -ltransfig -L$(top_builddir)/sysdeps -lsysdeps
++fig2dev_LDADD = -Ldev -ltransfig -L$(top_builddir)/sysdeps -lsysdeps -lm
 +fig2dev_SOURCES = \
 + arrow.c \
 + bound.c \

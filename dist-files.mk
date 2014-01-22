@@ -287,7 +287,6 @@ SRC_FILES_1 := \
   mingw-libmng-1-noundefines.patch \
   mingw-openssl-3-libdeps.patch \
   mingw-pango-1-fixes.patch \
-  mingw-transfig-1-configure.patch \
   mingw-units-1-fixes.patch \
   mingw-utils-1-portability-fix.patch \
   mingw-utils.mk \
@@ -541,6 +540,7 @@ SRC_FILES_1 := \
   tiff.mk \
   tinyxml-test.cpp \
   tinyxml.mk \
+  transfig-1-configure.patch \
   transfig.mk \
   tre.mk \
   units-1-fixes.patch \
