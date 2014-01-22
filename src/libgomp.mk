@@ -14,6 +14,10 @@ define $(PKG)_UPDATE
     echo $(build-gcc_VERSION)
 endef
 
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_SYSDEP_CONFIGURE_OPTIONS = LIBS='-lws2_32'
+endif
+
 define $(PKG)_BUILD
     mkdir -p '$(1)/build/$(TARGET)/libgomp'
     cd       '$(1)/build/$(TARGET)/libgomp' && '$(1)/libgomp/configure' \
@@ -23,7 +27,7 @@ define $(PKG)_BUILD
         --enable-version-specific-runtime-libs \
         --with-gnu-ld \
         $(ENABLE_SHARED_OR_STATIC) \
-        LIBS='-lws2_32'
+        $($(PKG)_SYSDEP_CONFIGURE_OPTIONS)
     $(MAKE) -C '$(1)/build/$(TARGET)/libgomp' -j '$(JOBS)'
     $(MAKE) -C '$(1)/build/$(TARGET)/libgomp' -j '1' install DESTDIR='$(3)'
 
