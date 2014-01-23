@@ -85,14 +85,14 @@ ifeq ($(STRIP_DIST_FILES),yes)
   ifeq ($(MXE_WINDOWS_BUILD),yes)
     define strip-dist-files
       echo "stripping files..."
-      for f in $(shell find $(OCTAVE_DIST_DIR) -name '*.dll' -o -name '*.exe'); do \
+      for f in `find $(OCTAVE_DIST_DIR) -name '*.dll' -o -name '*.exe'`; do \
 	$(MXE_STRIP) $$f; \
       done
     endef
   else
     define strip-dist-files
       echo "stripping files..."
-      for f in $(shell find $(OCTAVE_DIST_DIR) -type f -a -perm /a+x); do \
+      for f in `find $(OCTAVE_DIST_DIR) -type f -a -perm /a+x`; do \
         case "`file $$f`" in \
           *script*) \
           ;; \
