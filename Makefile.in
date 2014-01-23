@@ -160,11 +160,6 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   REQUIREMENTS += bsdtar
 endif
 
-# if we want jit (llvm) we need python
-ifeq ($(ENABLE_JIT),yes)
-  REQUIREMENTS += python
-endif
-
 LIBTOOL     := libtool
 LIBTOOLIZE  := libtoolize
 
