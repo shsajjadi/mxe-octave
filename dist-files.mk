@@ -30,6 +30,8 @@ SRC_FILES_1 := \
   build-msvctools.mk \
   build-pkg-config-1-fixes.patch \
   build-pkg-config.mk \
+  build-python.mk \
+  build-scons.mk \
   build-texinfo.mk \
   build-xz.mk \
   bzip2.mk \
