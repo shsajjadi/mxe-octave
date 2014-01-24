@@ -19,8 +19,15 @@ DATE := $(shell date +%Y-%m-%d-%H-%M)
 
 # Set the following configuration variables with a configure script?
 
-# Current valid values are mingw (cross) and gnu-linux (native).
+# Current valid values are mingw (cross or native), msvc (native)
+# and gnu-linux (native).
 MXE_SYSTEM := @MXE_SYSTEM@
+ifeq ($(MXE_SYSTEM),mingw)
+else ifeq ($(MXE_SYSTEM),msvc)
+else ifeq ($(MXE_SYSTEM),gnu-linux)
+else
+$(error "$(MXE_SYSTEM)" is not a valid value for MXE_SYSTEM)
+endif
 
 # Set to "no" if doing a cross compile build.
 MXE_NATIVE_BUILD := @MXE_NATIVE_BUILD@
