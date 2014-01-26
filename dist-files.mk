@@ -722,7 +722,8 @@ INSTALL_FILES_1 := \
   gpl-3.0.txt \
   octave.bmp \
   octave-hdr.bmp \
-  octave-logo.ico
+  octave-logo.ico \
+  README.html
 INSTALL_FILES := $(addprefix installer-files/, $(INSTALL_FILES_1))
 
 DIST_FILES := \
