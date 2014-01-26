@@ -372,7 +372,7 @@ SRC_FILES_1 := \
   msys-unzip.mk \
   msys-wget.mk \
   msys-xz.mk \
-  msys-zip\
+  msys-zip.mk \
   muparser.mk \
   mxml-test.c \
   mxml.mk \
