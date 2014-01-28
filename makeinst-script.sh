@@ -121,8 +121,12 @@ Var InstallAllUsers
 Var InstallAllUsersCtrl
 Var InstallShortcuts
 Var InstallShortcutsCtrl
+Var RegisterOctaveFileType
+Var RegisterOctaveFileTypeCtrl
+
 Function octaveOptionsPage 
- nsDialogs::Create 1018
+  Push \$0
+  nsDialogs::Create 1018
   Pop \$0
 
   \${If} \$0 == error
@@ -137,13 +141,19 @@ Function octaveOptionsPage
   Pop \$InstallShortcutsCtrl
   \${NSD_SetState} \$InstallShortcutsCtrl \${BST_CHECKED}
 
+  \${NSD_CreateCheckBox} 0 40 100% 12u "Register .m file type with Octave"
+  Pop \$RegisterOctaveFileTypeCtrl
+  \${NSD_SetState} \$RegisterOctaveFileTypeCtrl \${BST_CHECKED}
+
   !insertmacro MUI_HEADER_TEXT "Install Options" "Choose options for installing"
   nsDialogs::Show  
+  Pop \$0
 FunctionEnd
 
 Function octaveOptionsLeave
   \${NSD_GetState} \$InstallAllUsersCtrl \$InstallAllUsers
   \${NSD_GetState} \$InstallShortcutsCtrl \$InstallShortcuts
+  \${NSD_GetState} \$RegisterOctaveFileTypeCtrl \$RegisterOctaveFileType
 FunctionEnd
 
 ######################################################################
@@ -236,6 +246,23 @@ EOF
 
 SectionEnd
 
+Section "FileTypeRego"
+  ; Octave document
+  WriteRegStr HKCR "Octave.Document.$VERSION" "" "GNU Octave Script"
+  WriteRegStr HKCR "Octave.Document.$VERSION\\DefaultIcon" "" "\$INSTDIR\\$ICON"
+  ; document actions
+  WriteRegStr HKCR "Octave.Document.$VERSION\\shell\\open\\command" "" '"\$INSTDIR\\bin\\octave-gui.exe" --force-gui --persist --eval "edit %1"'
+
+  \${If} \$RegisterOctaveFileType == \${BST_CHECKED}
+    ReadRegStr \$0 HKCR ".m" ""
+    StrCmp "\$0" "" no_back_type
+    WriteRegStr HKCR ".m" "backup_val" "\$0"  
+no_back_type:
+    WriteRegStr HKCR ".m" "" "Octave.Document.$VERSION"
+    WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "RegisteredFileType" 1
+  \${EndIf}
+SectionEnd
+
 Section "Uninstall"
 
   ReadRegDWORD \$0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "AllUsers"
@@ -244,6 +271,26 @@ Section "Uninstall"
   SetShellVarContext all
 
 not_all_users:
+  ReadRegDWORD \$0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "RegisteredFileType"
+  IfErrors not_registered_file
+
+  ReadRegStr \$0 HKCR ".m" "backup_val"
+  IfErrors not_backup_file
+
+  # retore backup
+  WriteRegStr HKCR ".m" "" "\$0"
+
+  DeleteRegValue HKCR ".m" "backup_val"
+
+  ; dont delete .m if just restored backup
+  Goto not_registered_file
+not_backup_file:
+  DeleteRegKey HKCR ".m"
+
+not_registered_file:
+ ; delete file type
+ DeleteRegKey HKCR "Octave.Document.$VERSION"
+
  DeleteRegKey HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION"
  DeleteRegKey HKLM "Software\\Octave-$VERSION"
 
