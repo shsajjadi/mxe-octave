@@ -36,7 +36,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
 !define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
 !define INSTALLER_FILES "../installer-files"
 !define INSTALLER_NAME "octave-$OCTAVE_VERSION-installer.exe"
-!define MAIN_APP_EXE "octave.exe"
+!define MAIN_APP_EXE "octave-gui.exe"
 !define INSTALL_TYPE "SetShellVarContext current"
 !define PRODUCT_ROOT_KEY "HKLM"
 !define PRODUCT_KEY "Software\\Octave-$VERSION"
@@ -69,6 +69,12 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 ; MUI settings
 !include "MUI.nsh"
 
+; custom dialogs
+!include nsDialogs.nsh
+; additional logic
+!include LogicLib.nsh
+
+
 !define MUI_ABORTWARNING
 !define MUI_UNABORTWARNING
 !define MUI_HEADERIMAGE
@@ -85,24 +91,15 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 !define MUI_LICENSEPAGE_BUTTON "Next >"
 !insertmacro MUI_PAGE_LICENSE "\${INSTALLER_FILES}/gpl-3.0.txt"
 
+Page custom octaveOptionsPage octaveOptionsLeave
+
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE CheckPrevInstall
 !insertmacro MUI_PAGE_DIRECTORY
 
 !insertmacro MUI_PAGE_INSTFILES
 
-; set up checkbox to create desktop icon
-Function finishpage_desktopshortcut
-  SetOutPath "%USERPROFILE%"
-  CreateShortCut "\$desktop\\Octave-$VERSION (Command Line).lnk" "\$INSTDIR\\bin\\octave-cli.exe" "" "\$INSTDIR\\$ICON" 0
-  CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
-FunctionEnd
-
-!define MUI_FINISHPAGE_SHOWREADME ""
-!define MUI_FINISHPAGE_SHOWREADME_CHECKED
-!define MUI_FINISHPAGE_SHOWREADME_TEXT "Create Desktop Shortcut"
-!define MUI_FINISHPAGE_SHOWREADME_FUNCTION finishpage_desktopshortcut
-
 !define MUI_FINISHPAGE_RUN "\$INSTDIR\\bin\\\${MAIN_APP_EXE}"
+!define MUI_FINISHPAGE_SHOWREADME "\$INSTDIR\\README.html"
 !insertmacro MUI_PAGE_FINISH
 
 !insertmacro MUI_UNPAGE_CONFIRM
@@ -117,6 +114,50 @@ FunctionEnd
  
 RequestExecutionLevel admin
 
+######################################################################
+; custom options page functions
+
+Var InstallAllUsers
+Var InstallAllUsersCtrl
+Var InstallShortcuts
+Var InstallShortcutsCtrl
+Var RegisterOctaveFileType
+Var RegisterOctaveFileTypeCtrl
+
+Function octaveOptionsPage 
+  Push \$0
+  nsDialogs::Create 1018
+  Pop \$0
+
+  \${If} \$0 == error
+    Abort
+  \${EndIf} 
+
+  \${NSD_CreateCheckBox} 0 0 100% 12u "Install for all users"
+  Pop \$InstallAllUsersCtrl
+  \${NSD_SetState} \$InstallAllUsersCtrl \${BST_CHECKED}
+
+  \${NSD_CreateCheckBox} 0 20 100% 12u "Create desktop shortcuts"
+  Pop \$InstallShortcutsCtrl
+  \${NSD_SetState} \$InstallShortcutsCtrl \${BST_CHECKED}
+
+  \${NSD_CreateCheckBox} 0 40 100% 12u "Register .m file type with Octave"
+  Pop \$RegisterOctaveFileTypeCtrl
+  \${NSD_SetState} \$RegisterOctaveFileTypeCtrl \${BST_CHECKED}
+
+  !insertmacro MUI_HEADER_TEXT "Install Options" "Choose options for installing"
+  nsDialogs::Show  
+  Pop \$0
+FunctionEnd
+
+Function octaveOptionsLeave
+  \${NSD_GetState} \$InstallAllUsersCtrl \$InstallAllUsers
+  \${NSD_GetState} \$InstallShortcutsCtrl \$InstallShortcuts
+  \${NSD_GetState} \$RegisterOctaveFileTypeCtrl \$RegisterOctaveFileType
+FunctionEnd
+
+######################################################################
+
 Function .onInit
   Call DetectWinVer
   Call CheckCurrVersion
@@ -127,6 +168,18 @@ FunctionEnd
 ; file section
 Section "MainFiles"
 
+  ; set context based on whether installing for user or all
+  \${If} \$InstallAllUsers == \${BST_CHECKED}
+    SetShellVarContext all
+  \${Else}
+    SetShellVarContext current
+  \${Endif}
+
+  ; include the README
+  SetOutPath "\$INSTDIR" 
+  File "$OCTAVE_SOURCE/README.html"
+
+  ; distro files
 EOF
 
 # insert the files
@@ -156,6 +209,9 @@ Section make_uninstaller
  WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "UninstallString" "\$INSTDIR\\uninstall.exe"
  WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "NoModify" 1
  WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "NoRepair" 1
+ \${If} \$InstallAllUsers == \${BST_CHECKED}
+   WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "AllUsers" 1
+ \${EndIf}
  WriteUninstaller "uninstall.exe"
 SectionEnd
 
@@ -181,9 +237,59 @@ EOF
   fi
  
   cat >> $OUTFILE << EOF
+
+  \${If} \$InstallShortcuts == \${BST_CHECKED}
+    SetOutPath "%USERPROFILE%"
+    CreateShortCut "\$desktop\\Octave-$VERSION (Command Line).lnk" "\$INSTDIR\\bin\\octave-cli.exe" "" "\$INSTDIR\\$ICON" 0
+    CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
+  \${Endif}
+
+SectionEnd
+
+Section "FileTypeRego"
+  ; Octave document
+  WriteRegStr HKCR "Octave.Document.$VERSION" "" "GNU Octave Script"
+  WriteRegStr HKCR "Octave.Document.$VERSION\\DefaultIcon" "" "\$INSTDIR\\$ICON"
+  ; document actions
+  WriteRegStr HKCR "Octave.Document.$VERSION\\shell\\open\\command" "" '"\$INSTDIR\\bin\\octave-gui.exe" --force-gui --persist --eval "edit %1"'
+
+  \${If} \$RegisterOctaveFileType == \${BST_CHECKED}
+    ReadRegStr \$0 HKCR ".m" ""
+    StrCmp "\$0" "" no_back_type
+    WriteRegStr HKCR ".m" "backup_val" "\$0"  
+no_back_type:
+    WriteRegStr HKCR ".m" "" "Octave.Document.$VERSION"
+    WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "RegisteredFileType" 1
+  \${EndIf}
 SectionEnd
 
 Section "Uninstall"
+
+  ReadRegDWORD \$0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "AllUsers"
+  IfErrors not_all_users
+
+  SetShellVarContext all
+
+not_all_users:
+  ReadRegDWORD \$0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "RegisteredFileType"
+  IfErrors not_registered_file
+
+  ReadRegStr \$0 HKCR ".m" "backup_val"
+  IfErrors not_backup_file
+
+  # retore backup
+  WriteRegStr HKCR ".m" "" "\$0"
+
+  DeleteRegValue HKCR ".m" "backup_val"
+
+  ; dont delete .m if just restored backup
+  Goto not_registered_file
+not_backup_file:
+  DeleteRegKey HKCR ".m"
+
+not_registered_file:
+ ; delete file type
+ DeleteRegKey HKCR "Octave.Document.$VERSION"
 
  DeleteRegKey HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION"
  DeleteRegKey HKLM "Software\\Octave-$VERSION"

@@ -1,5 +1,11 @@
 more ("off");
 echo ("on");
+% cd to script directory as the packages files are in the same place
+[packagedir] = fileparts(mfilename("fullpathext"));
+if length(packagedir) > 0
+  cd(packagedir);
+endif
+% install the packages
 pkg install general-1.3.2.tar.gz
 pkg install miscellaneous-1.2.0.tar.gz
 pkg install struct-1.0.10.tar.gz

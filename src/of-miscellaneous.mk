@@ -8,7 +8,7 @@ $(PKG)_REMOTE_SUBDIR :=
 $(PKG)_SUBDIR   := miscellaneous
 $(PKG)_FILE     := miscellaneous-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
-$(PKG)_DEPS     := of-general
+$(PKG)_DEPS     := of-general units
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
