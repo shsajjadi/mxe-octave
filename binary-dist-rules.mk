@@ -123,7 +123,7 @@ define install-octave-wrapper-scripts
       -e "s|@OCTAVE_VERSION@|\"$($(OCTAVE_TARGET)_VERSION)\"|" \
       -e "s|@GNUPLOT_MAJOR_MINOR_VERSION@|\"$(shell echo $(gnuplot_VERSION) | $(SED) -e 's/\(^[0-9]+\.[0-9]+\)/\1/')\"|" \
       -e "s|@PROGRAM_NAME@|\"$$f\"|" > $$f-t \
-    && mv $$f-t $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION); \
+    && $(INSTALL) -m 755 $$f-t $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION); \
     rm -f $(OCTAVE_DIST_DIR)/bin/$$f; \
     ln -s $$f-$($(OCTAVE_TARGET)_VERSION) $(OCTAVE_DIST_DIR)/bin/$$f; \
   done
