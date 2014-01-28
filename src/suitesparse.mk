@@ -52,6 +52,7 @@ define $(PKG)_BUILD
 
     # build all
     $(MAKE) -C '$(1)' -j '$(JOBS)' \
+        CPPFLAGS='-DNTIMER' \
         CC='$(MXE_CC)' \
         CXX='$(MXE_CXX)' \
         CPLUSPLUS='$(MXE_CXX)' \
