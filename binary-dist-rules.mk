@@ -34,15 +34,27 @@ define make-dist-directory
   mkdir -p $(OCTAVE_DIST_DIR)
 endef
 
-define generate-dist-exclude-list
-  echo "generating lists of files to exclude..."
-  echo "  native files..."
-  echo "./$(TARGET)" > $(TOP_DIR)/excluded-native-files
-  echo "./bin/$(TARGET)-*.exe" >> $(TOP_DIR)/excluded-native-files
-  echo "  gcc cross compiler files..."
-  cd $(TOP_DIR)/cross-tools/$(HOST_PREFIX) \
-    && find . -type f -o -type l | sed "s,./,," > $(TOP_DIR)/excluded-gcc-files
-endef
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  define generate-dist-exclude-list
+    echo "generating (empty) lists of files to exclude..."
+    echo "  native files..."
+    rm -f $(TOP_DIR)/excluded-native-files
+    touch $(TOP_DIR)/excluded-native-files
+    echo "  gcc cross compiler files..."
+    rm -f $(TOP_DIR)/excluded-gcc-files
+    touch $(TOP_DIR)/excluded-gcc-files
+  endef
+else
+  define generate-dist-exclude-list
+    echo "generating lists of files to exclude..."
+    echo "  native files..."
+    echo "./$(TARGET)" > $(TOP_DIR)/excluded-native-files
+    echo "./bin/$(TARGET)-*.exe" >> $(TOP_DIR)/excluded-native-files
+    echo "  gcc cross compiler files..."
+    cd $(TOP_DIR)/cross-tools/$(HOST_PREFIX) \
+      && find . -type f -o -type l | sed "s,./,," > $(TOP_DIR)/excluded-gcc-files
+  endef
+endif
 
 define copy-dist-files
   echo "copying files..."
