@@ -73,6 +73,8 @@ define copy-windows-dist-files
   echo "  notepad++..."
   cd $(TOP_DIR) \
     && tar -c -h -f - notepad++ | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+  echo "  README.html..."
+  cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
 endef
 endif
 
