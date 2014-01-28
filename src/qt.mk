@@ -7,14 +7,14 @@ $(PKG)_CHECKSUM := bc352a283610e0cd2fe0dbedbc45613844090fcb
 $(PKG)_SUBDIR   := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.qt-project.org/archives/qt/4.8/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := openssl zlib libpng jpeg libmng tiff dbus
+$(PKG)_DEPS     := openssl zlib libpng jpeg libmng tiff dbus fontconfig
 
 $(PKG)_CONFIGURE_CMD :=
 $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION :=
 $(PKG)_CONFIGURE_DATABASE_OPTION :=
 $(PKG)_CONFIGURE_ENV := PKG_CONFIG_PATH='$(HOST_PREFIX)/lib/pkgconfig'
 $(PKG)_CONFIGURE_EXTRA_OPTION :=
-$(PKG)_CONFIGURE_INCLUDE_OPTION :=
+$(PKG)_CONFIGURE_INCLUDE_OPTION := '-I$(HOST_INCDIR)/freetype2'
 $(PKG)_CONFIGURE_LIBPATH_OPTION :=
 $(PKG)_CONFIGURE_PLATFORM_OPTION :=
 $(PKG)_PREFIX := $(HOST_PREFIX)
