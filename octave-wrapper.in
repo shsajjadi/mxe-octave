@@ -27,4 +27,4 @@ export TERM
 export FONTCONFIG_PATH
 export GNUPLOT_DRIVER_DIR
 
-exec "$OCTAVE_HOME/bin/@PROGRAM_NAME@.real" "$@"
+exec "$OCTAVE_HOME/bin/@PROGRAM_NAME@-@OCTAVE_VERSION@.real" "$@"
