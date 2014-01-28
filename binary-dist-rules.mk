@@ -15,6 +15,7 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
     native-gcc \
     native-binutils \
     npp
+  TAR_H_OPTION := -h
 endif
 
 BINARY_DIST_DEPS := \
@@ -60,7 +61,7 @@ define copy-dist-files
   echo "copying files..."
   echo "  octave and dependencies..."
   cd $(HOST_PREFIX) \
-    && tar -c -h -X $(TOP_DIR)/excluded-gcc-files -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+    && tar -c $(TAR_H_OPTION) -X $(TOP_DIR)/excluded-gcc-files -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
   echo "  octaverc file..."
   cp $(TOP_DIR)/build_packages.m $(OCTAVE_DIST_DIR)/src \
     && cp $(TOP_DIR)/octaverc $(OCTAVE_DIST_DIR)/share/octave/site/m/startup/octaverc
@@ -72,19 +73,19 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
 define copy-windows-dist-files
   echo "  native tools..."
   cd $(TOP_DIR)/native-tools/usr \
-    && tar -c -h -X $(TOP_DIR)/excluded-native-files -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+    && tar -c $(TAR_H_OPTION) -X $(TOP_DIR)/excluded-native-files -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
   echo "  libgcc_s_dw2-1.dll to bin directory"
   cd $(OCTAVE_DIST_DIR) \
     && cp lib/gcc/i686-pc-mingw32/libgcc_s_dw2-1.dll bin
   echo "  msys base files..."
   cd $(TOP_DIR)/msys-base \
-    && tar -c -h -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+    && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
   echo "  msys extension files..."
   cd $(TOP_DIR)/msys-extension \
-    && tar -c -h -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+    && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
   echo "  notepad++..."
   cd $(TOP_DIR) \
-    && tar -c -h -f - notepad++ | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+    && tar -c $(TAR_H_OPTION) -f - notepad++ | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
   echo "  README.html..."
   cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
 endef
