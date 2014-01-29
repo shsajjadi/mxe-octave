@@ -20,6 +20,7 @@ endif
 
 BINARY_DIST_DEPS := \
   $(OCTAVE_TARGET) \
+  blas-packages \
   octave-forge-packages \
   units \
   transfig \
@@ -88,6 +89,8 @@ define copy-windows-dist-files
     && tar -c $(TAR_H_OPTION) -f - notepad++ | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
   echo "  README.html..."
   cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
+  echo "  refblas..."
+  cp $(OCTAVE_DIST_DIR)/bin/libblas.dll $(OCTAVE_DIST_DIR)/bin/librefblas.dll
 endef
 endif
 

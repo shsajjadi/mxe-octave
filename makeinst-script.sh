@@ -71,6 +71,12 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 
 ; custom dialogs
 !include nsDialogs.nsh
+!macro __DropList_GetCurSel CONTROL VAR
+        SendMessage \${CONTROL} \${CB_GETCURSEL} 0 0 \${VAR}
+!macroend
+
+!define DropList_GetCurSel \`!insertmacro __DropList_GetCurSel\`
+
 ; additional logic
 !include LogicLib.nsh
 
@@ -123,6 +129,8 @@ Var InstallShortcuts
 Var InstallShortcutsCtrl
 Var RegisterOctaveFileType
 Var RegisterOctaveFileTypeCtrl
+Var InstallBlasLibCtrl
+Var InstallBlasLib
 
 Function octaveOptionsPage 
   Push \$0
@@ -145,6 +153,15 @@ Function octaveOptionsPage
   Pop \$RegisterOctaveFileTypeCtrl
   \${NSD_SetState} \$RegisterOctaveFileTypeCtrl \${BST_CHECKED}
 
+  \${NSD_CreateLabel} 0 70 110u 12u "BLAS library implementation:"
+  Pop \$0
+
+  \${NSD_CreateDropList} 120u 70 100u 80u ""
+  Pop \$InstallBlasLibCtrl
+  \${NSD_CB_AddString} \$InstallBlasLibCtrl "Reference BLAS"
+  \${NSD_CB_AddString} \$InstallBlasLibCtrl "OpenBLAS"
+  \${NSD_CB_SelectString} \$InstallBlasLibCtrl "Reference BLAS"
+
   !insertmacro MUI_HEADER_TEXT "Install Options" "Choose options for installing"
   nsDialogs::Show  
   Pop \$0
@@ -154,6 +171,7 @@ Function octaveOptionsLeave
   \${NSD_GetState} \$InstallAllUsersCtrl \$InstallAllUsers
   \${NSD_GetState} \$InstallShortcutsCtrl \$InstallShortcuts
   \${NSD_GetState} \$RegisterOctaveFileTypeCtrl \$RegisterOctaveFileType
+  \${DropList_GetCurSel} \$InstallBlasLibCtrl \$InstallBlasLib
 FunctionEnd
 
 ######################################################################
@@ -243,6 +261,15 @@ EOF
     CreateShortCut "\$desktop\\Octave-$VERSION (Command Line).lnk" "\$INSTDIR\\bin\\octave-cli.exe" "" "\$INSTDIR\\$ICON" 0
     CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
   \${Endif}
+
+  ; BLAS set up
+  \${If} \$InstallBlasLib == 1
+    ; OpenBLAS
+    CopyFiles /SILENT "\$INSTDIR\\bin\\libopenblas.dll" "\$INSTDIR\\bin\\libblas.dll"
+  \${Else}
+    ; Reference BLAS
+    CopyFiles /SILENT "\$INSTDIR\\bin\\librefblas.dll" "\$INSTDIR\\bin\\libblas.dll"
+  \${EndIf}
 
 SectionEnd
 
