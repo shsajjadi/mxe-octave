@@ -40,12 +40,20 @@ USE_SYSTEM_GCC := @USE_SYSTEM_GCC@
 # on your system (default is yes if doing native build). 
 USE_SYSTEM_FONTCONFIG := @USE_SYSTEM_FONTCONFIG@
 
+# Attempt to build Octave and dependencies with 64-bit indexing
+# enabled (experimental; requires 64-bit system and compiler).
+ENABLE_64 := @ENABLE_64@
+
 # Should match what config.guess prints for your system.
 # If cross compiling, you must set it manually.
 ifeq ($(MXE_NATIVE_BUILD),yes)
   TARGET := $(shell tools/config.guess)
 else
-  TARGET := i686-pc-mingw32
+  ifeq ($(ENABLE_64),yes)
+    TARGET := x86_64-w64-mingw32
+  else
+    TARGET := i686-pc-mingw32
+  endif
 endif
 BUILD_SYSTEM := $(shell tools/config.guess)
 
@@ -55,10 +63,6 @@ BUILD_SHARED := @BUILD_SHARED@
 BUILD_STATIC := @BUILD_STATIC@
 
 USE_PIC_FLAG := @USE_PIC_FLAG@
-
-# Attempt to build Octave and dependencies with 64-bit indexing
-# enabled (experimental; requires 64-bit system and compiler).
-ENABLE_64 := @ENABLE_64@
 
 # Attempt to build with support for Java.
 ENABLE_JAVA := @ENABLE_JAVA@
