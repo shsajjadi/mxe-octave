@@ -3,11 +3,11 @@
 
 PKG             := qt
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := bc352a283610e0cd2fe0dbedbc45613844090fcb
+$(PKG)_CHECKSUM := 745f9ebf091696c0d5403ce691dc28c039d77b9e
 $(PKG)_SUBDIR   := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.qt-project.org/archives/qt/4.8/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := openssl zlib libpng jpeg libmng tiff dbus fontconfig
+$(PKG)_DEPS     := postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus fontconfig
 
 $(PKG)_CONFIGURE_CMD :=
 $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION :=
@@ -77,7 +77,6 @@ else
       -no-glib \
       -no-gstreamer \
       -no-reduce-exports \
-      -no-ssse3 \
       -no-rpath \
       -make translations \
       -translationdir '$($(PKG)_PREFIX)/translations' \
@@ -135,7 +134,7 @@ define $(PKG)_BUILD
         -system-libjpeg \
         -system-libtiff \
         -system-libmng \
-        -no-sse2 
+        -system-sqlite
 
     if test x$(MXE_SYSTEM) = xmsvc; then \
         for f in $(1)/mkspecs/win32-msvc*/qmake.conf; do \
