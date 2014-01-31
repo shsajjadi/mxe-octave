@@ -10,6 +10,7 @@ else
 endif
 
 PWD := $(shell pwd)
+TOP_DIR := $(PWD)
 
 STRIP_DIST_FILES := @STRIP_DIST_FILES@
 
@@ -108,7 +109,7 @@ endif
 # and it's not clear to me how to change that.
 #
 # For native builds, dump everything all together in one directory tree.
-ROOT_PREFIX := $(PWD)/usr
+ROOT_PREFIX := $(TOP_DIR)/usr
 BUILD_TOOLS_PREFIX := $(ROOT_PREFIX)
 ifeq ($(MXE_NATIVE_BUILD),yes)
   HOST_PREFIX := $(ROOT_PREFIX)
@@ -177,7 +178,8 @@ LIBTOOLIZE  := libtoolize
 ## Build tools are tools that we need to build everything else.
 ## They run on the build system.  Some, like gcc and binutils may
 ## generate output that runs on the host system (TARGET in MXE terms).
-ALL_BUILD_TOOLS := $(patsubst src/%.mk, %, $(wildcard src/build-*.mk))
+ALL_BUILD_TOOLS := $(shell $(SED) -n 's/^.* class="package">\(build-[^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html')
+
 BUILD_COMPILER_TOOLS := build-gcc build-binutils
 BUILD_TOOLS := $(ALL_BUILD_TOOLS)
 # Building flex for native mingw fails, so disable it.
@@ -210,15 +212,14 @@ ifneq ($(MXE_SYSTEM),msvc)
   BUILD_TOOLS := $(filter-out build-msvctools, $(BUILD_TOOLS))
 endif
 
-STAMP_DIR  := $(PWD)/installed-packages
-MSYS_INFO_DIR := $(PWD)/msys-info
-LOG_DIR    := $(PWD)/log
+STAMP_DIR  := $(TOP_DIR)/installed-packages
+MSYS_INFO_DIR := $(TOP_DIR)/msys-info
+LOG_DIR    := $(TOP_DIR)/log
 TIMESTAMP  := $(shell date +%Y%m%d_%H%M%S)
-PKG_DIR    := $(PWD)/pkg
-TMP_DIR     = $(PWD)/tmp-$(1)
-TOP_DIR    := $(PWD)
+PKG_DIR    := $(TOP_DIR)/pkg
+TMP_DIR     = $(TOP_DIR)/tmp-$(1)
 MAKEFILE   := $(TOP_DIR)/Makefile
-PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html'))
+PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* class="package">\([^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html'))
 
 PATH := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)
 
@@ -427,14 +428,14 @@ DOWNLOAD_PKG_ARCHIVE = \
 
 ifeq ($(IGNORE_SETTINGS),yes)
     $(info [ignore settings.mk])
-else ifeq ($(wildcard $(PWD)/settings.mk),$(PWD)/settings.mk)
-    include $(PWD)/settings.mk
+else ifeq ($(wildcard $(TOP_DIR)/settings.mk),$(TOP_DIR)/settings.mk)
+    include $(TOP_DIR)/settings.mk
 else
     $(info [create settings.mk])
     $(shell { \
         echo '#JOBS = $(JOBS)'; \
         echo '#PKGS ='; \
-    } >'$(PWD)/settings.mk')
+    } >'$(TOP_DIR)/settings.mk')
 endif
 
 .PHONY: all
