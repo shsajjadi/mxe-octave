@@ -3,6 +3,7 @@
 
 PKG             := gtk2
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.24.10
 $(PKG)_CHECKSUM := baf5c73e186352cad767392a6b55840be0326ddc
 $(PKG)_SUBDIR   := gtk+-$($(PKG)_VERSION)
 $(PKG)_FILE     := gtk+-$($(PKG)_VERSION).tar.xz

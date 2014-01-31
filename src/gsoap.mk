@@ -3,6 +3,7 @@
 
 PKG             := gsoap
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.8.11
 $(PKG)_CHECKSUM := b1c17d501361939c6d419eeb2aa26e7fd2b586fe
 $(PKG)_SUBDIR   := gsoap-$(call SHORT_PKG_VERSION,$(PKG))
 $(PKG)_FILE     := gsoap_$($(PKG)_VERSION).zip

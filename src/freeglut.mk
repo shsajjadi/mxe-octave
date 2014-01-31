@@ -3,6 +3,7 @@
 
 PKG             := freeglut
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.8.0
 $(PKG)_CHECKSUM := 4debbe559c6c9841ce1abaddc9d461d17c6083b1
 $(PKG)_SUBDIR   := freeglut-$(word 1,$(subst -, ,$($(PKG)_VERSION)))
 $(PKG)_FILE     := freeglut-$($(PKG)_VERSION).tar.gz

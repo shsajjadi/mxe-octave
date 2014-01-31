@@ -3,6 +3,7 @@
 
 PKG             := build-scons
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.3.0
 $(PKG)_CHECKSUM := 728edf20047a9f8a537107dbff8d8f803fd2d5e3
 $(PKG)_SUBDIR   := scons-$($(PKG)_VERSION)
 $(PKG)_FILE     := scons-$($(PKG)_VERSION).tar.gz

@@ -3,6 +3,7 @@
 
 PKG             := of-geometry
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.7.0
 $(PKG)_CHECKSUM := 6d85ec312f6beab25ceeae910444bc1fdf0f70b9
 $(PKG)_REMOTE_SUBDIR :=
 $(PKG)_SUBDIR   := geometry

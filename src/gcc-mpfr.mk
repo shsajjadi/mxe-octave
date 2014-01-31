@@ -3,6 +3,7 @@
 
 PKG             := gcc-mpfr
 $(PKG)_IGNORE    = $(mpfr_IGNORE)
+$(PKG)_VERSION  := 3.1.1
 $(PKG)_CHECKSUM  = $(mpfr_CHECKSUM)
 $(PKG)_SUBDIR    = $(mpfr_SUBDIR)
 $(PKG)_FILE      = $(mpfr_FILE)

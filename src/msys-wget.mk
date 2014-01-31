@@ -3,6 +3,7 @@
 
 PKG             := msys-wget
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.12-1
 $(PKG)_CHECKSUM := b13415e735484d82e81bc648fed52a83323ff993
 $(PKG)_REMOTE_SUBDIR := wget/wget-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

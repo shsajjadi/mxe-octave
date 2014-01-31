@@ -3,6 +3,7 @@
 
 PKG             := gtk3
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.8.2
 $(PKG)_CHECKSUM := c519b553b618588f288c70ea5dce1145588944eb
 $(PKG)_SUBDIR   := gtk+-$($(PKG)_VERSION)
 $(PKG)_FILE     := gtk+-$($(PKG)_VERSION).tar.xz

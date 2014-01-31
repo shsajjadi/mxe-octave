@@ -3,6 +3,7 @@
 
 PKG             := build-binutils
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.23.1
 $(PKG)_CHECKSUM := 587fca86f6c85949576f4536a90a3c76ffc1a3e1
 $(PKG)_SUBDIR   := binutils-$($(PKG)_VERSION)
 $(PKG)_FILE     := binutils-$($(PKG)_VERSION).tar.bz2

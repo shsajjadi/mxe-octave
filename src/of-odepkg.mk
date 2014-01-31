@@ -3,6 +3,7 @@
 
 PKG             := of-odepkg
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.8.4
 $(PKG)_CHECKSUM := 74b7e88ad5a104e064c413f077a5e5327741efb4
 $(PKG)_REMOTE_SUBDIR :=
 $(PKG)_SUBDIR   := odepkg

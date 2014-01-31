@@ -4,6 +4,7 @@
 # zlib
 PKG				:= ocaml-core
 $(PKG)_IGNORE	:=
+$(PKG)_VERSION  := 4.00.0
 $(PKG)_CHECKSUM := $(ocaml-native_CHECKSUM)
 $(PKG)_SUBDIR	:= $(ocaml-native_SUBDIR)
 $(PKG)_FILE		:= $(ocaml-native_FILE)

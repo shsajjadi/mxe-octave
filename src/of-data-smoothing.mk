@@ -3,6 +3,7 @@
 
 PKG             := of-data-smoothing
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.3.0
 $(PKG)_CHECKSUM := 28fb1233f0db586bccac9317f0f0eff84bb9842e
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := data-smoothing

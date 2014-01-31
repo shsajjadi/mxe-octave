@@ -3,6 +3,7 @@
 
 PKG             := xz
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 5.0.4
 $(PKG)_CHECKSUM := 3e976d7715fde43422572c70f927bfdae56a94c3
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz

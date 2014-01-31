@@ -3,6 +3,7 @@
 
 PKG             := of-sockets
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.0.8
 $(PKG)_CHECKSUM := c4d4f6bea306dd4d722b3f7d8cf475a9fdd0dbba
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := sockets

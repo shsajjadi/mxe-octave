@@ -3,6 +3,7 @@
 
 PKG             := of-optim
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.2.2
 $(PKG)_CHECKSUM := c1fbd588dd11150ff4e973d4b93582c8bd6126ed
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := optim-$($(PKG)_VERSION)

@@ -3,6 +3,7 @@
 
 PKG             := pixman
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.30.0
 $(PKG)_CHECKSUM := 9c25dd0efa2023216e82033b71fcfe1bae9ebaac
 $(PKG)_SUBDIR   := pixman-$($(PKG)_VERSION)
 $(PKG)_FILE     := pixman-$($(PKG)_VERSION).tar.gz

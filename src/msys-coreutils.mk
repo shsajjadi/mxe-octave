@@ -3,6 +3,7 @@
 
 PKG             := msys-coreutils
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 5.97-3
 $(PKG)_CHECKSUM := 54ac256a8f0c6a89f1b3c7758f3703b4e56382be
 $(PKG)_REMOTE_SUBDIR := coreutils/coreutils-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

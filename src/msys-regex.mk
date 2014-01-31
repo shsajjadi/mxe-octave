@@ -3,6 +3,7 @@
 
 PKG             := msys-regex
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.20090805-2
 $(PKG)_CHECKSUM := d95faa144cf06625b3932a8e84ed1a6ab6bbe644
 $(PKG)_REMOTE_SUBDIR := regex/regex-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

@@ -3,6 +3,7 @@
 
 PKG             := uuid
 $(PKG)_IGNORE   = $(w32api_IGNORE)
+$(PKG)_VERSION  := 3.17
 $(PKG)_CHECKSUM = $(w32api_CHECKSUM)
 $(PKG)_SUBDIR   = $(w32api_SUBDIR)
 $(PKG)_FILE     = $(w32api_FILE)

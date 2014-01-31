@@ -3,6 +3,7 @@
 
 PKG             := of-communications
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.2.0
 $(PKG)_CHECKSUM := 66ffa1bf7a9a6c0642be8ff92f712ab087b47c90
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := communications

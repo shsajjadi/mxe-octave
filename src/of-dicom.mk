@@ -3,6 +3,7 @@
 
 PKG             := of-dicom
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.1.1
 $(PKG)_CHECKSUM := dfb7eccf6ccc39e52c27a5d885984eaa3a55d3d4
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := dicom

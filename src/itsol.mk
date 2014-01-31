@@ -3,6 +3,7 @@
 
 PKG             := itsol
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2
 $(PKG)_CHECKSUM := c7af215aaa6ab377521ba317eccf6859165ebefb
 $(PKG)_SUBDIR   := ITSOL_2
 $(PKG)_FILE     := ITSOL_2.tar.gz

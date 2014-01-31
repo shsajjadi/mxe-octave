@@ -3,6 +3,7 @@
 
 PKG             := npp
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 6.2.3
 $(PKG)_CHECKSUM := e246ebb89c10b71ed483b866ea90385a661092e6
 $(PKG)_SUBDIR   := unicode
 $(PKG)_FILE     := $(PKG).$($(PKG)_VERSION).bin.zip

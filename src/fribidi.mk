@@ -3,6 +3,7 @@
 
 PKG             := fribidi
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.19.4
 $(PKG)_CHECKSUM := 23d1adf1e929a3fb159345d509918ad109e925ad
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2

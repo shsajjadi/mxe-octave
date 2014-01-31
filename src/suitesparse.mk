@@ -2,6 +2,7 @@
 # See index.html for further information.
 
 PKG             := suitesparse
+$(PKG)_VERSION  := 4.0.2
 $(PKG)_CHECKSUM := 46b24a28eef4b040ea5a02d2c43e82e28b7d6195
 $(PKG)_SUBDIR   := SuiteSparse
 $(PKG)_FILE     := SuiteSparse-$($(PKG)_VERSION).tar.gz

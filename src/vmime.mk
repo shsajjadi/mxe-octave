@@ -3,6 +3,7 @@
 
 PKG             := vmime
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := fc9bc26
 $(PKG)_CHECKSUM := 670aaecfbab41747e3a8f1d80dd757eb01ac93cb
 $(PKG)_SUBDIR   := kisli-vmime-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz

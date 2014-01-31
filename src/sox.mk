@@ -4,6 +4,7 @@
 # sox
 PKG             := sox
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 14.4.0
 $(PKG)_CHECKSUM := d809cab382c7a9d015491c69051a9d1c1a1a44f1
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz

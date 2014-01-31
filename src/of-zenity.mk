@@ -3,6 +3,7 @@
 
 PKG             := of-zenity
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.5.7
 $(PKG)_CHECKSUM := bc24b583385a3d4d6f438361334be530e38752c7
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := zenity-$($(PKG)_VERSION)

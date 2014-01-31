@@ -3,6 +3,7 @@
 
 PKG             := wxwidgets
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.8.12
 $(PKG)_CHECKSUM := 39552f3e49341197fea8373824ec609c757e890b
 $(PKG)_SUBDIR   := wxMSW-$($(PKG)_VERSION)
 $(PKG)_FILE     := wxMSW-$($(PKG)_VERSION).tar.bz2

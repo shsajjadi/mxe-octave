@@ -3,6 +3,7 @@
 
 PKG             := xapian-core
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.2.12
 $(PKG)_CHECKSUM := 2b96800280fee41eed767289620172f5226c9c4f
 $(PKG)_SUBDIR   := xapian-core-$($(PKG)_VERSION)
 $(PKG)_FILE     := xapian-core-$($(PKG)_VERSION).tar.gz

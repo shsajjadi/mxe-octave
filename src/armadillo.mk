@@ -4,6 +4,7 @@
 # armadillo
 PKG             := armadillo
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.4.4
 $(PKG)_CHECKSUM := e293a56695e7447cf5caa395932f1f0d41e13ffc
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz

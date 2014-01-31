@@ -2,6 +2,7 @@
 # See index.html for further information.
 
 PKG             := libical
+$(PKG)_VERSION  := 0.48
 $(PKG)_CHECKSUM := 4693cd0438be9f3727146ac1a46aa5b1b93b8c86
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz

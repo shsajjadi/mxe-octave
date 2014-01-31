@@ -3,6 +3,7 @@
 
 PKG             := pkg-config
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.28
 $(PKG)_CHECKSUM := 71853779b12f958777bffcb8ca6d849b4d3bed46
 $(PKG)_SUBDIR   := pkg-config-$($(PKG)_VERSION)
 $(PKG)_FILE     := pkg-config-$($(PKG)_VERSION).tar.gz

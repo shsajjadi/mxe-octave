@@ -3,6 +3,7 @@
 
 PKG             := msys-termcap
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.20050421_1-2
 $(PKG)_CHECKSUM := e4273ccfde8ecf3a7631446fb2b01971a24ff9f7
 $(PKG)_REMOTE_SUBDIR := termcap/termcap-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

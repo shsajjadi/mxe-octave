@@ -3,6 +3,7 @@
 
 PKG             := build-libtool
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.4.2
 $(PKG)_CHECKSUM := 22b71a8b5ce3ad86e1094e7285981cae10e6ff88
 $(PKG)_SUBDIR   := libtool-$($(PKG)_VERSION)
 $(PKG)_FILE     := libtool-$($(PKG)_VERSION).tar.gz

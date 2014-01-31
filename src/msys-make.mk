@@ -3,6 +3,7 @@
 
 PKG             := msys-make
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.81-3
 $(PKG)_CHECKSUM := c7264eb13b05cf2e1a982a3c2619837b96203a27
 $(PKG)_REMOTE_SUBDIR := make/make-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

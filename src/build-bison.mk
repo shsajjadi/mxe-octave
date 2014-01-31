@@ -3,6 +3,7 @@
 
 PKG             := build-bison
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.7.1
 $(PKG)_CHECKSUM := 00ab1b32d864622077c311e4f5420d4e2931fdc8
 $(PKG)_SUBDIR   := bison-$($(PKG)_VERSION)
 $(PKG)_FILE     := bison-$($(PKG)_VERSION).tar.xz

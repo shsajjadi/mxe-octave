@@ -3,6 +3,7 @@
 
 PKG             := msys-less
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 436-2
 $(PKG)_CHECKSUM := 30373c5a85ebd9846e84aed5e147ced56b1e685c
 $(PKG)_REMOTE_SUBDIR := less/less-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

@@ -3,6 +3,7 @@
 
 PKG             := of-image
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.2.0
 $(PKG)_CHECKSUM := b4781831cf14ec71cc220776ab14672d335c55ed
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := image

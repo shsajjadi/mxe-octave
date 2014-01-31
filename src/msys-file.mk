@@ -3,6 +3,7 @@
 
 PKG             := msys-file
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 5.04-1
 $(PKG)_CHECKSUM := 9d38d45a66ff2b72d732397a9e23a12e347ae41f
 $(PKG)_REMOTE_SUBDIR := file/file-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

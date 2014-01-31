@@ -3,6 +3,7 @@
 
 PKG             := libgpg_error
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.11
 $(PKG)_CHECKSUM := be209b013652add5c7e2c473ea114f58203cc6cd
 $(PKG)_SUBDIR   := libgpg-error-$($(PKG)_VERSION)
 $(PKG)_FILE     := libgpg-error-$($(PKG)_VERSION).tar.bz2

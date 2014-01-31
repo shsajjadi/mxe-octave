@@ -3,6 +3,7 @@
 
 PKG             := units
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.02
 $(PKG)_CHECKSUM := e460371dc97034d17ce452e6b64991f7fd2d1409
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz

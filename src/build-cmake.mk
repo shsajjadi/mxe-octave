@@ -3,6 +3,7 @@
 
 PKG             := build-cmake
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.8.9
 $(PKG)_CHECKSUM := b96663c0757a5edfbddc410aabf7126a92131e2b
 $(PKG)_SUBDIR   := cmake-$($(PKG)_VERSION)
 $(PKG)_FILE     := cmake-$($(PKG)_VERSION).tar.gz

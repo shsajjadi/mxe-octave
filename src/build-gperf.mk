@@ -3,6 +3,7 @@
 
 PKG             := build-gperf
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.0.4
 $(PKG)_CHECKSUM := e32d4aff8f0c730c9a56554377b2c6d82d0951b8
 $(PKG)_SUBDIR   := gperf-$($(PKG)_VERSION)
 $(PKG)_FILE     := gperf-$($(PKG)_VERSION).tar.gz

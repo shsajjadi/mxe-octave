@@ -3,6 +3,7 @@
 
 PKG             := msys-tar
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.23-1
 $(PKG)_CHECKSUM := 1791b71ad8573612049a8a4821d93e870fb2ae38
 $(PKG)_REMOTE_SUBDIR := tar/tar-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

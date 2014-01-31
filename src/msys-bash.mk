@@ -3,6 +3,7 @@
 
 PKG             := msys-bash
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.1.17-4
 $(PKG)_CHECKSUM := 2c0d36bcd474a9d1232cfe35aea6f1beb477b78a
 $(PKG)_REMOTE_SUBDIR := bash/bash-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

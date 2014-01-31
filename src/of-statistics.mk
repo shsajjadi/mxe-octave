@@ -3,6 +3,7 @@
 
 PKG             := of-statistics
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.2.3
 $(PKG)_CHECKSUM := fba40342a265053323c36c590a74d9567e4a0870
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := statistics

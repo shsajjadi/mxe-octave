@@ -3,6 +3,7 @@
 
 PKG             := of-signal
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.2.2
 $(PKG)_CHECKSUM := 02d30ac92cb1ecb94247c9ce993f8a296081bf53
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := signal

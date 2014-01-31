@@ -3,6 +3,7 @@
 
 PKG             := libevent
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.0.20
 $(PKG)_CHECKSUM := 20bb4a1a296ac93c08dfc32ae19ab874cab67a0c
 $(PKG)_SUBDIR   := libevent-$($(PKG)_VERSION)-stable
 $(PKG)_FILE     := libevent-$($(PKG)_VERSION)-stable.tar.gz

@@ -3,6 +3,7 @@
 
 PKG             := imagemagick
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 6.7.2-7
 $(PKG)_CHECKSUM := 13198d502e95abb305c23c3d56378e9139fcb7c3
 $(PKG)_SUBDIR   := ImageMagick-$($(PKG)_VERSION)
 $(PKG)_FILE     := ImageMagick-$($(PKG)_VERSION).tar.xz

@@ -3,6 +3,7 @@
 
 PKG             := liblo
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.26
 $(PKG)_CHECKSUM := 21942c8f19e9829b5842cb85352f98c49dfbc823
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz

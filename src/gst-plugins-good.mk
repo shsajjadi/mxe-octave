@@ -3,6 +3,7 @@
 
 PKG             := gst-plugins-good
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.10.31
 $(PKG)_CHECKSUM := 15addda7c6322a42c904aaf1c1d0b5d5a63f908b
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz

@@ -3,6 +3,7 @@
 
 PKG             := of-actuarial
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.1.0
 $(PKG)_CHECKSUM := 89cc7a697f347329a107676afcf09575faa2f386
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := actuarial

@@ -3,6 +3,7 @@
 
 PKG             := of-specfun
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.1.0
 $(PKG)_CHECKSUM := 293a98dc2139057aa7119f3065d501616431c6a5
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := specfun

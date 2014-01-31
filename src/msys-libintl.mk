@@ -3,6 +3,7 @@
 
 PKG             := msys-libintl
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.18.1.1-1
 $(PKG)_CHECKSUM := 4000b935a5bc30b4c757fde69d27716fa3c2c269
 $(PKG)_REMOTE_SUBDIR := gettext/gettext-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

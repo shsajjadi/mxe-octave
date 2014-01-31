@@ -3,6 +3,7 @@
 
 PKG             := gettext
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.18.3.1
 $(PKG)_CHECKSUM := a32c19a6e39450748f6e56d2ac6b8b0966a5ab05
 $(PKG)_SUBDIR   := gettext-$($(PKG)_VERSION)
 $(PKG)_FILE     := gettext-$($(PKG)_VERSION).tar.gz

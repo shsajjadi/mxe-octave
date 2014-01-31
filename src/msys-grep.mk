@@ -3,6 +3,7 @@
 
 PKG             := msys-grep
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.5.4-2
 $(PKG)_CHECKSUM := 69d03c4415c55b9617850a4991d0708fbe3788f6
 $(PKG)_REMOTE_SUBDIR := grep/grep-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

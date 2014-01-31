@@ -3,6 +3,7 @@
 
 PKG             := openscenegraph
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.0.1
 $(PKG)_CHECKSUM := 13c7e39f6d62047ad944d8d28a0f0eb60384ce33
 $(PKG)_SUBDIR   := OpenSceneGraph-$($(PKG)_VERSION)
 $(PKG)_FILE     := OpenSceneGraph-$($(PKG)_VERSION).zip

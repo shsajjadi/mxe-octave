@@ -3,6 +3,7 @@
 
 PKG             := pango
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.34.1
 $(PKG)_CHECKSUM := a6c224424eb3f0dcc231a8000591c05a85df689c
 $(PKG)_SUBDIR   := pango-$($(PKG)_VERSION)
 $(PKG)_FILE     := pango-$($(PKG)_VERSION).tar.xz

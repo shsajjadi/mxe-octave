@@ -3,6 +3,7 @@
 
 PKG             := build-python
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.7.6
 $(PKG)_CHECKSUM := 8328d9f1d55574a287df384f4931a3942f03da64
 $(PKG)_SUBDIR   := Python-$($(PKG)_VERSION)
 $(PKG)_FILE     := Python-$($(PKG)_VERSION).tgz
