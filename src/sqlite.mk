@@ -3,6 +3,7 @@
 
 PKG             := sqlite
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3071401
 $(PKG)_CHECKSUM := c464e0e3efe98227c6546b9b1e786b51b8b642fc
 $(PKG)_SUBDIR   := $(PKG)-autoconf-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-autoconf-$($(PKG)_VERSION).tar.gz

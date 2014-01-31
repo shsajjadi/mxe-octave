@@ -3,6 +3,7 @@
 
 PKG             := msys-sed
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 4.2.1-2
 $(PKG)_CHECKSUM := ced60ab96ab3f713da0d0a570232f2a5f0ec5270
 $(PKG)_REMOTE_SUBDIR := sed/sed-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

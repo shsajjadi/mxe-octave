@@ -3,6 +3,7 @@
 
 PKG             := msys-gawk
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.1.7-2
 $(PKG)_CHECKSUM := 421ecc23e764ed87291796501189cc92fa905c0d
 $(PKG)_REMOTE_SUBDIR := gawk/gawk-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

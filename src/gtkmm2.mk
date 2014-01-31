@@ -3,6 +3,7 @@
 
 PKG             := gtkmm2
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.24.0
 $(PKG)_CHECKSUM := 9b9e68360fb3f5faa7f221acba56f0d75a8198d2
 $(PKG)_SUBDIR   := gtkmm-$($(PKG)_VERSION)
 $(PKG)_FILE     := gtkmm-$($(PKG)_VERSION).tar.bz2

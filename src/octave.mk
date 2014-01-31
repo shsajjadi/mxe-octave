@@ -3,6 +3,7 @@
 
 PKG             := octave
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.8.0
 $(PKG)_CHECKSUM := 7dc2736d05fef50e4f7b3e1b9ab83c8287e8f267
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz

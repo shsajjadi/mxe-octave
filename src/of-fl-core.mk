@@ -3,6 +3,7 @@
 
 PKG             := of-fl-core
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.0.0
 $(PKG)_CHECKSUM := 15c22155457f2eaf3d2531cd8a652732d9b7ebce
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := fl-core

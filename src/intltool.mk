@@ -3,6 +3,7 @@
 
 PKG             := intltool
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.50.2
 $(PKG)_CHECKSUM := 7fddbd8e1bf94adbf1bc947cbf3b8ddc2453f8ad
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz

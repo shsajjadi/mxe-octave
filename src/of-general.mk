@@ -3,6 +3,7 @@
 
 PKG             := of-general
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.3.2
 $(PKG)_CHECKSUM := 1662d97f0bf1be957e1a30a287d9c0aff7b5ecdd
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := general

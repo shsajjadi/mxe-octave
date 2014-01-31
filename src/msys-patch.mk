@@ -3,6 +3,7 @@
 
 PKG             := msys-patch
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.6.1-1
 $(PKG)_CHECKSUM := b4a82565f739f45dfa5ee3db8c59e9638833f89c
 $(PKG)_REMOTE_SUBDIR := patch/patch-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

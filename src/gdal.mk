@@ -3,6 +3,7 @@
 
 PKG             := gdal
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.9.2
 $(PKG)_CHECKSUM := 7eda6a4d735b8d6903740e0acdd702b43515e351
 $(PKG)_SUBDIR   := gdal-$($(PKG)_VERSION)
 $(PKG)_FILE     := gdal-$($(PKG)_VERSION).tar.gz

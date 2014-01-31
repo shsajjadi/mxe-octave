@@ -3,6 +3,7 @@
 
 PKG             := giflib
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 5.0.2
 $(PKG)_CHECKSUM := 841da41f2e8c212555453f7af7b5aa60d7ea4be7
 $(PKG)_SUBDIR   := giflib-$($(PKG)_VERSION)
 $(PKG)_FILE     := giflib-$($(PKG)_VERSION).tar.bz2

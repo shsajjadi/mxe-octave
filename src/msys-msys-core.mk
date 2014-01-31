@@ -3,6 +3,7 @@
 
 PKG             := msys-msys-core
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.0.18-1
 $(PKG)_CHECKSUM := 36d52ca7066eb6ad0da68c6f31214416f4c9dcec
 $(PKG)_REMOTE_SUBDIR := msys-core/msys-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

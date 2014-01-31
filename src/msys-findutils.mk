@@ -3,6 +3,7 @@
 
 PKG             := msys-findutils
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 4.4.2-2
 $(PKG)_CHECKSUM := fbdf7bae277f02f4189fa1d9ebf92fba6852dbce
 $(PKG)_REMOTE_SUBDIR := findutils/findutils-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

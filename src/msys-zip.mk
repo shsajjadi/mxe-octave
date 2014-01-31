@@ -3,6 +3,7 @@
 
 PKG             := msys-zip
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.0-1
 $(PKG)_CHECKSUM := 38a09ab05f88abd8e31e769a4520b2caea79bfde
 $(PKG)_REMOTE_SUBDIR := zip/zip-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

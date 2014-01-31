@@ -3,6 +3,7 @@
 
 PKG             := gdcm
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.0.19
 $(PKG)_CHECKSUM := ffbf5c1d040ec12d34fd7a7576633dfe0a1ff7b3
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz

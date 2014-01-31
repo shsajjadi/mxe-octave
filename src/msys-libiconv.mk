@@ -3,6 +3,7 @@
 
 PKG             := msys-libiconv
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.14-1
 $(PKG)_CHECKSUM := 056d16bfb7a91c3e3b1acf8adb20edea6fceecdd
 $(PKG)_REMOTE_SUBDIR := libiconv/libiconv-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

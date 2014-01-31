@@ -3,6 +3,7 @@
 
 PKG             := flac
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.2.1
 $(PKG)_CHECKSUM := bd54354900181b59db3089347cc84ad81e410b38
 $(PKG)_SUBDIR   := flac-$($(PKG)_VERSION)
 $(PKG)_FILE     := flac-$($(PKG)_VERSION).tar.gz

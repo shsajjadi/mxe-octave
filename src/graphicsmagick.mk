@@ -3,6 +3,7 @@
 
 PKG             := graphicsmagick
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.3.17
 $(PKG)_CHECKSUM := 6428eb4bd19635c833750ac9d56c9b89bef4c975
 $(PKG)_SUBDIR   := GraphicsMagick-$($(PKG)_VERSION)
 $(PKG)_FILE     := GraphicsMagick-$($(PKG)_VERSION).tar.xz

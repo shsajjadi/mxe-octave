@@ -2,6 +2,7 @@
 # See index.html for further information.
 
 PKG             := gnutls
+$(PKG)_VERSION  := 3.2.3
 $(PKG)_CHECKSUM := 18f5fffd1a0384944cb76cbedc0720c4726470f4
 $(PKG)_SUBDIR   := gnutls-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnutls-$($(PKG)_VERSION).tar.xz

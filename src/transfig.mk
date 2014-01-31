@@ -3,6 +3,7 @@
 
 PKG             := transfig
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.2.5e
 $(PKG)_CHECKSUM := 27aa9691bf84f8775db9be39c453a8132148bad1
 $(PKG)_SUBDIR   := $(PKG).$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG).$($(PKG)_VERSION).tar.gz

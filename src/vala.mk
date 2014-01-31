@@ -3,6 +3,7 @@
 
 PKG             := vala
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.20.1
 $(PKG)_CHECKSUM := 6a453140ccc252a3d46d110ab03da005885754f7
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz

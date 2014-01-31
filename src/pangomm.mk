@@ -3,6 +3,7 @@
 
 PKG             := pangomm
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.28.4
 $(PKG)_CHECKSUM := ee83497485e180708dffbf2e68d633ae8d5a36b4
 $(PKG)_SUBDIR   := pangomm-$($(PKG)_VERSION)
 $(PKG)_FILE     := pangomm-$($(PKG)_VERSION).tar.bz2

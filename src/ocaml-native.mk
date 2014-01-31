@@ -4,6 +4,7 @@
 # zlib
 PKG				:= ocaml-native
 $(PKG)_IGNORE	:=
+$(PKG)_VERSION  := 4.00.0
 $(PKG)_CHECKSUM := 9653e76dd14f0fbb750d7b438415890ab9fe2f4e
 $(PKG)_SUBDIR	:= ocaml-$($(PKG)_VERSION)
 $(PKG)_FILE		:= ocaml-$($(PKG)_VERSION).tar.gz

@@ -3,6 +3,7 @@
 
 PKG             := gstreamer
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.10.36
 $(PKG)_CHECKSUM := 27931b00eb5d50bc477e32e2dda7440f4179e7ac
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz

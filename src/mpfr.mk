@@ -3,6 +3,7 @@
 
 PKG             := mpfr
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.1.1
 $(PKG)_CHECKSUM := 7527c322b91fe8e6055ead551e1b46b9f1712ccd
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz

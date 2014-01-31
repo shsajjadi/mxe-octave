@@ -3,6 +3,7 @@
 
 PKG             := libgomp
 $(PKG)_IGNORE    = $(build-gcc_IGNORE)
+$(PKG)_VERSION  := 4.7.0
 $(PKG)_CHECKSUM  = $(build-gcc_CHECKSUM)
 $(PKG)_SUBDIR    = $(build-gcc_SUBDIR)
 $(PKG)_FILE      = $(build-gcc_FILE)

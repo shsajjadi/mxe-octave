@@ -3,6 +3,7 @@
 
 PKG             := msys-libmagic
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 5.04-1
 $(PKG)_CHECKSUM := 95de5e98b2067daaa499025854f4e4c6240a5bf9
 $(PKG)_REMOTE_SUBDIR := file/file-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

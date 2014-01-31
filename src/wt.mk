@@ -3,6 +3,7 @@
 
 PKG             := wt
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.2.3
 $(PKG)_CHECKSUM := d3870671a303d64878a1c9fe22765a643e515051
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz

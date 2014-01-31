@@ -3,6 +3,7 @@
 
 PKG             := arpack
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.1.3
 $(PKG)_CHECKSUM := c1ac96663916a4e11618e9557636ba1bd1a7b556
 $(PKG)_SUBDIR   := $(PKG)-ng-$($(PKG)_VERSION)
 $(PKG)_FILE     := arpack-ng-$($(PKG)_VERSION).tar.gz

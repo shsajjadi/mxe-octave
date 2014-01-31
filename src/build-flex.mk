@@ -3,6 +3,7 @@
 
 PKG             := build-flex
 $(PKG)_IGNORE   := 
+$(PKG)_VERSION  := 2.5.37
 $(PKG)_CHECKSUM := db4b140f2aff34c6197cab919828cc4146aae218
 $(PKG)_SUBDIR   := flex-$($(PKG)_VERSION)
 $(PKG)_FILE     := flex-$($(PKG)_VERSION).tar.bz2

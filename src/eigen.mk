@@ -3,6 +3,7 @@
 
 PKG             := eigen
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.0.17
 $(PKG)_CHECKSUM := 7e1674420a8eef7e90e1875ef5b9e828fb9db381
 $(PKG)_SUBDIR   := $(PKG)-$(PKG)-b23437e61a07
 $(PKG)_FILE     := $($(PKG)_VERSION).tar.gz

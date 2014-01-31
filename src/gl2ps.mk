@@ -2,6 +2,7 @@
 # See index.html for further information.
 
 PKG             := gl2ps
+$(PKG)_VERSION  := 1.3.8
 $(PKG)_CHECKSUM := 792e11db0fe7a30a4dc4491af5098b047ec378b1
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)-source
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz

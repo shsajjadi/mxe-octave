@@ -3,6 +3,7 @@
 
 PKG             := libgd
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.1.0
 $(PKG)_CHECKSUM := 66c56fc07246b66ba649c83e996fd2085ea2f9e2
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz

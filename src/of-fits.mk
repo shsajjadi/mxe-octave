@@ -3,6 +3,7 @@
 
 PKG             := of-fits
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.0.3
 $(PKG)_CHECKSUM := 6aecd4611879acaae1918025148cc09e197e0e82
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := fits

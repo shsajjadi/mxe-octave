@@ -3,6 +3,7 @@
 
 PKG             := msys-gzip
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.3.12-2
 $(PKG)_CHECKSUM := a8954ccefa9732cd16b68e2fb50bfef281465c78
 $(PKG)_REMOTE_SUBDIR := gzip/gzip-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

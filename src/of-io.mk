@@ -3,6 +3,7 @@
 
 PKG             := of-io
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.0.2
 $(PKG)_CHECKSUM := 6dcb18186678ebf89936c9ea9e94737d6bf2d3cc
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := io

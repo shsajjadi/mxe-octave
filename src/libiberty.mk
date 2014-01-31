@@ -3,6 +3,7 @@
 
 PKG             := libiberty
 $(PKG)_IGNORE    = $(build-binutils_IGNORE)
+$(PKG)_VERSION  := 2.22
 $(PKG)_CHECKSUM  = $(build-binutils_CHECKSUM)
 $(PKG)_SUBDIR    = $(build-binutils_SUBDIR)/libiberty
 $(PKG)_FILE      = $(build-binutils_FILE)

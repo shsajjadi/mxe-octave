@@ -3,6 +3,7 @@
 
 PKG             := msys-diffutils
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.8.7.20071206cvs-3
 $(PKG)_CHECKSUM := 674d3e0be4c8ffe84290f48ed1dd8eb21bc3f805
 $(PKG)_REMOTE_SUBDIR := diffutils/diffutils-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

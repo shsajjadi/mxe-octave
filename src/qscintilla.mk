@@ -3,6 +3,7 @@
 
 PKG             := qscintilla
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.8
 $(PKG)_CHECKSUM := 3edf9d476d4e6af0706a4d33401667a38e3a697e
 $(PKG)_SUBDIR   := QScintilla-gpl-$($(PKG)_VERSION)
 $(PKG)_FILE     := QScintilla-gpl-$($(PKG)_VERSION).tar.gz

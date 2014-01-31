@@ -3,6 +3,7 @@
 
 PKG             := ilmbase
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.0.2
 $(PKG)_CHECKSUM := fe6a910a90cde80137153e25e175e2b211beda36
 $(PKG)_SUBDIR   := ilmbase-$($(PKG)_VERSION)
 $(PKG)_FILE     := ilmbase-$($(PKG)_VERSION).tar.gz

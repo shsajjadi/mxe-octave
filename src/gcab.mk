@@ -3,6 +3,7 @@
 
 PKG             := gcab
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.4
 $(PKG)_CHECKSUM := d81dfe35125e611e3a94c0d4def37ebf62b9187c
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz

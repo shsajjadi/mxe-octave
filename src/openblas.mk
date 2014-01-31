@@ -3,6 +3,7 @@
 
 PKG             := openblas
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.2.8
 $(PKG)_CHECKSUM := d012ebc2b8dcd3e95f667dff08318a81479a47c3
 $(PKG)_SUBDIR   := OpenBLAS-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz

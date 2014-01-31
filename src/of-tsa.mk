@@ -3,6 +3,7 @@
 
 PKG             := of-tsa
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 4.2.7
 $(PKG)_CHECKSUM := 80d2faa61c32043bf1edc2c0fa48fe0c00eacd89
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := tsa

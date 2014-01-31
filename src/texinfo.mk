@@ -3,6 +3,7 @@
 
 PKG             := texinfo
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 5.2
 $(PKG)_CHECKSUM := fbbc35c5857d11d1164c8445c78b66ad6d472072
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz

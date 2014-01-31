@@ -3,6 +3,7 @@
 
 PKG             := libxml2
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.9.0
 $(PKG)_CHECKSUM := a43d7c0a8e463ac5a7846254f2a732a9af146fab
 $(PKG)_SUBDIR   := libxml2-$($(PKG)_VERSION)
 $(PKG)_FILE     := libxml2-$($(PKG)_VERSION).tar.gz

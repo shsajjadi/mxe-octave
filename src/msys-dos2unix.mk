@@ -3,6 +3,7 @@
 
 PKG             := msys-dos2unix
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 6.0.3-1
 $(PKG)_CHECKSUM := bab553c740877d02311bfc5d0be3acadbcc375d0
 $(PKG)_REMOTE_SUBDIR := dos2unix/dos2unix-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

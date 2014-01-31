@@ -3,6 +3,7 @@
 
 PKG             := msys-unzip
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 6.0-1
 $(PKG)_CHECKSUM := 38efa45dd20dde43a2911782e796e906a4e9a1cb
 $(PKG)_REMOTE_SUBDIR := unzip/unzip-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 

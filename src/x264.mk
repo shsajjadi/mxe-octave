@@ -3,6 +3,7 @@
 
 PKG             := x264
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 20111018-2245
 $(PKG)_CHECKSUM := a6c4a6786a2347b5b1d50dc0ddfd378bf1890481
 $(PKG)_SUBDIR   := $(PKG)-snapshot-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-snapshot-$($(PKG)_VERSION).tar.bz2

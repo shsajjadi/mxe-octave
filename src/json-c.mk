@@ -3,6 +3,7 @@
 
 PKG             := json-c
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.10
 $(PKG)_CHECKSUM := f90f643c8455da21d57b3e8866868a944a93c596
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz

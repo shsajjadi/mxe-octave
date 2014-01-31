@@ -3,6 +3,7 @@
 
 PKG             := muparser
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.2.2
 $(PKG)_CHECKSUM := 830383b1bcfa706be5a6ac8b7ba43f32f16a1497
 $(PKG)_SUBDIR   := $(PKG)_v$(subst .,_,$($(PKG)_VERSION))
 $(PKG)_FILE     := $(PKG)_v$(subst .,_,$($(PKG)_VERSION)).zip

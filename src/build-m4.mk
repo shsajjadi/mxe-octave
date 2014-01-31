@@ -3,6 +3,7 @@
 
 PKG             := build-m4
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.4.16
 $(PKG)_CHECKSUM := 44b3ed8931f65cdab02aee66ae1e49724d2551a4
 $(PKG)_SUBDIR   := m4-$($(PKG)_VERSION)
 $(PKG)_FILE     := m4-$($(PKG)_VERSION).tar.gz
