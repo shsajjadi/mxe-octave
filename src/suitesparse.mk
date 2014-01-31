@@ -39,6 +39,14 @@ $(PKG)_STATICLIBS_1 := \
   RBio/Lib/librbio.a \
   UMFPACK/Lib/libumfpack.a
 
+$(PKG)_CPPFLAGS := -DNTIMER
+
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  ifeq ($(ENABLE_64),yes)
+    $(PKG)_CPPFLAGS += -DLONGBLAS='long long'
+  endif
+endif
+
 define $(PKG)_BUILD
     # exclude demos
     find '$(1)' -name 'Makefile' \
@@ -52,7 +60,7 @@ define $(PKG)_BUILD
 
     # build all
     $(MAKE) -C '$(1)' -j '$(JOBS)' \
-        CPPFLAGS='-DNTIMER' \
+        CPPFLAGS="$($(PKG)_CPPFLAGS)" \
         CC='$(MXE_CC)' \
         CXX='$(MXE_CXX)' \
         CPLUSPLUS='$(MXE_CXX)' \
