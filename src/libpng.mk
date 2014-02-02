@@ -3,8 +3,8 @@
 
 PKG             := libpng
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.6.3
-$(PKG)_CHECKSUM := adc60a2c117a0929e18bf357e0a1e6115a9e3b76
+$(PKG)_VERSION  := 1.6.8
+$(PKG)_CHECKSUM := acdb0a45d80c90b39b56a41075003d4726f3558c
 $(PKG)_SUBDIR   := libpng-$($(PKG)_VERSION)
 $(PKG)_FILE     := libpng-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)$(subst .,,$(call SHORT_PKG_VERSION,$(PKG)))/older-releases/$($(PKG)_VERSION)/$($(PKG)_FILE)
