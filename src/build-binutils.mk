@@ -3,8 +3,8 @@
 
 PKG             := build-binutils
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.23.1
-$(PKG)_CHECKSUM := 587fca86f6c85949576f4536a90a3c76ffc1a3e1
+$(PKG)_VERSION  := 2.24
+$(PKG)_CHECKSUM := 7ac75404ddb3c4910c7594b51ddfc76d4693debb
 $(PKG)_SUBDIR   := binutils-$($(PKG)_VERSION)
 $(PKG)_FILE     := binutils-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/binutils/$($(PKG)_FILE)
@@ -39,6 +39,8 @@ define $(PKG)_BUILD
         --with-gnu-ld \
         --with-gnu-as \
         --disable-nls \
+        --disable-multilib \
+        --with-sysroot='$(BUILD_TOOLS_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-werror
     $(MAKE) -C '$(1)' -j '$(JOBS)'
