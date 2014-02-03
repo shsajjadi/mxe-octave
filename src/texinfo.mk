@@ -3,10 +3,10 @@
 
 PKG             := texinfo
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.2
-$(PKG)_CHECKSUM := fbbc35c5857d11d1164c8445c78b66ad6d472072
-$(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
+$(PKG)_VERSION  := 4.13a
+$(PKG)_CHECKSUM := a1533cf8e03ea4fa6c443b73f4c85e4da04dead0
+$(PKG)_SUBDIR   := $(PKG)-4.13
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/texinfo/$($(PKG)_FILE)
 $(PKG)_DEPS     := # libgnurx
 
@@ -22,10 +22,10 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)'
 
-    for d in gnulib/lib install-info tp util; do \
-      $(MAKE) -C '$(1).build' -C $$d -j '$(JOBS)'; \
-    done
-    for d in gnulib/lib install-info tp util; do \
-      $(MAKE) -C '$(1).build' -C $$d -j '$(JOBS)' install DESTDIR='$(3)'; \
-    done
+    ## All we need for Octave is makeinfo.
+    $(MAKE) -C '$(1).build/lib' -j '$(JOBS)'
+    $(MAKE) -C '$(1).build/gnulib/lib' -j '$(JOBS)'
+    $(MAKE) -C '$(1).build/makeinfo' -j '$(JOBS)'
+
+    $(MAKE) -C '$(1).build/makeinfo' -j '$(JOBS)' install DESTDIR='$(3)'
 endef
