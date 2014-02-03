@@ -31,8 +31,8 @@ else
   endif
 endif
 
-ifeq ($(ENABLE_DOCS),yes)
-  $(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS := --enable-docs
+ifneq ($(ENABLE_DOCS),yes)
+  $(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS := --disable-docs
 endif
 
 ifeq ($(ENABLE_OPENBLAS),yes)
