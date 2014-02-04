@@ -3,13 +3,13 @@
 
 PKG             := mpfr
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.1.1
-$(PKG)_CHECKSUM := 7527c322b91fe8e6055ead551e1b46b9f1712ccd
+$(PKG)_VERSION  := 3.1.2
+$(PKG)_CHECKSUM := 03e593cc6e26639ef5e60be1af8dc527209e5172
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/$(PKG)/$($(PKG)_FILE)
 $(PKG)_URL_2    := http://www.mpfr.org/mpfr-$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gmp
+$(PKG)_DEPS     := build-gcc gmp
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.mpfr.org/mpfr-current/#download' | \

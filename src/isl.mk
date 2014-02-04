@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := d7936929c3937e03f09b64c3c54e49422fa8ddb3
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://gcc.gnu.org/pub/gcc/infrastructure/$($(PKG)_FILE)
-$(PKG)_DEPS     := gcc gmp
+$(PKG)_DEPS     := build-gcc gmp
 
 # stick to tested versions from gcc
 define $(PKG)_UPDATE
