@@ -20,7 +20,7 @@ define $(PKG)_BUILD
     cd    '$(1).build' && '$(1)/configure' \
         --prefix='$(BUILD_TOOLS_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --with-gmp-prefix='$(PREFIX)'
+        --with-gmp-prefix='$(BUILD_TOOLS_PREFIX)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     $(MAKE) -C '$(1).build' -j 1 install
 endef
