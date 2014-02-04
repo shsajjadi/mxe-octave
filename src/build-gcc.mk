@@ -10,11 +10,10 @@ $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 
-$(PKG)_DEPS := build-cmake
+$(PKG)_DEPS := build-cmake build-binutils gcc-cloog gcc-gmp gcc-isl gcc-mpc gcc-mpfr
 ifeq ($(MXE_SYSTEM),mingw)
-  $(PKG)_DEPS += build-binutils
   ifeq ($(ENABLE_64),yes)
-    $(PKG)_DEPS += gcc-cloog gcc-gmp gcc-isl gcc-mpc gcc-mpfr mingw-w64
+    $(PKG)_DEPS += mingw-w64
   else
     $(PKG)_DEPS += mingwrt w32api
   endif
