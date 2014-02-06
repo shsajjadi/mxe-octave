@@ -19,7 +19,7 @@ define $(PKG)_BUILD
     mkdir '$(1).build'
     cd    '$(1).build' && '$(1)/configure' \
         --prefix='$(BUILD_TOOLS_PREFIX)' \
-        $(ENABLE_SHARED_OR_STATIC) \
+        --disable-shared \
         --with-gmp-prefix='$(BUILD_TOOLS_PREFIX)' \
         --with-isl-prefix='$(BUILD_TOOLS_PREFIX)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
