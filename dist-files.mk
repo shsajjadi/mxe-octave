@@ -587,6 +587,8 @@ SRC_FILES_1 := \
   xvidcore.mk \
   xz.mk \
   zenity.mk \
+  zeromq-1.patch \
+  zeromq.mk \
   zlib-1-win32-static.patch \
   zlib.mk \
   zziplib-1-fix-fnmatch.patch \
