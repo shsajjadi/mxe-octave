@@ -47,6 +47,13 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifneq ($(MXE_NATIVE_BUILD),yes)
+  define $(PKG)_POST_BUILD
+    $(INSTALL) -d '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
+    mv $(addprefix $(HOST_PREFIX)/bin/, c++ g++ gcc gfortran) '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
+  endef
+endif
+
 define $(PKG)_CONFIGURE
     # configure gcc
     mkdir '$(1).build'
@@ -65,6 +72,9 @@ define $(PKG)_CONFIGURE
         --with-isl='$(BUILD_TOOLS_PREFIX)' \
         --with-mpc='$(BUILD_TOOLS_PREFIX)' \
         --with-mpfr='$(BUILD_TOOLS_PREFIX)' \
+        --with-as='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-as' \
+        --with-ld='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ld' \
+        --with-nm='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-nm'
         $(shell [ `uname -s` == Darwin ] && echo "LDFLAGS='-Wl,-no_pie'")
 endef
 
@@ -113,5 +123,7 @@ define $(PKG)_BUILD
                > '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pkg-config'; \
       chmod 0755 '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pkg-config'; \
     fi
+
+    $($(PKG)_POST_BUILD)
 endef
 

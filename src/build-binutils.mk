@@ -15,6 +15,13 @@ else
   $(PKG)_DEPS     := build-gcc
 endif
 
+ifneq ($(MXE_NATIVE_BUILD),yes)
+  define $(PKG)_POST_BUILD
+    $(INSTALL) -d '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
+    mv $(addprefix $(HOST_PREFIX)/bin/, ar as dlltool ld ld.bfd nm objcopy objdump ranlib strip) '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
+  endef
+endif
+
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://ftp.gnu.org/gnu/binutils/?C=M;O=D' | \
     $(SED) -n 's,.*<a href="binutils-\([0-9][^"]*\)\.tar.*,\1,p' | \
@@ -45,5 +52,6 @@ define $(PKG)_BUILD
         --disable-werror
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
-    $(MAKE) -C '$(1)' -j 1 DESTDIR=$(TOP_DIR)/cross-tools install
+
+    $($(PKG)_POST_BUILD)
 endef
