@@ -34,6 +34,7 @@ SRC_FILES_1 := \
   build-scons.mk \
   build-texinfo.mk \
   build-xz.mk \
+  build-yasm.mk \
   bzip2.mk \
   cairo-2-static-init.patch \
   cairo.mk \
@@ -586,6 +587,7 @@ SRC_FILES_1 := \
   xvidcore-1-fixes.patch \
   xvidcore.mk \
   xz.mk \
+  yasm.mk \
   zenity.mk \
   zeromq-1.patch \
   zeromq.mk \
