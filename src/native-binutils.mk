@@ -30,7 +30,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --target='$(TARGET)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-        --prefix='/usr' \
+        --prefix='$(HOST_PREFIX)' \
         --with-gcc \
         --with-gnu-ld \
         --with-gnu-as \
@@ -38,5 +38,5 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-werror
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 DESTDIR='$(TOP_DIR)/native-tools' install
+    $(MAKE) -C '$(1)' -j 1 install
 endef
