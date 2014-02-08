@@ -114,6 +114,7 @@ SRC_FILES_1 := \
   glpk.mk \
   gmp.mk \
   gnuplot-1-fixes.patch \
+  gnuplot-2-win64.patch \
   gnuplot.mk \
   gnutls-1-fixes.patch \
   gnutls-2-ldadd.patch \
