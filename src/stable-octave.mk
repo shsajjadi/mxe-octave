@@ -3,15 +3,15 @@
 
 PKG             := stable-octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.8.0
-$(PKG)_CHECKSUM := 7dc2736d05fef50e4f7b3e1b9ab83c8287e8f267
+$(PKG)_VERSION  := 3.8.1-rc1
+$(PKG)_CHECKSUM := 5253e22690c7af70c28077b290354503fcfca13c
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := arpack curl fftw fltk $($(PKG)_FONTCONFIG) gl2ps glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
+$(PKG)_DEPS     := arpack curl fftw fltk $($(PKG)_FONTCONFIG) gl2ps glpk graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
 ifeq ($(ENABLE_JIT),yes)
   $(PKG)_DEPS += llvm
   $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --enable-jit
@@ -84,15 +84,15 @@ endef
 define $(PKG)_BUILD
     # jni install
     if [[ "$(MXE_SYSTEM)" == "mingw" && "$(MXE_NATIVE_BUILD)" == "no" && "$(ENABLE_JAVA)" == "yes" ]]; then \
-      if [ ! -f $(HOST_INCDIR)/java/include/jni.h ]; then \
-        mkdir -p '$(HOST_INCDIR)/java/include'; \
-        $(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/share/javavm/export/jni.h \
-          -O $(HOST_INCDIR)/java/include/jni.h; \
+      if [ ! -f $(HOST_INCDIR)/java/jni.h ]; then \
+	mkdir -p '$(HOST_INCDIR)/java'; \
+	$(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/share/javavm/export/jni.h \
+	  -O $(HOST_INCDIR)/java/jni.h; \
       fi; \
-      if [ ! -f $(HOST_INCDIR)/java/include/win32/jni_md.h ]; then \
-        mkdir -p '$(HOST_INCDIR)/java/include/win32'; \
-        $(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/windows/javavm/export/jni_md.h \
-          -O $(HOST_INCDIR)/java/include/win32/jni_md.h; \
+      if [ ! -f $(HOST_INCDIR)/java/win32/jni_md.h ]; then \
+	mkdir -p '$(HOST_INCDIR)/java/win32'; \
+	$(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/windows/javavm/export/jni_md.h \
+	  -O $(HOST_INCDIR)/java/win32/jni_md.h; \
       fi; \
     fi
 
