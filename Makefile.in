@@ -53,7 +53,7 @@ else
   ifeq ($(ENABLE_64),yes)
     TARGET := x86_64-w64-mingw32
   else
-    TARGET := i686-pc-mingw32
+    TARGET := i686-w64-mingw32
   endif
 endif
 BUILD_SYSTEM := $(shell tools/config.guess)
