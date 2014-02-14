@@ -10,12 +10,12 @@ OCTAVE_DIST_DIR := $(TOP_DIR)/dist/$(OCTAVE_DIST_NAME)
 OCTAVE_NSI_FILE := $(TOP_DIR)/dist/octave.nsi
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
+  TAR_H_OPTION := -h
   WINDOWS_BINARY_DIST_DEPS := \
     msys-base \
-    native-gcc \
     native-binutils \
+    native-gcc \
     npp
-  TAR_H_OPTION := -h
 endif
 
 BINARY_DIST_DEPS := \
@@ -36,38 +36,19 @@ define make-dist-directory
   mkdir -p $(OCTAVE_DIST_DIR)
 endef
 
-ifeq ($(MXE_NATIVE_BUILD),yes)
-  define generate-dist-exclude-list
-    echo "generating (empty) lists of files to exclude..."
-    echo "  native files..."
-    rm -f $(TOP_DIR)/excluded-native-files
-    touch $(TOP_DIR)/excluded-native-files
-    echo "  gcc cross compiler files..."
-    rm -f $(TOP_DIR)/excluded-gcc-files
-    touch $(TOP_DIR)/excluded-gcc-files
-  endef
-else
-  define generate-dist-exclude-list
-    echo "generating lists of files to exclude..."
-    echo "  native files..."
-    echo "./$(TARGET)" > $(TOP_DIR)/excluded-native-files
-    echo "./bin/$(TARGET)-*.exe" >> $(TOP_DIR)/excluded-native-files
-    echo "  gcc cross compiler files..."
-    cd $(TOP_DIR)/cross-tools/$(HOST_PREFIX) \
-      && find . -type f -o -type l | sed "s,./,," > $(TOP_DIR)/excluded-gcc-files
-  endef
-endif
-
 define copy-dist-files
   echo "copying files..."
   echo "  octave and dependencies..."
   cd $(HOST_PREFIX) \
-    && tar -c $(TAR_H_OPTION) -X $(TOP_DIR)/excluded-gcc-files -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+    && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
   echo "  octaverc file..."
-  cp $(TOP_DIR)/build_packages.m $(OCTAVE_DIST_DIR)/src \
-    && cp $(TOP_DIR)/octaverc $(OCTAVE_DIST_DIR)/share/octave/site/m/startup/octaverc
+  cp $(TOP_DIR)/octaverc $(OCTAVE_DIST_DIR)/share/octave/site/m/startup/octaverc
   echo "  build_packages.m..."
   cp $(TOP_DIR)/build_packages.m $(OCTAVE_DIST_DIR)/src
+  echo "  DLL files..."
+  cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
+  cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
+  cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/4.8.2/*.dll $(OCTAVE_DIST_DIR)/bin
 endef
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
@@ -151,7 +132,6 @@ endif
 binary-dist-files: $(BINARY_DIST_DEPS)
 	@$(delete-dist-directory)
 	@$(make-dist-directory)
-	@$(generate-dist-exclude-list)
 	@$(copy-dist-files)
 	@$(copy-windows-dist-files)
 	@$(make-dist-files-writable)
