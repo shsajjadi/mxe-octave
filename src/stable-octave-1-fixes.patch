@@ -1,0 +1,12 @@
+diff -ur a/libinterp/corefcn/file-io.cc b/libinterp/corefcn/file-io.cc
+--- a/libinterp/corefcn/file-io.cc	2014-01-08 01:39:44.000000000 -0500
++++ b/libinterp/corefcn/file-io.cc	2014-02-14 17:31:58.816756036 -0500
+@@ -1801,7 +1801,7 @@
+   return retval;
+ }
+ 
+-DEFUN (popen, args, ,
++DEFUNX ("popen", Fpopen, args, ,
+        "-*- texinfo -*-\n\
+ @deftypefn {Built-in Function} {@var{fid} =} popen (@var{command}, @var{mode})\n\
+ Start a process and create a pipe.  The name of the command to run is\n\
