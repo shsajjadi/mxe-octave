@@ -12,11 +12,7 @@ $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/rele
 
 $(PKG)_DEPS := build-cmake build-binutils gcc-cloog gcc-gmp gcc-isl gcc-mpc gcc-mpfr
 ifeq ($(MXE_SYSTEM),mingw)
-  ifeq ($(ENABLE_64),yes)
-    $(PKG)_DEPS += mingw-w64
-  else
-    $(PKG)_DEPS += mingwrt w32api
-  endif
+  $(PKG)_DEPS += mingw-w64
 endif
 
 ifneq ($(BUILD_SHARED),yes)
@@ -78,52 +74,37 @@ define $(PKG)_CONFIGURE
         $(shell [ `uname -s` == Darwin ] && echo "LDFLAGS='-Wl,-no_pie'")
 endef
 
-ifeq ($(ENABLE_64),yes)
-  define $(PKG)_BUILD_1
-    # build standalone gcc
-    $($(PKG)_CONFIGURE)
-    $(MAKE) -C '$(1).build' -j '$(JOBS)' all-gcc
-    $(MAKE) -C '$(1).build' -j 1 install-gcc
-
-    # build mingw-w64-crt
-    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,mingw-w64,$(TAR))
-    mkdir '$(1).crt-build'
-    cd '$(1).crt-build' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-crt/configure' \
-        --host='$(TARGET)' \
-        --prefix='$(HOST_PREFIX)'
-    $(MAKE) -C '$(1).crt-build' -j '$(JOBS)' || $(MAKE) -C '$(1).crt-build' -j '$(JOBS)'
-    $(MAKE) -C '$(1).crt-build' -j 1 install
-
-    # build rest of gcc
-    cd '$(1).build'
-    $(MAKE) -C '$(1).build' -j '$(JOBS)'
-    $(MAKE) -C '$(1).build' -j 1 install
-
-    if [ -f $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/lib/libgcc_s.a ]; then \
-      mv $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/lib/libgcc_s.a $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/4.8.2/libgcc_s.a; \
-    fi
-  endef
-else
-  define $(PKG)_BUILD_1
-    $($(PKG)_CONFIGURE)
-    $(MAKE) -C '$(1).build' -j '$(JOBS)'
-    $(MAKE) -C '$(1).build' -j 1 install
-    mkdir -p $(TOP_DIR)/cross-tools/$(HOST_BINDIR)
-    $(MAKE) -C '$(1).build' -j 1 DESTDIR=$(TOP_DIR)/cross-tools install
-  endef
-endif
-
 define $(PKG)_BUILD
-    $($(PKG)_BUILD_1)
+  # build standalone gcc
+  $($(PKG)_CONFIGURE)
+  $(MAKE) -C '$(1).build' -j '$(JOBS)' all-gcc
+  $(MAKE) -C '$(1).build' -j 1 install-gcc
 
-    # create pkg-config script
-    if [ '$(MXE_NATIVE_BUILD)' = 'no' ]; then \
-      (echo '#!/bin/sh'; \
-       echo 'PKG_CONFIG_PATH="$$PKG_CONFIG_PATH_$(subst -,_,$(TARGET))" PKG_CONFIG_LIBDIR='\''$(HOST_LIBDIR)/pkgconfig'\'' exec pkg-config $($(PKG)_STATIC_FLAG) "$$@"') \
-               > '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pkg-config'; \
-      chmod 0755 '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pkg-config'; \
-    fi
+  # build mingw-w64-crt
+  cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,mingw-w64,$(TAR))
+  mkdir '$(1).crt-build'
+  cd '$(1).crt-build' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-crt/configure' \
+      --host='$(TARGET)' \
+      --prefix='$(HOST_PREFIX)'
+  $(MAKE) -C '$(1).crt-build' -j '$(JOBS)' || $(MAKE) -C '$(1).crt-build' -j '$(JOBS)'
+  $(MAKE) -C '$(1).crt-build' -j 1 install
 
-    $($(PKG)_POST_BUILD)
+  # build rest of gcc
+  cd '$(1).build'
+  $(MAKE) -C '$(1).build' -j '$(JOBS)'
+  $(MAKE) -C '$(1).build' -j 1 install
+
+  if [ -f $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/lib/libgcc_s.a ]; then \
+    mv $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/lib/libgcc_s.a $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/$($(PKG)_VERSION)/libgcc_s.a; \
+  fi
+
+  # create pkg-config script
+  if [ '$(MXE_NATIVE_BUILD)' = 'no' ]; then \
+    (echo '#!/bin/sh'; \
+     echo 'PKG_CONFIG_PATH="$$PKG_CONFIG_PATH_$(subst -,_,$(TARGET))" PKG_CONFIG_LIBDIR='\''$(HOST_LIBDIR)/pkgconfig'\'' exec pkg-config $($(PKG)_STATIC_FLAG) "$$@"') \
+             > '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pkg-config'; \
+    chmod 0755 '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pkg-config'; \
+  fi
+
+  $($(PKG)_POST_BUILD)
 endef
-
