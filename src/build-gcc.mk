@@ -29,7 +29,8 @@ ifeq ($(MXE_SYSTEM),mingw)
     --disable-nls \
     --without-x \
     --disable-win32-registry \
-    --enable-threads=win32
+    --enable-threads=win32 \
+    --with-native-system-header-dir='/include'
   ifneq ($(ENABLE_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
       --disable-sjlj-exceptions
@@ -59,6 +60,7 @@ define $(PKG)_CONFIGURE
         --prefix='$(BUILD_TOOLS_PREFIX)' \
         --enable-languages='c,c++,fortran' \
         --disable-multilib \
+        --with-sysroot='$(HOST_PREFIX)' \
         $($(PKG)_SYSDEP_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-libgomp \
@@ -85,7 +87,9 @@ define $(PKG)_BUILD
   mkdir '$(1).crt-build'
   cd '$(1).crt-build' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-crt/configure' \
       --host='$(TARGET)' \
-      --prefix='$(HOST_PREFIX)'
+      --prefix='$(HOST_PREFIX)' \
+      --with-sysroot='$(HOST_PREFIX)' \
+      $(ENABLE_SHARED_OR_STATIC)
   $(MAKE) -C '$(1).crt-build' -j '$(JOBS)' || $(MAKE) -C '$(1).crt-build' -j '$(JOBS)'
   $(MAKE) -C '$(1).crt-build' -j 1 install
 

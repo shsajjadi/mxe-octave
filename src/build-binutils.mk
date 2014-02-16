@@ -42,12 +42,13 @@ define $(PKG)_BUILD
         --target='$(TARGET)' \
         --build='$(BUILD_SYSTEM)' \
         --prefix='$(BUILD_TOOLS_PREFIX)' \
+        --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
         --with-gcc \
         --with-gnu-ld \
         --with-gnu-as \
         --disable-nls \
         --disable-multilib \
-        --with-sysroot='$(BUILD_TOOLS_PREFIX)' \
+        --with-sysroot='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-werror
     $(MAKE) -C '$(1)' -j '$(JOBS)'
