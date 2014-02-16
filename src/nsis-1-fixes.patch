@@ -586,3 +586,14 @@ index 2c0b07f..18c31a2 100755
 -- 
 1.8.2.1
 
+diff -ur a/Contrib/InstallOptions/InstallerOptions.cpp b/Contrib/InstallOptions/InstallerOptions.cpp
+--- a/Contrib/InstallOptions/InstallerOptions.cpp	2009-02-04 09:08:31.000000000 -0500
++++ b/Contrib/InstallOptions/InstallerOptions.cpp	2014-02-14 18:14:18.638628714 -0500
+@@ -33,6 +33,7 @@
+ #define strdup(x) STRDUP(x)
+ #define stricmp(x,y) lstrcmpi(x,y)
+ //#define abs(x) ((x) < 0 ? -(x) : (x))
++#define min(x,y) ((x) < (y) ? (x) : (y))
+ 
+ char *WINAPI STRDUP(const char *c)
+ {
