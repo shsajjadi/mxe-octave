@@ -72,9 +72,6 @@ endef
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
 define copy-windows-dist-files
-  echo "  native tools..."
-  cd $(TOP_DIR)/native-tools/usr \
-    && tar -c $(TAR_H_OPTION) -X $(TOP_DIR)/excluded-native-files -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
   echo "  libgcc_s_dw2-1.dll to bin directory"
   cd $(OCTAVE_DIST_DIR) \
     && cp lib/gcc/i686-pc-mingw32/libgcc_s_dw2-1.dll bin
