@@ -74,10 +74,10 @@ AC_ARG_ENABLE(static,
   [if test "$enableval" = yes; then BUILD_STATIC=yes; fi], [])
 AC_SUBST(BUILD_STATIC)
 
-ENABLE_JIT=yes
+ENABLE_JIT=no
 AC_ARG_ENABLE([jit],
-  [AS_HELP_STRING([--disable-jit], [Disable Octave JIT compiler])],
-  [if test "$enableval" = no; then ENABLE_JIT=no; fi], [])
+  [AS_HELP_STRING([--enable-jit], [Enable Octave JIT compiler])],
+  [if test "$enableval" = yes; then ENABLE_JIT=yes; fi], [])
 AC_SUBST(ENABLE_JIT)
 
 ENABLE_JAVA=yes
