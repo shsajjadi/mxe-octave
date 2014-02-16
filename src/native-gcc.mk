@@ -12,11 +12,7 @@ $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/rele
 
 $(PKG)_DEPS := native-binutils cloog gmp isl mpc mpfr
 ifeq ($(MXE_SYSTEM),mingw)
-  ifeq ($(ENABLE_64),yes)
-    $(PKG)_DEPS += mingw-w64
-  else
-    $(PKG)_DEPS += mingwrt w32api
-  endif
+  $(PKG)_DEPS += mingw-w64
 endif
 ifneq ($(BUILD_SHARED),yes)
 $(PKG)_STATIC_FLAG := --static
@@ -29,7 +25,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     --without-x \
     --disable-win32-registry \
     --enable-threads=win32 \
-    --with-native-system-header-dir=$(HOST_PREFIX)/include
+    --with-native-system-header-dir='$(HOST_PREFIX)/include'
   ifneq ($(ENABLE_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
       --disable-sjlj-exceptions
