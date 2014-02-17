@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.62])
-AC_INIT([MXE-Octave], [0.0.20], [http://octave.org/bugs.html], [mxe-octave])
+AC_INIT([MXE-Octave], [0.0.21], [http://octave.org/bugs.html], [mxe-octave])
 
 AC_CONFIG_SRCDIR([src/octave.mk])
 AC_CONFIG_AUX_DIR([tools])
