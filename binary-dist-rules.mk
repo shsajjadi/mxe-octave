@@ -52,21 +52,21 @@ define copy-dist-files
 endef
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
-define copy-windows-dist-files
-  echo "  msys base files..."
-  cd $(TOP_DIR)/msys-base \
-    && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
-  echo "  msys extension files..."
-  cd $(TOP_DIR)/msys-extension \
-    && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
-  echo "  notepad++..."
-  cd $(TOP_DIR) \
-    && tar -c $(TAR_H_OPTION) -f - notepad++ | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
-  echo "  README.html..."
-  cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
-  echo "  refblas..."
-  cp $(OCTAVE_DIST_DIR)/bin/libblas.dll $(OCTAVE_DIST_DIR)/bin/librefblas.dll
-endef
+  define copy-windows-dist-files
+    echo "  msys base files..."
+    cd $(TOP_DIR)/msys-base \
+      && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+    echo "  msys extension files..."
+    cd $(TOP_DIR)/msys-extension \
+      && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+    echo "  notepad++..."
+    cd $(TOP_DIR) \
+      && tar -c $(TAR_H_OPTION) -f - notepad++ | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+    echo "  README.html..."
+    cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
+    echo "  refblas..."
+    cp $(OCTAVE_DIST_DIR)/bin/libblas.dll $(OCTAVE_DIST_DIR)/bin/librefblas.dll
+  endef
 endif
 
 define make-dist-files-writable
@@ -105,24 +105,24 @@ endif
 OCTAVE_WRAPPER_SCRIPTS = octave octave-cli octave-config
 
 ifeq ($(MXE_SYSTEM), gnu-linux)
-define install-octave-wrapper-scripts
-  echo "installing octave wrapper scripts..."
-  for f in $(OCTAVE_WRAPPER_SCRIPTS); do \
-    mv $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION) \
-       $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION).real; \
-    $(SED) < octave-wrapper.in \
-      -e "s|@OCTAVE_VERSION@|$($(OCTAVE_TARGET)_VERSION)|" \
-      -e "s|@GNUPLOT_MAJOR_MINOR_VERSION@|$(shell echo $(gnuplot_VERSION) | $(SED) -e 's/\(^[0-9]+\.[0-9]+\)/\1/')|" \
-      -e "s|@PROGRAM_NAME@|$$f|" > $$f-t \
-    && $(INSTALL) -m 755 $$f-t $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION); \
-    rm -f $(OCTAVE_DIST_DIR)/bin/$$f; \
-    ln -s $$f-$($(OCTAVE_TARGET)_VERSION) $(OCTAVE_DIST_DIR)/bin/$$f; \
-  done
-endef
+  define install-octave-wrapper-scripts
+    echo "installing octave wrapper scripts..."
+    for f in $(OCTAVE_WRAPPER_SCRIPTS); do \
+      mv $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION) \
+	 $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION).real; \
+      $(SED) < octave-wrapper.in \
+	-e "s|@OCTAVE_VERSION@|$($(OCTAVE_TARGET)_VERSION)|" \
+	-e "s|@GNUPLOT_MAJOR_MINOR_VERSION@|$(shell echo $(gnuplot_VERSION) | $(SED) -e 's/\(^[0-9]+\.[0-9]+\)/\1/')|" \
+	-e "s|@PROGRAM_NAME@|$$f|" > $$f-t \
+      && $(INSTALL) -m 755 $$f-t $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION); \
+      rm -f $(OCTAVE_DIST_DIR)/bin/$$f; \
+      ln -s $$f-$($(OCTAVE_TARGET)_VERSION) $(OCTAVE_DIST_DIR)/bin/$$f; \
+    done
+  endef
 else
-define install-octave-wrapper-scripts
-  echo "no octave wrapper scripts to install for this system..."
-endef
+  define install-octave-wrapper-scripts
+    echo "no octave wrapper scripts to install for this system..."
+  endef
 endif
 
 .PHONY: binary-dist-files
