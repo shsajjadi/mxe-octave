@@ -6,7 +6,7 @@ diff -urN gnuplot-4.6.4.orig/src/internal.c gnuplot-4.6.4/src/internal.c
  static enum DATA_TYPES sprintf_specifier __PROTO((const char *format));
  
 -
-+#ifndef _WIN64
++#ifndef WIN32
  int
  GP_MATHERR( STRUCT_EXCEPTION_P_X )
  {
