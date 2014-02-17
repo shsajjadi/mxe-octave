@@ -53,9 +53,6 @@ endef
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
 define copy-windows-dist-files
-  echo "  libgcc_s_dw2-1.dll to bin directory"
-  cd $(OCTAVE_DIST_DIR) \
-    && cp lib/gcc/i686-pc-mingw32/libgcc_s_dw2-1.dll bin
   echo "  msys base files..."
   cd $(TOP_DIR)/msys-base \
     && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
