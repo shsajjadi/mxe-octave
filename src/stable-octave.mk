@@ -11,7 +11,7 @@ $(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := arpack curl fftw fltk $($(PKG)_FONTCONFIG) gl2ps glpk graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
+$(PKG)_DEPS     := arpack curl fftw fltk $($(PKG)_FONTCONFIG) gl2ps glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
 ifeq ($(ENABLE_JIT),yes)
   $(PKG)_DEPS += llvm
   $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --enable-jit
@@ -25,7 +25,7 @@ else
   ifeq ($(MXE_SYSTEM),mingw)
     ifeq ($(MXE_NATIVE_BUILD),no)
       $(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS := \
-       --with-java-homedir="$(HOST_INCDIR)/java" 
+       --with-java-includedir="$(HOST_INCDIR)/java"
      endif
   endif
 endif
@@ -75,7 +75,6 @@ else
     LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
 endif
 
-
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package octave.' >&2;
     echo $($(PKG)_VERSION)
@@ -83,16 +82,18 @@ endef
 
 define $(PKG)_BUILD
     # jni install
-    if [[ "$(MXE_SYSTEM)" == "mingw" && "$(MXE_NATIVE_BUILD)" == "no" && "$(ENABLE_JAVA)" == "yes" ]]; then \
+    if [ "$(MXE_SYSTEM)" == "mingw" ] \
+      && [ "$(MXE_NATIVE_BUILD)" == "no" ] \
+      && [ "$(ENABLE_JAVA)" == "yes" ]; then \
       if [ ! -f $(HOST_INCDIR)/java/jni.h ]; then \
-	mkdir -p '$(HOST_INCDIR)/java'; \
-	$(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/share/javavm/export/jni.h \
-	  -O $(HOST_INCDIR)/java/jni.h; \
+        mkdir -p '$(HOST_INCDIR)/java'; \
+        $(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/share/javavm/export/jni.h \
+          -O $(HOST_INCDIR)/java/jni.h; \
       fi; \
       if [ ! -f $(HOST_INCDIR)/java/win32/jni_md.h ]; then \
-	mkdir -p '$(HOST_INCDIR)/java/win32'; \
-	$(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/windows/javavm/export/jni_md.h \
-	  -O $(HOST_INCDIR)/java/win32/jni_md.h; \
+        mkdir -p '$(HOST_INCDIR)/java/win32'; \
+        $(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/windows/javavm/export/jni_md.h \
+          -O $(HOST_INCDIR)/java/win32/jni_md.h; \
       fi; \
     fi
 

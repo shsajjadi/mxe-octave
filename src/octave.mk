@@ -25,7 +25,7 @@ else
   ifeq ($(MXE_SYSTEM),mingw)
     ifeq ($(MXE_NATIVE_BUILD),no)
       $(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS := \
-       --with-java-homedir="$(HOST_INCDIR)/java" 
+       --with-java-includedir="$(HOST_INCDIR)/java"
      endif
   endif
 endif
@@ -77,22 +77,23 @@ endif
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package octave.' >&2;
-    echo $(octave_VERSION)
+    echo $($(PKG)_VERSION)
 endef
 
 define $(PKG)_BUILD
-
     # jni install
-    if [[ "$(MXE_SYSTEM)" == "mingw" && "$(MXE_NATIVE_BUILD)" == "no" && "$(ENABLE_JAVA)" == "yes" ]]; then \
-      if [ ! -f $(HOST_INCDIR)/java/include/jni.h ]; then \
-        mkdir -p '$(HOST_INCDIR)/java/include'; \
+    if [ "$(MXE_SYSTEM)" == "mingw" ] \
+      && [ "$(MXE_NATIVE_BUILD)" == "no" ] \
+      && [ "$(ENABLE_JAVA)" == "yes" ]; then \
+      if [ ! -f $(HOST_INCDIR)/java/jni.h ]; then \
+        mkdir -p '$(HOST_INCDIR)/java'; \
         $(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/share/javavm/export/jni.h \
-          -O $(HOST_INCDIR)/java/include/jni.h; \
+          -O $(HOST_INCDIR)/java/jni.h; \
       fi; \
-      if [ ! -f $(HOST_INCDIR)/java/include/win32/jni_md.h ]; then \
-        mkdir -p '$(HOST_INCDIR)/java/include/win32'; \
+      if [ ! -f $(HOST_INCDIR)/java/win32/jni_md.h ]; then \
+        mkdir -p '$(HOST_INCDIR)/java/win32'; \
         $(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/windows/javavm/export/jni_md.h \
-          -O $(HOST_INCDIR)/java/include/win32/jni_md.h; \
+          -O $(HOST_INCDIR)/java/win32/jni_md.h; \
       fi; \
     fi
 
@@ -132,4 +133,3 @@ define $(PKG)_BUILD
     # create a file with latest installed octave rev in it
     echo "$($(PKG)_VERSION)" > $(TOP_DIR)/octave/octave-version
 endef
-
