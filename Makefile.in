@@ -749,8 +749,10 @@ define build-cmake-toolchain-file
 endef
 
 cmake-toolchain-file.stamp:
-	$(build-cmake-toolchain-file)
-	touch cmake-toolchain-file.stamp
+	@echo [creating CMake toolchain file]
+	@$(build-cmake-toolchain-file)
+	@touch cmake-toolchain-file.stamp
+	@echo [done]
 
 # Files to distribute
 include dist-files.mk
