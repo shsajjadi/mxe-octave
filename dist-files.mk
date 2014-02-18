@@ -32,6 +32,7 @@ SRC_FILES_1 := \
   build-pkg-config.mk \
   build-python.mk \
   build-scons.mk \
+  build-texinfo-1-fixes.patch \
   build-texinfo.mk \
   build-xz.mk \
   build-yasm.mk \
@@ -43,6 +44,7 @@ SRC_FILES_1 := \
   cfitsio.mk \
   cgal-1-fixes.patch \
   cgal.mk \
+  cloog.mk \
   cminpack.mk \
   cppunit.mk \
   cunit.mk \
@@ -88,7 +90,9 @@ SRC_FILES_1 := \
   gcab.mk \
   gcc-1-mingw-float.patch \
   gcc-2-darwin-no-pie.patch \
+  gcc-cloog.mk \
   gcc-gmp.mk \
+  gcc-isl.mk \
   gcc-mpc.mk \
   gcc-mpfr.mk \
   gd-1-libpng15.patch \
@@ -163,6 +167,7 @@ SRC_FILES_1 := \
   ilmbase.mk \
   imagemagick.mk \
   intltool.mk \
+  isl.mk \
   itsol.mk \
   itstool.mk \
   jasper-1-fixes.patch \
@@ -291,10 +296,12 @@ SRC_FILES_1 := \
   mingw-libmng-1-noundefines.patch \
   mingw-openssl-3-libdeps.patch \
   mingw-pango-1-fixes.patch \
+  mingw-transfig-1-fixes.patch \
   mingw-units-1-fixes.patch \
   mingw-utils-1-portability-fix.patch \
-  mingw-utils.mk \
+  mingw-w64.mk \
   mingwrt.mk \
+  mpc.mk \
   mpfr.mk \
   msitools.mk \
   msvc-atk-1.patch \
@@ -372,10 +379,8 @@ SRC_FILES_1 := \
   msys-sed.mk \
   msys-tar.mk \
   msys-termcap.mk \
-  msys-texinfo.mk \
   msys-unzip.mk \
   msys-wget.mk \
-  msys-xz.mk \
   msys-zip.mk \
   muparser.mk \
   mxml-test.c \
@@ -399,6 +404,7 @@ SRC_FILES_1 := \
   ocaml-native-1-fixes.patch \
   ocaml-native.mk \
   octave-1-docinstall.patch \
+  octave-1-fixes.patch \
   octave.mk \
   of-actuarial.mk \
   of-communications.mk \
@@ -495,8 +501,6 @@ SRC_FILES_1 := \
   qscintilla-2-bang-fix.patch \
   qscintilla.mk \
   qt-1-cherrypicks.patch \
-  qt-1-pcre.patch \
-  qt-2-dbus.patch \
   qt-test.cpp \
   qt-test.pro \
   qt-test.ui \
@@ -534,6 +538,7 @@ SRC_FILES_1 := \
   speex.mk \
   sqlite.mk \
   stable-octave-1-docinstall.patch \
+  stable-octave-1-fixes.patch \
   stable-octave.mk \
   suitesparse-1.patch \
   suitesparse.mk \
@@ -542,6 +547,7 @@ SRC_FILES_1 := \
   taglib.mk \
   termcap-1-fixes.patch \
   termcap.mk \
+  texinfo-1-fixes.patch \
   texinfo.mk \
   theora.mk \
   tiff.mk \
