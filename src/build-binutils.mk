@@ -9,11 +9,7 @@ $(PKG)_SUBDIR   := binutils-$($(PKG)_VERSION)
 $(PKG)_FILE     := binutils-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/binutils/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.cs.tu-berlin.de/pub/gnu/binutils/$($(PKG)_FILE)
-ifeq ($(MXE_SYSTEM),mingw)
-  $(PKG)_DEPS     :=
-else
-  $(PKG)_DEPS     := build-gcc
-endif
+$(PKG)_DEPS     :=
 
 ifneq ($(MXE_NATIVE_BUILD),yes)
   define $(PKG)_POST_BUILD
@@ -29,6 +25,17 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  $(PKG)_DEPS += build-gcc
+else
+  $(PKG)_SYSDEP_CONFIGURE_OPTIONS := \
+    --target='$(TARGET)' \
+    --build='$(BUILD_SYSTEM)' \
+    --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
+    --disable-multilib \
+    --with-sysroot='$(HOST_PREFIX)'
+endif
+
 define $(PKG)_BUILD
     # install config.guess for general use
     $(INSTALL) -d '$(BUILD_TOOLS_PREFIX)/bin'
@@ -39,16 +46,12 @@ define $(PKG)_BUILD
     echo "ac_cv_build=`$(1)/config.guess`" > '$(HOST_PREFIX)/share/config.site'
 
     cd '$(1)' && ./configure \
-        --target='$(TARGET)' \
-        --build='$(BUILD_SYSTEM)' \
+        $($(PKG)_SYSDEP_CONFIGURE_OPTIONS) \
         --prefix='$(BUILD_TOOLS_PREFIX)' \
-        --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
         --with-gcc \
         --with-gnu-ld \
         --with-gnu-as \
         --disable-nls \
-        --disable-multilib \
-        --with-sysroot='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-werror
     $(MAKE) -C '$(1)' -j '$(JOBS)'
