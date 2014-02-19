@@ -92,6 +92,7 @@ SRC_FILES_1 := \
   gcc-2-darwin-no-pie.patch \
   gcc-cloog.mk \
   gcc-gmp.mk \
+  gcc-isl-1-fixes.patch \
   gcc-isl.mk \
   gcc-mpc.mk \
   gcc-mpfr.mk \
@@ -167,6 +168,7 @@ SRC_FILES_1 := \
   ilmbase.mk \
   imagemagick.mk \
   intltool.mk \
+  isl-1-fixes.patch \
   isl.mk \
   itsol.mk \
   itstool.mk \
