@@ -10,7 +10,10 @@ $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 
-$(PKG)_DEPS := build-cmake build-binutils gcc-cloog gcc-gmp gcc-isl gcc-mpc gcc-mpfr
+$(PKG)_DEPS := build-cmake gcc-cloog gcc-gmp gcc-isl gcc-mpc gcc-mpfr
+ifneq ($(MXE_NATIVE_BUILD),yes)
+  $(PKG)_DEPS += build-binutils
+endif
 ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_DEPS += mingw-w64
 endif
@@ -29,12 +32,38 @@ ifeq ($(MXE_SYSTEM),mingw)
     --disable-nls \
     --without-x \
     --disable-win32-registry \
-    --enable-threads=win32 \
-    --with-native-system-header-dir='/include'
+    --with-native-system-header-dir='/include' \
+    --enable-threads=win32
   ifneq ($(ENABLE_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
       --disable-sjlj-exceptions
   endif
+  define $(PKG)_BUILD_SYSTEM_RUNTIME
+    # build standalone gcc
+    $(MAKE) -C '$(1).build' -j '$(JOBS)' all-gcc
+    $(MAKE) -C '$(1).build' -j 1 install-gcc
+
+    # build mingw-w64-crt
+    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,mingw-w64,$(TAR))
+    mkdir '$(1).crt-build'
+    cd '$(1).crt-build' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-crt/configure' \
+	--host='$(TARGET)' \
+	--prefix='$(HOST_PREFIX)' \
+	--with-sysroot='$(HOST_PREFIX)' \
+	$(ENABLE_SHARED_OR_STATIC)
+    $(MAKE) -C '$(1).crt-build' -j '$(JOBS)' || $(MAKE) -C '$(1).crt-build' -j '$(JOBS)'
+    $(MAKE) -C '$(1).crt-build' -j 1 install
+  endef
+endif
+
+ifneq ($(MXE_NATIVE_BUILD),yes)
+  $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
+    --target='$(TARGET)' \
+    --build='$(BUILD_SYSTEM)' \
+    --with-sysroot='$(HOST_PREFIX)' \
+    --with-as='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-as' \
+    --with-ld='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ld' \
+    --with-nm='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-nm'
 endif
 
 define $(PKG)_UPDATE
@@ -55,12 +84,9 @@ define $(PKG)_CONFIGURE
     # configure gcc
     mkdir '$(1).build'
     cd    '$(1).build' && '$(1)/configure' \
-        --target='$(TARGET)' \
-        --build='$(BUILD_SYSTEM)' \
         --prefix='$(BUILD_TOOLS_PREFIX)' \
         --enable-languages='c,c++,fortran' \
         --disable-multilib \
-        --with-sysroot='$(HOST_PREFIX)' \
         $($(PKG)_SYSDEP_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-libgomp \
@@ -70,31 +96,15 @@ define $(PKG)_CONFIGURE
         --with-isl='$(BUILD_TOOLS_PREFIX)' \
         --with-mpc='$(BUILD_TOOLS_PREFIX)' \
         --with-mpfr='$(BUILD_TOOLS_PREFIX)' \
-        --with-as='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-as' \
-        --with-ld='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ld' \
-        --with-nm='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-nm'
         $(shell [ `uname -s` == Darwin ] && echo "LDFLAGS='-Wl,-no_pie'")
 endef
 
 define $(PKG)_BUILD
-  # build standalone gcc
   $($(PKG)_CONFIGURE)
-  $(MAKE) -C '$(1).build' -j '$(JOBS)' all-gcc
-  $(MAKE) -C '$(1).build' -j 1 install-gcc
 
-  # build mingw-w64-crt
-  cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,mingw-w64,$(TAR))
-  mkdir '$(1).crt-build'
-  cd '$(1).crt-build' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-crt/configure' \
-      --host='$(TARGET)' \
-      --prefix='$(HOST_PREFIX)' \
-      --with-sysroot='$(HOST_PREFIX)' \
-      $(ENABLE_SHARED_OR_STATIC)
-  $(MAKE) -C '$(1).crt-build' -j '$(JOBS)' || $(MAKE) -C '$(1).crt-build' -j '$(JOBS)'
-  $(MAKE) -C '$(1).crt-build' -j 1 install
+  $($(PKG)_BUILD_SYSTEM_RUNTIME)
 
   # build rest of gcc
-  cd '$(1).build'
   $(MAKE) -C '$(1).build' -j '$(JOBS)'
   $(MAKE) -C '$(1).build' -j 1 install
 
