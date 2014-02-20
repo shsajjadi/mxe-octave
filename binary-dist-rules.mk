@@ -45,14 +45,14 @@ define copy-dist-files
   cp $(TOP_DIR)/octaverc $(OCTAVE_DIST_DIR)/share/octave/site/m/startup/octaverc
   echo "  build_packages.m..."
   cp $(TOP_DIR)/build_packages.m $(OCTAVE_DIST_DIR)/src
-  echo "  DLL files..."
-  cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
-  cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
-  cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/4.8.2/*.dll $(OCTAVE_DIST_DIR)/bin
 endef
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define copy-windows-dist-files
+    echo "  DLL files..."
+    cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
+    cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
+    cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/4.8.2/*.dll $(OCTAVE_DIST_DIR)/bin
     echo "  msys base files..."
     cd $(TOP_DIR)/msys-base \
       && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
