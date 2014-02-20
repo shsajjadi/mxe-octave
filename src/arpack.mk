@@ -8,11 +8,7 @@ $(PKG)_CHECKSUM := 1fb817346619b04d8fcdc958060cc0eab2c73c6f
 $(PKG)_SUBDIR   := $(PKG)-ng-$($(PKG)_VERSION)
 $(PKG)_FILE     := arpack-ng_$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://forge.scilab.org/index.php/p/arpack-ng/downloads/get/$($(PKG)_FILE)
-ifeq ($(ENABLE_OPENBLAS),yes)
-  $(PKG)_DEPS     := openblas lapack
-else
-  $(PKG)_DEPS     := blas lapack
-endif
+$(PKG)_DEPS     := blas lapack
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
@@ -26,12 +22,7 @@ ifeq ($(ENABLE_64),yes)
   $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := FFLAGS="-g -O2 -fdefault-integer-8"
 endif
 
-ifeq ($(ENABLE_OPENBLAS),yes)
-  $(PKG)_BLAS_OPTION := --with-blas=openblas
-  $(PKG)_BLAS_LIB := openblas
-else
-  $(PKG)_BLAS_LIB := blas
-endif
+$(PKG)_BLAS_LIB := blas
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package arpack.' >&2;
@@ -46,7 +37,6 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --enable-static --disable-shared \
 	$($(PKG)_CONFIGURE_PIC_OPTION) \
-        $($(PKG)_BLAS_OPTION) \
         --prefix='$(HOST_PREFIX)' \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)'

@@ -8,16 +8,12 @@ $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://www.netlib.org/$(PKG)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.eq.uc.pt/pub/software/math/netlib/$(PKG)/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := blas
 
-ifeq ($(ENABLE_OPENBLAS),yes)
-  $(PKG)_DEPS     += openblas
-
-  ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
-    $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES=$(HOST_BINDIR)/libopenblas.dll
-  else
-    $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES=openblas
-  endif
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES=$(HOST_BINDIR)/libblas.dll
+else
+  $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES=blas
 endif
 
 ifeq ($(ENABLE_64),yes)

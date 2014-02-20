@@ -159,7 +159,14 @@ Function octaveOptionsPage
   \${NSD_CreateDropList} 120u 70 100u 80u ""
   Pop \$InstallBlasLibCtrl
   \${NSD_CB_AddString} \$InstallBlasLibCtrl "Reference BLAS"
+EOF
+   # add option to install libopenblas if we have the dll present
+   if [ -e $OCTAVE_SOURCE/bin/libopenblas.dll ]; then
+     cat >> $OUTFILE << EOF
   \${NSD_CB_AddString} \$InstallBlasLibCtrl "OpenBLAS"
+EOF
+  fi
+  cat >> $OUTFILE << EOF
   \${NSD_CB_SelectString} \$InstallBlasLibCtrl "Reference BLAS"
 
   !insertmacro MUI_HEADER_TEXT "Install Options" "Choose options for installing"
