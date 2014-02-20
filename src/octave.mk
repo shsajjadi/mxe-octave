@@ -11,7 +11,7 @@ $(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := arpack curl fftw fltk $($(PKG)_FONTCONFIG) gl2ps glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
+$(PKG)_DEPS     := blas arpack curl fftw fltk $($(PKG)_FONTCONFIG) gl2ps glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qhull qrupdate qscintilla qt readline suitesparse texinfo zlib
 ifeq ($(ENABLE_JIT),yes)
   $(PKG)_DEPS += llvm
   $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --enable-jit
@@ -32,13 +32,6 @@ endif
 
 ifneq ($(ENABLE_DOCS),yes)
   $(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS := --disable-docs
-endif
-
-ifeq ($(ENABLE_OPENBLAS),yes)
-  $(PKG)_DEPS += openblas
-  $(PKG)_BLAS_OPTION := --with-blas=openblas
-else
-  $(PKG)_DEPS += blas
 endif
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
@@ -102,7 +95,6 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$($(PKG)_PREFIX)' \
-        $($(PKG)_BLAS_OPTION) \
         $($(PKG)_CROSS_CONFIG_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \

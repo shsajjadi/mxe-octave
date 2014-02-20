@@ -8,14 +8,9 @@ $(PKG)_SUBDIR   := SuiteSparse
 $(PKG)_FILE     := SuiteSparse-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.cise.ufl.edu/research/sparse/SuiteSparse/$($(PKG)_FILE)
 $(PKG)_URL_2    := https://distfiles.macports.org/SuiteSparse/$($(PKG)_FILE)
+$(PKG)_DEPS     := blas lapack
 
-ifeq ($(ENABLE_OPENBLAS),yes)
-  $(PKG)_DEPS     := openblas lapack
-  $(PKG)_BLAS_LIB := openblas
-else
-  $(PKG)_DEPS     := blas lapack
-  $(PKG)_BLAS_LIB := blas
-endif
+$(PKG)_BLAS_LIB := blas
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/' | \
