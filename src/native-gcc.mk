@@ -24,8 +24,8 @@ ifeq ($(MXE_SYSTEM),mingw)
     --disable-nls \
     --without-x \
     --disable-win32-registry \
-    --enable-threads=win32 \
-    --with-native-system-header-dir='$(HOST_PREFIX)/include'
+    --with-native-system-header-dir='$(HOST_PREFIX)/include' \
+    --enable-threads=win32 
   ifneq ($(ENABLE_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
       --disable-sjlj-exceptions
@@ -40,6 +40,19 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    # unpack support libraries
+    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,gmp,$(TAR))
+    mv '$(1)/$(gmp_SUBDIR)' '$(1)/gmp'
+    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,mpc,$(TAR))
+    mv '$(1)/$(mpc_SUBDIR)' '$(1)/mpc'
+    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,mpfr,$(TAR))
+    mv '$(1)/$(mpfr_SUBDIR)' '$(1)/mpfr'
+    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,cloog,$(TAR))
+    mv '$(1)/$(cloog_SUBDIR)' '$(1)/cloog'
+    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,isl,$(TAR))
+    mv '$(1)/$(isl_SUBDIR)' '$(1)/isl'
+    #--with-native-system-header-dir='/include'
+
     # configure gcc
     mkdir '$(1).build'
     cd    '$(1).build' && '$(1)/configure' \
@@ -52,6 +65,8 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-libgomp \
         --disable-libmudflap \
+        --with-mpfr-include='$(1)/mpfr/src' \
+        --with-mpfr-lib='$(1).build/mpfr/src/.libs' \
         $(shell [ `uname -s` == Darwin ] && echo "LDFLAGS='-Wl,-no_pie'")
 
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
