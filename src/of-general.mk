@@ -3,8 +3,8 @@
 
 PKG             := of-general
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.3.2
-$(PKG)_CHECKSUM := 1662d97f0bf1be957e1a30a287d9c0aff7b5ecdd
+$(PKG)_VERSION  := 1.3.4
+$(PKG)_CHECKSUM := 990dbd6f294b91e32b023d9d10673fae74d21795
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := general
 $(PKG)_FILE     := general-$($(PKG)_VERSION).tar.gz
