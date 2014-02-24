@@ -6,7 +6,7 @@ if length(packagedir) > 0
   cd(packagedir);
 endif
 % install the packages
-pkg install general-1.3.2.tar.gz
+pkg install general-1.3.4.tar.gz
 pkg install miscellaneous-1.2.0.tar.gz
 pkg install struct-1.0.10.tar.gz
 pkg install optim-1.2.2.tar.gz
