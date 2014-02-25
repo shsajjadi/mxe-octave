@@ -121,6 +121,9 @@ Page custom octaveOptionsPage octaveOptionsLeave
 RequestExecutionLevel admin
 
 ######################################################################
+; Win 8 detection
+Var IsWin8
+
 ; custom options page functions
 
 Var InstallAllUsers
@@ -246,8 +249,13 @@ Section "Shortcuts"
  CreateDirectory "\$SMPROGRAMS\\Octave-$VERSION"
  CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
  SetOutPath "%USERPROFILE%"
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Command Line).lnk" "\$INSTDIR\\bin\\octave-cli.exe" "" "\$INSTDIR\\$ICON" 0
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
+ \${If} \$IsWin8 == 1
+   CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Command Line).lnk" "\$INSTDIR\\bin\\octave-cli.exe" "-i --line-editing" "\$INSTDIR\\$ICON" 0
+   CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "-i --line-editing" "\$INSTDIR\\$ICON" 0
+ \${Else}
+   CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Command Line).lnk" "\$INSTDIR\\bin\\octave-cli.exe" "" "\$INSTDIR\\$ICON" 0
+   CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
+ \${EndIf}
  SetOutPath "\$INSTDIR"
 EOF
   # if we have documentation files, create shortcuts
@@ -265,8 +273,13 @@ EOF
 
   \${If} \$InstallShortcuts == \${BST_CHECKED}
     SetOutPath "%USERPROFILE%"
-    CreateShortCut "\$desktop\\Octave-$VERSION (Command Line).lnk" "\$INSTDIR\\bin\\octave-cli.exe" "" "\$INSTDIR\\$ICON" 0
-    CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
+    \${If} \$IsWin8 == 1
+       CreateShortCut "\$desktop\\Octave-$VERSION (Command Line).lnk" "\$INSTDIR\\bin\\octave-cli.exe" "-i --line-editing" "\$INSTDIR\\$ICON" 0
+       CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "-i --line-editing" "\$INSTDIR\\$ICON" 0
+    \${Else}
+       CreateShortCut "\$desktop\\Octave-$VERSION (Command Line).lnk" "\$INSTDIR\\bin\\octave-cli.exe" "" "\$INSTDIR\\$ICON" 0
+       CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
+    \${EndIf}
   \${Endif}
 
   ; BLAS set up
@@ -359,6 +372,9 @@ SectionEnd
 Function DetectWinVer
   Push \$0
   Push \$1
+
+  StrCpy \$IsWin8 0
+
   ReadRegStr \$0 HKLM "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion" CurrentVersion
   IfErrors is_error is_winnt
 is_winnt:
@@ -374,6 +390,8 @@ is_winnt:
   Goto is_error
 
 is_winnt_8:
+  StrCpy \$IsWin8 1
+
   MessageBox MB_YESNO|MB_ICONEXCLAMATION "Setup has detected Windows 8 installed on your system. Octave is currently not fully supported on Windows 8. If you choose to continue with the installation, you might not be able to access Octave GUI. Do you want to proceed with the installation anyway?" IDYES done IDNO 0
   Abort
 is_winnt_XP:
