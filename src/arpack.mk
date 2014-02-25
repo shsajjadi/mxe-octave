@@ -3,8 +3,8 @@
 
 PKG             := arpack
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.1.4
-$(PKG)_CHECKSUM := 1fb817346619b04d8fcdc958060cc0eab2c73c6f
+$(PKG)_VERSION  := 3.1.5
+$(PKG)_CHECKSUM := f5b492a70c10b39596e476d0c7958b4d85a40a29
 $(PKG)_SUBDIR   := $(PKG)-ng-$($(PKG)_VERSION)
 $(PKG)_FILE     := arpack-ng_$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://forge.scilab.org/index.php/p/arpack-ng/downloads/get/$($(PKG)_FILE)
