@@ -80,7 +80,7 @@ define $(PKG)_BUILD
         deplibs=""; \
         case $$lib in \
           libcholmod) \
-            deplibs="-lamd -lcolamd -lsuitesparseconfig -llapack -l$($(PKG)_BLAS_LIB)"; \
+            deplibs="-lamd -lcamd -lcolamd -lccolamd -lsuitesparseconfig -llapack -l$($(PKG)_BLAS_LIB)"; \
           ;; \
           libklu) \
             deplibs="-lbtf -lamd -lcolamd -lsuitesparseconfig"; \
