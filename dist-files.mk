@@ -425,6 +425,7 @@ SRC_FILES_1 := \
   of-io.mk \
   of-linear-algebra.mk \
   of-miscellaneous.mk \
+  of-netcdf.mk \
   of-odepkg.mk \
   of-optim-1-fixes.patch \
   of-optim.mk \

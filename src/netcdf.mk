@@ -4,7 +4,7 @@
 PKG             := netcdf
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 4.3.0
-$(PKG)_CHECKSUM := 31b4b3b17146cc8c14a8c7be3fe5f28e5a8a5deb
+$(PKG)_CHECKSUM := 246e4963e66e1c175563cc9a714e9da0a19b8b07
 $(PKG)_SUBDIR   := netcdf-$($(PKG)_VERSION)
 $(PKG)_FILE     := netcdf-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-$($(PKG)_VERSION).tar.gz
@@ -32,5 +32,5 @@ define $(PKG)_BUILD
         --enable-dll \
 	&& $($(PKG)_CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install
+    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
 endef
