@@ -70,5 +70,9 @@ define $(PKG)_BUILD
       ;; \
     esac
 
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
+    # libtool is somehow created to effectively disallow shared builds
+    $(SED) -i 's,allow_undefined_flag="unsupported",allow_undefined_flag="",g' '$(1)/.build/libtool'
+
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' 
+    $(MAKE) -C '$(1)/.build' -j 1 install DESTDIR='$(3)'
 endef
