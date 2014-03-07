@@ -56,4 +56,8 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     $(MAKE) -C '$(1).build' -j 1 install
+
+    if [ -f $(HOST_PREFIX)/lib/gcc/$(TARGET)/lib/libgcc_s.a ]; then \
+      mv $(HOST_PREFIX)/lib/gcc/$(TARGET)/lib/libgcc_s.a $(HOST_PREFIX)/lib/gcc/$(TARGET)/$($(PKG)_VERSION)/libgcc_s.a; \
+    fi
 endef
