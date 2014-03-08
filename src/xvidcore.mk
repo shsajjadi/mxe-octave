@@ -11,9 +11,8 @@ $(PKG)_URL      := http://downloads.xvid.org/downloads/$($(PKG)_FILE)
 $(PKG)_DEPS     := pthreads
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.xvid.org/' | \
-    $(SED) -n 's,.*Xvid \([0-9][^ ]*\) .*,\1,p' | \
-    head -1
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
 endef
 
 define $(PKG)_BUILD

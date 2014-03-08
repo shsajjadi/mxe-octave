@@ -11,9 +11,9 @@ $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/witty/$($(PKG)_FILE)
 $(PKG)_DEPS     := boost openssl libharu graphicsmagick pango postgresql sqlite
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://sourceforge.net/projects/witty/files/witty/' | \
-    $(SED) -n 's,.*wt-\([0-9][^>]*\)\.tar.*,\1,p' | \
-    tail -1
+    $(WGET) -q -O- 'http://sourceforge.net/projects/witty/files/wt/' | \
+    $(SED) -n 's,.*<a href="/projects/witty/files/wt/\([0-9][^>]*\)/.*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

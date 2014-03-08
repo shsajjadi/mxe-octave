@@ -11,11 +11,8 @@ $(PKG)_URL      := http://hci.iwr.uni-heidelberg.de/vigra/$($(PKG)_FILE)
 $(PKG)_DEPS     := jpeg tiff libpng openexr
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://hci.iwr.uni-heidelberg.de/vigra/' | \
-    grep 'Sources' | \
-    grep '<a href="vigra' | \
-    $(SED) -n 's,.*"vigra-\([0-9][^"]*\)-src.*,\1,p' | \
-    head
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
 endef
 
 define $(PKG)_BUILD
