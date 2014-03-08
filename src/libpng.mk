@@ -17,14 +17,13 @@ ifeq ($(MXE_SYSTEM),msvc)
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://libpng.git.sourceforge.net/git/gitweb.cgi?p=libpng/libpng;a=tags' | \
-    grep '<a class="list name"' | \
+    $(WGET) -q -O- 'http://sourceforge.net/p/libpng/code/ref/master/tags/' | \
     $(SED) -n 's,.*<a[^>]*>v\([0-9][^<]*\)<.*,\1,p' | \
     grep -v alpha | \
     grep -v beta | \
     grep -v rc | \
-    grep -v '^1\.[0-4]\.' | \
-    head -1
+    $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

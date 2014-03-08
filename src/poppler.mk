@@ -12,7 +12,7 @@ $(PKG)_DEPS     := glib cairo libpng lcms jpeg tiff freetype zlib curl qt
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://poppler.freedesktop.org/' | \
-    $(SED) -n 's,.*"poppler-\([0-9.]\+\)\.tar\.gz".*,\1,p' | \
+    $(SED) -n 's,.*"poppler-\([0-9.]\+\)\.tar\.xz".*,\1,p' | \
     head -1
 endef
 

@@ -93,10 +93,8 @@ else
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://qt.gitorious.org/qt/qt/commits' | \
-    grep '<li><a href="/qt/qt/commit/' | \
-    $(SED) -n 's,.*<a[^>]*>v\([0-9][^<-]*\)<.*,\1,p' | \
-    tail -1
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
 endef
 
 define $(PKG)_BUILD

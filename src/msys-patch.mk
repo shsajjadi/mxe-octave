@@ -12,8 +12,9 @@ $(PKG)_URL      := $(MSYS_EXTENSION_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_EXTENSION_URL)/patch' | \
+    $(SED) -n 's,.*title="patch-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD
