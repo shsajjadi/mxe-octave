@@ -302,6 +302,8 @@ SRC_FILES_1 := \
   mingw-transfig-1-fixes.patch \
   mingw-units-1-fixes.patch \
   mingw-utils-1-portability-fix.patch \
+  mingw-w64-1-math-h.patch \
+  mingw-w64-2-float-h.patch \
   mingw-w64.mk \
   mingwrt.mk \
   mpc.mk \
