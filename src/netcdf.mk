@@ -16,7 +16,7 @@ define $(PKG)_UPDATE
     head -1
 endef
 
-ifeq ($(MXE_WINDOWS_BUILD))
+ifeq ($(MXE_WINDOWS_BUILD),yes)
   $(PKG)_CONFIGURE_OPTIONS := --enable-dll
 endif
 
