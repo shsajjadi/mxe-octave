@@ -10,10 +10,15 @@ OUTFILE="$2"
 TOPDIR=`dirname $1`
 OCTAVE_SOURCE=`basename $1`
 
-echo "Generating installer script ... "
-
 cd $TOPDIR
 MXEDIR=`cd ..; pwd`
+
+if [ -e $OCTAVE_SOURCE/bin/libopenblas.dll ]; then
+  DEFAULT_BLAS="OpenBLAS"
+else
+  DEFAULT_BLAS="Reference BLAS"
+fi
+
 
 # find octave shortcut icon
 ICON=`find $OCTAVE_SOURCE -name octave-logo.ico -printf "%P" | head -1 | sed 's,/,\\\\,g'`
@@ -161,7 +166,6 @@ Function octaveOptionsPage
 
   \${NSD_CreateDropList} 120u 70 100u 80u ""
   Pop \$InstallBlasLibCtrl
-  \${NSD_CB_AddString} \$InstallBlasLibCtrl "Reference BLAS"
 EOF
    # add option to install libopenblas if we have the dll present
    if [ -e $OCTAVE_SOURCE/bin/libopenblas.dll ]; then
@@ -170,7 +174,11 @@ EOF
 EOF
   fi
   cat >> $OUTFILE << EOF
-  \${NSD_CB_SelectString} \$InstallBlasLibCtrl "Reference BLAS"
+  \${NSD_CB_AddString} \$InstallBlasLibCtrl "Reference BLAS"
+EOF
+
+  cat >> $OUTFILE << EOF
+  \${NSD_CB_SelectString} \$InstallBlasLibCtrl "$DEFAULT_BLAS"
 
   !insertmacro MUI_HEADER_TEXT "Install Options" "Choose options for installing"
   nsDialogs::Show  
@@ -284,11 +292,11 @@ EOF
 
   ; BLAS set up
   \${If} \$InstallBlasLib == 1
-    ; OpenBLAS
-    CopyFiles /SILENT "\$INSTDIR\\bin\\libopenblas.dll" "\$INSTDIR\\bin\\libblas.dll"
-  \${Else}
     ; Reference BLAS
     CopyFiles /SILENT "\$INSTDIR\\bin\\librefblas.dll" "\$INSTDIR\\bin\\libblas.dll"
+  \${Else}
+    ; OpenBLAS
+    CopyFiles /SILENT "\$INSTDIR\\bin\\libopenblas.dll" "\$INSTDIR\\bin\\libblas.dll"
   \${EndIf}
 
 SectionEnd
@@ -468,5 +476,3 @@ Function CheckJRE
   Pop \$R0
 FunctionEnd
 EOF
-
-echo "Generation Completed"
