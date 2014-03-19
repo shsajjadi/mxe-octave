@@ -136,12 +136,14 @@ binary-dist-files: $(BINARY_DIST_DEPS)
 	@$(install-octave-wrapper-scripts)
 
 define make-installer-file
+  if [ -f $(OCTAVE_NSI_FILE) ]; then
+    echo "deleting previous installer script..."
+    rm -f $(OCTAVE_NSI_FILE)
+  fi
   echo "generating installer script..."
   ./makeinst-script.sh $(OCTAVE_DIST_DIR) $(OCTAVE_NSI_FILE)
   echo "generating installer..."
   $(TARGET)-makensis $(OCTAVE_NSI_FILE) > $(TOP_DIR)/dist/nsis.log
-  echo "deleting installer script..."
-  rm -f $(OCTAVE_NSI_FILE)
 endef
 
 $(OCTAVE_DIST_NAME)-installer.exe: nsis binary-dist-files
