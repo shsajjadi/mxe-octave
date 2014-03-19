@@ -17,9 +17,7 @@ ifneq ($(MXE_NATIVE_BUILD),yes)
 endif
 
 ifeq ($(ENABLE_64),yes)
-  $(PKG)_MAKE_OPTS += BINARY=64
-else
-  $(PKG)_MAKE_OPTS += BINARY=32
+  $(PKG)_MAKE_OPTS += BINARY=64 INTERFACE64=1
 endif
 
 define $(PKG)_UPDATE
@@ -30,7 +28,7 @@ endef
 define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' $($(PKG)_MAKE_OPTS)  
     $(MAKE) -C '$(1)' -j 1 PREFIX='$(HOST_PREFIX)' $($(PKG)_MAKE_OPTS) install
-    if [ $(BUILD_SHARED) = yes ]; then \
+    if [ $(MXE_WINDOWS_BUILD) = yes ] && [ $(BUILD_SHARED) = yes ]; then \
       $(INSTALL) -d $(HOST_BINDIR); \
       $(INSTALL) $(HOST_LIBDIR)/libopenblas.dll $(HOST_BINDIR)/; \
     fi
