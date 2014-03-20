@@ -136,9 +136,9 @@ binary-dist-files: $(BINARY_DIST_DEPS)
 	@$(install-octave-wrapper-scripts)
 
 define make-installer-file
-  if [ -f $(OCTAVE_NSI_FILE) ]; then
-    echo "deleting previous installer script..."
-    rm -f $(OCTAVE_NSI_FILE)
+  if [ -f $(OCTAVE_NSI_FILE) ]; then \
+    echo "deleting previous installer script..."; \
+    rm -f $(OCTAVE_NSI_FILE); \
   fi
   echo "generating installer script..."
   ./makeinst-script.sh $(OCTAVE_DIST_DIR) $(OCTAVE_NSI_FILE)
