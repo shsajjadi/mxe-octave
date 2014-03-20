@@ -25,6 +25,23 @@ define $(PKG)_BUILD
     $(INSTALL) -m755 '$(1)/config/mingw/wgnuplot.exe' '$(3)$(HOST_BINDIR)'
     $(INSTALL) -m644 '$(1)/src/win/wgnuplot.mnu' '$(3)$(HOST_BINDIR)'
 
+    # config files
+    $(INSTALL) -d '$(3)$(HOST_PREFIX)/share'
+    $(INSTALL) -m644 '$(1)/share/gnuplotrc' '$(3)$(HOST_PREFIX)/share/'
+
+    for f in $(1)/share/*.gp; do \
+      $(INSTALL) -m644 "$$f" '$(3)$(HOST_PREFIX)/share/'; \
+    done
+
+    # terminal support
+    $(INSTALL) -d '$(3)$(HOST_PREFIX)/share/PostScript'
+    for f in $(1)/term/PostScript/*.ps; do \
+      $(INSTALL) -m644 "$$f" '$(3)$(HOST_PREFIX)/share/PostScript/'; \
+    done
+    for f in $(1)/term/PostScript/*.txt; do \
+      $(INSTALL) -m644 "$$f" '$(3)$(HOST_PREFIX)/share/PostScript/'; \
+    done
+
     ## MG: not sure what to do with these and how to integrate with DESTDIR
     $(INSTALL) -d '$(TOP_DIR)/gnuplot/bin'
     $(INSTALL) -m755 '$(1)/config/mingw/gnuplot.exe' '$(TOP_DIR)/gnuplot/bin/'
