@@ -306,7 +306,7 @@ Section "FileTypeRego"
   WriteRegStr HKCR "Octave.Document.$VERSION" "" "GNU Octave Script"
   WriteRegStr HKCR "Octave.Document.$VERSION\\DefaultIcon" "" "\$INSTDIR\\$ICON"
   ; document actions
-  WriteRegStr HKCR "Octave.Document.$VERSION\\shell\\open\\command" "" '"\$INSTDIR\\bin\\octave-gui.exe" --force-gui --persist --eval "edit %1"'
+  WriteRegStr HKCR "Octave.Document.$VERSION\\shell\\open\\command" "" '"\$INSTDIR\\bin\\octave-gui.exe" --force-gui --persist --eval "edit '%1'"'
 
   \${If} \$RegisterOctaveFileType == \${BST_CHECKED}
     ReadRegStr \$0 HKCR ".m" ""
