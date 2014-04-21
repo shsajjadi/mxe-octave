@@ -3,8 +3,8 @@
 
 PKG             := qscintilla
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.8
-$(PKG)_CHECKSUM := 3edf9d476d4e6af0706a4d33401667a38e3a697e
+$(PKG)_VERSION  := 2.8.1
+$(PKG)_CHECKSUM := 7eb468ddda24b015c11c5e5a964dc6e692941ad8
 $(PKG)_SUBDIR   := QScintilla-gpl-$($(PKG)_VERSION)
 $(PKG)_FILE     := QScintilla-gpl-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://sourceforge.net/projects/pyqt/files/QScintilla2/QScintilla-$($(PKG)_VERSION)/$($(PKG)_FILE)
