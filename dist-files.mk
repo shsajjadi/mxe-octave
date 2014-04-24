@@ -453,8 +453,7 @@ SRC_FILES_1 := \
   openexr-1-disable-zlib_winapi.patch \
   openexr.mk \
   openscenegraph.mk \
-  openssl-1-winsock2.patch \
-  openssl-2-pod.patch \
+  openssl-1-fixes.patch \
   openssl.mk \
   pango.mk \
   pangomm.mk \
