@@ -298,6 +298,7 @@ SRC_FILES_1 := \
   mingw-libmng-1-noundefines.patch \
   mingw-openssl-3-libdeps.patch \
   mingw-pango-1-fixes.patch \
+  mingw-texinfo-1-fixes.patch \
   mingw-transfig-1-fixes.patch \
   mingw-units-1-fixes.patch \
   mingw-utils-1-portability-fix.patch \
