@@ -392,6 +392,7 @@ SRC_FILES_1 := \
   mxml.mk \
   native-binutils.mk \
   native-gcc-1-float.patch \
+  native-gcc-2-intrinsics.patch \
   native-gcc.mk \
   ncurses.mk \
   netcdf.mk \
