@@ -52,7 +52,7 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
     echo "  DLL files..."
     cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
     cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
-    cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/4.8.2/*.dll $(OCTAVE_DIST_DIR)/bin
+    cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/$(build-gcc_VERSION)/*.dll $(OCTAVE_DIST_DIR)/bin
     echo "  msys base files..."
     cd $(TOP_DIR)/msys-base \
       && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
