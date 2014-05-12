@@ -2,8 +2,8 @@
 # See index.html for further information.
 
 PKG             := gnutls
-$(PKG)_VERSION  := 3.2.3
-$(PKG)_CHECKSUM := 18f5fffd1a0384944cb76cbedc0720c4726470f4
+$(PKG)_VERSION  := 3.2.14
+$(PKG)_CHECKSUM := a660dfb59bd6f907eeb5c73c540cdddeb51bf8ae
 $(PKG)_SUBDIR   := gnutls-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnutls-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/gnutls/$($(PKG)_FILE)

@@ -122,7 +122,6 @@ SRC_FILES_1 := \
   gnuplot-2-win64.patch \
   gnuplot.mk \
   gnutls-1-fixes.patch \
-  gnutls-2-ldadd.patch \
   gnutls-test.c \
   gnutls.mk \
   graphicsmagick-1-fix-xml2-config.patch \
