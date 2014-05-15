@@ -3,8 +3,8 @@
 
 PKG             := build-scons
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.3.0
-$(PKG)_CHECKSUM := 728edf20047a9f8a537107dbff8d8f803fd2d5e3
+$(PKG)_VERSION  := 2.3.1
+$(PKG)_CHECKSUM := 775e715e49fe5fd8e1d29551a296fdc9267509e7
 $(PKG)_SUBDIR   := scons-$($(PKG)_VERSION)
 $(PKG)_FILE     := scons-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://prdownloads.sourceforge.net/scons/$($(PKG)_FILE)
