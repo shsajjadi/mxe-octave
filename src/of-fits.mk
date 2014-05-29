@@ -3,8 +3,8 @@
 
 PKG             := of-fits
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.0.3
-$(PKG)_CHECKSUM := 6aecd4611879acaae1918025148cc09e197e0e82
+$(PKG)_VERSION  := 1.0.5
+$(PKG)_CHECKSUM := 0803d815d83d82d1b906c3a00fb43f72afbf4362
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := fits
 $(PKG)_FILE     := fits-$($(PKG)_VERSION).tar.gz
