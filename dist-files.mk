@@ -416,7 +416,6 @@ SRC_FILES_1 := \
   of-control.mk \
   of-data-smoothing.mk \
   of-dicom.mk \
-  of-fits-1-fixes.patch \
   of-fits.mk \
   of-fl-core-1-fixes.patch \
   of-fl-core.mk \
