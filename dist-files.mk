@@ -428,7 +428,6 @@ SRC_FILES_1 := \
   of-miscellaneous.mk \
   of-netcdf.mk \
   of-odepkg.mk \
-  of-optim-1-fixes.patch \
   of-optim.mk \
   of-quaternion.mk \
   of-signal.mk \
