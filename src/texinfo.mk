@@ -38,6 +38,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1).build/tools/lib' -j $(JOBS) 
     $(MAKE) -C '$(1).build/tools/gnulib/lib' -j $(JOBS) 
     $(MAKE) -C '$(1).build/tools/info' -j $(JOBS) makedoc
-    $(MAKE) -C '$(1).build/info' -j '$(JOBS)' funs.h ginfo.exe
+    $(MAKE) -C '$(1).build/info' -j 1 funs.h
+    $(MAKE) -C '$(1).build/info' -j '$(JOBS)' ginfo.exe
     $(INSTALL) '$(1).build/info/ginfo.exe' '$(3)$(HOST_BINDIR)/info.exe'
 endef
