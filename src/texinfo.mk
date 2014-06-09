@@ -34,11 +34,16 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1).build/makeinfo' -j 1 install DESTDIR='$(3)'
 
     # octave-cli needs info to display help
-    # need build native tools in order to build info
-    $(MAKE) -C '$(1).build/tools/lib' -j $(JOBS) 
-    $(MAKE) -C '$(1).build/tools/gnulib/lib' -j $(JOBS) 
-    $(MAKE) -C '$(1).build/tools/info' -j $(JOBS) makedoc
-    $(MAKE) -C '$(1).build/info' -j 1 funs.h
-    $(MAKE) -C '$(1).build/info' -j '$(JOBS)' ginfo.exe
-    $(INSTALL) '$(1).build/info/ginfo.exe' '$(3)$(HOST_BINDIR)/info.exe'
+    # for cross build, need build native tools in order to build info
+    if [ "x$(MXE_NATIVE_BUILD)" = "xyes" ]; then \
+        $(MAKE) -C '$(1).build/info' -j '$(JOBS)'; \
+        $(MAKE) -C '$(1).build/info' -j 1 install DESTDIR='$(3)'; \
+    else \
+        $(MAKE) -C '$(1).build/tools/lib' -j $(JOBS); \
+        $(MAKE) -C '$(1).build/tools/gnulib/lib' -j $(JOBS); \
+        $(MAKE) -C '$(1).build/tools/info' -j $(JOBS) makedoc; \
+        $(MAKE) -C '$(1).build/info' -j 1 funs.h; \
+        $(MAKE) -C '$(1).build/info' -j '$(JOBS)' ginfo.exe; \
+        $(INSTALL) '$(1).build/info/ginfo.exe' '$(3)$(HOST_BINDIR)/info.exe'; \
+    fi
 endef

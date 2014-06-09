@@ -951,3 +951,17 @@ diff -ur texinfo-4.13.orig/info/signals.c texinfo-4.13/info/signals.c
  reset_info_window_sizes (void)
  {
    terminal_goto_xy (0, 0);
+diff -ur texinfo-4.13.orig/info/terminal.c texinfo-4.13/info/terminal.c
+--- texinfo-4.13.orig/info/terminal.c	2014-06-09 00:27:32 -0400
++++ texinfo-4.13/info/terminal.c	2014-06-09 00:33:37 -0400
+@@ -47,6 +47,10 @@
+ #endif /* not HAVE_TERMCAP_H */
+ #endif /* not HAVE_NCURSES_TERMCAP_H */
+ 
++#if defined(__MSDOS__)  || defined(__MINGW32__)
++  unsigned int sleep(unsigned int);
++#endif
++
+ /* Function "hooks".  If you make one of these point to a function, that
+    function is called when appropriate instead of its namesake.  Your
+    function is called with exactly the same arguments that were passed
