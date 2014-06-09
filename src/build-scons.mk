@@ -8,7 +8,11 @@ $(PKG)_CHECKSUM := 775e715e49fe5fd8e1d29551a296fdc9267509e7
 $(PKG)_SUBDIR   := scons-$($(PKG)_VERSION)
 $(PKG)_FILE     := scons-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://prdownloads.sourceforge.net/scons/$($(PKG)_FILE)
-$(PKG)_DEPS     := build-python
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+    $(PKG)_DEPS     := 
+else
+    $(PKG)_DEPS     := build-python
+endif
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
