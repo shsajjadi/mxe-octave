@@ -203,6 +203,11 @@ ifeq ($(MXE_SYSTEM),msvc)
   REQUIREMENTS += makeinfo xz
   BUILD_TOOLS := $(filter-out build-texinfo build-xz, $(BUILD_TOOLS))
 endif
+# use the a native python in native mingw
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  REQUIREMENTS += python
+  BUILD_TOOLS := $(filter-out build-python, $(BUILD_TOOLS))
+endif
 
 
 ifeq ($(USE_SYSTEM_GCC),yes)
