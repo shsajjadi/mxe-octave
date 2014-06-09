@@ -61,30 +61,30 @@ define $(PKG)_BUILD
     $(INSTALL) -m644 '$(1)/src/include/postgres_ext.h' '$(3)$(HOST_INCDIR)'
     $(INSTALL) -d    '$(3)$(HOST_INCDIR)/libpq'
     $(INSTALL) -m644 '$(1)'/src/include/libpq/*        '$(3)$(HOST_INCDIR)/libpq/'
-    # Build a native pg_config.
-    $(SED) -i 's,-DVAL_,-D_DISABLED_VAL_,g' '$(1).native'/src/bin/pg_config/Makefile
-    cd '$(1).native' && ./configure \
-        --prefix='$(BUILD_TOOLS_PREFIX)' \
-        $(ENABLE_SHARED_OR_STATIC) \
-        --disable-rpath \
-        --without-tcl \
-        --without-perl \
-        --without-python \
-        --without-gssapi \
-        --without-krb5 \
-        --without-pam \
-        --without-ldap \
-        --without-bonjour \
-        --without-openssl \
-        --without-readline \
-        --without-ossp-uuid \
-        --without-libxml \
-        --without-libxslt \
-        --without-zlib \
-        --with-system-tzdata=/dev/null
-    $(MAKE) -C '$(1).native'/src/port          -j '$(JOBS)'
-    $(MAKE) -C '$(1).native'/src/bin/pg_config -j '$(JOBS)' install DESTDIR=$(3)
+    # Build a native pg_config (if cross build).
     if [ $(MXE_NATIVE_BUILD) = no ]; then \
-      $(INSTALL) -m755 '$(3)$(BUILD_TOOLS_PREFIX)/bin/pg_config' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pg_config'; \
+        $(SED) -i 's,-DVAL_,-D_DISABLED_VAL_,g' '$(1).native'/src/bin/pg_config/Makefile; \
+        cd '$(1).native' && ./configure \
+            --prefix='$(BUILD_TOOLS_PREFIX)' \
+            $(ENABLE_SHARED_OR_STATIC) \
+            --disable-rpath \
+            --without-tcl \
+            --without-perl \
+            --without-python \
+            --without-gssapi \
+            --without-krb5 \
+            --without-pam \
+            --without-ldap \
+            --without-bonjour \
+            --without-openssl \
+            --without-readline \
+            --without-ossp-uuid \
+            --without-libxml \
+            --without-libxslt \
+            --without-zlib \
+            --with-system-tzdata=/dev/null; \
+        $(MAKE) -C '$(1).native'/src/port          -j '$(JOBS)'; \
+        $(MAKE) -C '$(1).native'/src/bin/pg_config -j '$(JOBS)' install DESTDIR=$(3); \
+        $(INSTALL) -m755 '$(3)$(BUILD_TOOLS_PREFIX)/bin/pg_config' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pg_config'; \
     fi
 endef
