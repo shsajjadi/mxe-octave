@@ -139,6 +139,13 @@ AC_ARG_ENABLE([openblas],
   [if test "$enableval" = yes; then ENABLE_OPENBLAS=yes; fi], [])
 AC_SUBST(ENABLE_OPENBLAS)
 
+ENABLE_STABLE=yes
+AC_ARG_ENABLE(stable,
+  [AS_HELP_STRING([--enable-stable],
+    [Enable stable build of octave instead of devel octave])],
+  [if test "$enableval" = no; then ENABLE_STABLE=no; fi], [])
+AC_SUBST(ENABLE_STABLE)
+
 ### Default is to cross compile for mingw.
 
 echo $host_alias
