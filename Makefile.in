@@ -1,7 +1,7 @@
 # This file is part of MXE.
 # See index.html for further information.
 
-STABLE_BUILD := yes
+STABLE_BUILD := @ENABLE_STABLE@
 
 ifeq ($(STABLE_BUILD),yes)
   OCTAVE_TARGET := stable-octave
