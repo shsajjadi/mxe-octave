@@ -10,6 +10,12 @@ $(PKG)_FILE     := QScintilla-gpl-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://sourceforge.net/projects/pyqt/files/QScintilla2/QScintilla-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := qt
 
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+      $(PKG)_INSTALL_ROOT :=
+else
+      $(PKG)_INSTALL_ROOT := $(3)
+endif
+
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package qscintilla.' >&2;
     echo $(qscintilla_VERSION)
@@ -36,21 +42,21 @@ define $(PKG)_BUILD
             INSTALL_ROOT=`cd $(3) && pwd -W | sed -e 's,^[a-zA-Z]:,,' -e 's,/,\\\\,g'` install; \
     else \
         $(MAKE) -C '$(1)/Qt4Qt5' -j '$(JOBS)' && \
-        $(MAKE) -C '$(1)/Qt4Qt5' -j 1 install INSTALL_ROOT='$(3)'; \
+        $(MAKE) -C '$(1)/Qt4Qt5' -j 1 install INSTALL_ROOT='$($(PKG)_INSTALL_ROOT)'; \
     fi
 
     if [ $(MXE_SYSTEM) = mingw ]; then \
-        $(INSTALL) -d '$(3)$(HOST_BINDIR)'; \
-        $(INSTALL) -m755 '$(3)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' '$(3)$(HOST_BINDIR)/'; \
-        rm -f '$(3)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
+        $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(HOST_BINDIR)'; \
+        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' '$($(PKG)_INSTALL_ROOT)$(HOST_BINDIR)/'; \
+        rm -f '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
     fi
 
     # Qmake under MSVC uses Win32 paths. When combining this with
     # DESTDIR usage (or equivalent), the real Win32 directory hierarchy
     # is recreated under DESTDIR, not the MSYS hierarchy.
     if [ $(MXE_SYSTEM) = msvc ]; then \
-        $(INSTALL) -d '$(3)$(CMAKE_HOST_PREFIX)/bin'; \
-        $(INSTALL) -m755 '$(3)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' '$(3)$(CMAKE_HOST_PREFIX)/bin/'; \
-        rm -f '$(3)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
+        $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(CMAKE_HOST_PREFIX)/bin'; \
+        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' '$($(PKG)_INSTALL_ROOT)$(CMAKE_HOST_PREFIX)/bin/'; \
+        rm -f '$($(PKG)_INSTALL_ROOT)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
     fi
 endef
