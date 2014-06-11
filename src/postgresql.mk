@@ -36,6 +36,7 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
+        --with-libraries='$(HOST_LIBDIR)' \
         --disable-rpath \
         --without-tcl \
         --without-perl \
