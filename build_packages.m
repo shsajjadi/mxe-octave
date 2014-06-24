@@ -11,7 +11,7 @@ pkg install miscellaneous-1.2.1.tar.gz
 pkg install struct-1.0.10.tar.gz
 pkg install optim-1.3.1.tar.gz
 pkg install specfun-1.1.0.tar.gz
-pkg install control-2.6.4.tar.gz
+pkg install control-2.6.5.tar.gz
 pkg install signal-1.3.0.tar.gz
 pkg install communications-1.2.0.tar.gz
 pkg install image-2.2.1.tar.gz
