@@ -3,11 +3,11 @@
 
 PKG             := cfitsio
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.350
-$(PKG)_CHECKSUM := e928832708d6a5df21a1e17ae4a63036cab7c1b9
+$(PKG)_VERSION  := 3370
+$(PKG)_CHECKSUM := dbe3cc6981951d29200f442f4ab318f8899f9cc8
 $(PKG)_SUBDIR   := $(PKG)
-$(PKG)_FILE     := $(PKG)$(subst .,,$($(PKG)_VERSION)).tar.gz
-$(PKG)_URL      := ftp://heasarc.gsfc.nasa.gov/software/$(PKG)/c/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)$($(PKG)_VERSION).tar.gz
+$(PKG)_URL      := ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 $(PKG)_MAKE_FLAGS :=
