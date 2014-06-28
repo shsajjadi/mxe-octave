@@ -28,10 +28,12 @@ define $(PKG)_BUILD
         --disable-stdio-redirect
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(LN_SF) '$(HOST_BINDIR)/sdl-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)sdl-config'
+    if [ "$(MXE_NATIVE_BUILD)" == "no" ]; then \
+      $(LN_SF) '$(HOST_BINDIR)/sdl-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)sdl-config'; \
+    fi
 
-    '$(MXE_CC)' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_BINDIR)/test-sdl.exe' \
-        `'$(MXE_PKG_CONFIG)' sdl --cflags --libs`
+    #'$(MXE_CC)' \
+    #    -W -Wall -Werror -ansi -pedantic \
+    #    '$(2).c' -o '$(HOST_BINDIR)/test-sdl.exe' \
+    #    `'$(MXE_PKG_CONFIG)' sdl --cflags --libs`
 endef
