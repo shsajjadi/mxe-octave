@@ -178,6 +178,8 @@ SRC_FILES_1 := \
   json-c-2-patch-remove-rpl.patch \
   json-c-test.c \
   json-c.mk \
+  lame-1-fix-xmmintrin-errors.patch  \
+  lame-2-update-autotools.patch \
   lame.mk \
   lapack-test.f \
   lapack.mk \
