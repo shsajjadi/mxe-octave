@@ -598,7 +598,6 @@ SRC_FILES_1 := \
   xine-lib-1-fixes.patch \
   xine-lib.mk \
   xmlwrapp.mk \
-  xvidcore-1-fixes.patch \
   xvidcore.mk \
   xz.mk \
   yasm.mk \
