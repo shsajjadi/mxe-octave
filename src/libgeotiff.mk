@@ -24,7 +24,13 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
-        LIBS="`'$(MXE_PKG_CONFIG)' --libs libtiff-4` -ljpeg -lz"
-    $(MAKE) -C '$(1)' -j 1 all install EXEEXT=.remove-me MAKE='$(MAKE)'
+        --with-zlib=$(HOST_PREFIX) \
+        --with-jpeg=$(HOST_PREFIX) \
+        --with-libtiff=$(HOST_PREFIX) \
+        --with-proj=$(HOST_PREFIX) 
+
+    $(MAKE) -C '$(1)' -j $(JOBS) 
+    $(MAKE) -C '$(1)' -j 1 install
+    #$(MAKE) -j 1 install EXEEXT=.remove-me MAKE='$(MAKE)'
     rm -fv '$(HOST_BINDIR)'/*.remove-me
 endef

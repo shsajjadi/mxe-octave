@@ -207,6 +207,7 @@ SRC_FILES_1 := \
   libgda.mk \
   libgdamm.mk \
   libgee.mk \
+  libgeotiff-1-noundefined.patch \
   libgeotiff.mk \
   libglade.mk \
   libgnurx-1-build-static-lib.patch \
