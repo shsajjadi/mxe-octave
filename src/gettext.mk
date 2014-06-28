@@ -26,18 +26,18 @@ define $(PKG)_BUILD
         --without-libexpat-prefix \
         --without-libxml2-prefix \
         CONFIG_SHELL=$(SHELL) && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)/gettext-runtime' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)/gettext-runtime' -j '$(JOBS)' 
+    $(MAKE) -C '$(1)/gettext-runtime' -j 1 install DESTDIR='$(3)'
 
-    $(if $(filter msvc,$(MXE_SYSTEM)),
-        cd '$(1)/gettext-tools' && ./configure \
-            $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-            $(ENABLE_SHARED_OR_STATIC) \
-            --prefix='$(HOST_PREFIX)' \
-            --enable-threads=win32 \
-            --without-libexpat-prefix \
-            --without-libxml2-prefix \
-	    ac_cv_func_memset=yes \
-            CONFIG_SHELL=$(SHELL) && $(CONFIGURE_POST_HOOK)
-        $(MAKE) -C '$(1)/gettext-tools' -j '$(JOBS)' install DESTDIR='$(3)'
-    )
+    cd '$(1)/gettext-tools' && ./configure \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        $(ENABLE_SHARED_OR_STATIC) \
+        --prefix='$(HOST_PREFIX)' \
+        --enable-threads=win32 \
+        --without-libexpat-prefix \
+        --without-libxml2-prefix \
+        $(if $(filter msvc,$(MXE_SYSTEM)),ac_cv_func_memset=yes) \
+        CONFIG_SHELL=$(SHELL) && $(CONFIGURE_POST_HOOK)
+     $(MAKE) -C '$(1)/gettext-tools' -j '$(JOBS)' 
+     $(MAKE) -C '$(1)/gettext-tools' -j 1 install DESTDIR='$(3)'
 endef
