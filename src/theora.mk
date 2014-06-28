@@ -17,6 +17,11 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+   if [ "$(MXE_SYSTEM)" == "mingw" ]; then \
+       $(SED) -i 's,EXPORTS,,' '$(1)/win32/xmingw32/libtheoradec-all.def'; \
+       $(SED) -i 's,EXPORTS,,' '$(1)/win32/xmingw32/libtheoraenc-all.def'; \
+   fi
+
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
