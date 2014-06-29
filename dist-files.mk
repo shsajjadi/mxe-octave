@@ -66,8 +66,6 @@ SRC_FILES_1 := \
   fftw.mk \
   file-test.c \
   file.mk \
-  flac-1-win32.patch \
-  flac-2-lwsock32.patch \
   flac.mk \
   fltk-1-darwin-cross-compile.patch \
   fltk-2-uuid-mod.patch \
