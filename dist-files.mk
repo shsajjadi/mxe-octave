@@ -161,8 +161,6 @@ SRC_FILES_1 := \
   hunspell.mk \
   id3lib-1-win32.patch \
   id3lib.mk \
-  ilmbase-1-gcc45-include.patch \
-  ilmbase-2-osx-cxxflags.patch \
   ilmbase.mk \
   imagemagick.mk \
   intltool.mk \
