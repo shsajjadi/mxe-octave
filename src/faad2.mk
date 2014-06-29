@@ -21,7 +21,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC)
-    $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' LDFLAGS='-no-undefined'
+    $(MAKE) -C '$(1)' -j 1 install LDFLAGS='-no-undefined'
 endef
 
