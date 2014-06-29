@@ -308,6 +308,8 @@ SRC_FILES_1 := \
   mingwrt.mk \
   mpc.mk \
   mpfr.mk \
+  mman-win32-1-include_name_change.patch \
+  mman-win32.mk \
   msitools.mk \
   msvc-atk-1.patch \
   msvc-build-cmake-1.patch \
@@ -594,7 +596,11 @@ SRC_FILES_1 := \
   xerces-1-fix-pkgconfig.patch \
   xerces-test.cpp \
   xerces.mk \
-  xine-lib-1-fixes.patch \
+  xine-lib-1-configure_ac.patch \
+  xine-lib-2-build_fixes.patch \
+  xine-lib-3-more_build_fixes.patch \
+  xine-lib-4-mkdir.patch \
+  xine-lib-5-change_mma_h_to_mma_win32_h.patch \
   xine-lib.mk \
   xmlwrapp.mk \
   xvidcore.mk \
