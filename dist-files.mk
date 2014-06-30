@@ -1,4 +1,5 @@
 SRC_FILES_1 := \
+  a52dec.mk \
   agg-1-fixes.patch \
   agg.mk \
   apr-util.mk \
@@ -189,6 +190,7 @@ SRC_FILES_1 := \
   libarchive.mk \
   libass-test.c \
   libass.mk \
+  libcdio.mk \
   libcroco.mk \
   libdnet-1-fixes.patch \
   libdnet.mk \
@@ -239,6 +241,8 @@ SRC_FILES_1 := \
   libmng.mk \
   libmodplug-test.c \
   libmodplug.mk \
+  libmpcdec-1-configure_ac.patch \
+  libmpcdec.mk \
   libntlm.mk \
   liboauth-test.c \
   liboauth.mk \
@@ -566,6 +570,8 @@ SRC_FILES_1 := \
   units.mk \
   uuid.mk \
   vala.mk \
+  vcdimager-1-configure.patch \
+  vcdimager.mk \
   vigra-test.cpp \
   vigra.mk \
   vmime-1-fixes.patch \
@@ -581,6 +587,8 @@ SRC_FILES_1 := \
   w32api-1-dinput-dsound.patch \
   w32api-2-directx-additions-for-qt.patch \
   w32api.mk \
+  wavpack-1-exec_prefix.patch \
+  wavpack.m \
   wget.mk \
   winpcap-1-fixes.patch \
   winpcap.mk \
