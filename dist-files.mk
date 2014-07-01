@@ -53,6 +53,7 @@ SRC_FILES_1 := \
   curl.mk \
   dbus.mk \
   dcmtk-1-fixes.patch \
+  dcmtk-2-ming64.patch \
   dcmtk.mk \
   devil-1-png.patch \
   devil.mk \
