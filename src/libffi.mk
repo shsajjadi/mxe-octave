@@ -3,8 +3,8 @@
 
 PKG             := libffi
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.0.11
-$(PKG)_CHECKSUM := bff6a6c886f90ad5e30dee0b46676e8e0297d81d
+$(PKG)_VERSION  := 3.1
+$(PKG)_CHECKSUM := cb373ef2115ec7c57913b84ca72eee14b10ccdc3
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://sourceware.org/pub/$(PKG)/$($(PKG)_FILE)
@@ -26,11 +26,4 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/$(TARGET)' -j '$(JOBS)'
     $(MAKE) -C '$(1)/$(TARGET)' -j 1 install DESTDIR='$(3)'
 
-    if [ $(MXE_SYSTEM) != msvc ]; then \
-        PKG_CONFIG_PATH='$(3)$(HOST_PREFIX)/lib/pkgconfig' \
-        '$(MXE_CC)' \
-            -W -Wall -Werror -std=c99 -pedantic \
-            '$(2).c' -o '$(3)$(HOST_BINDIR)/test-libffi.exe' \
-            `'$(MXE_PKG_CONFIG)' libffi --cflags --libs`; \
-    fi
 endef
