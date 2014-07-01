@@ -454,7 +454,6 @@ SRC_FILES_1 := \
   opencore-amr.mk \
   opencsg-1-fixes.patch \
   opencsg.mk \
-  openexr-1-disable-zlib_winapi.patch \
   openexr.mk \
   openscenegraph.mk \
   openssl-1-fixes.patch \
@@ -589,7 +588,7 @@ SRC_FILES_1 := \
   w32api-2-directx-additions-for-qt.patch \
   w32api.mk \
   wavpack-1-exec_prefix.patch \
-  wavpack.m \
+  wavpack.mk \
   wget.mk \
   winpcap-1-fixes.patch \
   winpcap.mk \
