@@ -31,4 +31,4 @@ pkg install fits-1.0.5.tar.gz
 pkg install fl-core-1.0.0.tar.gz
 pkg install tsa-4.2.7.tar.gz
 pkg install dicom-0.1.1.tar.gz
-pkg install netcdf-1.0.4.tar.gz
+pkg install netcdf-1.0.5.tar.gz
