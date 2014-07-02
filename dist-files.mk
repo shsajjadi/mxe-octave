@@ -455,6 +455,7 @@ SRC_FILES_1 := \
   opencsg-1-fixes.patch \
   opencsg.mk \
   openexr.mk \
+  openscenegraph-1-fixes.patch \
   openscenegraph.mk \
   openssl-1-fixes.patch \
   openssl.mk \
