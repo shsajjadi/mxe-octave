@@ -68,6 +68,10 @@ else
     LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
 endif
 
+ifeq ($(MXE_SYSTEM),mingw)
+  $(PKG)_EXTRA_CONFIGURE_OPTIONS += --no-x
+endif
+
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package octave.' >&2;
     echo $($(PKG)_VERSION)
