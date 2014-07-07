@@ -69,7 +69,7 @@ else
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)
-  $(PKG)_EXTRA_CONFIGURE_OPTIONS += --no-x
+  $(PKG)_EXTRA_CONFIGURE_OPTIONS += --with-x=no
 endif
 
 define $(PKG)_UPDATE
