@@ -111,6 +111,7 @@ SRC_FILES_1 := \
   geos-test.c \
   geos.mk \
   gettext.mk \
+  ghostscript.mk \
   giflib.mk \
   gl2ps-1-fixes.patch \
   gl2ps.mk \
