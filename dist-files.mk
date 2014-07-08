@@ -25,6 +25,7 @@ SRC_FILES_1 := \
   build-bison.mk \
   build-cmake.mk \
   build-flex.mk \
+  build-gawk.mk \
   build-gcc.mk \
   build-gperf.mk \
   build-libtool.mk \
