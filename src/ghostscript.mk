@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 550a85e73b7213d8ae41ea06523661638b4bc1a2
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://downloads.ghostscript.com/public/$($(PKG)_FILE)
-$(PKG)_DEPS     := build-gcc jpeg libpng jpeg tiff zlib
+$(PKG)_DEPS     := jpeg libpng jpeg tiff zlib
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package ghostscript.' >&2;
@@ -19,6 +19,7 @@ endef
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   define $(PKG)_BUILD
+    cd '$(1)' && autoreconf
     cd '$(1)' && '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
