@@ -111,6 +111,9 @@ SRC_FILES_1 := \
   geos-test.c \
   geos.mk \
   gettext.mk \
+  ghostscript-mingw-i686-arch.h \
+  ghostscript-mingw-i686-gconfig_.h \
+  ghostscript-mingw-i686-makefile \
   ghostscript.mk \
   giflib.mk \
   gl2ps-1-fixes.patch \
@@ -122,6 +125,7 @@ SRC_FILES_1 := \
   glpk-1-fixes.patch \
   glpk.mk \
   gmp.mk \
+  gnu-linux-ghostscript-configure.patch \
   gnuplot-1-fixes.patch \
   gnuplot-2-win64.patch \
   gnuplot.mk \
