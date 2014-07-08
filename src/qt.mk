@@ -45,14 +45,22 @@ ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
   # compile-in generic ODBC driver under Windows
   $(PKG)_CONFIGURE_DATABASE_OPTION += -plugin-sql-odbc
 else
-  $(PKG)_CONFIGURE_ENV += \
-    LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
+  ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
+    $(PKG)_CONFIGURE_ENV += \
+      LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR) -Wl,-rpath-link,$(HOST_LIB64DIR) -L$(HOST_LIB64DIR)'
+  else
+    $(PKG)_CONFIGURE_ENV += \
+      LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
+  endif
   $(PKG)_CONFIGURE_DATABASE_OPTION += -system-sqlite
 endif
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)'
   $(PKG)_CONFIGURE_LIBPATH_OPTION += -L '$(HOST_LIBDIR)'
+  ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
+    $(PKG)_CONFIGURE_LIBPATH_OPTION += -L '$(HOST_LIB64DIR)'
+  endif
   $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)/dbus-1.0'
   $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_LIBDIR)/dbus-1.0/include'
 endif
@@ -133,6 +141,7 @@ define $(PKG)_BUILD
         -no-webkit \
         -no-phonon \
         -no-phonon-backend \
+        -no-javascript-jit \
         -accessibility \
         -nomake demos \
         -nomake docs \
