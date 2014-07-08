@@ -13,6 +13,10 @@ ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_TERMCAP_LIB := termcap
 else
   $(PKG)_TERMCAP_LIB := ncurses
+  ifeq ($(MXE_NATIVE_BUILD),yes)
+    $(PKG)_CONFIGURE_OPTIONS := --with-curses bash_cv_termcap_lib="-lncurses"
+    $(PKG)_MAKE_OPTIONS := SHLIB_LIBS="-lncurses"
+  endif
 endif
 
 $(PKG)_DEPS := $($(PKG)_TERMCAP_LIB)
@@ -35,8 +39,9 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
+        $($(PKG)_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         --enable-multibyte \
         --without-purify
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $($(PKG)_MAKE_OPTIONS) install DESTDIR='$(3)'
 endef
