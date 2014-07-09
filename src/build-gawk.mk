@@ -15,6 +15,18 @@ define $(PKG)_UPDATE
     echo $($(PKG)_VERSION)
 endef
 
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+define $(PKG)_BUILD
+    # copy from pc folder
+    cp    '$(1)'/pc/*.* '$(1)'
+    cp    '$(1)/pc/Makefile' '$(1)'
+    cp    '$(1)/pc/Makefile.ext' '$(1)/extension/Makefile'
+    cp    '$(1)/pc/Makefile.tst' '$(1)/test/Makefile'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' mingw32
+    $(MAKE) -C '$(1)/extension' -j '$(JOBS)' 
+    $(MAKE) -C '$(1)' -j 1 install prefix=$(BUILD_TOOLS_PREFIX) 
+endef
+else
 define $(PKG)_BUILD
     mkdir '$(1).build'
     cd    '$(1).build' && '$(1)/configure' \
@@ -22,3 +34,4 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     $(MAKE) -C '$(1).build' -j 1 install
 endef
+endif
