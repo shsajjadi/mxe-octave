@@ -16,6 +16,7 @@ endif
 
 ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_LIBS := -lsecur32
+  $(PKG)_CONFIGURE_FLAGS_OPTION += ac_cv_func_getaddrinfo=no
 endif
 
 define $(PKG)_UPDATE
@@ -54,10 +55,10 @@ define $(PKG)_BUILD
         --with-zlib \
         --with-system-tzdata=/dev/null \
         LIBS="$($(PKG)_LIBS) `'$(MXE_PKG_CONFIG)' openssl --libs`"
-    $(MAKE) -C '$(1)'/src/interfaces/libpq -j '$(JOBS)' install haslibarule= DESTDIR='$(3)'
-    $(MAKE) -C '$(1)'/src/port             -j '$(JOBS)'         haslibarule=
-    $(MAKE) -C '$(1)'/src/bin/psql         -j '$(JOBS)' install haslibarule= DESTDIR='$(3)'
-    $(MAKE) -C '$(1)'/src/bin/pg_config    -j '$(JOBS)' install haslibarule= DESTDIR='$(3)'
+    $(MAKE) -C '$(1)'/src/interfaces/libpq -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)'/src/port             -j '$(JOBS)'         
+    $(MAKE) -C '$(1)'/src/bin/psql         -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)'/src/bin/pg_config    -j '$(JOBS)' install DESTDIR='$(3)'
     $(INSTALL) -m644 '$(1)/src/include/pg_config.h'    '$(3)$(HOST_INCDIR)'
     $(INSTALL) -m644 '$(1)/src/include/postgres_ext.h' '$(3)$(HOST_INCDIR)'
     $(INSTALL) -d    '$(3)$(HOST_INCDIR)/libpq'
