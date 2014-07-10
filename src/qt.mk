@@ -95,6 +95,7 @@ else
       -make libs \
       -no-glib \
       -no-gstreamer \
+      -no-javascript-jit \
       -no-reduce-exports \
       -no-rpath \
       -make translations \
@@ -108,6 +109,7 @@ else
       -device-option CROSS_COMPILE=$(MXE_TOOL_PREFIX)
     $(PKG)_CONFIGURE_PLATFORM_OPTION := -xplatform win32-g++-4.6
   endif
+
 endif
 
 define $(PKG)_UPDATE
@@ -141,7 +143,6 @@ define $(PKG)_BUILD
         -no-webkit \
         -no-phonon \
         -no-phonon-backend \
-        -no-javascript-jit \
         -accessibility \
         -nomake demos \
         -nomake docs \
