@@ -209,6 +209,11 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   BUILD_TOOLS := $(filter-out build-python, $(BUILD_TOOLS))
 endif
 
+# use the a native awk in native mingw
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  REQUIREMENTS += awk
+  BUILD_TOOLS := $(filter-out build-gawk, $(BUILD_TOOLS))
+endif
 
 ifeq ($(USE_SYSTEM_GCC),yes)
   BUILD_TOOLS := $(filter-out $(BUILD_COMPILER_TOOLS), $(BUILD_TOOLS))
