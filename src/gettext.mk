@@ -39,5 +39,5 @@ define $(PKG)_BUILD
         $(if $(filter msvc,$(MXE_SYSTEM)),ac_cv_func_memset=yes) \
         CONFIG_SHELL=$(SHELL) && $(CONFIGURE_POST_HOOK)
      $(MAKE) -C '$(1)/gettext-tools' -j '$(JOBS)' 
-     $(MAKE) -C '$(1)/gettext-tools' -j 1 install DESTDIR='$(3)'
+     $(MAKE) -C '$(1)/gettext-tools' -j 1 install DESTDIR='$(3)' bin_PROGRAMS=
 endef
