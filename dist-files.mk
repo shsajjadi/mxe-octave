@@ -129,6 +129,7 @@ SRC_FILES_1 := \
   gnu-linux-ghostscript-configure.patch \
   gnuplot-1-fixes.patch \
   gnuplot-2-win64.patch \
+  gnuplot-3-iconv.patch \
   gnuplot.mk \
   gnutls-1-fixes.patch \
   gnutls-test.c \
