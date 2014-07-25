@@ -502,6 +502,7 @@ SRC_FILES_1 := \
   protobuf.mk \
   pstoedit-1-fixes.patch \
   pstoedit-2-gs.patch \
+  pstoedit-3-nosecapi.patch \
   pstoedit.mk \
   pthreads-1-fixes.patch \
   pthreads-test.c \
