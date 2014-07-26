@@ -3,8 +3,8 @@
 
 PKG             := netcdf
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.3.0
-$(PKG)_CHECKSUM := 246e4963e66e1c175563cc9a714e9da0a19b8b07
+$(PKG)_VERSION  := 4.3.2
+$(PKG)_CHECKSUM := 6e1bacab02e5220954fe0328d710ebb71c071d19
 $(PKG)_SUBDIR   := netcdf-$($(PKG)_VERSION)
 $(PKG)_FILE     := netcdf-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-$($(PKG)_VERSION).tar.gz
@@ -31,6 +31,7 @@ define $(PKG)_BUILD
     fi
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         $($(PKG)_CONFIGURE_OPTIONS) \
