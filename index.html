@@ -761,20 +761,19 @@ USE_OSGPLUGIN(&lt;plugin2&gt;)
     </p>
 
     <h3 id="requirements-mingw">MingW</h3>
-    Make sure to update and upgrade packages as some of the default versions
-    of packages are too old to work correctly.
-    <pre>mingw-get update</pre>
-    <pre>mingw-get upgrade</pre>
     <p>
-    And then get required packages.
-    <pre>mingw-get install autoconf bash msys-bison msys-flex gcc gcc-c++ \
-	      gcc-fortran gettext msys-m4 msys-make msys-sed \
-	      libiconv msys-openssl msys-patch msys-perl \
-              msys-libarchive msys-unzip msys-wget msys-bsdtar
+    Get required packages by running:
+    </p>
+    <pre>mingw-get install gcc gcc-c++ gcc-fortran mingw32-make \
+              msys-autoconf msys-bash msys-bison msys-bsdtar \
+              msys-flex msys-gettext mysys-libiconv \
+              msys-libarchive msys-libz msys-m4 msys-make \
+              msys-openssl msys-patch msys-perl msys-sed \
+              msys-unzip msys-wget 
     </pre>
     <p>
     You will also need to install Windows versions of python  
-    and ghostscript and ensure they are in visisble in the PATH.
+    and ensure it is visisble in the PATH.
     <p>
 
     <h3 id="requirements-opensuse">openSUSE</h3>
