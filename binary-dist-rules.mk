@@ -12,10 +12,15 @@ OCTAVE_NSI_FILE := $(TOP_DIR)/dist/octave.nsi
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   TAR_H_OPTION := -h
   WINDOWS_BINARY_DIST_DEPS := \
-    msys-base \
-    native-binutils \
-    native-gcc \
-    npp
+    msys-base 
+
+  ifeq ($(MXE_NATIVE_BUILD),no)
+    WINDOWS_BINARY_DIST_DEPS += \
+      native-binutils \
+      native-gcc \
+      npp
+  endif
+
 endif
 
 BINARY_DIST_DEPS := \
@@ -48,25 +53,36 @@ define copy-dist-files
 endef
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
-  define copy-windows-dist-files
-    echo "  DLL files..."
-    cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
-    cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
-    cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/$(build-gcc_VERSION)/*.dll $(OCTAVE_DIST_DIR)/bin
-    echo "  msys base files..."
-    cd $(TOP_DIR)/msys-base \
-      && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
-    echo "  msys extension files..."
-    cd $(TOP_DIR)/msys-extension \
-      && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
-    echo "  notepad++..."
-    cd $(TOP_DIR) \
-      && tar -c $(TAR_H_OPTION) -f - notepad++ | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
-    echo "  README.html..."
-    cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
-    echo "  refblas..."
-    cp $(OCTAVE_DIST_DIR)/bin/libblas.dll $(OCTAVE_DIST_DIR)/bin/librefblas.dll
-  endef
+  ifeq ($(MXE_NATIVE_BUILD),no)
+    define copy-windows-dist-files
+      echo "  DLL files..."
+      cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
+      cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
+      cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/$(build-gcc_VERSION)/*.dll $(OCTAVE_DIST_DIR)/bin
+      echo "  msys base files..."
+      cd $(TOP_DIR)/msys-base \
+        && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+      echo "  msys extension files..."
+      cd $(TOP_DIR)/msys-extension \
+        && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+      echo "  notepad++..."
+      cd $(TOP_DIR) \
+          && tar -c $(TAR_H_OPTION) -f - notepad++ | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
+      echo "  README.html..."
+      cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
+      echo "  refblas..."
+      cp $(OCTAVE_DIST_DIR)/bin/libblas.dll $(OCTAVE_DIST_DIR)/bin/librefblas.dll
+    endef
+  else
+    define copy-windows-dist-files
+      echo "  DLL files..."
+      cp /mingw/bin/*.dll $(OCTAVE_DIST_DIR)/bin
+      echo "  README.html..."
+      cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
+      echo "  refblas..."
+      cp $(OCTAVE_DIST_DIR)/bin/libblas.dll $(OCTAVE_DIST_DIR)/bin/librefblas.dll
+    endef
+  endif
 endif
 
 define make-dist-files-writable
