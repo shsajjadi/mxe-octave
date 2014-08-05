@@ -3,8 +3,8 @@
 
 PKG             := freetype
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.4.10
-$(PKG)_CHECKSUM := 73b2c28fcaf1ff5b8beef3af4c5abe4cb1ecb7dc
+$(PKG)_VERSION  := 2.5.3
+$(PKG)_CHECKSUM := d3c26cc17ec7fe6c36f4efc02ef92ab6aa3f4b46
 $(PKG)_SUBDIR   := freetype-$($(PKG)_VERSION)
 $(PKG)_FILE     := freetype-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/freetype/freetype2/$($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -21,7 +21,8 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' 
+    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
 
     rm -f '$(3)$(HOST_LIBDIR)/libfreetype.la'
 endef
