@@ -3,8 +3,8 @@
 
 PKG             := openblas
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.2.8
-$(PKG)_CHECKSUM := d012ebc2b8dcd3e95f667dff08318a81479a47c3
+$(PKG)_VERSION  := 0.2.10
+$(PKG)_CHECKSUM := c4a5ca4cb9876a90193f81a0c38f4abccdf2944d
 $(PKG)_SUBDIR   := OpenBLAS-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz
 $(PKG)_URL      := http://github.com/xianyi/OpenBLAS/archive/v$($(PKG)_VERSION).tar.gz
@@ -27,9 +27,5 @@ endef
 
 define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' $($(PKG)_MAKE_OPTS)  
-    $(MAKE) -C '$(1)' -j 1 PREFIX='$(HOST_PREFIX)' $($(PKG)_MAKE_OPTS) install
-    if [ $(MXE_WINDOWS_BUILD) = yes ] && [ $(BUILD_SHARED) = yes ]; then \
-      $(INSTALL) -d $(HOST_BINDIR); \
-      $(INSTALL) $(HOST_LIBDIR)/libopenblas.dll $(HOST_BINDIR)/; \
-    fi
+    $(MAKE) -C '$(1)' -j 1 $($(PKG)_MAKE_OPTS) install
 endef
