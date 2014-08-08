@@ -26,6 +26,8 @@ SRC_FILES_1 := \
   build-cmake.mk \
   build-flex.mk \
   build-gawk.mk \
+  build-gcc-1-mingw-float.patch \
+  build-gcc-2-intrinsics.patch \
   build-gcc.mk \
   build-gperf.mk \
   build-libtool.mk \
