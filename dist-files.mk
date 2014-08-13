@@ -559,9 +559,6 @@ SRC_FILES_1 := \
   sqlite.mk \
   stable-octave-1-docinstall.patch \
   stable-octave-1-fixes.patch \
-  stable-octave-1-xerror.patch \
-  stable-octave-2-xerror.patch \
-  stable-octave-3-termfocus.patch \
   stable-octave.mk \
   suitesparse-1.patch \
   suitesparse.mk \
