@@ -9,7 +9,7 @@ endif
 pkg install general-1.3.4.tar.gz
 pkg install miscellaneous-1.2.1.tar.gz
 pkg install struct-1.0.10.tar.gz
-pkg install optim-1.3.1.tar.gz
+pkg install optim-1.4.0.tar.gz
 pkg install specfun-1.1.0.tar.gz
 pkg install control-2.6.5.tar.gz
 pkg install signal-1.3.0.tar.gz
@@ -25,8 +25,8 @@ pkg install sockets-1.0.8.tar.gz
 pkg install zenity-0.5.7.tar.gz
 pkg install actuarial-1.1.0.tar.gz
 pkg install data-smoothing-1.3.0.tar.gz
-pkg install fuzzy-logic-toolkit-0.4.2.tar.gz
-pkg install quaternion-2.2.1.tar.gz
+pkg install fuzzy-logic-toolkit-0.4.5.tar.gz
+pkg install quaternion-2.2.2.tar.gz
 pkg install fits-1.0.5.tar.gz
 pkg install fl-core-1.0.0.tar.gz
 pkg install tsa-4.2.7.tar.gz
