@@ -1,0 +1,39 @@
+Patch based on savannah.gnu.org/bugs/?327623#attached
+
+diff -ur octave-3.8.2-rc2.orig/libgnu/isatty.c octave-3.8.2-rc2/libgnu/isatty.c
+--- octave-3.8.2-rc2.orig/libgnu/isatty.c	2014-08-12 15:31:01.710229546 -0400
++++ octave-3.8.2-rc2/libgnu/isatty.c	2014-08-12 15:41:15.603406658 -0400
+@@ -34,7 +34,13 @@
+ 
+ /* Optimized test whether a HANDLE refers to a console.
+    See <http://lists.gnu.org/archive/html/bug-gnulib/2009-08/msg00065.html>.  */
+-#define IsConsoleHandle(h) (((intptr_t) (h) & 3) == 3)
++//#define IsConsoleHandle(h) (((intptr_t) (h) & 3) == 3)
++static BOOL
++IsConsoleHandle(HANDLE h)
++{
++  DWORD mode;
++  return GetConsoleMode(h, &mode) != 0;
++}
+ 
+ #if HAVE_MSVC_INVALID_PARAMETER_HANDLER
+ static int
+diff -ur octave-3.8.2-rc2.orig/libgnu/select.c octave-3.8.2-rc2/libgnu/select.c
+--- octave-3.8.2-rc2.orig/libgnu/select.c	2014-08-12 15:31:01.704229427 -0400
++++ octave-3.8.2-rc2/libgnu/select.c	2014-08-12 15:44:44.268552023 -0400
+@@ -84,7 +84,14 @@
+ 
+ /* Optimized test whether a HANDLE refers to a console.
+    See <http://lists.gnu.org/archive/html/bug-gnulib/2009-08/msg00065.html>.  */
+-#define IsConsoleHandle(h) (((intptr_t) (h) & 3) == 3)
++//#define IsConsoleHandle(h) (((intptr_t) (h) & 3) == 3)
++static BOOL
++IsConsoleHandle(HANDLE h)
++{
++  DWORD mode;
++  return GetConsoleMode(h, &mode) != 0;
++}
++
+ 
+ static BOOL
+ IsSocketHandle (HANDLE h)
