@@ -428,6 +428,7 @@ SRC_FILES_1 := \
   ocaml-native.mk \
   octave-1-docinstall.patch \
   octave-1-fixes.patch \
+  octave-1-gnulib-isatty.patch \
   octave.mk \
   of-actuarial.mk \
   of-communications.mk \
@@ -561,6 +562,7 @@ SRC_FILES_1 := \
   sqlite.mk \
   stable-octave-1-docinstall.patch \
   stable-octave-1-fixes.patch \
+  stable-octave-1-gnulib-isatty.patch \
   stable-octave.mk \
   suitesparse-1.patch \
   suitesparse.mk \
