@@ -41,9 +41,11 @@ $(PKG)_STATICLIBS_1 := \
 
 $(PKG)_CPPFLAGS := -DNTIMER
 
-ifeq ($(MXE_WINDOWS_BUILD),yes)
-  ifeq ($(ENABLE_64),yes)
+ifeq ($(ENABLE_64),yes)
+  ifeq ($(MXE_WINDOWS_BUILD),yes)
     $(PKG)_CPPFLAGS += -DLONGBLAS='long long'
+  else
+    $(PKG)_CPPFLAGS += -DLONGBLAS='long'
   endif
 endif
 
