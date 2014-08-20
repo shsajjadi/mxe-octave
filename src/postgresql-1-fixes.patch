@@ -84,7 +84,7 @@ index 294d10f..3acdd81 100644
 -install-lib-shared: $(shlib) installdirs-lib
 +install-lib-shared: $(shlib)
 +ifeq (, $(filter $(PORTNAME), win32 cygwin))
-+install-lib-shared: installdirs-lib
++install-lib-shared: $(shlib) installdirs-lib
 +endif # not win32 or cygwin
  ifdef soname
  # we don't install $(shlib) on AIX
