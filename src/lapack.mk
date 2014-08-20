@@ -13,7 +13,7 @@ $(PKG)_DEPS     := blas
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES=$(HOST_BINDIR)/libblas.dll
 else
-  $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES=blas
+  $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES="-L$(HOST_PREFIX)/lib -lblas"
 endif
 
 ifeq ($(ENABLE_64),yes)
