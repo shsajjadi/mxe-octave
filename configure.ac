@@ -132,11 +132,11 @@ AC_ARG_ENABLE([strip-dist-files],
   [if test "$enableval" = no; then STRIP_DIST_FILES=no; fi], [])
 AC_SUBST(STRIP_DIST_FILES)
 
-ENABLE_OPENBLAS=no
+ENABLE_OPENBLAS=yes
 AC_ARG_ENABLE([openblas],
-  [AS_HELP_STRING([--enable-openblas],
+  [AS_HELP_STRING([--disable-openblas],
     [(EXPERIMENTAL) enable use of openblas in Octave])],
-  [if test "$enableval" = yes; then ENABLE_OPENBLAS=yes; fi], [])
+  [if test "$enableval" = no; then ENABLE_OPENBLAS=no; fi], [])
 AC_SUBST(ENABLE_OPENBLAS)
 
 ENABLE_STABLE=yes
