@@ -48,6 +48,7 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --enable-languages='c,c++,fortran' \
         --disable-multilib \
+        --disable-libsanitizer \
         $($(PKG)_SYSDEP_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-libgomp \
