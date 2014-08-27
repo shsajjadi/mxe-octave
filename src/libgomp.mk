@@ -26,6 +26,7 @@ define $(PKG)_BUILD
         --target='$(TARGET)' \
         --prefix='$(HOST_PREFIX)' \
         --enable-version-specific-runtime-libs \
+        --disable-multilib \
         --with-gnu-ld \
         $(ENABLE_SHARED_OR_STATIC) \
         $($(PKG)_SYSDEP_CONFIGURE_OPTIONS)
