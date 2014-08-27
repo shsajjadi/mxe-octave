@@ -123,7 +123,7 @@ define $(PKG)_BUILD
     ## FIXME: LDFLAGS was not correct for SuSE 10.4 systems.  Is there
     ## a better way to handle this problem?
     if [ -d '/usr/X11R6/lib64' ]; then \
-      sed -i 's/PLATFORM=linux-g++/PLATFORM=linux-g++-64/' '$(1)/configure' \
+      sed -i 's/PLATFORM=linux-g++/PLATFORM=linux-g++-64/' '$(1)/configure'; \
     fi
     cd '$(1)' && QTDIR='$(1)' \
         $($(PKG)_CONFIGURE_ENV) \
