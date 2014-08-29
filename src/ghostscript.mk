@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 550a85e73b7213d8ae41ea06523661638b4bc1a2
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://downloads.ghostscript.com/public/$($(PKG)_FILE)
-$(PKG)_DEPS     := jpeg libpng tiff zlib
+$(PKG)_DEPS     := jpeg lcms libpng tiff zlib
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
     $(PKG)_DEPS += lcms
