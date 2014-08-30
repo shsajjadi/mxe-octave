@@ -16,13 +16,9 @@ ifeq ($(MXE_SYSTEM),mingw)
       LIBS=-lws2_32 \
       hdf5_cv_gettimeofday_tz=no \
       hdf5_cv_vsnprintf_works=yes \
-      hdf5_cv_printf_ll=l \
-      hdf5_cv_system_scope_threads=yes \
       hdf5_cv_ldouble_to_integer_works=yes \
       hdf5_cv_ulong_to_float_accurate=yes \
-      hdf5_cv_ulong_to_fp_bottom_bit_accurate=no \
       hdf5_cv_fp_to_ullong_accurate=yes \
-      hdf5_cv_fp_to_ullong_right_maximum=no \
       hdf5_cv_fp_to_ullong_right_maximum=no \
       hdf5_cv_ldouble_to_uint_accurate=yes \
       hdf5_cv_ullong_to_ldouble_precision=yes \
@@ -31,6 +27,23 @@ ifeq ($(MXE_SYSTEM),mingw)
       hdf5_cv_long_to_ldouble_special=no \
       hdf5_cv_ldouble_to_llong_accurate=yes \
       hdf5_cv_llong_to_ldouble_correct=yes
+    ifeq ($(TARGET),x86_64-w64-mingw32)
+      $(PKG)_CROSS_CONFIG_OPTIONS += \
+        hdf5_cv_printf_ll=ll \
+        hdf5_cv_system_scope_threads=no \
+        hdf5_cv_ldouble_to_integer_accurate=yes \
+        hdf5_cv_ulong_to_fp_bottom_bit_accurate=yes \
+        ac_cv_sizeof_long=4 \
+        ac_cv_sizeof_long_double=16 \
+        ac_cv_sizeof_long_long=8 \
+        ac_cv_sizeof_off_t=8 \
+        ac_cv_sys_file_offset_bits=64
+    else
+      $(PKG)_CROSS_CONFIG_OPTIONS += \
+        hdf5_cv_printf_ll=l \
+        hdf5_cv_system_scope_threads=yes \
+        hdf5_cv_ulong_to_fp_bottom_bit_accurate=no
+    endif
   endif
 endif
 
@@ -44,6 +57,15 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    case '$(TARGET)' in \
+      x86_64-w64-mingw32) \
+        cp '$(1)/src/H5Tinit.c.mingw64' '$(1)/src/H5Tinit.c.mingw' \
+      ;; \
+      i686-w64-mingw32) \
+        cp '$(1)/src/H5Tinit.c.mingw32' '$(1)/src/H5Tinit.c.mingw' \
+      ;; \
+    esac
+
     # build GCC and support libraries
     cd '$(1)' && autoreconf
     mkdir '$(1)/.build'
