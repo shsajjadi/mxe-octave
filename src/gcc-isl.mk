@@ -12,6 +12,7 @@ $(PKG)_URL_2     = $(isl_URL_2)
 $(PKG)_DEPS     := gcc-gmp
 
 define $(PKG)_UPDATE
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
     echo $(isl_VERSION)
 endef
 

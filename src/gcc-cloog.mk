@@ -12,6 +12,7 @@ $(PKG)_URL_2     = $(cloog_URL_2)
 $(PKG)_DEPS     := gcc-gmp gcc-isl
 
 define $(PKG)_UPDATE
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
     echo $(cloog_VERSION)
 endef
 

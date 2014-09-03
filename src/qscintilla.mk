@@ -17,8 +17,10 @@ else
 endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package qscintilla.' >&2;
-    echo $(qscintilla_VERSION)
+    $(WGET) -q -O- 'http://www.riverbankcomputing.com/software/qscintilla/download' | \
+        grep QScintilla-gpl | \
+        head -n 1 | \
+        $(SED) -n 's,.*QScintilla-gpl-\([0-9][^>]*\)\.zip.*,\1,p'
 endef
 
 ifneq ($(MXE_NATIVE_BUILD),yes)

@@ -16,8 +16,10 @@ ifeq ($(BUILD_SHARED),yes)
 endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package cfitsio.' >&2;
-    echo $(cfitsio_VERSION)
+    $(WGET) -q -O- "http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/?C=M;O=D" | \
+    grep -i '<a href="cfitsio.*tar' | \
+    $(SED) -n 's,.*cfitsio\([0-9][^>]*\)\.tar.*,\1,p' | \
+    head -1
 endef
 
 ifeq ($(MXE_SYSTEM),msvc)

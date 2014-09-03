@@ -12,6 +12,7 @@ $(PKG)_URL_2     = $(gmp_URL_2)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
     echo $(gmp_VERSION)
 endef
 
