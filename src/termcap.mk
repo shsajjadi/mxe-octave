@@ -11,8 +11,9 @@ $(PKG)_URL      := ftp://ftp.gnu.org/gnu/termcap/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package termcap.' >&2;
-    echo $(termcap_VERSION)
+    $(WGET) -q -O- 'http://ftp.gnu.org/gnu/termcap/?C=M;O=D' | \
+    $(SED) -n 's,.*<a href="termcap-\([0-9][^"]*\)\.tar.*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD
