@@ -12,7 +12,8 @@ OCTAVE_NSI_FILE := $(TOP_DIR)/dist/octave.nsi
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   TAR_H_OPTION := -h
   WINDOWS_BINARY_DIST_DEPS := \
-    msys-base 
+    msys-base \
+    msys-base-sources
 
   ifeq ($(MXE_NATIVE_BUILD),no)
     WINDOWS_BINARY_DIST_DEPS += \
