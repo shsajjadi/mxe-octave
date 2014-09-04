@@ -338,6 +338,8 @@ ifeq ($(MXE_SYSTEM),mingw)
     MSYS_BASE_DIR := $(TOP_DIR)/msys-base
     MSYS_EXTENSION_DIR := $(TOP_DIR)/msys-extension
     MSYS_BASE_PACKAGES := $(addprefix msys-,bash coreutils diffutils dos2unix file findutils gawk grep gzip less libiconv libintl libmagic make msys-core patch regex sed tar termcap unzip zip wget)
+    MSYS_BASE_SOURCES := $(addprefix src-,$(MSYS_BASE_PACKAGES))
+    PKGS += $(MSYS_BASE_SOURCES)
 
     NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
   endif
@@ -454,6 +456,7 @@ endif
 
 .PHONY: all
 all: configure Makefile $(OCTAVE_TARGET)
+	echo $(PKGS)
 
 .PHONY: all-packages
 all-packages: $(PKGS)
@@ -462,6 +465,9 @@ $(PKGS): $(BUILD_TOOLS) cmake-toolchain-file.stamp
 
 .PHONY: msys-base
 msys-base:  $(MSYS_BASE_PACKAGES)
+
+.PHONY: msys-base-sources
+msys-base-sources:  $(MSYS_BASE_SOURCES)
 
 .PHONY: octave-forge-packages
 octave-forge-packages: $(OCTAVE_FORGE_PACKAGES)
