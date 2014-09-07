@@ -41,8 +41,16 @@ USE_SYSTEM_GCC := @USE_SYSTEM_GCC@
 # on your system (default is yes if doing native build). 
 USE_SYSTEM_FONTCONFIG := @USE_SYSTEM_FONTCONFIG@
 
+# Build compiler for 64-bit Windows.  Using this option will build
+# binaries that require a 64-bit Windows system.
+ENABLE_WINDOWS_64 := @ENABLE_WINDOWS_64@
+
 # Attempt to build Octave and dependencies with 64-bit indexing
 # enabled (experimental; requires 64-bit system and compiler).
+# Note that 64-bit indexing is NOT required simply because you have
+# 64-bit operating system.  Building Octave with 64-bit indexing is
+# still experimental, so enabling this option is discouraged unless
+# you know what you are doing.
 ENABLE_64 := @ENABLE_64@
 
 # Should match what config.guess prints for your system.
@@ -50,7 +58,7 @@ ENABLE_64 := @ENABLE_64@
 ifeq ($(MXE_NATIVE_BUILD),yes)
   TARGET := $(shell tools/config.guess)
 else
-  ifeq ($(ENABLE_64),yes)
+  ifeq ($(ENABLE_WINDOWS_64),yes)
     TARGET := x86_64-w64-mingw32
   else
     TARGET := i686-w64-mingw32

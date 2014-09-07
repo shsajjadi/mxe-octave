@@ -53,14 +53,25 @@ case $with_shell in
 esac
 AC_SUBST(SHELL)
 
-### If possible, use a 64-bit integer type for array dimensions and indexing.
+ENABLE_WINDOWS_64=no
+AC_ARG_ENABLE(windows-64,
+  [AS_HELP_STRING([--enable-windows-64],
+    [build a Windows 64 cross compiler; resulting build will work only on 64-bit Windows systems])],
+  [if test "$enableval" = yes; then ENABLE_WINDOWS_64=yes; fi], [])
 
 ENABLE_64=no
 AC_ARG_ENABLE(64,
   [AS_HELP_STRING([--enable-64],
     [(EXPERIMENTAL) use 64-bit integers for array dimensions and indexing])],
   [if test "$enableval" = yes; then ENABLE_64=yes; fi], [])
+
+if test "$ENABLE_64" = yes && test "$ENABLE_WINDOWS_64" = no; then
+  AC_MSG_WARN([--enable-64 implies --enable-windows-64])
+  ENABLE_WINDOWS_64=yes
+fi
+
 AC_SUBST(ENABLE_64)
+AC_SUBST(ENABLE_WINDOWS_64)
 
 BUILD_SHARED=yes
 AC_ARG_ENABLE(shared,

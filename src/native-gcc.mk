@@ -26,7 +26,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     --disable-win32-registry \
     --with-native-system-header-dir='$(HOST_PREFIX)/include' \
     --enable-threads=win32 
-  ifneq ($(ENABLE_64),yes)
+  ifneq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
       --disable-sjlj-exceptions
   endif
