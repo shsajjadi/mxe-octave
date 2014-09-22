@@ -146,7 +146,7 @@ AC_SUBST(STRIP_DIST_FILES)
 ENABLE_OPENBLAS=yes
 AC_ARG_ENABLE([openblas],
   [AS_HELP_STRING([--disable-openblas],
-    [(EXPERIMENTAL) enable use of openblas in Octave])],
+    [Disable use of openblas in Octave])],
   [if test "$enableval" = no; then ENABLE_OPENBLAS=no; fi], [])
 AC_SUBST(ENABLE_OPENBLAS)
 
