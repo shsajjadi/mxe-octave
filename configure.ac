@@ -151,9 +151,9 @@ AC_ARG_ENABLE([openblas],
 AC_SUBST(ENABLE_OPENBLAS)
 
 ENABLE_STABLE=yes
-AC_ARG_ENABLE(stable,
-  [AS_HELP_STRING([--enable-stable],
-    [Enable stable build of octave instead of devel octave])],
+AC_ARG_ENABLE([stable],
+  [AS_HELP_STRING([--disable-stable],
+    [Disable stable build of octave and use devel octave instead])],
   [if test "$enableval" = no; then ENABLE_STABLE=no; fi], [])
 AC_SUBST(ENABLE_STABLE)
 
