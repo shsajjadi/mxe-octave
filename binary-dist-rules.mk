@@ -73,6 +73,8 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
       echo "  refblas..."
       cp $(OCTAVE_DIST_DIR)/bin/libblas.dll $(OCTAVE_DIST_DIR)/bin/librefblas.dll
+      echo "  octave.bat..."
+      cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)/
     endef
   else
     define copy-windows-dist-files
@@ -82,6 +84,8 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
       echo "  refblas..."
       cp $(OCTAVE_DIST_DIR)/bin/libblas.dll $(OCTAVE_DIST_DIR)/bin/librefblas.dll
+      echo "  octave.bat..."
+      cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)/
     endef
   endif
 endif
