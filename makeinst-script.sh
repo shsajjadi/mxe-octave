@@ -41,7 +41,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
 !define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
 !define INSTALLER_FILES "../installer-files"
 !define INSTALLER_NAME "octave-$OCTAVE_VERSION-installer.exe"
-!define MAIN_APP_EXE "octave-gui.exe"
+!define MAIN_APP_EXE "octave.bat"
 !define INSTALL_TYPE "SetShellVarContext current"
 !define PRODUCT_ROOT_KEY "HKLM"
 !define PRODUCT_KEY "Software\\Octave-$VERSION"
@@ -109,7 +109,8 @@ Page custom octaveOptionsPage octaveOptionsLeave
 
 !insertmacro MUI_PAGE_INSTFILES
 
-!define MUI_FINISHPAGE_RUN "\$INSTDIR\\bin\\\${MAIN_APP_EXE}"
+!define MUI_FINISHPAGE_RUN "\$INSTDIR\\\${MAIN_APP_EXE}"
+!define MUI_FINISHPAGE_RUN_PARAMETERS "--force-gui"
 !define MUI_FINISHPAGE_SHOWREADME "\$INSTDIR\\README.html"
 !insertmacro MUI_PAGE_FINISH
 
@@ -215,6 +216,10 @@ Section "MainFiles"
   SetOutPath "\$INSTDIR" 
   File "$OCTAVE_SOURCE/README.html"
 
+  ; include the octave.bat file
+  SetOutPath "\$INSTDIR" 
+  File "$OCTAVE_SOURCE/octave.bat"
+
   ; distro files
 EOF
 
@@ -257,8 +262,8 @@ Section "Shortcuts"
  CreateDirectory "\$SMPROGRAMS\\Octave-$VERSION"
  CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
  SetOutPath "%USERPROFILE%"
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Command Line).lnk" "\$INSTDIR\\bin\\octave-cli.exe" "" "\$INSTDIR\\$ICON" 0
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
+ CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Command Line).lnk" "\$INSTDIR\\octave.bat" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Experimental GUI).lnk" "\$INSTDIR\\octave.bat" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
  SetOutPath "\$INSTDIR"
 EOF
   # if we have documentation files, create shortcuts
@@ -276,8 +281,8 @@ EOF
 
   \${If} \$InstallShortcuts == \${BST_CHECKED}
     SetOutPath "%USERPROFILE%"
-    CreateShortCut "\$desktop\\Octave-$VERSION (Command Line).lnk" "\$INSTDIR\\bin\\octave-cli.exe" "" "\$INSTDIR\\$ICON" 0
-    CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\bin\\octave-gui.exe" "" "\$INSTDIR\\$ICON" 0
+    CreateShortCut "\$desktop\\Octave-$VERSION (Command Line).lnk" "\$INSTDIR\\octave.bat" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+    CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\octave.bat" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
   \${Endif}
 
   ; BLAS set up
@@ -296,7 +301,7 @@ Section "FileTypeRego"
   WriteRegStr HKCR "Octave.Document.$VERSION" "" "GNU Octave Script"
   WriteRegStr HKCR "Octave.Document.$VERSION\\DefaultIcon" "" "\$INSTDIR\\$ICON"
   ; document actions
-  WriteRegStr HKCR "Octave.Document.$VERSION\\shell\\open\\command" "" "\$\\"\$INSTDIR\\bin\\octave-gui.exe\$\\" --force-gui --persist --eval \$\\"edit '%1'\$\\""
+  WriteRegStr HKCR "Octave.Document.$VERSION\\shell\\open\\command" "" "\$\\"\$INSTDIR\\octave.bat\$\\" --force-gui --persist --eval \$\\"edit '%1'\$\\""
 
   \${If} \$RegisterOctaveFileType == \${BST_CHECKED}
     ReadRegStr \$0 HKCR ".m" ""
