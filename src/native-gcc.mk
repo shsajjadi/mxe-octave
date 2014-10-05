@@ -3,8 +3,8 @@
 
 PKG             := native-gcc
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.9.1
-$(PKG)_CHECKSUM := 3f303f403053f0ce79530dae832811ecef91197e
+$(PKG)_VERSION  := 4.8.2
+$(PKG)_CHECKSUM := 810fb70bd721e1d9f446b6503afe0a9088b62986
 $(PKG)_SUBDIR   := gcc-$($(PKG)_VERSION)
 $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -52,11 +52,7 @@ define $(PKG)_BUILD
         $($(PKG)_SYSDEP_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-libgomp \
-        --with-cloog='$(HOST_PREFIX)' \
-        --with-gmp='$(HOST_PREFIX)' \
-        --with-isl='$(HOST_PREFIX)' \
-        --with-mpc='$(HOST_PREFIX)' \
-        --with-mpfr='$(HOST_PREFIX)' \
+        --disable-libmudflap \
         $(shell [ `uname -s` == Darwin ] && echo "LDFLAGS='-Wl,-no_pie'")
 
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
