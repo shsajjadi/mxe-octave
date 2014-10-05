@@ -3,8 +3,8 @@
 
 PKG             := build-gcc
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.8.2
-$(PKG)_CHECKSUM := 810fb70bd721e1d9f446b6503afe0a9088b62986
+$(PKG)_VERSION  := 4.9.1
+$(PKG)_CHECKSUM := 3f303f403053f0ce79530dae832811ecef91197e
 $(PKG)_SUBDIR   := gcc-$($(PKG)_VERSION)
 $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -73,13 +73,6 @@ define $(PKG)_UPDATE
     head -1
 endef
 
-ifneq ($(MXE_NATIVE_BUILD),yes)
-  define $(PKG)_POST_BUILD
-    $(INSTALL) -d '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
-    mv $(addprefix $(HOST_PREFIX)/bin/, c++ g++ gcc gfortran) '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
-  endef
-endif
-
 define $(PKG)_CONFIGURE
     # configure gcc
     mkdir '$(1).build'
@@ -91,7 +84,6 @@ define $(PKG)_CONFIGURE
         $($(PKG)_SYSDEP_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-libgomp \
-        --disable-libmudflap \
         --with-cloog='$(BUILD_TOOLS_PREFIX)' \
         --with-gmp='$(BUILD_TOOLS_PREFIX)' \
         --with-isl='$(BUILD_TOOLS_PREFIX)' \

@@ -26,6 +26,8 @@ SRC_FILES_1 := \
   build-cmake.mk \
   build-flex.mk \
   build-gawk.mk \
+  build-gcc-1-mingw-float.patch \
+  build-gcc-2-intrinsics.patch \
   build-gcc.mk \
   build-gperf.mk \
   build-libtool.mk \
@@ -408,6 +410,7 @@ SRC_FILES_1 := \
   mxml.mk \
   native-binutils.mk \
   native-gcc-1-float.patch \
+  native-gcc-2-intrinsics.patch \
   native-gcc.mk \
   ncurses.mk \
   netcdf.mk \
@@ -562,7 +565,6 @@ SRC_FILES_1 := \
   stable-octave-1-fixes.patch \
   stable-octave-1-gnulib-isatty.patch \
   stable-octave-2-winbelloff.patch \
-  stable-octave-3-fixes.patch \
   stable-octave.mk \
   suitesparse-1.patch \
   suitesparse.mk \
