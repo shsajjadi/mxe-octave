@@ -150,12 +150,29 @@ AC_ARG_ENABLE([openblas],
   [if test "$enableval" = no; then ENABLE_OPENBLAS=no; fi], [])
 AC_SUBST(ENABLE_OPENBLAS)
 
-ENABLE_STABLE=yes
-AC_ARG_ENABLE([stable],
-  [AS_HELP_STRING([--disable-stable],
-    [Disable stable build of octave and use devel octave instead])],
-  [if test "$enableval" = no; then ENABLE_STABLE=no; fi], [])
-AC_SUBST(ENABLE_STABLE)
+ENABLE_OCTAVE=stable
+AC_ARG_ENABLE([octave],
+  [AS_HELP_STRING([--enable-octave=stable],
+    [Enable a specific build of octave (stable, alpha, default)])],
+  [], [])
+
+case $enableval in
+ stable)
+   ENABLE_OCTAVE="stable-"
+   ;;
+ alpha)
+   ENABLE_OCTAVE=""
+   ;;
+ default)
+   ENABLE_OCTAVE="default-"
+   ;;
+ *)
+   ENABLE_OCTAVE="stable-"
+   AC_MSG_WARN([Unknown octave type $enableval - using enable-octave=stable])
+   ;;
+esac
+   
+AC_SUBST(ENABLE_OCTAVE)
 
 ### Default is to cross compile for mingw.
 

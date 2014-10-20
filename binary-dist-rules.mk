@@ -1,5 +1,5 @@
 
-ifeq ($(STABLE_BUILD),yes)
+ifeq ($(OCTAVE_TARGET),stable-octave)
   OCTAVE_DIST_NAME := octave-$($(OCTAVE_TARGET)_VERSION)
 else
   OCTAVE_DIST_NAME := octave-$(DATE)
