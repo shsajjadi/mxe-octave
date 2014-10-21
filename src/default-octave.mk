@@ -1,7 +1,7 @@
 # This file is part of MXE.
 # See index.html for further information.
 
-PKG             := master-octave
+PKG             := default-octave
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 4.1.0+
 $(PKG)_CHECKSUM := 0a72ae6da93c7e8bf6b8230dab416fe77f77d1b6
