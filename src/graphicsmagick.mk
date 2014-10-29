@@ -48,6 +48,7 @@ define $(PKG)_BUILD
         --with-xml \
         --with-zlib \
         --without-x \
+       --with-quantum-depth=16 \
         ac_cv_prog_xml2_config='$(HOST_BINDIR)/xml2-config' \
         ac_cv_path_xml2_config='$(HOST_BINDIR)/xml2-config' \
 	&& $(CONFIGURE_POST_HOOK)
