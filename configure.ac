@@ -154,7 +154,7 @@ ENABLE_OCTAVE=stable
 AC_ARG_ENABLE([octave],
   [AS_HELP_STRING([--enable-octave=stable],
     [Enable a specific build of octave (stable, alpha, default)])],
-  [], [])
+  [], [enableval=$ENABLE_OCTAVE])
 
 case $enableval in
  stable)
