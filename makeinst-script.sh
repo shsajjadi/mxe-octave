@@ -104,7 +104,7 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 
 Page custom octaveOptionsPage octaveOptionsLeave
 
-!define MUI_PAGE_CUSTOMFUNCTION_LEAVE CheckPrevInstall
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE CheckPrevInstallAndDest
 !insertmacro MUI_PAGE_DIRECTORY
 
 !insertmacro MUI_PAGE_INSTFILES
@@ -428,13 +428,36 @@ curr_check_ok:
   Pop \$0
 FunctionEnd
 
-; Check whether prev install is here
-Function CheckPrevInstall 
+; Check whether prev install is here and no spaces in dest name
+Function CheckPrevInstallAndDest
   IfFileExists "\$INSTDIR\\bin\\octave.exe" inst_exists  inst_none
 inst_exists:
   MessageBox MB_YESNO|MB_ICONEXCLAMATION "Another Octave installation has been detected at that destination. It is recommended to uninstall it if you intend to use the same installation directory. Do you want to proceed with the installation anyway?" IDYES inst_none IDNO 0
   Abort 
+  GoTo inst_end
 inst_none:
+
+
+  ; check for spaces in dest filename
+  Push \$R0
+  Push \$R1
+
+  StrCpy \$R1 0 # r1 = counter
+space_loop:
+  StrCpy \$R0 \$INSTDIR 1 \$R1  # R0 = character in string to check
+  StrCmp \$R0 "" space_end # end of string
+  StrCmp \$R0 " " space_found
+  IntOp  \$R1 \$R1 + 1
+  GoTo space_loop
+space_found:
+  MessageBox MB_OK|MB_ICONEXCLAMATION "Octave should not be installed to a destination folder containing spaces. Please select another destination."
+  Abort 
+space_end:
+  Pop \$R1
+  Pop \$R0
+
+inst_end:
+
 FunctionEnd
 
 ; Function to check Java Runtime Environment
