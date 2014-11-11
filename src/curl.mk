@@ -3,8 +3,8 @@
 
 PKG             := curl
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 7.37.1
-$(PKG)_CHECKSUM := 0f3f8a3eb3019d2e671552e8425784818123dc09
+$(PKG)_VERSION  := 7.39.0
+$(PKG)_CHECKSUM := a72fa6615d112960be609cdcf720f6332da822db
 $(PKG)_SUBDIR   := curl-$($(PKG)_VERSION)
 $(PKG)_FILE     := curl-$($(PKG)_VERSION).tar.lzma
 $(PKG)_URL      := http://curl.haxx.se/download/$($(PKG)_FILE)
@@ -28,10 +28,5 @@ define $(PKG)_BUILD
         --enable-ipv6 \
         --with-libssh2 && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' DESTDIR='$(3)' install
-
-##    '$(MXE_CC)' \
-##        -W -Wall -Werror -ansi -pedantic \
-##        '$(2).c' -o '$(HOST_BINDIR)/test-curl.exe' \
-##        `'$(MXE_PKG_CONFIG)' libcurl --cflags --libs`
 
 endef
