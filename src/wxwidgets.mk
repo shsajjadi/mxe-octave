@@ -3,8 +3,8 @@
 
 PKG             := wxwidgets
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.8.12
-$(PKG)_CHECKSUM := 39552f3e49341197fea8373824ec609c757e890b
+$(PKG)_VERSION  := 3.0.2
+$(PKG)_CHECKSUM := 6461eab4428c0a8b9e41781b8787510484dea800
 $(PKG)_SUBDIR   := wxMSW-$($(PKG)_VERSION)
 $(PKG)_FILE     := wxMSW-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/wxwindows/$($(PKG)_VERSION)/$($(PKG)_FILE)
