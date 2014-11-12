@@ -64,6 +64,9 @@ define $(PKG)_BUILD
       i686-w64-mingw32) \
         cp '$(1)/src/H5Tinit.c.mingw32' '$(1)/src/H5Tinit.c.mingw' \
       ;; \
+      i686-pc-mingw32) \
+        cp '$(1)/src/H5Tinit.c.mingw32' '$(1)/src/H5Tinit.c.mingw' \
+      ;; \
     esac
 
     # build GCC and support libraries
