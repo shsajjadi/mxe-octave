@@ -1,0 +1,302 @@
+diff -ur nettle-2.7-orig/Makefile.in nettle-2.7/Makefile.in
+--- nettle-2.7-orig/Makefile.in	2013-11-05 14:51:27 -0500
++++ nettle-2.7/Makefile.in	2013-11-05 18:04:21 -0500
+@@ -16,7 +16,7 @@
+ 
+ OPT_ASM_SOURCES = @OPT_ASM_SOURCES@
+ 
+-SUBDIRS = tools testsuite examples
++SUBDIRS = tools #testsuite examples
+ 
+ include config.make
+ 
+@@ -197,6 +197,9 @@
+ hogweed_OBJS = $(hogweed_SOURCES:.c=.$(OBJEXT)) $(OPT_ASM_SOURCES:.asm=.$(OBJEXT))
+ hogweed_PURE_OBJS = $(hogweed_OBJS:.$(OBJEXT)=.p$(OBJEXT))
+ 
++$(nettle_OBJS): PRE_CPPFLAGS += -DBUILDING_NETTLE
++$(hogweed_OBJS): PRE_CPPFLAGS += -DBUILDING_HOGWEED
++
+ libnettle.a: $(nettle_OBJS)
+ 	-rm -f $@
+ 	$(AR) $(ARFLAGS) $@ $(nettle_OBJS)
+@@ -252,7 +255,7 @@
+ 	-o twofishdata$(EXEEXT_FOR_BUILD)
+ 
+ shadata$(EXEEXT_FOR_BUILD): shadata.c
+-	$(CC_FOR_BUILD) `test -f shadata.c || echo '$(srcdir)/'`shadata.c -lm \
++	$(CC_FOR_BUILD) `test -f shadata.c || echo '$(srcdir)/'`shadata.c \
+ 	-o shadata$(EXEEXT_FOR_BUILD)
+ 
+ gcmdata$(EXEEXT_FOR_BUILD): gcmdata.c
+@@ -340,10 +343,10 @@
+ 	&& test -s $@T && mv -f $@T $@
+ 
+ .s.$(OBJEXT):
+-	$(COMPILE) $(CCPIC_MAYBE) -c $<
++	$(COMPILE_AS) $(CCPIC_MAYBE) -c $<
+ 
+ .s.p$(OBJEXT):
+-	$(COMPILE) $(SHLIBCFLAGS) -c $< -o $@
++	$(COMPILE_AS) $(SHLIBCFLAGS) -c $< -o $@
+ 
+ # Texinfo rules
+ .texinfo.info:
+diff -ur nettle-2.7-orig/config.make.in nettle-2.7/config.make.in
+--- nettle-2.7-orig/config.make.in	2013-04-24 09:26:53 -0400
++++ nettle-2.7/config.make.in	2013-11-05 14:56:57 -0500
+@@ -1,6 +1,7 @@
+ # Makefile settings shared between Makefiles.
+ 
+ CC = @CC@
++CCAS = @CCAS@
+ CXX = @CXX@
+ CFLAGS = @CFLAGS@
+ CXXFLAGS = @CXXFLAGS@
+@@ -72,6 +73,7 @@
+ # flags before CPPFLAGS and LDFLAGS.
+ 
+ COMPILE = $(CC) $(PRE_CPPFLAGS) $(CPPFLAGS) $(DEFS) $(CFLAGS) $(CCPIC) $(DEP_FLAGS)
++COMPILE_AS = $(CCAS) $(PRE_CPPFLAGS) $(CPPFLAGS) $(DEFS) $(CXXFLAGS) $(CCPIC) $(DEP_FLAGS)
+ COMPILE_CXX = $(CXX) $(PRE_CPPFLAGS) $(CPPFLAGS) $(DEFS) $(CXXFLAGS) $(CCPIC) $(DEP_FLAGS)
+ LINK = $(CC) $(CFLAGS) $(PRE_LDFLAGS) $(LDFLAGS)
+ LINK_CXX = $(CXX) $(CXXFLAGS) $(PRE_LDFLAGS) $(LDFLAGS)
+diff -ur nettle-2.7-orig/configure nettle-2.7/configure
+--- nettle-2.7-orig/configure	2013-04-24 09:26:53 -0400
++++ nettle-2.7/configure	2013-11-05 14:59:15 -0500
+@@ -693,6 +693,7 @@
+ LDFLAGS
+ CFLAGS
+ CC
++CCAS
+ host_os
+ host_vendor
+ host_cpu
+@@ -4764,7 +4765,7 @@
+ 	vmlal.u32	q1, d0, d1
+ 
+ EOF
+-gmp_assemble="$CC $CFLAGS $CPPFLAGS -c conftest.s >conftest.out 2>&1"
++gmp_assemble="$CCAS $CFLAGS $CPPFLAGS -c conftest.s >conftest.out 2>&1"
+ if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$gmp_assemble\""; } >&5
+   (eval $gmp_assemble) 2>&5
+   ac_status=$?
+@@ -5106,7 +5107,7 @@
+ .size foo, .Lend - foo
+ 
+ EOF
+-gmp_assemble="$CC $CFLAGS $CPPFLAGS -c conftest.s >conftest.out 2>&1"
++gmp_assemble="$CCAS $CFLAGS $CPPFLAGS -c conftest.s >conftest.out 2>&1"
+ if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$gmp_assemble\""; } >&5
+   (eval $gmp_assemble) 2>&5
+   ac_status=$?
+@@ -5142,7 +5143,7 @@
+ .size foo, .Lend - foo
+ 
+ EOF
+-gmp_assemble="$CC $CFLAGS $CPPFLAGS -c conftest.s >conftest.out 2>&1"
++gmp_assemble="$CCAS $CFLAGS $CPPFLAGS -c conftest.s >conftest.out 2>&1"
+ if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$gmp_assemble\""; } >&5
+   (eval $gmp_assemble) 2>&5
+   ac_status=$?
+@@ -5217,7 +5218,7 @@
+ .align 3
+ 
+ EOF
+-gmp_assemble="$CC $CFLAGS $CPPFLAGS -c conftest.s >conftest.out 2>&1"
++gmp_assemble="$CCAS $CFLAGS $CPPFLAGS -c conftest.s >conftest.out 2>&1"
+ if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$gmp_assemble\""; } >&5
+   (eval $gmp_assemble) 2>&5
+   ac_status=$?
+diff -ur nettle-2.7-orig/ecc-curve.h nettle-2.7/ecc-curve.h
+--- nettle-2.7-orig/ecc-curve.h	2013-04-24 09:26:52 -0400
++++ nettle-2.7/ecc-curve.h	2013-11-05 15:27:46 -0500
+@@ -25,6 +25,18 @@
+ #ifndef NETTLE_ECC_CURVE_H_INCLUDED
+ #define NETTLE_ECC_CURVE_H_INCLUDED
+ 
++#ifndef HOGWEED_EXPORTED
++# ifdef _MSC_VER
++#  ifdef BUILDING_HOGWEED
++#   define HOGWEED_EXPORTED __declspec(dllexport)
++#  else
++#   define HOGWEED_EXPORTED __declspec(dllimport)
++#  endif
++# else
++#  define HOGWEED_EXPORTED
++# endif
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+@@ -32,11 +44,11 @@
+ /* The contets of this struct is internal. */
+ struct ecc_curve;
+ 
+-extern const struct ecc_curve nettle_secp_192r1;
+-extern const struct ecc_curve nettle_secp_224r1;
+-extern const struct ecc_curve nettle_secp_256r1;
+-extern const struct ecc_curve nettle_secp_384r1;
+-extern const struct ecc_curve nettle_secp_521r1;
++extern HOGWEED_EXPORTED const struct ecc_curve nettle_secp_192r1;
++extern HOGWEED_EXPORTED const struct ecc_curve nettle_secp_224r1;
++extern HOGWEED_EXPORTED const struct ecc_curve nettle_secp_256r1;
++extern HOGWEED_EXPORTED const struct ecc_curve nettle_secp_384r1;
++extern HOGWEED_EXPORTED const struct ecc_curve nettle_secp_521r1;
+ 
+ #ifdef __cplusplus
+ }
+diff -ur nettle-2.7-orig/examples/Makefile.in nettle-2.7/examples/Makefile.in
+--- nettle-2.7-orig/examples/Makefile.in	2013-11-05 14:51:27 -0500
++++ nettle-2.7/examples/Makefile.in	2013-11-05 15:19:45 -0500
+@@ -11,7 +11,7 @@
+ PRE_LDFLAGS = -L..
+ 
+ OPENSSL_LIBFLAGS = @OPENSSL_LIBFLAGS@
+-BENCH_LIBS = @BENCH_LIBS@ -lm
++BENCH_LIBS = @BENCH_LIBS@
+ 
+ HOGWEED_TARGETS = rsa-keygen$(EXEEXT) rsa-sign$(EXEEXT) \
+ 	      rsa-verify$(EXEEXT) rsa-encrypt$(EXEEXT) rsa-decrypt$(EXEEXT) \
+diff -ur nettle-2.7-orig/nettle-meta.h nettle-2.7/nettle-meta.h
+--- nettle-2.7-orig/nettle-meta.h	2013-04-24 09:26:52 -0400
++++ nettle-2.7/nettle-meta.h	2013-11-05 15:23:56 -0500
+@@ -28,6 +28,18 @@
+ 
+ #include "nettle-types.h"
+ 
++#ifndef NETTLE_EXPORTED
++# ifdef _MSC_VER
++#  ifdef BUILDING_NETTLE
++#   define NETTLE_EXPORTED __declspec(dllexport)
++#  else
++#   define NETTLE_EXPORTED __declspec(dllimport)
++#  endif
++# else
++#  define NETTLE_EXPORTED
++# endif
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+@@ -97,32 +109,32 @@
+ }
+ 
+ /* null-terminated list of ciphers implemented by this version of nettle */
+-extern const struct nettle_cipher * const nettle_ciphers[];
++extern NETTLE_EXPORTED const struct nettle_cipher * const nettle_ciphers[];
+ 
+-extern const struct nettle_cipher nettle_aes128;
+-extern const struct nettle_cipher nettle_aes192;
+-extern const struct nettle_cipher nettle_aes256;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_aes128;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_aes192;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_aes256;
+ 
+-extern const struct nettle_cipher nettle_arcfour128;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_arcfour128;
+ 
+-extern const struct nettle_cipher nettle_camellia128;
+-extern const struct nettle_cipher nettle_camellia192;
+-extern const struct nettle_cipher nettle_camellia256;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_camellia128;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_camellia192;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_camellia256;
+ 
+-extern const struct nettle_cipher nettle_cast128;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_cast128;
+ 
+-extern const struct nettle_cipher nettle_serpent128;
+-extern const struct nettle_cipher nettle_serpent192;
+-extern const struct nettle_cipher nettle_serpent256;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_serpent128;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_serpent192;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_serpent256;
+ 
+-extern const struct nettle_cipher nettle_twofish128;
+-extern const struct nettle_cipher nettle_twofish192;
+-extern const struct nettle_cipher nettle_twofish256;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_twofish128;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_twofish192;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_twofish256;
+ 
+-extern const struct nettle_cipher nettle_arctwo40;
+-extern const struct nettle_cipher nettle_arctwo64;
+-extern const struct nettle_cipher nettle_arctwo128;
+-extern const struct nettle_cipher nettle_arctwo_gutmann128;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_arctwo40;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_arctwo64;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_arctwo128;
++extern NETTLE_EXPORTED const struct nettle_cipher nettle_arctwo_gutmann128;
+ 
+ struct nettle_hash
+ {
+@@ -153,22 +165,22 @@
+ } 
+ 
+ /* null-terminated list of digests implemented by this version of nettle */
+-extern const struct nettle_hash * const nettle_hashes[];
++extern NETTLE_EXPORTED const struct nettle_hash * const nettle_hashes[];
+ 
+-extern const struct nettle_hash nettle_md2;
+-extern const struct nettle_hash nettle_md4;
+-extern const struct nettle_hash nettle_md5;
+-extern const struct nettle_hash nettle_gosthash94;
+-extern const struct nettle_hash nettle_ripemd160;
+-extern const struct nettle_hash nettle_sha1;
+-extern const struct nettle_hash nettle_sha224;
+-extern const struct nettle_hash nettle_sha256;
+-extern const struct nettle_hash nettle_sha384;
+-extern const struct nettle_hash nettle_sha512;
+-extern const struct nettle_hash nettle_sha3_224;
+-extern const struct nettle_hash nettle_sha3_256;
+-extern const struct nettle_hash nettle_sha3_384;
+-extern const struct nettle_hash nettle_sha3_512;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_md2;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_md4;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_md5;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_gosthash94;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_ripemd160;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_sha1;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_sha224;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_sha256;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_sha384;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_sha512;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_sha3_224;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_sha3_256;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_sha3_384;
++extern NETTLE_EXPORTED const struct nettle_hash nettle_sha3_512;
+ 
+ struct nettle_armor
+ {
+@@ -220,10 +232,10 @@
+ }
+ 
+ /* null-terminated list of armor schemes implemented by this version of nettle */
+-extern const struct nettle_armor * const nettle_armors[];
++extern NETTLE_EXPORTED const struct nettle_armor * const nettle_armors[];
+ 
+-extern const struct nettle_armor nettle_base64;
+-extern const struct nettle_armor nettle_base16;
++extern NETTLE_EXPORTED const struct nettle_armor nettle_base64;
++extern NETTLE_EXPORTED const struct nettle_armor nettle_base16;
+ 
+ #ifdef __cplusplus
+ }
+diff -ur nettle-2.7-orig/tools/sexp-conv.c nettle-2.7/tools/sexp-conv.c
+--- nettle-2.7-orig/tools/sexp-conv.c	2013-04-24 09:26:53 -0400
++++ nettle-2.7/tools/sexp-conv.c	2013-11-05 15:04:03 -0500
+@@ -225,7 +225,10 @@
+   
+   for (;;)
+     {
+-      static const struct nettle_hash *hashes[] =
++#ifndef _MSC_VER
++      static
++#endif
++      const struct nettle_hash *hashes[] =
+ 	{ &nettle_md5, &nettle_sha1, &nettle_sha256, NULL };
+   
+       static const struct option options[] =

@@ -1,0 +1,24 @@
+diff -ur sockets.orig/src/Makefile sockets/src/Makefile
+--- sockets.orig/src/Makefile	2014-01-03 08:34:47.000000000 -0500
++++ sockets/src/Makefile	2014-01-03 09:18:19.000000000 -0500
+@@ -1,6 +1,11 @@
+ OCT = sockets.oct
+ SRC := $(OCT:.oct=.cc)
+ 
++EXTRALIBS = 
++ifeq ($(OS),Windows_NT)
++  EXTRALIBS = -lws2_32
++endif
++
+ #See which octave version we run by querying mkoctfile for its version
+ #string. (Is there a better way to do this? This looks horrible.) 
+ majorversion := $(shell  mkoctfile --version 2>&1  | sed  -e 's/[ .+]/\n/g' |sed  -n '3p')
+@@ -14,7 +19,7 @@
+ all: $(OCT)
+ 
+ %.oct: %.cc
+-	mkoctfile $(VFLAGS) -s $<
++	mkoctfile $(VFLAGS) -s $< $(EXTRALIBS)
+ 
+ test: $(OCT)
+ 	test_octave_sockets

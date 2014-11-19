@@ -1,0 +1,40 @@
+diff -ur pstoedit-3.61-orig/src/dynload.cpp pstoedit-3.61/src/dynload.cpp
+--- pstoedit-3.61-orig/src/dynload.cpp	2012-08-28 09:52:31 -0400
++++ pstoedit-3.61/src/dynload.cpp	2013-07-05 23:48:11 -0400
+@@ -434,7 +434,7 @@
+ //              errstream << "szExePath " << szExePath << endl;
+ 
+ 					if ((STRICMP(fullname, szExePath) != 0)
+-						&& (STRICMP(finddata.cFileName, "pstoedit.dll") != 0)) {
++						&& (strstr(finddata.cFileName, "pstoedit") == NULL)) {
+ 						// avoid loading dll itself again
+ 						//                 errstream << "loading " << fullname << endl;
+ 						loadaPlugin(fullname, errstream, verbose);
+diff -ur pstoedit-3.61-orig/src/miscutil.cpp pstoedit-3.61/src/miscutil.cpp
+--- pstoedit-3.61-orig/src/miscutil.cpp	2012-08-28 09:52:31 -0400
++++ pstoedit-3.61/src/miscutil.cpp	2013-07-05 23:36:21 -0400
+@@ -26,7 +26,7 @@
+ // #ifdef _MSC_VER
+ // for getcwd ( at least for Visual C++)
+ 
+-#if defined(unix) || defined(__unix__) || defined(_unix) || defined(__unix) || defined(__EMX__) || defined (NetBSD) || defined(__APPLE__) || defined(_AIX)
++#if defined(unix) || defined(__unix__) || defined(_unix) || defined(__unix) || defined(__EMX__) || defined (NetBSD) || defined(__APPLE__) || defined(_AIX) || defined(_MSC_VER)
+ #include <unistd.h>
+ 
+ #ifdef __hpux
+diff -ur pstoedit-3.61-orig/src/pstoedit.cpp pstoedit-3.61/src/pstoedit.cpp
+--- pstoedit-3.61-orig/src/pstoedit.cpp	2012-08-28 09:52:31 -0400
++++ pstoedit-3.61/src/pstoedit.cpp	2013-07-05 23:50:53 -0400
+@@ -263,7 +263,12 @@
+ 	if (verbose)  errstream << "pstoedit : path to myself:" << progname << " " << r << " " << szExePath<< endl;
+ 	char *p = 0;
+ 	if (r && (p = strrchr(szExePath, directoryDelimiter)) != 0) {
++		int len;
+ 		*p = '\0';
++                if ((len = strlen (szExePath)) >= 4 && STRICMP (&szExePath[len-4], "\\bin") == 0) {
++                        strcpy (&szExePath[len-3], "lib");
++                        strncat (szExePath, "\\pstoedit", sizeof (szExePath));
++                }
+ 		if (strcmp(szExePath, plugindir.value() ? plugindir.value() : "") != 0) {
+ 			loadPlugInDrivers(szExePath, errstream,verbose);
+ 			pluginsloaded = true;

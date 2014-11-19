@@ -1,0 +1,967 @@
+diff -ur texinfo-4.13.orig/info/man.c texinfo-4.13/info/man.c
+--- texinfo-4.13.orig/info/man.c	2014-04-24 13:39:35.918682762 -0400
++++ texinfo-4.13/info/man.c	2014-04-24 13:40:33.385768723 -0400
+@@ -20,7 +20,9 @@
+    Originally written by Brian Fox Thu May  4 09:17:52 1995. */
+ 
+ #include "info.h"
++#if defined (HAVE_SYS_IOCTL_H)
+ #include <sys/ioctl.h>
++#endif
+ #include "signals.h"
+ #if defined (HAVE_SYS_TIME_H)
+ #include <sys/time.h>
+diff -ur texinfo-4.13.orig/info/pcterm.c texinfo-4.13/info/pcterm.c
+--- texinfo-4.13.orig/info/pcterm.c	2014-04-24 13:39:35.917682743 -0400
++++ texinfo-4.13/info/pcterm.c	2014-04-24 13:44:02.643696094 -0400
+@@ -717,7 +717,7 @@
+ }
+ 
+ /* These should never be called, but they make the linker happy.  */
+-
++#ifndef __MINGW32__
+ void       tputs (char *a, int b, int (*c)())
+ {
+   perror ("tputs");
+@@ -757,3 +757,4 @@
+ {
+   perror ("tcsetattr"); return 0;
+ }
++#endif
+diff -ur texinfo-4.13.orig/info/session.c texinfo-4.13/info/session.c
+--- texinfo-4.13.orig/info/session.c	2014-04-24 13:39:35.917682743 -0400
++++ texinfo-4.13/info/session.c	2014-04-24 13:41:43.144087140 -0400
+@@ -21,7 +21,9 @@
+ 
+ #include "info.h"
+ #include "search.h"
++#if defined (HAVE_SYS_IOCTL_H)
+ #include <sys/ioctl.h>
++#endif
+ 
+ #if defined (HAVE_SYS_TIME_H)
+ #  include <sys/time.h>
+diff -ur texinfo-4.13.orig/info/search.c texinfo-4.13/info/search.c
+--- texinfo-4.13.orig/info/search.c	2014-04-24 13:51:21.592277409 -0400
++++ texinfo-4.13/info/search.c	2014-04-24 13:52:53.217898167 -0400
+@@ -20,7 +20,14 @@
+    Originally written by Brian Fox (bfox@ai.mit.edu). */
+ 
+ #include "info.h"
+-#include <regex.h>
++
++#ifndef __MINGW32__
++ #include <regex.h>
++#else
++ // using pcre
++ #include <pcre.h>
++ #include <pcreposix.h>
++#endif
+ 
+ #include "search.h"
+ #include "nodes.h"
+diff -ur texinfo-4.13.orig/info/termdep.h texinfo-4.13/info/termdep.h
+--- texinfo-4.13.orig/info/termdep.h	2014-04-24 13:55:42.343917317 -0400
++++ texinfo-4.13/info/termdep.h	2014-04-24 13:56:31.331797804 -0400
+@@ -43,7 +43,9 @@
+ #      endif /* M_XENIX */
+ #    endif /* HAVE_SYS_PTEM_H */
+ #  else /* !HAVE_TERMIO_H */
++#ifndef __MINGW32__
+ #    include <sgtty.h>
++#endif
+ #  endif /* !HAVE_TERMIO_H */
+ #endif /* !HAVE_TERMIOS_H */
+ 
+diff -ur texinfo-4.13.orig/info/terminal.c texinfo-4.13/info/terminal.c
+--- texinfo-4.13.orig/info/terminal.c	2014-04-24 13:55:42.344917335 -0400
++++ texinfo-4.13/info/terminal.c	2014-04-24 14:17:33.962456844 -0400
+@@ -572,7 +572,9 @@
+       ospeed = B9600;
+   }
+ # else
++#ifndef __MINGW32__
+   ospeed = B9600;
++#endif
+ # endif /* !TIOCGETP */
+ #endif
+ 
+@@ -663,7 +665,9 @@
+ /* Buffers containing the terminal mode flags upon entry to info. */
+ int original_tty_flags = 0;
+ int original_lmode;
++#ifndef __MINGW32__
+ struct sgttyb ttybuff;
++#endif
+ 
+ #    if defined(TIOCGETC) && defined(M_XENIX)
+ /* SCO 3.2v5.0.2 defines but does not support TIOCGETC.  Gak.  Maybe
+@@ -758,7 +762,7 @@
+ #  endif
+ #endif
+ 
+-#if !defined (HAVE_TERMIOS_H) && !defined (HAVE_TERMIO_H)
++#if !defined (HAVE_TERMIOS_H) && !defined (HAVE_TERMIO_H)  && !defined(__MINGW32__)
+   ioctl (tty, TIOCGETP, &ttybuff);
+ 
+   if (!original_tty_flags)
+@@ -818,10 +822,11 @@
+     ioctl (tty, TIOCSLTC, &temp);
+   }
+ #  endif /* TIOCGLTC */
+-
++#ifndef __MINGW32__
+   ttybuff.sg_flags &= ~ECHO;
+   ttybuff.sg_flags |= CBREAK;
+   ioctl (tty, TIOCSETN, &ttybuff);
++#endif
+ #endif /* !HAVE_TERMIOS_H && !HAVE_TERMIO_H */
+ }
+ 
+@@ -846,9 +851,11 @@
+ #  if defined (HAVE_TERMIO_H)
+   ioctl (tty, TCSETA, &original_termio);
+ #  else /* !HAVE_TERMIO_H */
++#ifndef __MINGW32__
+   ioctl (tty, TIOCGETP, &ttybuff);
+   ttybuff.sg_flags = original_tty_flags;
+   ioctl (tty, TIOCSETN, &ttybuff);
++#endif
+ 
+ #  if defined (TIOCGETC)
+   ioctl (tty, TIOCSETC, &original_tchars);
+@@ -867,6 +874,6 @@
+   terminal_end_using_terminal ();
+ }
+ 
+-#ifdef __MSDOS__
++#if defined(__MSDOS__)  || defined(__MINGW32__)
+ # include "pcterm.c"
+ #endif
+diff -ur texinfo-4.13.orig/info/pcterm.c texinfo-4.13/info/pcterm.c
+--- texinfo-4.13.orig/info/pcterm.c	2014-04-24 14:19:51.514087212 -0400
++++ texinfo-4.13/info/pcterm.c	2014-04-24 14:42:21.295014635 -0400
+@@ -24,6 +24,7 @@
+ 
+ /* intl/libintl.h defines a macro `gettext' which
+    conflicts with conio.h header.  */
++#ifdef __MSDOS__
+ #ifdef gettext
+ # undef gettext
+ # define gettext _gettext
+@@ -32,6 +33,42 @@
+ #include <pc.h>
+ #include <keys.h>
+ #include <conio.h>
++#endif
++
++#ifdef _WIN32
++#include <io.h>
++#include <conio.h>
++#include <process.h>
++#include <windows.h>
++
++struct text_info {
++    WORD normattr;
++    WORD attribute;
++    SHORT winleft;
++    SHORT wintop;
++    SHORT winright;
++    SHORT winbottom;
++    SHORT screenheight;
++    SHORT screenwidth;
++    SHORT curx;
++    SHORT cury;
++    COORD bufsize;
++    unsigned char currmode;     /* unused and unsupported for Windows */
++};
++
++struct termios {
++  int dummy;
++};
++
++enum text_modes { LASTMODE=-1 };
++
++#define cprintf _cprintf
++#define cputs _cputs
++
++#undef read
++#undef _read
++
++#endif
+ 
+ #include "variables.h"
+ 
+@@ -44,10 +81,511 @@
+ /* **************************************************************** */
+ 
+ static struct text_info outside_info;  /* holds screen params outside Info */
++#ifdef _WIN32
++static SHORT norm_attr, inv_attr;
++static SHORT current_attr;
++static HANDLE hstdin = INVALID_HANDLE_VALUE;
++static HANDLE hstdout = INVALID_HANDLE_VALUE;
++static HANDLE hinfo = INVALID_HANDLE_VALUE;
++static HANDLE hscreen = INVALID_HANDLE_VALUE;
++static DWORD old_inpmode;
++#else
+ static unsigned char    norm_attr, inv_attr;
+-
++#endif
+ static unsigned const char * find_sequence (int);
+ 
++#ifdef _WIN32
++
++/* Windows-specific initialization and de-initialization.  */
++void
++w32_info_prep (void)
++{
++  SetConsoleActiveScreenBuffer (hinfo);
++  current_attr = norm_attr;
++  hscreen = hinfo;
++  SetConsoleMode (hstdin, ENABLE_WINDOW_INPUT);
++}
++
++void
++w32_info_unprep (void)
++{
++  SetConsoleActiveScreenBuffer (hstdout);
++  current_attr = outside_info.normattr;
++  hscreen = hstdout;
++  SetConsoleMode (hstdin, old_inpmode);
++}
++
++void
++w32_cleanup (void)
++{
++  CloseHandle (hinfo);
++}
++
++static void w32_info_init (void) __attribute__((constructor));
++static void pc_initialize_terminal (char *);
++
++static void
++w32_info_init (void)
++{
++  /* We need to set this single hook here; the rest
++ *      will be set by pc_initialize_terminal when it is called.  */
++  terminal_initialize_terminal_hook = pc_initialize_terminal;
++}
++
++/* Emulate DJGPP conio functions for Windows.  */
++static void
++gettextinfo (struct text_info *ti)
++{
++  CONSOLE_SCREEN_BUFFER_INFO csbi;
++  static TCHAR errbuf[500];
++
++  hstdin = GetStdHandle (STD_INPUT_HANDLE);
++  hstdout = GetStdHandle (STD_OUTPUT_HANDLE);
++  hinfo = CreateConsoleScreenBuffer (GENERIC_READ | GENERIC_WRITE,
++                                     FILE_SHARE_READ | FILE_SHARE_WRITE,
++                                     NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
++
++  if (hstdin != INVALID_HANDLE_VALUE
++      && hstdout != INVALID_HANDLE_VALUE
++      && hinfo != INVALID_HANDLE_VALUE
++      && GetConsoleMode (hstdin, &old_inpmode)
++      && GetConsoleScreenBufferInfo (hstdout, &csbi))
++    {
++      ti->normattr = csbi.wAttributes;
++      ti->winleft = 1;
++      ti->wintop = 1;
++      ti->winright = csbi.srWindow.Right + 1;
++      ti->winbottom = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
++      ti->attribute = csbi.wAttributes;
++      ti->screenheight = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
++      ti->screenwidth = csbi.srWindow.Right - csbi.srWindow.Left + 1;
++      ti->curx = csbi.dwCursorPosition.X;
++      ti->cury = csbi.dwCursorPosition.Y;
++      ti->bufsize = csbi.dwSize;
++
++
++      atexit (w32_cleanup);
++    }
++  else
++    {
++      DWORD error_no = GetLastError ();
++
++      if (!FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM, NULL,
++                          error_no,
++                          0, /* choose most suitable language */
++                          errbuf, sizeof (errbuf), NULL))
++        sprintf (errbuf, "w32 error %u", error_no);
++      CloseHandle (hinfo);
++      info_error (_("Terminal cannot be initialized: %s\n"), errbuf, NULL);
++      exit (1);
++    }
++}
++
++void
++textattr (int attr)
++{
++  SetConsoleTextAttribute (hscreen, attr);
++}
++
++void
++textmode (int mode)
++{
++  /* Nothing.  */
++}
++
++void
++ScreenGetCursor (int *row, int *col)
++{
++  CONSOLE_SCREEN_BUFFER_INFO csbi;
++
++  GetConsoleScreenBufferInfo (hscreen, &csbi);
++  *row = csbi.dwCursorPosition.Y;
++  *col = csbi.dwCursorPosition.X;
++}
++
++void
++ScreenSetCursor (int row, int col)
++{
++  COORD cursor_pos;
++
++  cursor_pos.X = col;
++  cursor_pos.Y = row;
++
++  SetConsoleCursorPosition (hscreen, cursor_pos);
++}
++
++void
++ScreenClear (void)
++{
++  DWORD nchars = screenwidth * screenheight;
++  COORD start_pos;
++  DWORD written;
++
++  start_pos.X = start_pos.Y = 0;
++  FillConsoleOutputAttribute (hscreen, norm_attr, nchars, start_pos, &written);
++  FillConsoleOutputCharacter (hscreen, ' ', nchars, start_pos, &written);
++}
++void
++clreol (void)
++{
++  DWORD nchars;
++  COORD start_pos;
++  DWORD written;
++  CONSOLE_SCREEN_BUFFER_INFO csbi;
++
++  GetConsoleScreenBufferInfo (hscreen, &csbi);
++  start_pos = csbi.dwCursorPosition;
++  nchars = csbi.dwSize.X - start_pos.X;
++
++  FillConsoleOutputAttribute (hscreen, current_attr, nchars, start_pos,
++                              &written);
++  FillConsoleOutputCharacter (hscreen, ' ', nchars, start_pos, &written);
++}
++
++void
++ScreenVisualBell (void)
++{
++  DWORD nchars = screenwidth * screenheight;
++  COORD start_pos;
++  DWORD written;
++
++  start_pos.X = start_pos.Y = 0;
++  FillConsoleOutputAttribute (hscreen, inv_attr, nchars, start_pos, &written);
++  Sleep (20);
++  FillConsoleOutputAttribute (hscreen, norm_attr, nchars, start_pos, &written);
++}
++
++int
++movetext(int left, int top, int right, int bottom, int destleft, int desttop)
++{
++  SMALL_RECT src;
++  COORD dest;
++  CHAR_INFO fill;
++
++  src.Left = left - 1;
++  src.Top = top - 1;
++  src.Right = right - 1;
++  src.Bottom = bottom - 1;
++
++  dest.X = destleft - 1;
++  dest.Y = desttop - 1;
++
++  fill.Attributes = norm_attr;
++  fill.Char.AsciiChar = (CHAR)' ';
++
++  return ScrollConsoleScreenBuffer (hscreen, &src , NULL, dest, &fill) != 0;
++}
++
++int
++ScreenRows (void)
++{
++  CONSOLE_SCREEN_BUFFER_INFO csbi;
++
++  GetConsoleScreenBufferInfo (hscreen, &csbi);
++  return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
++}
++int
++ScreenCols (void)
++{
++  CONSOLE_SCREEN_BUFFER_INFO csbi;
++
++  GetConsoleScreenBufferInfo (hscreen, &csbi);
++  return csbi.srWindow.Right - csbi.srWindow.Left + 1;
++}
++
++void
++_set_screen_lines (int lines)
++{
++  SMALL_RECT window_rectangle;
++  CONSOLE_SCREEN_BUFFER_INFO csbi;
++  COORD scrbufsize;
++
++  GetConsoleScreenBufferInfo (hscreen, &csbi);
++
++  window_rectangle = csbi.srWindow;
++  window_rectangle.Bottom = window_rectangle.Top + lines - 1;
++  SetConsoleWindowInfo (hscreen, TRUE, &window_rectangle);
++
++  /* Set the screen buffer size to the same dimensions as the window,
++ *      so that the dysfunctional scroll bar disappears.  */
++  scrbufsize.X = window_rectangle.Right - window_rectangle.Left + 1;
++  scrbufsize.Y = window_rectangle.Bottom - window_rectangle.Top + 1;
++  SetConsoleScreenBufferSize (hscreen, scrbufsize);
++}
++
++void
++w32_set_screen_dimensions (int cols, int rows)
++{
++  SMALL_RECT window_rectangle;
++  CONSOLE_SCREEN_BUFFER_INFO csbi;
++
++  GetConsoleScreenBufferInfo (hscreen, &csbi);
++
++  window_rectangle = csbi.srWindow;
++  window_rectangle.Bottom = window_rectangle.Top + rows - 1;
++  window_rectangle.Right = window_rectangle.Left + cols - 1;
++  SetConsoleWindowInfo (hscreen, TRUE, &window_rectangle);
++}
++
++/* Emulate `sleep'.  */
++unsigned
++sleep (unsigned sec)
++{
++  Sleep (sec*1000);
++  return 0;
++}
++
++/* Keyboard input support.  */
++
++static int
++w32_our_tty (int fd)
++{
++  return
++    isatty (fd)
++   /* Windows `isatty' actually tests for character devices, so the
++      null device gets reported as a tty.  Fix that by calling
++      `lseek'.  */
++    && lseek (fd, SEEK_CUR, 0) == -1
++    /* Is this our tty?  */
++    && hstdin != INVALID_HANDLE_VALUE
++    && hstdin == (HANDLE)_get_osfhandle (fd);
++}
++
++/* Translate a Windows key event into the equivalent sequence of bytes
++   to be submitted to Info dispatcher.  */
++#define define_seq(p,s1,s2)                                     \
++  do {                                                          \
++    if ((ctl & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED)) != 0)  \
++      memcpy (p, s1, sizeof (s1)), p += sizeof (s1) - 1;        \
++    else                                                        \
++      memcpy (p, s2, sizeof (s2)), p += sizeof (s2) - 1;        \
++  } while (0)
++
++static int
++w32keyseq (unsigned char ascii_ch, WORD vkey, DWORD ctl, unsigned char *seq)
++{
++  unsigned char *p = seq;
++
++  switch (ascii_ch)
++    {
++      case '\0':
++        /* Keys with no ASCII code are extended keys, like arrows.  */
++        switch (vkey)
++          {
++            case VK_PRIOR:
++              define_seq (p, "\033\061p", "\033v");
++              break;
++            case VK_NEXT:
++              define_seq (p, "\033\061n", "\026");
++              break;
++            case VK_END:
++              define_seq (p, "\033>", "\033>");
++              break;
++            case VK_HOME:
++              define_seq (p, "\033<", "\033<");
++              break;
++            case VK_LEFT:
++              define_seq (p, "\033b", "\033[D");
++              break;
++            case VK_UP:
++              define_seq (p, "\033\061u", "\033[A");
++              break;
++            case VK_RIGHT:
++              define_seq (p, "\033f", "\033[C");
++              break;
++            case VK_DOWN:
++              define_seq (p, "\033\061m", "\033[B");
++              break;
++            case VK_INSERT:
++              define_seq (p, "\033[L", "\033[L");
++              break;
++            case VK_DELETE:     /* Delete => Ctrl-d, Alt-Delete => ESC d */
++              if ((ctl & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED)) != 0)
++                define_seq (p, "\033d", "\033d");
++              else
++                define_seq (p, "\033d", "\004");
++              break;
++          case VK_F1:
++              *p++ = '\010';
++              break;
++            case 50:            /* Ctrl-@ => '\0' */
++              if ((ctl & SHIFT_PRESSED) != 0)
++                *p++ = '\0';
++              break;
++            default:
++              if (0x41 <= vkey && vkey <= 0x5a)
++                {
++                  /* Alt-Ctrl-a, Alt-Ctrl-b, etc.  */
++                  *p++ = '\033';
++                  *p++ = '\001' + vkey - 0x41;
++                }
++          }
++        break;
++      case ' ':                 /* Ctrl-SPC => '\0' */
++        if ((ctl & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED)) != 0)
++          ascii_ch = '\0';
++        *p++ = ascii_ch;
++        break;
++      case '\t':                /* Shift-TAB/Alt-TAB => Esc-TAB */
++        if ((ctl & (SHIFT_PRESSED | LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED)) != 0)
++          {
++            memcpy (p, "\033\011", sizeof ("\033\011"));
++            p += sizeof ("\033\011") - 1;
++          }
++        else
++          *p++ = '\t';
++        break;
++      case '\b':
++        /* Backspace => DEL.  */
++        ascii_ch = '\177';
++        /* FALLTHROUGH */
++     default:
++        if ((ctl & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED)) != 0)
++          *p++ = '\033';
++        *p++ = ascii_ch;
++        break;
++    }
++  return p - seq;
++}
++
++static unsigned char buffered_chars[512];
++static size_t buf_head;
++static size_t buf_tail;
++
++static ssize_t
++w32_kbd_read (unsigned char *inbuf, size_t n)
++{
++  DWORD nevents, nread;
++  INPUT_RECORD inrec;
++  ssize_t nret = 0;
++
++  do {
++
++    /* Stuff any unread buffered characters.  */
++    while (buf_head < buf_tail && n > 0)
++      {
++        *inbuf++ = buffered_chars[buf_head++];
++        nret++;
++        n--;
++      }
++    if (n <= 0)
++      break;
++
++    /* Wait for input.  */
++    while (GetNumberOfConsoleInputEvents (hstdin, &nevents)
++           && nevents < 1)
++      Sleep (20);
++
++    while (nevents-- && n > 0)
++      {
++        if (!ReadConsoleInput (hstdin, &inrec, 1, &nread))
++          return -1;
++
++        if (nread > 0)
++          {
++            switch (inrec.EventType)
++              {
++                case KEY_EVENT:
++                  if (inrec.Event.KeyEvent.bKeyDown == TRUE
++                      && !(inrec.Event.KeyEvent.wVirtualScanCode == 0
++                           || inrec.Event.KeyEvent.wVirtualKeyCode == VK_SHIFT
++                           || inrec.Event.KeyEvent.wVirtualKeyCode == VK_CONTROL
++                           || inrec.Event.KeyEvent.wVirtualKeyCode == VK_MENU))
++                    {
++                      unsigned char keyseq[10];
++                      int count = inrec.Event.KeyEvent.wRepeatCount;
++                      unsigned char ch = inrec.Event.KeyEvent.uChar.AsciiChar;
++                      WORD vkey = inrec.Event.KeyEvent.wVirtualKeyCode;
++                      DWORD ctl_state = inrec.Event.KeyEvent.dwControlKeyState;
++                      int nbytes = w32keyseq (ch, vkey, ctl_state, keyseq);
++
++                      /* Supply up to N characters to the caller.  */
++                      while (count && n >= nbytes)
++                        {
++                          if (nbytes == 1 && keyseq[0] == '\032')
++                            {
++                              terminal_goto_xy (0, screenheight - 1);
++                              terminal_clear_to_eol ();
++                            fflush (stdout);
++                              terminal_unprep_terminal ();
++                              kill (getpid (), 0);
++                              terminal_prep_terminal ();
++                              reset_info_window_sizes ();
++                            }
++                          else
++                            {
++                              memcpy (&inbuf[nret], keyseq, nbytes);
++                              nret += nbytes;
++                              n -= nbytes;
++                            }
++                          count--;
++                        }
++                      /* Buffer the rest.  */
++                      if (count > 0)
++                        {
++                          buf_head = buf_tail = 0;
++                          while (count--
++                                 && buf_tail < sizeof(buffered_chars) - nbytes)
++                            {
++                              memcpy (&buffered_chars[buf_tail], keyseq, nbytes);
++                              buf_tail += nbytes;
++                            }
++                        }
++                    }
++                  break;
++                case WINDOW_BUFFER_SIZE_EVENT:
++                  {
++                    int rows, cols;
++
++                    /* Note: this event is only sent when the console
++                       window's _screen_buffer_ size is changed via
++                       the Properties->Layout dialog.  */
++                    cols = inrec.Event.WindowBufferSizeEvent.dwSize.X;
++                    rows = inrec.Event.WindowBufferSizeEvent.dwSize.Y;
++                    screenwidth = cols;
++                    screenheight = rows;
++                    w32_set_screen_dimensions (cols, rows);
++                    display_initialize_display (screenwidth, screenheight);
++                    window_new_screen_size (screenwidth, screenheight);
++                    redisplay_after_signal ();
++                  }
++                  break;
++                default:
++                  break;
++              }
++          }
++      }
++  } while (n > 0);
++  return nret;
++}
++long
++w32_chars_avail (int fd)
++{
++  if (w32_our_tty (fd))
++    return buf_tail - buf_head;
++  else
++    {
++      struct stat st;
++
++      if (fstat (fd, &st) < 0)
++        return 1;
++      else
++        return st.st_size;
++    }
++}
++
++ssize_t
++w32_read (int fd, void *buf, size_t n)
++{
++  if (w32_our_tty (fd))
++    return w32_kbd_read (buf, n);
++  else
++    return _read (fd, buf, n);
++}
++
++#endif  /* _WIN32 */
++
++
+ /* Turn on reverse video. */
+ static void
+ pc_begin_inverse (void)
+@@ -192,6 +730,11 @@
+ {
+   int tty;
+ 
++#ifdef _WIN32
++  w32_info_prep ();
++#endif
++
++
+   /* Do not set screen height if we already have it, because
+      doing so erases the screen.  */
+   if (screenheight != ScreenRows ())
+@@ -221,6 +764,11 @@
+ {
+   int tty;
+ 
++#ifdef _WIN32
++  w32_info_unprep ();
++#endif
++
++
+   textattr (outside_info.normattr);
+ 
+   /* Do not set screen height if we already have it, because
+@@ -230,8 +778,14 @@
+       _set_screen_lines (outside_info.screenheight);
+       textmode (LASTMODE);
+     }
++#ifdef __MSDOS__
+   else
+     pc_clear_to_eol ();	/* for text attributes to really take effect */
++#endif
++#ifdef _WIN32
++  SetConsoleScreenBufferSize (hstdout, outside_info.bufsize);
++#endif
++
+ 
+   /* Switch back to text mode on stdin.  */
+   tty = fileno (stdin);
+@@ -256,7 +810,12 @@
+     {
+       term_name = getenv ("TERM");
+       if (!term_name)
++#ifdef __MSDOS__
+ 	term_name = "pc-dos";	/* ``what's in a name?'' */
++#endif
++#ifdef _WIN32
++        term_name = "w32console";
++#endif
+     }
+ 
+   /* Get current video information, to be restored later.  */
+@@ -310,7 +869,7 @@
+   terminal_is_dumb_p = 0;
+ 
+   pc_get_screen_size ();
+-
++#ifdef __MSDOS__
+   /* Store the arrow keys.  */
+   term_ku = (char *)find_sequence (K_Up);
+   term_kd = (char *)find_sequence (K_Down);
+@@ -326,6 +885,7 @@
+   term_ki = (char *)find_sequence (K_Insert);
+   term_kx = (char *)find_sequence (K_Delete);
+ #endif
++#endif
+ 
+   /* Set all the hooks to our PC-specific functions.  */
+   terminal_begin_inverse_hook       = pc_begin_inverse;
+@@ -687,10 +1247,11 @@
+ 	  xexit (1);
+ 	case SIGUSR1:
+ 	  /* Simulate SIGTSTP by invoking a subsidiary shell.  */
++#ifndef _WIN32
+ 	  pc_goto_xy (0, outside_info.screenheight - 1);
+ 	  pc_clear_to_eol ();
+ 	  pc_write_chars (stopped_msg, sizeof (stopped_msg) - 1);
+-
++#endif
+ 	  /* The child shell can change the working directory, so
+ 	     we need to save and restore it, since it is global.  */
+ 	  if (!getcwd (cwd, PATH_MAX)) /* should never happen */
+@@ -699,7 +1260,26 @@
+ 	  /* We don't want to get fatal signals while the subshell runs.  */
+ 	  old_INT = signal (SIGINT, SIG_IGN);
+ 	  old_QUIT = signal (SIGQUIT, SIG_IGN);
++#ifdef _WIN32
++          {
++            const char *argv[2];
++            const char *shell = NULL;
++
++            argv[0] = NULL;
++            shell = getenv ("SHELL");
++            if (!shell)
++              {
++                shell = getenv ("COMSPEC");
++                if (!shell)
++                  return -1;
++                argv[0] = " /k";
++              }
++            argv[1] = NULL;
++            _spawnvp (_P_WAIT, shell, argv);
++          }
++#else
+ 	  system ("");
++#endif
+ 	  if (*cwd)
+ 	    chdir (cwd);
+ 	  signal (SIGINT, old_INT);
+@@ -758,3 +1338,4 @@
+   perror ("tcsetattr"); return 0;
+ }
+ #endif
++
+diff -ur texinfo-4.13.orig/info/tilde.c texinfo-4.13/info/tilde.c
+--- texinfo-4.13.orig/info/tilde.c	2014-04-24 14:52:47.757094645 -0400
++++ texinfo-4.13/info/tilde.c	2014-04-24 14:58:38.949450825 -0400
+@@ -190,11 +190,15 @@
+              the password database. */
+           if (!temp_home)
+             {
++#ifndef __MINGW32__
+               struct passwd *entry;
+ 
+               entry = (struct passwd *) getpwuid (getuid ());
+               if (entry)
+                 temp_home = entry->pw_dir;
++#else
++              temp_home = ".";
++#endif
+             }
+ 
+           temp_name = xmalloc (1 + strlen (&dirname[1])
+@@ -210,7 +214,9 @@
+         }
+       else
+         {
++#ifndef __MINGW32__
+           struct passwd *user_entry;
++#endif
+           char *username = xmalloc (257);
+           int i, c;
+ 
+@@ -222,7 +228,7 @@
+                 username[i - 1] = c;
+             }
+           username[i - 1] = 0;
+-
++#ifndef __MINGW32__
+           if (!(user_entry = (struct passwd *) getpwnam (username)))
+             {
+               /* If the calling program has a special syntax for
+@@ -259,6 +265,24 @@
+ 
+           endpwent ();
+           free (username);
++#else
++         if (tilde_expansion_failure_hook)
++            {
++              char *expansion = (*tilde_expansion_failure_hook) (username);
++
++              if (expansion)
++                {
++                  temp_name = xmalloc (1 + strlen (expansion)
++                                       + strlen (&dirname[i]));
++                  strcpy (temp_name, expansion);
++                  strcat (temp_name, &dirname[i]);
++                  free (expansion);
++                }
++            }
++          free (dirname);
++          dirname = xstrdup (temp_name);
++          free (temp_name);
++#endif
+         }
+     }
+   return dirname;
+diff -ur texinfo-4.13.orig/info/info.c texinfo-4.13/info/info.c
+--- texinfo-4.13.orig/info/info.c	2014-04-24 15:00:00.165123612 -0400
++++ texinfo-4.13/info/info.c	2014-04-24 15:07:10.262443440 -0400
+@@ -82,7 +82,7 @@
+ /* Non-zero means print the absolute location of the file to be loaded.  */
+ static int print_where_p = 0;
+ 
+-#ifdef __MSDOS__
++#if defined(__MSDOS__) || defined(__MINGW32__)
+ /* Non-zero indicates that screen output should be made 'speech-friendly'.
+    Since on MSDOS the usual behavior is to write directly to the video
+    memory, speech synthesizer software cannot grab the output.  Therefore,
+@@ -118,14 +118,14 @@
+   { "version", 0, &print_version_p, 1 },
+   { "vi-keys", 0, &vi_keys_p, 1 },
+   { "where", 0, &print_where_p, 1 },
+-#ifdef __MSDOS__
++#if defined(__MSDOS__) || defined(__MINGW32__)
+   { "speech-friendly", 0, &speech_friendly, 1 },
+ #endif
+   {NULL, 0, NULL, 0}
+ };
+ 
+ /* String describing the shorthand versions of the long options found above. */
+-#ifdef __MSDOS__
++#if defined(__MSDOS__) || defined(__MINGW32__)
+ static char *short_options = "k:d:n:f:ho:ORswb";
+ #else
+ static char *short_options = "k:d:n:f:ho:ORws";
+@@ -239,7 +239,7 @@
+           print_where_p = 1;
+           break;
+ 
+-#ifdef __MSDOS__
++#if defined(__MSDOS__) || defined(__MINGW32__)
+ 	  /* User wants speech-friendly output.  */
+ 	case 'b':
+ 	  speech_friendly = 1;
+@@ -621,8 +621,7 @@
+       --no-raw-escapes         output escapes as literal text.\n\
+       --restore=FILENAME       read initial keystrokes from FILENAME.\n\
+   -O, --show-options, --usage  go to command-line options node."));
+-
+-#ifdef __MSDOS__
++#if defined(__MSDOS__) || defined(__MINGW32__)
+   puts (_("\
+   -b, --speech-friendly        be friendly to speech synthesizers."));
+ #endif
+diff -ur texinfo-4.13.orig/info/signals.c texinfo-4.13/info/signals.c
+--- texinfo-4.13.orig/info/signals.c	2014-04-24 15:00:00.164123591 -0400
++++ texinfo-4.13/info/signals.c	2014-04-24 15:13:26.706132612 -0400
+@@ -151,7 +151,7 @@
+ #endif
+ }
+ 
+-static void
++void
+ redisplay_after_signal (void)
+ {
+   terminal_clear_screen ();
+@@ -162,7 +162,7 @@
+   fflush (stdout);
+ }
+ 
+-static void
++void
+ reset_info_window_sizes (void)
+ {
+   terminal_goto_xy (0, 0);
+diff -ur texinfo-4.13.orig/info/terminal.c texinfo-4.13/info/terminal.c
+--- texinfo-4.13.orig/info/terminal.c	2014-06-09 00:27:32 -0400
++++ texinfo-4.13/info/terminal.c	2014-06-09 00:33:37 -0400
+@@ -47,6 +47,10 @@
+ #endif /* not HAVE_TERMCAP_H */
+ #endif /* not HAVE_NCURSES_TERMCAP_H */
+ 
++#if defined(__MSDOS__)  || defined(__MINGW32__)
++  unsigned int sleep(unsigned int);
++#endif
++
+ /* Function "hooks".  If you make one of these point to a function, that
+    function is called when appropriate instead of its namesake.  Your
+    function is called with exactly the same arguments that were passed

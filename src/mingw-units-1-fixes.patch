@@ -1,0 +1,119 @@
+diff -ur units-2.02.orig/Makefile.in units-2.02/Makefile.in
+--- units-2.02.orig/Makefile.in	2013-12-07 06:56:41.000000000 -0500
++++ units-2.02/Makefile.in	2013-12-07 19:50:21.000000000 -0500
+@@ -35,7 +35,7 @@
+ TEXI2DVI = texi2dvi
+ TEXI2PDF = texi2pdf
+ LDFLAGS = @LDFLAGS@
+-LIBS= @LIBS@
++LIBS= @LIBS@ -lkernel32
+ VPATH = @srcdir@
+ 
+ datarootdir = @datarootdir@
+diff -ur units-2.02.orig/units.c units-2.02/units.c
+--- units-2.02.orig/units.c	2013-12-07 06:56:41.000000000 -0500
++++ units-2.02/units.c	2013-12-07 20:51:00.000000000 -0500
+@@ -56,13 +56,28 @@
+ #include "getopt.h"
+ #include "units.h"
+ 
+-#ifndef UNITSFILE
+-#  define UNITSFILE "definitions.units"
+-#endif
++#ifdef _WIN32
++  #define WIN32_LEAN_AND_MEAN
++  #include <windows.h>
+ 
+-#ifndef LOCALEMAP
+-#  define LOCALEMAP "locale.map"
+-#endif 
++#  ifdef UNITSFILE
++#    undef UNITSFILE
++#  endif
++#  define UNITSFILE "/share/units/definitions.units"
++
++#  ifdef LOCALEMAP
++#    undef LOCALEMAP
++#  endif
++#  define LOCALEMAP "/share/units/locale.map"
++#else
++#  ifndef UNITSFILE
++#    define UNITSFILE "definitions.units"
++#  endif
++
++#  ifndef LOCALEMAP
++#    define LOCALEMAP "locale.map"
++#  endif 
++#endif
+ 
+ #ifndef EOFCHAR
+ #  define EOFCHAR "D"
+@@ -1187,6 +1202,31 @@
+ }
+ #endif
+ 
++#ifdef _WIN32
++char * root_path()
++{
++  static char buff[2048];
++  if(GetModuleFileName(NULL, buff, 2048) > 0)\
++  {
++    /* name should be something like \somepath\bin\units.exe */
++    char * ptr;
++
++    ptr = strrchr(buff, '\\');
++    if(ptr) *ptr = 0;
++
++    ptr = strrchr(buff, '\\');
++    if(ptr) 
++    {
++      *ptr = 0;
++    }
++  }
++  else
++    strcpy(buff, "c:");
++
++  return buff;
++}
++#endif
++
+ 
+ /* 
+    Read in units data.  
+@@ -3296,6 +3336,18 @@
+     return file;
+   file = UNITSFILE;
+   testfile = fopen(file, "rt");
++
++#ifdef _WIN32
++  if (!testfile) {
++    char * root = root_path();
++    file = mymalloc(strlen(root)+strlen(UNITSFILE)+2,"(findunitsfile)");
++    strcpy(file, root);
++    strcat(file, "\\");
++    strcat(file, UNITSFILE);
++    testfile = fopen(file, "rt");
++  }
++#endif
++
+   if (!testfile) {
+     char *direc, *env;
+     char separator[2];
+@@ -4214,6 +4266,17 @@
+   char *value;
+   char name[80];
+   map = fopen(LOCALEMAP,"rt");
++#ifdef _WIN32
++  if (!map) {
++    char * root = root_path();
++    char * file = mymalloc(strlen(root)+strlen(UNITSFILE)+2,"(localmap)");
++    strcpy(file, root);
++    strcat(file, "\\");
++    strcat(file, LOCALEMAP);
++    map = fopen(file, "rt");
++    free(file);
++  }
++#endif
+   if (!map)
+     fprintf(stderr,"%s: Unable to read locale map '%s'\n",progname,LOCALEMAP);
+   else {

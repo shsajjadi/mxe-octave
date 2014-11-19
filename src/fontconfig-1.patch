@@ -1,0 +1,73 @@
+diff -u fontconfig-2.11.0.orig/Makefile.in fontconfig-2.11.0/Makefile.in
+--- fontconfig-2.11.0.orig/Makefile.in	2014-02-01 14:30:40.000000000 -0500
++++ fontconfig-2.11.0/Makefile.in	2014-02-01 14:30:58.000000000 -0500
+@@ -997,7 +997,7 @@
+ 	mv $@.tmp $@
+ 
+ install-data-local: fonts.conf
+-	$(mkinstalldirs) $(DESTDIR)$(baseconfigdir) $(DESTDIR)$(fc_cachedir)
++	$(mkinstalldirs) $(DESTDIR)$(baseconfigdir) #$(DESTDIR)$(fc_cachedir)
+ 	if [ -f $(DESTDIR)$(baseconfigdir)/fonts.conf ]; then \
+ 	  echo "backing up existing $(DESTDIR)$(baseconfigdir)/fonts.conf"; \
+ 	  mv $(DESTDIR)$(baseconfigdir)/fonts.conf $(DESTDIR)$(baseconfigdir)/fonts.conf.bak; \
+diff -ur fontconfig-2.11.0.orig/conf.d/Makefile.am fontconfig-2.11.0/conf.d/Makefile.am
+--- fontconfig-2.11.0.orig/conf.d/Makefile.am	2014-02-06 16:51:06 -0500
++++ fontconfig-2.11.0/conf.d/Makefile.am	2014-02-06 16:53:20 -0500
+@@ -88,9 +88,9 @@
+ 	@(echo cd $(DESTDIR)$(configdir);			\
+ 	  cd $(DESTDIR)$(configdir);				\
+ 	  for i in $(CONF_LINKS); do				\
+-	    echo $(RM) $$i";" ln -s $(templatedir)/$$i .;	\
++	    echo $(RM) $$i";" $(LN_S) $(templatedir)/$$i .;	\
+ 	    $(RM) $$i;						\
+-	    ln -s $(templatedir)/$$i .;				\
++	    $(LN_S) $(templatedir)/$$i .;				\
+ 	  done)
+ uninstall-local:
+ 	@(echo cd $(DESTDIR)$(configdir);			\
+diff -ur fontconfig-2.11.0.orig/conf.d/Makefile.in fontconfig-2.11.0/conf.d/Makefile.in
+--- fontconfig-2.11.0.orig/conf.d/Makefile.in	2014-02-06 16:51:06 -0500
++++ fontconfig-2.11.0/conf.d/Makefile.in	2014-02-06 16:53:51 -0500
+@@ -632,9 +632,9 @@
+ 	@(echo cd $(DESTDIR)$(configdir);			\
+ 	  cd $(DESTDIR)$(configdir);				\
+ 	  for i in $(CONF_LINKS); do				\
+-	    echo $(RM) $$i";" ln -s $(templatedir)/$$i .;	\
++	    echo $(RM) $$i";" $(LN_S) $(templatedir)/$$i .;	\
+ 	    $(RM) $$i;						\
+-	    ln -s $(templatedir)/$$i .;				\
++	    $(LN_S) $(templatedir)/$$i .;				\
+ 	  done)
+ uninstall-local:
+ 	@(echo cd $(DESTDIR)$(configdir);			\
+
+diff -ur fontconfig-2.11.0.orig/conf.d/Makefile.am fontconfig-2.11.0/conf.d/Makefile.am
+--- fontconfig-2.11.0.orig/conf.d/Makefile.am	2014-02-06 19:41:13 -0500
++++ fontconfig-2.11.0/conf.d/Makefile.am	2014-02-06 19:54:52 -0500
+@@ -88,9 +88,9 @@
+ 	@(echo cd $(DESTDIR)$(configdir);			\
+ 	  cd $(DESTDIR)$(configdir);				\
+ 	  for i in $(CONF_LINKS); do				\
+-	    echo $(RM) $$i";" $(LN_S) $(templatedir)/$$i .;	\
++	    echo $(RM) $$i";" $(LN_S) $(DESTDIR)$(templatedir)/$$i .;	\
+ 	    $(RM) $$i;						\
+-	    $(LN_S) $(templatedir)/$$i .;				\
++	    $(LN_S) $(DESTDIR)$(templatedir)/$$i .;		\
+ 	  done)
+ uninstall-local:
+ 	@(echo cd $(DESTDIR)$(configdir);			\
+diff -ur fontconfig-2.11.0.orig/conf.d/Makefile.in fontconfig-2.11.0/conf.d/Makefile.in
+--- fontconfig-2.11.0.orig/conf.d/Makefile.in	2014-02-06 19:41:13 -0500
++++ fontconfig-2.11.0/conf.d/Makefile.in	2014-02-06 19:54:00 -0500
+@@ -632,9 +632,9 @@
+ 	@(echo cd $(DESTDIR)$(configdir);			\
+ 	  cd $(DESTDIR)$(configdir);				\
+ 	  for i in $(CONF_LINKS); do				\
+-	    echo $(RM) $$i";" $(LN_S) $(templatedir)/$$i .;	\
++	    echo $(RM) $$i";" $(LN_S) $(DESTDIR)$(templatedir)/$$i .;	\
+ 	    $(RM) $$i;						\
+-	    $(LN_S) $(templatedir)/$$i .;				\
++	    $(LN_S) $(DESTDIR)$(templatedir)/$$i .;				\
+ 	  done)
+ uninstall-local:
+ 	@(echo cd $(DESTDIR)$(configdir);			\

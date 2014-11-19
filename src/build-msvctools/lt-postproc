@@ -1,0 +1,36 @@
+#!/bin/bash
+
+prefix=
+suffix=
+no_auto_export=false
+
+while getopts ":p:s:x" opt; do
+	case $opt in
+		s) suffix="$OPTARG" ;;
+		p) prefix="$OPTARG" ;;
+		x) no_auto_export=true ;;
+	esac
+done
+shift $((OPTIND-1))
+
+if [ "$1" = "" ]; then
+	libtool_files=`find . -name libtool`
+else
+	libtool_files="$@"
+fi
+
+SED_ARGS=
+if $no_auto_export; then
+	SED_ARGS="$SED_ARGS -e s/^always_export_symbols=.*/always_export_symbols=/"
+fi
+
+for ltfile in $libtool_files; do
+	sed -i \
+		-e "s/^soname_spec=\"\\(.*\\)\\\${shared_ext}\"/soname_spec=\"$prefix\\1$suffix\\\${shared_ext}\"/" \
+		-e "s/\.dll\.lib/\.lib/" \
+		-e "s/^\(deplibs_check_method\)=.*/\1=\"pass_all\"/" \
+		-e "s/-link\\>//" \
+		-e '/^archive_cmds=/ { s/-Wl,-dll~/-Wl,-dll,-IMPLIB:\\\\\\"\\$tool_output_objdir\\$libname.lib\\\\\\"~/; }' \
+		$SED_ARGS \
+		$ltfile
+done

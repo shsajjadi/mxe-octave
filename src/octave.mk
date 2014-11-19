@@ -1,0 +1,137 @@
+# This file is part of MXE.
+# See index.html for further information.
+
+PKG             := octave
+$(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.8.2-rc2
+$(PKG)_CHECKSUM := 07b1266cd55cc79099382e858c430fdd8dcfb638
+$(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
+$(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
+$(PKG)_URL      := ftp://alpha.gnu.org/gnu/octave/$($(PKG)_FILE)
+ifeq ($(USE_SYSTEM_FONTCONFIG),no)
+  $(PKG)_FONTCONFIG := fontconfig
+endif
+$(PKG)_DEPS     := blas arpack curl fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack pcre pstoedit qrupdate qscintilla qt readline suitesparse texinfo zlib
+ifeq ($(MXE_WINDOWS_BUILD),no)
+  $(PKG)_DEPS += x11 xext
+endif
+ifeq ($(ENABLE_64),no)
+  $(PKG)_DEPS += qhull
+endif
+ifeq ($(ENABLE_JIT),yes)
+  $(PKG)_DEPS += llvm
+  $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --enable-jit
+else
+  $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --disable-jit
+endif
+
+ifeq ($(ENABLE_JAVA),no)
+  $(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS := --disable-java
+else
+  ifeq ($(MXE_SYSTEM),mingw)
+    ifeq ($(MXE_NATIVE_BUILD),no)
+      $(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS := \
+       --with-java-includedir="$(HOST_INCDIR)/java"
+     endif
+  endif
+endif
+
+ifneq ($(ENABLE_DOCS),yes)
+  $(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS := --disable-docs
+endif
+
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
+  ifeq ($(ENABLE_64),yes)
+    $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 --without-qhull F77_INTEGER_8_FLAG=-fdefault-integer-8
+  endif
+else
+  ifeq ($(MXE_SYSTEM),mingw)
+    $(PKG)_CROSS_CONFIG_OPTIONS := \
+      FLTK_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)fltk-config' \
+      gl_cv_func_gettimeofday_clobber=no
+    ifeq ($(ENABLE_64),yes)
+      $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 --without-qhull F77_INTEGER_8_FLAG=-fdefault-integer-8 ax_blas_f77_func_ok=yes
+    endif
+  endif
+endif
+
+ifeq ($(MXE_SYSTEM),msvc)
+  $(PKG)_PREFIX := '$(HOST_PREFIX)/local/$($(PKG)_SUBDIR)'
+  # - Enable atomic refcount (required for QtHandles)
+  # - Skip configure test for pow and sqrt, MSVC fails to compile them
+  #   because it uses intrinsics (with -O2 flag) and bump on the fake
+  #   "char FUNC()" forward declaration.
+  # - Override CFLAGS and CXXFLAGS to disable some warnings.
+  $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
+    --enable-atomic-refcount \
+    ac_cv_func_pow=yes ac_cv_func_sqrt=yes \
+    CFLAGS='-O2 -wd4244 -wd4003 -wd4005 -wd4068' \
+    CXXFLAGS='-O2 -wd4244 -wd4003 -wd4005 -wd4068'
+else
+  $(PKG)_PREFIX := '$(HOST_PREFIX)'
+  $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
+    LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
+endif
+
+ifeq ($(MXE_SYSTEM),mingw)
+  $(PKG)_EXTRA_CONFIGURE_OPTIONS += --with-x=no
+endif
+
+define $(PKG)_UPDATE
+    echo 'Warning: Updates are temporarily disabled for package octave.' >&2;
+    echo $($(PKG)_VERSION)
+endef
+
+define $(PKG)_BUILD
+    # jni install
+    if [ "$(MXE_SYSTEM)" == "mingw" ] \
+      && [ "$(MXE_NATIVE_BUILD)" == "no" ] \
+      && [ "$(ENABLE_JAVA)" == "yes" ]; then \
+      if [ ! -f $(HOST_INCDIR)/java/jni.h ]; then \
+        mkdir -p '$(HOST_INCDIR)/java'; \
+        $(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/share/javavm/export/jni.h \
+          -O $(HOST_INCDIR)/java/jni.h; \
+      fi; \
+      if [ ! -f $(HOST_INCDIR)/java/win32/jni_md.h ]; then \
+        mkdir -p '$(HOST_INCDIR)/java/win32'; \
+        $(WGET) -N http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/raw-file/tip/src/windows/javavm/export/jni_md.h \
+          -O $(HOST_INCDIR)/java/win32/jni_md.h; \
+      fi; \
+    fi
+
+    mkdir '$(1)/.build'
+    cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        --prefix='$($(PKG)_PREFIX)' \
+        $($(PKG)_CROSS_CONFIG_OPTIONS) \
+        $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
+        $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \
+        $($(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS) \
+        $($(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS) \
+        $($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
+        PKG_CONFIG='$(MXE_PKG_CONFIG)' \
+        PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
+        && $(CONFIGURE_POST_HOOK)
+
+    ## We want both of these install steps so that we install in the
+    ## location set by the configure --prefix option, and the other
+    ## in a directory tree that will have just Octave files.
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
+
+    if [ "x$(MXE_SYSTEM)" == "xmingw" ]; then \
+      cp '$(1)/.build/src/.libs/octave-gui.exe' '$(3)$(HOST_BINDIR)'; \
+    fi
+
+    if [ "x$(ENABLE_DOCS)" == "xyes" ]; then \
+        $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(3) install-pdf install-html; \
+    fi
+
+    if [ $(MXE_SYSTEM) != msvc ]; then \
+        $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(TOP_DIR)/octave install; \
+    fi
+
+    # create a file with latest installed octave rev in it
+    echo "$($(PKG)_VERSION)" > $(TOP_DIR)/octave/octave-version
+endef
