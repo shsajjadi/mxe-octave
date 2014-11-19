@@ -8,14 +8,13 @@ $(PKG)_CHECKSUM := 25071d6bb81cc136a449825bfd574094b48f07fb
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR)-source.tar.gz
 $(PKG)_URL      := http://fltk.org/pub/fltk/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_DEPS     := zlib jpeg libpng
 ifeq ($(MXE_SYSTEM),mingw)
-  $(PKG)_DEPS   := zlib jpeg libpng pthreads uuid
+  $(PKG)_DEPS   += pthreads uuid
+else ifeq ($(MXE_SYSTEM),msvc)
+  $(PKG)_DEPS   += freetype
 else
-ifeq ($(MXE_SYSTEM),msvc)
-  $(PKG)_DEPS   := zlib jpeg libpng freetype
-else
-  $(PKG)_DEPS   := zlib jpeg libpng pthreads freetype
-endif
+  $(PKG)_DEPS   += pthreads freetype x11 xext xrender xdmcp
 endif
 
 define $(PKG)_UPDATE

@@ -9,6 +9,9 @@ $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://downloads.ghostscript.com/public/$($(PKG)_FILE)
 $(PKG)_DEPS     := jpeg lcms libpng tiff zlib
+ifeq ($(MXE_WINDOWS_BUILD),no)
+  $(PKG)_DEPS += x11 xext
+endif
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
     $(PKG)_DEPS += lcms

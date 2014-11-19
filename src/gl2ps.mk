@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 792e11db0fe7a30a4dc4491af5098b047ec378b1
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)-source
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://geuz.org/$(PKG)/src/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := xft
 
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
