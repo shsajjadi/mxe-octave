@@ -460,7 +460,6 @@ endif
 
 .PHONY: all
 all: configure Makefile $(OCTAVE_TARGET)
-	echo $(PKGS)
 
 .PHONY: all-packages
 all-packages: $(PKGS)
