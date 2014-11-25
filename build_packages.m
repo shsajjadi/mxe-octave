@@ -46,4 +46,5 @@ try_install fl-core-1.0.0.tar.gz
 try_install tsa-4.2.7.tar.gz
 try_install dicom-0.1.1.tar.gz
 try_install netcdf-1.0.5.tar.gz
+try_install ltfat-2.0.1.tar.gz
 

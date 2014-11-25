@@ -446,6 +446,8 @@ SRC_FILES_1 := \
   of-image.mk \
   of-io.mk \
   of-linear-algebra.mk \
+  of-ltfat.mk \
+  of-ltfat-1-mingw-fixes.patch \
   of-miscellaneous.mk \
   of-netcdf.mk \
   of-odepkg.mk \
