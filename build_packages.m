@@ -29,7 +29,7 @@ try_install control-2.6.6.tar.gz
 try_install signal-1.3.0.tar.gz
 try_install communications-1.2.0.tar.gz
 try_install image-2.2.2.tar.gz
-try_install io-2.2.4.tar.gz
+try_install io-2.2.5.tar.gz
 try_install statistics-1.2.3.tar.gz
 try_install geometry-1.7.0.tar.gz
 try_install windows-1.2.1.tar.gz
