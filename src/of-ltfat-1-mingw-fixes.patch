@@ -1,0 +1,50 @@
+diff -ur ltfat.orig/src/Makefile.in ltfat/src/Makefile.in
+--- ltfat.orig/src/Makefile.in	2014-11-13 07:55:44 -0500
++++ ltfat/src/Makefile.in	2014-11-13 15:31:03 -0500
+@@ -1,5 +1,11 @@
+ targets = oct playrec
+ 
++CC=@CC@
++CXX=@CXX@
++
++export CC
++export CXX
++
+ ifeq (@have_libportaudio@,1)
+   export HAVE_PORTAUDIO=1
+ endif
+diff -ur ltfat.orig/src/Makefile_unix ltfat/src/Makefile_unix
+--- ltfat.orig/src/Makefile_unix	2014-11-13 07:55:44 -0500
++++ ltfat/src/Makefile_unix	2014-11-21 08:31:02 -0500
+@@ -21,8 +21,11 @@
+    SFFTW=-lfftw3f
+ endif
+ 
+-
+-CFLAGS=-O3 -fPIC -std=c99 -Ithirdparty 
++ifeq ($(OS),Windows_NT)
++   CFLAGS=-O3 -std=c99 -Ithirdparty 
++else
++   CFLAGS=-O3 -fPIC -std=c99 -Ithirdparty 
++endif
+ SHARED_FLAGS=-shared -Wl,--no-undefined -lc -lm -L"$(MATLABROOT)/bin/$(ARCH)" \
+ 			 -lmwblas -lmwlapack $(DFFTW) $(SFFTW)
+ 
+diff -ur ltfat.orig/src/ostools.mk ltfat/src/ostools.mk
+--- ltfat.orig/src/ostools.mk	2014-11-13 07:55:44 -0500
++++ ltfat/src/ostools.mk	2014-11-13 15:28:55 -0500
+@@ -9,12 +9,14 @@
+ CP = copy /Y
+ PS2 = \\
+ PS = $(strip $(PS2))
++ifndef SHELL
+ ifdef ComSpec
+ SHELL := $(ComSpec)
+ endif
+ ifdef COMSPEC
+ SHELL := $(COMSPEC)
+ endif
++endif
+ CC = gcc
+ else
+ #If not on Windows
