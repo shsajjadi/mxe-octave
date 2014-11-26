@@ -300,6 +300,9 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     MXE_PKG_CONFIG := pkg-config
     MXE_QMAKE := qmake
   endif
+
+  MXE_MOC := moc
+  MXE_UIC := uic
 else
   MXE_TOOL_PREFIX := $(TARGET)-
   MXE_AR := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ar'
@@ -318,6 +321,8 @@ else
   endif
   MXE_PKG_CONFIG := '$(BUILD_TOOLS_PREFIX)/bin/pkg-config'
   MXE_QMAKE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
+  MXE_MOC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
+  MXE_UIC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)
