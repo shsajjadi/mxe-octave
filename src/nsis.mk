@@ -20,10 +20,10 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && scons VERBOSE=1 \
         MINGW_CROSS_PREFIX='$(MXE_TOOL_PREFIX)' \
-        PREFIX='$(HOST_PREFIX)' \
+        PREFIX='$(HOST_PREFIX)' PREFIX_BIN=$(BUILD_TOOLS_PREFIX)/bin \
         `[ -d /usr/local/include ] && echo APPEND_CPPPATH=/usr/local/include` \
         `[ -d /usr/local/lib ]     && echo APPEND_LIBPATH=/usr/local/lib` \
         SKIPUTILS='NSIS Menu' \
         install
-    $(INSTALL) -m755 '$(HOST_BINDIR)/makensis' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)makensis'
+    $(INSTALL) -m755 '$(BUILD_TOOLS_PREFIX)/bin/makensis' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)makensis'
 endef
