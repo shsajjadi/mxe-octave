@@ -34,7 +34,7 @@ ifneq ($(MXE_NATIVE_BUILD),yes)
 endif
 
 define $(PKG)_BUILD
-    cd '$(1)/Qt4Qt5' && '$(HOST_BINDIR)/qmake' -makefile $($(PKG)_QMAKE_SPEC_OPTION)
+    cd '$(1)/Qt4Qt5' && '$(MXE_QMAKE)' -makefile $($(PKG)_QMAKE_SPEC_OPTION) QMAKE_UIC=$(MXE_UIC) QMAKE_MOC=$(MXE_MOC)
 
     if [ $(MXE_SYSTEM) = msvc ]; then \
         mkdir -p '$(3)' && \

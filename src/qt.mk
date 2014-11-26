@@ -206,16 +206,16 @@ define $(PKG)_BUILD
     $(if $(filter-out msvc, $(MXE_SYSTEM)),
       $(if $(filter-out yes, $(MXE_NATIVE_BUILD)),
         $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin'
-        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/moc' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
-        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/rcc' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
-        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/uic' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
-        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/qmake' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
+        mv '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/moc' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
+        mv '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/rcc' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
+        mv '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/uic' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
+        mv '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/qmake' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
       )
 
       # lrelease (from linguist) needed by octave for GUI build
       $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' 
       $(MAKE) -C '$(1)/tools/linguist/lrelease' -j 1 install INSTALL_ROOT='$($(PKG)_INSTALL_ROOT)'
       $(if $(filter-out yes, $(MXE_NATIVE_BUILD)),
-        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/lrelease' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'))
+        mv '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/lrelease' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'))
 
 endef
