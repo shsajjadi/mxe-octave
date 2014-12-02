@@ -3,11 +3,11 @@
 
 PKG             := build-cmake
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.8.12.2
-$(PKG)_CHECKSUM := cca70b307aa32a6a32c72e01fdfcecc84c1c2690
+$(PKG)_VERSION  := 3.0.2
+$(PKG)_CHECKSUM := 379472e3578902a1d6f8b68a9987773151d6f21a
 $(PKG)_SUBDIR   := cmake-$($(PKG)_VERSION)
 $(PKG)_FILE     := cmake-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://www.cmake.org/files/v2.8/$($(PKG)_FILE)
+$(PKG)_URL      := http://www.cmake.org/files/v3.0/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
