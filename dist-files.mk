@@ -679,7 +679,6 @@ SRC_FILES_1 := \
   xz.mk \
   yasm.mk \
   zenity.mk \
-  zeromq-1.patch \
   zeromq.mk \
   zlib-1-win32-static.patch \
   zlib.mk \
