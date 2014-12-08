@@ -4,7 +4,7 @@
 PKG             := default-octave
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 4.1.0+
-$(PKG)_CHECKSUM := 0a72ae6da93c7e8bf6b8230dab416fe77f77d1b6
+$(PKG)_CHECKSUM := 7ee5a7b3c65f29b7eb8ec92421b405f263ec6f6e
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://hydra.nixos.org/job/gnu/octave-default/tarball/latest/download
