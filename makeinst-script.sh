@@ -109,8 +109,8 @@ Page custom octaveOptionsPage octaveOptionsLeave
 
 !insertmacro MUI_PAGE_INSTFILES
 
-!define MUI_FINISHPAGE_RUN "\$INSTDIR\\\${MAIN_APP_EXE}"
-!define MUI_FINISHPAGE_RUN_PARAMETERS "--force-gui"
+!define MUI_FINISHPAGE_RUN "\$WINDIR\\explorer.exe"
+!define MUI_FINISHPAGE_RUN_PARAMETERS "\$INSTDIR\\\${MAIN_APP_EXE}"
 !define MUI_FINISHPAGE_SHOWREADME "\$INSTDIR\\README.html"
 !insertmacro MUI_PAGE_FINISH
 
