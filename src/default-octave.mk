@@ -1,10 +1,13 @@
 # This file is part of MXE.
 # See index.html for further information.
 
+## We omit the package checksum so that we don't have to update it
+## each time the tarball changes on the hydra site.
+
 PKG             := default-octave
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 4.1.0+
-$(PKG)_CHECKSUM := 7ee5a7b3c65f29b7eb8ec92421b405f263ec6f6e
+$(PKG)_CHECKSUM := ## No checksum
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://hydra.nixos.org/job/gnu/octave-default/tarball/latest/download
