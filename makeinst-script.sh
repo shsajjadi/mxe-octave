@@ -21,7 +21,7 @@ fi
 
 
 # find octave shortcut icon
-ICON=`find $OCTAVE_SOURCE -name octave-logo.ico -printf "%P" | head -1 | sed 's,/,\\\\,g'`
+ICON=`find $OCTAVE_SOURCE -name octave-logo.ico -printf "%P\n" | head -1 | sed 's,/,\\\\,g'`
 
 # extract version number
 OCTAVE_VERSION=`head -1 $MXEDIR/octave/octave-version`
