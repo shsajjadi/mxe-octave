@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := f46a37ea6d869f702e03f393c376760f3cbee673
 $(PKG)_SUBDIR   := libxml2-$($(PKG)_VERSION)
 $(PKG)_FILE     := libxml2-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://xmlsoft.org/libxml2/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := zlib
 
 ifneq ($(MXE_SYSTEM),msvc)
     $(PKG)_DEPS := xz
@@ -29,6 +29,7 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --without-debug \
         --prefix='$(HOST_PREFIX)' \
+        --with-zlib='$(HOST_PREFIX)' \
         --without-python \
         --without-threads && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' noinst_PROGRAMS=
