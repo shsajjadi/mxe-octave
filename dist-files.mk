@@ -66,6 +66,7 @@ SRC_FILES_1 := \
   devil-1-png.patch \
   devil.mk \
   eigen.mk \
+  epstool.mk \
   exiv2-issue847.patch \
   exiv2-r2796.patch \
   exiv2.mk \
@@ -313,6 +314,7 @@ SRC_FILES_1 := \
   mdbtools.mk \
   mingw-cairo-1-ssize-t-defined.patch \
   mingw-cfitsio-1-fixes.patch \
+  mingw-epstool-1-fixes.patch \
   mingw-fontconfig-ln_s.patch \
   mingw-glib-1-fixes.patch \
   mingw-glib-2-fixes.patch \
