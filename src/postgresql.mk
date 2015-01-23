@@ -3,8 +3,8 @@
 
 PKG             := postgresql
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 9.2.4
-$(PKG)_CHECKSUM := 75b53c884cb10ed9404747b51677358f12082152
+$(PKG)_VERSION  := 9.4.0
+$(PKG)_CHECKSUM := bdf7f4872c7dd6bfee5ba04de81bf5097b73d5d7
 $(PKG)_SUBDIR   := postgresql-$($(PKG)_VERSION)
 $(PKG)_FILE     := postgresql-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://ftp.postgresql.org/pub/source/v$($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -55,11 +55,14 @@ define $(PKG)_BUILD
         --with-zlib \
         --with-system-tzdata=/dev/null \
         LIBS="$($(PKG)_LIBS) `'$(MXE_PKG_CONFIG)' openssl --libs`"
+    $(MAKE) -C '$(1)'/src/common             -j '$(JOBS)'         
     $(MAKE) -C '$(1)'/src/interfaces/libpq -j '$(JOBS)' install DESTDIR='$(3)'
     $(MAKE) -C '$(1)'/src/port             -j '$(JOBS)'         
     $(MAKE) -C '$(1)'/src/bin/psql         -j '$(JOBS)' install DESTDIR='$(3)'
     $(MAKE) -C '$(1)'/src/bin/pg_config    -j '$(JOBS)' install DESTDIR='$(3)'
     $(INSTALL) -m644 '$(1)/src/include/pg_config.h'    '$(3)$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/src/include/pg_config_ext.h' '$(3)$(HOST_INCDIR)'
+    $(INSTALL) -m644 '$(1)/src/include/pg_config_os.h' '$(3)$(HOST_INCDIR)'
     $(INSTALL) -m644 '$(1)/src/include/postgres_ext.h' '$(3)$(HOST_INCDIR)'
     $(INSTALL) -d    '$(3)$(HOST_INCDIR)/libpq'
     $(INSTALL) -m644 '$(1)'/src/include/libpq/*        '$(3)$(HOST_INCDIR)/libpq/'

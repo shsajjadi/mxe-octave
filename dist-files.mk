@@ -511,7 +511,6 @@ SRC_FILES_1 := \
   portaudio-1-win32.patch \
   portaudio-test.c \
   portaudio.mk \
-  postgresql-1-fixes.patch \
   postgresql.mk \
   proj.mk \
   protobuf-test.cpp \
