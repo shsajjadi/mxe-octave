@@ -29,16 +29,12 @@ define $(PKG)_BUILD
         --with-host_os=mingw \
         --with-winapi=wmme,directx \
         --with-dxdir=$(HOST_PREFIX) \
-        ac_cv_path_AR=$MXE_AR() \
+        ac_cv_path_AR=$(MXE_AR) \
         $(if $(filter $(BUILD_SHARED),yes),\
             lt_cv_deplibs_check_method='file_magic file format (pe-i386|pe-x86-64)' \
             lt_cv_file_magic_cmd='$$OBJDUMP -f')
     $(MAKE) -C '$(1)' -j '$(JOBS)' $(if $(filter $(BUILD_STATIC),yes),SHARED_FLAGS=) TESTS=
     $(MAKE) -C '$(1)' -j 1 install
 
-    '$(MXE_CC)' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(1)/test-portaudio.exe' \
-        `'$(MXE_PKG_CONFIG)' portaudio-2.0 --cflags --libs`
 endef
 
