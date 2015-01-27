@@ -18,5 +18,6 @@ define $(PKG)_BUILD
     if [ $(BUILD_SHARED) = yes ]; then \
       $(INSTALL) -d '$(HOST_BINDIR)'; \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(HOST_LIBDIR)/libuuid.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
+      rm -f $(HOST_LIBDIR)/libuuid.dll.a; \
     fi
 endef
