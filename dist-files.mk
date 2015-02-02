@@ -464,7 +464,6 @@ SRC_FILES_1 := \
   of-optim.mk \
   of-quaternion.mk \
   of-signal.mk \
-  of-sockets-1-fixes.patch \
   of-sockets.mk \
   of-specfun.mk \
   of-statistics.mk \

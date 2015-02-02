@@ -35,7 +35,7 @@ try_install geometry-1.7.0.tar.gz
 try_install windows-1.2.1.tar.gz
 try_install odepkg-0.8.4.tar.gz
 try_install linear-algebra-2.2.0.tar.gz
-try_install sockets-1.0.8.tar.gz
+try_install sockets-1.2.0.tar.gz
 try_install zenity-0.5.7.tar.gz
 try_install actuarial-1.1.0.tar.gz
 try_install data-smoothing-1.3.0.tar.gz

@@ -3,12 +3,11 @@
 
 PKG             := of-sockets
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.0.8
-$(PKG)_CHECKSUM := c4d4f6bea306dd4d722b3f7d8cf475a9fdd0dbba
+$(PKG)_VERSION  := 1.2.0
+$(PKG)_CHECKSUM := 8143ad6e18ce6b64911eedd7c318a34a039ddbd1
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := sockets
 $(PKG)_FILE     := sockets-$($(PKG)_VERSION).tar.gz
-$(PKG)_FIXED_FILE := sockets-$($(PKG)_VERSION)a.tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
 
