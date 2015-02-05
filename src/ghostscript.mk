@@ -3,10 +3,10 @@
 
 PKG             := ghostscript
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 9.07
-$(PKG)_CHECKSUM := 550a85e73b7213d8ae41ea06523661638b4bc1a2
+$(PKG)_VERSION  := 9.15
+$(PKG)_CHECKSUM := f53bcc47e912c7bffc2ced62ed9311376fb18bab
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://downloads.ghostscript.com/public/$($(PKG)_FILE)
 $(PKG)_DEPS     := jpeg lcms libpng tiff zlib
 ifeq ($(MXE_WINDOWS_BUILD),no)
@@ -56,6 +56,8 @@ else
       ## so we generate the files then replace them with files from a
       ## mingw native build.
       define $(PKG)_BUILD
+        mv '$(1)/zlib' '$(1)/zlib.x'
+        mv '$(1)/freetype' '$(1)/freetype.x'
         cp '$(TOP_DIR)/src/ghostscript-mingw-i686-makefile' '$(1)/Makefile'
         $(MAKE) -C '$(1)' TARGET='$(TARGET)' prefix='$(HOST_PREFIX)' obj/arch.h obj/gconfig_.h
         cp '$(TOP_DIR)/src/ghostscript-mingw-i686-arch.h' '$(1)/obj/arch.h'
