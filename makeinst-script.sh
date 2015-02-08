@@ -262,8 +262,8 @@ Section "Shortcuts"
  CreateDirectory "\$SMPROGRAMS\\Octave-$VERSION"
  CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
  SetOutPath "%USERPROFILE%"
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Command Line).lnk" "\$INSTDIR\\octave.bat" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (Experimental GUI).lnk" "\$INSTDIR\\octave.bat" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (CLI).lnk" "\$INSTDIR\\octave.bat" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (GUI).lnk" "\$INSTDIR\\octave.bat" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
  SetOutPath "\$INSTDIR"
 EOF
   # if we have documentation files, create shortcuts
@@ -281,8 +281,8 @@ EOF
 
   \${If} \$InstallShortcuts == \${BST_CHECKED}
     SetOutPath "%USERPROFILE%"
-    CreateShortCut "\$desktop\\Octave-$VERSION (Command Line).lnk" "\$INSTDIR\\octave.bat" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
-    CreateShortCut "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" "\$INSTDIR\\octave.bat" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+    CreateShortCut "\$desktop\\Octave-$VERSION (CLI).lnk" "\$INSTDIR\\octave.bat" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+    CreateShortCut "\$desktop\\Octave-$VERSION (GUI).lnk" "\$INSTDIR\\octave.bat" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
   \${Endif}
 
   ; BLAS set up
@@ -351,8 +351,8 @@ not_registered_file:
  Delete "\$SMPROGRAMS\\Octave-$VERSION\\*.*"
  RMDir "\$SMPROGRAMS\\Octave-$VERSION"
 
- Delete "\$desktop\\Octave-$VERSION (Command Line).lnk" 
- Delete "\$desktop\\Octave-$VERSION (Experimental GUI).lnk" 
+ Delete "\$desktop\\Octave-$VERSION (CLI).lnk" 
+ Delete "\$desktop\\Octave-$VERSION (GUI).lnk" 
 
  ; delete generated qt.conf file
  Delete "\$INSTDIR\\bin\\qt.conf"
