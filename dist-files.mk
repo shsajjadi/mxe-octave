@@ -132,6 +132,7 @@ SRC_FILES_1 := \
   glibmm.mk \
   glpk-1-fixes.patch \
   glpk.mk \
+  glproto.mk \
   gmp.mk \
   gnu-linux-ghostscript-configure.patch \
   gnuplot-1-fixes.patch \
@@ -485,6 +486,7 @@ SRC_FILES_1 := \
   openscenegraph.mk \
   openssl-1-fixes.patch \
   openssl.mk \
+  osmesa.mk \
   pango.mk \
   pangomm.mk \
   pcre.mk \
