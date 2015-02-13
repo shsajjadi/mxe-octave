@@ -14,7 +14,7 @@ $(PKG)_URL      := http://hydra.nixos.org/job/gnu/octave-default/tarball/latest/
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile pcre portaudio pstoedit qrupdate qscintilla qt readline suitesparse texinfo zlib
+$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile osmesa pcre portaudio pstoedit qrupdate qscintilla qt readline suitesparse texinfo zlib
 ifeq ($(MXE_WINDOWS_BUILD),no)
   $(PKG)_DEPS += x11 xext
 endif
