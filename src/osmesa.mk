@@ -17,7 +17,7 @@ endef
 define $(PKG)_BUILD
     mkdir '$(1)/.build'
     cd '$(1)' && autoreconf
-    cd '$(1)/.build' && autoreconf && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
+    cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
