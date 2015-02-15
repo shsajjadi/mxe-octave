@@ -16,11 +16,13 @@ endef
 
 define $(PKG)_BUILD
     mkdir '$(1)/.build'
-    cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
+    cd '$(1)' && autoreconf
+    cd '$(1)/.build' && autoreconf && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
-        --disable-dri --disable-egl --without-gallium-drivers \
-        --enable-osmesa \
+        --enable-osmesa --disable-dri --without-gallium-drivers --disable-egl \
         && $(CONFIGURE_POST_HOOK)
+
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
 endef

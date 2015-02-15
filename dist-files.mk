@@ -132,7 +132,6 @@ SRC_FILES_1 := \
   glibmm.mk \
   glpk-1-fixes.patch \
   glpk.mk \
-  glproto.mk \
   gmp.mk \
   gnu-linux-ghostscript-configure.patch \
   gnuplot-1-fixes.patch \
