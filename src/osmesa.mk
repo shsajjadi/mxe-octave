@@ -14,15 +14,34 @@ define $(PKG)_UPDATE
     echo $($(PKG)_VERSION)
 endef
 
-define $(PKG)_BUILD
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  define $(PKG)_BUILD
+    ## FIXME: is machine=x86 the correct thing for 64-bit Windows builds?
+    cd '$(1)' && scons platform=windows toolchain=crossmingw machine=x86 verbose=1 osmesa
+
+    ## Do the scons config files have useful install targets?
+    $(INSTALL) -d '$(3)$(HOST_INCDIR)/GL';
+    for f in '$(1)/include/GL/*.h' ; do \
+      $(INSTALL) -m 644 $$f '$(3)$(HOST_INCDIR)/GL'; \
+    done
+    $(INSTALL) -d '$(3)$(HOST_BINDIR)';
+    $(INSTALL) -m 755 '$(1)/build/windows-x86-debug/mesa/drivers/osmesa/osmesa.dll' '$(3)$(HOST_BINDIR)/osmesa.dll';
+    $(INSTALL) -d '$(3)$(HOST_LIBDIR)';
+    $(INSTALL) -m 644 '$(1)/build/windows-x86-debug/mesa/drivers/osmesa/libosmesa.a' '$(3)$(HOST_LIBDIR)/libOSMesa.a';
+  endef
+else
+  define $(PKG)_BUILD
     mkdir '$(1)/.build'
-    cd '$(1)' && autoreconf
     cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
-        --enable-osmesa --disable-dri --without-gallium-drivers --disable-egl \
+        --enable-osmesa --disable-dri --disable-egl --disable-xvmc \
+        --disable-glx --disable-shared-glapi --disable-gallium-llvm \
+        --with-gallium-drivers="" --with-dri-drivers="" \
+        --with-egl-platforms="" --enable-texture-float \
         && $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
-endef
+  endef
+endif
