@@ -3,8 +3,8 @@
 
 PKG             := glpk
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.54
-$(PKG)_CHECKSUM := 69d9c5d83271d34de1a58d2de2f7ababab975492
+$(PKG)_VERSION  := 4.55
+$(PKG)_CHECKSUM := 893058aada022a8dfc63c675ebcd7e7e86a3a363
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := glpk-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/glpk/$($(PKG)_FILE)
