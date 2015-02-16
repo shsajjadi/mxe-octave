@@ -133,7 +133,6 @@ SRC_FILES_1 := \
   glpk-1-fixes.patch \
   glpk.mk \
   gmp.mk \
-  gnu-linux-ghostscript-configure.patch \
   gnuplot-1-fixes.patch \
   gnuplot-2-win64.patch \
   gnuplot-3-iconv.patch \
