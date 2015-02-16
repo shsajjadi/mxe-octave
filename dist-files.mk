@@ -79,7 +79,6 @@ SRC_FILES_1 := \
   file.mk \
   fixesproto.mk \
   flac.mk \
-  fltk-1-darwin-cross-compile.patch \
   fltk-2-uuid-mod.patch \
   fltk-test.cpp \
   fltk.mk \
