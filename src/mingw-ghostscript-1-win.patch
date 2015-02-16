@@ -1,34 +1,15 @@
-diff -ur ghostscript-9.15.orig/base/gp_unifs.c ghostscript-9.15/base/gp_unifs.c
---- ghostscript-9.15.orig/base/gp_unifs.c	2015-02-15 10:31:35.198127593 -0500
-+++ ghostscript-9.15/base/gp_unifs.c	2015-02-15 13:11:28.950483663 -0500
-@@ -80,6 +80,14 @@
-     int prefix_length = strlen(prefix);
-     int len = gp_file_name_sizeof - prefix_length - 8;
-     FILE *fp;
-+#ifdef __MINGW32__
-+    // add 'b' to ensure in binary mode
-+    char tmpmode[32];
-+ 
-+    strcpy(tmpmode, mode);
-+    strcat(tmpmode,"b");
-+    mode = tmpmode;
+diff -ur ghostscript-9.15.orig/base/gp_unifn.c ghostscript-9.15/base/gp_unifn.c
+--- ghostscript-9.15.orig/base/gp_unifn.c	2015-02-16 07:47:31.050998971 -0500
++++ ghostscript-9.15/base/gp_unifn.c	2015-02-16 07:48:50.582467223 -0500
+@@ -25,7 +25,11 @@
+ 
+ /* Define the string to be concatenated with the file mode */
+ /* for opening files without end-of-line conversion. */
++#if (defined(__MINGW32__) && __MINGW32__ == 1) || (defined(__CYGWIN__) && __CYGWIN__ == 1)
++const char gp_fmode_binary_suffix[] = "b";
++#else
+ const char gp_fmode_binary_suffix[] = "";
 +#endif
  
-     if (gp_file_name_is_absolute(prefix, prefix_length))
-         *fname = 0;
-@@ -148,6 +156,15 @@
- FILE *
- gp_fopen(const char *fname, const char *mode)
- {
-+#ifdef __MINGW32__
-+    // add 'b' to ensure in binary mode
-+    char tmpmode[32];
-+ 
-+    strcpy(tmpmode, mode);
-+    strcat(tmpmode,"b");
-+    mode = tmpmode;
-+#endif
-+
-     return fopen(fname, mode);
- }
- 
+ /* Define the file modes for binary reading or writing. */
+ #if (defined(__MINGW32__) && __MINGW32__ == 1) || (defined(__CYGWIN__) && __CYGWIN__ == 1)
