@@ -121,6 +121,9 @@ SRC_FILES_1 := \
   ghostscript-mingw-i686-arch.h \
   ghostscript-mingw-i686-gconfig_.h \
   ghostscript-mingw-i686-makefile \
+  ghostscript-mingw-x86_64-arch.h \
+  ghostscript-mingw-x86_64-gconfig_.h \
+  ghostscript-mingw-x86_64-makefile \
   ghostscript.mk \
   giflib.mk \
   gl2ps-1-fixes.patch \
