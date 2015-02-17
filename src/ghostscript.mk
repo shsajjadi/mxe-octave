@@ -47,14 +47,28 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
   endef
 else
   ifeq ($(MXE_SYSTEM),mingw)
-    ifneq ($(ENABLE_64),yes)
-      ## Ghostscript configure script is not cross-compiler friendly,
-      ## so instead of running it, copying configuration files from a
-      ## native mingw build.  Some configuration is done by compiling
-      ## and running programs during the build, but those programs
-      ## probe the build system and don't know about cross compiling,
-      ## so we generate the files then replace them with files from a
-      ## mingw native build.
+    ## Ghostscript configure script is not cross-compiler friendly,
+    ## so instead of running it, copying configuration files from a
+    ## native mingw build.  Some configuration is done by compiling
+    ## and running programs during the build, but those programs
+    ## probe the build system and don't know about cross compiling,
+    ## so we generate the files then replace them with files from a
+    ## mingw native build.
+    ifeq ($(ENABLE_64),yes)
+      define $(PKG)_BUILD
+        mv '$(1)/zlib' '$(1)/zlib.x'
+        mv '$(1)/freetype' '$(1)/freetype.x'
+        cp '$(TOP_DIR)/src/ghostscript-mingw-x86_64-makefile' '$(1)/Makefile'
+        $(MAKE) -C '$(1)' TARGET='$(TARGET)' prefix='$(HOST_PREFIX)' obj/arch.h obj/gconfig_.h
+        cp '$(TOP_DIR)/src/ghostscript-mingw-x86_64-arch.h' '$(1)/obj/arch.h'
+        cp '$(TOP_DIR)/src/ghostscript-mingw-x86_64-arch.h' '$(1)/obj/gconfig_.h'
+        $(MAKE) -C '$(1)' -j '$(JOBS)' \
+          TARGET='$(TARGET)' prefix='$(HOST_PREFIX)' CC='$(MXE_CC)'
+        $(MAKE) -C '$(1)' \
+          TARGET='$(TARGET)' prefix='$(HOST_PREFIX)' CC='$(MXE_CC)' \
+          install
+      endef
+    else
       define $(PKG)_BUILD
         mv '$(1)/zlib' '$(1)/zlib.x'
         mv '$(1)/freetype' '$(1)/freetype.x'
@@ -68,6 +82,7 @@ else
           TARGET='$(TARGET)' prefix='$(HOST_PREFIX)' CC='$(MXE_CC)' \
           install
       endef
+ 
     endif
   endif
 endif
