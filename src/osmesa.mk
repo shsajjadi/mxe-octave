@@ -15,9 +15,13 @@ define $(PKG)_UPDATE
 endef
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
+  ifeq ($(ENABLE_WINDOWS_64),yes)
+    $(PKG)_MACHINE := x86_64
+  else
+    $(PKG)_MACHINE := x86
+  endif
   define $(PKG)_BUILD
-    ## FIXME: is machine=x86 the correct thing for 64-bit Windows builds?
-    cd '$(1)' && scons platform=windows toolchain=crossmingw machine=x86 verbose=1 osmesa
+    cd '$(1)' && scons platform=windows toolchain=crossmingw machine=$($(PKG)_MACHINE) verbose=1 osmesa
 
     ## Do the scons config files have useful install targets?
     $(INSTALL) -d '$(3)$(HOST_INCDIR)/GL';
@@ -25,9 +29,9 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       $(INSTALL) -m 644 $$f '$(3)$(HOST_INCDIR)/GL'; \
     done
     $(INSTALL) -d '$(3)$(HOST_BINDIR)';
-    $(INSTALL) -m 755 '$(1)/build/windows-x86-debug/mesa/drivers/osmesa/osmesa.dll' '$(3)$(HOST_BINDIR)/osmesa.dll';
+    $(INSTALL) -m 755 '$(1)/build/windows-$($(PKG)_MACHINE)-debug/mesa/drivers/osmesa/osmesa.dll' '$(3)$(HOST_BINDIR)/osmesa.dll';
     $(INSTALL) -d '$(3)$(HOST_LIBDIR)';
-    $(INSTALL) -m 644 '$(1)/build/windows-x86-debug/mesa/drivers/osmesa/libosmesa.a' '$(3)$(HOST_LIBDIR)/libOSMesa.a';
+    $(INSTALL) -m 644 '$(1)/build/windows-$($(PKG)_MACHINE)-debug/mesa/drivers/osmesa/libosmesa.a' '$(3)$(HOST_LIBDIR)/libOSMesa.a';
   endef
 else
   define $(PKG)_BUILD
