@@ -1,0 +1,32 @@
+diff -ur nsis-2.46-src.orig/SCons/Tools/crossmingw.py nsis-2.46-src/SCons/Tools/crossmingw.py
+--- nsis-2.46-src.orig/SCons/Tools/crossmingw.py	2015-02-08 20:55:24.129440718 -0500
++++ nsis-2.46-src/SCons/Tools/crossmingw.py	2015-02-08 20:58:12.005446948 -0500
+@@ -145,15 +145,15 @@
+         SCons.Tool.Tool(tool)(env)
+ 
+     #... but a few things differ:
+-    env['CC'] = mingw_prefix + 'gcc'
++    env['CC'] = mingw_prefix + 'gcc -m32'
+     env['SHCCFLAGS'] = SCons.Util.CLVar('$CCFLAGS')
+-    env['CXX'] = mingw_prefix + 'g++'
++    env['CXX'] = mingw_prefix + 'g++ -m32'
+     env['SHCXXFLAGS'] = SCons.Util.CLVar('$CXXFLAGS')
+     env['SHLINKFLAGS'] = SCons.Util.CLVar('$LINKFLAGS -shared')
+     env['SHLINKCOM']   = shlib_action
+     env.Append(SHLIBEMITTER = [shlib_emitter])
+-    env['LINK'] = mingw_prefix + 'g++'
+-    env['AS'] = mingw_prefix + 'as'
++    env['LINK'] = mingw_prefix + 'g++ -m32'
++    env['AS'] = mingw_prefix + 'as -m32'
+     env['AR'] = mingw_prefix + 'ar'
+     env['RANLIB'] = mingw_prefix + 'ranlib'
+     env['WIN32DEFPREFIX']        = ''
+@@ -161,7 +161,7 @@
+     env['SHOBJSUFFIX'] = '.o'
+     env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME'] = 1
+ 
+-    env['RC'] = mingw_prefix + 'windres'
++    env['RC'] = mingw_prefix + 'windres --target=pe-i386'
+     env['RCFLAGS'] = SCons.Util.CLVar('')
+     env['RCCOM'] = '$RC $_CPPDEFFLAGS $_CPPINCFLAGS ${INCPREFIX}${SOURCE.dir} $RCFLAGS -i $SOURCE -o $TARGET'
+     env['BUILDERS']['RES'] = res_builder

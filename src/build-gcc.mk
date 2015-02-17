@@ -24,7 +24,6 @@ endif
 
 ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_SYSDEP_CONFIGURE_OPTIONS := \
-    --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
     --enable-version-specific-runtime-libs \
     --with-gcc \
     --with-gnu-ld \
@@ -32,11 +31,26 @@ ifeq ($(MXE_SYSTEM),mingw)
     --disable-nls \
     --without-x \
     --disable-win32-registry \
-    --with-native-system-header-dir='/include' \
     --enable-threads=win32
   ifneq ($(TARGET),x86_64-w64-mingw32)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
+    --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
+    --with-native-system-header-dir='/include' \
       --disable-sjlj-exceptions
+  else
+    define $(PKG)_PRE_BUILD
+      echo "Shortcuts"
+      # create shortcuts
+      if ! [ -L $(HOST_PREFIX)/lib64 ]; then \
+        ln -s $(HOST_PREFIX)/lib $(HOST_PREFIX)/lib64; \
+      fi
+      if ! [ -d $(HOST_PREFIX)/lib32 ]; then \
+        mkdir -p $(HOST_PREFIX)/lib32; \
+      fi
+      if ! [ -L $(BUILD_TOOLS_PREFIX)/mingw ]; then \
+        ln -s $(HOST_PREFIX) $(BUILD_TOOLS_PREFIX)/mingw; \
+      fi
+    endef
   endif
   define $(PKG)_BUILD_SYSTEM_RUNTIME
     # build standalone gcc
@@ -60,10 +74,21 @@ ifneq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
     --target='$(TARGET)' \
     --build='$(BUILD_SYSTEM)' \
-    --with-sysroot='$(HOST_PREFIX)' \
     --with-as='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-as' \
     --with-ld='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ld' \
     --with-nm='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-nm'
+
+  ifeq ($(ENABLE_WINDOWS_64),yes)
+    $(PKG)_SYSDEP_CONFIGURE_OPTIONS += --with-sysroot='$(BUILD_TOOLS_PREFIX)' \
+      --enable-multilib  --with-host-libstdcxx="-lstdc++ -lsupc++" --with-system-zlib \
+      --enable-64bit --enable-fully-dynamic-string
+  else
+    $(PKG)_SYSDEP_CONFIGURE_OPTIONS += --with-sysroot='$(HOST_PREFIX)' \
+      --disable-multilib
+  endif
+else
+  $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
+      --disable-multilib
 endif
 
 define $(PKG)_UPDATE
@@ -79,7 +104,6 @@ define $(PKG)_CONFIGURE
     cd    '$(1).build' && '$(1)/configure' \
         --prefix='$(BUILD_TOOLS_PREFIX)' \
         --enable-languages='c,c++,fortran' \
-        --disable-multilib \
         --disable-libsanitizer \
         $($(PKG)_SYSDEP_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -93,6 +117,8 @@ define $(PKG)_CONFIGURE
 endef
 
 define $(PKG)_BUILD
+  $($(PKG)_PRE_BUILD)
+
   $($(PKG)_CONFIGURE)
 
   $($(PKG)_BUILD_SYSTEM_RUNTIME)
@@ -104,6 +130,11 @@ define $(PKG)_BUILD
   if [ -f $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/lib/libgcc_s.a ]; then \
     mv $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/lib/libgcc_s.a $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/$($(PKG)_VERSION)/libgcc_s.a; \
   fi
+
+  if [ -f $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/lib32/libgcc_s.a ]; then \
+    mv $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/lib32/libgcc_s.a $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/$($(PKG)_VERSION)/32/libgcc_s.a; \
+  fi
+
 
   # create pkg-config script
   if [ '$(MXE_NATIVE_BUILD)' = 'no' ]; then \
