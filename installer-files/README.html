@@ -14,42 +14,43 @@ body {
 Thank you for installing GNU Octave!
 </p>
 <p>
-Octave 4.0 is a major new release with many new features including a
-graphical user interface and support for classdef object-oriented programming.
+Octave 4.0 is a major release with many new features including a graphical user
+interface and support for classdef object-oriented programming.
 </p>
 <p>
 A full list of changes can be found in the Release Notes from the News menu.
 </p>
-<h2>BLAS Library selection</h2>
+<h2>BLAS Library Selection</h2>
 <p>
-During the install a default BLAS library was selected. The installer contains
-2 BLAS implementations,
+During the installation a default BLAS library was selected. The installer
+contains 2 BLAS implementations,
 the <a href="http://www.netlib.org/blas/">NetLib reference BLAS</a>
 and <a href="http://www.openblas.net/">OpenBLAS</a>.
 </p>
 <p>
-The choice of library can be changed after the install by copying
-librefblas.dll or libopenblas.dll to libblas.dll in the bin folder of the
-Octave installation.
+The choice of library may be changed after installation by copying
+either librefblas.dll or libopenblas.dll to the file libblas.dll in the bin
+folder of the Octave installation.
 </p>
 <h2>Included Octave Forge Packages</h2>
 <p>
-A number of Octave-forge packages have been included with this install of
-Octave, however they need to be installed in order to use them.
+A number of Octave-Forge packages have been included with Octave, however they
+must be installed in order to use them.
 </p>
 <p>
 To install:
 <ul>
  <li>Start Octave and then open the build_packages.m file found in the src
  folder where Octave was installed.</li>
- <li>Run the build_packages.m script to build and install the packages.</li>
+ <li>Run the script build_packages.m to build and install the packages.</li>
 </ul>
-Packages must then be loaded in order to use them with the
+Installation is a one-time procedure.
+After installation packages must still be loaded in order to use them with the
 <tt>pkg load PACKAGENAME</tt> command.
 </p>
 <p>
 Other packages are available from
-<a href="http://octave.sourceforge.net/">Octave-Forge</a>
+<a href="http://octave.sourceforge.net/">Octave-Forge</a>.
 </p>
 <h2>Issues</h2>
 Please report any problems with Octave on the
