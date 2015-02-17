@@ -644,6 +644,7 @@ SRC_FILES_1 := \
   wavpack-1-exec_prefix.patch \
   wavpack.mk \
   wget.mk \
+  win64-nsis.patch \
   winpcap-1-fixes.patch \
   winpcap.mk \
   wt-1-fixes.patch \
