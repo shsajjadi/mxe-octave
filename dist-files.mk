@@ -524,7 +524,6 @@ SRC_FILES_1 := \
   pstoedit-3-nosecapi.patch \
   pstoedit.mk \
   pthread-stubs.mk \
-  pthreads-1-fixes.patch \
   pthreads-test.c \
   pthreads.mk \
   qdbm-test.c \
