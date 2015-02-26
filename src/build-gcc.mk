@@ -63,8 +63,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     cd '$(1).crt-build' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-crt/configure' \
 	--host='$(TARGET)' \
 	--prefix='$(HOST_PREFIX)' \
-	--with-sysroot='$(HOST_PREFIX)' \
-	$(ENABLE_SHARED_OR_STATIC)
+	--with-sysroot='$(HOST_PREFIX)'
     $(MAKE) -C '$(1).crt-build' -j '$(JOBS)' || $(MAKE) -C '$(1).crt-build' -j '$(JOBS)'
     $(MAKE) -C '$(1).crt-build' -j 1 install
   endef
