@@ -33,7 +33,7 @@ if -%1-==-- goto noargs
 
 Rem   Start Octave (this detaches and immediately returns):
 if %GUI_MODE%==1 (
-start octave-gui.exe %*
+start /B octave-gui.exe %*
 ) else (
 start octave-cli.exe %*
 )
