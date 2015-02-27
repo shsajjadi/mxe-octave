@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 50d5a4e2fe0e0ff2f73cb094cb945b221083e742
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://sourceforge.net/projects/pstoedit/files/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)/download
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := plotutils
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package pstoedit.' >&2;
