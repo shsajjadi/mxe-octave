@@ -1,6 +1,6 @@
-diff -ur pstoedit-3.61-orig/configure.ac pstoedit-3.61/configure.ac
---- pstoedit-3.61-orig/configure.ac	2012-08-28 06:46:41 -0400
-+++ pstoedit-3.61/configure.ac	2013-07-05 23:29:38 -0400
+diff -ur pstoedit-3.70.orig/configure.ac pstoedit-3.70/configure.ac
+--- pstoedit-3.70.orig/configure.ac	2015-02-27 13:34:44.538158342 -0500
++++ pstoedit-3.70/configure.ac	2015-02-27 15:12:27.821126740 -0500
 @@ -53,12 +53,12 @@
  dnl Check Ghostscript
  GS=""
@@ -15,18 +15,18 @@ diff -ur pstoedit-3.61-orig/configure.ac pstoedit-3.61/configure.ac
 +dnl    AC_MSG_ERROR([** Cannot find ghostscript. If it is already installed, Check PATH.])
 +dnl else
 +dnl dnl Strip off // to / that causes troubles.
-+dnl    GS=`echo $GS | sed -e 's/\/\//\//g'`
++dnl    GS=`echo $GS | sed -e 's/\/\//\//g'`	
 +dnl fi
  
  PKG_PROG_PKG_CONFIG
  
-diff -ur pstoedit-3.62.orig/src/Makefile.am pstoedit-3.62/src/Makefile.am
---- pstoedit-3.62.orig/src/Makefile.am	2014-06-03 12:53:10 -0400
-+++ pstoedit-3.62/src/Makefile.am	2014-06-03 12:54:14 -0400
-@@ -31,7 +31,7 @@
- 	${LIBMAGICK_CFLAGS}			\
+diff -ur pstoedit-3.70.orig/src/Makefile.am pstoedit-3.70/src/Makefile.am
+--- pstoedit-3.70.orig/src/Makefile.am	2015-02-27 13:34:45.004167901 -0500
++++ pstoedit-3.70/src/Makefile.am	2015-02-27 15:13:10.916976944 -0500
+@@ -32,7 +32,7 @@
  	${LIBEMF_CFLAGS}			\
  	${LIBPNG_CFLAGS}			\
+ 	${LIBZIP_CFLAGS}			\
 -        -DDEFAULTGS=$(GS)			\
 +        -DDEFAULTGS="\"$(GS)\""			\
  	-DPSTOEDITDATADIR="\"$(pkgdatadir)\""	\
