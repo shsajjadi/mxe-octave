@@ -22,11 +22,22 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --prefix='$(HOST_PREFIX)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-        $(ENABLE_SHARED_OR_STATIC) \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
+        --disable-shared --enable-static \
         --enable-libplotter \
         --enable-libxmi \
         --with-png \
         --without-x \
-        CFLAGS='-DNO_SYSTEM_GAMMA'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS= INFO_DEPS=
+        CFLAGS='-DNO_SYSTEM_GAMMA' LIBS='-lpng -lz'
+
+    $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS= INFO_DEPS=
+
+    if [ "$(BUILD_SHARED)" = yes ]; then \
+       $(MAKE) -C '$(1)' -j 1 bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS= INFO_DEPS= lib_LTLIBRARIES= install; \
+       $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CXX)' $(1)/libplot/.libs/libplot.a --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)' -lpng -lz; \
+       $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CXX)' $(1)/libplotter/.libs/libplotter.a --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)' -lpng -lz; \
+       $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CXX)' $(1)/libxmi/.libs/libxmi.a --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)'; \
+    else \
+       $(MAKE) -C '$(1)' -j 1 bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS= INFO_DEPS= install; \
+    fi
 endef
