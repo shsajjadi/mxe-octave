@@ -27,6 +27,9 @@ ICON=`find $OCTAVE_SOURCE -name octave-logo.ico -printf "%P\n" | head -1 | sed '
 OCTAVE_VERSION=`head -1 $MXEDIR/octave/octave-version`
 VERSION=`echo $OCTAVE_VERSION | sed -n 's,\([0-9\.]*\).*,\1,p'`
 
+# estimated size of installed files
+SIZE=`du -slk $OCTAVE_SOURCE | awk '{print \$1}'`
+
 # create installer script
 echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
 
@@ -246,11 +249,14 @@ SectionEnd
 Section make_uninstaller
  ; Write the uninstall keys for Windows
  SetOutPath "\$INSTDIR"
- WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "DisplayName" "Octave"
+ WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "DisplayName" "Octave $VERSION"
  WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "DisplayVersion" "$VERSION"
+ WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "DisplayIcon" "\$INSTDIR\\$ICON"
  WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "UninstallString" "\$INSTDIR\\uninstall.exe"
  WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "NoModify" 1
  WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "NoRepair" 1
+ WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "Publisher" "\${APP_NAME}"
+ WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "EstimatedSize" $SIZE
  \${If} \$InstallAllUsers == \${BST_CHECKED}
    WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "AllUsers" 1
  \${EndIf}
