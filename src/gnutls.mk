@@ -2,8 +2,8 @@
 # See index.html for further information.
 
 PKG             := gnutls
-$(PKG)_VERSION  := 3.2.20
-$(PKG)_CHECKSUM := 6b104f737330ff2f6833b8c5d80e1cd2c3fcfb66
+$(PKG)_VERSION  := 3.3.13
+$(PKG)_CHECKSUM := 644d9b886fa574a5f19869232078e6fd933f8022
 $(PKG)_SUBDIR   := gnutls-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnutls-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnutls.org/gcrypt/gnutls/v3.2/$($(PKG)_FILE)
@@ -32,9 +32,8 @@ endif
 
 define $(PKG)_BUILD
     $(SED) -i 's, sed , $(SED) ,g' '$(1)/gl/tests/Makefile.am'
-    cd '$(1)' && aclocal -I m4 -I gl/m4 -I src/libopts/m4 --install
-    cd '$(1)' && autoconf
-    cd '$(1)' && automake --add-missing
+    rm '$(1)/ltmain.sh'
+    cd '$(1)' && autoreconf -fi  -I m4 -I gl/m4 -I src/libopts/m4
     if [ "$(MXE_NATIVE_BUILD)" = no ]; then \
       $(SED) -i 's/libopts_cv_with_libregex=no/libopts_cv_with_libregex=yes/g;' '$(1)/configure'; \
     fi
