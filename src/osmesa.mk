@@ -36,6 +36,7 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
 else
   define $(PKG)_BUILD
     mkdir '$(1)/.build'
+    cd '$(1)' && autoreconf -fi  -I m4
     cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
