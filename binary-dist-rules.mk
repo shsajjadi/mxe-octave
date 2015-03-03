@@ -75,6 +75,7 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       cp $(OCTAVE_DIST_DIR)/bin/libblas.dll $(OCTAVE_DIST_DIR)/bin/librefblas.dll
       echo "  octave.bat..."
       cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)/
+      cp $(TOP_DIR)/installer-files/octave.vbs $(OCTAVE_DIST_DIR)/
     endef
   else
     define copy-windows-dist-files

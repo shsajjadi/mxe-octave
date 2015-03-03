@@ -826,6 +826,7 @@ INSTALL_FILES_1 := \
   gpl-3.0.txt \
   octave.bat \
   octave.bmp \
+  octave.vbs \
   octave-hdr.bmp \
   octave-logo.ico \
   README.html

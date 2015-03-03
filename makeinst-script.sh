@@ -41,7 +41,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
 !define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
 !define INSTALLER_FILES "../installer-files"
 !define INSTALLER_NAME "octave-$OCTAVE_VERSION-installer.exe"
-!define MAIN_APP_EXE "octave.bat"
+!define MAIN_APP_EXE "octave.vbs"
 !define INSTALL_TYPE "SetShellVarContext current"
 !define PRODUCT_ROOT_KEY "HKLM"
 !define PRODUCT_KEY "Software\\Octave-$VERSION"
@@ -219,6 +219,7 @@ Section "MainFiles"
   ; include the octave.bat file
   SetOutPath "\$INSTDIR" 
   File "$OCTAVE_SOURCE/octave.bat"
+  File "$OCTAVE_SOURCE/octave.vbs"
 
   ; distro files
 EOF
@@ -262,8 +263,8 @@ Section "Shortcuts"
  CreateDirectory "\$SMPROGRAMS\\Octave-$VERSION"
  CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
  SetOutPath "%USERPROFILE%"
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (CLI).lnk" "\$INSTDIR\\octave.bat" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (GUI).lnk" "\$INSTDIR\\octave.bat" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (CLI).lnk" "\$INSTDIR\\octave.vbs" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (GUI).lnk" "\$INSTDIR\\octave.vbs" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
  SetOutPath "\$INSTDIR"
 EOF
   # if we have documentation files, create shortcuts
@@ -281,8 +282,8 @@ EOF
 
   \${If} \$InstallShortcuts == \${BST_CHECKED}
     SetOutPath "%USERPROFILE%"
-    CreateShortCut "\$desktop\\Octave-$VERSION (CLI).lnk" "\$INSTDIR\\octave.bat" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
-    CreateShortCut "\$desktop\\Octave-$VERSION (GUI).lnk" "\$INSTDIR\\octave.bat" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+    CreateShortCut "\$desktop\\Octave-$VERSION (CLI).lnk" "\$INSTDIR\\octave.vbs" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+    CreateShortCut "\$desktop\\Octave-$VERSION (GUI).lnk" "\$INSTDIR\\octave.vbs" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
   \${Endif}
 
   ; BLAS set up
