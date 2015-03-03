@@ -2,10 +2,10 @@
 # See index.html for further information.
 
 PKG             := gdb
-$(PKG)_VERSION  := 7.7.1
-$(PKG)_CHECKSUM := 35228319f7c715074a80be42fff64c7645227a80
+$(PKG)_VERSION  := 7.9
+$(PKG)_CHECKSUM := 1dabff2168bd8fe3cadf9386e47a47c527ea99ba
 $(PKG)_SUBDIR   := gdb-$($(PKG)_VERSION)
-$(PKG)_FILE     := gdb-$($(PKG)_VERSION).tar.bz2
+$(PKG)_FILE     := gdb-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/$(PKG)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.cs.tu-berlin.de/pub/gnu/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     := expat libiconv readline zlib
