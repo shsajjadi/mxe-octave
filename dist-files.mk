@@ -326,7 +326,7 @@ SRC_FILES_1 := \
   mingw-libmng-1-noundefines.patch \
   mingw-openssl-3-libdeps.patch \
   mingw-pango-1-fixes.patch \
-  src/mingw-portaudio-1-pkgconfig.patch \
+  mingw-portaudio-1-pkgconfig.patch \
   mingw-texinfo-1-fixes.patch \
   mingw-transfig-1-fixes.patch \
   mingw-units-1-fixes.patch \
