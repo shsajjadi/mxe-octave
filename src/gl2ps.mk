@@ -7,8 +7,11 @@ $(PKG)_CHECKSUM := 792e11db0fe7a30a4dc4491af5098b047ec378b1
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)-source
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://geuz.org/$(PKG)/src/$($(PKG)_FILE)
-$(PKG)_DEPS     := xft
+$(PKG)_DEPS     :=
 
+ifeq ($(USE_SYSTEM_X11_LIBS),no)
+  $(PKG)_DEPS += xft
+endif
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
     ifeq ($(MXE_SYSTEM),msvc)
