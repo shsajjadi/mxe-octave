@@ -16,7 +16,9 @@ ifeq ($(USE_SYSTEM_FONTCONFIG),no)
 endif
 $(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile osmesa pcre portaudio pstoedit qrupdate qscintilla qt readline suitesparse texinfo zlib
 ifeq ($(MXE_WINDOWS_BUILD),no)
-  $(PKG)_DEPS += x11 xext
+  ifeq ($(USE_SYSTEM_X11_LIBS),no)
+    $(PKG)_DEPS += x11 xext
+  endif
 endif
 ifeq ($(ENABLE_64),no)
   $(PKG)_DEPS += qhull

@@ -117,6 +117,13 @@ AC_ARG_ENABLE([system-fontconfig],
   [if test "$enableval" = yes; then USE_SYSTEM_FONTCONFIG=yes; else USE_SYSTEM_FONTCONFIG=no; fi], [])
 AC_SUBST(USE_SYSTEM_FONTCONFIG)
 
+USE_SYSTEM_X11_LIBS=$MXE_NATIVE_BUILD
+AC_ARG_ENABLE([system-x11-libs],
+  [AS_HELP_STRING([--enable-system-x11-libs],
+    [Use X11 libraries already installed on system])],
+  [if test "$enableval" = yes; then USE_SYSTEM_X11_LIBS=yes; else USE_SYSTEM_X11_LIBS=no; fi], [])
+AC_SUBST(USE_SYSTEM_X11_LIBS)
+
 USE_SYSTEM_GCC=$MXE_NATIVE_BUILD
 AC_ARG_ENABLE([system-gcc],
   [AS_HELP_STRING([--enable-system-gcc],
