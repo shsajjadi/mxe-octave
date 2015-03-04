@@ -9,7 +9,7 @@ Set fso = Nothing
 
 ' set up path to ensure octave bin comes first
 Set wshSystemEnv = wshShell.Environment( "PROCESS" )
-wshSystemEnv("PATH") = OctavePath & ";" & wshSystemEnv("PATH")
+wshSystemEnv("PATH") = OctavePath & "\bin;" & wshSystemEnv("PATH")
 
 ' set terminal type
 wshSystemEnv("TERM") = "cygwin"
