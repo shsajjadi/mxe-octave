@@ -14,7 +14,10 @@ ifeq ($(MXE_SYSTEM),mingw)
 else ifeq ($(MXE_SYSTEM),msvc)
   $(PKG)_DEPS   += freetype
 else
-  $(PKG)_DEPS   += pthreads freetype x11 xext xrender xdmcp
+  $(PKG)_DEPS   += pthreads freetype
+  ifeq ($(USE_SYSTEM_X11_LIBS),no)
+    $(PKG)_DEPS += x11 xext xrender xdmcp
+  endif
 endif
 
 define $(PKG)_UPDATE

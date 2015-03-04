@@ -10,7 +10,9 @@ $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://downloads.ghostscript.com/public/$($(PKG)_FILE)
 $(PKG)_DEPS     := jpeg lcms libpng tiff zlib
 ifeq ($(MXE_WINDOWS_BUILD),no)
-  $(PKG)_DEPS += x11 xext
+  ifeq ($(USE_SYSTEM_X11_LIBS),no)
+    $(PKG)_DEPS += x11 xext
+  endif
 endif
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
