@@ -79,7 +79,7 @@ ifneq ($(MXE_NATIVE_BUILD),yes)
 
   ifeq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += --with-sysroot='$(BUILD_TOOLS_PREFIX)' \
-      --enable-multilib  --with-host-libstdcxx="-lstdc++ -lsupc++" --with-system-zlib \
+      --enable-multilib  --with-host-libstdcxx="-lstdc++" --with-system-zlib \
       --enable-64bit --enable-fully-dynamic-string
   else
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += --with-sysroot='$(HOST_PREFIX)' \
