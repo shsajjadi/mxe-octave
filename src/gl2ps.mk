@@ -9,10 +9,6 @@ $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://geuz.org/$(PKG)/src/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
-ifeq ($(USE_SYSTEM_X11_LIBS),no)
-  $(PKG)_DEPS += xft
-endif
-
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
     ifeq ($(MXE_SYSTEM),msvc)
         $(PKG)_CMAKE_FLAGS := -G 'NMake Makefiles'
