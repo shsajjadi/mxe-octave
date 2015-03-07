@@ -41,6 +41,14 @@ else
   endif
 endif
 
+## If we allow the system Qt libraries to be used, then these
+## won't make sense.
+$(PKG)_QT_CONFIGURE_OPTIONS := \
+  MOC=$(HOST_BINDIR)/moc \
+  UIC=$(HOST_BINDIR)/uic \
+  RCC=$(HOST_BINDIR)/rcc \
+  LRELEASE=$(HOST_BINDIR)/lrelease
+
 ifneq ($(ENABLE_DOCS),yes)
   $(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS := --disable-docs
 endif
@@ -116,6 +124,7 @@ define $(PKG)_BUILD
         $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS) \
+        $($(PKG)_QT_CONFIGURE_OPTIONS) \
         $($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
         PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
