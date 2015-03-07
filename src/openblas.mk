@@ -12,7 +12,10 @@ $(PKG)_DEPS     :=
 
 $(PKG)_MAKE_OPTS := PREFIX=$(HOST_PREFIX) DYNAMIC_ARCH=1 NO_LAPACK=1
 
-ifneq ($(MXE_NATIVE_BUILD),yes)
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  ## This may also be needed on some systems: NO_AVX2=1
+  $(PKG)_MAKE_OPTS += NO_CBLAS=1 USE_THREAD=1 CC=$(MXE_CC) FC=$(MXE_F77)
+else
   $(PKG)_MAKE_OPTS += NO_CBLAS=1 USE_THREAD=1 CC=$(MXE_CC) FC=$(MXE_F77) HOSTCC=gcc HOSTFC=gfortran CROSS=1 CROSS_SUFFIX=$(MXE_TOOL_PREFIX)
 endif
 
