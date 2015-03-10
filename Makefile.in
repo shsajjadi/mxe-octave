@@ -682,7 +682,7 @@ $(foreach TOOL,$(BUILD_TOOLS),$(eval $(call PKG_RULE,$(TOOL),$(call TMP_DIR,$(TO
 clean:
 	rm -rf $(call TMP_DIR,*) $(BUILD_TOOLS_PREFIX)
 	rm -rf $(STAMP_DIR) $(MSYS_INFO_DIR) $(LOG_DIR)
-	rm -rf $(MSYS_BASE_DIR) $(NOTEPAD_BASE_DIR)
+	rm -rf $(MSYS_BASE_DIR) $(MSYS_EXTENSION_DIR) $(NOTEPAD_BASE_DIR)
 	rm -rf native-tools cross-tools octave gnuplot
 	rm -f Makefile cmake-toolchain-file.stamp
 	rm -f tools/set-mxe-env.sh
