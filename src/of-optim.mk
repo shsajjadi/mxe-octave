@@ -3,12 +3,11 @@
 
 PKG             := of-optim
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.4.0
-$(PKG)_CHECKSUM := d60e6ae879afa5c8542571667d017fef7161d119
+$(PKG)_VERSION  := 1.4.1
+$(PKG)_CHECKSUM := ff65c5341533ebb0c8d5749c3645b13c06ea60ca
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := optim-$($(PKG)_VERSION)
 $(PKG)_FILE     := optim-$($(PKG)_VERSION).tar.gz
-$(PKG)_FIXED_FILE := optim-$($(PKG)_VERSION)a.tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
 

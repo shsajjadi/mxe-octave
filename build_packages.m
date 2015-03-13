@@ -23,7 +23,7 @@ endfunction
 try_install general-1.3.4.tar.gz
 try_install miscellaneous-1.2.1.tar.gz
 try_install struct-1.0.11.tar.gz
-try_install optim-1.4.0.tar.gz
+try_install optim-1.4.1.tar.gz
 try_install specfun-1.1.0.tar.gz
 try_install control-2.6.6.tar.gz
 try_install signal-1.3.0.tar.gz
