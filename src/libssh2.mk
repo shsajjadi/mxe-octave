@@ -3,8 +3,8 @@
 
 PKG             := libssh2
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.4.3
-$(PKG)_CHECKSUM := c27ca83e1ffeeac03be98b6eef54448701e044b0
+$(PKG)_VERSION  := 1.5.0
+$(PKG)_CHECKSUM := d9a97a04aef8bcf835b22a7a2e8e869782baa3aa
 $(PKG)_SUBDIR   := libssh2-$($(PKG)_VERSION)
 $(PKG)_FILE     := libssh2-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.libssh2.org/download/$($(PKG)_FILE)
@@ -24,6 +24,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
+        --disable-examples-build \
         --without-openssl \
         --with-libgcrypt \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' && $(CONFIGURE_POST_HOOK)
