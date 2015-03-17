@@ -305,8 +305,10 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     MXE_QMAKE := qmake
   endif
 
-  MXE_MOC := moc
-  MXE_UIC := uic
+  MXE_MOC := $(HOST_BINDIR)/moc
+  MXE_UIC := $(HOST_BINDIR)/uic
+  MXE_LRELEASE := $(HOST_BINDIR)/lrelease
+  MXE_RCC := $(HOST_BINDIR)/rcc
 else
   MXE_TOOL_PREFIX := $(TARGET)-
   MXE_AR := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ar'
@@ -327,6 +329,8 @@ else
   MXE_QMAKE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
   MXE_MOC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
   MXE_UIC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
+  MXE_LRELEASE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'
+  MXE_RCC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)

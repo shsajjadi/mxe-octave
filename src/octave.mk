@@ -41,10 +41,10 @@ endif
 ## If we allow the system Qt libraries to be used, then these
 ## won't make sense.
 $(PKG)_QT_CONFIGURE_OPTIONS := \
-  MOC=$(HOST_BINDIR)/moc \
-  UIC=$(HOST_BINDIR)/uic \
-  RCC=$(HOST_BINDIR)/rcc \
-  LRELEASE=$(HOST_BINDIR)/lrelease
+  MOC=$(MXE_MOC) \
+  UIC=$(MXE_UIC) \
+  RCC=$(MXE_RCC) \
+  LRELEASE=$(MXE_LRELEASE)
 
 ifneq ($(ENABLE_DOCS),yes)
   $(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS := --disable-docs
