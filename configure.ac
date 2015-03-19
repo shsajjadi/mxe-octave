@@ -181,6 +181,13 @@ esac
    
 AC_SUBST(ENABLE_OCTAVE)
 
+ENABLE_BINARY_PACKAGES=no
+AC_ARG_ENABLE([binary-packages],
+  [AS_HELP_STRING([--enable-binary-packages],
+    [Enable creating binary octave forge packages])],
+  [if test "$enableval" = yes; then ENABLE_BINARY_PACKAGES=yes; fi], [])
+AC_SUBST(ENABLE_BINARY_PACKAGES)
+
 ### Default is to cross compile for mingw.
 
 echo $host_alias
