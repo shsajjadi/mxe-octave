@@ -51,6 +51,10 @@ ENABLE_WINDOWS_64 := @ENABLE_WINDOWS_64@
 # you know what you are doing.
 ENABLE_64 := @ENABLE_64@
 
+# create binary octave forge tools.
+# if cross, compiling, this also means we will attempt to create cross mkoctfile
+ENABLE_BINARY_PACKAGES := @ENABLE_BINARY_PACKAGES@
+
 # Should match what config.guess prints for your system.
 # If cross compiling, you must set it manually.
 ifeq ($(MXE_NATIVE_BUILD),yes)
@@ -309,6 +313,8 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
   MXE_UIC := $(HOST_BINDIR)/uic
   MXE_LRELEASE := $(HOST_BINDIR)/lrelease
   MXE_RCC := $(HOST_BINDIR)/rcc
+
+  MXE_MKOCTFILE := $(HOST_BINDIR)/mkoctfile
 else
   MXE_TOOL_PREFIX := $(TARGET)-
   MXE_AR := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ar'
@@ -331,6 +337,8 @@ else
   MXE_UIC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
   MXE_LRELEASE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'
   MXE_RCC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
+
+  MXE_MKOCTFILE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)mkoctfile'
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)
@@ -578,6 +586,26 @@ define INSTALL_DESTDIR
     fi
 endef
 
+define OCTAVE_FORGE_PKG_COMPILE
+  if [ -d '$(1)/src' ]; then \
+    if [ -f '$(1)/src/configure' ]; then \
+      cd '$(1)/src' && ./configure $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) MKOCTFILE='$(MXE_MKOCTFILE)'\
+        $(4); \
+    fi; \
+    if [ -f '$(1)/src/Makefile' ]; then \
+      $(MAKE) -C '$(1)/src' MKOCTFILE='$(MXE_MKOCTFILE) --verbose'; \
+    fi; \
+  fi
+endef
+
+define OCTAVE_FORGE_PKG_BUILD_NOCOMPILE
+    mkdir -p '$(3)$(HOST_PREFIX)/src'
+    cd '$(1)/..' \
+      && tar cvfz $($(PKG)_FILE) $($(PKG)_SUBDIR) \
+      && $(INSTALL) -m644 '$($(PKG)_FILE)' '$(3)$(HOST_PREFIX)/src'
+endef
+
 ifeq ($(MXE_SYSTEM),msvc)
 define OCTAVE_FORGE_PKG_BUILD
     $(INSTALL) -d '$(3)$(HOST_PREFIX)/local/octave-$(octave_VERSION)/share/octave'
@@ -590,6 +618,9 @@ define OCTAVE_FORGE_PKG_BUILD
 endef
 else
 define OCTAVE_FORGE_PKG_BUILD
+    if [ $(ENABLE_BINARY_PACKAGES) = yes ]; then \
+      $(OCTAVE_FORGE_PKG_COMPILE); \
+    fi
     mkdir -p '$(3)$(HOST_PREFIX)/src'
     cd '$(1)/..' \
       && tar cvfz $($(PKG)_FILE) $($(PKG)_SUBDIR) \
