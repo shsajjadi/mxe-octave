@@ -116,6 +116,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$($(PKG)_PREFIX)' \
         --disable-silent-rules \
+        --enable-install-build-logs \
         $($(PKG)_CROSS_CONFIG_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \
