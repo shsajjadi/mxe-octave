@@ -91,10 +91,10 @@ ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_EXTRA_CONFIGURE_OPTIONS += --with-x=no
 endif
 
-# if want binary packages and are cross compiling, then we need cross mkoctfile
+# if want binary packages and are cross compiling, then we need cross tools enabled
 ifeq ($(ENABLE_BINARY_PACKAGES),yes)
   ifeq ($(MXE_NATIVE_BUILD),no)
-    $(PKG)_EXTRA_CONFIGURE_OPTIONS += --enable-cross-mkoctfile
+    $(PKG)_EXTRA_CONFIGURE_OPTIONS += --enable-cross-tools
   endif
 endif
 
@@ -145,8 +145,11 @@ define $(PKG)_BUILD
 
     if [ "x$(MXE_SYSTEM)" == "xmingw" ]; then \
       cp '$(1)/.build/src/.libs/octave-gui.exe' '$(3)$(HOST_BINDIR)'; \
-      mkdir -p '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
-      $(INSTALL) '$(1)/.build/src/$(MXE_TOOL_PREFIX)mkoctfile' '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
+      if [ "x$(ENABLE_BINARY_PACKAGES)" == "xyes" ]; then \
+        mkdir -p '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
+        $(INSTALL) '$(1)/.build/src/$(MXE_TOOL_PREFIX)mkoctfile' '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
+        $(INSTALL) '$(1)/.build/src/$(MXE_TOOL_PREFIX)octave-config' '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
+      fi; \
     fi
 
     if [ "x$(ENABLE_DOCS)" == "xyes" ]; then \

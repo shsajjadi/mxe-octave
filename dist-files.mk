@@ -450,6 +450,7 @@ SRC_FILES_1 := \
   of-control.mk \
   of-data-smoothing.mk \
   of-dicom.mk \
+  of-fits-1-cross-fixes.patch \
   of-fits.mk \
   of-fl-core-1-fixes.patch \
   of-fl-core.mk \
@@ -467,6 +468,7 @@ SRC_FILES_1 := \
   of-optim.mk \
   of-quaternion.mk \
   of-signal.mk \
+  of-sockets-1-cross-fixes.patch \
   of-sockets.mk \
   of-specfun.mk \
   of-statistics.mk \

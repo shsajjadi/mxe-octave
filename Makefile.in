@@ -315,6 +315,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
   MXE_RCC := $(HOST_BINDIR)/rcc
 
   MXE_MKOCTFILE := $(HOST_BINDIR)/mkoctfile
+  MXE_OCTAVECONFIG := $(HOST_BINDIR)/octave-config
 else
   MXE_TOOL_PREFIX := $(TARGET)-
   MXE_AR := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ar'
@@ -339,6 +340,7 @@ else
   MXE_RCC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
 
   MXE_MKOCTFILE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)mkoctfile'
+  MXE_OCTAVECONFIG := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)octave-config'
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)
@@ -590,11 +592,13 @@ define OCTAVE_FORGE_PKG_COMPILE
   if [ -d '$(1)/src' ]; then \
     if [ -f '$(1)/src/configure' ]; then \
       cd '$(1)/src' && ./configure $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) MKOCTFILE='$(MXE_MKOCTFILE)'\
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) MKOCTFILE='$(MXE_MKOCTFILE)' \
+        OCTAVECONFIG='$(MXE_OCTAVECONFIG)' \
         $(4); \
     fi; \
     if [ -f '$(1)/src/Makefile' ]; then \
-      $(MAKE) -C '$(1)/src' MKOCTFILE='$(MXE_MKOCTFILE) --verbose'; \
+      $(MAKE) -C '$(1)/src' MKOCTFILE='$(MXE_MKOCTFILE) --verbose' \
+        OCTAVECONFIG='$(MXE_OCTAVECONFIG)'; \
     fi; \
   fi
 endef
