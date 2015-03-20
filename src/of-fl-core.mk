@@ -18,5 +18,5 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(OCTAVE_FORGE_PKG_BUILD_NOCOMPILE)
+    $(OCTAVE_FORGE_PKG_BUILD)
 endef
