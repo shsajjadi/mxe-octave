@@ -593,12 +593,12 @@ define OCTAVE_FORGE_PKG_COMPILE
     if [ -f '$(1)/src/configure' ]; then \
       cd '$(1)/src' && ./configure $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) MKOCTFILE='$(MXE_MKOCTFILE)' \
-        OCTAVECONFIG='$(MXE_OCTAVECONFIG)' \
+        OCTAVE_CONFIG='$(MXE_OCTAVECONFIG)' \
         $(4); \
     fi; \
     if [ -f '$(1)/src/Makefile' ]; then \
       $(MAKE) -C '$(1)/src' MKOCTFILE='$(MXE_MKOCTFILE) --verbose' \
-        OCTAVECONFIG='$(MXE_OCTAVECONFIG)'; \
+        OCTAVE_CONFIG='$(MXE_OCTAVECONFIG)'; \
     fi; \
   fi
 endef
