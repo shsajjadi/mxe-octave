@@ -5,10 +5,10 @@ diff -ur octave-sockets-1.2.0.orig/src/Makefile octave-sockets-1.2.0/src/Makefil
  SRC := $(OCT:.oct=.cc)
  
  MKOCTFILE ?= mkoctfile -Wall
-+OCTAVECONFIG ?= octave-config
++OCTAVE_CONFIG ?= octave-config
  OCTAVE ?= octave
  
-+CANONICAL_HOST_TYPE := $(shell $(OCTAVECONFIG) -p CANONICAL_HOST_TYPE))
++CANONICAL_HOST_TYPE := $(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE))
 +
  #The following is necessary to get the sockets package working in Windows.
  #It has been tried on Win7 and XP, in Octave 3.8.0 using mxe-octave (mingw)
