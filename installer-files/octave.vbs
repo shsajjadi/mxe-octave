@@ -20,16 +20,15 @@ GUI_MODE=1
 AllArgs = ""
 Set wshArgs = WScript.Arguments
 For I = 0 to wshArgs.Count - 1
-  if wshArgs(I) = "--force-gui" then GUI_MODE=1
   if wshArgs(I) = "--no-gui" then GUI_MODE=0
   AllArgs = AllArgs & " " & chr(34) & wshArgs(I) & chr(34)
 Next
 
-' start whatever octave we no want to run
+' start octave-gui, either with console shown or hidden
 If GUI_MODE = 1 then
   wshShell.Run chr(34) & OctavePath & "\bin\octave-gui.exe" & Chr(34) & AllArgs, 0
 Else
-  wshShell.Run chr(34) & OctavePath & "\bin\octave-cli.exe" & Chr(34) & AllArgs, 1
+  wshShell.Run chr(34) & OctavePath & "\bin\octave-gui.exe" & Chr(34) & AllArgs, 1
 End If
 
 ' free our objects
