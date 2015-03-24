@@ -8,9 +8,9 @@ diff -ur fl-core/src/Makefile fl-core.new/src/Makefile
 -ifdef COMSPEC 
 +
 +MKOCTFILE ?= mkoctfile
-+OCTAVECONFIG ?= octave-config
++OCTAVE_CONFIG ?= octave-config
 +
-+ifneq (,$(findstring mingw,$(shell $(OCTAVECONFIG) -p CANONICAL_HOST_TYPE)))
++ifneq (,$(findstring mingw,$(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE)))
 +	ADDPARAM := -lpthread
 +else
 + ifdef COMSPEC 
