@@ -8,7 +8,10 @@ $(PKG)_CHECKSUM := ddf9c20ca8309a116e0466c42984238009525da6
 $(PKG)_SUBDIR   := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.qt-project.org/archives/qt/4.8/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus fontconfig
+$(PKG)_DEPS     := postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
+ifeq ($(USE_SYSTEM_FONTCONFIG),no)
+  $(PKG)_FONTCONFIG := fontconfig
+endif
 ifeq ($(MXE_WINDOWS_BUILD),no)
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += x11 xext xfixes xdmcp xrender xfixes xdamage xt xxf86vm
