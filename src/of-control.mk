@@ -3,8 +3,8 @@
 
 PKG             := of-control
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.6.6
-$(PKG)_CHECKSUM := 540811b8b749fed24ff8ff752b77b8fa941de56e
+$(PKG)_VERSION  := 2.8.0
+$(PKG)_CHECKSUM := b35781fdc02f92fdbbf4eb114a8c5e1e975f978d
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := control
 $(PKG)_FILE     := control-$($(PKG)_VERSION).tar.gz
