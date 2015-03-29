@@ -3,8 +3,8 @@
 
 PKG             := of-quaternion
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.2.2
-$(PKG)_CHECKSUM := 5fb44e4f2ff5fb7d6dd14e949fc2a909f084be67
+$(PKG)_VERSION  := 2.4.0
+$(PKG)_CHECKSUM := f02927157927ec4939970fb7be72c9bef76bf4f3
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := quaternion
 $(PKG)_FILE     := quaternion-$($(PKG)_VERSION).tar.gz
