@@ -3,10 +3,10 @@
 
 PKG             := of-signal
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.3.0
-$(PKG)_CHECKSUM := 007f2d574cc107a3ffb657c3242e97610056e33d
+$(PKG)_VERSION  := 1.3.1
+$(PKG)_CHECKSUM := 89304fdf6cf610d5731029ca08b3284457db2b14
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := signal
+$(PKG)_SUBDIR   := signal-$($(PKG)_VERSION)
 $(PKG)_FILE     := signal-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := of-specfun of-control of-general
