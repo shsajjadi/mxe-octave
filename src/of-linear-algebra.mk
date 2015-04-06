@@ -3,8 +3,8 @@
 
 PKG             := of-linear-algebra
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.2.0
-$(PKG)_CHECKSUM := 513d69169248c903e57cbf8b6a82e850e377045b
+$(PKG)_VERSION  := 2.2.2
+$(PKG)_CHECKSUM := 5ebc229807038d5663540b6a6f1e00608dce4e7b
 $(PKG)_REMOTE_SUBDIR :=
 $(PKG)_SUBDIR   := linear-algebra
 $(PKG)_FILE     := linear-algebra-$($(PKG)_VERSION).tar.gz
