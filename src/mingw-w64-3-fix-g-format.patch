@@ -1,0 +1,20 @@
+From: John Donoghue <john.david.donoghue@gmail.com>
+Date: Mon, 6 Apr 2015 09:29:43 -0400
+Subject: [PATCH] Fix printf("%g") width format out by one in some instances
+ (Bug 362)
+
+* mingw-w64-crt\stdio\mingw_pformat.c
+  (__pformat_emit_float): change width > len => width >= len
+
+diff -ur mingw-w64-v3.3.0.orig/mingw-w64-crt/stdio/mingw_pformat.c mingw-w64-v3.3.0/mingw-w64-crt/stdio/mingw_pformat.c
+--- mingw-w64-v3.3.0.orig/mingw-w64-crt/stdio/mingw_pformat.c	2015-04-06 10:12:45.486721000 -0400
++++ mingw-w64-v3.3.0/mingw-w64-crt/stdio/mingw_pformat.c	2015-04-06 10:14:26.200702676 -0400
+@@ -1055,7 +1055,7 @@
+      * reserve space in the output field, for the required number of
+      * decimal digits to be placed before the decimal point...
+      */
+-    if( stream->width > len )
++    if( stream->width >= len )
+       /*
+        * adjusting as appropriate, when width is sufficient...
+        */

@@ -59,6 +59,10 @@ ifeq ($(MXE_SYSTEM),mingw)
 
     # build mingw-w64-crt
     cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,mingw-w64,$(TAR))
+    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/mingw-w64-*.patch)),
+      (cd '$(1)/$(mingw-w64_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
+    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(MXE_SYSTEM)-mingw-w64-*.patch)),
+      (cd '$(1)/$(mingw-w64_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
     mkdir '$(1).crt-build'
     cd '$(1).crt-build' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-crt/configure' \
 	--host='$(TARGET)' \
