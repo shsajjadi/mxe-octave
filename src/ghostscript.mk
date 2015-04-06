@@ -3,8 +3,8 @@
 
 PKG             := ghostscript
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 9.15
-$(PKG)_CHECKSUM := f53bcc47e912c7bffc2ced62ed9311376fb18bab
+$(PKG)_VERSION  := 9.16
+$(PKG)_CHECKSUM := cc06fbf8244b9e8d0694cee5bf3be5bdd444b888
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://downloads.ghostscript.com/public/$($(PKG)_FILE)
@@ -58,7 +58,6 @@ else
     ## mingw native build.
     ifeq ($(ENABLE_64),yes)
       define $(PKG)_BUILD
-        mv '$(1)/zlib' '$(1)/zlib.x'
         mv '$(1)/freetype' '$(1)/freetype.x'
         cp '$(TOP_DIR)/src/ghostscript-mingw-x86_64-makefile' '$(1)/Makefile'
         $(MAKE) -C '$(1)' TARGET='$(TARGET)' prefix='$(HOST_PREFIX)' obj/arch.h obj/gconfig_.h
@@ -72,7 +71,6 @@ else
       endef
     else
       define $(PKG)_BUILD
-        mv '$(1)/zlib' '$(1)/zlib.x'
         mv '$(1)/freetype' '$(1)/freetype.x'
         cp '$(TOP_DIR)/src/ghostscript-mingw-i686-makefile' '$(1)/Makefile'
         $(MAKE) -C '$(1)' TARGET='$(TARGET)' prefix='$(HOST_PREFIX)' obj/arch.h obj/gconfig_.h

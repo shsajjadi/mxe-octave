@@ -319,7 +319,6 @@ SRC_FILES_1 := \
   mingw-cfitsio-1-fixes.patch \
   mingw-epstool-1-fixes.patch \
   mingw-fontconfig-ln_s.patch \
-  mingw-ghostscript-1-win.patch \
   mingw-glib-1-fixes.patch \
   mingw-glib-2-fixes.patch \
   mingw-hdf5-1.patch \
