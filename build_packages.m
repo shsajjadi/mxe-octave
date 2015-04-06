@@ -27,7 +27,7 @@ try_install optim-1.4.1.tar.gz
 try_install specfun-1.1.0.tar.gz
 try_install control-2.8.0.tar.gz
 try_install signal-1.3.0.tar.gz
-try_install communications-1.2.0.tar.gz
+try_install communications-1.2.1.tar.gz
 try_install image-2.2.2.tar.gz
 try_install io-2.2.7.tar.gz
 try_install statistics-1.2.4.tar.gz
