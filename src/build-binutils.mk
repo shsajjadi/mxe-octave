@@ -17,6 +17,10 @@ ifneq ($(ENABLE_WINDOWS_64),yes)
     $(INSTALL) -d '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
     mv $(addprefix $(HOST_PREFIX)/bin/, ar as dlltool ld ld.bfd nm objcopy objdump ranlib strip) '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
   endef
+else
+  define $(PKG)_POST_BUILD
+    rm $(addprefix $(HOST_PREFIX)/bin/, ar as dlltool ld ld.bfd nm objcopy objdump ranlib strip)
+  endef
 endif
 endif
 
