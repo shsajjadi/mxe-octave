@@ -449,6 +449,8 @@ SRC_FILES_1 := \
   of-communications.mk \
   of-control.mk \
   of-data-smoothing.mk \
+  of-database-1-cross-fixes.patch \
+  of-database.mk \
   of-dicom.mk \
   of-fits-1-cross-fixes.patch \
   of-fits.mk \
