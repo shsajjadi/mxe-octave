@@ -15,6 +15,6 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && make CC="$(MXE_CC)" CLINK=$(MXE_CC) LDFLAGS="$(MXE_LDFLAGS)" CFLAGS="$(MXE_CFLAGS)"
-    cd '$(1)' && make prefix=$(3)$(HOST_PREFIX) install
+    cd '$(1)' && make CC="$(MXE_CC)" CLINK=$(MXE_CC) LDFLAGS="$(MXE_LDFLAGS)" CFLAGS="$(MXE_CFLAGS)" prefix="$(TOP_DIR)" EPSTOOL_ROOT="/usr"
+    cd '$(1)' && make prefix="$(3)$(TOP_DIR)" EPSTOOL_ROOT="/usr" install
 endef
