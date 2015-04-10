@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 4.3.2
 $(PKG)_CHECKSUM := 6e1bacab02e5220954fe0328d710ebb71c071d19
 $(PKG)_SUBDIR   := netcdf-$($(PKG)_VERSION)
 $(PKG)_FILE     := netcdf-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-$($(PKG)_VERSION).tar.gz
+$(PKG)_URL      := ftp://ftp.unidata.ucar.edu/pub/netcdf/old/$($(PKG)_FILE)
 $(PKG)_DEPS     := curl hdf5
 
 define $(PKG)_UPDATE
