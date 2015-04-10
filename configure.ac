@@ -157,6 +157,15 @@ AC_ARG_ENABLE([openblas],
   [if test "$enableval" = no; then ENABLE_OPENBLAS=no; fi], [])
 AC_SUBST(ENABLE_OPENBLAS)
 
+ENABLE_QHULL_NO_STRICT_ALIASING_FLAG=no
+AC_ARG_ENABLE([qhull-no-strict-aliasing-flag],
+  [AS_HELP_STRING([--enable-qhull-no-strict-aliasing-flag],
+    [Compile Qhull with -fno-strict-aliasing flag])],
+  [if test "$enableval" = yes; then
+     ENABLE_QHULL_NO_STRICT_ALIASING_FLAG=yes;
+   fi], [])
+AC_SUBST(ENABLE_QHULL_NO_STRICT_ALIASING_FLAG)
+
 ENABLE_OCTAVE=stable
 AC_ARG_ENABLE([octave],
   [AS_HELP_STRING([--enable-octave=stable],

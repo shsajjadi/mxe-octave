@@ -75,6 +75,9 @@ BUILD_STATIC := @BUILD_STATIC@
 
 USE_PIC_FLAG := @USE_PIC_FLAG@
 
+# Compile Qhull with -fno-strict-aliasing flag.
+ENABLE_QHULL_NO_STRICT_ALIASING_FLAG := @ENABLE_QHULL_NO_STRICT_ALIASING_FLAG@
+
 # Attempt to build with support for Java.
 ENABLE_JAVA := @ENABLE_JAVA@
 
