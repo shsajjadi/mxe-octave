@@ -460,6 +460,7 @@ SRC_FILES_1 := \
   of-general.mk \
   of-geometry.mk \
   of-image.mk \
+  of-instrument-control.mk \
   of-io.mk \
   of-linear-algebra.mk \
   of-ltfat-1-mingw-fixes.patch \
