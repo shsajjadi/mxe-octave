@@ -9,7 +9,10 @@ $(PKG)_REMOTE_SUBDIR :=
 $(PKG)_SUBDIR   := tsa
 $(PKG)_FILE     := tsa-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/octave/$($(PKG)_FILE)?download
-$(PKG)_DEPS     := libgomp
+$(PKG)_DEPS     :=
+ifeq ($(USE_SYSTEM_GCC),no)
+  $(PKG)_DEPS += libgomp
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://$(SOURCEFORGE_MIRROR)/projects/octave/files/Octave%20Forge%20Packages/Individual%20Package%20Releases/' | \
