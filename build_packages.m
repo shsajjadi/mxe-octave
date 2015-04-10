@@ -49,4 +49,5 @@ try_install netcdf-1.0.6.tar.gz
 try_install ltfat-2.0.1.tar.gz
 try_install database-2.3.1.tar.gz
 try_install instrument-control-0.2.1.tar.gz
+try_install generate_html-0.1.7.tar.gz
 
