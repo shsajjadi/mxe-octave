@@ -9,12 +9,18 @@ $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://pkgs.fedoraproject.org/repo/pkgs/epstool/epstool-3.08.tar.gz/465a57a598dbef411f4ecbfbd7d4c8d7/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
+ifeq ($(MXE_NATIVE_BUILD),yes)
+ $(PKG)_PREFIX_DIR := $(TOP_DIR)
+else
+ $(PKG)_PREFIX_DIR := $(HOST_PREFIX)
+endif
+
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
     echo $($(PKG)_VERSION)
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && make CC="$(MXE_CC)" CLINK=$(MXE_CC) LDFLAGS="$(MXE_LDFLAGS)" CFLAGS="$(MXE_CFLAGS)" prefix="$(TOP_DIR)" EPSTOOL_ROOT="/usr"
-    cd '$(1)' && make prefix="$(3)$(TOP_DIR)" EPSTOOL_ROOT="/usr" install
+    cd '$(1)' && make CC="$(MXE_CC)" CLINK=$(MXE_CC) LDFLAGS="$(MXE_LDFLAGS)" CFLAGS="$(MXE_CFLAGS)" prefix="$($(PKG)_PREFIX_DIR)" EPSTOOL_ROOT="/usr"
+    cd '$(1)' && make prefix="$(3)$($(PKG)_PREFIX_DIR)" EPSTOOL_ROOT="/usr" install
 endef
