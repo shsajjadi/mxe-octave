@@ -467,6 +467,7 @@ SRC_FILES_1 := \
   of-ltfat-1-mingw-fixes.patch \
   of-ltfat.mk \
   of-miscellaneous.mk \
+  of-netcdf-1-cross-fixes.patch \
   of-netcdf.mk \
   of-odepkg.mk \
   of-optim.mk \
