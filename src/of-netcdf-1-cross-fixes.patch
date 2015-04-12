@@ -1,0 +1,329 @@
+diff -ur netcdf.orig/src/configure netcdf/src/configure
+--- netcdf.orig/src/configure	2015-04-12 18:55:55.602652298 -0400
++++ netcdf/src/configure	2015-04-12 18:56:10.946652868 -0400
+@@ -601,6 +601,7 @@
+ mpath
+ subver
+ ver
++OCTAVE_CONFIG
+ MKOCTFILE
+ OBJEXT
+ EXEEXT
+@@ -2610,6 +2611,46 @@
+ test -z "$MKOCTFILE" &&	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: no mkoctfile found on path" >&5
+ $as_echo "$as_me: WARNING: no mkoctfile found on path" >&2;}
+ 
++# Extract the first word of "octave-config", so it can be a program name with args.
++set dummy octave-config; ac_word=$2
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
++$as_echo_n "checking for $ac_word... " >&6; }
++if ${ac_cv_prog_OCTAVE_CONFIG+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++  if test -n "$OCTAVE_CONFIG"; then
++  ac_cv_prog_OCTAVE_CONFIG="$OCTAVE_CONFIG" # Let the user override the test.
++else
++as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
++for as_dir in $PATH
++do
++  IFS=$as_save_IFS
++  test -z "$as_dir" && as_dir=.
++    for ac_exec_ext in '' $ac_executable_extensions; do
++  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++    ac_cv_prog_OCTAVE_CONFIG="octave-config"
++    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
++    break 2
++  fi
++done
++  done
++IFS=$as_save_IFS
++
++fi
++fi
++OCTAVE_CONFIG=$ac_cv_prog_OCTAVE_CONFIG
++if test -n "$OCTAVE_CONFIG"; then
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $OCTAVE_CONFIG" >&5
++$as_echo "$OCTAVE_CONFIG" >&6; }
++else
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++fi
++
++
++test -z "$OCTAVE_CONFIG" &&	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: no octave-config found on path" >&5
++$as_echo "$as_me: WARNING: no octave-config found on path" >&2;}
++
+ 
+ 
+ 
+@@ -2796,6 +2837,8 @@
+ 
+ 
+ 
++
++
+ # Extract the first word of "octave", so it can be a program name with args.
+ set dummy octave; ac_word=$2
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+@@ -2833,25 +2876,25 @@
+ fi
+ 
+ 
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for OCTAVE_VERSION in Octave" >&5
+-$as_echo_n "checking for OCTAVE_VERSION in Octave... " >&6; }
+-OCTAVE_VERSION=`echo "disp(OCTAVE_VERSION)" | $OCTAVE -qf`
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for VERSION in octave-config" >&5
++$as_echo_n "checking for VERSION in octave-config... " >&6; }
++OCTAVE_VERSION=`$OCTAVE_CONFIG -p VERSION`
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $OCTAVE_VERSION" >&5
+ $as_echo "$OCTAVE_VERSION" >&6; }
+ 
+ 
+ 
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for octave_config_info('canonical_host_type') in Octave" >&5
+-$as_echo_n "checking for octave_config_info('canonical_host_type') in Octave... " >&6; }
+-canonical_host_type=`echo "disp(octave_config_info('canonical_host_type'))" | $OCTAVE -qf`
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for CANONICAL_HOST_TYPE in octave-config" >&5
++$as_echo_n "checking for CANONICAL_HOST_TYPE in octave-config... " >&6; }
++canonical_host_type=`$OCTAVE_CONFIG -p CANONICAL_HOST_TYPE`
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $canonical_host_type" >&5
+ $as_echo "$canonical_host_type" >&6; }
+ 
+ 
+ 
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for octave_config_info('SHLEXT') in Octave" >&5
+-$as_echo_n "checking for octave_config_info('SHLEXT') in Octave... " >&6; }
+-SHLEXT=`echo "disp(octave_config_info('SHLEXT'))" | $OCTAVE -qf`
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SHLEXT in octave-config" >&5
++$as_echo_n "checking for SHLEXT in octave-config... " >&6; }
++SHLEXT=`$OCTAVE_CONFIG -p SHLEXT`
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $SHLEXT" >&5
+ $as_echo "$SHLEXT" >&6; }
+ 
+@@ -3058,11 +3101,105 @@
+ 
+ 
+ if test -z "$NC_CONFIG"; then
++if test -n "$ac_tool_prefix"; then
++  # Extract the first word of "${ac_tool_prefix}nc-config", so it can be a program name with args.
++set dummy ${ac_tool_prefix}nc-config; ac_word=$2
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
++$as_echo_n "checking for $ac_word... " >&6; }
++if ${ac_cv_prog_NC_CONFIG+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++  if test -n "$NC_CONFIG"; then
++  ac_cv_prog_NC_CONFIG="$NC_CONFIG" # Let the user override the test.
++else
++as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
++for as_dir in $PATH
++do
++  IFS=$as_save_IFS
++  test -z "$as_dir" && as_dir=.
++    for ac_exec_ext in '' $ac_executable_extensions; do
++  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++    ac_cv_prog_NC_CONFIG="${ac_tool_prefix}nc-config"
++    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
++    break 2
++  fi
++done
++  done
++IFS=$as_save_IFS
++
++fi
++fi
++NC_CONFIG=$ac_cv_prog_NC_CONFIG
++if test -n "$NC_CONFIG"; then
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $NC_CONFIG" >&5
++$as_echo "$NC_CONFIG" >&6; }
++else
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++fi
++
++
++fi
++if test -z "$ac_cv_prog_NC_CONFIG"; then
++  ac_ct_NC_CONFIG=$NC_CONFIG
++  # Extract the first word of "nc-config", so it can be a program name with args.
++set dummy nc-config; ac_word=$2
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
++$as_echo_n "checking for $ac_word... " >&6; }
++if ${ac_cv_prog_ac_ct_NC_CONFIG+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++  if test -n "$ac_ct_NC_CONFIG"; then
++  ac_cv_prog_ac_ct_NC_CONFIG="$ac_ct_NC_CONFIG" # Let the user override the test.
++else
++as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
++for as_dir in $PATH
++do
++  IFS=$as_save_IFS
++  test -z "$as_dir" && as_dir=.
++    for ac_exec_ext in '' $ac_executable_extensions; do
++  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++    ac_cv_prog_ac_ct_NC_CONFIG="nc-config"
++    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
++    break 2
++  fi
++done
++  done
++IFS=$as_save_IFS
++
++fi
++fi
++ac_ct_NC_CONFIG=$ac_cv_prog_ac_ct_NC_CONFIG
++if test -n "$ac_ct_NC_CONFIG"; then
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_NC_CONFIG" >&5
++$as_echo "$ac_ct_NC_CONFIG" >&6; }
++else
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++fi
++
++  if test "x$ac_ct_NC_CONFIG" = x; then
++    NC_CONFIG="nc-config"
++  else
++    case $cross_compiling:$ac_tool_warned in
++yes:)
++{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
++$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
++ac_tool_warned=yes ;;
++esac
++    NC_CONFIG=$ac_ct_NC_CONFIG
++  fi
++else
++  NC_CONFIG="$ac_cv_prog_NC_CONFIG"
++fi
++
++fi
++if test -z "$NC_CONFIG"; then
+ as_fn_error 1 "nc-config not found" "$LINENO" 5;
+ fi
+ 
+-NETCDF_LIBS="$NETCDF_LIBS `nc-config --libs`"
+-NETCDF_CFLAGS="$NETCDF_CFLAGS `nc-config --cflags`"
++NETCDF_LIBS="$NETCDF_LIBS `$NC_CONFIG --libs`"
++NETCDF_CFLAGS="$NETCDF_CFLAGS `$NC_CONFIG --cflags`"
+ 
+ 
+ CONFIGURE_OUTPUTS="Makeconf"
+@@ -3082,8 +3219,9 @@
+    headers:   $includedir
+ 
+ octave-forge is configured with
+-   octave:      $OCTAVE (version $OCTAVE_VERSION)
+-   mkoctfile:	$MKOCTFILE for Octave $subver
++   octave:        $OCTAVE (version $OCTAVE_VERSION)
++   mkoctfile:	  $MKOCTFILE for Octave $subver
++   octave-config: $OCTAVE_CONFIG for Octave $subver
+    netCDF compiler flags: $NETCDF_CFLAGS
+    netCDF libraries: $NETCDF_LIBS"
+   ac_config_files="$ac_config_files $CONFIGURE_OUTPUTS"
+diff -ur netcdf.orig/src/configure.base netcdf/src/configure.base
+--- netcdf.orig/src/configure.base	2015-04-12 18:55:55.602652298 -0400
++++ netcdf/src/configure.base	2015-04-12 18:56:10.946652868 -0400
+@@ -50,6 +50,9 @@
+ AC_CHECK_PROG(MKOCTFILE,mkoctfile,mkoctfile)
+ test -z "$MKOCTFILE" &&	AC_MSG_WARN([no mkoctfile found on path])
+ 
++AC_CHECK_PROG(OCTAVE_CONFIG,octave-config,octave-config)
++test -z "$OCTAVE_CONFIG" &&	AC_MSG_WARN([no octave-config found on path])
++
+ AC_SUBST(ver)
+ AC_SUBST(subver)
+ AC_SUBST(mpath)
+@@ -252,6 +255,13 @@
+ AC_SUBST($2)
+ ])
+ 
++AC_DEFUN(OCTAVE_CONFIG_EVAL,
++[AC_MSG_CHECKING([for $1 in octave-config])
++$2=`$OCTAVE_CONFIG -p $1`
++AC_MSG_RESULT($$2)
++AC_SUBST($2)
++])
++
+ dnl Check status of an octave variable
+ dnl
+ dnl OCTAVE_CHECK_EXIST(variable,action_if_true,action_if_false)
+@@ -269,13 +279,13 @@
+ 
+ dnl should check that $(OCTAVE) --version matches $(MKOCTFILE) --version
+ AC_CHECK_PROG(OCTAVE,octave,octave)
+-OCTAVE_EVAL(OCTAVE_VERSION,OCTAVE_VERSION)
++OCTAVE_CONFIG_EVAL(VERSION,OCTAVE_VERSION)
+ 
+ dnl grab canonical host type so we can write system specific install stuff
+-OCTAVE_EVAL(octave_config_info('canonical_host_type'),canonical_host_type)
++OCTAVE_CONFIG_EVAL(CANONICAL_HOST_TYPE,canonical_host_type)
+ 
+ dnl grab SHLEXT from octave config
+-OCTAVE_EVAL(octave_config_info('SHLEXT'),SHLEXT)
++OCTAVE_CONFIG_EVAL(SHLEXT,SHLEXT)
+ 
+ AC_PROG_LN_S
+ 
+@@ -312,11 +322,14 @@
+ 
+ AC_CHECK_PROG(NC_CONFIG, nc-config, nc-config)
+ if test -z "$NC_CONFIG"; then
++AC_CHECK_TOOL(NC_CONFIG, nc-config, nc-config)
++fi
++if test -z "$NC_CONFIG"; then
+ AC_MSG_ERROR([nc-config not found], 1);
+ fi
+ 
+-NETCDF_LIBS="$NETCDF_LIBS `nc-config --libs`"
+-NETCDF_CFLAGS="$NETCDF_CFLAGS `nc-config --cflags`"
++NETCDF_LIBS="$NETCDF_LIBS `$NC_CONFIG --libs`"
++NETCDF_CFLAGS="$NETCDF_CFLAGS `$NC_CONFIG --cflags`"
+ 
+ 
+ CONFIGURE_OUTPUTS="Makeconf"
+@@ -336,7 +349,8 @@
+    headers:   $includedir
+ 
+ octave-forge is configured with
+-   octave:      $OCTAVE (version $OCTAVE_VERSION)
+-   mkoctfile:	$MKOCTFILE for Octave $subver
++   octave:        $OCTAVE (version $OCTAVE_VERSION)
++   mkoctfile:	  $MKOCTFILE for Octave $subver
++   octave-config: $OCTAVE_CONFIG for Octave $subver
+    netCDF compiler flags: $NETCDF_CFLAGS
+    netCDF libraries: $NETCDF_LIBS"
+diff -ur netcdf.orig/src/Makeconf.in netcdf/src/Makeconf.in
+--- netcdf.orig/src/Makeconf.in	2015-04-12 18:55:55.602652298 -0400
++++ netcdf/src/Makeconf.in	2015-04-12 18:58:26.890657913 -0400
+@@ -53,6 +53,8 @@
+ OCTAVE_VERSION = @OCTAVE_VERSION@
+ MKOCTFILE = @MKOCTFILE@ -DHAVE_OCTAVE_$(ver) -v
+ SHLEXT = @SHLEXT@
++NC_CONFIG = @NC_CONFIG@
++OCTAVE_CONFIG = @OCTAVE_CONFIG@
+ 
+ %.o: %.c ; $(MKOCTFILE) -c $<
+ %.o: %.f ; $(MKOCTFILE) -c $<
+diff -ur netcdf.orig/src/Makefile netcdf/src/Makefile
+--- netcdf.orig/src/Makefile	2015-04-12 18:55:55.602652298 -0400
++++ netcdf/src/Makefile	2015-04-12 18:58:31.602658088 -0400
+@@ -1,10 +1,13 @@
+-LIBS=$(shell nc-config --libs)
+-AWK=awk
+-MKOCTFILE=mkoctfile
+-OCTAVE=octave
+-NCHEADER=$(shell nc-config --includedir)/netcdf.h
++sinclude Makeconf
++
++AWK ?= awk
++MKOCTFILE ?= mkoctfile
++OCTAVE ?= octave
++NC_CONFIG ?= nc-config
++NCHEADER=$(shell $(NC_CONFIG) --includedir)/netcdf.h
+ SRC=__netcdf__.cc
+-CFLAGS=$(shell nc-config --cflags)
++CFLAGS=$(shell $(NC_CONFIG) --cflags)
++LIBS=$(shell $(NC_CONFIG) --libs)
+ 
+ all: __netcdf__.oct
+ 
