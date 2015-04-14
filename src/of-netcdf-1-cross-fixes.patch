@@ -1,6 +1,6 @@
 diff -ur netcdf.orig/src/configure netcdf/src/configure
---- netcdf.orig/src/configure	2015-04-12 18:55:55.602652298 -0400
-+++ netcdf/src/configure	2015-04-12 18:56:10.946652868 -0400
+--- netcdf.orig/src/configure	2015-04-13 21:29:33.000000000 -0400
++++ netcdf/src/configure	2015-04-13 21:31:02.000000000 -0400
 @@ -601,6 +601,7 @@
  mpath
  subver
@@ -100,48 +100,31 @@ diff -ur netcdf.orig/src/configure netcdf/src/configure
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $SHLEXT" >&5
  $as_echo "$SHLEXT" >&6; }
  
-@@ -3058,11 +3101,105 @@
+@@ -3020,8 +3063,9 @@
+ esac
  
  
- if test -z "$NC_CONFIG"; then
+-# Extract the first word of "nc-config", so it can be a program name with args.
+-set dummy nc-config; ac_word=$2
 +if test -n "$ac_tool_prefix"; then
 +  # Extract the first word of "${ac_tool_prefix}nc-config", so it can be a program name with args.
 +set dummy ${ac_tool_prefix}nc-config; ac_word=$2
-+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-+$as_echo_n "checking for $ac_word... " >&6; }
-+if ${ac_cv_prog_NC_CONFIG+:} false; then :
-+  $as_echo_n "(cached) " >&6
-+else
-+  if test -n "$NC_CONFIG"; then
-+  ac_cv_prog_NC_CONFIG="$NC_CONFIG" # Let the user override the test.
-+else
-+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-+for as_dir in $PATH
-+do
-+  IFS=$as_save_IFS
-+  test -z "$as_dir" && as_dir=.
-+    for ac_exec_ext in '' $ac_executable_extensions; do
-+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+ $as_echo_n "checking for $ac_word... " >&6; }
+ if ${ac_cv_prog_NC_CONFIG+:} false; then :
+@@ -3037,7 +3081,7 @@
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+-    ac_cv_prog_NC_CONFIG="nc-config"
 +    ac_cv_prog_NC_CONFIG="${ac_tool_prefix}nc-config"
-+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-+    break 2
-+  fi
-+done
-+  done
-+IFS=$as_save_IFS
-+
-+fi
-+fi
-+NC_CONFIG=$ac_cv_prog_NC_CONFIG
-+if test -n "$NC_CONFIG"; then
-+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $NC_CONFIG" >&5
-+$as_echo "$NC_CONFIG" >&6; }
-+else
-+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-+$as_echo "no" >&6; }
-+fi
-+
-+
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+   fi
+@@ -3057,12 +3101,66 @@
+ fi
+ 
+ 
 +fi
 +if test -z "$ac_cv_prog_NC_CONFIG"; then
 +  ac_ct_NC_CONFIG=$NC_CONFIG
@@ -196,8 +179,7 @@ diff -ur netcdf.orig/src/configure netcdf/src/configure
 +  NC_CONFIG="$ac_cv_prog_NC_CONFIG"
 +fi
 +
-+fi
-+if test -z "$NC_CONFIG"; then
+ if test -z "$NC_CONFIG"; then
  as_fn_error 1 "nc-config not found" "$LINENO" 5;
  fi
  
@@ -208,7 +190,7 @@ diff -ur netcdf.orig/src/configure netcdf/src/configure
  
  
  CONFIGURE_OUTPUTS="Makeconf"
-@@ -3082,8 +3219,9 @@
+@@ -3082,8 +3180,9 @@
     headers:   $includedir
  
  octave-forge is configured with
@@ -221,8 +203,8 @@ diff -ur netcdf.orig/src/configure netcdf/src/configure
     netCDF libraries: $NETCDF_LIBS"
    ac_config_files="$ac_config_files $CONFIGURE_OUTPUTS"
 diff -ur netcdf.orig/src/configure.base netcdf/src/configure.base
---- netcdf.orig/src/configure.base	2015-04-12 18:55:55.602652298 -0400
-+++ netcdf/src/configure.base	2015-04-12 18:56:10.946652868 -0400
+--- netcdf.orig/src/configure.base	2015-04-13 21:29:33.000000000 -0400
++++ netcdf/src/configure.base	2015-04-13 21:30:41.000000000 -0400
 @@ -50,6 +50,9 @@
  AC_CHECK_PROG(MKOCTFILE,mkoctfile,mkoctfile)
  test -z "$MKOCTFILE" &&	AC_MSG_WARN([no mkoctfile found on path])
@@ -264,13 +246,14 @@ diff -ur netcdf.orig/src/configure.base netcdf/src/configure.base
  
  AC_PROG_LN_S
  
-@@ -312,11 +322,14 @@
+@@ -310,13 +320,14 @@
  
- AC_CHECK_PROG(NC_CONFIG, nc-config, nc-config)
- if test -z "$NC_CONFIG"; then
+ dnl checking for nc-config
+ 
+-AC_CHECK_PROG(NC_CONFIG, nc-config, nc-config)
++dnl AC_CHECK_PROG(NC_CONFIG, nc-config, nc-config)
 +AC_CHECK_TOOL(NC_CONFIG, nc-config, nc-config)
-+fi
-+if test -z "$NC_CONFIG"; then
+ if test -z "$NC_CONFIG"; then
  AC_MSG_ERROR([nc-config not found], 1);
  fi
  
@@ -281,7 +264,7 @@ diff -ur netcdf.orig/src/configure.base netcdf/src/configure.base
  
  
  CONFIGURE_OUTPUTS="Makeconf"
-@@ -336,7 +349,8 @@
+@@ -336,7 +347,8 @@
     headers:   $includedir
  
  octave-forge is configured with
@@ -293,8 +276,8 @@ diff -ur netcdf.orig/src/configure.base netcdf/src/configure.base
     netCDF compiler flags: $NETCDF_CFLAGS
     netCDF libraries: $NETCDF_LIBS"
 diff -ur netcdf.orig/src/Makeconf.in netcdf/src/Makeconf.in
---- netcdf.orig/src/Makeconf.in	2015-04-12 18:55:55.602652298 -0400
-+++ netcdf/src/Makeconf.in	2015-04-12 18:58:26.890657913 -0400
+--- netcdf.orig/src/Makeconf.in	2015-04-13 21:29:33.000000000 -0400
++++ netcdf/src/Makeconf.in	2015-04-13 21:29:55.000000000 -0400
 @@ -53,6 +53,8 @@
  OCTAVE_VERSION = @OCTAVE_VERSION@
  MKOCTFILE = @MKOCTFILE@ -DHAVE_OCTAVE_$(ver) -v
@@ -305,8 +288,8 @@ diff -ur netcdf.orig/src/Makeconf.in netcdf/src/Makeconf.in
  %.o: %.c ; $(MKOCTFILE) -c $<
  %.o: %.f ; $(MKOCTFILE) -c $<
 diff -ur netcdf.orig/src/Makefile netcdf/src/Makefile
---- netcdf.orig/src/Makefile	2015-04-12 18:55:55.602652298 -0400
-+++ netcdf/src/Makefile	2015-04-12 18:58:31.602658088 -0400
+--- netcdf.orig/src/Makefile	2015-04-13 21:29:33.000000000 -0400
++++ netcdf/src/Makefile	2015-04-13 21:29:55.000000000 -0400
 @@ -1,10 +1,13 @@
 -LIBS=$(shell nc-config --libs)
 -AWK=awk
