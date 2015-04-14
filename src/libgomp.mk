@@ -3,7 +3,7 @@
 
 PKG             := libgomp
 $(PKG)_IGNORE    = $(build-gcc_IGNORE)
-$(PKG)_VERSION  := 4.7.0
+$(PKG)_VERSION  := $(build-gcc_VERSION)
 $(PKG)_CHECKSUM  = $(build-gcc_CHECKSUM)
 $(PKG)_SUBDIR    = $(build-gcc_SUBDIR)
 $(PKG)_FILE      = $(build-gcc_FILE)
@@ -32,6 +32,10 @@ define $(PKG)_BUILD
         $($(PKG)_SYSDEP_CONFIGURE_OPTIONS)
     $(MAKE) -C '$(1)/build/$(TARGET)/libgomp' -j '$(JOBS)'
     $(MAKE) -C '$(1)/build/$(TARGET)/libgomp' -j '1' install DESTDIR='$(3)'
+
+    # also copy omp.h to where other programs will see it
+    $(INSTALL) -d "$(3)$(HOST_INCDIR)" 
+    $(INSTALL) -m644 '$(1)/build/$(TARGET)/libgomp/omp.h' '$(3)$(HOST_INCDIR)/'
 
     #'$(MXE_CC)' \
     #    -W -Wall -Werror -ansi -pedantic \
