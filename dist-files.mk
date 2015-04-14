@@ -471,6 +471,8 @@ SRC_FILES_1 := \
   of-netcdf.mk \
   of-nurbs-1-fixes.patch \
   of-nurbs.mk \
+  of-octcdf-1-cross-fixes.patch \
+  of-octcdf.mk \
   of-odepkg.mk \
   of-optim.mk \
   of-quaternion.mk \
