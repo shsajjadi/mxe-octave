@@ -9,7 +9,7 @@ $(PKG)_REMOTE_SUBDIR :=
 $(PKG)_SUBDIR   := nurbs
 $(PKG)_FILE     := nurbs-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
-$(PKG)_DEPS     := 
+$(PKG)_DEPS     := libgomp
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://$(SOURCEFORGE_MIRROR)/projects/octave/files/Octave%20Forge%20Packages/Individual%20Package%20Releases/' | \

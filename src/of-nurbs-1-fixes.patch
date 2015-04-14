@@ -1,6 +1,27 @@
+diff -ur nurbs.orig/src/Makefile nurbs/src/Makefile
+--- nurbs.orig/src/Makefile	2015-04-14 13:19:10.283611864 -0400
++++ nurbs/src/Makefile	2015-04-14 13:21:10.137011941 -0400
+@@ -2,13 +2,15 @@
+ curvederivcpts.oct nrb_srf_basisfun_der__.oct surfderiveval.oct bspderiv.oct \
+ nrbsurfderiveval.oct tbasisfun.oct
+ 
++MKOCTFILE ?= mkoctfile
++
+ all: $(OCTFILES)
+ 
+ low_level_functions.o: low_level_functions.cc
+-	mkoctfile -c $<
++	$(MKOCTFILE) -c $<
+ 
+ %.oct:  %.cc low_level_functions.o
+-	mkoctfile $< low_level_functions.o
++	$(MKOCTFILE) $< low_level_functions.o
+ 
+ clean:
+ 	-rm -f *.o core octave-core *.oct *~
 diff -ur nurbs.orig/src/nrbsurfderiveval.cc nurbs/src/nrbsurfderiveval.cc
---- nurbs.orig/src/nrbsurfderiveval.cc	2015-04-13 06:35:14.000000000 -0400
-+++ nurbs/src/nrbsurfderiveval.cc	2015-04-13 06:36:26.000000000 -0400
+--- nurbs.orig/src/nrbsurfderiveval.cc	2015-04-14 13:19:10.283611864 -0400
++++ nurbs/src/nrbsurfderiveval.cc	2015-04-14 13:19:47.273352588 -0400
 @@ -120,7 +120,7 @@
        
        Array<idx_vector> idx(dim_vector (3, 1), idx_vector(':'));	 
