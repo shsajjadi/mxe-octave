@@ -1,6 +1,58 @@
+diff -ur Windows.orig/src/__COM__.cc Windows/src/__COM__.cc
+--- Windows.orig/src/__COM__.cc	2015-04-15 19:22:06.000000000 -0400
++++ Windows/src/__COM__.cc	2015-04-15 19:22:30.000000000 -0400
+@@ -157,15 +157,23 @@
+ 
+ 	dim_vector dims(void) const { static dim_vector dv(1, 1); return dv; }
+ 
+-	void print(std::ostream& os, bool pr_as_read_syntax = false) const
++	void print_raw (std::ostream& os, bool pr_as_read_syntax = false) const
+ 	{
+-		os << "<COM object " << (com_typename.empty() ? std::string("Unknown") : com_typename) << " (0x" << (void*)iface << ")>";
+-		newline(os);
++		os << "<COM object " 
++                   << (com_typename.empty () ? std::string("Unknown") : com_typename) 
++                   << " (0x" << (void*)iface << ")>";
++	}
++
++	void print (std::ostream& os, bool pr_as_read_syntax = false)
++	{
++                print_raw (os, pr_as_read_syntax);
++		newline (os);
+ 	}
+ 	
+-	void print_raw(std::ostream& os, bool pr_as_read_syntax = false) const
++	void print (std::ostream& os, bool pr_as_read_syntax = false) const
+ 	{
+-		print(os, pr_as_read_syntax);
++                print_raw (os, pr_as_read_syntax);
++		newline (os);
+ 	}
+ 
+ 	octave_value_list subsref (const std::string& type, const std::list<octave_value_list>& idx, int nargout);
+@@ -180,7 +188,9 @@
+ 
+ private:
+ 	// regular octave value declarations
++  #if defined (DEFINE_OCTAVE_ALLOCATOR)	
+ 	DECLARE_OCTAVE_ALLOCATOR
++  #endif
+ 	
+ 	DECLARE_OV_TYPEID_FUNCTIONS_AND_DATA
+ 
+@@ -189,7 +199,9 @@
+ 	std::string com_typename;
+ };
+ 
++#if defined (DEFINE_OCTAVE_ALLOCATOR)
+ DEFINE_OCTAVE_ALLOCATOR (octave_com_object);
++#endif
+ 
+ DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_com_object,
+ 		"octave_com_object",
 diff -ur Windows.orig/src/configure Windows/src/configure
---- Windows.orig/src/configure	2015-04-14 22:06:35.000000000 -0400
-+++ Windows/src/configure	2015-04-14 22:14:41.000000000 -0400
+--- Windows.orig/src/configure	2015-04-15 19:22:06.000000000 -0400
++++ Windows/src/configure	2015-04-15 19:22:19.000000000 -0400
 @@ -1,11 +1,9 @@
  #! /bin/sh
  # Guess values for system-dependent variables and create Makefiles.
@@ -419,7 +471,7 @@ diff -ur Windows.orig/src/configure Windows/src/configure
     octave:      $OCTAVE (version $OCTAVE_VERSION)
 -   mkoctfile:	$MKOCTFILE for Octave $subver"
 +   mkoctfile:	$MKOCTFILE for Octave $OCTAVE_VERSION
-+   octave-config: $OCTAVE_CONFIG for Octave $OCTAVE_VERSION
++   octave-config: $OCTAVE_CONFIG for Octave $OCTAVE_VERSION"
    ac_config_files="$ac_config_files $CONFIGURE_OUTPUTS"
  
  
@@ -515,8 +567,8 @@ diff -ur Windows.orig/src/configure Windows/src/configure
    \$as_echo "running CONFIG_SHELL=$SHELL \$*" >&6
    CONFIG_SHELL='$SHELL'
 diff -ur Windows.orig/src/configure.base Windows/src/configure.base
---- Windows.orig/src/configure.base	2015-04-14 22:06:35.000000000 -0400
-+++ Windows/src/configure.base	2015-04-14 22:13:09.000000000 -0400
+--- Windows.orig/src/configure.base	2015-04-15 19:22:06.000000000 -0400
++++ Windows/src/configure.base	2015-04-15 19:22:19.000000000 -0400
 @@ -49,6 +49,8 @@
  dnl Check for mkoctfile
  AC_CHECK_PROG(MKOCTFILE,mkoctfile,mkoctfile)
@@ -558,42 +610,10 @@ diff -ur Windows.orig/src/configure.base Windows/src/configure.base
     octave:      $OCTAVE (version $OCTAVE_VERSION)
 -   mkoctfile:	$MKOCTFILE for Octave $subver"
 +   mkoctfile:	$MKOCTFILE for Octave $OCTAVE_VERSION
-+   octave-config: $OCTAVE_CONFIG for Octave $OCTAVE_VERSION
-diff -ur Windows.orig/src/Makeconf.in Windows/src/Makeconf.in
---- Windows.orig/src/Makeconf.in	2015-04-14 22:06:35.000000000 -0400
-+++ Windows/src/Makeconf.in	2015-04-14 22:13:40.000000000 -0400
-@@ -52,6 +52,7 @@
- OCTAVE = @OCTAVE@
- OCTAVE_VERSION = @OCTAVE_VERSION@
- MKOCTFILE = @MKOCTFILE@ -DHAVE_OCTAVE_$(ver) -v
-+OCTAVE_CONFIG = @OCTAVE_CONFIG@
- SHLEXT = @SHLEXT@
- 
- ver = @ver@
-diff -ur Windows.orig/src/configure Windows/src/configure
---- Windows.orig/src/configure	2015-04-14 22:26:36.000000000 -0400
-+++ Windows/src/configure	2015-04-14 22:27:10.000000000 -0400
-@@ -3080,7 +3080,7 @@
- octave-forge is configured with
-    octave:      $OCTAVE (version $OCTAVE_VERSION)
-    mkoctfile:	$MKOCTFILE for Octave $OCTAVE_VERSION
--   octave-config: $OCTAVE_CONFIG for Octave $OCTAVE_VERSION
 +   octave-config: $OCTAVE_CONFIG for Octave $OCTAVE_VERSION"
-   ac_config_files="$ac_config_files $CONFIGURE_OUTPUTS"
- 
- 
-diff -ur Windows.orig/src/configure.base Windows/src/configure.base
---- Windows.orig/src/configure.base	2015-04-14 22:26:36.000000000 -0400
-+++ Windows/src/configure.base	2015-04-14 22:26:57.000000000 -0400
-@@ -361,4 +361,4 @@
- octave-forge is configured with
-    octave:      $OCTAVE (version $OCTAVE_VERSION)
-    mkoctfile:	$MKOCTFILE for Octave $OCTAVE_VERSION
--   octave-config: $OCTAVE_CONFIG for Octave $OCTAVE_VERSION
-+   octave-config: $OCTAVE_CONFIG for Octave $OCTAVE_VERSION"
-diff -ru Windows.orig/src/grab.cc Windows/src/grab.cc
---- Windows.orig/src/grab.cc	2015-04-14 22:28:16.000000000 -0400
-+++ Windows/src/grab.cc	2015-04-14 22:31:44.000000000 -0400
+diff -ur Windows.orig/src/grab.cc Windows/src/grab.cc
+--- Windows.orig/src/grab.cc	2015-04-15 19:22:06.000000000 -0400
++++ Windows/src/grab.cc	2015-04-15 19:22:19.000000000 -0400
 @@ -123,8 +123,8 @@
  
  
@@ -616,26 +636,14 @@ diff -ru Windows.orig/src/grab.cc Windows/src/grab.cc
      }
    }
  
-diff -ur Windows.orig/src/__COM__.cc Windows/src/__COM__.cc
---- Windows.orig/src/__COM__.cc	2015-04-14 22:44:19.000000000 -0400
-+++ Windows/src/__COM__.cc	2015-04-14 22:45:12.000000000 -0400
-@@ -180,7 +180,9 @@
+diff -ur Windows.orig/src/Makeconf.in Windows/src/Makeconf.in
+--- Windows.orig/src/Makeconf.in	2015-04-15 19:22:06.000000000 -0400
++++ Windows/src/Makeconf.in	2015-04-15 19:22:19.000000000 -0400
+@@ -52,6 +52,7 @@
+ OCTAVE = @OCTAVE@
+ OCTAVE_VERSION = @OCTAVE_VERSION@
+ MKOCTFILE = @MKOCTFILE@ -DHAVE_OCTAVE_$(ver) -v
++OCTAVE_CONFIG = @OCTAVE_CONFIG@
+ SHLEXT = @SHLEXT@
  
- private:
- 	// regular octave value declarations
-+  #if defined (DEFINE_OCTAVE_ALLOCATOR)	
- 	DECLARE_OCTAVE_ALLOCATOR
-+  #endif
- 	
- 	DECLARE_OV_TYPEID_FUNCTIONS_AND_DATA
- 
-@@ -189,7 +191,9 @@
- 	std::string com_typename;
- };
- 
-+#if defined (DEFINE_OCTAVE_ALLOCATOR)
- DEFINE_OCTAVE_ALLOCATOR (octave_com_object);
-+#endif
- 
- DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_com_object,
- 		"octave_com_object",
+ ver = @ver@
