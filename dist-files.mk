@@ -485,6 +485,7 @@ SRC_FILES_1 := \
   of-strings.mk \
   of-struct.mk \
   of-tsa.mk \
+  of-windows-1-fixes.patch \
   of-windows.mk \
   of-zenity.mk \
   ogg.mk \
