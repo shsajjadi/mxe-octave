@@ -452,6 +452,8 @@ SRC_FILES_1 := \
   of-database-1-cross-fixes.patch \
   of-database.mk \
   of-dicom.mk \
+  of-financial-1-fixes.patch \
+  of-financial.mk \
   of-fits-1-cross-fixes.patch \
   of-fits.mk \
   of-fl-core-1-fixes.patch \
