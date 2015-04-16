@@ -451,6 +451,7 @@ SRC_FILES_1 := \
   of-data-smoothing.mk \
   of-database-1-cross-fixes.patch \
   of-database.mk \
+  of-dicom-1-fixes.patch \
   of-dicom.mk \
   of-financial-1-fixes.patch \
   of-financial.mk \
