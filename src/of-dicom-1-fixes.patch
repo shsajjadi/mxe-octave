@@ -1,0 +1,241 @@
+diff -ur dicom.orig/src/dicominfo.cpp dicom/src/dicominfo.cpp
+--- dicom.orig/src/dicominfo.cpp	2015-04-15 21:36:10.000000000 -0400
++++ dicom/src/dicominfo.cpp	2015-04-15 21:41:21.000000000 -0400
+@@ -76,10 +76,10 @@
+ char* byteval2string(char * d, int d_len_p, const gdcm::ByteValue *bv);
+ char* name2Keyword(char *d, int *d_len_p, const char* s);
+ Matrix str2DoubleVec(const char*);
+-Octave_map dump(const char filename[], int chatty);
+-void dumpDataSet(Octave_map *om, const gdcm::DataSet *ds, int chatty, int sequenceDepth);
++octave_map dump(const char filename[], int chatty);
++void dumpDataSet(octave_map *om, const gdcm::DataSet *ds, int chatty, int sequenceDepth);
+ void getFileModTime(char *timeStr, const char *filename);
+-void dumpElement(Octave_map *om, const gdcm::DataElement * elem, int chatty, int sequenceDepth);
++void dumpElement(octave_map *om, const gdcm::DataElement * elem, int chatty, int sequenceDepth);
+ void dumpSequence(octave_value *ov, gdcm::SequenceOfItems *seq, int chatty, int sequenceDepth);
+ int element2value(std::string & varname, octave_value *ov, const gdcm::DataElement * elem, int chatty, int sequenceDepth) ;
+ 
+@@ -163,7 +163,7 @@
+ 		}
+ 	}
+ 	
+-	Octave_map om=dump(filename.c_str(),chatty);
++	octave_map om=dump(filename.c_str(),chatty);
+ 	retval(0)=om;
+ 
+ 	load_dicom_dict(current_dict.c_str()); // reset dictionary to initial value
+@@ -172,9 +172,9 @@
+ #endif
+ 
+ 
+-Octave_map dump(const char filename[], int chatty) {
++octave_map dump(const char filename[], int chatty) {
+ 	// output struct
+-	Octave_map om;
++	octave_map om;
+ 	// Instantiate the reader:
+ 	gdcm::Reader reader;
+ 	reader.SetFileName( filename );
+@@ -202,7 +202,7 @@
+ 	return om;
+ }
+ 
+-void dumpDataSet(Octave_map *om, const gdcm::DataSet *ds, int chatty, int sequenceDepth) {
++void dumpDataSet(octave_map *om, const gdcm::DataSet *ds, int chatty, int sequenceDepth) {
+ 	
+ 	const gdcm::DataSet::DataElementSet DES=ds->GetDES(); // gdcm::DataSet::DataElementSet is a std::set
+ 	gdcm::DataSet::Iterator it;
+@@ -212,7 +212,7 @@
+ 	}
+ }
+ 
+-void dumpElement(Octave_map *om, const gdcm::DataElement * elem, 
++void dumpElement(octave_map *om, const gdcm::DataElement * elem, 
+ 				int chatty, int sequenceDepth) {
+ 	std::string varname;
+ 	octave_value ov;
+@@ -453,10 +453,10 @@
+ 	const octave_idx_type nDataSet=seq->GetNumberOfItems(); // objects in sequence
+ 	if (chatty) octave_stdout << nDataSet << " object" << ((nDataSet==1)?"":"s") << std::endl;
+ 	char item_name_buf[16];
+-	Octave_map om;
++	octave_map om;
+ 	for (octave_idx_type j=1; j<=nDataSet; j++ ) {
+ 		const gdcm::DataSet::DataElementSet des=seq->GetItem(j).GetNestedDataSet().GetDES() ;
+-		Octave_map subom;
++		octave_map subom;
+ 		for (gdcm::DataSet::Iterator it=des.begin(); it != des.end(); it++) {
+ 			std::string key("");
+ 			octave_value subov;
+diff -ur dicom.orig/src/dicomwrite.cpp dicom/src/dicomwrite.cpp
+--- dicom.orig/src/dicomwrite.cpp	2015-04-15 21:36:10.000000000 -0400
++++ dicom/src/dicomwrite.cpp	2015-04-15 21:41:49.000000000 -0400
+@@ -43,7 +43,7 @@
+ // TODO all fns here should throw exceptions, not use this "std::string & err" arg
+ 
+ void struct2metadata(gdcm::ImageWriter *w, gdcm::File *file, const octave_value  & ov, bool trial, int sequenceDepth) ;
+-void structarray2sequence(gdcm::SequenceOfItems & sq, Octave_map * om, bool trial, int sequenceDepth);
++void structarray2sequence(gdcm::SequenceOfItems & sq, octave_map * om, bool trial, int sequenceDepth);
+ void value2element (gdcm::DataElement * de, const octave_value * ov, gdcm::Tag * tag, const std::string & keyword, bool trial, bool * handled, int sequenceDepth);
+ void octaveVal2dicomImage(gdcm::ImageWriter *w, octave_value *pixval) ;
+ void genMinimalMetaData(gdcm::ImageWriter *w, gdcm::File *file);
+@@ -132,9 +132,9 @@
+ 	}
+ 	gdcm::DataSet ds;
+ 	gdcm::FileMetaInformation hds;
+-	Octave_map om=ov.map_value();
++	octave_map om=ov.map_value();
+ 	uint32_t skipped = 0;
+-	for (Octave_map::iterator it = om.begin(); it != om.end(); it++) {
++	for (octave_map::iterator it = om.begin(); it != om.end(); it++) {
+ 		std::string keyword(om.key(it));
+ 		Cell cell = om.contents(it);
+ 		if (!dicom_is_present(keyword)) {
+@@ -179,17 +179,17 @@
+ 	return ;
+ }
+ 
+-void structarray2sequence(gdcm::SequenceOfItems & sq, Octave_map * om, bool trial, int sequenceDepth) {
+-	for (Octave_map::iterator it = om->begin(); it != om->end(); it++) {
++void structarray2sequence(gdcm::SequenceOfItems & sq, octave_map * om, bool trial, int sequenceDepth) {
++	for (octave_map::iterator it = om->begin(); it != om->end(); it++) {
+ 		gdcm::Item item;
+ 		// item.SetVLToUndefined(); //TODO: does VL need to be set for items that contain datasets?
+ 		gdcm::DataSet &nds = item.GetNestedDataSet();
+ 		std::string itemname(om->key(it));
+ 		// TODO: test itemname is something like Item_n.
+ 		Cell cell = om->contents(it);
+-		Octave_map subom = cell(0).map_value();
++		octave_map subom = cell(0).map_value();
+ 		// octave_stdout << itemname <<std::endl;
+-		for (Octave_map::iterator subit = subom.begin(); subit != subom.end(); subit++) {
++		for (octave_map::iterator subit = subom.begin(); subit != subom.end(); subit++) {
+ 			std::string subkeyword(subom.key(subit));
+ 			gdcm::DataElement de;
+ 			gdcm::Tag tag;
+@@ -289,7 +289,7 @@
+ 		}
+ 		octave_stdout << std::endl;
+ 		//int nObj = ov->numel() ;
+-		Octave_map subom = ov->map_value();
++		octave_map subom = ov->map_value();
+ 		gdcm::SmartPointer<gdcm::SequenceOfItems> sq = new gdcm::SequenceOfItems();
+ 		try {
+ 			structarray2sequence(*sq, &subom, trial, ++sequenceDepth) ;
+diff -ur dicom.orig/src/Makefile dicom/src/Makefile
+--- dicom.orig/src/Makefile	2015-04-15 21:36:10.000000000 -0400
++++ dicom/src/Makefile	2015-04-15 21:40:04.000000000 -0400
+@@ -15,10 +15,11 @@
+ #   Please see the file, "COPYING" for further details of GNU General 
+ #   Public License version 3.
+   
+- 
++MKOCTFILE ?= mkoctfile 
++OCTAVE ?= octave
+ 
+ INCDIRFLAGS =	
+-LIBDIRFLAGS =	-L/usr/local/lib
++LIBDIRFLAGS =
+ GDCMLIBFLAGS =	-lgdcmcharls  -lgdcmjpeg8 -lgdcmjpeg12 \
+ -lgdcmjpeg16 -lgdcmCommon \
+ -lgdcmDICT -lgdcmDSED -lgdcmIOD -lgdcmMSFF  
+@@ -29,35 +30,35 @@
+ 
+ 
+ dicomlookup.oct: dicomdict.o dicomlookup.o
+-	mkoctfile $(INCDIRFLAGS) $(LIBDIRFLAGS) $(GDCMLIBFLAGS) $(DEBUGFLAG) dicomlookup.o dicomdict.o -o dicomlookup.oct
++	$(MKOCTFILE) $(INCDIRFLAGS) $(LIBDIRFLAGS) $(GDCMLIBFLAGS) $(DEBUGFLAG) dicomlookup.o dicomdict.o -o dicomlookup.oct
+ 
+ dicomdict.oct: dicomdict.o
+-	mkoctfile $(INCDIRFLAGS) $(DEBUGFLAG) dicomdict.o
++	$(MKOCTFILE) $(INCDIRFLAGS) $(DEBUGFLAG) dicomdict.o
+ 
+ dicominfo.oct: dicominfo.o dicomdict.o
+-	mkoctfile $(INCDIRFLAGS) $(LIBDIRFLAGS) $(GDCMLIBFLAGS) $(DEBUGFLAG) dicominfo.o dicomdict.o -o dicominfo.oct
++	$(MKOCTFILE) $(INCDIRFLAGS) $(LIBDIRFLAGS) $(GDCMLIBFLAGS) $(DEBUGFLAG) dicominfo.o dicomdict.o -o dicominfo.oct
+ 
+ dicomwrite.oct: dicomwrite.o dicomdict.o
+-	mkoctfile $(INCDIRFLAGS) $(LIBDIRFLAGS) $(GDCMLIBFLAGS) $(DEBUGFLAG) dicomwrite.o dicomdict.o -o dicomwrite.oct
++	$(MKOCTFILE) $(INCDIRFLAGS) $(LIBDIRFLAGS) $(GDCMLIBFLAGS) $(DEBUGFLAG) dicomwrite.o dicomdict.o -o dicomwrite.oct
+ 
+ dicomread.oct: dicomread.cpp
+-	mkoctfile $(INCDIRFLAGS) $(LIBDIRFLAGS) $(GDCMLIBFLAGS) $(DEBUGFLAG) dicomread.cpp
++	$(MKOCTFILE) $(INCDIRFLAGS) $(LIBDIRFLAGS) $(GDCMLIBFLAGS) $(DEBUGFLAG) dicomread.cpp
+ 
+ _gendicomdict.oct: _gendicomdict.cpp
+-	mkoctfile $(INCDIRFLAGS) $(LIBDIRFLAGS) $(GDCMLIBFLAGS) $(DEBUGFLAG) _gendicomdict.cpp
++	$(MKOCTFILE) $(INCDIRFLAGS) $(LIBDIRFLAGS) $(GDCMLIBFLAGS) $(DEBUGFLAG) _gendicomdict.cpp
+ 
+ 
+ dicominfo.o: dicomdict.h dicominfo.cpp
+-	mkoctfile -c $(INCDIRFLAGS) $(DEBUGFLAG) dicominfo.cpp
++	$(MKOCTFILE) -c $(INCDIRFLAGS) $(DEBUGFLAG) dicominfo.cpp
+ 
+ dicomwrite.o: dicomdict.h dicomwrite.cpp
+-	mkoctfile -c $(INCDIRFLAGS) $(DEBUGFLAG) dicomwrite.cpp
++	$(MKOCTFILE) -c $(INCDIRFLAGS) $(DEBUGFLAG) dicomwrite.cpp
+ 
+ dicomdict.o: dicomdict.h dicomdict.cpp
+-	mkoctfile -c $(INCDIRFLAGS) $(DEBUGFLAG) dicomdict.cpp
++	$(MKOCTFILE) -c $(INCDIRFLAGS) $(DEBUGFLAG) dicomdict.cpp
+ 
+ dicomlookup.o: dicomdict.h dicomlookup.cpp
+-	mkoctfile -c $(INCDIRFLAGS) $(DEBUGFLAG) dicomlookup.cpp
++	$(MKOCTFILE) -c $(INCDIRFLAGS) $(DEBUGFLAG) dicomlookup.cpp
+ 
+ clean:
+ 	rm -f *.o *.oct *~
+@@ -65,13 +66,14 @@
+ test: test_dicominfo test_dicomdict test_dicomread test_dicomlookup
+ 	
+ test_dicominfo: dicominfo.oct
+-	octave -q --eval "test dicominfo.cpp"
++	$(OCTAVE) -q --eval "test dicominfo.cpp"
+ 
+ test_dicomdict: dicomdict.oct
+-	octave -q --eval "test dicomdict.cpp"
++	$(OCTAVE) -q --eval "test dicomdict.cpp"
+ 
+ test_dicomread: dicomread.oct
+-	octave -q --eval "test dicomread.cpp"
++	$(OCTAVE) -q --eval "test dicomread.cpp"
+ 
+ test_dicomlookup: dicomlookup.oct
+-	octave -q --eval "test dicomlookup.cpp"
+\ No newline at end of file
++	$(OCTAVE) -q --eval "test dicomlookup.cpp"
++
+diff -ur dicom.orig/src/dicominfo.cpp dicom/src/dicominfo.cpp
+--- dicom.orig/src/dicominfo.cpp	2015-04-15 21:44:32.000000000 -0400
++++ dicom/src/dicominfo.cpp	2015-04-15 21:47:48.000000000 -0400
+@@ -187,10 +187,10 @@
+ 	gdcm::DataSet &ds = file.GetDataSet();
+ 	gdcm::FileMetaInformation &hds=file.GetHeader();
+ 	
+-	om.assign("Filename",filename);
++	om.assign("Filename",octave_value(filename));
+ 	char dateStr[TIME_STR_LEN+1];
+ 	getFileModTime(dateStr, filename);
+-	om.assign("FileModDate", dateStr);
++	om.assign("FileModDate", octave_value(dateStr));
+ 	if(chatty) octave_stdout << "# file info\nFilename:" 
+ 		<< filename << "\nFileModDate:" << dateStr << '\n';
+ 	
+@@ -220,7 +220,7 @@
+ 		om->assign(varname.c_str(), ov);
+ 	} else {
+ 		if (0==varname.length()) return ;
+-		om->assign(varname.c_str(), "not assigned");
++		om->assign(varname.c_str(), octave_value("not assigned"));
+ 	}
+ }
+ 
+@@ -464,7 +464,7 @@
+ 				subom.assign(key.c_str(), subov);
+ 			} else {
+ 				if (0==key.length()) continue ;
+-				subom.assign(key.c_str(), "not assigned");
++				subom.assign(key.c_str(), octave_value("not assigned"));
+ 			}
+ 		}
+ 		snprintf(item_name_buf,15,"Item_%i",j);
