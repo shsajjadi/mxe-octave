@@ -14,6 +14,9 @@ wshSystemEnv("PATH") = OctavePath & "\bin;" & wshSystemEnv("PATH")
 ' set terminal type
 wshSystemEnv("TERM") = "cygwin"
 
+' set Qt plugin directory
+wshSystemEnv("QT_PLUGIN_PATH") = OctavePath & "\plugins"
+
 ' check args to see if told to run gui or command line
 ' and build other args to use
 GUI_MODE=1
