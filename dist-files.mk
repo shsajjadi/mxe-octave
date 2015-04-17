@@ -484,6 +484,7 @@ SRC_FILES_1 := \
   of-sockets.mk \
   of-specfun.mk \
   of-statistics.mk \
+  of-stk.mk \
   of-strings-1-fixes.patch \
   of-strings.mk \
   of-struct.mk \
