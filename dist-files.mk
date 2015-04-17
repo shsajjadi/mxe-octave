@@ -483,6 +483,7 @@ SRC_FILES_1 := \
   of-sockets-1-cross-fixes.patch \
   of-sockets.mk \
   of-specfun.mk \
+  of-splines.mk \
   of-statistics.mk \
   of-stk.mk \
   of-strings-1-fixes.patch \
