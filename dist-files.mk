@@ -559,8 +559,6 @@ SRC_FILES_1 := \
   qjson.mk \
   qrupdate-1-fixes.patch \
   qrupdate.mk \
-  qscintilla-1-transpose-fix.patch \
-  qscintilla-2-bang-fix.patch \
   qscintilla.mk \
   qt-1-cherrypicks.patch \
   qt-test.cpp \
