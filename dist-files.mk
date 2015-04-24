@@ -468,6 +468,7 @@ SRC_FILES_1 := \
   of-image.mk \
   of-instrument-control.mk \
   of-io.mk \
+  of-linear-algebra-1-cross-fixes.patch \
   of-linear-algebra.mk \
   of-ltfat-1-mingw-fixes.patch \
   of-ltfat.mk \
