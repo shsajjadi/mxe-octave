@@ -54,4 +54,5 @@ try_install financial-0.4.0.tar.gz
 try_install stk-2.2.1.tar.gz
 try_install splines-1.2.7.tar.gz
 try_install dataframe-1.1.0.tar.gz
+try_install lssa-0.1.2.tar.gz
 

@@ -419,7 +419,7 @@ ifeq ($(MXE_SYSTEM),msvc)
 endif
 
 OCTAVE_FORGE_BASE_URL := 'http://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
-OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim specfun general signal communications image io statistics control geometry windows odepkg linear-algebra sockets zenity actuarial data-smoothing fuzzy-logic-toolkit quaternion fits fl-core tsa dicom netcdf ltfat database instrument-control generate_html nurbs strings octcdf financial stk splines dataframe)
+OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim specfun general signal communications image io statistics control geometry windows odepkg linear-algebra sockets zenity actuarial data-smoothing fuzzy-logic-toolkit quaternion fits fl-core tsa dicom netcdf ltfat database instrument-control generate_html nurbs strings octcdf financial stk splines dataframe lssa)
 # get ALL deps for all of- packages, regardless of whethe building the actual forge package in the installer
 OCTAVE_FORGE_DEPS:= $(sort $(foreach p,$(wildcard $(TOP_DIR)/src/of-*.mk),$(shell $(SED) -n 's/.*_DEPS.*:=\(.*\)/\1/p' $p)))
 
