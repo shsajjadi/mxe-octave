@@ -56,4 +56,7 @@ try_install splines-1.2.7.tar.gz
 try_install dataframe-1.1.0.tar.gz
 try_install lssa-0.1.2.tar.gz
 try_install queueing-1.2.3.tar.gz
+try_install nurbs-1.3.9.tar.gz
+try_install octcdf-1.1.8.tar.gz
+try_install strings-1.1.0.tar.gz
 
