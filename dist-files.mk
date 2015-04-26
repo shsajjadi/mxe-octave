@@ -462,6 +462,7 @@ SRC_FILES_1 := \
   of-fl-core-1-fixes.patch \
   of-fl-core.mk \
   of-fuzzy-logic-toolkit.mk \
+  of-ga.mk \
   of-general.mk \
   of-generate_html.mk \
   of-geometry.mk \
