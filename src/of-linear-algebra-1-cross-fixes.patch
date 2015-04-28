@@ -1,7 +1,6 @@
-Only in linear-algebra.orig/src: autom4te.cache
 diff -ur linear-algebra.orig/src/configure linear-algebra/src/configure
---- linear-algebra.orig/src/configure	2015-04-23 17:02:51.860802263 -0400
-+++ linear-algebra/src/configure	2015-04-24 10:32:00.984766575 -0400
+--- linear-algebra.orig/src/configure	2015-04-28 07:57:58.455790565 -0400
++++ linear-algebra/src/configure	2015-04-28 07:59:16.904304093 -0400
 @@ -1,11 +1,9 @@
  #! /bin/sh
  # Guess values for system-dependent variables and create Makefiles.
@@ -606,8 +605,8 @@ diff -ur linear-algebra.orig/src/configure linear-algebra/src/configure
      ;;
    esac
 diff -ur linear-algebra.orig/src/configure.base linear-algebra/src/configure.base
---- linear-algebra.orig/src/configure.base	2015-04-23 17:02:51.860802263 -0400
-+++ linear-algebra/src/configure.base	2015-04-24 10:31:56.972688364 -0400
+--- linear-algebra.orig/src/configure.base	2015-04-28 07:57:58.456790584 -0400
++++ linear-algebra/src/configure.base	2015-04-28 07:59:16.905304112 -0400
 @@ -49,6 +49,8 @@
  dnl Check for mkoctfile
  AC_CHECK_PROG(MKOCTFILE,mkoctfile,mkoctfile)
@@ -651,8 +650,8 @@ diff -ur linear-algebra.orig/src/configure.base linear-algebra/src/configure.bas
 +   mkoctfile:	$MKOCTFILE for Octave $subver
 +   octave-config: $OCTAVE_CONFIG for Octave $subver"
 diff -ur linear-algebra.orig/src/Makeconf.in linear-algebra/src/Makeconf.in
---- linear-algebra.orig/src/Makeconf.in	2015-04-23 17:02:51.860802263 -0400
-+++ linear-algebra/src/Makeconf.in	2015-04-24 10:28:22.596509366 -0400
+--- linear-algebra.orig/src/Makeconf.in	2015-04-28 07:57:58.456790584 -0400
++++ linear-algebra/src/Makeconf.in	2015-04-28 07:59:16.905304112 -0400
 @@ -52,6 +52,7 @@
  OCTAVE = @OCTAVE@
  OCTAVE_VERSION = @OCTAVE_VERSION@
@@ -662,8 +661,8 @@ diff -ur linear-algebra.orig/src/Makeconf.in linear-algebra/src/Makeconf.in
  
  ver = @ver@
 diff -ur linear-algebra.orig/src/Makefile linear-algebra/src/Makefile
---- linear-algebra.orig/src/Makefile	2015-04-23 17:02:51.833801732 -0400
-+++ linear-algebra/src/Makefile	2015-04-24 10:38:46.120667412 -0400
+--- linear-algebra.orig/src/Makefile	2015-04-28 07:57:58.455790565 -0400
++++ linear-algebra/src/Makefile	2015-04-28 08:09:03.787626987 -0400
 @@ -1,7 +1,7 @@
  sinclude Makeconf
  
@@ -673,7 +672,24 @@ diff -ur linear-algebra.orig/src/Makefile linear-algebra/src/Makefile
  endif
  
  ifndef LAPACK_LIBS
-@@ -53,7 +53,7 @@
+@@ -21,7 +21,7 @@
+ 
+ OBJECTS = $(GSVD_OBJECTS) 
+ TARGETS = $(GSVD_TARGET) 
+-DEPENDS = $(GSVD_DEPENDS) 
++#DEPENDS = $(GSVD_DEPENDS) 
+ 
+ .PHONY: all test clean count
+ 
+@@ -44,7 +44,6 @@
+ 	$(MKOCTFILE) $(DEFINES) -M $<
+ 
+ %.o:%.cc
+-%.o:%.cc %.d
+ 	$(MKOCTFILE) $(DEFINES) -c $<
+ 
+ %.o:%.f
+@@ -53,7 +52,7 @@
  	$(MKOCTFILE) $(DEFINES) $< -o $@
  
  %.oct: %.cc
@@ -682,3 +698,4 @@ diff -ur linear-algebra.orig/src/Makefile linear-algebra/src/Makefile
  
  .phony: test
  test: $(GSVD_TEST)
+Only in linear-algebra/src: Makefile.orig
