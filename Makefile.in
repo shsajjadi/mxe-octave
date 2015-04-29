@@ -605,7 +605,12 @@ define OCTAVE_FORGE_PKG_COMPILE
     if [ -f '$(1)/src/Makefile' ]; then \
       $(MAKE) -C '$(1)/src' MKOCTFILE='$(MXE_MKOCTFILE) --verbose' \
         OCTAVE_CONFIG='$(MXE_OCTAVECONFIG)'; \
+      rm -f $(1)/src/Makefile; \
     fi; \
+    if [ -f '$(1)/src/configure' ]; then \
+      rm -f $(1)/src/configure; \
+    fi; \
+    find '$(1)/src' -type f -name "*.o" -exec rm -f {} \; ; \
   fi
 endef
 
