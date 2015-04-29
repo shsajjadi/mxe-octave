@@ -2028,7 +2028,7 @@ diff -rNu a/src/H5Tinit.c.mingw64 b/src/H5Tinit.c.mingw64
 diff -rNu a/src/Makefile.am b/src/Makefile.am
 --- a/src/Makefile.am	2012-10-11 13:30:56.000000000 -0400
 +++ b/src/Makefile.am	2014-09-01 11:57:11.711319644 -0400
-@@ -22,18 +22,11 @@
+@@ -22,17 +22,12 @@
  include $(top_srcdir)/config/lt_vers.am
  
  
@@ -2037,8 +2037,7 @@ diff -rNu a/src/Makefile.am b/src/Makefile.am
 -# a long time to compile it with any optimization on.  H5detect is used
 -# to generate H5Tinit.c once. So, optimization is not critical.
 -noinst_PROGRAMS = H5detect H5make_libsettings
--H5detect_CFLAGS = -g $(AM_CFLAGS)
--
+
  # Our main target, the HDF5 library
  lib_LTLIBRARIES=libhdf5.la
  
