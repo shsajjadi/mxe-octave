@@ -3,10 +3,10 @@
 
 PKG             := of-geometry
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.7.0
-$(PKG)_CHECKSUM := 6d85ec312f6beab25ceeae910444bc1fdf0f70b9
+$(PKG)_VERSION  := 2.0.0
+$(PKG)_CHECKSUM := 4874b4eaffa0deab40f6e95df3dbfb18dffb6655
 $(PKG)_REMOTE_SUBDIR :=
-$(PKG)_SUBDIR   := geometry
+$(PKG)_SUBDIR   := geometry_tmp
 $(PKG)_FILE     := geometry-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     :=
