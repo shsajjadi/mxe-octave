@@ -3,14 +3,14 @@
 
 PKG             := native-gcc
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.9.2
-$(PKG)_CHECKSUM := 79dbcb09f44232822460d80b033c962c0237c6d8
+$(PKG)_VERSION  := 5.1.0
+$(PKG)_CHECKSUM := b6c947b09adf780fe02065d0c48bfd7b4bdddfa3
 $(PKG)_SUBDIR   := gcc-$($(PKG)_VERSION)
 $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 
-$(PKG)_DEPS := native-binutils cloog gmp isl mpc mpfr
+$(PKG)_DEPS := native-binutils gmp isl mpc mpfr
 ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_DEPS += mingw-w64
 endif

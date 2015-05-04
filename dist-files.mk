@@ -101,7 +101,6 @@ SRC_FILES_1 := \
   gcc-2-darwin-no-pie.patch \
   gcc-cloog.mk \
   gcc-gmp.mk \
-  gcc-isl-1-fixes.patch \
   gcc-isl.mk \
   gcc-mpc.mk \
   gcc-mpfr.mk \
@@ -236,7 +235,6 @@ SRC_FILES_1 := \
   libgnurx.mk \
   libgomp-test.c \
   libgomp.mk \
-  libgpg_error-1-fixes.patch \
   libgpg_error.mk \
   libgsasl-1-fixes.patch \
   libgsasl-test.c \
