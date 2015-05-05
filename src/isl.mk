@@ -10,6 +10,10 @@ $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://gcc.gnu.org/pub/gcc/infrastructure/$($(PKG)_FILE)
 $(PKG)_DEPS     := build-gcc gmp
 
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+ $(PKG)_EXTRA_MAKE_FLAGS="LDFLAGS='-no-undefined'"
+endif
+
 # stick to tested versions from gcc
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'ftp://gcc.gnu.org/pub/gcc/infrastructure/' | \
@@ -24,6 +28,6 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --with-gmp-prefix='$(HOST_PREFIX)'
-    $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $($(PKG)_EXTRA_MAKE_FLAGS)
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $($(PKG)_EXTRA_MAKE_FLAGS) install
 endef
