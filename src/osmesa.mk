@@ -6,7 +6,7 @@ $(PKG)_VERSION  := 10.2.2
 $(PKG)_CHECKSUM := 2cc7c5b80fd2ddbf540acf47dbaec68e8cab16a4
 $(PKG)_SUBDIR   := Mesa-$($(PKG)_VERSION)
 $(PKG)_FILE     := MesaLib-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := ftp://ftp.freedesktop.org/pub/mesa/current/$($(PKG)_FILE)
+$(PKG)_URL      := ftp://ftp.freedesktop.org/pub/mesa/older-versions/10.x/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
