@@ -3,16 +3,12 @@
 
 PKG             := isl
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.14
-$(PKG)_CHECKSUM := b09e25df265c97ed54002cd811d227a9a26c5f9c
+$(PKG)_VERSION  := 0.12.2
+$(PKG)_CHECKSUM := ca98a91e35fb3ded10d080342065919764d6f928
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://gcc.gnu.org/pub/gcc/infrastructure/$($(PKG)_FILE)
 $(PKG)_DEPS     := build-gcc gmp
-
-ifeq ($(MXE_WINDOWS_BUILD),yes)
- $(PKG)_EXTRA_MAKE_FLAGS="LDFLAGS='-no-undefined'"
-endif
 
 # stick to tested versions from gcc
 define $(PKG)_UPDATE
