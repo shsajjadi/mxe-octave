@@ -1,0 +1,36 @@
+diff -ur a/include/isl/int.h b/include/isl/int.h
+--- a/include/isl/int.h	2012-11-29 03:47:32.000000000 -0500
++++ b/include/isl/int.h	2014-02-19 02:44:04.311137242 -0500
+@@ -14,7 +14,7 @@
+ #include <string.h>
+ #include <gmp.h>
+ #if defined(__cplusplus)
+-#include <iostream>
++#include <ostream>
+ #endif
+ 
+ #if defined(__cplusplus)
+diff -u isl-0.12.2.orig/Makefile.am isl-0.12.2/Makefile.am
+--- isl-0.12.2.orig/Makefile.am	2014-04-25 14:38:30.985118233 -0400
++++ isl-0.12.2/Makefile.am	2014-04-25 14:39:56.860765352 -0400
+@@ -154,7 +154,7 @@
+ 	isl_sample_piplib.h \
+ 	isl_piplib.c
+ libisl_la_LIBADD = @PIPLIB_LIBS@ @GMP_LIBS@
+-libisl_la_LDFLAGS = -version-info @versioninfo@ \
++libisl_la_LDFLAGS = -no-undefined -version-info @versioninfo@ \
+ 	@PIPLIB_LDFLAGS@ @GMP_LDFLAGS@
+ libisl_la_CPPFLAGS = $(INCLUDES) @PIPLIB_CPPFLAGS@ @GMP_CPPFLAGS@
+ 
+diff -u isl-0.12.2.orig/Makefile.in isl-0.12.2/Makefile.in
+--- isl-0.12.2.orig/Makefile.in	2014-04-25 14:38:30.972117984 -0400
++++ isl-0.12.2/Makefile.in	2014-04-25 14:40:36.809531647 -0400
+@@ -645,7 +645,7 @@
+ 	isl_piplib.c
+ 
+ libisl_la_LIBADD = @PIPLIB_LIBS@ @GMP_LIBS@
+-libisl_la_LDFLAGS = -version-info @versioninfo@ \
++libisl_la_LDFLAGS = -no-undefined -version-info @versioninfo@ \
+ 	@PIPLIB_LDFLAGS@ @GMP_LDFLAGS@
+ 
+ libisl_la_CPPFLAGS = $(INCLUDES) @PIPLIB_CPPFLAGS@ @GMP_CPPFLAGS@
