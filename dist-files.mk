@@ -482,6 +482,7 @@ SRC_FILES_1 := \
   of-octcdf.mk \
   of-odepkg.mk \
   of-optim.mk \
+  of-quaternion-1-cross-fixes.patch \
   of-quaternion.mk \
   of-signal.mk \
   of-sockets-1-cross-fixes.patch \
