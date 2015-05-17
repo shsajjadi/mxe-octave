@@ -470,7 +470,6 @@ SRC_FILES_1 := \
   of-linear-algebra-1-cross-fixes.patch \
   of-linear-algebra.mk \
   of-lssa.mk \
-  of-ltfat-1-mingw-fixes.patch \
   of-ltfat.mk \
   of-miscellaneous-1-fixes.patch \
   of-miscellaneous.mk \
