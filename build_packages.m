@@ -41,7 +41,7 @@ try_install fuzzy-logic-toolkit-0.4.5.tar.gz
 try_install quaternion-2.4.0.tar.gz
 try_install fits-1.0.5.tar.gz
 try_install fl-core-1.0.0.tar.gz
-try_install tsa-4.2.7.tar.gz
+try_install tsa-4.2.9.tar.gz
 try_install dicom-0.1.1.tar.gz
 try_install netcdf-1.0.6.tar.gz
 try_install ltfat-2.1.0.tar.gz
