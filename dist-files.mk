@@ -493,6 +493,7 @@ SRC_FILES_1 := \
   of-strings-1-fixes.patch \
   of-strings.mk \
   of-struct.mk \
+  of-tsa-1-cross-fixes.patch \
   of-tsa.mk \
   of-windows-1-fixes.patch \
   of-windows.mk \

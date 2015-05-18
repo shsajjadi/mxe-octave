@@ -1,0 +1,29 @@
+diff -ur tsa.orig/src/Makefile tsa/src/Makefile
+--- tsa.orig/src/Makefile	2015-05-17 20:55:08.000000000 -0400
++++ tsa/src/Makefile	2015-05-17 20:58:48.000000000 -0400
+@@ -39,11 +39,12 @@
+ W32_LIBS += $(LDLIBS_W32)libblas.a
+ W64_LIBS += $(LDLIBS_W64)libblas.a
+ 
+-CC  	= gcc
+-CXX 	= g++
++CC  	?= gcc
++CXX 	?= g++
+ CFLAGS 	= -Wall -Wextra -Wconversion -O2 -fPIC 
+-OCTMEX	= mkoctfile$(OCTAVE_VERSION) --mex
+-RM      = rm
++MKOCTFILE ?= mkoctfile$(OCTAVE_VERSION)
++OCTMEX	?= $(MKOCTFILE) --mex
++RM      ?= rm
+ 
+ ifneq (Darwin,$(shell uname))
+ CFLAGS      += -fopenmp
+@@ -91,7 +92,7 @@
+ #	Octave, MATLAB on Linux 
+ #########################################################
+ %.oct: %.cc
+-	mkoctfile$(OCTAVE_VERSION) "$<"
++	$(MKOCTFILE) "$<"
+ 
+ %.mex: %.cpp
+ 	$(OCTMEX) "$<" -llapack -lblas
