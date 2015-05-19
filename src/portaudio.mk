@@ -24,7 +24,7 @@ define $(PKG)_BUILD
     # https://sourceware.org/cgi-bin/cvsweb.cgi/src/bfd/libpei.h?annotate=1.25&cvsroot=src
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-        --prefix='$(HOST_PREFIX)'
+        --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
         --with-host_os=mingw \
         --with-winapi=wmme,directx \
