@@ -28,8 +28,15 @@ ifeq ($(MXE_SYSTEM),mingw)
     --enable-threads=win32 
   ifneq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
+      --disable-multilib \
       --disable-sjlj-exceptions
+  else
+    $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
+      --enable-multilib --enable-64bit
   endif
+else
+  $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
+    --disable-multilib
 endif
 
 define $(PKG)_UPDATE
@@ -47,7 +54,6 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         --enable-languages='c,c++,fortran' \
-        --disable-multilib \
         --disable-libsanitizer \
         $($(PKG)_SYSDEP_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -65,4 +71,9 @@ define $(PKG)_BUILD
     if [ -f $(HOST_PREFIX)/lib/gcc/$(TARGET)/lib/libgcc_s.a ]; then \
       mv $(HOST_PREFIX)/lib/gcc/$(TARGET)/lib/libgcc_s.a $(HOST_PREFIX)/lib/gcc/$(TARGET)/$($(PKG)_VERSION)/libgcc_s.a; \
     fi
+
+    if [ -f $(HOST_PREFIX)/lib/gcc/$(TARGET)/lib32/libgcc_s.a ]; then \
+      mv $(HOST_PREFIX)/lib/gcc/$(TARGET)/lib32/libgcc_s.a $(HOST_PREFIX)/lib/gcc/$(TARGET)/$($(PKG)_VERSION)/32/libgcc_s.a; \
+    fi
+
 endef
