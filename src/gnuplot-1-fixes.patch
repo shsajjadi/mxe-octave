@@ -1,6 +1,6 @@
-diff -ur gnuplot-4.6.4.orig/config/mingw/Makefile gnuplot-4.6.4/config/mingw/Makefile
---- gnuplot-4.6.4.orig/config/mingw/Makefile	2013-11-04 18:26:55.000000000 -0500
-+++ gnuplot-4.6.4/config/mingw/Makefile	2013-11-04 18:28:37.000000000 -0500
+ diff -ur gnuplot-4.6.7/config/mingw/Makefile gnuplot-4.6.7-commit/config/mingw/Makefile
+--- gnuplot-4.6.7/config/mingw/Makefile	2014-06-13 01:56:55.000000000 +0900
++++ gnuplot-4.6.7-commit/config/mingw/Makefile	2015-05-16 11:46:53.704000000 +0900
 @@ -27,7 +27,7 @@
  
  # Use more modern HTML help instead of no longer supported Windows help system
@@ -11,57 +11,56 @@ diff -ur gnuplot-4.6.4.orig/config/mingw/Makefile gnuplot-4.6.4/config/mingw/Mak
  # GIF, PNG, JPEG device drivers
  # Requires gd library. There are two possibilities how to configure these
 @@ -127,29 +127,29 @@
- # -mpentiumpro means optimize for Pentium II and Pro procesors
+ # -mpentiumpro means optimize for Pentium II and Pro processors
  #CFLAGS +=
  
 -ifdef HTML_HELP
--
--# To compile the .chm file you need the Microsoft HTML Help 1.4 SDK
--# It can be obtained here:
--# http://go.microsoft.com/fwlink/?LinkId=154968
--# We need to explicitly set the correct path here since we also need
--# adjust the include and linrary paths.
--HHWPATH = "$(PROGRAMFILES)/HTML Help Workshop/"
--HHC = $(HHWPATH)hhc
 +# ifdef HTML_HELP
  
--else
-+# # To compile the .chm file you need the Microsoft HTML Help 1.4 SDK
-+# # It can be obtained here:
-+# # http://go.microsoft.com/fwlink/?LinkId=154968
-+# # We need to explicitly set the correct path here since we also need
-+# # adjust the include and linrary paths.
+ # To compile the .chm file you need the Microsoft HTML Help 1.4 SDK
+ # It can be obtained here:
+ # http://go.microsoft.com/fwlink/?LinkId=154968
+ # We need to explicitly set the correct path here since we also need
+ # adjust the include and library paths.
+-HHWPATH = "$(PROGRAMFILES)/HTML Help Workshop/"
+-HHC = $(HHWPATH)hhc
 +# HHWPATH = "$(PROGRAMFILES)/HTML Help Workshop/"
 +# HHC = $(HHWPATH)hhc
-+
-+# else
-+
-+# # To compile the .hlp file you need hcw either out of Microsoft SDK or MS Help
-+# # Workshop. The latter can be obtained from either of
-+# # ftp://ftp.microsoft.com/softlib/mslfiles/hcwsetup.exe
-+# # http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=34D35502-4DE9-4676-952C-34CC7F64F098
-+# # Put the path to hcw here unless it is already in PATH:
-+# HCWPATH = "$(PROGRAMFILES)/Help\ Workshop/"
-+# HCW = $(HCWPATH)hcw
-+# # Switches are for HCW 4.03:
-+# HCWFLAG =
  
--# To compile the .hlp file you need hcw either out of Microsoft SDK or MS Help
--# Workshop. The latter can be obtained from either of
--# ftp://ftp.microsoft.com/softlib/mslfiles/hcwsetup.exe
--# http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=34D35502-4DE9-4676-952C-34CC7F64F098
--# Put the path to hcw here unless it is already in PATH:
+-else
++# else
+ 
+ # To compile the .hlp file you need hcw either out of Microsoft SDK or MS Help
+ # Workshop. The latter can be obtained from either of
+ # ftp://ftp.microsoft.com/softlib/mslfiles/hcwsetup.exe
+ # http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=34D35502-4DE9-4676-952C-34CC7F64F098
+ # Put the path to hcw here unless it is already in PATH:
 -HCWPATH = "$(PROGRAMFILES)/Help\ Workshop/"
 -HCW = $(HCWPATH)hcw
--# Switches are for HCW 4.03:
++# HCWPATH = "$(PROGRAMFILES)/Help\ Workshop/"
++# HCW = $(HCWPATH)hcw
+ # Switches are for HCW 4.03:
 -HCWFLAG =
--
++# HCWFLAG =
+ 
 -endif
 +# endif
  
- # Choose which windres/rc do you want to use (GNU windres or MS RC):
+ # Choose which resource compiler you want to use (GNU windres or MS rc):
  GNU_RC = 1
-@@ -401,7 +401,7 @@
+@@ -382,8 +382,9 @@
+ endif
+ 
+ ifdef ICONV
+-	CFLAGS += -DHAVE_ICONV
+-	TERMLIBS += -liconv
++	CFLAGS += -DHAVE_ICONV $(ICONV_CFLAGS)
++        LDFLAGS += $(ICONV_LDFLAGS)
++	TERMLIBS += -liconv 
+ endif
+ 
+ ifdef GNU_RC
+@@ -401,7 +402,7 @@
    RES2COFF = res2coff -i wgnuplot.res -o wgplt_res.$(O)
  endif
  
@@ -70,7 +69,7 @@ diff -ur gnuplot-4.6.4.orig/config/mingw/Makefile gnuplot-4.6.4/config/mingw/Mak
  
  console:
  	$(MAKE) TARGET=gnuplot.exe gnuplot.exe
-@@ -443,7 +443,7 @@
+@@ -443,7 +444,7 @@
    LDFLAGS2 += -L$(HHWPATH)lib
  endif
  
@@ -79,7 +78,7 @@ diff -ur gnuplot-4.6.4.orig/config/mingw/Makefile gnuplot-4.6.4/config/mingw/Mak
  	$(LDX) $(LDFLAGS) $(LDFLAGS2) -o $@ $(OBJS) $(WINOBJS) wgplt_res.$(O) $(LDLIBS)\
  	$(TERMLIBS) $(WX_LIBS) $(PANGOCAIRO_LIBS)
  
-@@ -458,7 +458,7 @@
+@@ -458,7 +459,7 @@
  
  # explicit rules
  
@@ -88,7 +87,7 @@ diff -ur gnuplot-4.6.4.orig/config/mingw/Makefile gnuplot-4.6.4/config/mingw/Mak
  	$(RC) $(RCFLAGS) $< $(RCOUT)
  	$(RES2COFF)
  
-@@ -494,13 +494,13 @@
+@@ -494,13 +495,13 @@
  	$(CC) -c $(CFLAGS) $(CXXFLAGS) $(PANGOCAIRO_CFLAGS) -MMD -MT '$*.$$(O)' -MF $*.d -o $@ $<
  
  # extract icons from wgnuplot.rc
@@ -106,7 +105,7 @@ diff -ur gnuplot-4.6.4.orig/config/mingw/Makefile gnuplot-4.6.4/config/mingw/Mak
  
  ifdef HTML_HELP
  # convert gnuplot.doc to windows/wgnuplot.html
-@@ -703,7 +703,7 @@
+@@ -703,7 +704,7 @@
  	$(RM) config.h wgnuplot.map wgnuplot.res $(W)/gnuplot.rtf
  	$(RM) *.$(O) *.po *.o *.co *.d
  	$(RM) doc2*.exe $(W)/wgnuplib.res wgnuplib.map wgnuplot.lib
@@ -115,7 +114,7 @@ diff -ur gnuplot-4.6.4.orig/config/mingw/Makefile gnuplot-4.6.4/config/mingw/Mak
  	$(RM) *.aux *.log *.dvi *.toc
  	$(RM) gnuplot.tex gnuplot-figures.tex pdffigures.tex figure_*.pdf
  	$(RM) titlepag.tex toc_entr.sty VERSION
-@@ -802,7 +802,7 @@
+@@ -802,7 +803,7 @@
  
  installer:
  	$(MAKE) DESTDIR=./dist install
@@ -124,10 +123,37 @@ diff -ur gnuplot-4.6.4.orig/config/mingw/Makefile gnuplot-4.6.4/config/mingw/Mak
  	cp -p $(TOP)/win/*.iss ./dist
  	(cd ./dist; $(ISCC) gnuplot.iss)
  ifdef RELEASE
-diff -ur gnuplot-4.6.4.orig/src/win/wgnuplot.rc gnuplot-4.6.4/src/win/wgnuplot.rc
---- gnuplot-4.6.4.orig/src/win/wgnuplot.rc	2013-11-04 18:26:55.000000000 -0500
-+++ gnuplot-4.6.4/src/win/wgnuplot.rc	2013-11-04 18:27:15.000000000 -0500
-@@ -15,8 +15,8 @@
+
+diff -ur gnuplot-4.6.7/src/syscfg.h gnuplot-4.6.7-commit/src/syscfg.h
+--- gnuplot-4.6.7/src/syscfg.h	2014-08-01 01:56:25.000000000 +0900
++++ gnuplot-4.6.7-commit/src/syscfg.h	2015-05-16 15:27:58.612000000 +0900
+@@ -317,11 +317,19 @@
+ #endif
+ 
+ #ifndef GP_EXCEPTION_NAME
+-# define GP_EXCEPTION_NAME exception
++# if __MINGW32__
++#  define GP_EXCEPTION_NAME _exception
++# else
++#  define GP_EXCEPTION_NAME exception
++# endif
+ #endif
+ 
+ #ifndef GP_MATHERR
+-# define GP_MATHERR matherr
++# if __MINGW32__
++#  define GP_MATHERR _matherr
++# else
++#  define GP_MATHERR matherr
++# endif
+ #endif
+ 
+ #ifdef HAVE_STRUCT_EXCEPTION_IN_MATH_H
+
+diff -ur gnuplot-4.6.7/src/win/wgnuplot.rc gnuplot-4.6.7-commit/src/win/wgnuplot.rc
+--- gnuplot-4.6.7/src/win/wgnuplot.rc	2014-07-08 03:18:41.000000000 +0900
++++ gnuplot-4.6.7-commit/src/win/wgnuplot.rc	2015-05-16 11:24:48.912000000 +0900
+@@ -19,8 +19,8 @@
     * rc -30 -k -dMSRC win\wgnuplot.rc wgnuplot.exe
     */
  
@@ -138,3 +164,23 @@ diff -ur gnuplot-4.6.4.orig/src/win/wgnuplot.rc gnuplot-4.6.4/src/win/wgnuplot.r
  
  #else
  /* using Borland BRC.EXE */
+
+diff -ur internal.orig.c internal.mod.c
+--- a/src/internal.c	2014-07-08 03:18:40.000000000 +0900
++++ b/src/internal.c	2015-05-16 19:29:17.660000000 +0900
+@@ -58,6 +58,7 @@
+ 
+ static enum DATA_TYPES sprintf_specifier __PROTO((const char *format));
+ 
++#ifndef __MINGW32__
+ #ifndef _WIN64
+ int
+ GP_MATHERR( STRUCT_EXCEPTION_P_X )
+@@ -65,6 +66,7 @@
+     return (undefined = TRUE);	/* don't print error message */
+ }
+ #endif
++#endif
+ 
+ #define BAD_DEFAULT default: int_error(NO_CARET, "internal error : type neither INT or CMPLX"); return;
+
