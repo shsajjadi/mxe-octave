@@ -11,6 +11,14 @@ $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/binutils/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.cs.tu-berlin.de/pub/gnu/binutils/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
+$(PKG)_SYSDEP_OPTIONS :=
+ifeq ($(ENABLE_WINDOWS_64),yes)
+    $(PKG)_SYSDEP_OPTIONS += \
+      --enable-multilib \
+      --enable-targets=x86_64-w64-mingw32,i686-w64-mingw32
+endif
+
+
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://ftp.gnu.org/gnu/binutils/?C=M;O=D' | \
     $(SED) -n 's,.*<a href="binutils-\([0-9][^"]*\)\.tar.*,\1,p' | \
@@ -29,6 +37,7 @@ define $(PKG)_BUILD
 
     cd '$(1)' && ./configure \
         --target='$(TARGET)' \
+        $($(PKG)_SYSDEP_OPTIONS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         --with-gcc \
