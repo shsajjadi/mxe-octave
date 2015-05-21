@@ -3,10 +3,10 @@
 
 PKG             := of-odepkg
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.8.4
-$(PKG)_CHECKSUM := 74b7e88ad5a104e064c413f077a5e5327741efb4
+$(PKG)_VERSION  := 0.8.5
+$(PKG)_CHECKSUM := f8fcaae85b6a132be15ca4683cd2b60d5d028bc7
 $(PKG)_REMOTE_SUBDIR :=
-$(PKG)_SUBDIR   := odepkg
+$(PKG)_SUBDIR   := odepkg-$($(PKG)_VERSION)
 $(PKG)_FILE     := odepkg-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     :=
@@ -18,5 +18,5 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(OCTAVE_FORGE_PKG_BUILD_NOCOMPILE)
+    $(OCTAVE_FORGE_PKG_BUILD)
 endef
