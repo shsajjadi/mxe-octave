@@ -3,10 +3,10 @@
 
 PKG             := of-general
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.3.4
-$(PKG)_CHECKSUM := 990dbd6f294b91e32b023d9d10673fae74d21795
+$(PKG)_VERSION  := 2.0.0
+$(PKG)_CHECKSUM := 200885c802a0047a493daef644cd285a13ca83c9
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := general
+$(PKG)_SUBDIR   := general-$($(PKG)_VERSION)
 $(PKG)_FILE     := general-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
