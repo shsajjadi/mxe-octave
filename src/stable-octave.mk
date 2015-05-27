@@ -3,15 +3,15 @@
 
 PKG             := stable-octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.8.2
-$(PKG)_CHECKSUM := 02c38e0f69bce4e6dd7be7d301898347085d9c2d
+$(PKG)_VERSION  := 4.0.0
+$(PKG)_CHECKSUM := 795c7ef1fb8d92f4cf9cae9eabba374a0328b1a9
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
-$(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.bz2
+$(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack osmesa pcre pstoedit qrupdate qscintilla qt readline suitesparse texinfo zlib
+$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile osmesa pcre portaudio pstoedit qrupdate qscintilla qt readline suitesparse texinfo zlib
 ifeq ($(MXE_WINDOWS_BUILD),no)
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += x11 xext
@@ -88,6 +88,13 @@ ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_EXTRA_CONFIGURE_OPTIONS += --with-x=no
 endif
 
+# if want binary packages and are cross compiling, then we need cross tools enabled
+ifeq ($(ENABLE_BINARY_PACKAGES),yes)
+  ifeq ($(MXE_NATIVE_BUILD),no)
+    $(PKG)_EXTRA_CONFIGURE_OPTIONS += --enable-cross-tools
+  endif
+endif
+
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package octave.' >&2;
     echo $($(PKG)_VERSION)
@@ -116,6 +123,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$($(PKG)_PREFIX)' \
         --disable-silent-rules \
+        --enable-install-build-logs \
         $($(PKG)_CROSS_CONFIG_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \
@@ -134,6 +142,11 @@ define $(PKG)_BUILD
 
     if [ "x$(MXE_SYSTEM)" == "xmingw" ]; then \
       cp '$(1)/.build/src/.libs/octave-gui.exe' '$(3)$(HOST_BINDIR)'; \
+      if [ "x$(ENABLE_BINARY_PACKAGES)" == "xyes" ]; then \
+        mkdir -p '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
+        $(INSTALL) '$(1)/.build/src/$(MXE_TOOL_PREFIX)mkoctfile' '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
+        $(INSTALL) '$(1)/.build/src/$(MXE_TOOL_PREFIX)octave-config' '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
+      fi; \
     fi
 
     if [ "x$(ENABLE_DOCS)" == "xyes" ]; then \
