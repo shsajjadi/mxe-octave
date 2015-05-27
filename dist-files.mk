@@ -624,9 +624,6 @@ SRC_FILES_1 := \
   src-msys-zip.mk \
   stable-octave-1-docinstall.patch \
   stable-octave-1-fixes.patch \
-  stable-octave-1-gnulib-isatty.patch \
-  stable-octave-2-winbelloff.patch \
-  stable-octave-3-fixes.patch \
   stable-octave.mk \
   suitesparse-1.patch \
   suitesparse.mk \
