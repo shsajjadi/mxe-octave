@@ -10,6 +10,14 @@ $(PKG)_FILE     := pa_stable_v$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://www.portaudio.com/archives/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
+$(PKG)_SYSDEP_OPTIONS :=
+ifeq ($(MXE_SYSTEM),mingw)
+  $(PKG)_SYSDEP_OPTIONS += \
+        --with-host_os=mingw \
+        --with-winapi=wmme,directx \
+        --with-dxdir=$(HOST_PREFIX)
+endif
+
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.portaudio.com/download.html' | \
     $(SED) -n 's,.*pa_stable_v\([0-9][^>]*\)\.tgz.*,\1,p' | \
@@ -26,9 +34,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
-        --with-host_os=mingw \
-        --with-winapi=wmme,directx \
-        --with-dxdir=$(HOST_PREFIX) \
+        $($(PKG)_SYSDEP_OPTIONS) \
         ac_cv_path_AR=$(MXE_AR) \
         $(if $(filter $(BUILD_SHARED),yes),\
             lt_cv_deplibs_check_method='file_magic file format (pe-i386|pe-x86-64)' \
