@@ -376,6 +376,13 @@ EOF
   cat >> $OUTFILE << EOF
  Delete "\$INSTDIR\\*.*"
  RmDir "\$INSTDIR"
+
+ ; didnt remove directory ? most likely from not all files removed
+ IfErrors 0 uninstall_done
+    MessageBox MB_YESNO "One or more folders were not deleted because they contain extra files. Try to delete them?" IDNO uninstall_done
+    RMDir /r "\$INSTDIR"
+uninstall_done:
+
 SectionEnd
 
 ; Function to detect Windows version and abort if Octave is unsupported in the current platform
