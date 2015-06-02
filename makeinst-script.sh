@@ -379,8 +379,12 @@ EOF
 
  ; didnt remove directory ? most likely from not all files removed
  IfErrors 0 uninstall_done
-    MessageBox MB_YESNO "One or more folders were not deleted because they contain extra files. Try to delete them?" IDNO uninstall_done
+    MessageBox MB_YESNO "One or more folders were not uninstalled because they contain extra files. Try to delete them?" IDNO uninstall_done
     RMDir /r "\$INSTDIR"
+
+    IfErrors 0 uninstall_done
+        MessageBox MB_YESNO "One of more files were still not uninstalled. Do you want to delete them on the next reboot?" IDNO uninstall_done
+        RMDir /r /REBOOTOK "\$INSTDIR"
 uninstall_done:
 
 SectionEnd
