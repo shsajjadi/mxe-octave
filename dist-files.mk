@@ -416,6 +416,7 @@ SRC_FILES_1 := \
   msys-unzip.mk \
   msys-wget.mk \
   msys-zip.mk \
+  msys-zlib.mk \
   muparser.mk \
   mxml-test.c \
   mxml.mk \
@@ -622,6 +623,7 @@ SRC_FILES_1 := \
   src-msys-unzip.mk \
   src-msys-wget.mk \
   src-msys-zip.mk \
+  src-msys-zlib.mk \
   stable-octave-1-docinstall.patch \
   stable-octave-1-fixes.patch \
   stable-octave.mk \
