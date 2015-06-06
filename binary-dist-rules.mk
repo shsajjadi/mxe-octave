@@ -28,6 +28,7 @@ BINARY_DIST_DEPS := \
   $(OCTAVE_TARGET) \
   blas-packages \
   octave-forge-packages \
+  devel-packages \
   units \
   transfig \
   $(WINDOWS_BINARY_DIST_DEPS)

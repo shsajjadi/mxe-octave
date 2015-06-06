@@ -197,6 +197,13 @@ AC_ARG_ENABLE([binary-packages],
   [if test "$enableval" = yes; then ENABLE_BINARY_PACKAGES=yes; fi], [])
 AC_SUBST(ENABLE_BINARY_PACKAGES)
 
+ENABLE_DEVEL_TOOLS=no
+AC_ARG_ENABLE([devel-tools],
+  [AS_HELP_STRING([--enable-devel-tools],
+    [Enable creating devel tools such as gdb])],
+  [if test "$enableval" = yes; then ENABLE_DEVEL_TOOLS=yes; fi], [])
+AC_SUBST(ENABLE_DEVEL_TOOLS)
+
 ### Default is to cross compile for mingw.
 
 echo $host_alias
