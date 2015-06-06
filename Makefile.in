@@ -55,6 +55,9 @@ ENABLE_64 := @ENABLE_64@
 # if cross, compiling, this also means we will attempt to create cross mkoctfile
 ENABLE_BINARY_PACKAGES := @ENABLE_BINARY_PACKAGES@
 
+# create and install devel tools (default no)
+ENABLE_DEVEL_TOOLS := @ENABLE_DEVEL_TOOLS@
+
 # Should match what config.guess prints for your system.
 # If cross compiling, you must set it manually.
 ifeq ($(MXE_NATIVE_BUILD),yes)
@@ -428,6 +431,12 @@ ifeq ($(ENABLE_OPENBLAS),yes)
   BLAS_PACKAGES += openblas
 endif
 
+DEVEL_PACKAGES := 
+ifeq ($(ENABLE_DEVEL_TOOLS),yes)
+  DEVEL_PACKAGES += gdb
+endif
+
+
 MAKE_SHARED_FROM_STATIC := \
   $(TOP_DIR)/tools/make-shared-from-static $(MAKE_SHARED_FROM_STATIC_OPTIONS)
 
@@ -506,6 +515,9 @@ octave-forge-packages: $(OCTAVE_FORGE_DEPS) $(OCTAVE_FORGE_PACKAGES)
 
 .PHONY: blas-packages
 blas-packages: $(BLAS_PACKAGES)
+
+.PHONY: devel-packages
+devel-packages: $(DEVEL_PACKAGES)
 
 configure: configure.ac
 	autoconf
