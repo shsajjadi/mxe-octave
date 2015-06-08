@@ -562,6 +562,7 @@ SRC_FILES_1 := \
   qrupdate.mk \
   qscintilla.mk \
   qt-1-cherrypicks.patch \
+  qt-2-shared-tools-fixes.patch \
   qt-test.cpp \
   qt-test.pro \
   qt-test.ui \

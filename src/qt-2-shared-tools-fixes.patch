@@ -1,0 +1,12 @@
+diff -ur qt-everywhere-opensource-src-4.8.7.orig/tools/linguist/shared/profileevaluator.cpp qt-everywhere-opensource-src-4.8.7/tools/linguist/shared/profileevaluator.cpp
+--- qt-everywhere-opensource-src-4.8.7.orig/tools/linguist/shared/profileevaluator.cpp	2015-06-07 17:14:32.348070244 -0400
++++ qt-everywhere-opensource-src-4.8.7/tools/linguist/shared/profileevaluator.cpp	2015-06-07 17:16:43.792075123 -0400
+@@ -65,7 +65,7 @@
+ #include <unistd.h>
+ #include <sys/utsname.h>
+ #else
+-#include <Windows.h>
++#include <windows.h>
+ #endif
+ #include <stdio.h>
+ #include <stdlib.h>
