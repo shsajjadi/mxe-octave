@@ -3,10 +3,10 @@
 
 PKG             := of-strings
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.1.0
-$(PKG)_CHECKSUM := 55a77a68d3015d0aa471a723b099a9460838e82c
+$(PKG)_VERSION  := 1.2.0
+$(PKG)_CHECKSUM := 5db5442b62961a490526eec5d30e6db2a008914a
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := strings
+$(PKG)_SUBDIR   := strings-$($(PKG)_VERSION)
 $(PKG)_FILE     := strings-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
