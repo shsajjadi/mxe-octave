@@ -221,4 +221,20 @@ define $(PKG)_BUILD
       $(if $(filter-out yes, $(MXE_NATIVE_BUILD)),
         mv '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/lrelease' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'))
 
+    # if mingw cross compiling, and want devel tools, create cross compiles uic, moc, rcc and lrelease
+    if [ "$(MXE_NATIVE_BUILD)" = "no" -a "$(MXE_SYSTEM)" = "mingw" ]; then \
+      if [ "$(ENABLE_DEVEL_TOOLS)" = "yes" ]; then \
+        for f in bootstrap moc uic rcc; do \
+          echo "do make in $$f"; \
+          make -C "$(1)/src/tools/$$f" distclean; \
+          cd "$(1)/src/tools/$$f" && $(MXE_QMAKE) -makefile -spec '$(1)/mkspecs/win32-g++'; \
+          make -C "$(1)/src/tools/$$f"; \
+          make -C "$(1)/src/tools/$$f" -j 1 install INSTALL_ROOT='$($(PKG)_INSTALL_ROOT)'; \
+        done; \
+        make -C '$(1)/tools/linguist/lrelease' distclean; \
+        cd '$(1)/tools/linguist/lrelease' && $(MXE_QMAKE) -makefile -spec '$(1)/mkspecs/win32-g++'; \
+        make -C '$(1)/tools/linguist/lrelease'; \
+        make -C '$(1)/tools/linguist/lrelease' -j 1 install INSTALL_ROOT='$($(PKG)_INSTALL_ROOT)'; \
+      fi; \
+    fi
 endef
