@@ -403,12 +403,14 @@ SRC_FILES_1 := \
   msys-grep.mk \
   msys-gzip.mk \
   msys-less.mk \
+  msys-libcrypt.mk \
   msys-libiconv.mk \
   msys-libintl.mk \
   msys-libmagic.mk \
   msys-make.mk \
   msys-msys-core.mk \
   msys-patch.mk \
+  msys-perl.mk \
   msys-regex.mk \
   msys-sed.mk \
   msys-tar.mk \
@@ -611,12 +613,14 @@ SRC_FILES_1 := \
   src-msys-grep.mk \
   src-msys-gzip.mk \
   src-msys-less.mk \
+  src-msys-libcrypt.mk \
   src-msys-libiconv.mk \
   src-msys-libintl.mk \
   src-msys-libmagic.mk \
   src-msys-make.mk \
   src-msys-msys-core.mk \
   src-msys-patch.mk \
+  src-msys-perl.mk \
   src-msys-regex.mk \
   src-msys-sed.mk \
   src-msys-tar.mk \

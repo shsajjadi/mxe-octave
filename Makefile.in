@@ -372,10 +372,15 @@ ifeq ($(MXE_SYSTEM),mingw)
     MSYS_BASE_DIR := $(TOP_DIR)/msys-base
     MSYS_EXTENSION_DIR := $(TOP_DIR)/msys-extension
     MSYS_BASE_PACKAGES := $(addprefix msys-,bash coreutils diffutils dos2unix file findutils gawk grep gzip less libiconv libintl libmagic make msys-core patch regex sed tar termcap unzip zip wget zlib)
+
+    ifeq ($(ENABLE_DEVEL_TOOLS),yes)
+      MSYS_BASE_PACKAGES += msys-perl msys-libcrypt
+    endif
+
     MSYS_BASE_SOURCES := $(addprefix src-,$(MSYS_BASE_PACKAGES))
     PKGS += $(MSYS_BASE_SOURCES)
 
-    NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
+     NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
   endif
 else ifeq ($(MXE_SYSTEM),msvc)
   MXE_WINDOWS_BUILD := yes
