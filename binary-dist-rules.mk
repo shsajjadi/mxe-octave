@@ -78,10 +78,14 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)/
       cp $(TOP_DIR)/installer-files/octave.vbs $(OCTAVE_DIST_DIR)/
       echo "  updating libtool references..."
-      find '$(OCTAVE_DIST_DIR)/' -type f -name "*.la" -exec $(SED) -i 's|$(HOST_PREFIX)|/usr|g' {} \; ;
+      find '$(OCTAVE_DIST_DIR)/' -type f -name "*.la" \
+        -exec $(SED) -i 's|$(HOST_PREFIX)|/usr|g;s|$(BUILD_TOOLS_PREFIX)|/usr|g' {} \; ;
       echo "  updating pkg-config .pc references..."
-      find '$(OCTAVE_DIST_DIR)/lib/pkgconfig' -type f -name "*.pc" -exec $(SED) -i 's|$(HOST_PREFIX)|/usr|g' {} \; ;
-      
+      find '$(OCTAVE_DIST_DIR)/lib/pkgconfig' -type f -name "*.pc" \
+        -exec $(SED) -i 's|$(HOST_PREFIX)|/usr|g;s|$(BUILD_TOOLS_PREFIX)|/usr|g' {} \; ;
+      if [ "$(ENABLE_DEVEL_TOOLS)" = "yes" ]; then \
+        cp $(TOP_DIR)/installer-files/cmdshell.bat $(OCTAVE_DIST_DIR)/; \
+      fi
     endef
   else
     define copy-windows-dist-files

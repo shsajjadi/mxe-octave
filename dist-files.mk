@@ -848,6 +848,7 @@ FILES := \
   octaverc
 
 INSTALL_FILES_1 := \
+  cmdshell.bat \
   gpl-3.0.txt \
   octave.bat \
   octave.bmp \
