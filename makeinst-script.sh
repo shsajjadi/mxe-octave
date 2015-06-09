@@ -226,6 +226,9 @@ Section "MainFiles"
 
   ; distro files
 EOF
+  if [ -f $OCTAVE_SOURCE/cmdshell.bat ]; then 
+    echo "File '$OCTAVE_SOURCE/cmdshell.bat'" >> $OUTFILE
+  fi
 
 # insert the files
   IFS=$'\n'
@@ -273,6 +276,10 @@ Section "Shortcuts"
  CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (GUI).lnk" "\$INSTDIR\\octave.vbs" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
  SetOutPath "\$INSTDIR"
 EOF
+  # shortcut for cmd win
+  if [ -f $OCTAVE_SOURCE/cmdshell.bat ]; then 
+    echo "CreateShortCut '\$SMPROGRAMS\\Octave-$VERSION\\Bash Shell.lnk' '\$INSTDIR\\cmdshell.bat' '' '' 0" >> $OUTFILE
+  fi
   # if we have documentation files, create shortcuts
   if [ -d $OCTAVE_SOURCE/share/doc/octave ]; then
     cat >> $OUTFILE << EOF
