@@ -77,6 +77,11 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       echo "  octave.bat..."
       cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)/
       cp $(TOP_DIR)/installer-files/octave.vbs $(OCTAVE_DIST_DIR)/
+      echo "  updating libtool references..."
+      find '$(OCTAVE_DIST_DIR)/' -type f -name "*.la" -exec $(SED) -i 's|$(HOST_PREFIX)|/usr|g' {} \; ;
+      echo "  updating pkg-config .pc references..."
+      find '$(OCTAVE_DIST_DIR)/lib/pkgconfig' -type f -name "*.pc" -exec $(SED) -i 's|$(HOST_PREFIX)|/usr|g' {} \; ;
+      
     endef
   else
     define copy-windows-dist-files
