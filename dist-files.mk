@@ -407,6 +407,7 @@ SRC_FILES_1 := \
   msys-libiconv.mk \
   msys-libintl.mk \
   msys-libmagic.mk \
+  msys-libopenssl.mk \
   msys-make.mk \
   msys-msys-core.mk \
   msys-patch.mk \
@@ -617,6 +618,7 @@ SRC_FILES_1 := \
   src-msys-libiconv.mk \
   src-msys-libintl.mk \
   src-msys-libmagic.mk \
+  src-msys-libopenssl.mk \
   src-msys-make.mk \
   src-msys-msys-core.mk \
   src-msys-patch.mk \

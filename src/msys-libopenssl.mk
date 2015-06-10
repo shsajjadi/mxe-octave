@@ -1,19 +1,19 @@
 # This file is part of MXE.
 # See index.html for further information.
 
-PKG             := msys-wget
+PKG             := msys-libopenssl
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.12-1
-$(PKG)_CHECKSUM := b13415e735484d82e81bc648fed52a83323ff993
-$(PKG)_REMOTE_SUBDIR := wget/wget-$($(PKG)_VERSION)
+$(PKG)_VERSION  := 1.0.0-1
+$(PKG)_CHECKSUM := 09bceb768e6989feb5af63928cfda661977bf751
+$(PKG)_REMOTE_SUBDIR := openssl/openssl-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
-$(PKG)_FILE     := wget-$($(PKG)_VERSION)-msys-1.0.13-bin.tar.lzma
+$(PKG)_FILE     := libopenssl-$($(PKG)_VERSION)-msys-1.0.13-dll-100.tar.lzma
 $(PKG)_URL      := $(MSYS_EXTENSION_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/download
-$(PKG)_DEPS     := msys-libopenssl
+$(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- '$(MSYS_EXTENSION_URL)/wget' | \
-    $(SED) -n 's,.*title="wget-\([0-9][^"]*\)".*,\1,p' | \
+    $(WGET) -q -O- '$(MSYS_EXTENSION_URL)/openssl' | \
+    $(SED) -n 's,.*title="libopenssl-\([0-9][^"]*\)".*,\1,p' | \
     head -1
 endef
 
