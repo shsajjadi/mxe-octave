@@ -475,7 +475,6 @@ SRC_FILES_1 := \
   of-ltfat.mk \
   of-miscellaneous-1-fixes.patch \
   of-miscellaneous.mk \
-  of-netcdf-1-cross-fixes.patch \
   of-netcdf.mk \
   of-nurbs-1-fixes.patch \
   of-nurbs.mk \
