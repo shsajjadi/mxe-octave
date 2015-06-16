@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 792e11db0fe7a30a4dc4491af5098b047ec378b1
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)-source
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://geuz.org/$(PKG)/src/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := libpng zlib
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
     ifeq ($(MXE_SYSTEM),msvc)
@@ -29,6 +29,20 @@ ifeq ($(MXE_SYSTEM),msvc)
         .
     cd '$(1)' && env -u MAKE -u MAKEFLAGS nmake
     cd '$(1)' && env -u MAKE -u MAKEFLAGS nmake DESTDIR='$(3)' install
+  endef
+else ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  define $(PKG)_BUILD
+    mkdir '$(1)/.build'
+    cd '$(1)' && autoreconf --force
+    cd '$(1)/.build' && ../configure \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        $(ENABLE_SHARED_OR_STATIC) \
+        --prefix='$(HOST_PREFIX)' \
+        LIBS=-lopengl32 \
+        && $(CONFIGURE_POST_HOOK)
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' LDFLAGS='-no-undefined -L$(HOST_LIBDIR)'
+    $(MAKE) -C '$(1)/.build' -j 1 install DESTDIR='$(3)'
   endef
 else
   ifeq ($(MXE_SYSTEM),mingw)
