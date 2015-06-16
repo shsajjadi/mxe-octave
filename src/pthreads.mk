@@ -14,7 +14,7 @@ define $(PKG)_UPDATE
     echo $(mingw-w64_VERSION)
 endef
 
-ifeq ($(MXE_SYSTEM),mingw)
+ifeq ($(MXE_SYSTEM)$(MXE_NATIVE_BUILD),mingwno)
 define $(PKG)_BUILD
     cd '$(1)/mingw-w64-libraries/winpthreads' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
