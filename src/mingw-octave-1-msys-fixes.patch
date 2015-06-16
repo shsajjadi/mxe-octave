@@ -1,0 +1,47 @@
+Changes required for octave to compile under msys2
+
+diff -ur octave-4.0.0.orig/libinterp/corefcn/syscalls.cc octave-4.0.0/libinterp/corefcn/syscalls.cc
+--- octave-4.0.0.orig/libinterp/corefcn/syscalls.cc	2015-06-14 08:00:55.195888300 -0400
++++ octave-4.0.0/libinterp/corefcn/syscalls.cc	2015-06-14 08:50:10.755418300 -0400
+@@ -30,6 +30,7 @@
+ #include <config.h>
+ #endif
+ 
++#include <ctime>
+ #include <cstdio>
+ #include <cstring>
+ 
+diff -ur octave-4.0.0.orig/liboctave/system/file-stat.cc octave-4.0.0/liboctave/system/file-stat.cc
+--- octave-4.0.0.orig/liboctave/system/file-stat.cc	2015-06-14 08:00:26.881838600 -0400
++++ octave-4.0.0/liboctave/system/file-stat.cc	2015-06-14 08:49:10.992967600 -0400
+@@ -24,6 +24,7 @@
+ #include <config.h>
+ #endif
+ 
++#include <ctime>
+ #include <cerrno>
+ #include <cstring>
+ 
+diff -ur octave-4.0.0.orig/liboctave/system/oct-syscalls.cc octave-4.0.0/liboctave/system/oct-syscalls.cc
+--- octave-4.0.0.orig/liboctave/system/oct-syscalls.cc	2015-06-14 08:00:26.913038700 -0400
++++ octave-4.0.0/liboctave/system/oct-syscalls.cc	2015-06-14 08:49:37.309661500 -0400
+@@ -24,6 +24,7 @@
+ #include <config.h>
+ #endif
+ 
++#include <ctime>
+ #include <cerrno>
+ #include <cstdlib>
+ 
+diff -ur octave-4.0.0.orig/libinterp/corefcn/oct-tex-lexer.cc octave-4.0.0/libinterp/corefcn/oct-tex-lexer.cc
+--- octave-4.0.0.orig/libinterp/corefcn/oct-tex-lexer.cc	2015-06-14 14:15:46.436310300 -0400
++++ octave-4.0.0/libinterp/corefcn/oct-tex-lexer.cc	2015-06-14 14:24:23.464145100 -0400
+@@ -3,7 +3,7 @@
+ #include <config.h>
+ #endif
+ 
+-
++#include <ctime>
+ 
+ 
+ #line 10 "corefcn/oct-tex-lexer.cc"

@@ -313,6 +313,7 @@ SRC_FILES_1 := \
   mdbtools.mk \
   mingw-cairo-1-ssize-t-defined.patch \
   mingw-cfitsio-1-fixes.patch \
+  mingw-default-octave-1-msys-fixes.patch \
   mingw-epstool-1-fixes.patch \
   mingw-fontconfig-ln_s.patch \
   mingw-glib-1-fixes.patch \
@@ -320,6 +321,7 @@ SRC_FILES_1 := \
   mingw-hdf5-1.patch \
   mingw-libgcrypt-1-fixes.patch \
   mingw-libmng-1-noundefines.patch \
+  mingw-octave-1-msys-fixes.patch \
   mingw-openssl-3-libdeps.patch \
   mingw-osmesa-1-fixes.patch \
   mingw-pango-1-fixes.patch \
