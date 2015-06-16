@@ -467,6 +467,7 @@ SRC_FILES_1 := \
   of-generate_html.mk \
   of-geometry.mk \
   of-image.mk \
+  of-interval.mk \
   of-instrument-control.mk \
   of-io.mk \
   of-linear-algebra-1-cross-fixes.patch \
