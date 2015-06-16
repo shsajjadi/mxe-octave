@@ -257,6 +257,8 @@ ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
   export PKG_CONFIG_PATH
 else
   CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX)/lib'
+  PKG_CONFIG_PATH := $(HOST_PREFIX)/lib/pkgconfig
+  export PKG_CONFIG_PATH
 endif
 CONFIGURE_POST_HOOK := true
 
