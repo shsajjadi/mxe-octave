@@ -91,6 +91,10 @@ ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_EXTRA_CONFIGURE_OPTIONS += --with-x=no
 endif
 
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  $(PKG)_EXTRA_CONFIGURE_OPTIONS += ac_cv_search_tputs=-ltermcap
+endif
+
 # if want binary packages and are cross compiling, then we need cross tools enabled
 ifeq ($(ENABLE_BINARY_PACKAGES),yes)
   ifeq ($(MXE_NATIVE_BUILD),no)
