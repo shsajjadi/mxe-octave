@@ -12,3 +12,18 @@ diff -uNr a/scons/gallium.py b/scons/gallium.py
              # Handle the @xx symbol munging of DLL exports
              shlinkflags += ['-Wl,--enable-stdcall-fixup']
              #shlinkflags += ['-Wl,--kill-at']
+diff -ur Mesa-10.2.2.orig/scons/crossmingw.py Mesa-10.2.2/scons/crossmingw.py
+--- Mesa-10.2.2.orig/scons/crossmingw.py       2015-06-12 06:33:42.524589500 -0400
++++ Mesa-10.2.2/scons/crossmingw.py    2015-06-12 22:12:26.181163800 -0400
+@@ -160,7 +160,11 @@
+     env.Append(SHLIBEMITTER = [shlib_emitter])
+     env['LINK'] = mingw_prefix + 'g++'
+     env['AR'] = mingw_prefix + 'ar'
++    if not SCons.Util.WhereIs(env['AR']):
++        env['AR'] = env['CC'] + '-ar'
+     env['RANLIB'] = mingw_prefix + 'ranlib'
++    if not SCons.Util.WhereIs(env['RANLIB']):
++        env['RANLIB'] = env['CC'] + '-ranlib'
+     env['LINK'] = mingw_prefix + 'g++'
+     env['AS'] = mingw_prefix + 'as'
+     env['WIN32DEFPREFIX']        = ''
