@@ -478,6 +478,8 @@ SRC_FILES_1 := \
   of-ltfat.mk \
   of-miscellaneous-1-fixes.patch \
   of-miscellaneous.mk \
+  of-nan-1-cross-fixes.patch \
+  of-nan.mk \
   of-netcdf.mk \
   of-nurbs-1-fixes.patch \
   of-nurbs.mk \
