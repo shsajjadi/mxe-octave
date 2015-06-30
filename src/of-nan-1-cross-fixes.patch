@@ -1,0 +1,22 @@
+diff -ur NaN.orig/src/Makefile NaN/src/Makefile
+--- NaN.orig/src/Makefile	2015-06-30 13:30:25.348544831 -0400
++++ NaN/src/Makefile	2015-06-30 13:35:18.600346663 -0400
+@@ -31,13 +31,15 @@
+ # Instead of building "mex shortpath.c" and "mex uigetpath.c", I used empty m-functions within argout=argin; 
+ ####################################################
+ MKOCTFILE ?= mkoctfile$(OCTAVE_VERSION)
+-CC      = gcc
+-CXX     = g++
++OCTAVE_CONFIG ?= octave-config
++CC      = $(shell $(MKOCTFILE) -p CC)
++CXX     = $(shell $(MKOCTFILE) -p CXX)
+ CFLAGS 	= -fopenmp -Wall -Wextra -Wconversion -O2
+ OCTMEX	= $(MKOCTFILE) --mex
+ RM      = rm
+ 
+-ifneq ($(OS),Windows_NT)
++HOST_TYPE := $(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE))
++ifeq (,$(findstring mingw,$(HOST_TYPE)))
+ CFLAGS      += -fPIC
+ endif
+ 
