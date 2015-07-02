@@ -28,14 +28,16 @@ ifeq ($(MXE_SYSTEM),mingw)
     --enable-threads=win32 
   ifneq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
+      $(ENABLE_SHARED_OR_STATIC) \
       --disable-multilib \
       --disable-sjlj-exceptions
   else
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
-      --enable-multilib --enable-64bit
+      --enable-multilib --enable-64bit --disable-shared
   endif
 else
   $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
+    $(ENABLE_SHARED_OR_STATIC) \
     --disable-multilib
 endif
 
@@ -56,7 +58,6 @@ define $(PKG)_BUILD
         --enable-languages='c,c++,fortran' \
         --disable-libsanitizer \
         $($(PKG)_SYSDEP_CONFIGURE_OPTIONS) \
-        $(ENABLE_SHARED_OR_STATIC) \
         --disable-libgomp \
         --with-cloog='$(HOST_PREFIX)' \
         --with-gmp='$(HOST_PREFIX)' \
