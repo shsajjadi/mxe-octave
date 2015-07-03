@@ -3,8 +3,8 @@
 
 PKG             := zeromq
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.0.5
-$(PKG)_CHECKSUM := a664ec63661a848ef46114029156a0a6006feecd
+$(PKG)_VERSION  := 4.1.2
+$(PKG)_CHECKSUM := 86c17096f7f4bf46cbcd2ad242cf8fec8a7cfb7b
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.zeromq.org/$($(PKG)_FILE)
@@ -19,6 +19,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
+        --without-libsodium \
         $(ENABLE_SHARED_OR_STATIC) 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
