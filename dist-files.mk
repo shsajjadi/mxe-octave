@@ -483,6 +483,8 @@ SRC_FILES_1 := \
   of-netcdf.mk \
   of-nurbs-1-fixes.patch \
   of-nurbs.mk \
+  of-ocs-1-cross-fixes.patch \
+  of-ocs.mk \
   of-octcdf-1-cross-fixes.patch \
   of-octcdf.mk \
   of-odepkg.mk \
