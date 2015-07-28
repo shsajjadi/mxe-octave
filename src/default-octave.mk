@@ -142,6 +142,8 @@ define $(PKG)_BUILD
         PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
         && $(CONFIGURE_POST_HOOK)
 
+    $(MAKE) -C '$(1)/.build/libgnu'
+
     ## We want both of these install steps so that we install in the
     ## location set by the configure --prefix option, and the other
     ## in a directory tree that will have just Octave files.

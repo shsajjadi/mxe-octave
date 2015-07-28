@@ -60,7 +60,6 @@ SRC_FILES_1 := \
   dcmtk-1-fixes.patch \
   dcmtk-2-ming64.patch \
   dcmtk.mk \
-  default-octave-1-docinstall.patch \
   default-octave-1-fixes.patch \
   default-octave.mk \
   devil-1-png.patch \
