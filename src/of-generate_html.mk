@@ -3,8 +3,8 @@
 
 PKG             := of-generate_html
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.1.8
-$(PKG)_CHECKSUM := 869ade577cc6288ebc10b6958e2ce85ee3f93a0c
+$(PKG)_VERSION  := 0.1.9
+$(PKG)_CHECKSUM := b3994212f934653b85fe02685e741500d2fe63b2
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := generate_html-$($(PKG)_VERSION)
 $(PKG)_FILE     := generate_html-$($(PKG)_VERSION).tar.gz
