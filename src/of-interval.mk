@@ -3,8 +3,8 @@
 
 PKG             := of-interval
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.0.0
-$(PKG)_CHECKSUM := 8ba9a76367d56c855c2d7088eca9c788221dcc7b
+$(PKG)_VERSION  := 1.1.0
+$(PKG)_CHECKSUM := a82d45680172f7b3d60e3709ce11c5e909815d5c
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := interval-$($(PKG)_VERSION)
 $(PKG)_FILE     := interval-$($(PKG)_VERSION).tar.gz
