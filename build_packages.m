@@ -48,7 +48,7 @@ try_install netcdf-1.0.7.tar.gz
 try_install ltfat-2.1.0.tar.gz
 try_install database-2.3.2.tar.gz
 try_install instrument-control-0.2.1.tar.gz
-try_install generate_html-0.1.8.tar.gz
+try_install generate_html-0.1.9.tar.gz
 try_install financial-0.4.0.tar.gz
 try_install stk-2.3.2.tar.gz
 try_install splines-1.2.8.tar.gz
