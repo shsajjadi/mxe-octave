@@ -475,6 +475,7 @@ SRC_FILES_1 := \
   of-linear-algebra.mk \
   of-lssa.mk \
   of-ltfat.mk \
+  of-mapping.mk \
   of-miscellaneous-1-fixes.patch \
   of-miscellaneous.mk \
   of-nan-1-cross-fixes.patch \
