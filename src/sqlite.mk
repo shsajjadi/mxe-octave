@@ -23,6 +23,6 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --disable-readline \
         --disable-threadsafe
-    $(MAKE) -C '$(1)' -j '$(JOBS)' 
+    $(MAKE) -C '$(1)' -j 1
     $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
 endef
