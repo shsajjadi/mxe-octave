@@ -80,7 +80,7 @@ else
       cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
 	  $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
 	  $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-	  --prefix='$($(PKG)_PREFIX)' \
+	  --prefix='$(HOST_PREFIX)' \
 	  && $(CONFIGURE_POST_HOOK)
 
       $(MAKE) -C '$(1)/.build' -j '$(JOBS)'
