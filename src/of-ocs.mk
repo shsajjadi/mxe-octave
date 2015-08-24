@@ -3,8 +3,8 @@
 
 PKG             := of-ocs
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.1.4
-$(PKG)_CHECKSUM := f3aa636a0f63f2c69cc9e0f88fa50c423e0cf548
+$(PKG)_VERSION  := 0.1.5
+$(PKG)_CHECKSUM := 4cb871bcd96e8443e9839525c2721b99957fc75c
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := ocs
 $(PKG)_FILE     := ocs-$($(PKG)_VERSION).tar.gz
