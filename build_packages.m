@@ -61,6 +61,6 @@ try_install strings-1.2.0.tar.gz
 try_install ga-0.10.0.tar.gz
 try_install interval-1.1.0.tar.gz
 try_install nan-2.8.1.tar.gz
-try_install ocs-0.1.4.tar.gz
+try_install ocs-0.1.5.tar.gz
 try_install mapping-1.2.0.tar.gz
 
