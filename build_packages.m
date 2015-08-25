@@ -63,4 +63,5 @@ try_install interval-1.1.0.tar.gz
 try_install nan-2.8.1.tar.gz
 try_install ocs-0.1.5.tar.gz
 try_install mapping-1.2.0.tar.gz
+try_install tisean-0.2.3.tar.gz
 
