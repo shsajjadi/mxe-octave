@@ -3,8 +3,8 @@
 
 PKG             := zeromq
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.1.2
-$(PKG)_CHECKSUM := 86c17096f7f4bf46cbcd2ad242cf8fec8a7cfb7b
+$(PKG)_VERSION  := 4.1.3
+$(PKG)_CHECKSUM := b7185724f2fd56d0face50047757ac2a04d26ca4
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.zeromq.org/$($(PKG)_FILE)
