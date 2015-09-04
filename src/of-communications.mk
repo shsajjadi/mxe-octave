@@ -20,5 +20,6 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    cd $(1)/src && autoconf
     $(call OCTAVE_FORGE_PKG_BUILD,$(1),$(2),$(3),$($(PKG)_OPTIONS))
 endef
