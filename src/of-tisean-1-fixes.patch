@@ -1,17 +1,7 @@
-# HG changeset patch
-# User John Donoghue
-# Date 1440511254 14400
-#      Tue Aug 25 10:00:54 2015 -0400
-# Node ID 6ccac6d363c9082ab3898e7220ca1b3e3bb09043
-# Parent  1bbc3eb050ac4fcb6704e43ef11dc809c0a83e55
-Use FLIB settings from mkoctfile in mingw build
-
-* src/Makefile.in: set F77LIBS to mkoctfile values and use in link
-
-diff -r 1bbc3eb050ac -r 6ccac6d363c9 src/Makefile.in
---- a/src/Makefile.in	Fri Aug 14 16:28:35 2015 -0600
-+++ b/src/Makefile.in	Tue Aug 25 10:00:54 2015 -0400
-@@ -1,9 +1,15 @@
+diff -ur tisean-0.2.3.orig/src/Makefile.in tisean-0.2.3/src/Makefile.in
+--- tisean-0.2.3.orig/src/Makefile.in	2015-08-24 13:01:27.265995455 -0400
++++ tisean-0.2.3/src/Makefile.in	2015-09-03 12:59:29.934122317 -0400
+@@ -1,9 +1,18 @@
  MKOCTFILE ?= mkoctfile -Wall
 +OCTAVE_CONFIG ?= octave-config
  SED       ?= sed
@@ -23,11 +13,14 @@ diff -r 1bbc3eb050ac -r 6ccac6d363c9 src/Makefile.in
 +ifneq (,$(findstring mingw,$(CANONICAL_HOST_TYPE)))
 +  F77LIBS := $(shell $(MKOCTFILE) -p FLIBS)
 +endif
++ifneq (,$(findstring cygwin,$(CANONICAL_HOST_TYPE)))
++  F77LIBS := $(shell $(MKOCTFILE) -p FLIBS)
++endif
 +
  ## The next two are important to actually rebuild them when a change
  ## is made to the the functions they link to.
  OCT_LINK_F=__surrogates__.oct __c1__.oct __upo__.oct lazy.oct
-@@ -73,7 +79,7 @@
+@@ -73,7 +82,7 @@
  	$(MKOCTFILE) $(CXXFLAGS) $< $(LIBS) -o $@
  
  $(OCT_LINK_F): %.oct : %.cc $(OBJECTS_F) $(LIBS_F)
