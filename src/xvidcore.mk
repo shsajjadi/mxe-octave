@@ -28,7 +28,7 @@ define $(PKG)_BUILD
     if [ "x$(BUILD_STATIC)" == "xyes" ]; then \
       $(INSTALL) -m644 '$(1)/build/xvidcore.a' '$(HOST_LIBDIR)/libxvidcore.a'; \
     else \
-      $(INSTALL) -m644 '$(1)/build/xvidcore.dll.a' '$(HOST_LIBDIR)/libxvidcore.dll.alibxvidcore.dll.a'; \
+      $(INSTALL) -m644 '$(1)/build/xvidcore.dll.a' '$(HOST_LIBDIR)/libxvidcore.dll.a'; \
       $(INSTALL) -m644 '$(1)/build/xvidcore.dll' '$(HOST_BINDIR)/libxvidcore.dll'; \
     fi
 endef
