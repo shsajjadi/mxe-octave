@@ -10,6 +10,17 @@ $(PKG)_FILE     := $(PKG)-v$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://webm.googlecode.com/files/$($(PKG)_FILE)
 $(PKG)_DEPS     := pthreads
 
+$(PKG)_TARGET_OPTS := 
+
+ifeq ($(MXE_NATIVE_BUILD),no)
+  ifeq ($(ENABLE_WINDOWS_64),yes)
+    $(PKG)_TARGET_OPTS := --target=x86_64-win64-gcc 
+  else
+    $(PKG)_TARGET_OPTS := --target=x86-win32-gcc 
+  endif
+endif
+
+
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://code.google.com/p/webm/downloads/list?sort=-uploaded' | \
     $(SED) -n 's,.*libvpx-v\([0-9][^<]*\)\.tar.*,\1,p' | \
@@ -21,7 +32,7 @@ define $(PKG)_BUILD
         CROSS='$(MXE_TOOL_PREFIX)' \
         ./configure \
         --prefix='$(HOST_PREFIX)' \
-        --target=x86-win32-gcc \
+        $($(PKG)_TARGET_OPTS) \
         --disable-examples \
         --disable-install-docs
     $(MAKE) -C '$(1)' -j '$(JOBS)'
