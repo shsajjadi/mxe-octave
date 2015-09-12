@@ -428,6 +428,7 @@ SRC_FILES_1 := \
   native-gcc-1-float.patch \
   native-gcc-2-intrinsics.patch \
   native-gcc.mk \
+  ncurses-1-gcc-5-fix.patch \
   ncurses.mk \
   netcdf.mk \
   nettle-1-fixes.patch \
