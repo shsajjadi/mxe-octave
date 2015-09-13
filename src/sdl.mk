@@ -16,6 +16,7 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifeq ($(MXE_NATIVE_BUILD),no)
 define $(PKG)_BUILD
     $(SED) -i 's,-mwindows,-lwinmm -mwindows,' '$(1)/configure'
     cd '$(1)' && ./configure \
@@ -37,3 +38,16 @@ define $(PKG)_BUILD
     #    '$(2).c' -o '$(HOST_BINDIR)/test-sdl.exe' \
     #    `'$(MXE_PKG_CONFIG)' sdl --cflags --libs`
 endef
+else
+define $(PKG)_BUILD
+    cd '$(1)' && ./autogen.sh && ./configure \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        $(ENABLE_SHARED_OR_STATIC) \
+        --prefix='$(HOST_PREFIX)' \
+        --enable-threads \
+        --disable-stdio-redirect
+    $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+endef
+endif

@@ -15,6 +15,7 @@ define $(PKG)_UPDATE
     echo $($(PKG)_VERSION)
 endef
 
+ifeq ($(MXE_NATIVE_BUILD),no)
 define $(PKG)_BUILD
     cd '$(1)' && autoconf
     cd '$(1)' && ./configure \
@@ -32,3 +33,15 @@ define $(PKG)_BUILD
       $(INSTALL) -m644 '$(1)/build/xvidcore.dll' '$(HOST_BINDIR)/libxvidcore.dll'; \
     fi
 endef
+else
+define $(PKG)_BUILD
+    cd '$(1)' && autoconf
+    cd '$(1)' && ./configure \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        --prefix='$(HOST_PREFIX)' \
+        $(ENABLE_SHARED_OR_STATIC) \
+        --prefix='$(HOST_PREFIX)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' BUILD_DIR='build'
+    $(MAKE) -C '$(1)' -j 1 BUILD_DIR='build' install
+endef
+endif
