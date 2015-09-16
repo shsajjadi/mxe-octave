@@ -1,24 +1,27 @@
 diff -ur tsa.orig/src/Makefile tsa/src/Makefile
---- tsa.orig/src/Makefile	2015-05-17 20:55:08.000000000 -0400
-+++ tsa/src/Makefile	2015-05-17 20:58:48.000000000 -0400
-@@ -39,11 +39,12 @@
- W32_LIBS += $(LDLIBS_W32)libblas.a
- W64_LIBS += $(LDLIBS_W64)libblas.a
+--- tsa.orig/src/Makefile	2015-09-16 09:30:29.103875849 -0400
++++ tsa/src/Makefile	2015-09-16 09:40:42.945344571 -0400
+@@ -41,9 +41,16 @@
  
--CC  	= gcc
--CXX 	= g++
-+CC  	?= gcc
-+CXX 	?= g++
- CFLAGS 	= -Wall -Wextra -Wconversion -O2 -fPIC 
--OCTMEX	= mkoctfile$(OCTAVE_VERSION) --mex
+ CC  	?= gcc
+ CXX 	?= g++
+-CFLAGS 	= -Wall -Wextra -Wconversion -O2 -fPIC 
+-OCTMEX	= mkoctfile$(OCTAVE_VERSION) --mex -lgomp
 -RM      = rm
++CFLAGS 	?= -Wall -Wextra -Wconversion -O2 -fPIC 
 +MKOCTFILE ?= mkoctfile$(OCTAVE_VERSION)
-+OCTMEX	?= $(MKOCTFILE) --mex
++OCTAVE_CONFIG ?= octave-config
++CANONICAL_HOST_TYPE=$(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE)
++ifneq (,$(findstring mingw,$(CANONICAL_HOST_TYPE)))
++  OCTMEX	?= $(MKOCTFILE) --mex
++else
++  OCTMEX	?= $(MKOCTFILE) --mex -lgomp
++endif
 +RM      ?= rm
  
  ifneq (Darwin,$(shell uname))
  CFLAGS      += -fopenmp
-@@ -91,7 +92,7 @@
+@@ -89,7 +96,7 @@
  #	Octave, MATLAB on Linux 
  #########################################################
  %.oct: %.cc
