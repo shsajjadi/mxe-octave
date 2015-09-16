@@ -865,6 +865,7 @@ INSTALL_FILES_1 := \
   octave.bat \
   octave.bmp \
   octave.vbs \
+  octave-firsttime.vbs \
   octave-hdr.bmp \
   octave-logo.ico \
   README.html
