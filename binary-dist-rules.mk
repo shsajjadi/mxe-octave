@@ -77,6 +77,7 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       echo "  octave.bat..."
       cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)/
       cp $(TOP_DIR)/installer-files/octave.vbs $(OCTAVE_DIST_DIR)/
+      cp $(TOP_DIR)/installer-files/octave-firsttime.vbs $(OCTAVE_DIST_DIR)/
       echo "  updating libtool references..."
       find '$(OCTAVE_DIST_DIR)/' -type f -name "*.la" \
         -exec $(SED) -i 's|$(HOST_PREFIX)|/usr|g;s|$(BUILD_TOOLS_PREFIX)|/usr|g' {} \; ;

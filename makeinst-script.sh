@@ -44,7 +44,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
 !define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
 !define INSTALLER_FILES "../installer-files"
 !define INSTALLER_NAME "octave-$OCTAVE_VERSION-installer.exe"
-!define MAIN_APP_EXE "octave.vbs"
+!define MAIN_APP_EXE "octave-firsttime.vbs"
 !define INSTALL_TYPE "SetShellVarContext current"
 !define PRODUCT_ROOT_KEY "HKLM"
 !define PRODUCT_KEY "Software\\Octave-$VERSION"
@@ -223,6 +223,7 @@ Section "MainFiles"
   SetOutPath "\$INSTDIR" 
   File "$OCTAVE_SOURCE/octave.bat"
   File "$OCTAVE_SOURCE/octave.vbs"
+  File "$OCTAVE_SOURCE/octave-firsttime.vbs"
 
   ; distro files
 EOF
