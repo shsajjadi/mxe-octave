@@ -36,6 +36,8 @@ define $(PKG)_BUILD
         ./configure \
         --prefix='$(HOST_PREFIX)' \
         $($(PKG)_TARGET_OPTS) \
+        --as=yasm \
+        --extra-cflags='-std=gnu89' \
         --disable-examples \
         --disable-install-docs
     $(MAKE) -C '$(1)' -j '$(JOBS)'
