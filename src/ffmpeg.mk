@@ -29,13 +29,13 @@ define $(PKG)_BUILD
         --arch=$(firstword $(subst -, ,$(TARGET))) \
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
+        --extra-libs='-mconsole' \
         --disable-debug \
         --disable-doc \
         --enable-memalign-hack \
         --enable-gpl \
         --enable-version3 \
         --disable-nonfree \
-        --enable-postproc \
         --disable-pthreads \
         --enable-w32threads \
         --enable-avisynth \
@@ -44,7 +44,6 @@ define $(PKG)_BUILD
         --enable-libvorbis \
         --enable-libmp3lame \
         --enable-libxvid \
-        --disable-libfaac \
         --enable-libopencore-amrnb \
         --enable-libopencore-amrwb \
         --enable-libx264 \
