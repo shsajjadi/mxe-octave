@@ -30,5 +30,5 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
 
     rm -f '$(3)$(HOST_LIBDIR)/libtiff.la'
-    rm -f '$(3)$(HOST_LIBDIR)/lib/libtiffxx.la'
+    rm -f '$(3)$(HOST_LIBDIR)/libtiffxx.la'
 endef
