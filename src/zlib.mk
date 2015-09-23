@@ -49,6 +49,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 
     if [ "$(BUILD_SHARED)" = yes ]; then \
+      rm -r $(3)$(HOST_LIBDIR)/libz.a; \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(1)/libz.a' --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)'; \
     fi
 endef
