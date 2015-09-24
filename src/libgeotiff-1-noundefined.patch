@@ -16,7 +16,7 @@ diff -ur libgeotiff-1.4.0.orig/Makefile.am libgeotiff-1.4.0/Makefile.am
  endif
  
 -libgeotiff_la_LDFLAGS = -version-info 3:0:1
-+libgeotiff_la_LDFLAGS = -version-info 3:0:1 --no-undefined
++libgeotiff_la_LDFLAGS = -version-info 3:0:1 -no-undefined
  
  libgeotiff_la_LIBADD = libxtiff/libxtiff.la
  
@@ -32,3 +32,15 @@ diff -ur libgeotiff-1.4.0.orig/Makefile.in libgeotiff-1.4.0/Makefile.in
  libgeotiff_la_LIBADD = libxtiff/libxtiff.la
  lib_LTLIBRARIES = libgeotiff.la
  EXTRA_DIST = makefile.vc \
+diff -burN libgeotiff-1.4.0.orig/configure.ac libgeotiff-1.4.0/configure.ac
+--- libgeotiff-1.4.0.orig/configure.ac	2015-06-21 03:50:03.341076086 +0200
++++ libgeotiff-1.4.0/configure.ac	2015-06-21 03:50:39.741125191 +0200
+@@ -280,7 +280,7 @@
+   PROJ_INC=-I$PROJ_INC
+ 
+   AC_SUBST(PROJ_INC,$PROJ_INC)
+-  AC_DEFINE(HAVE_PROJECTS_H)
++  AC_DEFINE([HAVE_PROJECTS_H], [], [Description])
+   AC_DEFINE(HAVE_LIBPROJ)
+   AC_SUBST([HAVE_LIBPROJ])
+   PROJ_CONFIG="yes"
