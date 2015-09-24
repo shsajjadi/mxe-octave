@@ -20,6 +20,7 @@ endef
 define $(PKG)_BUILD
     $(SED) -i 's,/usr/local,@prefix@,' '$(1)/bin/Makefile.in'
     touch '$(1)/configure'
+    cd '$(1)' && autoreconf -fi
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -31,6 +32,4 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)' -j $(JOBS) 
     $(MAKE) -C '$(1)' -j 1 install
-    #$(MAKE) -j 1 install EXEEXT=.remove-me MAKE='$(MAKE)'
-    rm -fv '$(HOST_BINDIR)'/*.remove-me
 endef
