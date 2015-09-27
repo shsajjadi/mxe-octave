@@ -457,6 +457,7 @@ SRC_FILES_1 := \
   of-dataframe-1-fixes.patch \
   of-dataframe.mk \
   of-dicom-1-fixes.patch \
+  of-dicom-2-gdcm2.4.patch \
   of-dicom.mk \
   of-financial-1-fixes.patch \
   of-financial.mk \

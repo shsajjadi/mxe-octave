@@ -1,0 +1,130 @@
+diff -ur dicom.orig/src/dicomdict.cpp dicom/src/dicomdict.cpp
+--- dicom.orig/src/dicomdict.cpp	2015-09-27 15:34:20.971531487 -0400
++++ dicom/src/dicomdict.cpp	2015-09-27 15:36:52.571537114 -0400
+@@ -27,9 +27,9 @@
+ #include "octave/oct.h"
+ #include "octave/load-path.h"
+ 
+-#include "gdcm-2.0/gdcmDict.h"
+-#include "gdcm-2.0/gdcmVR.h"
+-#include "gdcm-2.0/gdcmVM.h"
++#include "gdcm-2.4/gdcmDict.h"
++#include "gdcm-2.4/gdcmVR.h"
++#include "gdcm-2.4/gdcmVM.h"
+ 
+ #include "dicomdict.h"
+ 
+diff -ur dicom.orig/src/dicominfo.cpp dicom/src/dicominfo.cpp
+--- dicom.orig/src/dicominfo.cpp	2015-09-27 15:34:20.971531487 -0400
++++ dicom/src/dicominfo.cpp	2015-09-27 15:37:31.131538545 -0400
+@@ -41,18 +41,18 @@
+ #include "octave/oct.h"
+ #include "octave/ov-struct.h"
+ 
+-//#include "gdcm-2.0/gdcmSystem.h"
+-#include "gdcm-2.0/gdcmReader.h"
+-//#include "gdcm-2.0/gdcmWriter.h"
+-//#include "gdcm-2.0/gdcmAttribute.h"
+-#include "gdcm-2.0/gdcmDataSet.h"
+-//#include "gdcm-2.0/gdcmGlobal.h"
+-//#include "gdcm-2.0/gdcmDicts.h"
+-#include "gdcm-2.0/gdcmDict.h"
+-//#include "gdcm-2.0/gdcmCSAHeader.h"
+-//#include "gdcm-2.0/gdcmPrivateTag.h"
+-#include "gdcm-2.0/gdcmVR.h"
+-#include "gdcm-2.0/gdcmSequenceOfItems.h"
++//#include "gdcm-2.4/gdcmSystem.h"
++#include "gdcm-2.4/gdcmReader.h"
++//#include "gdcm-2.4/gdcmWriter.h"
++//#include "gdcm-2.4/gdcmAttribute.h"
++#include "gdcm-2.4/gdcmDataSet.h"
++//#include "gdcm-2.4/gdcmGlobal.h"
++//#include "gdcm-2.4/gdcmDicts.h"
++#include "gdcm-2.4/gdcmDict.h"
++//#include "gdcm-2.4/gdcmCSAHeader.h"
++//#include "gdcm-2.4/gdcmPrivateTag.h"
++#include "gdcm-2.4/gdcmVR.h"
++#include "gdcm-2.4/gdcmSequenceOfItems.h"
+  
+ #include "dicomdict.h" 
+ 
+diff -ur dicom.orig/src/dicomlookup.cpp dicom/src/dicomlookup.cpp
+--- dicom.orig/src/dicomlookup.cpp	2015-09-27 15:34:20.971531487 -0400
++++ dicom/src/dicomlookup.cpp	2015-09-27 15:37:07.223537658 -0400
+@@ -20,9 +20,9 @@
+ 
+ #include "octave/oct.h"
+ 
+-#include "gdcm-2.0/gdcmDict.h"
+-#include "gdcm-2.0/gdcmVR.h"
+-#include "gdcm-2.0/gdcmVM.h"
++#include "gdcm-2.4/gdcmDict.h"
++#include "gdcm-2.4/gdcmVR.h"
++#include "gdcm-2.4/gdcmVM.h"
+ 
+ #include "dicomdict.h"
+ 
+diff -ur dicom.orig/src/dicomread.cpp dicom/src/dicomread.cpp
+--- dicom.orig/src/dicomread.cpp	2015-09-27 15:34:20.971531487 -0400
++++ dicom/src/dicomread.cpp	2015-09-27 15:37:53.435539373 -0400
+@@ -24,7 +24,7 @@
+ 
+ #include "octave/oct.h"
+ #include <octave/ov-struct.h>
+-#include "gdcm-2.0/gdcmImageReader.h"
++#include "gdcm-2.4/gdcmImageReader.h"
+               
+ #define DICOM_ERR -1
+ #define DICOM_OK 0
+diff -ur dicom.orig/src/dicomwrite.cpp dicom/src/dicomwrite.cpp
+--- dicom.orig/src/dicomwrite.cpp	2015-09-27 15:34:20.971531487 -0400
++++ dicom/src/dicomwrite.cpp	2015-09-27 15:38:05.403539817 -0400
+@@ -21,11 +21,11 @@
+ #include "octave/oct.h"
+ #include "octave/ov-struct.h"
+ 
+-#include "gdcm-2.0/gdcmDictEntry.h"
+-#include "gdcm-2.0/gdcmImage.h"
+-#include "gdcm-2.0/gdcmImageWriter.h"
+-#include "gdcm-2.0/gdcmFileDerivation.h"
+-#include "gdcm-2.0/gdcmUIDGenerator.h"
++#include "gdcm-2.4/gdcmDictEntry.h"
++#include "gdcm-2.4/gdcmImage.h"
++#include "gdcm-2.4/gdcmImageWriter.h"
++#include "gdcm-2.4/gdcmFileDerivation.h"
++#include "gdcm-2.4/gdcmUIDGenerator.h"
+               
+ #include "dicomdict.h"
+               
+diff -ur dicom.orig/src/_gendicomdict.cpp dicom/src/_gendicomdict.cpp
+--- dicom.orig/src/_gendicomdict.cpp	2015-09-27 15:34:20.971531487 -0400
++++ dicom/src/_gendicomdict.cpp	2015-09-27 15:38:22.687540459 -0400
+@@ -28,17 +28,17 @@
+ 
+ #include "octave/oct.h"
+ 
+-#include "gdcm-2.0/gdcmSystem.h"
+-#include "gdcm-2.0/gdcmReader.h"
+-#include "gdcm-2.0/gdcmWriter.h"
+-#include "gdcm-2.0/gdcmAttribute.h"
+-#include "gdcm-2.0/gdcmDataSet.h"
+-#include "gdcm-2.0/gdcmGlobal.h"
+-#include "gdcm-2.0/gdcmDicts.h"
+-#include "gdcm-2.0/gdcmDict.h"
+-#include "gdcm-2.0/gdcmCSAHeader.h"
+-#include "gdcm-2.0/gdcmPrivateTag.h"
+-#include "gdcm-2.0/gdcmVR.h"
++#include "gdcm-2.4/gdcmSystem.h"
++#include "gdcm-2.4/gdcmReader.h"
++#include "gdcm-2.4/gdcmWriter.h"
++#include "gdcm-2.4/gdcmAttribute.h"
++#include "gdcm-2.4/gdcmDataSet.h"
++#include "gdcm-2.4/gdcmGlobal.h"
++#include "gdcm-2.4/gdcmDicts.h"
++#include "gdcm-2.4/gdcmDict.h"
++#include "gdcm-2.4/gdcmCSAHeader.h"
++#include "gdcm-2.4/gdcmPrivateTag.h"
++#include "gdcm-2.4/gdcmVR.h"
+ 
+ #define OCT_FN_NAME _gendicomdict
+ #define QUOTED_(x) #x
