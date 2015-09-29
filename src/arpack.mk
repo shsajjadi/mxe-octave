@@ -4,10 +4,10 @@
 PKG             := arpack
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 3.1.5
-$(PKG)_CHECKSUM := f5b492a70c10b39596e476d0c7958b4d85a40a29
+$(PKG)_CHECKSUM := e34934bf76634479a7f52778c1391af93f9bab72
 $(PKG)_SUBDIR   := $(PKG)-ng-$($(PKG)_VERSION)
 $(PKG)_FILE     := arpack-ng_$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://forge.scilab.org/index.php/p/arpack-ng/downloads/get/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/opencollab/arpack-ng/archive/$($(PKG)_VERSION).tar.gz
 $(PKG)_DEPS     := blas lapack
 $(PKG)_DESTDIR  := '$(3)'
 
