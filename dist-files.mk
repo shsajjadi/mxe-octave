@@ -483,6 +483,7 @@ SRC_FILES_1 := \
   of-miscellaneous.mk \
   of-nan-1-cross-fixes.patch \
   of-nan.mk \
+  of-netcdf-1-fixes.patch \
   of-netcdf.mk \
   of-nurbs.mk \
   of-ocs-1-cross-fixes.patch \
