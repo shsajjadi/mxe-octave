@@ -485,6 +485,7 @@ SRC_FILES_1 := \
   of-nan.mk \
   of-netcdf-1-fixes.patch \
   of-netcdf.mk \
+  of-nurbs-1-fixes.patch \
   of-nurbs.mk \
   of-ocs-1-cross-fixes.patch \
   of-ocs.mk \
