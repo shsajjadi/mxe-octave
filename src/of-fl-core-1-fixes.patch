@@ -1,36 +1,6 @@
-diff -ur fl-core/src/Makefile fl-core.new/src/Makefile
---- fl-core/src/Makefile	2011-02-06 14:09:03.000000000 -0500
-+++ fl-core.new/src/Makefile	2015-03-20 13:45:48.577323118 -0400
-@@ -1,15 +1,23 @@
- OCT = fl_compose.oct
- SRC := $(OCT:.oct=.cc)
- BASE := $(OCT:.oct=)
--ifdef COMSPEC 
-+
-+MKOCTFILE ?= mkoctfile
-+OCTAVE_CONFIG ?= octave-config
-+
-+ifneq (,$(findstring mingw,$(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE)))
-+	ADDPARAM := -lpthread
-+else
-+ ifdef COMSPEC 
- 	ADDPARAM := -lpthreadVC2
-+ endif
- endif
- 
- .phony: all
- all: $(OCT)
- 
- %.oct: %.cc
--	mkoctfile -s $< $(ADDPARAM)
-+	$(MKOCTFILE) -s $< $(ADDPARAM)
- 
- .phony: clean
- clean: 
-Only in fl-core.orig: fl-core
 diff -ur fl-core.orig/src/fl_compose.cc fl-core/src/fl_compose.cc
---- fl-core.orig/src/fl_compose.cc	2015-03-20 13:43:53.970074780 -0400
-+++ fl-core/src/fl_compose.cc	2015-09-30 13:51:56.498187582 -0400
+--- fl-core.orig/src/fl_compose.cc	2015-10-02 10:13:53.044225859 -0400
++++ fl-core/src/fl_compose.cc	2015-10-02 10:22:05.635130470 -0400
 @@ -63,14 +63,14 @@
  // Structure for thread arguments. Each thread will perform the computation between the start_index and end_index row.
  struct threadArg
@@ -66,18 +36,19 @@ diff -ur fl-core.orig/src/fl_compose.cc fl-core/src/fl_compose.cc
  
  // Number of threads that will be created
  int num_threads;
-@@ -357,8 +357,8 @@
+@@ -357,8 +357,9 @@
  	else
  	{	
  		Matrix outMatrix(rowsC,colsC);
 -		for(int i=0;i<rowsC;i++)
 -			for(int j=0;j<colsC;j++)
++
 +		for(octave_idx_type i=0;i<rowsC;i++)
 +			for(octave_idx_type j=0;j<colsC;j++)
  				outMatrix(i,j) = get_elem(c,i,j,colsC);
  		
  		if(sparse_res)
-@@ -390,15 +390,15 @@
+@@ -390,15 +391,15 @@
  	// Initialize the first matrix
  	Matrix tempMatrix = args(0).matrix_value();
  	a = new float[rowsA*colsA];
@@ -97,7 +68,7 @@ diff -ur fl-core.orig/src/fl_compose.cc fl-core/src/fl_compose.cc
  			b[i*colsB+j] = tempMatrix(i,j);
  	
  
-@@ -418,7 +418,7 @@
+@@ -418,7 +419,7 @@
  	}
  
  	// Define the number interval of rows for each thread		
@@ -106,7 +77,7 @@ diff -ur fl-core.orig/src/fl_compose.cc fl-core/src/fl_compose.cc
  			
  	int i;
  	// Define the threads
-@@ -465,22 +465,22 @@
+@@ -465,22 +466,22 @@
  	float tnorm_val;	
  
  	// Initialize the result sparse matrix
@@ -134,7 +105,7 @@ diff -ur fl-core.orig/src/fl_compose.cc fl-core/src/fl_compose.cc
  		snorm_val = 0;
  	
  		// Check if the values of the matrix are really not 0 (it happens if the column of a or b hasn't any value)
-@@ -549,18 +549,18 @@
+@@ -549,18 +550,18 @@
  	float tnorm_val;	
  	
  	// Get the row start_index and end_index 
@@ -158,7 +129,7 @@ diff -ur fl-core.orig/src/fl_compose.cc fl-core/src/fl_compose.cc
  			{					
  				tnorm_val = calc_tnorm(get_elem(a,i,k,colsA),get_elem(b,k,j,colsB)); 
  				snorm_val = calc_snorm(snorm_val,tnorm_val);
-@@ -767,7 +767,7 @@
+@@ -767,7 +768,7 @@
  
  
  /* Get the (i,j)-th element from the vector vec. The column number of the original matrix (numCols) is required */
@@ -167,7 +138,7 @@ diff -ur fl-core.orig/src/fl_compose.cc fl-core/src/fl_compose.cc
  {
  	return vec[row*numCols+col];
  }
-@@ -775,7 +775,7 @@
+@@ -775,7 +776,7 @@
  
  
  /* Set the (i,j)-th element from the vector vec. The column number of the original matrix (numCols) is required */
@@ -176,3 +147,33 @@ diff -ur fl-core.orig/src/fl_compose.cc fl-core/src/fl_compose.cc
  {
  	vec[row*numCols+col] = elem;
  	return;
+diff -ur fl-core.orig/src/Makefile fl-core/src/Makefile
+--- fl-core.orig/src/Makefile	2015-10-02 10:13:53.044225859 -0400
++++ fl-core/src/Makefile	2015-10-02 10:16:20.899198805 -0400
+@@ -1,15 +1,23 @@
+ OCT = fl_compose.oct
+ SRC := $(OCT:.oct=.cc)
+ BASE := $(OCT:.oct=)
+-ifdef COMSPEC 
+-	ADDPARAM := -lpthreadVC2
++
++MKOCTFILE ?= mkoctfile
++OCTAVE_CONFIG ?= octave-config
++
++ifneq (,$(findstring mingw,$(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE)))
++	ADDPARAM := -lpthread
++else
++ ifdef COMSPEC 
++ 	ADDPARAM := -lpthreadVC2
++ endif
+ endif
+ 
+ .phony: all
+ all: $(OCT)
+ 
+ %.oct: %.cc
+-	mkoctfile -s $< $(ADDPARAM)
++	$(MKOCTFILE) -s $< $(ADDPARAM)
+ 
+ .phony: clean
+ clean: 
