@@ -3,10 +3,10 @@
 
 PKG             := blas
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1
-$(PKG)_CHECKSUM := a643b737c30a0a5b823e11e33c9d46a605122c61
+$(PKG)_VERSION  := 3.5.0
+$(PKG)_CHECKSUM := 1ef559f9f03e3bb73faa9d33722229c7ac35730f
 $(PKG)_SUBDIR   := BLAS
-$(PKG)_FILE     := $(PKG).tgz
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://www.netlib.org/$(PKG)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.eq.uc.pt/pub/software/math/netlib/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
