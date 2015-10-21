@@ -24,5 +24,6 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
 	$(ENABLE_SHARED_OR_STATIC) \
         && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)'
+    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
 endef
