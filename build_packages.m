@@ -45,7 +45,7 @@ try_install fl-core-1.0.0.tar.gz
 try_install tsa-4.3.2.tar.gz
 try_install dicom-0.1.1.tar.gz
 try_install netcdf-1.0.7.tar.gz
-try_install ltfat-2.1.0.tar.gz
+try_install ltfat-2.1.1.tar.gz
 try_install database-2.3.2.tar.gz
 try_install instrument-control-0.2.1.tar.gz
 try_install generate_html-0.1.9.tar.gz
