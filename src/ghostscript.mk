@@ -56,7 +56,7 @@ else
     ## probe the build system and don't know about cross compiling,
     ## so we generate the files then replace them with files from a
     ## mingw native build.
-    ifeq ($(ENABLE_64),yes)
+    ifeq ($(ENABLE_WINDOWS_64),yes)
       define $(PKG)_BUILD
         mv '$(1)/freetype' '$(1)/freetype.x'
         cp '$(TOP_DIR)/src/ghostscript-mingw-x86_64-makefile' '$(1)/Makefile'

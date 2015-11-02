@@ -78,7 +78,7 @@ gsincludedir = ${prefix}/include/ghostscript/
 
 docdir=$(gsdatadir)/doc
 exdir=$(gsdatadir)/examples
-GS_DOCDIR=$(docdir)
+GS_DOCDIR=/usr/share/ghostscript/$(GS_DOT_VERSION)/doc
 
 # Choose whether to compile the .ps initialization files into the executable.
 # See gs.mak for details.
@@ -88,7 +88,7 @@ COMPILE_INITS=1
 # Define the default directory/ies for the runtime
 # initialization and font files.  Separate multiple directories with a :.
 
-GS_LIB_DEFAULT=$(gsdatadir)/Resource/Init:$(gsdatadir)/lib:$(gsdatadir)/Resource/Font:$(gsdir)/fonts:${datarootdir}/fonts/default/ghostscript:${datarootdir}/fonts/default/Type1:${datarootdir}/fonts/default/TrueType:/usr/lib/DPS/outline/base:/usr/openwin/lib/X11/fonts/Type1:/usr/openwin/lib/X11/fonts/TrueType
+GS_LIB_DEFAULT=/usr/share/ghostscript/$(GS_DOT_VERSION)/Resource/Init:/usr/share/ghostscript/$(GS_DOT_VERSION)/lib:/usr/share/ghostscript/$(GS_DOT_VERSION)/Resource/Font:/usr/share/ghostscript/fonts:/usr/share/fonts/default/ghostscript:/usr/share/fonts/default/Type1:/usr/share/fonts/default/TrueType:/usr/lib/DPS/outline/base
 
 # Define the default directory for cached data files
 # this must be a single path.
