@@ -36,6 +36,10 @@ define $(PKG)_BUILD
     # also copy omp.h to where other programs will see it
     $(INSTALL) -d "$(3)$(HOST_INCDIR)" 
     $(INSTALL) -m644 '$(1)/build/$(TARGET)/libgomp/omp.h' '$(3)$(HOST_INCDIR)/'
+    if [ x"$(USE_SYSTEM_GCC)" == "xno" ]; then \
+      $(INSTALL) -d "$(3)/$(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/$($(PKG)_VERSION)/"; \
+      cat '$(1)/build/$(TARGET)/libgomp/libgomp.spec' | $(SED) 's,-lgomp,-L$(HOST_LIBDIR)/gcc/$(TARGET)/$($(PKG)_VERSION) -lgomp,' > '$(3)$(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/$($(PKG)_VERSION)/libgomp.spec'; \
+    fi
 
     #'$(MXE_CC)' \
     #    -W -Wall -Werror -ansi -pedantic \
