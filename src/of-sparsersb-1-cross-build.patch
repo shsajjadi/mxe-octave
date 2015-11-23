@@ -1,0 +1,313 @@
+diff -ur sparsersb-1.0.0.orig/src/autogen.sh sparsersb-1.0.0/src/autogen.sh
+--- sparsersb-1.0.0.orig/src/autogen.sh	2015-11-10 06:07:55.812398937 -0500
++++ sparsersb-1.0.0/src/autogen.sh	2015-11-22 18:40:12.413271177 -0500
+@@ -16,6 +16,9 @@
+ if test x"\$LIBRSB_LIBS" = x ; then
+ 	LIBRSB_LIBS="\`\$LIBRSB_CONFIG --ldflags | sed 's/ -static/ /g'\` -lgomp"
+ fi
++if test x"\$SPARSERSB_LIBS" = x ; then
++	SPARSERSB_LIBS="\`\$LIBRSB_CONFIG --extra_libs\`"
++fi
+ AC_OPENMP([])
+ ##
+ STATUS_MSG="
+diff -ur sparsersb-1.0.0.orig/src/configure sparsersb-1.0.0/src/configure
+--- sparsersb-1.0.0.orig/src/configure	2015-11-10 06:07:55.806398985 -0500
++++ sparsersb-1.0.0/src/configure	2015-11-22 18:41:23.740687962 -0500
+@@ -616,6 +616,7 @@
+ mpath
+ subver
+ ver
++OCTAVE_CONFIG
+ MKOCTFILE
+ OBJEXT
+ EXEEXT
+@@ -2689,6 +2690,45 @@
+ 
+ test -z "$MKOCTFILE" &&	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: no mkoctfile found on path" >&5
+ $as_echo "$as_me: WARNING: no mkoctfile found on path" >&2;}
++# Extract the first word of "octave-config", so it can be a program name with args.
++set dummy octave-config; ac_word=$2
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
++$as_echo_n "checking for $ac_word... " >&6; }
++if ${ac_cv_prog_OCTAVE_CONFIG+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++  if test -n "$OCTAVE_CONFIG"; then
++  ac_cv_prog_OCTAVE_CONFIG="$OCTAVE_CONFIG" # Let the user override the test.
++else
++as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
++for as_dir in $PATH
++do
++  IFS=$as_save_IFS
++  test -z "$as_dir" && as_dir=.
++    for ac_exec_ext in '' $ac_executable_extensions; do
++  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++    ac_cv_prog_OCTAVE_CONFIG="octave-config"
++    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
++    break 2
++  fi
++done
++  done
++IFS=$as_save_IFS
++
++fi
++fi
++OCTAVE_CONFIG=$ac_cv_prog_OCTAVE_CONFIG
++if test -n "$OCTAVE_CONFIG"; then
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $OCTAVE_CONFIG" >&5
++$as_echo "$OCTAVE_CONFIG" >&6; }
++else
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++fi
++
++
++test -z "$OCTAVE_CONFIG" && { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: no octave-config found on path" >&5
++$as_echo "$as_me: WARNING: no octave-config found on path" >&2;}
+ 
+ 
+ 
+@@ -2840,15 +2880,17 @@
+ # add -fPIC or equivalent flags
+ FPICFLAG=`$MKOCTFILE -p FPICFLAG`
+ CPICFLAG=`$MKOCTFILE -p CPICFLAG`
++
+ FFLAGS="$FFLAGS $FPICFLAG"
+ CFLAGS="$CFLAGS $CPICFLAG"
+ 
+ 
+ 
+ 
++
+ RSBOI_CXXFLAGS=""
+ if test x$RSBOI_VERBOSE_CONFIG != x ; then
+-	RSBOI_CXXFLAGS="$RSBOI_CXXFLAGS -D''RSBOI_VERBOSE_CONFIG=$RSBOI_VERBOSE_CONFIG";
++	RSBOI_CXXFLAGS="$RSBOI_CXXFLAGS -DRSBOI_VERBOSE_CONFIG=$RSBOI_VERBOSE_CONFIG";
+ fi
+ 
+ F77=`$MKOCTFILE -p F77`
+@@ -2858,6 +2900,7 @@
+ 
+ 
+ 
++
+ CXX=`$MKOCTFILE -p CXX`
+ CXXFLAGS=`$MKOCTFILE -p CXXFLAGS`
+ CXXPICFLAG=`$MKOCTFILE -p CXXPICFLAG`
+@@ -2967,6 +3010,11 @@
+ 
+ 
+ 
++
++
++
++
++
+ # Extract the first word of "octave", so it can be a program name with args.
+ set dummy octave; ac_word=$2
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+@@ -3004,25 +3052,25 @@
+ fi
+ 
+ 
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for OCTAVE_VERSION in Octave" >&5
+-$as_echo_n "checking for OCTAVE_VERSION in Octave... " >&6; }
+-OCTAVE_VERSION=`echo "disp(OCTAVE_VERSION)" | $OCTAVE -qf`
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for VERSION in octave-config" >&5
++$as_echo_n "checking for VERSION in octave-config... " >&6; }
++OCTAVE_VERSION=`$OCTAVE_CONFIG -p VERSION`
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $OCTAVE_VERSION" >&5
+ $as_echo "$OCTAVE_VERSION" >&6; }
+ 
+ 
+ 
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for octave_config_info('canonical_host_type') in Octave" >&5
+-$as_echo_n "checking for octave_config_info('canonical_host_type') in Octave... " >&6; }
+-canonical_host_type=`echo "disp(octave_config_info('canonical_host_type'))" | $OCTAVE -qf`
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for CANONICAL_HOST_TYPE in octave-config" >&5
++$as_echo_n "checking for CANONICAL_HOST_TYPE in octave-config... " >&6; }
++canonical_host_type=`$OCTAVE_CONFIG -p CANONICAL_HOST_TYPE`
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $canonical_host_type" >&5
+ $as_echo "$canonical_host_type" >&6; }
+ 
+ 
+ 
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for octave_config_info('SHLEXT') in Octave" >&5
+-$as_echo_n "checking for octave_config_info('SHLEXT') in Octave... " >&6; }
+-SHLEXT=`echo "disp(octave_config_info('SHLEXT'))" | $OCTAVE -qf`
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SHLEXT in octave-config" >&5
++$as_echo_n "checking for SHLEXT in octave-config... " >&6; }
++SHLEXT=`$OCTAVE_CONFIG -p SHLEXT`
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $SHLEXT" >&5
+ $as_echo "$SHLEXT" >&6; }
+ 
+@@ -3188,16 +3236,16 @@
+ 
+ 
+ 
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for octave_config_info('AR') in Octave" >&5
+-$as_echo_n "checking for octave_config_info('AR') in Octave... " >&6; }
+-AR=`echo "disp(octave_config_info('AR'))" | $OCTAVE -qf`
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for AR in mkoctfile" >&5
++$as_echo_n "checking for AR in mkoctfile... " >&6; }
++AR=`$MKOCTFILE -p AR`
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $AR" >&5
+ $as_echo "$AR" >&6; }
+ 
+ 
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for octave_config_info('ARFLAGS') in Octave" >&5
+-$as_echo_n "checking for octave_config_info('ARFLAGS') in Octave... " >&6; }
+-ARFLAGS=`echo "disp(octave_config_info('ARFLAGS'))" | $OCTAVE -qf`
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ARFLAGS in mkoctfile" >&5
++$as_echo_n "checking for ARFLAGS in mkoctfile... " >&6; }
++ARFLAGS=`$MKOCTFILE -p ARFLAGS`
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ARFLAGS" >&5
+ $as_echo "$ARFLAGS" >&6; }
+ 
+@@ -3325,7 +3373,9 @@
+    CXXFLAGS:    $CXXFLAGS
+    octave:      $OCTAVE (version $OCTAVE_VERSION)
+    mkoctfile:	$MKOCTFILE for Octave $subver
++   octave-config: $OCTAVE_CONFIG for Octave $subver
+    swig:        $SWIG"
++
+ # Extract the first word of "librsb-config", so it can be a program name with args.
+ set dummy librsb-config; ac_word=$2
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+@@ -3372,6 +3422,9 @@
+ if test x"$LIBRSB_LIBS" = x ; then
+ 	LIBRSB_LIBS="`$LIBRSB_CONFIG --ldflags | sed 's/ -static/ /g'` -lgomp"
+ fi
++if test x"$SPARSERSB_LIBS" = x ; then
++	SPARSERSB_LIBS="`$LIBRSB_CONFIG --extra_libs`"
++fi
+ 
+   OPENMP_CFLAGS=
+   # Check whether --enable-openmp was given.
+diff -ur sparsersb-1.0.0.orig/src/configure.base sparsersb-1.0.0/src/configure.base
+--- sparsersb-1.0.0.orig/src/configure.base	2015-11-10 06:07:55.808398969 -0500
++++ sparsersb-1.0.0/src/configure.base	2015-11-22 18:40:51.666950216 -0500
+@@ -54,6 +54,8 @@
+ dnl Check for mkoctfile
+ AC_CHECK_PROG(MKOCTFILE,mkoctfile,mkoctfile)
+ test -z "$MKOCTFILE" &&	AC_MSG_WARN([no mkoctfile found on path])
++AC_CHECK_PROG(OCTAVE_CONFIG,octave-config,octave-config)
++test -z "$OCTAVE_CONFIG" && AC_MSG_WARN([no octave-config found on path])
+ 
+ AC_SUBST(ver)
+ AC_SUBST(subver)
+@@ -193,21 +195,24 @@
+ # add -fPIC or equivalent flags
+ FPICFLAG=`$MKOCTFILE -p FPICFLAG`
+ CPICFLAG=`$MKOCTFILE -p CPICFLAG`
++
+ FFLAGS="$FFLAGS $FPICFLAG"
+ CFLAGS="$CFLAGS $CPICFLAG"
+ AC_SUBST(CC)
+ AC_SUBST(CFLAGS)
+ AC_SUBST(CPPFLAGS)
+ AC_SUBST(CPICFLAG)
++
+ RSBOI_CXXFLAGS=""
+ if test x$RSBOI_VERBOSE_CONFIG != x ; then
+-	RSBOI_CXXFLAGS="$RSBOI_CXXFLAGS -D''RSBOI_VERBOSE_CONFIG=$RSBOI_VERBOSE_CONFIG"; 
++	RSBOI_CXXFLAGS="$RSBOI_CXXFLAGS -DRSBOI_VERBOSE_CONFIG=$RSBOI_VERBOSE_CONFIG"; 
+ fi
+ 
+ dnl Fortran compiler and flags
+ F77=`$MKOCTFILE -p F77`
+ FFLAGS=`$MKOCTFILE -p FFLAGS`
+ FPICFLAG=`$MKOCTFILE -p FPICFLAG`
++
+ AC_SUBST(F77)
+ AC_SUBST(FFLAGS)
+ AC_SUBST(FPICFLAG)
+@@ -304,6 +309,24 @@
+ AC_SUBST($2)
+ ])
+ 
++dnl Use octave-config to get an octave setting
++dnl and set as an variable
++dnl
++AC_DEFUN(OCTAVE_CONFIG_EVAL,
++[AC_MSG_CHECKING([for $1 in octave-config])
++$2=`$OCTAVE_CONFIG -p $1`
++AC_MSG_RESULT($$2)
++AC_SUBST($2)
++])
++
++AC_DEFUN(MKOCTFILE_EVAL,
++[AC_MSG_CHECKING([for $1 in mkoctfile])
++$2=`$MKOCTFILE -p $1`
++AC_MSG_RESULT($$2)
++AC_SUBST($2)
++])
++
++
+ dnl Check status of an octave variable
+ dnl
+ dnl OCTAVE_CHECK_EXIST(variable,action_if_true,action_if_false)
+@@ -321,13 +344,16 @@
+ 
+ dnl should check that $(OCTAVE) --version matches $(MKOCTFILE) --version
+ AC_CHECK_PROG(OCTAVE,octave,octave)
+-OCTAVE_EVAL(OCTAVE_VERSION,OCTAVE_VERSION)
++dnl OCTAVE_EVAL(OCTAVE_VERSION,OCTAVE_VERSION)
++OCTAVE_CONFIG_EVAL(VERSION,OCTAVE_VERSION)
+ 
+ dnl grab canonical host type so we can write system specific install stuff
+-OCTAVE_EVAL(octave_config_info('canonical_host_type'),canonical_host_type)
++dnl OCTAVE_EVAL(octave_config_info('canonical_host_type'),canonical_host_type)
++OCTAVE_CONFIG_EVAL(CANONICAL_HOST_TYPE,canonical_host_type)
+ 
+ dnl grab SHLEXT from octave config
+-OCTAVE_EVAL(octave_config_info('SHLEXT'),SHLEXT)
++dnl OCTAVE_EVAL(octave_config_info('SHLEXT'),SHLEXT)
++OCTAVE_CONFIG_EVAL(SHLEXT,SHLEXT)
+ 
+ AC_PROG_LN_S
+ 
+@@ -346,8 +372,10 @@
+ OF_CHECK_LIB(m,sin,[OTHERLIBS=-lm])
+ AC_SUBST(OTHERLIBS)
+ 
+-OCTAVE_EVAL(octave_config_info('AR'),AR)
+-OCTAVE_EVAL(octave_config_info('ARFLAGS'),ARFLAGS)
++dnl OCTAVE_EVAL(octave_config_info('AR'),AR)
++dnl OCTAVE_EVAL(octave_config_info('ARFLAGS'),ARFLAGS)
++MKOCTFILE_EVAL(AR,AR)
++MKOCTFILE_EVAL(ARFLAGS,ARFLAGS)
+ 
+ CPPFLAGS="$CPPFLAGS -DSTATIC_LINKED"
+ 
+@@ -402,4 +430,6 @@
+    CXXFLAGS:    $CXXFLAGS
+    octave:      $OCTAVE (version $OCTAVE_VERSION)
+    mkoctfile:	$MKOCTFILE for Octave $subver
++   octave-config: $OCTAVE_CONFIG for Octave $subver
+    swig:        $SWIG"
++
+diff -ur sparsersb-1.0.0.orig/src/Makeconf.in sparsersb-1.0.0/src/Makeconf.in
+--- sparsersb-1.0.0.orig/src/Makeconf.in	2015-11-10 06:07:55.808398969 -0500
++++ sparsersb-1.0.0/src/Makeconf.in	2015-11-10 06:19:13.844014051 -0500
+@@ -61,6 +61,7 @@
+ OCTAVE = @OCTAVE@
+ OCTAVE_VERSION = @OCTAVE_VERSION@
+ MKOCTFILE = @MKOCTFILE@ -DHAVE_OCTAVE_$(ver) -v
++OCTAVE_CONFIG = @OCTAVE_CONFIG@
+ SHLEXT = @SHLEXT@
+ 
+ ver = @ver@
+diff -ur sparsersb-1.0.0.orig/src/Makefile sparsersb-1.0.0/src/Makefile
+--- sparsersb-1.0.0.orig/src/Makefile	2015-11-10 06:07:55.811398945 -0500
++++ sparsersb-1.0.0/src/Makefile	2015-11-10 06:21:58.401707659 -0500
+@@ -23,7 +23,7 @@
+ #LIBRSB_LIBS=$(RSBLIBDIR)/librsb.a
+ 
+ $(SPARSERSB_OCT): sparsersb.cc
+-	CXXFLAGS="$(CXXFLAGS)" $(MKOCTFILE)  -D''RSB_SPARSERSB_LABEL=sparsersb $(RSBOI_CXXFLAGS) $(LIBRSB_CXXFLAGS) -o $@ $< $(LIBRSB_LIBS) $(SPARSERSB_LIBS)
++	CXXFLAGS="$(CXXFLAGS)" $(MKOCTFILE)  -D'RSB_SPARSERSB_LABEL=sparsersb' $(RSBOI_CXXFLAGS) $(LIBRSB_CXXFLAGS) -o $@ $< $(LIBRSB_LIBS) $(SPARSERSB_LIBS)
+ 
+ rtest: $(SPARSERSB_OCT)
+ 	$(OCTAVE) --silent ../inst/sparsersbtester.m

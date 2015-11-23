@@ -1,0 +1,11 @@
+--- librsb-1.2.0-rc2/rsb_sys.h.orig	2015-11-08 08:20:56.737959489 -0500
++++ librsb-1.2.0-rc2/rsb_sys.h	2015-11-08 08:24:46.712072656 -0500
+@@ -204,6 +204,8 @@
+ 
+ #ifdef RSB_HAVE_BZERO
+ #define RSB_BZERO bzero		/**< we have the chance of using a custom bzero function in this way */
++#elif RSB_HAVE_MEMSET 
++#define RSB_BZERO(a,b) memset(a,0,b)
+ #else /* RSB_HAVE_BZERO */
+ #error "missing a definition of RSB_BZERO!"
+ #endif /* RSB_HAVE_BZERO */
