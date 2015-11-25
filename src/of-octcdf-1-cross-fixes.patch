@@ -1106,3 +1106,33 @@ diff -ur octcdf.orig/src/Makeconf.in octcdf/src/Makeconf.in
  
  HAVE_NETCDF=@HAVE_NETCDF@
  OCTCDF_LIBS=@OCTCDF_LIBS@
+diff -ur octcdf.orig/src/configure octcdf/src/configure
+--- octcdf.orig/src/configure	2015-11-25 08:22:54.216927907 -0500
++++ octcdf/src/configure	2015-11-25 08:43:20.679996250 -0500
+@@ -2887,6 +2887,11 @@
+ 
+ 
+ 
++oct_ver=`echo $OCTAVE_VERSION | sed -e "s/\.//" -e "s/\..*$//"`
++if test "$oct_ver" -ge "40" ; then
++   OCTCDF_CFLAGS="$OCTCDF_CFLAGS -DOV_REP_TYPE=octave_base_value"
++fi
++
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for CANONICAL_HOST_TYPE in octave-config" >&5
+ $as_echo_n "checking for CANONICAL_HOST_TYPE in octave-config... " >&6; }
+ canonical_host_type=`$OCTAVE_CONFIG -p CANONICAL_HOST_TYPE`
+diff -ur octcdf.orig/src/configure.base octcdf/src/configure.base
+--- octcdf.orig/src/configure.base	2015-11-25 08:22:54.215927888 -0500
++++ octcdf/src/configure.base	2015-11-25 08:43:05.311695338 -0500
+@@ -281,6 +281,11 @@
+ AC_CHECK_PROG(OCTAVE,octave,octave)
+ OCTAVE_CONFIG_EVAL(VERSION,OCTAVE_VERSION)
+ 
++oct_ver=`echo $OCTAVE_VERSION | sed -e "s/\.//" -e "s/\..*$//"`
++if test "$ocvt_ver" -ge "40" ; then
++   OCTCDF_CFLAGS="$OCTCDF_CFLAGS -DOV_REP_TYPE=octave_base_value"
++fi
++
+ dnl grab canonical host type so we can write system specific install stuff
+ OCTAVE_CONFIG_EVAL(CANONICAL_HOST_TYPE,canonical_host_type)
+ 
