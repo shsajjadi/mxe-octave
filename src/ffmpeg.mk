@@ -3,13 +3,13 @@
 
 PKG             := ffmpeg
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.7.2
-$(PKG)_CHECKSUM := b8175a9a729fc4bdbb3c196ffe84a2fca7977ff8
+$(PKG)_VERSION  := 2.8.2
+$(PKG)_CHECKSUM := 1952aeb9ec3f569514d8db4f30c195b765392639
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://www.ffmpeg.org/releases/$($(PKG)_FILE)
 $(PKG)_URL_2    := http://launchpad.net/ffmpeg/main/$($(PKG)_VERSION)/+download/$($(PKG)_FILE)
-$(PKG)_DEPS     := bzip2 lame libvpx opencore-amr sdl speex theora vorbis x264 xvidcore zlib
+$(PKG)_DEPS     := bzip2 gnutls lame libvpx opencore-amr sdl speex theora vorbis x264 xvidcore zlib
 
 $(PKG)_CONFIG_OPTS :=
 
@@ -29,16 +29,18 @@ define $(PKG)_BUILD
         --arch=$(firstword $(subst -, ,$(TARGET))) \
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC) \
+        --yasmexe='$(BUILD_TOOLS_PREFIX)/bin/yasm' \
         --extra-libs='-mconsole' \
         --disable-debug \
         --disable-doc \
         --enable-memalign-hack \
+        --enable-avresample \
         --enable-gpl \
         --enable-version3 \
-        --disable-nonfree \
         --disable-pthreads \
         --enable-w32threads \
         --enable-avisynth \
+        --enable-gnutls \
         --enable-libspeex \
         --enable-libtheora \
         --enable-libvorbis \
