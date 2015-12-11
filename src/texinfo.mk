@@ -3,16 +3,16 @@
 
 PKG             := texinfo
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.13a
-$(PKG)_CHECKSUM := a1533cf8e03ea4fa6c443b73f4c85e4da04dead0
-$(PKG)_SUBDIR   := $(PKG)-4.13
+$(PKG)_VERSION  := 6.0
+$(PKG)_CHECKSUM := 110d45256c4219c88dc2fdb8c9c1a20749e4e7c5
+$(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/texinfo/$($(PKG)_FILE)
 $(PKG)_DEPS     := # libgnurx
 
 ifeq ($(MXE_SYSTEM),mingw)
     $(PKG)_DEPS += pcre
-    $(PKG)_LIBS += LIBS='-lpcre -lpcreposix'
+    $(PKG)_LIBS += LIBS='-lpcre -lpcreposix -lpthread'
 endif
 
 define $(PKG)_UPDATE
@@ -28,10 +28,11 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' $($(PKG)_LIBS)
 
     ## All we need for Octave is makeinfo
-    $(MAKE) -C '$(1).build/lib' -j '$(JOBS)'
     $(MAKE) -C '$(1).build/gnulib/lib' -j '$(JOBS)'
-    $(MAKE) -C '$(1).build/makeinfo' -j '$(JOBS)'
-    $(MAKE) -C '$(1).build/makeinfo' -j 1 install DESTDIR='$(3)'
+    $(MAKE) -C '$(1).build/util' -j '$(JOBS)'
+    $(MAKE) -C '$(1).build/tp' -j '$(JOBS)'
+    $(MAKE) -C '$(1).build/tp' -j 1 install DESTDIR='$(3)'
+    $(MAKE) -C '$(1).build/util' -j 1 install DESTDIR='$(3)'
 
     # octave-cli needs info to display help
     # for cross build, need build native tools in order to build info
@@ -39,7 +40,6 @@ define $(PKG)_BUILD
         $(MAKE) -C '$(1).build/info' -j '$(JOBS)'; \
         $(MAKE) -C '$(1).build/info' -j 1 install DESTDIR='$(3)'; \
     else \
-        $(MAKE) -C '$(1).build/tools/lib' -j $(JOBS); \
         $(MAKE) -C '$(1).build/tools/gnulib/lib' -j $(JOBS); \
         $(MAKE) -C '$(1).build/tools/info' -j $(JOBS) makedoc; \
         $(MAKE) -C '$(1).build/info' -j 1 funs.h; \

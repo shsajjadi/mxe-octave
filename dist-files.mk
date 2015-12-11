@@ -37,7 +37,6 @@ SRC_FILES_1 := \
   build-pkg-config.mk \
   build-python.mk \
   build-scons.mk \
-  build-texinfo-1-fixes.patch \
   build-texinfo.mk \
   build-xz.mk \
   build-yasm.mk \
@@ -652,7 +651,6 @@ SRC_FILES_1 := \
   taglib.mk \
   termcap-1-fixes.patch \
   termcap.mk \
-  texinfo-1-fixes.patch \
   texinfo.mk \
   theora.mk \
   tiff.mk \
