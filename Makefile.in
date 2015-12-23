@@ -4,7 +4,8 @@
 OCTAVE_TARGET := @ENABLE_OCTAVE@octave
 
 PWD := $(shell pwd)
-TOP_DIR := $(PWD)
+TOP_BUILD_DIR := @abs_builddir@
+TOP_DIR := @abs_srcdir@
 
 STRIP_DIST_FILES := @STRIP_DIST_FILES@
 
@@ -61,7 +62,7 @@ ENABLE_DEVEL_TOOLS := @ENABLE_DEVEL_TOOLS@
 # Should match what config.guess prints for your system.
 # If cross compiling, you must set it manually.
 ifeq ($(MXE_NATIVE_BUILD),yes)
-  TARGET := $(shell tools/config.guess)
+  TARGET := $(shell $(TOP_DIR)/tools/config.guess)
 else
   ifeq ($(ENABLE_WINDOWS_64),yes)
     TARGET := x86_64-w64-mingw32
@@ -69,7 +70,7 @@ else
     TARGET := i686-w64-mingw32
   endif
 endif
-BUILD_SYSTEM := $(shell tools/config.guess)
+BUILD_SYSTEM := $(shell $(TOP_DIR)/tools/config.guess)
 
 # Enable shared or static libs, or perhaps both.  Probably it doesn't
 # make sense to disable both...
@@ -125,7 +126,7 @@ endif
 # and it's not clear to me how to change that.
 #
 # For native builds, dump everything all together in one directory tree.
-ROOT_PREFIX := $(TOP_DIR)/usr
+ROOT_PREFIX := $(TOP_BUILD_DIR)/usr
 BUILD_TOOLS_PREFIX := $(ROOT_PREFIX)
 ifeq ($(MXE_NATIVE_BUILD),yes)
   HOST_PREFIX := $(ROOT_PREFIX)
@@ -239,13 +240,13 @@ ifneq ($(MXE_SYSTEM),msvc)
   BUILD_TOOLS := $(filter-out build-msvctools, $(BUILD_TOOLS))
 endif
 
-STAMP_DIR  := $(TOP_DIR)/installed-packages
-MSYS_INFO_DIR := $(TOP_DIR)/msys-info
-LOG_DIR    := $(TOP_DIR)/log
+STAMP_DIR  := $(TOP_BUILD_DIR)/installed-packages
+MSYS_INFO_DIR := $(TOP_BUILD_DIR)/msys-info
+LOG_DIR    := $(TOP_BUILD_DIR)/log
 TIMESTAMP  := $(shell date +%Y%m%d_%H%M%S)
 PKG_DIR    := $(TOP_DIR)/pkg
-TMP_DIR     = $(TOP_DIR)/tmp-$(1)
-MAKEFILE   := $(TOP_DIR)/Makefile
+TMP_DIR     = $(TOP_BUILD_DIR)/tmp-$(1)
+MAKEFILE   := $(TOP_BUILD_DIR)/Makefile
 PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* class="package">\([^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html'))
 
 PATH := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)
@@ -371,8 +372,8 @@ ifeq ($(MXE_SYSTEM),mingw)
     MSYS_EXTENSION_URL := $(MSYS_URL)/Extension
     MSYS_BASE_VER := 1.0.13
     MSYS_EXTENSION_VER := 1.0.13
-    MSYS_BASE_DIR := $(TOP_DIR)/msys-base
-    MSYS_EXTENSION_DIR := $(TOP_DIR)/msys-extension
+    MSYS_BASE_DIR := $(TOP_BUILD_DIR)/msys-base
+    MSYS_EXTENSION_DIR := $(TOP_BUILD_DIR)/msys-extension
     MSYS_BASE_PACKAGES := $(addprefix msys-,bash coreutils diffutils dos2unix file findutils gawk grep gzip less libiconv libintl libmagic libopenssl make msys-core patch regex sed tar termcap unzip zip wget zlib)
 
     ifeq ($(ENABLE_DEVEL_TOOLS),yes)
@@ -382,7 +383,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     MSYS_BASE_SOURCES := $(addprefix src-,$(MSYS_BASE_PACKAGES))
     PKGS += $(MSYS_BASE_SOURCES)
 
-     NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
+     NOTEPAD_BASE_DIR := $(TOP_BUILD_DIR)/notepad++
   endif
 else ifeq ($(MXE_SYSTEM),msvc)
   MXE_WINDOWS_BUILD := yes
@@ -493,18 +494,18 @@ DOWNLOAD_PKG_ARCHIVE = \
 
 ifeq ($(IGNORE_SETTINGS),yes)
     $(info [ignore settings.mk])
-else ifeq ($(wildcard $(TOP_DIR)/settings.mk),$(TOP_DIR)/settings.mk)
-    include $(TOP_DIR)/settings.mk
+else ifeq ($(wildcard $(TOP_BUILD_DIR)/settings.mk),$(TOP_BUILD_DIR)/settings.mk)
+    include $(TOP_BUILD_DIR)/settings.mk
 else
     $(info [create settings.mk])
     $(shell { \
         echo '#JOBS = $(JOBS)'; \
         echo '#PKGS ='; \
-    } >'$(TOP_DIR)/settings.mk')
+    } >'$(TOP_BUILD_DIR)/settings.mk')
 endif
 
 .PHONY: all
-all: configure Makefile $(OCTAVE_TARGET)
+all: $(TOP_DIR)/configure Makefile $(OCTAVE_TARGET)
 
 .PHONY: all-packages
 all-packages: $(PKGS)
@@ -526,13 +527,13 @@ blas-packages: $(BLAS_PACKAGES)
 .PHONY: devel-packages
 devel-packages: $(DEVEL_PACKAGES)
 
-configure: configure.ac
-	autoconf
+$(TOP_DIR)/configure: $(TOP_DIR)/configure.ac
+	cd $(TOP_DIR) && autoconf
 
-config.status: configure
+config.status: $(TOP_DIR)/configure
 	$(SHELL) ./config.status --recheck
 
-Makefile: Makefile.in config.status
+Makefile: $(TOP_DIR)/Makefile.in config.status
 	$(SHELL) ./config.status Makefile
 
 .PHONY: check-requirements
@@ -567,8 +568,8 @@ $(STAMP_DIR)/check-requirements: $(MAKEFILE)
 	@[ -d '$(STAMP_DIR)' ] || mkdir -p '$(STAMP_DIR)'
 	@if test "$(USE_SYSTEM_GCC)" = yes; then \
 	  $(INSTALL) -d '$(BUILD_TOOLS_PREFIX)/bin' ; \
-	  $(INSTALL) -m 755 tools/config.guess '$(BUILD_TOOLS_PREFIX)/bin/config.guess' ; \
-	  $(INSTALL) -m 755 tools/config.sub '$(BUILD_TOOLS_PREFIX)/bin/config.sub' ; \
+	  $(INSTALL) -m 755 $(TOP_DIR)/tools/config.guess '$(BUILD_TOOLS_PREFIX)/bin/config.guess' ; \
+	  $(INSTALL) -m 755 $(TOP_DIR)/tools/config.sub '$(BUILD_TOOLS_PREFIX)/bin/config.sub' ; \
 	fi
 	@touch '$@'
 
@@ -853,7 +854,7 @@ cmake-toolchain-file.stamp:
 	@echo [done]
 
 # Files to distribute
-include dist-files.mk
+include $(TOP_DIR)/dist-files.mk
 
 PACKAGE_VERSION := @PACKAGE_VERSION@
 PACKAGE_TARNAME := @PACKAGE_TARNAME@
@@ -867,4 +868,4 @@ dist:
 	$(TAR) cf - $(DIST_FILES) | ( cd $(distdir) ; $(TAR) xpf - )
 	$(TAR) czf $(distdir).tar.gz $(distdir)
 
-include binary-dist-rules.mk
+include $(TOP_DIR)/binary-dist-rules.mk

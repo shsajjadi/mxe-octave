@@ -215,7 +215,7 @@ fi
 AC_SUBST(MXE_SYSTEM)
 
 # set MXE_ROOTDIR for knowing the mxe root
-MXE_ROOTDIR=`cd $srcdir; pwd`
+MXE_ROOTDIR=`cd "$builddir"; pwd`
 AC_SUBST(MXE_ROOTDIR)
 
 AC_CONFIG_FILES([Makefile tools/set-mxe-env.sh])
