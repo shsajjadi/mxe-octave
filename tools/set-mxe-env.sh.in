@@ -8,7 +8,7 @@ if [ -z "$MXE_OCTAVE_ENV" ]; then
     MXE_INC_PATH="$MXEDIR/usr/include"
     MXE_LIB_PATH="$MXEDIR/usr/lib"
   else
-    HOST=$($MXEDIR/tools/config.guess)
+    HOST=$(@abs_top_srcdir@/tools/config.guess)
 
     MXE_PATH="$MXEDIR/usr/$HOST/bin:$MXEDIR/usr/bin"
     MXE_INC_PATH="$MXEDIR/usr/$HOST/include"

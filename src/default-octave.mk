@@ -163,9 +163,9 @@ define $(PKG)_BUILD
     fi
 
     if [ $(MXE_SYSTEM) != msvc ]; then \
-        $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(TOP_DIR)/octave install; \
+        $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(TOP_BUILD_DIR)/octave install; \
     fi
 
     # create a file with latest installed octave rev in it
-    echo "$($(PKG)_VERSION)" > $(TOP_DIR)/octave/octave-version
+    echo "$($(PKG)_VERSION)" > $(TOP_BUILD_DIR)/octave/octave-version
 endef

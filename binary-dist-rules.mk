@@ -5,9 +5,9 @@ else
   OCTAVE_DIST_NAME := octave-$(DATE)
 endif
 
-OCTAVE_DIST_DIR := $(TOP_DIR)/dist/$(OCTAVE_DIST_NAME)
+OCTAVE_DIST_DIR := $(TOP_BUILD_DIR)/dist/$(OCTAVE_DIST_NAME)
 
-OCTAVE_NSI_FILE := $(TOP_DIR)/dist/octave.nsi
+OCTAVE_NSI_FILE := $(TOP_BUILD_DIR)/dist/octave.nsi
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   TAR_H_OPTION := -h
@@ -35,7 +35,7 @@ BINARY_DIST_DEPS := \
 
 define delete-dist-directory
   echo "deleting previous dist directory..."
-  rm -rf $(TOP_DIR)/dist
+  rm -rf $(TOP_BUILD_DIR)/dist
 endef
 
 define make-dist-directory
@@ -62,13 +62,13 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/*.dll $(OCTAVE_DIST_DIR)/bin
       cp $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/$(build-gcc_VERSION)/*.dll $(OCTAVE_DIST_DIR)/bin
       echo "  msys base files..."
-      cd $(TOP_DIR)/msys-base \
+      cd $(TOP_BUILD_DIR)/msys-base \
         && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
       echo "  msys extension files..."
-      cd $(TOP_DIR)/msys-extension \
+      cd $(TOP_BUILD_DIR)/msys-extension \
         && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
       echo "  notepad++..."
-      cd $(TOP_DIR) \
+      cd $(TOP_BUILD_DIR) \
           && tar -c $(TAR_H_OPTION) -f - notepad++ | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
       echo "  README.html..."
       cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
@@ -174,9 +174,9 @@ define make-installer-file
     rm -f $(OCTAVE_NSI_FILE); \
   fi
   echo "generating installer script..."
-  ./makeinst-script.sh $(OCTAVE_DIST_DIR) $(OCTAVE_NSI_FILE)
+  $(TOP_DIR)/makeinst-script.sh $(OCTAVE_DIST_DIR) $(OCTAVE_NSI_FILE)
   echo "generating installer..."
-  $(TARGET)-makensis $(OCTAVE_NSI_FILE) > $(TOP_DIR)/dist/nsis.log
+  $(TARGET)-makensis $(OCTAVE_NSI_FILE) > $(TOP_BUILD_DIR)/dist/nsis.log
 endef
 
 $(OCTAVE_DIST_NAME)-installer.exe: nsis binary-dist-files
@@ -187,7 +187,7 @@ nsis-installer: $(OCTAVE_DIST_NAME)-installer.exe
 
 define make-zip-dist
   echo "generating zip file..."
-  cd $(TOP_DIR)/dist \
+  cd $(TOP_BUILD_DIR)/dist \
     && zip -q -9 -r $(OCTAVE_DIST_NAME).zip $(OCTAVE_DIST_NAME)
 endef
 
@@ -197,7 +197,7 @@ zip-dist: binary-dist-files
 
 define make-tar-dist
   echo "generating tar file..."
-  cd $(TOP_DIR)/dist \
+  cd $(TOP_BUILD_DIR)/dist \
     && tar -c -z -f $(OCTAVE_DIST_NAME).tgz $(OCTAVE_DIST_NAME)
 endef
 

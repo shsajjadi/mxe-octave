@@ -7,10 +7,10 @@ if [ $# != 2 ]; then
 fi
 
 OUTFILE="$2"
-TOPDIR=`dirname $1`
+TOPDIR=`dirname $0`
 OCTAVE_SOURCE=`basename $1`
 
-cd $TOPDIR
+cd `dirname $1`
 MXEDIR=`cd ..; pwd`
 
 if [ -e $OCTAVE_SOURCE/bin/libopenblas.dll ]; then
@@ -42,7 +42,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
 !define OCTAVE_VERSION "$OCTAVE_VERSION"
 !define COPYRIGHT "Copyright © 2013 John W. Eaton and others."
 !define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
-!define INSTALLER_FILES "../installer-files"
+!define INSTALLER_FILES "$TOPDIR/installer-files"
 !define INSTALLER_NAME "octave-$OCTAVE_VERSION-installer.exe"
 !define MAIN_APP_EXE "octave-firsttime.vbs"
 !define INSTALL_TYPE "SetShellVarContext current"
