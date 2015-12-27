@@ -653,13 +653,18 @@ define OCTAVE_FORGE_PKG_BUILD
 endef
 else
 define OCTAVE_FORGE_PKG_BUILD
-    if [ $(ENABLE_BINARY_PACKAGES) = yes ]; then \
-      $(OCTAVE_FORGE_PKG_COMPILE); \
-    fi
-    mkdir -p '$(3)$(HOST_PREFIX)/src'
-    cd '$(1)/..' \
-      && tar cvfz $($(PKG)_FILE) $($(PKG)_SUBDIR) \
-      && $(INSTALL) -m644 '$($(PKG)_FILE)' '$(3)$(HOST_PREFIX)/src'
+    if [ $(ENABLE_BINARY_PACKAGES) = no ]; then \
+      mkdir -p '$(3)$(HOST_PREFIX)/src'; \
+      cd '$(1)/..' \
+        && tar cvfz $($(PKG)_FILE) $($(PKG)_SUBDIR) \
+        && $(INSTALL) -m644 '$($(PKG)_FILE)' '$(3)$(HOST_PREFIX)/src'; \
+    else \
+      cd '$(1)/..' && \
+      tar cfz $($(PKG)_FILE) $($(PKG)_SUBDIR) && \
+         OCTAVE_CONFIG=$(MXE_OCTAVECONFIG) TMP="$(1)/.." \
+         MKOCTFILE=$(MXE_MKOCTFILE) MAKE=$(MAKE) CONFIGURE_OPTIONS="$(HOST_AND_BUILD_CONFIGURE_OPTIONS)" $(4) \
+         $(TOP_DIR)/tools/pkg-install.py -verbose "$($(PKG)_FILE)"; \
+     fi
 endef
 endif
 
