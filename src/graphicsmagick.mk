@@ -27,6 +27,7 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
          $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --prefix='$(HOST_PREFIX)' \
+        --disable-openmp \
         --without-modules \
         --with-threads \
         --with-magick-plus-plus \
