@@ -1,12 +1,11 @@
-diff -ur io.bak/src/Makefile io/src/Makefile
---- io.bak/src/Makefile	2015-12-26 17:19:18.198422122 -0500
-+++ io/src/Makefile	2015-12-26 17:19:46.303214603 -0500
-@@ -12,7 +12,7 @@
- ## xmltree_read.l:150: warning: ‘bufferliteral’ defined but not used
- ## xmltree_read.l:1221: warning: ‘input’ defined but not used
- #MKOCTFILE = mkoctfile -Wall
+diff -ur io.orig/src/Makefile io/src/Makefile
+--- io.orig/src/Makefile	2016-01-05 11:02:27.913416346 -0500
++++ io/src/Makefile	2016-01-05 11:02:54.153950570 -0500
+@@ -1,6 +1,6 @@
+ all: csvexplode.oct csv2cell.oct csvconcat.oct cell2csv.oct col2num.oct num2col.oct
+ 
 -MKOCTFILE = mkoctfile
 +MKOCTFILE ?= mkoctfile
- 
- ifdef FLEXML
- # flexml is a dead project.  It requires flex 2.5.4a-6  (flex-old on Debian).
+   
+ %.oct: %.cc
+ 	$(MKOCTFILE) $<
