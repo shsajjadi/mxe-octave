@@ -1,0 +1,36 @@
+diff -ur ltfat.org/src/Makefile_unix ltfat/src/Makefile_unix
+--- ltfat.org/src/Makefile_unix	2016-01-05 17:21:15.961378462 -0500
++++ ltfat/src/Makefile_unix	2016-01-05 17:24:30.278398266 -0500
+@@ -27,9 +27,11 @@
+ include comptarget.mk
+ 
+ # This is used for Octave mxe 
+-ifneq ($(OS),Windows_NT)
+-   CFLAGS+=-fPIC
+-endif
++#ifneq ($(OS),Windows_NT)
++#   CFLAGS+=-fPIC
++#endif
++AR ?= ar
++RANLIB ?= ranlib
+ 
+ # Used only in the shared library build
+ SHARED_FLAGS=-shared -Wl,--no-undefined -L"$(MATLABROOT)/bin/$(ARCH)" \
+@@ -50,13 +52,13 @@
+ shared: double_shared single_shared
+ 
+ double_static: $(DFILES) Makefile_unix
+-	ar rvu libltfat.a $(DFILES) 
+-	ranlib libltfat.a
++	$(AR) rvu libltfat.a $(DFILES) 
++	$(RANLIB) libltfat.a
+ 	cp -f libltfat.a ../lib
+ 
+ single_static: $(SFILES) Makefile_unix
+-	ar rvu libltfatf.a $(SFILES) 
+-	ranlib libltfatf.a
++	$(AR) rvu libltfatf.a $(SFILES) 
++	$(RANLIB) libltfatf.a
+ 	cp -f libltfatf.a ../lib
+ 
+ double_shared: $(DFILES) Makefile_unix
