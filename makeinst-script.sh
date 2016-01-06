@@ -328,6 +328,12 @@ no_back_type:
   \${EndIf}
 SectionEnd
 
+Section "InstallPackages"
+  ; fix the installed packages (if any)
+  SetOutPath "\$INSTDIR"
+  ExecWait '"\$INSTDIR\\bin\\octave-cli.exe" --no-gui -W -H -f -q --eval "pkg rebuild"' \$0
+SectionEnd
+
 Section "Uninstall"
 
   ReadRegDWORD \$0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "AllUsers"
