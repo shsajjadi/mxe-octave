@@ -1,6 +1,18 @@
+diff -ur video-1.2.1.orig/src/AVHandler.cc video-1.2.1/src/AVHandler.cc
+--- video-1.2.1.orig/src/AVHandler.cc	2016-01-06 12:44:20.588188244 -0500
++++ video-1.2.1/src/AVHandler.cc	2016-01-08 08:40:05.511829573 -0500
+@@ -560,7 +560,7 @@
+     }
+ 
+   // XXX FIXME XXX What is the best size for video_outbuf?
+-  video_outbuf = (uint8_t *)malloc(VIDEO_OUTBUF_SIZE);
++  video_outbuf = (uint8_t *)av_malloc(VIDEO_OUTBUF_SIZE);
+ 
+   return 0;
+ }
 diff -ur video-1.2.1.orig/src/oct-avifile.cc video-1.2.1/src/oct-avifile.cc
 --- video-1.2.1.orig/src/oct-avifile.cc	2016-01-06 12:44:20.588188244 -0500
-+++ video-1.2.1/src/oct-avifile.cc	2016-01-06 12:59:04.321779847 -0500
++++ video-1.2.1/src/oct-avifile.cc	2016-01-08 08:38:22.357487990 -0500
 @@ -57,6 +57,14 @@
  }
  
@@ -18,7 +30,7 @@ diff -ur video-1.2.1.orig/src/oct-avifile.cc video-1.2.1/src/oct-avifile.cc
    if (frames == 0)
 diff -ur video-1.2.1.orig/src/oct-avifile.h video-1.2.1/src/oct-avifile.h
 --- video-1.2.1.orig/src/oct-avifile.h	2016-01-06 12:44:20.588188244 -0500
-+++ video-1.2.1/src/oct-avifile.h	2016-01-06 12:58:15.673572910 -0500
++++ video-1.2.1/src/oct-avifile.h	2016-01-08 08:39:19.029576872 -0500
 @@ -52,6 +52,7 @@
    ~Avifile(void);
  
