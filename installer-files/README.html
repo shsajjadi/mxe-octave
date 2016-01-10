@@ -5,6 +5,9 @@
 <!--
 body {
 }
+li {
+  margin-bottom: 1.5em
+}
 -->
 </style>
 </head>
@@ -35,18 +38,15 @@ folder of the Octave installation.
 <h2>Included Octave Forge Packages</h2>
 <p>
 A number of Octave-Forge packages have been included with Octave, however they
-must be installed in order to use them.
+must be loaded in order to use them.
 </p>
 <p>
-To install:
 <ul>
- <li>Start Octave and then open the build_packages.m file found in the src
- folder where Octave was installed.</li>
- <li>Run the script build_packages.m to build and install the packages.</li>
+<li>To list the available installed packages, use the
+<tt>pkg list</tt> command.</li>
+<li>To load a package in order to use its functions, use the
+<tt>pkg load PACKAGENAME</tt> command.</li>
 </ul>
-Installation is a one-time procedure.
-After installation packages must still be loaded in order to use them with the
-<tt>pkg load PACKAGENAME</tt> command.
 </p>
 <p>
 Other packages are available from
