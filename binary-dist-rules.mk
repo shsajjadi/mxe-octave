@@ -50,8 +50,10 @@ define copy-dist-files
     && tar -c $(TAR_H_OPTION) -f - . | ( cd $(OCTAVE_DIST_DIR) ; tar xpf - )
   echo "  octaverc file..."
   cp $(TOP_DIR)/octaverc $(OCTAVE_DIST_DIR)/share/octave/site/m/startup/octaverc
-  echo "  build_packages.m..."
-  cp $(TOP_DIR)/build_packages.m $(OCTAVE_DIST_DIR)/src
+  if [ $(ENABLE_BINARY_PACKAGES) = no ]; then \
+    echo "  build_packages.m..."; \
+    cp $(TOP_DIR)/build_packages.m $(OCTAVE_DIST_DIR)/src; \
+  fi
 endef
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
