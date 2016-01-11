@@ -32,6 +32,8 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     if [ "$(MXE_SYSTEM)" == "mingw" ]; then \
         rm -rf '$(1)/lcms2'; \
     fi
+    # force external libpng
+    mv '$(1)/libpng' '$(1)/libpng.x'
     cd '$(1)' && autoreconf
     cd '$(1)' && '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
@@ -59,6 +61,7 @@ else
     ifeq ($(ENABLE_WINDOWS_64),yes)
       define $(PKG)_BUILD
         mv '$(1)/freetype' '$(1)/freetype.x'
+        mv '$(1)/libpng' '$(1)/libpng.x'
         cp '$(TOP_DIR)/src/ghostscript-mingw-x86_64-makefile' '$(1)/Makefile'
         $(MAKE) -C '$(1)' TARGET='$(TARGET)' prefix='$(HOST_PREFIX)' obj/arch.h obj/gconfig_.h
         cp '$(TOP_DIR)/src/ghostscript-mingw-x86_64-arch.h' '$(1)/obj/arch.h'
