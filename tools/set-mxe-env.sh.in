@@ -15,6 +15,10 @@ if [ -z "$MXE_OCTAVE_ENV" ]; then
     MXE_LIB_PATH="$MXEDIR/usr/$HOST/lib"
   fi
 
+  if [ "@ENABLE_LIB64_DIRECTORY@" = "yes" ]; then
+    MXE_LIB_PATH="$MXE_LIB_PATH:${MXE_LIB_PATH}64"
+  fi
+
   export PATH="$MXE_PATH:$PATH"
   export CPPFLAGS="-I$MXE_INC_PATH"
   export LDFLAGS="-L$MXE_LIB_PATH"
