@@ -1,0 +1,30 @@
+diff -ur glpk-4.55.orig/src/env/time.c glpk-4.55/src/env/time.c
+--- glpk-4.55.orig/src/env/time.c	2016-01-14 09:41:16.135339481 -0500
++++ glpk-4.55/src/env/time.c	2016-01-14 09:48:05.279096864 -0500
+@@ -44,9 +44,24 @@
+ 
+ #define EPOCH 2440588 /* jday(1, 1, 1970) */
+ 
+-/* POSIX version ******************************************************/
++#if defined(__MINGW32__)
++
++#include <windows.h>
+ 
+-#if defined(HAVE_SYS_TIME_H) && defined(HAVE_GETTIMEOFDAY)
++double glp_time(void)
++{     SYSTEMTIME st;
++      int j;
++      double t;
++      GetSystemTime(&st);
++      j = jday(st.wDay, st.wMonth, st.wYear);
++      xassert(j >= 0);
++      t = ((((double)(j - EPOCH) * 24.0 + (double)st.wHour) * 60.0 +
++         (double)st.wMinute) * 60.0 + (double)st.wSecond) * 1000.0 +
++         (double)st.wMilliseconds;
++      return t;
++}
++/* POSIX version ******************************************************/
++#elif defined(HAVE_SYS_TIME_H) && defined(HAVE_GETTIMEOFDAY)
+ 
+ #include <sys/time.h>
+ #include <time.h>
