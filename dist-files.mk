@@ -845,6 +845,7 @@ TOOLS_FILES_1 := \
   install-sh \
   make-shared-from-static \
   patch-tool-mxe \
+  pkg-install.py \
   s3-fetch-and-sync \
   set-mxe-env.sh.in
 

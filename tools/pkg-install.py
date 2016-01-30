@@ -6,6 +6,7 @@ import tempfile
 import shutil
 import fnmatch
 import subprocess
+import glob
 
 class Env:
   mkoctfile = "mkoctfile";
@@ -264,6 +265,18 @@ def add_package_list(env, desc):
   pass
   
 def uninstall_pkg(pkg,env):
+  # uninstall existing directories
+
+  files=glob.glob(env.prefix + "/share/octave/packages/" + env.pkg + "-" + "*")
+  for f in files:
+    print "removing dir " + f
+    shutil.rmtree(f)
+
+  files=glob.glob(env.prefix + "/lib/octave/packages/" + env.pkg + "-" + "*")
+  for f in files:
+    print "removing dir " + f
+    shutil.rmtree(f)
+
   pass
 
 def install_pkg(pkg, env):
@@ -300,6 +313,9 @@ def install_pkg(pkg, env):
     env.arch_dir = env.prefix + "/lib/octave/packages/" + env.pkg + "-" + desc['Version'] + "/" + env.arch + "-" + env.apiversion
 
     configure_make (env, packdir)
+
+    # uninstall old packages
+    uninstall_pkg(pkg, env)
 
     # install package files
     copy_files(env, packdir)
