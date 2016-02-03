@@ -3,10 +3,10 @@
 
 PKG             := of-instrument-control
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.2.1
-$(PKG)_CHECKSUM := 5365a568c6a9e4295a26a6ab7d612ace590a4f67
+$(PKG)_VERSION  := 0.2.2
+$(PKG)_CHECKSUM := 8e7bfdd308ef2b78c750a7ff91d3830f01300d09
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := instrument-control
+$(PKG)_SUBDIR   := instrument-control-$($(PKG)_VERSION)
 $(PKG)_FILE     := instrument-control-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
