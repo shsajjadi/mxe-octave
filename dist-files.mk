@@ -459,7 +459,6 @@ SRC_FILES_1 := \
   of-dicom-1-fixes.patch \
   of-dicom-2-gdcm2.4.patch \
   of-dicom.mk \
-  of-financial-1-fixes.patch \
   of-financial.mk \
   of-fits-1-cross-fixes.patch \
   of-fits.mk \

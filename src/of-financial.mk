@@ -3,10 +3,10 @@
 
 PKG             := of-financial
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.4.0
-$(PKG)_CHECKSUM := b49cac5e247904cf7288442a823af74da3a1df18
+$(PKG)_VERSION  := 0.5.0
+$(PKG)_CHECKSUM := 81612eb7a5ccbcee22f30edda93586c074b7563f
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := financial
+$(PKG)_SUBDIR   := financial-$($(PKG)_VERSION)
 $(PKG)_FILE     := financial-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
