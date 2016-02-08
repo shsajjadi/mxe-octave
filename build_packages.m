@@ -31,7 +31,7 @@ try_install communications-1.2.1.tar.gz
 try_install image-2.4.1.tar.gz
 try_install io-2.2.11.tar.gz
 try_install statistics-1.2.4.tar.gz
-try_install geometry-2.0.0.tar.gz
+try_install geometry-2.1.0.tar.gz
 try_install windows-1.2.1.tar.gz
 try_install odepkg-0.8.5.tar.gz
 try_install linear-algebra-2.2.2.tar.gz
