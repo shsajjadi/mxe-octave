@@ -3,13 +3,13 @@
 
 PKG             := of-mapping
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.2.0
-$(PKG)_CHECKSUM := 21101d6d1a92499df826063ce79ee093fd95d23d
+$(PKG)_VERSION  := 1.2.1
+$(PKG)_CHECKSUM := dcda538e8142365f3c8485238e2cd6caf737b62e
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := mapping
+$(PKG)_SUBDIR   := mapping-$($(PKG)_VERSION)
 $(PKG)_FILE     := mapping-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
-$(PKG)_DEPS     := 
+$(PKG)_DEPS     := gdal
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://$(SOURCEFORGE_MIRROR)/projects/octave/files/Octave%20Forge%20Packages/Individual%20Package%20Releases/' | \
