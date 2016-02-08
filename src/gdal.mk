@@ -3,12 +3,12 @@
 
 PKG             := gdal
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.9.2
-$(PKG)_CHECKSUM := 7eda6a4d735b8d6903740e0acdd702b43515e351
+$(PKG)_VERSION  := 1.11.4
+$(PKG)_CHECKSUM := bfda8487c9a892b2d04d2dde289fd9479a57ea8d
 $(PKG)_SUBDIR   := gdal-$($(PKG)_VERSION)
 $(PKG)_FILE     := gdal-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://download.osgeo.org/gdal/$($(PKG)_FILE)
-$(PKG)_URL_2    := ftp://ftp.remotesensing.org/gdal/$($(PKG)_FILE)
+$(PKG)_URL      := http://download.osgeo.org/gdal/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL_2    := ftp://ftp.remotesensing.org/gdal/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := zlib libpng tiff libgeotiff jpeg jasper giflib expat sqlite curl geos postgresql gta
 
 define $(PKG)_UPDATE
@@ -82,6 +82,9 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/alg'   -j 1 install
     $(MAKE) -C '$(1)/ogr'   -j 1 install OGR_ENABLED=
     $(MAKE) -C '$(1)/apps'  -j 1 install BIN_LIST=
+    $(MAKE) -C '$(1)'       -j 1 gdal.pc
+    $(INSTALL) -d '$(HOST_LIBDIR)/pkgconfig'
+    $(INSTALL) '$(1)/gdal.pc' '$(HOST_LIBDIR)/pkgconfig/'
     if [ $(MXE_NATIVE_BUILD) = no ]; then \
       $(INSTALL) -m755 '$(HOST_BINDIR)/gdal-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)gdal-config'; \
     fi
