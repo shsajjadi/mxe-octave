@@ -42,6 +42,7 @@ define $(PKG)_BUILD
         --with-geos='$(HOST_BINDIR)/geos-config' \
         --with-pg='$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)pg_config' \
         --with-gta='$(HOST_PREFIX)' \
+        --with-xml2='$(HOST_BINDIR)/xml2-config' \
         --without-odbc \
         --without-static-proj4 \
         --without-xerces \
