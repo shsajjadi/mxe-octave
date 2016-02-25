@@ -3,10 +3,10 @@
 
 PKG             := of-windows
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.2.1
-$(PKG)_CHECKSUM := 2270f3d64cf69d030e6825303158c18b9b94a871
+$(PKG)_VERSION  := 1.2.3
+$(PKG)_CHECKSUM := b057ad6de503ea23a3764d1216fc4d93436ccd91
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := Windows
+$(PKG)_SUBDIR   := windows
 $(PKG)_FILE     := windows-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 

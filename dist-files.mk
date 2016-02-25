@@ -509,7 +509,6 @@ SRC_FILES_1 := \
   of-tsa-1-cross-fixes.patch \
   of-tsa.mk \
   of-video.mk \
-  of-windows-1-fixes.patch \
   of-windows.mk \
   of-zenity.mk \
   ogg.mk \
