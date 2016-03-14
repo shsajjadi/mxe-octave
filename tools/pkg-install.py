@@ -13,15 +13,15 @@ class Env:
   octave_config = "octave-config";
   make = "make"
   verbose = True;
-  prefix = ""
-  pkg = ""
-  arch = ""
-  tmp = "/tmp"
-  apiversion = ""
-  bin_dir = ""
-  m_dir = ""
-  arch_dir = ""
-  config_opts = ""
+  prefix = "";
+  pkg = "";
+  arch = "";
+  tmp = "/tmp";
+  apiversion = "";
+  bin_dir = "";
+  m_dir = "";
+  arch_dir = "";
+  cleanup = False;
 
 def show_usage():
   print sys.argv(0), "[options] pkg1 [pkg2]"
@@ -330,7 +330,9 @@ def install_pkg(pkg, env):
     if env.verbose:
       print "cleaning up"
     os.chdir(currdir)
-    shutil.rmtree(tmpdir)
+
+    if env.cleanup:
+      shutil.rmtree(tmpdir)
   
 
 def pkg (args):
@@ -353,6 +355,8 @@ def pkg (args):
       env.verbose = True;
     elif key == "--verbose":
       env.verbose = True;
+    elif key == "-no-cleanup":
+      env.cleanup = False;
     elif val == "":
       files.append(key)
 
