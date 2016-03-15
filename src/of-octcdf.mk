@@ -1,6 +1,8 @@
 # This file is part of MXE.
 # See index.html for further information.
 
+# NOTE: octcdf is now depreciated - use of netcdf is encouraged instead
+
 PKG             := of-octcdf
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 1.1.8
