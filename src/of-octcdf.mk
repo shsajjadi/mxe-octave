@@ -5,8 +5,8 @@
 
 PKG             := of-octcdf
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.1.8
-$(PKG)_CHECKSUM := 0550e4d5741d5e720d6ad8a42edc8c1a451f07e5
+$(PKG)_VERSION  := 1.1.10
+$(PKG)_CHECKSUM := 96efa6d45fe79480d7de090e759f19d8324cfd21
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := octcdf
 $(PKG)_FILE     := octcdf-$($(PKG)_VERSION).tar.gz
