@@ -3,8 +3,8 @@
 
 PKG             := of-ltfat
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.1.1
-$(PKG)_CHECKSUM := 0be355ed3d67d80f86407b9da74eeeef75715924
+$(PKG)_VERSION  := 2.1.2
+$(PKG)_CHECKSUM := 9aa4b4e0546595eeac984844ec4c83d1804afc3a
 $(PKG)_REMOTE_SUBDIR :=
 $(PKG)_SUBDIR   := ltfat
 $(PKG)_FILE     := ltfat-$($(PKG)_VERSION).tar.gz
