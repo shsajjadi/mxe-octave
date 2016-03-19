@@ -487,7 +487,6 @@ SRC_FILES_1 := \
   of-nurbs.mk \
   of-ocs-1-cross-fixes.patch \
   of-ocs.mk \
-  of-octcdf-1-cross-fixes.patch \
   of-octcdf.mk \
   of-odepkg.mk \
   of-optim.mk \
