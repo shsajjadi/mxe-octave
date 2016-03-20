@@ -1,78 +1,24 @@
-diff -ur database-2.3.1.orig/src/configure database-2.3.1/src/configure
---- database-2.3.1.orig/src/configure	2015-04-09 14:43:58.349514050 -0400
-+++ database-2.3.1/src/configure	2015-04-09 14:55:44.447432890 -0400
-@@ -591,6 +591,7 @@
- CFLAGS
- CC
- PG_CONFIG
-+OCTAVE_CONFIG
- MKOCTFILE
- OCTAVE
- OBJEXT
-@@ -2407,6 +2408,43 @@
- else
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
- $as_echo "no" >&6; }
-+fi
-+
-+
-+# Extract the first word of "octave-config", so it can be a program name with args.
-+set dummy octave-config; ac_word=$2
-+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-+$as_echo_n "checking for $ac_word... " >&6; }
-+if ${ac_cv_prog_OCTAVE_CONFIG+:} false; then :
-+  $as_echo_n "(cached) " >&6
-+else
-+  if test -n "$OCTAVE_CONFIG"; then
-+  ac_cv_prog_OCTAVE_CONFIG="$OCTAVE_CONFIG" # Let the user override the test.
-+else
-+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-+for as_dir in $PATH
-+do
-+  IFS=$as_save_IFS
-+  test -z "$as_dir" && as_dir=.
-+    for ac_exec_ext in '' $ac_executable_extensions; do
-+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-+    ac_cv_prog_OCTAVE_CONFIG="octave-config"
-+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-+    break 2
-+  fi
-+done
-+  done
-+IFS=$as_save_IFS
-+
-+fi
-+fi
-+OCTAVE_CONFIG=$ac_cv_prog_OCTAVE_CONFIG
-+if test -n "$OCTAVE_CONFIG"; then
-+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $OCTAVE_CONFIG" >&5
-+$as_echo "$OCTAVE_CONFIG" >&6; }
-+else
-+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-+$as_echo "no" >&6; }
- fi
+# HG changeset patch
+# User John Donoghue <john.donoghue@ieee.org>
+# Date 1458419460 14400
+#      Sat Mar 19 16:31:00 2016 -0400
+# Node ID ff3a96a08ec915983ef9a1c189404578b00d2db4
+# Parent  8e13dd6c295b004fb3e8df97b4ef6438b61bcf19
+Check mingw hosttype via octave config (Bug #44795)
+
+* src/Makefile.in: get CANONICAL_HOST_TYPE from octave-config to check target OS for using ws2_32
+
+diff -r 8e13dd6c295b -r ff3a96a08ec9 src/Makefile.in
+--- a/src/Makefile.in	Sat Mar 19 08:20:47 2016 +0100
++++ b/src/Makefile.in	Sat Mar 19 16:31:00 2016 -0400
+@@ -17,9 +17,12 @@
  
- 
-diff -ur database-2.3.1.orig/src/configure.ac database-2.3.1/src/configure.ac
---- database-2.3.1.orig/src/configure.ac	2015-04-09 14:43:58.346513991 -0400
-+++ database-2.3.1/src/configure.ac	2015-04-09 14:49:01.101482292 -0400
-@@ -13,6 +13,7 @@
-   
- AC_CHECK_PROG(OCTAVE, octave, octave)
- AC_CHECK_PROG(MKOCTFILE, mkoctfile, mkoctfile)
-+AC_CHECK_PROG(OCTAVE_CONFIG, octave-config, octave-config)
- AC_CHECK_PROG(PG_CONFIG, pg_config, pg_config)
- if test -z "$PG_CONFIG"; then
- AC_MSG_ERROR([pg_config not found], 1);
-diff -ur database-2.3.1.orig/src/Makefile.in database-2.3.1/src/Makefile.in
---- database-2.3.1.orig/src/Makefile.in	2015-04-09 14:43:58.348514031 -0400
-+++ database-2.3.1/src/Makefile.in	2015-04-09 14:51:59.623001539 -0400
-@@ -1,8 +1,10 @@
- # We rely on g++ features, configure assures CXX=g++.
- CXX := @CXX@
- 
+ MKOCTFILE ?= @MKOCTFILE@
+ PG_CONFIG ?= @PG_CONFIG@
++OCTAVE_CONFIG ?= @OCTAVE_CONFIG@
++
 +CANONICAL_HOST_TYPE := $(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE))
-+
+ 
  EXTRALIBS = 
 -ifeq ($(OS),Windows_NT)
 +ifneq (,$(findstring mingw,$(CANONICAL_HOST_TYPE)))

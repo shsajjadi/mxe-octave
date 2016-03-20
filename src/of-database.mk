@@ -3,8 +3,8 @@
 
 PKG             := of-database
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.3.2
-$(PKG)_CHECKSUM := be66711a4c20d0ce560dee7d42d0dd066d85ac15
+$(PKG)_VERSION  := 2.4.1
+$(PKG)_CHECKSUM := d8c0efac63e695c7d94d6b39c7b8f652e99e3653
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := database-$($(PKG)_VERSION)
 $(PKG)_FILE     := database-$($(PKG)_VERSION).tar.gz
