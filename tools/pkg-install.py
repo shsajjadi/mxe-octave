@@ -93,7 +93,7 @@ def create_pkgadddel (env, packdir, nm):
   if env.verbose:
     print "Creating...", nm
 
-  instfid = open(env.m_dir + "/" + nm, "w")
+  instfid = open(env.m_dir + "/" + nm, "a")
   if os.path.exists(env.arch_dir) == True:
     archfid = open(env.arch_dir + "/" + nm, "w")
   else:
@@ -107,7 +107,7 @@ def create_pkgadddel (env, packdir, nm):
     for a in extract_pkg(f, '^[#%][#%]* *' + nm + ': *(.*)$'):
       instfid.write("%s\n" % str(a))
 
-  # search inst .m files for PKG_ commands
+  # search src .cc files for PKG_ commands
   if os.path.exists(packdir + "/src") == True:
     srcdir = packdir + "/src"
     files = list(srcdir + "/" + a for a in os.listdir(srcdir))
