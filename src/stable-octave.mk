@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 4.0.1
 $(PKG)_CHECKSUM := 76b531063e37df13fdbe3467a6e3c14dce364d9e
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.xz
-$(PKG)_URL      := ftp://alpha.gnu.org/gnu/octave/$($(PKG)_FILE)
+$(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
