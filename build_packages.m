@@ -46,7 +46,7 @@ try_install tsa-4.4.1.tar.gz
 try_install dicom-0.1.1.tar.gz
 try_install netcdf-1.0.9.tar.gz
 try_install ltfat-2.1.2.tar.gz
-try_install database-2.3.2.tar.gz
+try_install database-2.4.1.tar.gz
 try_install instrument-control-0.2.2.tar.gz
 try_install generate_html-0.1.10.tar.gz
 try_install financial-0.5.0.tar.gz
