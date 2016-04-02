@@ -423,7 +423,7 @@ is_winnt:
 
 is_winnt_10:
 
-  MessageBox MB_YESNO|MB_ICONEXCLAMATION "Setup has detected Windows 10 installed on your system. Octave is currently not fully tested on Windows 10. Testers are welcom to provide feedback. Do you want to proceed with the installation anyway?" IDYES done IDNO 0
+  MessageBox MB_YESNO|MB_ICONEXCLAMATION "Setup has detected Windows 10 installed on your system. Octave is currently not fully tested on Windows 10. Testers are welcome to provide feedback. Do you want to proceed with the installation anyway?" IDYES done IDNO 0
   Abort
 is_winnt_XP:
 is_winnt_2003:
