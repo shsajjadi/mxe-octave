@@ -219,6 +219,7 @@ MXE_ROOTDIR=`cd "$builddir"; pwd`
 AC_SUBST(MXE_ROOTDIR)
 
 AC_CONFIG_FILES([Makefile tools/set-mxe-env.sh])
+AC_CONFIG_FILES([tools/makeinst-script.sh], [chmod a+x tools/makeinst-script.sh])
 
 AC_OUTPUT
 
