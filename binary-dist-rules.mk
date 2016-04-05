@@ -176,7 +176,7 @@ define make-installer-file
     rm -f $(OCTAVE_NSI_FILE); \
   fi
   echo "generating installer script..."
-  $(TOP_DIR)/makeinst-script.sh $(OCTAVE_DIST_DIR) $(OCTAVE_NSI_FILE)
+  $(TOP_BUILD_DIR)/tools/makeinst-script.sh $(OCTAVE_DIST_DIR) $(OCTAVE_NSI_FILE)
   echo "generating installer..."
   $(TARGET)-makensis $(OCTAVE_NSI_FILE) > $(TOP_BUILD_DIR)/dist/nsis.log
 endef
