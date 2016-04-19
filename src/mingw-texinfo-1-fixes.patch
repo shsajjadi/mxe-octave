@@ -80,7 +80,7 @@ diff -ur texinfo-6.0.orig/tp/texi2any.pl texinfo-6.0/tp/texi2any.pl
       = fileparse($0, '.pl');
  
 -  my $datadir = '@datadir@';
-+  my $datadir = '/usr/share'
++  my $datadir = '/usr/share';
    my $package = '@PACKAGE@';
    my $updir = File::Spec->updir();
  
