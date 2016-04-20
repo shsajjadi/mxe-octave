@@ -18,12 +18,13 @@ endef
 
 define $(PKG)_BUILD
     mkdir '$(1)/.build'
-    cd '$(1)' && autoreconf --install && ./configure \
+    cd '$(1)' && autoreconf --install
+    cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
-	$(ENABLE_SHARED_OR_STATIC) \
+        $(ENABLE_SHARED_OR_STATIC) \
         && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)'
+    $(MAKE) -C '$(1)' -j 1
     $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
 endef
