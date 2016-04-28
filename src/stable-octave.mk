@@ -3,8 +3,8 @@
 
 PKG             := stable-octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.0.1
-$(PKG)_CHECKSUM := 76b531063e37df13fdbe3467a6e3c14dce364d9e
+$(PKG)_VERSION  := 4.0.2
+$(PKG)_CHECKSUM := 34384a5ddeea1b29bdfedd5e8d2bdb13b7b2daf5
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
