@@ -22,7 +22,7 @@ endfunction
 % install the packages
 try_install general-2.0.0.tar.gz
 try_install miscellaneous-1.2.1.tar.gz
-try_install struct-1.0.12.tar.gz
+try_install struct-1.0.13.tar.gz
 try_install optim-1.5.0.tar.gz
 try_install specfun-1.1.0.tar.gz
 try_install control-3.0.0.tar.gz
