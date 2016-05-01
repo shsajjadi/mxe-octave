@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 9.16
 $(PKG)_CHECKSUM := cc06fbf8244b9e8d0694cee5bf3be5bdd444b888
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://downloads.ghostscript.com/public/$($(PKG)_FILE)
+$(PKG)_URL      := http://downloads.ghostscript.com/public/old-gs-releases/$($(PKG)_FILE)
 $(PKG)_DEPS     := jpeg lcms libpng tiff zlib
 ifeq ($(MXE_WINDOWS_BUILD),no)
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
