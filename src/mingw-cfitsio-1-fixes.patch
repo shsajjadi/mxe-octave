@@ -1,7 +1,7 @@
-diff -u cfitsio.orig/configure cfitsio/configure
---- cfitsio.orig/configure	2014-06-12 11:42:22.000000000 -0400
-+++ cfitsio/configure	2014-06-26 15:38:26.323327942 -0400
-@@ -1981,7 +1981,7 @@
+diff -ur cfitsio.orig/configure cfitsio/configure
+--- cfitsio.orig/configure	2016-05-04 09:33:42.223458798 -0400
++++ cfitsio/configure	2016-05-04 09:34:05.530107491 -0400
+@@ -1982,7 +1982,7 @@
        || { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
  as_fn_error $? "failed to load site script $ac_site_file
@@ -10,7 +10,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
    fi
  done
  
-@@ -2122,7 +2122,7 @@
+@@ -2123,7 +2123,7 @@
  $as_echo "$ac_cv_build" >&6; }
  case $ac_cv_build in
  *-*-*) ;;
@@ -19,7 +19,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
  esac
  build=$ac_cv_build
  ac_save_IFS=$IFS; IFS='-'
-@@ -2155,7 +2155,7 @@
+@@ -2156,7 +2156,7 @@
  $as_echo "$ac_cv_host" >&6; }
  case $ac_cv_host in
  *-*-*) ;;
@@ -28,7 +28,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
  esac
  host=$ac_cv_host
  ac_save_IFS=$IFS; IFS='-'
-@@ -2188,7 +2188,7 @@
+@@ -2189,7 +2189,7 @@
  $as_echo "$ac_cv_target" >&6; }
  case $ac_cv_target in
  *-*-*) ;;
@@ -37,7 +37,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
  esac
  target=$ac_cv_target
  ac_save_IFS=$IFS; IFS='-'
-@@ -3592,7 +3592,7 @@
+@@ -3573,7 +3573,7 @@
  	EXT="dec"
  	;;
      *)
@@ -46,7 +46,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
  	;;
  esac
  
-@@ -3946,7 +3946,7 @@
+@@ -3927,7 +3927,7 @@
  test -z "$CC" && { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
  as_fn_error $? "no acceptable C compiler found in \$PATH
@@ -55,18 +55,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
  
  # Provide some information about the compiler.
  $as_echo "$as_me:${as_lineno-$LINENO}: checking for C compiler version" >&5
-@@ -4716,6 +4716,10 @@
- CFITSIO_SHLIB_SONAME=""
- lhea_shlib_cflags=
- case $EXT in
-+  mingw32)
-+    SHLIB_LD="$CC -shared"
-+    SHLIB_SUFFIX=".dll"
-+    ;;
-   cygwin)
-     SHLIB_LD="$CC -shared"
-     SHLIB_SUFFIX=".dll"
-@@ -5878,7 +5882,7 @@
+@@ -5876,7 +5876,7 @@
    case $ac_config_target in
      "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
  
@@ -75,7 +64,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
    esac
  done
  
-@@ -6086,7 +6090,7 @@
+@@ -6084,7 +6084,7 @@
    esac
    case $ac_mode$ac_tag in
    :[FHL]*:*);;
@@ -84,7 +73,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
    :[FH]-) ac_tag=-:-;;
    :[FH]*) ac_tag=$ac_tag:$ac_tag.in;;
    esac
-@@ -6114,7 +6118,7 @@
+@@ -6112,7 +6112,7 @@
  	   [\\/$]*) false;;
  	   *) test -f "$srcdir/$ac_f" && ac_f="$srcdir/$ac_f";;
  	   esac ||
@@ -93,7 +82,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
        esac
        case $ac_f in *\'*) ac_f=`$as_echo "$ac_f" | sed "s/'/'\\\\\\\\''/g"`;; esac
        as_fn_append ac_file_inputs " '$ac_f'"
-@@ -6141,7 +6145,7 @@
+@@ -6139,7 +6139,7 @@
  
      case $ac_tag in
      *:-:* | *:-) cat >"$ac_tmp/stdin" \
@@ -102,7 +91,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
      esac
      ;;
    esac
-@@ -7036,7 +7040,7 @@
+@@ -7034,7 +7034,7 @@
      "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
      "cfitsio.pc") CONFIG_FILES="$CONFIG_FILES cfitsio.pc" ;;
  
@@ -111,7 +100,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
    esac
  done
  
-@@ -7244,7 +7248,7 @@
+@@ -7242,7 +7242,7 @@
    esac
    case $ac_mode$ac_tag in
    :[FHL]*:*);;
@@ -120,7 +109,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
    :[FH]-) ac_tag=-:-;;
    :[FH]*) ac_tag=$ac_tag:$ac_tag.in;;
    esac
-@@ -7272,7 +7276,7 @@
+@@ -7270,7 +7270,7 @@
  	   [\\/$]*) false;;
  	   *) test -f "$srcdir/$ac_f" && ac_f="$srcdir/$ac_f";;
  	   esac ||
@@ -129,7 +118,7 @@ diff -u cfitsio.orig/configure cfitsio/configure
        esac
        case $ac_f in *\'*) ac_f=`$as_echo "$ac_f" | sed "s/'/'\\\\\\\\''/g"`;; esac
        as_fn_append ac_file_inputs " '$ac_f'"
-@@ -7299,7 +7303,7 @@
+@@ -7297,7 +7297,7 @@
  
      case $ac_tag in
      *:-:* | *:-) cat >"$ac_tmp/stdin" \
@@ -138,10 +127,10 @@ diff -u cfitsio.orig/configure cfitsio/configure
      esac
      ;;
    esac
-diff -u cfitsio.orig/configure.in cfitsio/configure.in
---- cfitsio.orig/configure.in	2014-06-12 11:42:38.000000000 -0400
-+++ cfitsio/configure.in	2014-06-26 15:38:26.324327963 -0400
-@@ -159,7 +159,7 @@
+diff -ur cfitsio.orig/configure.in cfitsio/configure.in
+--- cfitsio.orig/configure.in	2016-05-04 09:33:42.238458572 -0400
++++ cfitsio/configure.in	2016-05-04 09:34:05.531107476 -0400
+@@ -154,7 +154,7 @@
  	EXT="dec"
  	;;
      *)
@@ -150,14 +139,3 @@ diff -u cfitsio.orig/configure.in cfitsio/configure.in
  	;;
  esac
  
-@@ -379,6 +379,10 @@
- CFITSIO_SHLIB_SONAME=""
- lhea_shlib_cflags=
- case $EXT in
-+  mingw32)
-+    SHLIB_LD="$CC -shared"
-+    SHLIB_SUFFIX=".dll"
-+    ;;
-   cygwin)
-     SHLIB_LD="$CC -shared"
-     SHLIB_SUFFIX=".dll"
