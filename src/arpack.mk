@@ -3,8 +3,8 @@
 
 PKG             := arpack
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.1.5
-$(PKG)_CHECKSUM := e34934bf76634479a7f52778c1391af93f9bab72
+$(PKG)_VERSION  := 3.3.0
+$(PKG)_CHECKSUM := b62bb47126fac75d659b2e9622ce8f7b52bef122
 $(PKG)_SUBDIR   := $(PKG)-ng-$($(PKG)_VERSION)
 $(PKG)_FILE     := arpack-ng_$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://github.com/opencollab/arpack-ng/archive/$($(PKG)_VERSION).tar.gz
@@ -33,6 +33,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    cd '$(1)' && '$(1)/bootstrap'
     mkdir '$(1)/.build'
     cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
         F77=$(MXE_F77) \
