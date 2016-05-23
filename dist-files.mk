@@ -106,7 +106,6 @@ SRC_FILES_1 := \
   gd-test.c \
   gd.mk \
   gdal.mk \
-  gdb-1-fix-termcap.patch \
   gdb.mk \
   gdcm-1-nosecapi.patch \
   gdcm.mk \
