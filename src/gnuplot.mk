@@ -65,7 +65,7 @@ else
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
       $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) LIBS=-liconv \
-      --prefix '$(HOST_PREFIX)'
+      --without-lua --prefix='$(HOST_PREFIX)'
     make -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 endef
 endif
