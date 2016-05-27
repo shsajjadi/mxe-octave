@@ -1,186 +1,129 @@
- diff -ur gnuplot-4.6.7/config/mingw/Makefile gnuplot-4.6.7-commit/config/mingw/Makefile
---- gnuplot-4.6.7/config/mingw/Makefile	2014-06-13 01:56:55.000000000 +0900
-+++ gnuplot-4.6.7-commit/config/mingw/Makefile	2015-05-16 11:46:53.704000000 +0900
-@@ -27,7 +27,7 @@
+diff -ur gnuplot-5.0.3.orig/config/config.mgw gnuplot-5.0.3/config/config.mgw
+--- gnuplot-5.0.3.orig/config/config.mgw	2016-05-25 15:58:26.763608353 -0400
++++ gnuplot-5.0.3/config/config.mgw	2016-05-27 08:00:58.093953296 -0400
+@@ -671,5 +671,5 @@
+ #endif
  
- # Use more modern HTML help instead of no longer supported Windows help system
- # Please update the HHWPATH below if necessary.
--HTML_HELP=1
-+#HTML_HELP=1
+ /* gnuplot.gih is not used by wgnuplot */
+-#define NO_GIH 1
++/*#define NO_GIH 1*/
+ #define HELPFILE "wgnuplot.chm"
+diff -ur gnuplot-5.0.3.orig/config/mingw/Makefile gnuplot-5.0.3/config/mingw/Makefile
+--- gnuplot-5.0.3.orig/config/mingw/Makefile	2016-05-25 15:58:26.763608353 -0400
++++ gnuplot-5.0.3/config/mingw/Makefile	2016-05-27 07:49:18.557940422 -0400
+@@ -91,14 +91,14 @@
+ # Requires libcaca version 0.99.beta15 or newer. A post-beta18
+ # svn version is recommended since it contains an improved
+ # win32 backend.
+-CACA=1
++#CACA=1
  
- # GIF, PNG, JPEG device drivers
- # Requires gd library. There are two possibilities how to configure these
-@@ -127,29 +127,29 @@
- # -mpentiumpro means optimize for Pentium II and Pro processors
- #CFLAGS +=
+ # Uncomment if you have libiconv
+ ICONV=1
  
--ifdef HTML_HELP
-+# ifdef HTML_HELP
+ # Uncomment if you have libcerf
+ # http://sourceforge.net/projects/libcerf/
+-CERF=1
++#CERF=1
  
- # To compile the .chm file you need the Microsoft HTML Help 1.4 SDK
- # It can be obtained here:
+ # Below you can adapt paths according to your software setup:
+ 
+@@ -140,8 +140,8 @@
  # http://go.microsoft.com/fwlink/?LinkId=154968
  # We need to explicitly set the correct path here since we also need
  # adjust the include and library paths.
 -HHWPATH = "$(PROGRAMFILES)/HTML Help Workshop/"
 -HHC = $(HHWPATH)hhc
-+# HHWPATH = "$(PROGRAMFILES)/HTML Help Workshop/"
-+# HHC = $(HHWPATH)hhc
- 
--else
-+# else
- 
- # To compile the .hlp file you need hcw either out of Microsoft SDK or MS Help
- # Workshop. The latter can be obtained from either of
- # ftp://ftp.microsoft.com/softlib/mslfiles/hcwsetup.exe
- # http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=34D35502-4DE9-4676-952C-34CC7F64F098
- # Put the path to hcw here unless it is already in PATH:
--HCWPATH = "$(PROGRAMFILES)/Help\ Workshop/"
--HCW = $(HCWPATH)hcw
-+# HCWPATH = "$(PROGRAMFILES)/Help\ Workshop/"
-+# HCW = $(HCWPATH)hcw
- # Switches are for HCW 4.03:
--HCWFLAG =
-+# HCWFLAG =
- 
--endif
-+# endif
++#HHWPATH = "$(PROGRAMFILES)/HTML Help Workshop/"
++#HHC = $(HHWPATH)hhc
  
  # Choose which resource compiler you want to use (GNU windres or MS rc):
  GNU_RC = 1
-@@ -382,8 +382,9 @@
- endif
+@@ -155,7 +155,7 @@
  
- ifdef ICONV
--	CFLAGS += -DHAVE_ICONV
--	TERMLIBS += -liconv
-+	CFLAGS += -DHAVE_ICONV $(ICONV_CFLAGS)
-+        LDFLAGS += $(ICONV_LDFLAGS)
-+	TERMLIBS += -liconv 
- endif
+ # Inno Setup Compiler
+ # get it from: http://www.jrsoftware.org/isdl.php
+-ISCC = "$(PROGRAMFILES)/Inno Setup 5/iscc"
++#ISCC = "$(PROGRAMFILES)/Inno Setup 5/iscc"
  
- ifdef GNU_RC
-@@ -401,7 +402,7 @@
-   RES2COFF = res2coff -i wgnuplot.res -o wgplt_res.$(O)
- endif
+ # Directory that might contain extra files to be shipped with the installer.
+ # This should include dependencies like DLLs, but also fontconfig configuration files.
+@@ -445,7 +445,7 @@
+ FULLVERSION := $(MAINVERSION) patchlevel $(PATCHLEVEL)
+ 
  
 -default: $(TARGET) $(MENUFILE) support
 +default: $(TARGET) $(MENUFILE) # support
  
- console:
- 	$(MAKE) TARGET=gnuplot.exe gnuplot.exe
-@@ -443,7 +444,7 @@
-   LDFLAGS2 += -L$(HHWPATH)lib
- endif
+ console: 
+ 	$(MAKE) TARGET=gnuplot.exe default
+@@ -487,8 +487,8 @@
+ 	$(CC) -c $(CFLAGS) $(CFLAGSEXTRA) -MMD -MT '$*.$$(O)' -MF $*.d -o $@ $<
  
--$(TARGET): $(OBJS) $(WINOBJS) wgplt_res.$(O) texticon.ico grpicon.ico
-+$(TARGET): $(OBJS) $(WINOBJS) wgplt_res.$(O) TEXTICON.ico GRPICON.ico
+ LDLIBS = -lkernel32 -lgdi32 -lwinspool -lcomdlg32 -lcomctl32 -ladvapi32 -lshell32 -lmsimg32 -lgdiplus
+-LDLIBS += -lhtmlhelp
+-LDFLAGS2 += -L$(HHWPATH)lib
++#LDLIBS += -lhtmlhelp
++#LDFLAGS2 += -L$(HHWPATH)lib
+ 
+ $(TARGET): $(VERSIONING) $(OBJS) $(WINOBJS) wgplt_res.$(O) Makefile
  	$(LDX) $(LDFLAGS) $(LDFLAGS2) -o $@ $(OBJS) $(WINOBJS) wgplt_res.$(O) $(LDLIBS)\
- 	$(TERMLIBS) $(WX_LIBS) $(PANGOCAIRO_LIBS)
+Only in gnuplot-5.0.3/config/mingw: .Makefile.swp
+diff -ur gnuplot-5.0.3.orig/src/command.c gnuplot-5.0.3/src/command.c
+--- gnuplot-5.0.3.orig/src/command.c	2016-05-25 15:58:26.693609393 -0400
++++ gnuplot-5.0.3/src/command.c	2016-05-27 07:55:44.467430876 -0400
+@@ -117,7 +117,7 @@
+ #endif /* OS2_IPC */
  
-@@ -458,7 +459,7 @@
  
- # explicit rules
+-#ifndef _Windows
++#ifndef IGNORE_Windows
+ # include "help.h"
+ #else
+ # ifdef USE_OWN_WINSYSTEM_FUNCTION
+@@ -125,7 +125,7 @@
+ # endif
+ #endif /* _Windows */
  
--wgplt_res.$(O): $(W)/wgnuplot.rc $(W)/wgnuplib.rc $(W)/wresourc.h texticon.ico grpicon.ico
-+wgplt_res.$(O): $(W)/wgnuplot.rc $(W)/wgnuplib.rc $(W)/wresourc.h TEXTICON.ico GRPICON.ico
- 	$(RC) $(RCFLAGS) $< $(RCOUT)
- 	$(RES2COFF)
+-#ifdef _Windows
++#ifdef IGNORE_Windows
+ # include <windows.h>
+ # ifdef __MSC__
+ #  include <malloc.h>
+diff -ur gnuplot-5.0.3.orig/src/internal.c gnuplot-5.0.3/src/internal.c
+--- gnuplot-5.0.3.orig/src/internal.c	2016-05-25 15:58:26.743608650 -0400
++++ gnuplot-5.0.3/src/internal.c	2016-05-27 07:36:23.856997094 -0400
+@@ -47,7 +47,7 @@
  
-@@ -494,13 +495,13 @@
- 	$(CC) -c $(CFLAGS) $(CXXFLAGS) $(PANGOCAIRO_CFLAGS) -MMD -MT '$*.$$(O)' -MF $*.d -o $@ $<
+ #include <math.h>
  
- # extract icons from wgnuplot.rc
--texticon.ico: grpicon.ico
-+TEXTICON.ico: GRPICON.ico
- 
--grpicon.ico: geticon.exe $(W)/wgnuplot.rc
-+GRPICON.ico: geticon $(W)/wgnuplot.rc
- 	./geticon $(W)/wgnuplot.rc
- 
--geticon.exe: $(W)/geticon.c
--	$(LD) $(LDFLAGS) -o $@ $<
-+geticon: $(W)/geticon.c
-+	gcc -o $@ $<
- 
- ifdef HTML_HELP
- # convert gnuplot.doc to windows/wgnuplot.html
-@@ -703,7 +704,7 @@
- 	$(RM) config.h wgnuplot.map wgnuplot.res $(W)/gnuplot.rtf
- 	$(RM) *.$(O) *.po *.o *.co *.d
- 	$(RM) doc2*.exe $(W)/wgnuplib.res wgnuplib.map wgnuplot.lib
--	$(RM) $(M)bf_test.exe *.ico geticon.exe allterm.h allterm.c
-+	$(RM) $(M)bf_test.exe *.ico geticon allterm.h allterm.c
- 	$(RM) *.aux *.log *.dvi *.toc
- 	$(RM) gnuplot.tex gnuplot-figures.tex pdffigures.tex figure_*.pdf
- 	$(RM) titlepag.tex toc_entr.sty VERSION
-@@ -802,7 +803,7 @@
- 
- installer:
- 	$(MAKE) DESTDIR=./dist install
--	cp -p grpicon.ico ./dist/bin/
-+	cp -p GRPICON.ico ./dist/bin/
- 	cp -p $(TOP)/win/*.iss ./dist
- 	(cd ./dist; $(ISCC) gnuplot.iss)
- ifdef RELEASE
-
-diff -ur gnuplot-4.6.7/src/syscfg.h gnuplot-4.6.7-commit/src/syscfg.h
---- gnuplot-4.6.7/src/syscfg.h	2014-08-01 01:56:25.000000000 +0900
-+++ gnuplot-4.6.7-commit/src/syscfg.h	2015-05-16 15:27:58.612000000 +0900
-@@ -317,11 +317,19 @@
+-#ifndef _WIN64
++#if !defined(__MINGW64_VERSION_MAJOR)
+ /*
+  * FIXME: This is almost certainly out of date on linux, since the matherr
+  * mechanism has been replaced by math_error() and supposedly is only 
+diff -ur gnuplot-5.0.3.orig/src/syscfg.h gnuplot-5.0.3/src/syscfg.h
+--- gnuplot-5.0.3.orig/src/syscfg.h	2016-05-25 15:58:26.698609318 -0400
++++ gnuplot-5.0.3/src/syscfg.h	2016-05-27 07:51:03.707439227 -0400
+@@ -341,11 +341,19 @@
  #endif
  
  #ifndef GP_EXCEPTION_NAME
 -# define GP_EXCEPTION_NAME exception
 +# if __MINGW32__
-+#  define GP_EXCEPTION_NAME _exception
-+# else
 +#  define GP_EXCEPTION_NAME exception
-+# endif
++#else
++#  define GP_EXCEPTION_NAME exception
++#endif
  #endif
  
  #ifndef GP_MATHERR
 -# define GP_MATHERR matherr
 +# if __MINGW32__
 +#  define GP_MATHERR _matherr
-+# else
++#else
 +#  define GP_MATHERR matherr
-+# endif
++#endif
  #endif
  
  #ifdef HAVE_STRUCT_EXCEPTION_IN_MATH_H
-
-diff -ur gnuplot-4.6.7/src/win/wgnuplot.rc gnuplot-4.6.7-commit/src/win/wgnuplot.rc
---- gnuplot-4.6.7/src/win/wgnuplot.rc	2014-07-08 03:18:41.000000000 +0900
-+++ gnuplot-4.6.7-commit/src/win/wgnuplot.rc	2015-05-16 11:24:48.912000000 +0900
-@@ -19,8 +19,8 @@
-    * rc -30 -k -dMSRC win\wgnuplot.rc wgnuplot.exe
-    */
- 
--GRPICON ICON "grpicon.ico"
--TEXTICON ICON  "texticon.ico"
-+GRPICON ICON "GRPICON.ico"
-+TEXTICON ICON  "TEXTICON.ico"
- 
- #else
- /* using Borland BRC.EXE */
-
-diff -ur internal.orig.c internal.mod.c
---- a/src/internal.c	2014-07-08 03:18:40.000000000 +0900
-+++ b/src/internal.c	2015-05-16 19:29:17.660000000 +0900
-@@ -58,6 +58,7 @@
- 
- static enum DATA_TYPES sprintf_specifier __PROTO((const char *format));
- 
-+#ifndef __MINGW32__
- #ifndef _WIN64
- int
- GP_MATHERR( STRUCT_EXCEPTION_P_X )
-@@ -65,6 +66,7 @@
-     return (undefined = TRUE);	/* don't print error message */
- }
- #endif
-+#endif
- 
- #define BAD_DEFAULT default: int_error(NO_CARET, "internal error : type neither INT or CMPLX"); return;
-
