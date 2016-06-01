@@ -14,6 +14,7 @@ set PATH=%OCT_HOME%bin;%PATH%
 Rem   Set up any environment vars we may need
 
 set TERM=cygwin
+set GNUTERM=windows
 
 Rem   Check for args to see if we are told to start GUI
 Rem   with the --force-gui option or not (--no-gui)
