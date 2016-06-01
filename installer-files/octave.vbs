@@ -13,6 +13,7 @@ wshSystemEnv("PATH") = OctavePath & "\bin;" & wshSystemEnv("PATH")
 
 ' set terminal type
 wshSystemEnv("TERM") = "cygwin"
+wshSystemEnv("GNUTERM") = "windows"
 
 ' set Qt plugin directory
 wshSystemEnv("QT_PLUGIN_PATH") = OctavePath & "\plugins"
