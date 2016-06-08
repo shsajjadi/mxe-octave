@@ -59,7 +59,7 @@ unwind_protect
   try_install generate_html-0.1.10.tar.gz
   try_install financial-0.5.0.tar.gz
   try_install stk-2.3.4.tar.gz
-  try_install splines-1.3.0.tar.gz
+  try_install splines-1.3.1.tar.gz
   try_install dataframe-1.1.0.tar.gz
   try_install lssa-0.1.2.tar.gz
   try_install queueing-1.2.3.tar.gz
