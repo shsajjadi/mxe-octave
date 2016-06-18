@@ -1,0 +1,36 @@
+diff -ur octave-4.1.0+.orig/liboctave/util/oct-inttypes.cc octave-4.1.0+/liboctave/util/oct-inttypes.cc
+--- octave-4.1.0+.orig/liboctave/util/oct-inttypes.cc	2016-06-17 14:01:56.000000000 -0400
++++ octave-4.1.0+/liboctave/util/oct-inttypes.cc	2016-06-17 19:52:03.943017663 -0400
+@@ -105,7 +105,31 @@
+ 
+ #if defined (OCTAVE_ENSURE_LONG_DOUBLE_OPERATIONS_ARE_NOT_TRUNCATED)
+ 
+-#define DEFINE_OCTAVE_LONG_DOUBLE_CMP_OP_TEMPLATES(T) \
++typedef unsigned short fpucw_t; /* glibc calls this fpu_control_t */
++
++# define FPU_PC_MASK 0x0300
++# define FPU_PC_DOUBLE 0x200    /* glibc calls this _FPU_DOUBLE */
++# define FPU_PC_EXTENDED 0x300  /* glibc calls this _FPU_EXTENDED */
++
++# define GET_FPUCW() \
++  ({ fpucw_t _cw;                                               \
++     __asm__ __volatile__ ("fnstcw %0" : "=m" (*&_cw));         \
++     _cw;                                                       \
++   })
++# define SET_FPUCW(word) \
++  (void)({ fpucw_t _ncw = (word);                               \
++           __asm__ __volatile__ ("fldcw %0" : : "m" (*&_ncw));  \
++         })
++
++# define DECL_LONG_DOUBLE_ROUNDING \
++  fpucw_t oldcw;
++# define BEGIN_LONG_DOUBLE_ROUNDING() \
++  (void)(oldcw = GET_FPUCW (),                                  \
++         SET_FPUCW ((oldcw & ~FPU_PC_MASK) | FPU_PC_EXTENDED))
++# define END_LONG_DOUBLE_ROUNDING() \
++  SET_FPUCW (oldcw)
++
++#define DEFINE_OCTAVE_LONG_DOUBLE_CMP_OP_TEMPLATES(T)   \
+   template <typename xop> \
+   bool \
+   octave_int_cmp_op::external_mop (double x, T y) \
