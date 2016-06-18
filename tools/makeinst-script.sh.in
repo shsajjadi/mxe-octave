@@ -524,7 +524,7 @@ EOF
   IfErrors JRE_Error
 
  JRE_Error:
-  MessageBox MB_ICONEXCLAMATION|MB_YESNO "Octave includes a Java integration component, but it seems Java is not available on this system. This component requires the Java Runtime Environment from Oracle (http://www.java.com) installed on your system. Octave can work without Java available, but the Java integration component will not be functional. Installing those components without Java available might prevent Octave from working correctly. Proceed with installation anyway?" IDYES continue
+  MessageBox MB_ICONEXCLAMATION|MB_YESNO "Octave has the capability to call Java libraries, but the installer was unable to find a Java Runtime Environment (JRE) on this system.  Octave will still function without a JRE, only certain specific functions will be disabled.  If a JRE is installed later, Octave should be able to detect and use it automatically.  Continue with installation?" IDYES continue
   Abort
  continue:
   Pop \$R1
