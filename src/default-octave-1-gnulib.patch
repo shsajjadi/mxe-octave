@@ -1,0 +1,12 @@
+diff -uNr a/libgnu/unistd.in.h b/libgnu/unistd.in.h
+--- a/libgnu/unistd.in.h	2016-06-18 18:47:32.000000000 -0400
++++ b/libgnu/unistd.in.h	2016-06-23 18:45:42.410781867 -0400
+@@ -734,7 +734,7 @@
+    Null terminate it if the name is shorter than LEN.
+    If the host name is longer than LEN, set errno = EINVAL and return -1.
+    Return 0 if successful, otherwise set errno and return -1.  */
+-# if @UNISTD_H_HAVE_WINSOCK2_H@
++# if !@HAVE_GETHOSTNAME@ && @UNISTD_H_HAVE_WINSOCK2_H@
+ #  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+ #   undef gethostname
+ #   define gethostname rpl_gethostname
