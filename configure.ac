@@ -93,13 +93,13 @@ AC_SUBST(ENABLE_JIT)
 
 ENABLE_JAVA=yes
 AC_ARG_ENABLE([java],
-  [AS_HELP_STRING([--disable-java], [Disable Java])],
+  [AS_HELP_STRING([--disable-java], [Disable Java/Octave interface])],
   [if test "$enableval" = no; then ENABLE_JAVA=no; fi], [])
 AC_SUBST(ENABLE_JAVA)
 
 ENABLE_DOCS=yes
 AC_ARG_ENABLE([docs],
-  [AS_HELP_STRING([--disable-docs], [Disable Octave docs])],
+  [AS_HELP_STRING([--disable-docs], [Disable building Octave documentation])],
   [if test "$enableval" = no; then ENABLE_DOCS=no; fi], [])
 AC_SUBST(ENABLE_DOCS)
 
@@ -153,7 +153,7 @@ AC_SUBST(STRIP_DIST_FILES)
 ENABLE_OPENBLAS=yes
 AC_ARG_ENABLE([openblas],
   [AS_HELP_STRING([--disable-openblas],
-    [Disable use of openblas in Octave])],
+    [Disable use of OpenBLAS in Octave])],
   [if test "$enableval" = no; then ENABLE_OPENBLAS=no; fi], [])
 AC_SUBST(ENABLE_OPENBLAS)
 
@@ -169,7 +169,7 @@ AC_SUBST(ENABLE_QHULL_NO_STRICT_ALIASING_FLAG)
 ENABLE_OCTAVE=stable
 AC_ARG_ENABLE([octave],
   [AS_HELP_STRING([--enable-octave=stable],
-    [Enable a specific build of octave (stable, alpha, default)])],
+    [Enable a specific build of Octave (stable, alpha, default)])],
   [], [enableval=$ENABLE_OCTAVE])
 
 case $enableval in
@@ -193,14 +193,14 @@ AC_SUBST(ENABLE_OCTAVE)
 ENABLE_BINARY_PACKAGES=no
 AC_ARG_ENABLE([binary-packages],
   [AS_HELP_STRING([--enable-binary-packages],
-    [Enable creating binary octave forge packages])],
+    [Enable creating binary Octave Forge packages])],
   [if test "$enableval" = yes; then ENABLE_BINARY_PACKAGES=yes; fi], [])
 AC_SUBST(ENABLE_BINARY_PACKAGES)
 
 ENABLE_DEVEL_TOOLS=no
 AC_ARG_ENABLE([devel-tools],
   [AS_HELP_STRING([--enable-devel-tools],
-    [Enable creating devel tools such as gdb])],
+    [Enable creating developer tools such as gdb])],
   [if test "$enableval" = yes; then ENABLE_DEVEL_TOOLS=yes; fi], [])
 AC_SUBST(ENABLE_DEVEL_TOOLS)
 
