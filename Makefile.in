@@ -241,6 +241,7 @@ ifneq ($(MXE_SYSTEM),msvc)
 endif
 
 STAMP_DIR  := $(TOP_BUILD_DIR)/installed-packages
+BUILT_PKGS_DIR := $(TOP_BUILD_DIR)/built-packages
 MSYS_INFO_DIR := $(TOP_BUILD_DIR)/msys-info
 LOG_DIR    := $(TOP_BUILD_DIR)/log
 TIMESTAMP  := $(shell date +%Y%m%d_%H%M%S)
@@ -601,13 +602,18 @@ define GENERATE_FILE_LIST
     fi
 endef
 
-define INSTALL_DESTDIR
-    if [ -d '$(1)$(ROOT_PREFIX)' ]; then \
-        (cd '$(1)$(ROOT_PREFIX)' && tar c .) | (cd '$(ROOT_PREFIX)' && tar x -p); \
+define CREATE_PKG
+    [ -d '$(BUILT_PKGS_DIR)' ] || mkdir -p '$(BUILT_PKGS_DIR)'; \
+    if [ -d '$(2)$(ROOT_PREFIX)' ]; then \
+        (cd '$(2)$(ROOT_PREFIX)' && tar caf '$(BUILT_PKGS_DIR)/$(1).tar.xz' .); \
     fi; \
-    if [ "$(ROOT_PREFIX)" != "$(CMAKE_ROOT_PREFIX)" ] && [ -d '$(1)$(CMAKE_ROOT_PREFIX)' ]; then \
-        (cd '$(1)$(CMAKE_ROOT_PREFIX)' && tar c .) | (cd '$(ROOT_PREFIX)' && tar x -p); \
+    if [ "$(ROOT_PREFIX)" != "$(CMAKE_ROOT_PREFIX)" ] && [ -d '$(2)$(CMAKE_ROOT_PREFIX)' ]; then \
+        (cd '$(2)$(CMAKE_ROOT_PREFIX)' && tar caf '$(BUILT_PKGS_DIR)/$(1).tar.xz' .); \
     fi
+endef
+
+define INSTALL_PKG_TO_DESTDIR
+    (cd '$(ROOT_PREFIX)' && tar xaf '$(BUILT_PKGS_DIR)/$(1).tar.xz')
 endef
 
 define OCTAVE_FORGE_PKG_COMPILE
@@ -735,10 +741,11 @@ build-only-$(1):
 	    $$(call $(1)_BUILD,$(2)/$($(1)_SUBDIR),$(TOP_DIR)/src/$(1)-test,$(2)-install)
 	    if [ -d '$(2)-install' ]; then \
                 $(call GENERATE_FILE_LIST,$(1),$(2)-install); \
-                $(call INSTALL_DESTDIR,$(2)-install); \
+                $(call CREATE_PKG,$(1),$(2)-install); \
+                $(call INSTALL_PKG_TO_DESTDIR,$(1),$(2)-install); \
 		(du -k -d 0 '$(2)-install' 2>/dev/null || du -k --max-depth 0 '$(2)-install') | \
 			$(SED) -n 's/^\(\S*\).*/du: \1 KiB/p'; \
-		rm -rfv  '$(2)-install'; \
+		[ '$(KEEP_BUILD)' = '1' ] || rm -rfv  '$(2)-install'; \
 	    fi
 	    (du -k -d 0 '$(2)' 2>/dev/null || du -k --max-depth 0 '$(2)') | $(SED) -n 's/^\(\S*\).*/du: \1 KiB/p'
 	    [ '$(KEEP_BUILD)' = '1' ] || rm -rfv  '$(2)'
@@ -757,6 +764,10 @@ clean:
 	rm -rf native-tools cross-tools octave gnuplot
 	rm -f Makefile cmake-toolchain-file.stamp
 	rm -f tools/set-mxe-env.sh
+
+.PHONY: realclean
+realclean: clean
+	rm -rf $(BUILT_PKGS_DIR)
 
 .PHONY: clean-pkg
 clean-pkg:
