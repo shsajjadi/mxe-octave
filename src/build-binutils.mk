@@ -14,12 +14,12 @@ $(PKG)_DEPS     :=
 ifneq ($(MXE_NATIVE_BUILD),yes)
 ifneq ($(ENABLE_WINDOWS_64),yes)
   define $(PKG)_POST_BUILD
-    $(INSTALL) -d '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
-    mv $(addprefix $(HOST_PREFIX)/bin/, ar as dlltool ld ld.bfd nm objcopy objdump ranlib strip) '$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
+    $(INSTALL) -d '$(3)/$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
+    mv $(addprefix $(3)/$(HOST_PREFIX)/bin/, ar as dlltool ld ld.bfd nm objcopy objdump ranlib strip) '$(3)/$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
   endef
 else
   define $(PKG)_POST_BUILD
-    rm $(addprefix $(HOST_PREFIX)/bin/, ar as dlltool ld ld.bfd nm objcopy objdump ranlib strip)
+    rm $(addprefix $(3)/$(HOST_PREFIX)/bin/, ar as dlltool ld ld.bfd nm objcopy objdump ranlib strip)
   endef
 endif
 endif
@@ -53,12 +53,11 @@ endif
 
 define $(PKG)_BUILD
     # install config.guess for general use
-    $(INSTALL) -d '$(BUILD_TOOLS_PREFIX)/bin'
-    $(INSTALL) -m755 '$(1)/config.guess' '$(BUILD_TOOLS_PREFIX)/bin/'
+    $(INSTALL) -d '$(3)/$(BUILD_TOOLS_PREFIX)/bin'
+    $(INSTALL) -m755 '$(1)/config.guess' '$(3)/$(BUILD_TOOLS_PREFIX)/bin/'
 
-    # install target-specific autotools config file
-    $(INSTALL) -d '$(HOST_PREFIX)/share'
-    echo "ac_cv_build=`$(1)/config.guess`" > '$(HOST_PREFIX)/share/config.site'
+    $(INSTALL) -d '$(3)/$(HOST_PREFIX)/share'
+    echo "ac_cv_build=`$(1)/config.guess`" > '$(3)/$(HOST_PREFIX)/share/config.site'
 
     cd '$(1)' && ./configure \
         $($(PKG)_SYSDEP_CONFIGURE_OPTIONS) \
@@ -70,7 +69,7 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-werror
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install
+    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
 
     $($(PKG)_POST_BUILD)
 endef
