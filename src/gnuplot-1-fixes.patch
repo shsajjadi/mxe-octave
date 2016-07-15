@@ -1,17 +1,7 @@
-diff -ur gnuplot-5.0.3.orig/config/config.mgw gnuplot-5.0.3/config/config.mgw
---- gnuplot-5.0.3.orig/config/config.mgw	2016-05-25 15:58:26.763608353 -0400
-+++ gnuplot-5.0.3/config/config.mgw	2016-05-27 08:00:58.093953296 -0400
-@@ -671,5 +671,5 @@
- #endif
- 
- /* gnuplot.gih is not used by wgnuplot */
--#define NO_GIH 1
-+/*#define NO_GIH 1*/
- #define HELPFILE "wgnuplot.chm"
-diff -ur gnuplot-5.0.3.orig/config/mingw/Makefile gnuplot-5.0.3/config/mingw/Makefile
---- gnuplot-5.0.3.orig/config/mingw/Makefile	2016-05-25 15:58:26.763608353 -0400
-+++ gnuplot-5.0.3/config/mingw/Makefile	2016-05-27 07:49:18.557940422 -0400
-@@ -91,14 +91,14 @@
+diff -ur gnuplot-5.0.4.orig/config/mingw/Makefile gnuplot-5.0.4/config/mingw/Makefile
+--- gnuplot-5.0.4.orig/config/mingw/Makefile	2016-07-21 13:47:52.025061617 -0400
++++ gnuplot-5.0.4/config/mingw/Makefile	2016-07-21 13:48:27.859547002 -0400
+@@ -119,14 +119,14 @@
  # Requires libcaca version 0.99.beta15 or newer. A post-beta18
  # svn version is recommended since it contains an improved
  # win32 backend.
@@ -28,27 +18,27 @@ diff -ur gnuplot-5.0.3.orig/config/mingw/Makefile gnuplot-5.0.3/config/mingw/Mak
  
  # Below you can adapt paths according to your software setup:
  
-@@ -140,8 +140,8 @@
+@@ -171,8 +171,8 @@
  # http://go.microsoft.com/fwlink/?LinkId=154968
  # We need to explicitly set the correct path here since we also need
  # adjust the include and library paths.
--HHWPATH = "$(PROGRAMFILES)/HTML Help Workshop/"
+-HHWPATH = $(PROGRAMFILES32)/HTML\ Help\ Workshop/
 -HHC = $(HHWPATH)hhc
-+#HHWPATH = "$(PROGRAMFILES)/HTML Help Workshop/"
++#HHWPATH = $(PROGRAMFILES32)/HTML\ Help\ Workshop/
 +#HHC = $(HHWPATH)hhc
  
  # Choose which resource compiler you want to use (GNU windres or MS rc):
  GNU_RC = 1
-@@ -155,7 +155,7 @@
+@@ -186,7 +186,7 @@
  
  # Inno Setup Compiler
  # get it from: http://www.jrsoftware.org/isdl.php
--ISCC = "$(PROGRAMFILES)/Inno Setup 5/iscc"
-+#ISCC = "$(PROGRAMFILES)/Inno Setup 5/iscc"
+-ISCC = $(PROGRAMFILES32)/Inno\ Setup\ 5/iscc
++#ISCC = $(PROGRAMFILES32)/Inno\ Setup\ 5/iscc
  
  # Directory that might contain extra files to be shipped with the installer.
  # This should include dependencies like DLLs, but also fontconfig configuration files.
-@@ -445,7 +445,7 @@
+@@ -514,7 +514,7 @@
  FULLVERSION := $(MAINVERSION) patchlevel $(PATCHLEVEL)
  
  
@@ -57,7 +47,7 @@ diff -ur gnuplot-5.0.3.orig/config/mingw/Makefile gnuplot-5.0.3/config/mingw/Mak
  
  console: 
  	$(MAKE) TARGET=gnuplot.exe default
-@@ -487,8 +487,8 @@
+@@ -556,8 +556,8 @@
  	$(CC) -c $(CFLAGS) $(CFLAGSEXTRA) -MMD -MT '$*.$$(O)' -MF $*.d -o $@ $<
  
  LDLIBS = -lkernel32 -lgdi32 -lwinspool -lcomdlg32 -lcomctl32 -ladvapi32 -lshell32 -lmsimg32 -lgdiplus
@@ -65,22 +55,12 @@ diff -ur gnuplot-5.0.3.orig/config/mingw/Makefile gnuplot-5.0.3/config/mingw/Mak
 -LDFLAGS2 += -L$(HHWPATH)lib
 +#LDLIBS += -lhtmlhelp
 +#LDFLAGS2 += -L$(HHWPATH)lib
- 
- $(TARGET): $(VERSIONING) $(OBJS) $(WINOBJS) wgplt_res.$(O) Makefile
- 	$(LDX) $(LDFLAGS) $(LDFLAGS2) -o $@ $(OBJS) $(WINOBJS) wgplt_res.$(O) $(LDLIBS)\
-Only in gnuplot-5.0.3/config/mingw: .Makefile.swp
-diff -ur gnuplot-5.0.3.orig/src/command.c gnuplot-5.0.3/src/command.c
---- gnuplot-5.0.3.orig/src/command.c	2016-05-25 15:58:26.693609393 -0400
-+++ gnuplot-5.0.3/src/command.c	2016-05-27 07:55:44.467430876 -0400
-@@ -117,7 +117,7 @@
- #endif /* OS2_IPC */
- 
- 
--#ifndef _Windows
-+#ifndef IGNORE_Windows
- # include "help.h"
- #else
- # ifdef USE_OWN_WINSYSTEM_FUNCTION
+ ifdef MINGW64
+ LDFLAGS2 += -L.
+ endif
+diff -ur gnuplot-5.0.4.orig/src/command.c gnuplot-5.0.4/src/command.c
+--- gnuplot-5.0.4.orig/src/command.c	2016-07-21 13:47:51.987062163 -0400
++++ gnuplot-5.0.4/src/command.c	2016-07-21 13:48:27.860546987 -0400
 @@ -125,7 +125,7 @@
  # endif
  #endif /* _Windows */
@@ -90,9 +70,25 @@ diff -ur gnuplot-5.0.3.orig/src/command.c gnuplot-5.0.3/src/command.c
  # include <windows.h>
  # ifdef __MSC__
  #  include <malloc.h>
-diff -ur gnuplot-5.0.3.orig/src/internal.c gnuplot-5.0.3/src/internal.c
---- gnuplot-5.0.3.orig/src/internal.c	2016-05-25 15:58:26.743608650 -0400
-+++ gnuplot-5.0.3/src/internal.c	2016-05-27 07:36:23.856997094 -0400
+@@ -2535,6 +2535,7 @@
+ void
+ help_command()
+ {
++#ifndef __MINGW32__
+     HWND parent;
+ 
+     c_token++;
+@@ -2570,6 +2571,7 @@
+         link.fIndexOnFail = TRUE;
+         HtmlHelp(parent, winhelpname, HH_KEYWORD_LOOKUP, (DWORD_PTR)&link);
+     }
++#endif
+ }
+ #else  /* !_Windows */
+ #ifndef VMS
+diff -ur gnuplot-5.0.4.orig/src/internal.c gnuplot-5.0.4/src/internal.c
+--- gnuplot-5.0.4.orig/src/internal.c	2016-07-21 13:47:52.006061890 -0400
++++ gnuplot-5.0.4/src/internal.c	2016-07-21 13:48:27.861546973 -0400
 @@ -47,7 +47,7 @@
  
  #include <math.h>
@@ -102,19 +98,10 @@ diff -ur gnuplot-5.0.3.orig/src/internal.c gnuplot-5.0.3/src/internal.c
  /*
   * FIXME: This is almost certainly out of date on linux, since the matherr
   * mechanism has been replaced by math_error() and supposedly is only 
-diff -ur gnuplot-5.0.3.orig/src/syscfg.h gnuplot-5.0.3/src/syscfg.h
---- gnuplot-5.0.3.orig/src/syscfg.h	2016-05-25 15:58:26.698609318 -0400
-+++ gnuplot-5.0.3/src/syscfg.h	2016-05-27 07:51:03.707439227 -0400
-@@ -341,11 +341,19 @@
- #endif
- 
- #ifndef GP_EXCEPTION_NAME
--# define GP_EXCEPTION_NAME exception
-+# if __MINGW32__
-+#  define GP_EXCEPTION_NAME exception
-+#else
-+#  define GP_EXCEPTION_NAME exception
-+#endif
+diff -ur gnuplot-5.0.4.orig/src/syscfg.h gnuplot-5.0.4/src/syscfg.h
+--- gnuplot-5.0.4.orig/src/syscfg.h	2016-07-21 13:47:51.994062063 -0400
++++ gnuplot-5.0.4/src/syscfg.h	2016-07-21 13:49:02.401050952 -0400
+@@ -345,7 +345,11 @@
  #endif
  
  #ifndef GP_MATHERR
