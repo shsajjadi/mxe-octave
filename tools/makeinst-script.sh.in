@@ -8,6 +8,8 @@ fi
 
 OUTFILE="$2"
 TOPDIR=@abs_top_srcdir@
+TOP_BUILD_DIR=@abs_top_builddir@
+
 ENABLE64="@ENABLE_WINDOWS_64@"
 
 OCTAVE_SOURCE=`basename $1`
@@ -97,7 +99,7 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 
 ; Theme
 !define MUI_ICON "\${INSTALLER_FILES}/octave-logo.ico"
-!define MUI_UNICON "./${OCTAVE_SOURCE}/share/nsis/Contrib/Graphics/Icons/orange-uninstall.ico"
+!define MUI_UNICON "$TOP_BUILD_DIR/usr/share/nsis/Contrib/Graphics/Icons/orange-uninstall.ico"
 !define MUI_HEADERIMAGE_BITMAP "\${INSTALLER_FILES}/octave-hdr.bmp"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "\${INSTALLER_FILES}/octave.bmp"
  
