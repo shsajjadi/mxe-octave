@@ -13,7 +13,8 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
   TAR_H_OPTION := -h
   WINDOWS_BINARY_DIST_DEPS := \
     msys-base \
-    msys-base-sources
+    msys-base-sources \
+    win7appid
 
   ifeq ($(MXE_NATIVE_BUILD),no)
     WINDOWS_BINARY_DIST_DEPS += \
