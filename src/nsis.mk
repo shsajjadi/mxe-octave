@@ -22,9 +22,9 @@ define $(PKG)_BUILD
 
     cd '$(1)' && scons VERBOSE=1 \
         MINGW_CROSS_PREFIX='$(MXE_TOOL_PREFIX)' \
-        PREFIX='$(HOST_PREFIX)' PREFIX_BIN=$(BUILD_TOOLS_PREFIX)/bin \
+        PREFIX='$(BUILD_TOOLS_PREFIX)' \
         APPEND_LIBPATH='$(HOST_PREFIX)/lib32' \
-        SKIPUTILS='NSIS Menu' \
+        SKIPUTILS='MakeLangId,Makensisw,NSIS Menu,zip2exe' \
         install
     $(INSTALL) -m755 '$(BUILD_TOOLS_PREFIX)/bin/makensis' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)makensis'
 endef
@@ -32,10 +32,10 @@ else
 define $(PKG)_BUILD
     cd '$(1)' && scons VERBOSE=1 \
         MINGW_CROSS_PREFIX='$(MXE_TOOL_PREFIX)' \
-        PREFIX='$(HOST_PREFIX)' PREFIX_BIN=$(BUILD_TOOLS_PREFIX)/bin \
+        PREFIX='$(BUILD_TOOLS_PREFIX)' \
         `[ -d /usr/local/include ] && echo APPEND_CPPPATH=/usr/local/include` \
         `[ -d /usr/local/lib ]     && echo APPEND_LIBPATH=/usr/local/lib` \
-        SKIPUTILS='NSIS Menu' \
+        SKIPUTILS='MakeLangId,Makensisw,NSIS Menu,zip2exe' \
         install
     $(INSTALL) -m755 '$(BUILD_TOOLS_PREFIX)/bin/makensis' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)makensis'
 endef
