@@ -278,6 +278,9 @@ Section "Shortcuts"
  CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (CLI).lnk" "\$INSTDIR\\octave.vbs" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
  CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave (GUI).lnk" "\$INSTDIR\\octave.vbs" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
  SetOutPath "\$INSTDIR"
+
+ ; fix the shortcuts for appid
+ ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$SMPROGRAMS\\Octave-$VERSION\\Octave (GUI).lnk" "gnu.octave"'
 EOF
   # shortcut for cmd win
   if [ -f $OCTAVE_SOURCE/cmdshell.bat ]; then 
