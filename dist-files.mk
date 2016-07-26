@@ -323,7 +323,6 @@ SRC_FILES_1 := \
   mingw-pango-1-fixes.patch \
   mingw-portaudio-1-pkgconfig.patch \
   mingw-texinfo-1-fixes.patch \
-  mingw-transfig-1-fixes.patch \
   mingw-units-1-fixes.patch \
   mingw-utils-1-portability-fix.patch \
   mingw-w64-1-float-h.patch \
@@ -654,7 +653,7 @@ SRC_FILES_1 := \
   tiff.mk \
   tinyxml-test.cpp \
   tinyxml.mk \
-  transfig-1-configure.patch \
+  transfig-1-fixes.patch \
   transfig.mk \
   tre.mk \
   units-1-fixes.patch \
