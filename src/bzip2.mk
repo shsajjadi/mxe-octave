@@ -19,8 +19,8 @@ endef
 
 ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
 define $(PKG)_BUILD
-    $(SED) -i 's,sys\\stat\.h,sys/stat.h,g' '$(1)/bzip2.c'
-    $(SED) -i 's,WINAPI,,g'                 '$(1)/bzlib.h'
+    #$(SED) -i 's,sys\\stat\.h,sys/stat.h,g' '$(1)/bzip2.c'
+    #$(SED) -i 's,WINAPI,,g'                 '$(1)/bzlib.h'
     $(MAKE) -C '$(1)' -j '$(JOBS)' libbz2.a bzip2 \
         PREFIX='$(HOST_PREFIX)' \
         CC='$(MXE_CC)' \
@@ -43,8 +43,8 @@ define $(PKG)_BUILD
 endef
 else
 define $(PKG)_BUILD
-    $(SED) -i 's,sys\\stat\.h,sys/stat.h,g' '$(1)/bzip2.c'
-    $(SED) -i 's,WINAPI,,g'                 '$(1)/bzlib.h'
+    #$(SED) -i 's,sys\\stat\.h,sys/stat.h,g' '$(1)/bzip2.c'
+    #$(SED) -i 's,WINAPI,,g'                 '$(1)/bzlib.h'
     $(MAKE) -C '$(1)' -j '$(JOBS)' -f Makefile-libbz2_so \
         PREFIX='$(HOST_PREFIX)' \
         CC='$(MXE_CC)' \

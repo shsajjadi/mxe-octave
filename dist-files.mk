@@ -40,6 +40,7 @@ SRC_FILES_1 := \
   build-texinfo.mk \
   build-xz.mk \
   build-yasm.mk \
+  bzip2-1-fixes.patch \
   bzip2.mk \
   cairo-2-static-init.patch \
   cairo.mk \
