@@ -877,7 +877,7 @@ distdir := $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
 dist:
 	rm -rf $(distdir)
 	mkdir $(distdir)
-	$(TAR) cf - $(DIST_FILES) | ( cd $(distdir) ; $(TAR) xpf - )
+	( cd $(TOP_DIR) ; $(TAR) cf - $(DIST_FILES) ) | ( cd $(distdir) ; $(TAR) xpf - )
 	$(TAR) czf $(distdir).tar.gz $(distdir)
 
 include $(TOP_DIR)/binary-dist-rules.mk

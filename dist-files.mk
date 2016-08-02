@@ -29,6 +29,7 @@ SRC_FILES_1 := \
   build-gcc-1-mingw-float.patch \
   build-gcc-2-intrinsics.patch \
   build-gcc.mk \
+  build-gettext.mk \
   build-gperf.mk \
   build-libtool.mk \
   build-m4.mk \
@@ -60,7 +61,6 @@ SRC_FILES_1 := \
   dcmtk-1-fixes.patch \
   dcmtk-2-ming64.patch \
   dcmtk.mk \
-  default-octave-1-fixes.patch \
   default-octave.mk \
   devil-1-png.patch \
   devil.mk \
@@ -272,6 +272,7 @@ SRC_FILES_1 := \
   libpaper.mk \
   libpng-test.c \
   libpng.mk \
+  librsb.mk \
   librsvg-1-fixes.patch \
   librsvg-test.c \
   librsvg.mk \
@@ -310,7 +311,6 @@ SRC_FILES_1 := \
   mdbtools.mk \
   mingw-cairo-1-ssize-t-defined.patch \
   mingw-cfitsio-1-fixes.patch \
-  mingw-default-octave-1-msys-fixes.patch \
   mingw-epstool-1-fixes.patch \
   mingw-fontconfig-ln_s.patch \
   mingw-glib-1-fixes.patch \
@@ -493,6 +493,7 @@ SRC_FILES_1 := \
   of-signal.mk \
   of-sockets-1-cross-fixes.patch \
   of-sockets.mk \
+  of-sparsersb.mk \
   of-specfun.mk \
   of-splines.mk \
   of-statistics.mk \
@@ -500,7 +501,6 @@ SRC_FILES_1 := \
   of-strings-1-fixes.patch \
   of-strings.mk \
   of-struct.mk \
-  of-tisean-1-fortran.patch \
   of-tisean.mk \
   of-tsa-1-cross-fixes.patch \
   of-tsa.mk \
@@ -838,6 +838,7 @@ TOOLS_FILES_1 := \
   create-screenshot-for-doc \
   install-sh \
   make-shared-from-static \
+  makeinst-script.sh.in \
   patch-tool-mxe \
   pkg-install.py \
   s3-fetch-and-sync \
@@ -854,7 +855,6 @@ FILES := \
   dist-files.mk \
   index.html \
   Makefile.in \
-  makeinst-script.sh \
   octave-wrapper.in \
   octaverc
 
