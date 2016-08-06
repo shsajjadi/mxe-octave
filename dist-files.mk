@@ -558,6 +558,7 @@ SRC_FILES_1 := \
   pstoedit-2-gs.patch \
   pstoedit-3-nosecapi.patch \
   pstoedit-4-winlibemf.patch \
+  pstoedit-5-use_gs_env.patch \
   pstoedit.mk \
   pthread-stubs.mk \
   pthreads-test.c \
