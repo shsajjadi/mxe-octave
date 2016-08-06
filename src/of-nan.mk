@@ -3,10 +3,10 @@
 
 PKG             := of-nan
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.0.1
-$(PKG)_CHECKSUM := 4fbd03c64374781765c27c1aad4ddbf86bd36b5b
+$(PKG)_VERSION  := 3.0.2
+$(PKG)_CHECKSUM := cb9d51a9b97cd906a86282c8f1ec91bf314de414
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := NaN
+$(PKG)_SUBDIR   := nan-$($(PKG)_VERSION)
 $(PKG)_FILE     := nan-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
