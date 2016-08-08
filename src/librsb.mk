@@ -24,7 +24,7 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --disable-c-examples --disable-fortran-examples \
         --disable-sparse-blas-interface \
-        --disable-octave-testing --without-openmp
+        --disable-octave-testing
     $(MAKE) -C '$(1)' -j '$(JOBS)' 
     $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
 
