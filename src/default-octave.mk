@@ -20,6 +20,13 @@ ifeq ($(MXE_WINDOWS_BUILD),no)
     $(PKG)_DEPS += x11 xext
   endif
 endif
+
+ifeq ($(MXE_SYSTEM),mingw)
+  ifeq ($(USE_SYSTEM_GCC),no)
+    $(PKG)_DEPS     += libgomp
+  endif
+endif
+
 ifeq ($(ENABLE_64),no)
   $(PKG)_DEPS += qhull
 endif
