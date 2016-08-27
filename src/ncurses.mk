@@ -4,8 +4,8 @@
 # ncurses
 PKG             := ncurses
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.9
-$(PKG)_CHECKSUM := 3e042e5f2c7223bffdaac9646a533b8c758b65b5
+$(PKG)_VERSION  := 6.0
+$(PKG)_CHECKSUM := acd606135a5124905da770803c05f1f20dd3b21c
 $(PKG)_SUBDIR   := ncurses-$($(PKG)_VERSION)
 $(PKG)_FILE     := ncurses-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/pub/gnu/ncurses/$($(PKG)_FILE)
