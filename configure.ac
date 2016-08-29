@@ -66,7 +66,7 @@ case $with_pkg_dir in
   *)
     PKG_DIR="$withval"
     ## Ensure directory exists and that we refer to it using an absolute name
-    if test -d "$PKG_DIR"; then
+    if ! test -d "$PKG_DIR"; then
       mkdir -p "$PKG_DIR"
     fi
     PKG_DIR=`(cd "$PKG_DIR"; pwd)`
