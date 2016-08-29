@@ -53,6 +53,27 @@ case $with_shell in
 esac
 AC_SUBST(SHELL)
 
+PKG_DIR="$abs_srcdir/pkg"
+AC_ARG_WITH([pkg-dir],
+  [AS_HELP_STRING([--with-pkg-dir=DIR],
+    [use DIR as the location for downloaded packages (default: pkg)])])
+case $with_pkg_dir in
+  no)
+    AC_MSG_ERROR([A pkg directory is required])
+  ;;
+  yes | "")
+  ;;
+  *)
+    PKG_DIR="$withval"
+    ## Ensure directory exists and that we refer to it using an absolute name
+    if test -d "$PKG_DIR"; then
+      mkdir -p "$PKG_DIR"
+    fi
+    PKG_DIR=`(cd "$PKG_DIR"; pwd)`
+  ;;
+esac
+AC_SUBST(PKG_DIR)
+
 ENABLE_WINDOWS_64=no
 AC_ARG_ENABLE(windows-64,
   [AS_HELP_STRING([--enable-windows-64],
