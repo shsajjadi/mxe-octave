@@ -74,6 +74,12 @@ case $with_pkg_dir in
 esac
 AC_SUBST(PKG_DIR)
 
+USE_CCACHE=no
+AC_ARG_WITH([ccache],
+  [AS_HELP_STRING([--with-ccache], [use ccache (default: no)])],
+  [if test "$withval" = yes; then USE_CCACHE=yes; fi], [])
+AC_SUBST(USE_CCACHE)
+
 ENABLE_WINDOWS_64=no
 AC_ARG_ENABLE(windows-64,
   [AS_HELP_STRING([--enable-windows-64],
@@ -238,6 +244,15 @@ AC_SUBST(MXE_SYSTEM)
 # set MXE_ROOTDIR for knowing the mxe root
 MXE_ROOTDIR=`cd "$builddir"; pwd`
 AC_SUBST(MXE_ROOTDIR)
+
+if test "$MXE_NATIVE_BUILD" = no; then
+  if test "$ENABLE_WINDOWS_64" = yes; then
+    MXE_TARGET=x86_64-w64-mingw32
+  else
+    MXE_TARGET=i686-w64-mingw32
+  fi
+fi
+AC_SUBST(MXE_TARGET)
 
 AC_CONFIG_FILES([Makefile tools/set-mxe-env.sh])
 AC_CONFIG_FILES([tools/makeinst-script.sh], [chmod a+x tools/makeinst-script.sh])
