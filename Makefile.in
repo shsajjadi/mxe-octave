@@ -250,7 +250,10 @@ TMP_DIR     = $(TOP_BUILD_DIR)/tmp-$(1)
 MAKEFILE   := $(TOP_BUILD_DIR)/Makefile
 PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* class="package">\([^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html'))
 
+ENV_PATH := $(PATH)
 PATH := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)
+
+ENV_PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
 CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(HOST_PREFIX)/include'
 ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
@@ -364,6 +367,8 @@ endif
 ifeq ($(MXE_SYSTEM),mingw)
   MAKE_SHARED_FROM_STATIC_OPTIONS := --windowsdll
 endif
+
+ENV_LD_LIBRARY_PATH := $(LD_LIBRARY_PATH)
 
 ifeq ($(MXE_SYSTEM),mingw)
   MXE_WINDOWS_BUILD := yes
@@ -881,3 +886,5 @@ dist:
 	$(TAR) czf $(distdir).tar.gz $(distdir)
 
 include $(TOP_DIR)/binary-dist-rules.mk
+
+include $(TOP_DIR)/hg-octave-dist.mk
