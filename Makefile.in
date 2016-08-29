@@ -28,6 +28,9 @@ endif
 # Set to "no" if doing a cross compile build.
 MXE_NATIVE_BUILD := @MXE_NATIVE_BUILD@
 
+# Set to "yes" to use ccache
+USE_CCACHE := @USE_CCACHE@
+
 # Set to "yes" to use the versions of GCC and binutils already
 # installed on your system (default is yes if doing native build).
 USE_SYSTEM_GCC := @USE_SYSTEM_GCC@
@@ -60,15 +63,11 @@ ENABLE_BINARY_PACKAGES := @ENABLE_BINARY_PACKAGES@
 ENABLE_DEVEL_TOOLS := @ENABLE_DEVEL_TOOLS@
 
 # Should match what config.guess prints for your system.
-# If cross compiling, you must set it manually.
+# If cross compiling, you must set it manually (defaults are set by configure).
 ifeq ($(MXE_NATIVE_BUILD),yes)
   TARGET := $(shell $(TOP_DIR)/tools/config.guess)
 else
-  ifeq ($(ENABLE_WINDOWS_64),yes)
-    TARGET := x86_64-w64-mingw32
-  else
-    TARGET := i686-w64-mingw32
-  endif
+  TARGET := @MXE_TARGET@
 endif
 BUILD_SYSTEM := $(shell $(TOP_DIR)/tools/config.guess)
 
@@ -252,6 +251,10 @@ PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* class="p
 
 ENV_PATH := $(PATH)
 PATH := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)
+ifeq ($(USE_CCACHE),yes)
+  PATH := $(BUILD_TOOLS_PREFIX)/bin/ccache:$(PATH)
+  CCACHE_LINKS_TARGET := ccache-links
+endif
 
 ENV_PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
@@ -507,7 +510,30 @@ else
 endif
 
 .PHONY: all
-all: $(TOP_DIR)/configure Makefile $(OCTAVE_TARGET)
+all:
+	$(MAKE) prerequisites
+	$(MAKE) all-targets
+
+.PHONY: prerequisites
+prerequisites: $(TOP_DIR)/configure Makefile $(CCACHE_LINKS_TARGET)
+
+.PHONY: ccache-links
+ccache-links:
+	@echo "creating ccache links"
+	@mkdir -p usr/bin/ccache && \
+	for f in gcc g++ gfortran; do \
+	  if test ! -e usr/bin/ccache/$(MXE_TOOL_PREFIX)$$f; then \
+	    ln -s /usr/bin/ccache usr/bin/ccache/$(MXE_TOOL_PREFIX)$$f; \
+	  fi; \
+	done && \
+	for f in gcc g++ gfortran; do \
+	  if test ! -e usr/bin/ccache/$$f; then \
+	    ln -s /usr/bin/ccache usr/bin/ccache/$$f; \
+	  fi; \
+	done
+
+.PHONY: all-targets
+all-targets: $(OCTAVE_TARGET)
 
 .PHONY: all-packages
 all-packages: $(PKGS)
