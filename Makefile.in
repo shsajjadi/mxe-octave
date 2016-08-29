@@ -245,7 +245,7 @@ BUILT_PKGS_DIR := $(TOP_BUILD_DIR)/built-packages
 MSYS_INFO_DIR := $(TOP_BUILD_DIR)/msys-info
 LOG_DIR    := $(TOP_BUILD_DIR)/log
 TIMESTAMP  := $(shell date +%Y%m%d_%H%M%S)
-PKG_DIR    := $(TOP_DIR)/pkg
+PKG_DIR    := @PKG_DIR@
 TMP_DIR     = $(TOP_BUILD_DIR)/tmp-$(1)
 MAKEFILE   := $(TOP_BUILD_DIR)/Makefile
 PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* class="package">\([^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html'))
