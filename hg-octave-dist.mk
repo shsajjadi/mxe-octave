@@ -36,7 +36,7 @@ hg-octave-dist: $(BUILD_TOOLS) update-hg-octave-repo
 	$(HG_OCTAVE_DIST_ENV_FLAGS) ../configure && \
 	$(HG_OCTAVE_DIST_ENV_FLAGS) make -j '$(JOBS)' all && \
 	$(HG_OCTAVE_DIST_ENV_FLAGS) make -j '$(JOBS)' dist && \
-	mv '$(hg-octave_FILE)' '../../pkg/$(hg-octave_FILE)'
+	mv '$(default-octave_FILE)' '$(PKG_DIR)'
 
 .PHONY: update-hg-octave-repo
 update-hg-octave-repo:
