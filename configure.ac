@@ -53,7 +53,7 @@ case $with_shell in
 esac
 AC_SUBST(SHELL)
 
-PKG_DIR="$abs_srcdir/pkg"
+PKG_DIR="pkg"
 AC_ARG_WITH([pkg-dir],
   [AS_HELP_STRING([--with-pkg-dir=DIR],
     [use DIR as the location for downloaded packages (default: pkg)])])
@@ -65,13 +65,13 @@ case $with_pkg_dir in
   ;;
   *)
     PKG_DIR="$withval"
-    ## Ensure directory exists and that we refer to it using an absolute name
-    if ! test -d "$PKG_DIR"; then
-      mkdir -p "$PKG_DIR"
-    fi
-    PKG_DIR=`(cd "$PKG_DIR"; pwd)`
   ;;
 esac
+## Ensure directory exists and that we refer to it using an absolute name
+if ! test -d "$PKG_DIR"; then
+  mkdir -p "$PKG_DIR"
+fi
+PKG_DIR=`(cd "$PKG_DIR"; pwd)`
 AC_SUBST(PKG_DIR)
 
 USE_CCACHE=no
