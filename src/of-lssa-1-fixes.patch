@@ -1,0 +1,92 @@
+# HG changeset patch
+# User John Donoghue
+# Date 1467900324 14400
+#      Thu Jul 07 10:05:24 2016 -0400
+# Node ID 59af0bcd5cafce29162db3dfc42dcf326f56d8be
+# Parent  3727b85ea021033ee96fb0b017eefb73fb2f7c35
+Use complex real/imag set method to assign values (Bug #48424)
+
+* src/fastlscomplex.cc
+  (flscomplex): Use record_current, record_next real/imag set method to assign +/- values
+
+diff --git a/src/fastlscomplex.cc b/src/fastlscomplex.cc
+--- a/src/fastlscomplex.cc
++++ b/src/fastlscomplex.cc
+@@ -372,8 +372,10 @@ bool flscomplex (const RowVector & tvec,
+ 
+                             --tpra;
+                             h = *tpra * *exp_ptr;
+-                            record_current->power_series[p].real() -= h.imag();
+-                            record_current->power_series[p].imag() += h.real();
++                            record_current->power_series[p].real ( 
++                              record_current->power_series[p].real() - h.imag());
++                            record_current->power_series[p].imag (
++                              record_current->power_series[p].imag() + h.real());
+ 
+                             if (++exp_ptr >= exp_pse_ptr )
+                               break;
+@@ -386,8 +388,10 @@ bool flscomplex (const RowVector & tvec,
+ 
+                             --tpra;
+                             h = -*tpra * *exp_ptr;
+-                            record_current->power_series[p].real() -= h.imag();
+-                            record_current->power_series[p].imag() += h.real();
++                            record_current->power_series[p].real ( 
++                              record_current->power_series[p].real() - h.imag());
++                            record_current->power_series[p].imag (
++                              record_current->power_series[p].imag() + h.real());
+ 
+                             if (++exp_ptr >= exp_pse_ptr)
+                               break;
+@@ -422,8 +426,10 @@ bool flscomplex (const RowVector & tvec,
+ 
+                                   tprb -= 2;
+                                   h = *tprb * *exp_ptr;
+-                                  record_current->power_series[p].real() -= h.imag();
+-                                  record_current->power_series[p].imag() += h.real();
++                                  record_current->power_series[p].real ( 
++                                    record_current->power_series[p].real() - h.imag());
++                                  record_current->power_series[p].imag (
++                                    record_current->power_series[p].imag() + h.real());
+ 
+                                   if ( ++exp_ptr >= exp_pse_ptr )
+                                     break;
+@@ -436,8 +442,10 @@ bool flscomplex (const RowVector & tvec,
+ 
+                                   tprb -= 2;
+                                   h = - *tprb * *exp_ptr;
+-                                  record_current->power_series[p].real() -= h.imag();
+-                                  record_current->power_series[p].imag() += h.real();
++                                  record_current->power_series[p].real ( 
++                                    record_current->power_series[p].real() - h.imag());
++                                  record_current->power_series[p].imag (
++                                    record_current->power_series[p].imag() + h.real());
+ 
+                                   if (++exp_ptr >= exp_pse_ptr)
+                                     break;
+@@ -467,8 +475,10 @@ bool flscomplex (const RowVector & tvec,
+ 
+                                   --tpra;
+                                   h = *tpra * *exp_ptr;
+-                                  record_next->power_series[q].real() -= h.imag();
+-                                  record_next->power_series[q].imag() += h.real();
++                                  record_next->power_series[q].real ( 
++                                    record_next->power_series[q].real() - h.imag());
++                                  record_next->power_series[q].imag (
++                                    record_next->power_series[q].imag() + h.real());
+ 
+                                   if (++exp_ptr >= exp_pse_ptr)
+                                     break;
+@@ -481,8 +491,10 @@ bool flscomplex (const RowVector & tvec,
+ 
+                                   --tpra;
+                                   h = -*tpra * *exp_ptr;
+-                                  record_next->power_series[q].real() -= h.imag();
+-                                  record_next->power_series[q].imag() += h.real();
++                                  record_next->power_series[q].real ( 
++                                    record_next->power_series[q].real() - h.imag());
++                                  record_next->power_series[q].imag (
++                                    record_next->power_series[q].imag() + h.real());
+ 
+                                   if (++exp_ptr >= exp_pse_ptr)
+                                     break;
