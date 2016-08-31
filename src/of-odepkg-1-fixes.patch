@@ -1,0 +1,444 @@
+diff -uNr a/src/odepkg_octsolver_ddaskr.cc b/src/odepkg_octsolver_ddaskr.cc
+--- a/src/odepkg_octsolver_ddaskr.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_ddaskr.cc	2016-08-31 14:22:43.798913906 -0400
+@@ -42,6 +42,10 @@
+ #include <parse.h>
+ #include "odepkg_auxiliary_functions.h"
+ 
++#if ! defined (GCC_ATTR_UNUSED)
++#  define GCC_ATTR_UNUSED OCTAVE_UNUSED
++#endif
++
+ typedef octave_idx_type (*odepkg_ddaskr_restype)
+   (const double& T, const double* Y, const double* YPRIME,
+    const double& CJ, double* DELTA, octave_idx_type& IRES,
+diff -uNr a/src/odepkg_octsolver_mebdfdae.cc b/src/odepkg_octsolver_mebdfdae.cc
+--- a/src/odepkg_octsolver_mebdfdae.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_mebdfdae.cc	2016-08-31 14:23:07.518439633 -0400
+@@ -46,6 +46,10 @@
+ #include <parse.h>
+ #include "odepkg_auxiliary_functions.h"
+ 
++#if ! defined (GCC_ATTR_UNUSED)
++#  define GCC_ATTR_UNUSED OCTAVE_UNUSED
++#endif
++
+ typedef octave_idx_type (*odepkg_mebdfdae_usrtype)
+   (const octave_idx_type& N, const double& T, const double* Y,
+    double* YDOT, const octave_idx_type* IPAR, const double* RPAR,
+diff -uNr a/src/odepkg_octsolver_mebdfi.cc b/src/odepkg_octsolver_mebdfi.cc
+--- a/src/odepkg_octsolver_mebdfi.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_mebdfi.cc	2016-08-31 14:22:39.958990687 -0400
+@@ -42,6 +42,10 @@
+ #include <parse.h>
+ #include "odepkg_auxiliary_functions.h"
+ 
++#if ! defined (GCC_ATTR_UNUSED)
++#  define GCC_ATTR_UNUSED OCTAVE_UNUSED
++#endif
++
+ /* -*- texinfo -*-
+  * @subsection Source File @file{odepkg_octsolver_mebdfi.cc}
+  *
+diff -uNr a/src/odepkg_octsolver_radau5.cc b/src/odepkg_octsolver_radau5.cc
+--- a/src/odepkg_octsolver_radau5.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_radau5.cc	2016-08-31 14:51:45.128382513 -0400
+@@ -37,24 +37,28 @@
+ #include <parse.h>
+ #include "odepkg_auxiliary_functions.h"
+ 
+-typedef octave_idx_type (*odepkg_radau5_usrtype)
++#if ! defined (GCC_ATTR_UNUSED)
++#  define GCC_ATTR_UNUSED OCTAVE_UNUSED
++#endif
++
++typedef F77_RET_T (*odepkg_radau5_usrtype)
+   (const octave_idx_type& N, const double& X, const double* Y, double* F,
+    GCC_ATTR_UNUSED const double* RPAR, 
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR);
+ 
+-typedef octave_idx_type (*odepkg_radau5_jactype)
++typedef F77_RET_T (*odepkg_radau5_jactype)
+   (const octave_idx_type& N, const double& X, const double* Y, double* DFY,
+    GCC_ATTR_UNUSED const octave_idx_type& LDFY,
+    GCC_ATTR_UNUSED const double* RPAR,
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR);
+ 
+-typedef octave_idx_type (*odepkg_radau5_masstype)
++typedef F77_RET_T (*odepkg_radau5_masstype)
+   (const octave_idx_type& N, double* AM, 
+    GCC_ATTR_UNUSED const octave_idx_type* LMAS, 
+    GCC_ATTR_UNUSED const double* RPAR,
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR);
+ 
+-typedef octave_idx_type (*odepkg_radau5_soltype)
++typedef F77_RET_T (*odepkg_radau5_soltype)
+   (const octave_idx_type& NR, const double& XOLD, const double& X,
+    const double* Y, const double* CONT, const octave_idx_type* LRC,
+    const octave_idx_type& N, GCC_ATTR_UNUSED const double* RPAR,
+@@ -91,7 +95,7 @@
+ static octave_value vradau5mass;
+ static octave_value vradau5massstate;
+ 
+-octave_idx_type odepkg_radau5_usrfcn
++F77_RET_T odepkg_radau5_usrfcn
+   (const octave_idx_type& N, const double& X, const double* Y, 
+    double* F, GCC_ATTR_UNUSED const double* RPAR, 
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR) {
+@@ -119,10 +123,10 @@
+   for (octave_idx_type vcnt = 0; vcnt < N; vcnt++)
+     F[vcnt] = vcol(vcnt);
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+-octave_idx_type odepkg_radau5_jacfcn
++F77_RET_T odepkg_radau5_jacfcn
+   (const octave_idx_type& N, const double& X, const double* Y,
+    double* DFY, GCC_ATTR_UNUSED const octave_idx_type& LDFY,
+    GCC_ATTR_UNUSED const double* RPAR,
+@@ -146,7 +150,7 @@
+      for (octave_idx_type vrow = 0; vrow < N; vrow++)
+        DFY[vrow+vcol*N] = vdfy (vrow, vcol);
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+ F77_RET_T odepkg_radau5_massfcn
+@@ -176,10 +180,10 @@
+     for (octave_idx_type vcol = 0; vcol < N; vcol++)
+       AM[vrow+vcol*N] = vam (vrow, vcol);
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+-octave_idx_type odepkg_radau5_solfcn
++F77_RET_T odepkg_radau5_solfcn
+   (const octave_idx_type& NR, const double& XOLD, const double& X,
+    const double* Y, const double* CONT, const octave_idx_type* LRC,
+    const octave_idx_type& N, GCC_ATTR_UNUSED const double* RPAR,
+@@ -241,7 +245,7 @@
+       (vradau5pltfun, vradau5outsel, vt, vy, vradau5extarg, 1);
+   }
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+ // PKG_ADD: autoload ("ode5r",  "dldsolver.oct");
+diff -uNr a/src/odepkg_octsolver_radau.cc b/src/odepkg_octsolver_radau.cc
+--- a/src/odepkg_octsolver_radau.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_radau.cc	2016-08-31 14:44:01.261572457 -0400
+@@ -37,24 +37,28 @@
+ #include <parse.h>
+ #include "odepkg_auxiliary_functions.h"
+ 
+-typedef octave_idx_type (*odepkg_radau_usrtype)
++#if ! defined (GCC_ATTR_UNUSED)
++#  define GCC_ATTR_UNUSED OCTAVE_UNUSED
++#endif
++
++typedef F77_RET_T (*odepkg_radau_usrtype)
+   (const octave_idx_type& N, const double& X, const double* Y, double* F,
+    GCC_ATTR_UNUSED const double* RPAR, 
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR);
+ 
+-typedef octave_idx_type (*odepkg_radau_jactype)
++typedef F77_RET_T (*odepkg_radau_jactype)
+   (const octave_idx_type& N, const double& X, const double* Y, double* DFY,
+    GCC_ATTR_UNUSED const octave_idx_type& LDFY,
+    GCC_ATTR_UNUSED const double* RPAR,
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR);
+ 
+-typedef octave_idx_type (*odepkg_radau_masstype)
++typedef F77_RET_T (*odepkg_radau_masstype)
+   (const octave_idx_type& N, double* AM, 
+    GCC_ATTR_UNUSED const octave_idx_type* LMAS, 
+    GCC_ATTR_UNUSED const double* RPAR,
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR);
+ 
+-typedef octave_idx_type (*odepkg_radau_soltype)
++typedef F77_RET_T (*odepkg_radau_soltype)
+   (const octave_idx_type& NR, const double& XOLD, const double& X,
+    const double* Y, const double* CONT, const octave_idx_type* LRC,
+    const octave_idx_type& N, GCC_ATTR_UNUSED const double* RPAR,
+@@ -91,7 +95,7 @@
+ static octave_value vradaumass;
+ static octave_value vradaumassstate;
+ 
+-octave_idx_type odepkg_radau_usrfcn
++F77_RET_T odepkg_radau_usrfcn
+   (const octave_idx_type& N, const double& X, const double* Y, 
+    double* F, GCC_ATTR_UNUSED const double* RPAR, 
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR) {
+@@ -119,10 +123,10 @@
+   for (octave_idx_type vcnt = 0; vcnt < N; vcnt++)
+     F[vcnt] = vcol(vcnt);
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+-octave_idx_type odepkg_radau_jacfcn
++F77_RET_T odepkg_radau_jacfcn
+   (const octave_idx_type& N, const double& X, const double* Y,
+    double* DFY, GCC_ATTR_UNUSED const octave_idx_type& LDFY,
+    GCC_ATTR_UNUSED const double* RPAR,
+@@ -146,7 +150,7 @@
+      for (octave_idx_type vrow = 0; vrow < N; vrow++)
+        DFY[vrow+vcol*N] = vdfy (vrow, vcol);
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+ F77_RET_T odepkg_radau_massfcn
+@@ -176,10 +180,10 @@
+     for (octave_idx_type vcol = 0; vcol < N; vcol++)
+       AM[vrow+vcol*N] = vam (vrow, vcol);
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+-octave_idx_type odepkg_radau_solfcn
++F77_RET_T odepkg_radau_solfcn
+   (const octave_idx_type& NR, const double& XOLD, const double& X,
+    const double* Y, const double* CONT, const octave_idx_type* LRC,
+    const octave_idx_type& N, GCC_ATTR_UNUSED const double* RPAR,
+@@ -241,7 +245,7 @@
+       (vradaupltfun, vradauoutsel, vt, vy, vradauextarg, 1);
+   }
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+ // PKG_ADD: autoload ("ode2r",  "dldsolver.oct");
+diff -uNr a/src/odepkg_octsolver_rodas.cc b/src/odepkg_octsolver_rodas.cc
+--- a/src/odepkg_octsolver_rodas.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_rodas.cc	2016-08-31 14:54:58.648546043 -0400
+@@ -33,6 +33,10 @@
+ #include <parse.h>
+ #include "odepkg_auxiliary_functions.h"
+ 
++#if ! defined (GCC_ATTR_UNUSED)
++#  define GCC_ATTR_UNUSED OCTAVE_UNUSED
++#endif
++
+ /* -*- texinfo -*-
+  * @subsection Source File @file{odepkg_octsolver_rodas.cc}
+  *
+@@ -47,7 +51,7 @@
+  * @end example
+  * @end deftp
+  */
+-typedef octave_idx_type (*odepkg_rodas_usrtype)
++typedef F77_RET_T (*odepkg_rodas_usrtype)
+   (const octave_idx_type& N, const double& X, const double* Y, double* F,
+    GCC_ATTR_UNUSED const double* RPAR, 
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR);
+@@ -66,7 +70,7 @@
+  * @end example
+  * @end deftp
+  */
+-typedef octave_idx_type (*odepkg_rodas_jactype)
++typedef F77_RET_T (*odepkg_rodas_jactype)
+   (const octave_idx_type& N, const double& X, const double* Y, double* DFY,
+    GCC_ATTR_UNUSED const octave_idx_type& LDFY,
+    GCC_ATTR_UNUSED const double* RPAR,
+@@ -86,7 +90,7 @@
+  * @end example
+  * @end deftp
+  */
+-typedef octave_idx_type (*odepkg_rodas_masstype)
++typedef F77_RET_T (*odepkg_rodas_masstype)
+   (const octave_idx_type& N, double* AM, 
+    GCC_ATTR_UNUSED const octave_idx_type* LMAS, 
+    GCC_ATTR_UNUSED const double* RPAR,
+@@ -106,7 +110,7 @@
+  * @end example
+  * @end deftp
+  */
+-typedef octave_idx_type (*odepkg_rodas_soltype)
++typedef F77_RET_T (*odepkg_rodas_soltype)
+   (const octave_idx_type& NR, const double& XOLD, const double& X,
+    const double* Y, const double* CONT, const octave_idx_type* LRC,
+    const octave_idx_type& N, GCC_ATTR_UNUSED const double* RPAR,
+@@ -128,7 +132,7 @@
+  * @end example
+  * @end deftp
+  */
+-typedef octave_idx_type (*odepkg_rodas_dfxtype)
++typedef F77_RET_T (*odepkg_rodas_dfxtype)
+   (GCC_ATTR_UNUSED const octave_idx_type& N, GCC_ATTR_UNUSED const double& X,
+    GCC_ATTR_UNUSED const double* Y, GCC_ATTR_UNUSED const double* FX,
+    GCC_ATTR_UNUSED const double* RPAR, GCC_ATTR_UNUSED const octave_idx_type* IPAR);
+@@ -270,7 +274,7 @@
+  * @end itemize
+  * @end deftypefn
+  */
+-octave_idx_type odepkg_rodas_usrfcn
++F77_RET_T odepkg_rodas_usrfcn
+   (const octave_idx_type& N, const double& X, const double* Y, 
+    double* F, GCC_ATTR_UNUSED const double* RPAR, 
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR) {
+@@ -298,7 +302,7 @@
+   for (octave_idx_type vcnt = 0; vcnt < N; vcnt++)
+     F[vcnt] = vcol(vcnt);
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+ /* -*- texinfo -*-
+@@ -317,7 +321,7 @@
+  * @end itemize
+  * @end deftypefn
+  */
+-octave_idx_type odepkg_rodas_jacfcn
++F77_RET_T odepkg_rodas_jacfcn
+   (const octave_idx_type& N, const double& X, const double* Y,
+    double* DFY, GCC_ATTR_UNUSED const octave_idx_type& LDFY,
+    GCC_ATTR_UNUSED const double* RPAR,
+@@ -341,7 +345,7 @@
+      for (octave_idx_type vrow = 0; vrow < N; vrow++)
+        DFY[vrow+vcol*N] = vdfy (vrow, vcol);
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+ /* -*- texinfo -*-
+@@ -374,13 +378,13 @@
+     for (octave_idx_type vcol = 0; vcol < N; vcol++)
+       AM[vrow+vcol*N] = vam (vrow, vcol);
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+ /* -*- texinfo -*-
+  * odepkg_rodas_solfcn - TODO
+  */
+-octave_idx_type odepkg_rodas_solfcn
++F77_RET_T odepkg_rodas_solfcn
+   (const octave_idx_type& NR, const double& XOLD, const double& X,
+    const double* Y, const double* CONT, const octave_idx_type* LRC,
+    const octave_idx_type& N, GCC_ATTR_UNUSED const double* RPAR,
+@@ -442,20 +446,20 @@
+       (vrodaspltfun, vrodasoutsel, vt, vy, vrodasextarg, 1);
+   }
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+ /* -*- texinfo -*-
+  * odepkg_rodas_solfcn - TODO dummy function
+  */
+-octave_idx_type odepkg_rodas_dfxfcn
++F77_RET_T odepkg_rodas_dfxfcn
+   (GCC_ATTR_UNUSED const octave_idx_type& N, GCC_ATTR_UNUSED const double& X,
+    GCC_ATTR_UNUSED const double* Y, GCC_ATTR_UNUSED const double* FX,
+    GCC_ATTR_UNUSED const double* RPAR, GCC_ATTR_UNUSED const octave_idx_type* IPAR) {
+ 
+    warning_with_id ("OdePkg:InvalidFunctionCall",
+      "function odepkg_rodas_dfxfcn: This warning message should never appear");
+-   return (true);
++   F77_RETURN (true);
+ }
+ 
+ // PKG_ADD: autoload ("oders",  "dldsolver.oct");
+diff -uNr a/src/odepkg_octsolver_seulex.cc b/src/odepkg_octsolver_seulex.cc
+--- a/src/odepkg_octsolver_seulex.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_seulex.cc	2016-08-31 14:56:43.990460352 -0400
+@@ -37,24 +37,28 @@
+ #include <parse.h>
+ #include "odepkg_auxiliary_functions.h"
+ 
+-typedef octave_idx_type (*odepkg_seulex_usrtype)
++#if ! defined (GCC_ATTR_UNUSED)
++#  define GCC_ATTR_UNUSED OCTAVE_UNUSED
++#endif
++
++typedef F77_RET_T (*odepkg_seulex_usrtype)
+   (const octave_idx_type& N, const double& X, const double* Y,
+    double* F, GCC_ATTR_UNUSED const double* RPAR,
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR);
+ 
+-typedef octave_idx_type (*odepkg_seulex_jactype)
++typedef F77_RET_T (*odepkg_seulex_jactype)
+   (const octave_idx_type& N, const double& X, const double* Y,
+    double* DFY, GCC_ATTR_UNUSED const octave_idx_type& LDFY,
+    GCC_ATTR_UNUSED const double* RPAR,
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR);
+ 
+-typedef octave_idx_type (*odepkg_seulex_masstype)
++typedef F77_RET_T (*odepkg_seulex_masstype)
+   (const octave_idx_type& N, double* AM, 
+    GCC_ATTR_UNUSED const octave_idx_type* LMAS, 
+    GCC_ATTR_UNUSED const double* RPAR,
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR);
+ 
+-typedef octave_idx_type (*odepkg_seulex_soltype)
++typedef F77_RET_T (*odepkg_seulex_soltype)
+   (const octave_idx_type& NR, const double& XOLD, const double& X,
+    const double* Y, const double* RC, const octave_idx_type& LRC, 
+    const double* IC, const octave_idx_type& LIC,
+@@ -94,7 +98,7 @@
+ static octave_value vseulexmass;
+ static octave_value vseulexmassstate;
+ 
+-octave_idx_type odepkg_seulex_usrfcn
++F77_RET_T odepkg_seulex_usrfcn
+   (const octave_idx_type& N, const double& X, const double* Y, 
+    double* F, GCC_ATTR_UNUSED const double* RPAR, 
+    GCC_ATTR_UNUSED const octave_idx_type* IPAR) {
+@@ -122,10 +126,10 @@
+   for (octave_idx_type vcnt = 0; vcnt < N; vcnt++)
+     F[vcnt] = vcol(vcnt);
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+-octave_idx_type odepkg_seulex_jacfcn
++F77_RET_T odepkg_seulex_jacfcn
+   (const octave_idx_type& N, const double& X, const double* Y,
+    double* DFY, GCC_ATTR_UNUSED const octave_idx_type& LDFY,
+    GCC_ATTR_UNUSED const double* RPAR,
+@@ -149,7 +153,7 @@
+      for (octave_idx_type vrow = 0; vrow < N; vrow++)
+        DFY[vrow+vcol*N] = vdfy (vrow, vcol);
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+ F77_RET_T odepkg_seulex_massfcn
+@@ -179,10 +183,10 @@
+     for (octave_idx_type vcol = 0; vcol < N; vcol++)
+       AM[vrow+vcol*N] = vam (vrow, vcol);
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+-octave_idx_type odepkg_seulex_solfcn
++F77_RET_T odepkg_seulex_solfcn
+   (const octave_idx_type& NR, const double& XOLD, const double& X,
+    const double* Y, const double* RC, const octave_idx_type& LRC,
+    const double* IC, const octave_idx_type& LIC,
+@@ -249,7 +253,7 @@
+     vseulexpltbrk = true;
+   }
+ 
+-  return (true);
++  F77_RETURN (true);
+ }
+ 
+ // PKG_ADD: autoload ("odesx",  "dldsolver.oct");
