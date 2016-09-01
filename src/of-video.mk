@@ -3,8 +3,8 @@
 
 PKG             := of-video
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.2.2
-$(PKG)_CHECKSUM := f7fd729ade4dcd8951cc61e9b13b89dbfaf342bd
+$(PKG)_VERSION  := 1.2.3
+$(PKG)_CHECKSUM := 364f6932194616ef1644d3e2421ffd9dfd2c90d0
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := video-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz
