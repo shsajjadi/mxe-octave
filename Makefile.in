@@ -438,10 +438,10 @@ OCTAVE_FORGE_BASE_URL := 'http://sourceforge.net/projects/octave/files/Octave Fo
 OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim specfun general signal communications image io statistics control geometry windows linear-algebra sockets zenity data-smoothing fuzzy-logic-toolkit quaternion fits tsa dicom netcdf ltfat database instrument-control generate_html nurbs strings financial stk splines dataframe lssa queueing ga odepkg interval nan ocs mapping tisean video zeromq)
 ifeq ($(ENABLE_64),no)
   ## This package does not work properly with 64-bit indexing
-  OCTAVE_FORGE_PACKAGES += sparsersb
+  OCTAVE_FORGE_PACKAGES += of-sparsersb
 endif
-# get ALL deps for all of- packages, regardless of whethe building the actual forge package in the installer
-OCTAVE_FORGE_DEPS:= $(sort $(foreach p,$(wildcard $(TOP_DIR)/src/of-*.mk),$(shell $(SED) -n 's/.*_DEPS.*:=\(.*\)/\1/p' $p)))
+# get ALL deps for all of- packages, regardless of whether building the actual forge package in the installer
+OCTAVE_FORGE_DEPS:= $(sort $(foreach p,$(addprefix $(TOP_DIR)/src/,$(addsuffix .mk,$(OCTAVE_FORGE_PACKAGES))),$(shell $(SED) -n 's/.*_DEPS.*:=\(.*\)/\1/p' $p)))
 
 BLAS_PACKAGES := blas
 ifeq ($(ENABLE_OPENBLAS),yes)
