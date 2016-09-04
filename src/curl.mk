@@ -22,6 +22,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
+        --without-ssl \
         --with-gnutls \
         --with-libidn \
         --enable-sspi \
