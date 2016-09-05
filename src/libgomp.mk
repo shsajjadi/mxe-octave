@@ -11,6 +11,10 @@ $(PKG)_URL       = $(build-gcc_URL)
 $(PKG)_URL_2     = $(build-gcc_URL_2)
 $(PKG)_DEPS     := pthreads
 
+ifeq ($(USE_SYSTEM_GCC),no)
+    $(PKG)_DEPS += build-gcc
+endif
+
 define $(PKG)_UPDATE
     echo $(build-gcc_VERSION)
 endef
