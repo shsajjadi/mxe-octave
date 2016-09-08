@@ -174,7 +174,13 @@ define $(PKG)_BUILD
     if [ "$(MXE_NATIVE_MINGW_BUILD)" = yes ]; then \
       mkdir -p '$($(PKG)_MKSPECS)'; \
       cp -r '$(1)/mkspecs' '$($(PKG)_MKSPECS)'; \
+      $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin'; \
       $(INSTALL) -m755 '$(1)/bin/qmake.exe' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/'; \
+    elif [ "$(MXE_NATIVE_BUILD)" = "yes" ]; then \
+      mkdir -p '$($(PKG)_MKSPECS)'; \
+      cp -r '$(1)/mkspecs' '$($(PKG)_MKSPECS)'; \
+      $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin'; \
+      $(INSTALL) $(1)/bin/qmake '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/'; \
     fi
 
     # compilation under MSVC requires the use of NMAKE, which does not
