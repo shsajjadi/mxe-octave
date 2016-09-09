@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 0086c9625e727be5b1ef00c4c694e762e41eba50
 $(PKG)_SUBDIR   := postgresql-$($(PKG)_VERSION)
 $(PKG)_FILE     := postgresql-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://ftp.postgresql.org/pub/source/v$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := zlib openssl
+$(PKG)_DEPS     := zlib
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_FLAGS_OPTION := $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS)
@@ -47,14 +47,14 @@ define $(PKG)_BUILD
         --without-pam \
         --without-ldap \
         --without-bonjour \
-        --with-openssl \
+        --without-openssl \
         --without-readline \
         --without-ossp-uuid \
         --without-libxml \
         --without-libxslt \
         --with-zlib \
         --with-system-tzdata=/dev/null \
-        LIBS="$($(PKG)_LIBS) `'$(MXE_PKG_CONFIG)' openssl --libs`"
+        LIBS="$($(PKG)_LIBS)"
     $(MAKE) -C '$(1)'/src/common             -j '$(JOBS)'         
     $(MAKE) -C '$(1)'/src/interfaces/libpq -j '$(JOBS)' install DESTDIR='$(3)'
     $(MAKE) -C '$(1)'/src/port             -j '$(JOBS)'         
