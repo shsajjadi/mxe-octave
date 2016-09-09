@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 76aef40335c0701e5be7bb3a9101df5d22fe3666
 $(PKG)_SUBDIR   := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.qt.io/official_releases/qt/4.8/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := postgresql freetds openssl zlib libpng jpeg libmng tiff sqlite dbus
+$(PKG)_DEPS     := postgresql freetds zlib libpng jpeg libmng tiff sqlite dbus
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
@@ -45,8 +45,7 @@ ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
     endif
   else
     $(PKG)_CONFIGURE_ENV := \
-      OPENSSL_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l openssl`" \
-      PSQL_LIBS="-lpq -lsecur32 `'$(MXE_PKG_CONFIG)' --libs-only-l openssl` -lws2_32" \
+      PSQL_LIBS="-lpq -lsecur32 `'$(MXE_PKG_CONFIG)'` -lws2_32" \
       SYBASE_LIBS="-lsybdb `'$(MXE_PKG_CONFIG)' --libs-only-l gnutls` -liconv -lws2_32" 
     $(PKG)_CONFIGURE_DATABASE_OPTION += -system-sqlite
   endif
@@ -91,11 +90,6 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   else
     $(PKG)_CONFIGURE_PLATFORM_OPTION := -platform win32-g++
   endif
-  # OPENSSL_LIBS needs to be specified here, specifying it as environment
-  # variables *before* "configure.exe" doesn't work. Also compile-in D-BUS
-  # support, for what it's worth...
-  $(PKG)_CONFIGURE_EXTRA_OPTION += \
-      OPENSSL_LIBS="`PKG_CONFIG_PATH='$(HOST_PREFIX)/lib/pkgconfig' '$(MXE_PKG_CONFIG)' --libs-only-l openssl`"
 else
   $(PKG)_CONFIGURE_CMD := configure
   $(PKG)_CONFIGURE_EXTRA_OPTION := \
@@ -104,6 +98,7 @@ else
       -no-glib \
       -no-gstreamer \
       -no-javascript-jit \
+      -no-openssl \
       -no-reduce-exports \
       -no-rpath \
       -make translations \
@@ -147,7 +142,6 @@ define $(PKG)_BUILD
         -script \
         -no-iconv \
         -opengl desktop \
-        -openssl-linked \
         -no-webkit \
         -no-phonon \
         -no-phonon-backend \
