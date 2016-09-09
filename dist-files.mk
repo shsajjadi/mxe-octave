@@ -571,6 +571,7 @@ SRC_FILES_1 := \
   qjson.mk \
   qrupdate-1-fixes.patch \
   qrupdate.mk \
+  qscintilla-1-fixes.patch \
   qscintilla.mk \
   qt-1-cherrypicks.patch \
   qt-2-shared-tools-fixes.patch \
