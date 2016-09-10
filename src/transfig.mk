@@ -10,10 +10,10 @@ $(PKG)_FILE     := fig2dev-$($(PKG)_VERSION)-rc.tar.xz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/mcj/$($(PKG)_FILE)
 $(PKG)_DEPS     := jpeg libpng
 
-$(PKG)_CONFIG_OPTS := 
+$(PKG)_CONFIG_OPTS := LIBS=-liconv
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
-  $(PKG)_CONFIG_OPTS += --without-xpm LIBS=-liconv \
+  $(PKG)_CONFIG_OPTS += --without-xpm \
       BITMAPDIR="/share/fig2dev/bitmaps" \
       RGB_FILE="/share/fig2dev/rgb.txt"
 endif
