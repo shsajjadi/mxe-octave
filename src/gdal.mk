@@ -74,7 +74,7 @@ define $(PKG)_BUILD
         --without-php \
         --without-ruby \
         --without-python \
-        LIBS="-ljpeg -lsecur32 `'$(MXE_PKG_CONFIG)' --libs openssl libtiff-4`"
+        LIBS="-ljpeg `'$(MXE_PKG_CONFIG)' --libs libtiff-4`"
     $(MAKE) -C '$(1)'       -j 1 lib-target
     $(MAKE) -C '$(1)'       -j 1 install-lib
     $(MAKE) -C '$(1)/port'  -j 1 install
