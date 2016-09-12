@@ -318,7 +318,6 @@ SRC_FILES_1 := \
   mingw-hdf5-1.patch \
   mingw-libgcrypt-1-fixes.patch \
   mingw-libmng-1-noundefines.patch \
-  mingw-octave-1-msys-fixes.patch \
   mingw-openssl-3-libdeps.patch \
   mingw-osmesa-1-fixes.patch \
   mingw-pango-1-fixes.patch \
@@ -439,8 +438,7 @@ SRC_FILES_1 := \
   ocaml-flexdll.mk \
   ocaml-native-1-fixes.patch \
   ocaml-native.mk \
-  octave-1-docinstall.patch \
-  octave-1-fixes.patch \
+  octave-1-gnulib.patch \
   octave.mk \
   of-actuarial.mk \
   of-communications-1-fixes.patch \
