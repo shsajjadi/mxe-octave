@@ -61,7 +61,7 @@ unwind_protect
   try_install splines-1.3.1.tar.gz
   try_install dataframe-1.1.0.tar.gz
   try_install lssa-0.1.2.tar.gz
-  try_install queueing-1.2.3.tar.gz
+  try_install queueing-1.2.4.tar.gz
   try_install nurbs-1.3.10.tar.gz
   try_install strings-1.2.0.tar.gz
   try_install ga-0.10.0.tar.gz

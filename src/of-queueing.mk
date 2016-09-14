@@ -3,8 +3,8 @@
 
 PKG             := of-queueing
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.2.3
-$(PKG)_CHECKSUM := 72150daf891b0af0d02c690cf462e219dd2f564d
+$(PKG)_VERSION  := 1.2.4
+$(PKG)_CHECKSUM := 411aa00fef78eae7bbf28f8e28d1803a4898433d
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := queueing
 $(PKG)_FILE     := queueing-$($(PKG)_VERSION).tar.gz
