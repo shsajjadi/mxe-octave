@@ -37,7 +37,7 @@ unwind_protect
   try_install signal-1.3.2.tar.gz
   try_install communications-1.2.1.tar.gz
   try_install image-2.4.1.tar.gz
-  try_install io-2.4.2.tar.gz
+  try_install io-2.4.3.tar.gz
   try_install statistics-1.2.4.tar.gz
   try_install geometry-2.1.1.tar.gz
   try_install windows-1.2.3.tar.gz
