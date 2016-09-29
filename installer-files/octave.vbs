@@ -17,8 +17,14 @@ wshSystemEnv("GNUTERM") = "windows"
 
 wshSystemEnv("GS") = "gs.exe"
 
-' set Qt plugin directory
-wshSystemEnv("QT_PLUGIN_PATH") = OctavePath & "\plugins"
+' set Qt plugin directory and path 
+Set objFSO = CreateObject("Scripting.FileSystemObject")
+If objFSO.FolderExists(OctavePath & "\qt5\bin") Then
+  wshSystemEnv("PATH") = OctavePath & "\qt5\bin;" & wshSystemEnv("PATH")
+  wshSystemEnv("QT_PLUGIN_PATH") = OctavePath & "\qt5\plugins"
+Else
+  wshSystemEnv("QT_PLUGIN_PATH") = OctavePath & "\plugins"
+End If
 
 ' check args to see if told to run gui or command line
 ' and build other args to use

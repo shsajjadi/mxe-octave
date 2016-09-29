@@ -1,0 +1,37 @@
+# This file is part of MXE.
+# See index.html for further information.
+
+From 3dc7b77a86b4d399836472484a5b3448a27f1a1e Mon Sep 17 00:00:00 2001
+From: Mark Brand <mabrand@mabrand.nl>
+Date: Wed, 21 May 2014 11:31:45 +0200
+Subject: [PATCH] disable windeployqt (MXE specific)
+
+
+diff --git a/src/src.pro b/src/src.pro
+index 722b32e..66ce5bf 100644
+--- a/src/src.pro
++++ b/src/src.pro
+@@ -27,7 +27,7 @@ android {
+ 
+ qtHaveModule(dbus): SUBDIRS += qdbus
+ 
+-win32|winrt:SUBDIRS += windeployqt
++#win32|winrt:SUBDIRS += windeployqt
+ winrt:SUBDIRS += winrtrunner
+ qtHaveModule(gui):!android:!ios:!qnx:!wince*:!winrt*:SUBDIRS += qtdiag
+ 
+-- 
+2.1.2
+
+diff -ur qttools-opensource-src-5.7.0.orig/src/linguist/lrelease/lrelease.pro qttools-opensource-src-5.7.0/src/linguist/lrelease/lrelease.pro
+--- qttools-opensource-src-5.7.0.orig/src/linguist/lrelease/lrelease.pro	2016-08-25 16:36:01.797626791 -0400
++++ qttools-opensource-src-5.7.0/src/linguist/lrelease/lrelease.pro	2016-08-25 17:46:21.465008465 -0400
+@@ -4,6 +4,8 @@
+ 
+ SOURCES += main.cpp
+ 
++INCLUDEPATH += XXX
++
+ include(../shared/formats.pri)
+ include(../shared/proparser.pri)
+ 

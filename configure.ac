@@ -231,6 +231,14 @@ AC_ARG_ENABLE([devel-tools],
   [if test "$enableval" = yes; then ENABLE_DEVEL_TOOLS=yes; fi], [])
 AC_SUBST(ENABLE_DEVEL_TOOLS)
 
+ENABLE_QT5=no
+AC_ARG_ENABLE([qt5],
+  [AS_HELP_STRING([--enable-qt5],
+    [Enable compile of GNU octave using Qt5 (Experimental)])],
+  [if test "$enableval" = yes; then ENABLE_QT5=yes; fi], [])
+AC_SUBST(ENABLE_QT5)
+
+
 ### Default is to cross compile for mingw.
 
 echo $host_alias

@@ -8,7 +8,13 @@ $(PKG)_CHECKSUM := d62c36272f47a176177613dd8260961d50d0ed64
 $(PKG)_SUBDIR   := QScintilla_gpl-$($(PKG)_VERSION)
 $(PKG)_FILE     := QScintilla_gpl-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://sourceforge.net/projects/pyqt/files/QScintilla2/QScintilla-$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := qt
+
+
+ifeq ($(ENABLE_QT5),yes)
+      $(PKG)_DEPS     := qt5
+else
+      $(PKG)_DEPS     := qt
+endif
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
       $(PKG)_INSTALL_ROOT :=
@@ -25,7 +31,11 @@ endef
 
 ifneq ($(MXE_NATIVE_BUILD),yes)
   ifeq ($(MXE_SYSTEM),mingw)
-    $(PKG)_QMAKE_SPEC_OPTION := -spec '$(HOST_PREFIX)/mkspecs/win32-g++'
+    ifeq ($(ENABLE_QT5),yes)
+       $(PKG)_QMAKE_SPEC_OPTION := -spec '$(BUILD_TOOLS_PREFIX)/mkspecs/win32-g++'
+    else
+       $(PKG)_QMAKE_SPEC_OPTION := -spec '$(HOST_PREFIX)/mkspecs/win32-g++'
+    endif
   endif
   ifeq ($(MXE_SYSTEM),msvc)
     # FIXME: compute "2010" suffix dynamically
@@ -47,11 +57,18 @@ define $(PKG)_BUILD
         $(MAKE) -C '$(1)/Qt4Qt5' -j 1 install INSTALL_ROOT='$($(PKG)_INSTALL_ROOT)'; \
     fi
 
-    if [ $(MXE_SYSTEM) = mingw ]; then \
+    if [ $(MXE_SYSTEM)$(ENABLE_QT5) = mingwyes ]; then \
+        $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib'; \
+        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/bin/'; \
+        rm -f '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
+        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/libqscintilla2.a' '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/libqscintilla2-qt5.a'; \
+    fi
+    if [ $(MXE_SYSTEM)$(ENABLE_QT5) = mingwno ]; then \
         $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(HOST_BINDIR)'; \
         $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' '$($(PKG)_INSTALL_ROOT)$(HOST_BINDIR)/'; \
         rm -f '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
     fi
+
 
     # Qmake under MSVC uses Win32 paths. When combining this with
     # DESTDIR usage (or equivalent), the real Win32 directory hierarchy
@@ -61,4 +78,5 @@ define $(PKG)_BUILD
         $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' '$($(PKG)_INSTALL_ROOT)$(CMAKE_HOST_PREFIX)/bin/'; \
         rm -f '$($(PKG)_INSTALL_ROOT)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
     fi
+
 endef

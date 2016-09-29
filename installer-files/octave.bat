@@ -9,7 +9,7 @@ set OCT_HOME=%~dp0
 Rem   Set up PATH. Make sure the octave bin dir
 Rem   comes first.
 
-set PATH=%OCT_HOME%bin;%PATH%
+set PATH=%OCT_HOME%qt5\bin;%OCT_HOME%bin;%PATH%
 
 Rem   Set up any environment vars we may need
 
