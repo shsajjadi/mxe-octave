@@ -62,6 +62,9 @@ ENABLE_BINARY_PACKAGES := @ENABLE_BINARY_PACKAGES@
 # create and install devel tools (default no)
 ENABLE_DEVEL_TOOLS := @ENABLE_DEVEL_TOOLS@
 
+# use qt5 instead of qt4
+ENABLE_QT5 := @ENABLE_QT5@
+
 # Should match what config.guess prints for your system.
 # If cross compiling, you must set it manually (defaults are set by configure).
 ifeq ($(MXE_NATIVE_BUILD),yes)
@@ -357,7 +360,12 @@ else
     MXE_WINDRES := true
   endif
   MXE_PKG_CONFIG := '$(BUILD_TOOLS_PREFIX)/bin/pkg-config'
-  MXE_QMAKE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
+  ifeq ($(ENABLE_QT5),yes)
+    MXE_QMAKE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake-qt5'
+  else
+    MXE_QMAKE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
+  endif
+
   MXE_MOC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
   MXE_UIC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
   MXE_LRELEASE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'

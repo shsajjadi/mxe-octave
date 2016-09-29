@@ -14,7 +14,14 @@ $(PKG)_URL      := http://hydra.nixos.org/job/gnu/octave-default/tarball/latest/
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile osmesa pcre portaudio pstoedit qrupdate qscintilla qt readline suitesparse texinfo zlib
+$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile osmesa pcre portaudio pstoedit qrupdate qscintilla readline suitesparse texinfo zlib
+
+ifeq ($(ENABLE_QT5),yes)
+    $(PKG)_DEPS += qt5
+else
+    $(PKG)_DEPS += qt
+endif
+
 ifeq ($(MXE_WINDOWS_BUILD),no)
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += x11 xext
@@ -56,6 +63,16 @@ $(PKG)_QT_CONFIGURE_OPTIONS := \
   RCC=$(MXE_RCC) \
   LRELEASE=$(MXE_LRELEASE)
 
+ifeq ($(ENABLE_QT5),yes)
+  #$(PKG)_PKG_CONFIG_PATH := "$(HOST_LIBDIR)/pkgconfig"
+  $(PKG)_PKG_CONFIG_PATH := "$(HOST_PREFIX)/qt5/lib/pkgconfig:$(HOST_LIBDIR)/pkgconfig"
+  $(PKG)_QTDIR := $(HOST_PREFIX)/qt5
+else
+  $(PKG)_PKG_CONFIG_PATH := "$(HOST_LIBDIR)/pkgconfig"
+  $(PKG)_QTDIR := $(HOST_PREFIX)
+endif
+
+
 ifneq ($(ENABLE_DOCS),yes)
   $(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS := --disable-docs
 endif
@@ -91,7 +108,7 @@ ifeq ($(MXE_SYSTEM),msvc)
 else
   $(PKG)_PREFIX := '$(HOST_PREFIX)'
   $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
-    LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
+    LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR) -L$($(PKG)_QTDIR)/lib'
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)
@@ -146,7 +163,7 @@ define $(PKG)_BUILD
         $($(PKG)_QT_CONFIGURE_OPTIONS) \
         $($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
-        PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
+        PKG_CONFIG_PATH=$($(PKG)_PKG_CONFIG_PATH) \
         && $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)/.build/libgnu'
