@@ -6,7 +6,7 @@
 
 PKG             := default-octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.2.0-rc2
+$(PKG)_VERSION  := 4.3.0+
 $(PKG)_CHECKSUM := ## No checksum
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
