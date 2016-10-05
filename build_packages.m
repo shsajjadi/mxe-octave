@@ -31,7 +31,7 @@ unwind_protect
   try_install general-2.0.0.tar.gz
   try_install miscellaneous-1.2.1.tar.gz
   try_install struct-1.0.14.tar.gz
-  try_install optim-1.5.1.tar.gz
+  try_install optim-1.5.2.tar.gz
   try_install specfun-1.1.0.tar.gz
   try_install control-3.0.0.tar.gz
   try_install signal-1.3.2.tar.gz
