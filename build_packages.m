@@ -70,7 +70,7 @@ unwind_protect
   try_install ocs-0.1.5.tar.gz
   try_install mapping-1.2.1.tar.gz
   try_install tisean-0.2.3.tar.gz
-  try_install sparsersb-1.0.1.tar.gz
+  try_install sparsersb-1.0.2.tar.gz
   try_install video-1.2.3.tar.gz
   try_install zeromq-1.2.1.tar.gz
 

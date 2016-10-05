@@ -489,7 +489,6 @@ SRC_FILES_1 := \
   of-signal.mk \
   of-sockets-1-cross-fixes.patch \
   of-sockets.mk \
-  of-sparsersb-1-fixes.patch \
   of-sparsersb.mk \
   of-specfun.mk \
   of-splines.mk \
