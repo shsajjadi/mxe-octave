@@ -3,8 +3,8 @@
 
 PKG             := of-database
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.4.1
-$(PKG)_CHECKSUM := d8c0efac63e695c7d94d6b39c7b8f652e99e3653
+$(PKG)_VERSION  := 2.4.2
+$(PKG)_CHECKSUM := cb9654c724012509e2d2e0ceb3ec2c67b20f1eb0
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := database-$($(PKG)_VERSION)
 $(PKG)_FILE     := database-$($(PKG)_VERSION).tar.gz
@@ -17,6 +17,12 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+ifeq ($(MXE_SYSTEM)$(MXE_NATIVE_MINGW_BUILD),mingwno)
+define $(PKG)_BUILD
+    $(OCTAVE_FORGE_PKG_BUILD,$(1),$(2),$(3),"BUILD_CXX=g++"))
+endef
+else
 define $(PKG)_BUILD
     $(OCTAVE_FORGE_PKG_BUILD)
 endef
+endif

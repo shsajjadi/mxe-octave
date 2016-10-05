@@ -1,27 +1,21 @@
-# HG changeset patch
-# User John Donoghue <john.donoghue@ieee.org>
-# Date 1458419460 14400
-#      Sat Mar 19 16:31:00 2016 -0400
-# Node ID ff3a96a08ec915983ef9a1c189404578b00d2db4
-# Parent  8e13dd6c295b004fb3e8df97b4ef6438b61bcf19
-Check mingw hosttype via octave config (Bug #44795)
-
-* src/Makefile.in: get CANONICAL_HOST_TYPE from octave-config to check target OS for using ws2_32
-
-diff -r 8e13dd6c295b -r ff3a96a08ec9 src/Makefile.in
---- a/src/Makefile.in	Sat Mar 19 08:20:47 2016 +0100
-+++ b/src/Makefile.in	Sat Mar 19 16:31:00 2016 -0400
-@@ -17,9 +17,12 @@
+diff -ur database-2.4.2.orig/src/Makefile.in database-2.4.2/src/Makefile.in
+--- database-2.4.2.orig/src/Makefile.in	2016-10-02 15:12:37.447321334 -0400
++++ database-2.4.2/src/Makefile.in	2016-10-02 18:19:06.118462056 -0400
+@@ -32,6 +32,8 @@
  
+ CXXCPP = @CXXCPP@
+ 
++BUILD_CXX ?= gcc
++
  MKOCTFILE ?= @MKOCTFILE@
  PG_CONFIG ?= @PG_CONFIG@
-+OCTAVE_CONFIG ?= @OCTAVE_CONFIG@
-+
-+CANONICAL_HOST_TYPE := $(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE))
+ OCTAVE_CONFIG ?= @OCTAVE_CONFIG@
+@@ -130,7 +132,7 @@
+ %.bin: %.cc
+ 	if grep -q $(RDEFUN_DLD) $<; then echo "The string '$(RDEFUN_DLD)' must not be present in source code, but is in $<."; exit 1; fi
+ 	if grep -q $(RDEFUNX_DLD) $<; then echo "The string '$(RDEFUNX_DLD)' must not be present in source code, but is in $<."; exit 1; fi
+-	(echo "#include <stdio.h>"; echo "int main () {"; sed -e s/DEFUN_DLD/$(RDEFUN_DLD)/g -e s/DEFUNX_DLD/$(RDEFUNX_DLD)/g $< | $(CXXCPP) `$(MKOCTFILE) -p INCFLAGS` -I`$(PG_CONFIG) --includedir` -x c++ -iquote '.' -D'$(RDEFUN_DLD)(name,args,nargout,doc)=$(RDEFUN_DLD)(name,doc)' -D'$(RDEFUNX_DLD)(name,fname,gname,args,nargout,doc)=$(RDEFUN_DLD)(name,doc)' - | sed -e '/.*$(RDEFUN_DLD)/!D'; echo "}";) | $(CXX) -x c++ -D'$(RDEFUN_DLD)(name,doc)=printf("%c" #name "\n@c " #name " $<\n" doc "\n\n", 0x1D);' -o $@ -
++	(echo "#include <stdio.h>"; echo "int main () {"; sed -e s/DEFUN_DLD/$(RDEFUN_DLD)/g -e s/DEFUNX_DLD/$(RDEFUNX_DLD)/g $< | $(CXXCPP) `$(MKOCTFILE) -p INCFLAGS` -I`$(PG_CONFIG) --includedir` -x c++ -iquote '.' -D'$(RDEFUN_DLD)(name,args,nargout,doc)=$(RDEFUN_DLD)(name,doc)' -D'$(RDEFUNX_DLD)(name,fname,gname,args,nargout,doc)=$(RDEFUN_DLD)(name,doc)' - | sed -e '/.*$(RDEFUN_DLD)/!D'; echo "}";) | $(BUILD_CXX) -x c++ -D'$(RDEFUN_DLD)(name,doc)=printf("%c" #name "\n@c " #name " $<\n" doc "\n\n", 0x1D);' -o $@ -
  
- EXTRALIBS = 
--ifeq ($(OS),Windows_NT)
-+ifneq (,$(findstring mingw,$(CANONICAL_HOST_TYPE)))
-   EXTRALIBS = -lws2_32
- endif
- 
+ clean:
+ 	$(RM) *.o octave-core *.oct *.cc.docstrings MFDOCSTRINGS $(INFOFILE) $(TEXIFILE) *~
