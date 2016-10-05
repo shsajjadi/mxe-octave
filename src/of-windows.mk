@@ -3,8 +3,8 @@
 
 PKG             := of-windows
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.2.3
-$(PKG)_CHECKSUM := b057ad6de503ea23a3764d1216fc4d93436ccd91
+$(PKG)_VERSION  := 1.2.4
+$(PKG)_CHECKSUM := 025cb4c9456d11b7a0a5aa540901894d7ff9f6db
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := windows
 $(PKG)_FILE     := windows-$($(PKG)_VERSION).tar.gz
