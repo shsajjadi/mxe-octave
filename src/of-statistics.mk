@@ -3,8 +3,8 @@
 
 PKG             := of-statistics
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.2.4
-$(PKG)_CHECKSUM := 5cf70f146235d6fd19e3d3dd1c7548a96a019dee
+$(PKG)_VERSION  := 1.3.0
+$(PKG)_CHECKSUM := 01cc538d2e9e07f8b9892936c69a2312bd16c295
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := statistics-$($(PKG)_VERSION)
 $(PKG)_FILE     := statistics-$($(PKG)_VERSION).tar.gz
