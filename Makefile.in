@@ -476,10 +476,11 @@ UNPACK_ARCHIVE = \
     $(if $(filter %.tgz,     $(1)),$(3) xzf '$(1)', \
     $(if $(filter %.tar.gz,  $(1)),$(3) xzf '$(1)', \
     $(if $(filter %.tar.bz2, $(1)),$(3) xjf '$(1)', \
+    $(if $(filter %.tar.lz, $(1)),$(3) xaf '$(1)', \
     $(if $(filter %.tar.lzma,$(1)),xz -dc -F lzma '$(1)' | $(3) xf -, \
     $(if $(filter %.tar.xz,$(1)),xz -dc '$(1)' | $(3) xf -, \
     $(if $(filter %.zip,     $(1)),unzip -q '$(1)', \
-    $(error Unknown archive format for $(2): $(1))))))))
+    $(error Unknown archive format for $(2): $(1)))))))))
 
 UNPACK_PKG_ARCHIVE = \
     $(if $(value $(1)_FILE),$(call UNPACK_ARCHIVE,$(PKG_DIR)/$($(1)_FILE),$(1),$(2)),true)
