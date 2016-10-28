@@ -3,10 +3,10 @@
 
 PKG             := octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.2.0-rc2
-$(PKG)_CHECKSUM := a4fa80e0493bf2c818c4574744e2a706138df7c4
+$(PKG)_VERSION  := 4.2.0-rc3
+$(PKG)_CHECKSUM := 78521a5010351bf5c33459c79d823299122db2bb
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.xz
+$(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.lz
 $(PKG)_URL      := ftp://alpha.gnu.org/gnu/octave/$($(PKG)_FILE)
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
