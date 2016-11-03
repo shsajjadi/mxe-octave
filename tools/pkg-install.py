@@ -225,7 +225,8 @@ def configure_make(env, packdir):
       if env.verbose:
         print "running ./configure " + env.config_opts
 
-      os.system("./configure " + env.config_opts + "")
+      if os.system("./configure " + env.config_opts + "") != 0:
+        raise Exception, "configure failed - stopping install"
 
     if os.path.isfile(src + "/Makefile") == True:
       if env.verbose:
