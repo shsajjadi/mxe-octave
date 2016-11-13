@@ -1,0 +1,12 @@
+diff -ur io-2.4.5.orig/inst/private/__OCT_xlsx2oct__.m io-2.4.5/inst/private/__OCT_xlsx2oct__.m
+--- orig/inst/private/__OCT_xlsx2oct__.m     2016-11-08 22:05:13.000000000 +0100
++++ src/inst/private/__OCT_xlsx2oct__.m      2016-11-12 21:43:52.076390219 +0100
+@@ -196,7 +196,7 @@
+         vals = ctext(vals);
+         ids = cellfun (@isempty, vals);
+         if (any (ids))
+-          vals {find (ids)} = "";
++          vals(ids) = {""};
+         endif
+         ## Cell addresses
+         valraws = cell2mat (regexp (rawdata, '<c r="(\w+)"(?: s="\d+")? t="s"><v(?:.*?)>\d+</v>', "tokens"));
