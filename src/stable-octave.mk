@@ -3,15 +3,22 @@
 
 PKG             := stable-octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.0.3
-$(PKG)_CHECKSUM := c798346a8271e0141d9dbe5610584dabb8311277
+$(PKG)_VERSION  := 4.2.0
+$(PKG)_CHECKSUM := de2977e8b242cb655ec326b8f7718d43a15135a9
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
-$(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.xz
+$(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.lz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile osmesa pcre portaudio pstoedit qrupdate qscintilla qt readline suitesparse texinfo zlib
+$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile osmesa pcre portaudio pstoedit qrupdate qscintilla readline suitesparse texinfo zlib
+
+ifeq ($(ENABLE_QT5),yes)
+    $(PKG)_DEPS += qt5
+else
+    $(PKG)_DEPS += qt
+endif
+
 ifeq ($(MXE_WINDOWS_BUILD),no)
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += x11 xext
@@ -51,6 +58,15 @@ $(PKG)_QT_CONFIGURE_OPTIONS := \
   RCC=$(MXE_RCC) \
   LRELEASE=$(MXE_LRELEASE)
 
+ifeq ($(ENABLE_QT5),yes)
+  #$(PKG)_PKG_CONFIG_PATH := "$(HOST_LIBDIR)/pkgconfig"
+  $(PKG)_PKG_CONFIG_PATH := "$(HOST_PREFIX)/qt5/lib/pkgconfig:$(HOST_LIBDIR)/pkgconfig"
+  $(PKG)_QTDIR := $(HOST_PREFIX)/qt5
+else
+  $(PKG)_PKG_CONFIG_PATH := "$(HOST_LIBDIR)/pkgconfig"
+  $(PKG)_QTDIR := $(HOST_PREFIX)
+endif
+
 ifneq ($(ENABLE_DOCS),yes)
   $(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS := --disable-docs
 endif
@@ -86,11 +102,15 @@ ifeq ($(MXE_SYSTEM),msvc)
 else
   $(PKG)_PREFIX := '$(HOST_PREFIX)'
   $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
-    LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
+    LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR) -L$($(PKG)_QTDIR)/lib'
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_EXTRA_CONFIGURE_OPTIONS += --with-x=no
+endif
+
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  $(PKG)_EXTRA_CONFIGURE_OPTIONS += ac_cv_search_tputs=-ltermcap
 endif
 
 # if want binary packages and are cross compiling, then we need cross tools enabled
@@ -137,7 +157,7 @@ define $(PKG)_BUILD
         $($(PKG)_QT_CONFIGURE_OPTIONS) \
         $($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
-        PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
+        PKG_CONFIG_PATH=$($(PKG)_PKG_CONFIG_PATH) \
         && $(CONFIGURE_POST_HOOK)
 
     ## We want both of these install steps so that we install in the
