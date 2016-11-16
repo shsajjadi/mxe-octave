@@ -10,6 +10,11 @@ $(PKG)_FILE     := curl-$($(PKG)_VERSION).tar.lzma
 $(PKG)_URL      := http://curl.haxx.se/download/$($(PKG)_FILE)
 $(PKG)_DEPS     := gnutls libidn libssh2
 
+$(PKG)_CONFIGURE_OPTS :=
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+    $(PKG)_CONFIGURE_OPTS := "--with-winssl"
+endif
+
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://curl.haxx.se/download/?C=M;O=D' | \
     $(SED) -n 's,.*curl-\([0-9][^"]*\)\.tar.*,\1,p' | \
@@ -22,6 +27,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
+        $($(PKG)_CONFIGURE_OPTS) \
         --without-ssl \
         --with-gnutls \
         --with-libidn \
