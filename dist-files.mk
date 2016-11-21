@@ -462,6 +462,7 @@ SRC_FILES_1 := \
   of-general.mk \
   of-generate_html.mk \
   of-geometry.mk \
+  of-gsl.mk \
   of-image.mk \
   of-interval.mk \
   of-instrument-control.mk \
