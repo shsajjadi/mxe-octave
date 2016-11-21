@@ -19,6 +19,12 @@ endef
 
 define $(PKG)_BUILD
     mkdir -p '$(MSYS_BASE_DIR)'
+    if test $(MXE_WINDOWS_BUILD) = "yes"; then \
+      for f in `find $(1)/bin -type f -exec grep -l '\/bin/sh$$' {} \;` ; do \
+        echo "file $$f"; \
+        $(TOP_DIR)/tools/gen-bat-wrapper `basename $$f` > $$f.bat; \
+      done; \
+    fi
     cd '$(1)' && tar cf - . | ( cd '$(MSYS_BASE_DIR)'; tar xpf - )
     mkdir -p '$(MSYS_INFO_DIR)'
     cd '$(1)' && find . > '$(MSYS_INFO_DIR)'/$(PKG).list
