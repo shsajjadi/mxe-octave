@@ -842,7 +842,8 @@ TOOLS_FILES_1 := \
   patch-tool-mxe \
   pkg-install.py \
   s3-fetch-and-sync \
-  set-mxe-env.sh.in
+  set-mxe-env.sh.in \
+  gen-bat-wrapper
 
 TOOLS_FILES := $(addprefix tools/, $(TOOLS_FILES_1))
 

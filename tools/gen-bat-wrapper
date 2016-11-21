@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+prog=$1
+
+if [ -z $prog ]; then
+  echo "Missing program name" >&2
+  exit 1
+fi
+
+cat << EOF
+@echo off
+set BINPATH=%~dp0
+%BINPATH%bash -c '$prog %*'
+EOF
