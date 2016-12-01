@@ -227,11 +227,14 @@ Section "MainFiles"
   File "$OCTAVE_SOURCE/octave.vbs"
   File "$OCTAVE_SOURCE/octave-firsttime.vbs"
 
+  File "$OCTAVE_SOURCE/fc_update.bat"
+
   ; distro files
 EOF
   if [ -f $OCTAVE_SOURCE/cmdshell.bat ]; then 
     echo "File '$OCTAVE_SOURCE/cmdshell.bat'" >> $OUTFILE
   fi
+
 
 # insert the files
   IFS=$'\n'
@@ -250,6 +253,10 @@ EOF
  WriteINIStr "\$INSTDIR\\bin\\qt.conf" "Paths" "Prefix" "\$0"
  WriteINIStr "\$INSTDIR\\bin\\qt.conf" "Paths" "Translations" "translations"
  Pop \$0
+
+ ; run fc-cache updater
+ DetailPrint "Building font cache (may take a while)"
+ ExecWait "\$INSTDIR\\fc_update.bat"
 SectionEnd
 
 Section make_uninstaller
