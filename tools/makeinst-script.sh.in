@@ -359,6 +359,10 @@ not_all_users:
   ReadRegDWORD \$0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "RegisteredFileType"
   IfErrors not_registered_file
 
+  ; only try remove if is set to our version of octave
+  ReadRegStr \$0 HKCR ".m" ""
+  StrCmp \$0 "Octave.Document.$VERSION" 0 not_registered_file
+
   ReadRegStr \$0 HKCR ".m" "backup_val"
   IfErrors not_backup_file
 
