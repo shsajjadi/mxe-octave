@@ -861,6 +861,7 @@ FILES := \
 
 INSTALL_FILES_1 := \
   cmdshell.bat \
+  fc_update.bat \
   gpl-3.0.txt \
   octave.bat \
   octave.bmp \
