@@ -5,6 +5,10 @@ Set wshShell = CreateObject( "WScript.Shell" )
 ' get the directory that script resides in
 Set fso = CreateObject("Scripting.FileSystemObject")
 OctavePath = fso.GetParentFolderName(WScript.ScriptFullName)
+' get path as a 8.3 path
+Set fo = fso.GetFolder(OctavePath)
+OctavePath = fo.ShortPath
+Set fo = Nothing
 Set fso = Nothing
 
 ' set up path to ensure octave bin comes first
