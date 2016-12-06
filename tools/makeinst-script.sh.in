@@ -255,8 +255,9 @@ EOF
  Pop \$0
 
  ; run fc-cache updater
+ GetFullPathName /SHORT \$1 \$INSTDIR
  DetailPrint "Building font cache (may take a while)"
- ExecWait "\$INSTDIR\\fc_update.bat"
+ ExecWait "\$1\\fc_update.bat"
 SectionEnd
 
 Section make_uninstaller
@@ -344,8 +345,9 @@ SectionEnd
 
 Section "InstallPackages"
   ; fix the installed packages (if any)
-  SetOutPath "\$INSTDIR"
-  ExecWait '"\$INSTDIR\\bin\\octave-cli.exe" --no-gui -W -H -f -q --eval "pkg rebuild"' \$0
+  GetFullPathName /SHORT \$1 \$INSTDIR
+  SetOutPath "\$1"
+  ExecWait '"\$1\\bin\\octave-cli.exe" --no-gui -W -H -f -q --eval "pkg rebuild"' \$0
 SectionEnd
 
 Section "Uninstall"

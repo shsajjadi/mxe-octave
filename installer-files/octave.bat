@@ -5,6 +5,8 @@ Rem
 Rem   This trick finds the location where the batch file resides.
 Rem   Note: the result ends with a backslash
 set OCT_HOME=%~dp0
+Rem Coonvert to 8.3 format so dont have to worry about spaces
+for %%I in ("%OCT_HOME%") do set OCT_HOME=%%~sI
 
 Rem   Set up PATH. Make sure the octave bin dir
 Rem   comes first.
