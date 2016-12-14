@@ -3,8 +3,8 @@
 
 PKG             := openblas
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.2.18
-$(PKG)_CHECKSUM := e602c4d4c361f572e3bb1db9892c2d5c82c9f506
+$(PKG)_VERSION  := 0.2.19
+$(PKG)_CHECKSUM := df4ceb25d2529748ad0f2715e62fefb348477edd
 $(PKG)_SUBDIR   := OpenBLAS-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz
 $(PKG)_URL      := http://github.com/xianyi/OpenBLAS/archive/v$($(PKG)_VERSION).tar.gz
