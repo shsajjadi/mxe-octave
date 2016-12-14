@@ -1,73 +1,39 @@
-diff -u fontconfig-2.11.0.orig/Makefile.in fontconfig-2.11.0/Makefile.in
---- fontconfig-2.11.0.orig/Makefile.in	2014-02-01 14:30:40.000000000 -0500
-+++ fontconfig-2.11.0/Makefile.in	2014-02-01 14:30:58.000000000 -0500
-@@ -997,7 +997,7 @@
- 	mv $@.tmp $@
- 
- install-data-local: fonts.conf
--	$(mkinstalldirs) $(DESTDIR)$(baseconfigdir) $(DESTDIR)$(fc_cachedir)
-+	$(mkinstalldirs) $(DESTDIR)$(baseconfigdir) #$(DESTDIR)$(fc_cachedir)
- 	if [ -f $(DESTDIR)$(baseconfigdir)/fonts.conf ]; then \
- 	  echo "backing up existing $(DESTDIR)$(baseconfigdir)/fonts.conf"; \
- 	  mv $(DESTDIR)$(baseconfigdir)/fonts.conf $(DESTDIR)$(baseconfigdir)/fonts.conf.bak; \
-diff -ur fontconfig-2.11.0.orig/conf.d/Makefile.am fontconfig-2.11.0/conf.d/Makefile.am
---- fontconfig-2.11.0.orig/conf.d/Makefile.am	2014-02-06 16:51:06 -0500
-+++ fontconfig-2.11.0/conf.d/Makefile.am	2014-02-06 16:53:20 -0500
-@@ -88,9 +88,9 @@
- 	@(echo cd $(DESTDIR)$(configdir);			\
- 	  cd $(DESTDIR)$(configdir);				\
- 	  for i in $(CONF_LINKS); do				\
--	    echo $(RM) $$i";" ln -s $(templatedir)/$$i .;	\
-+	    echo $(RM) $$i";" $(LN_S) $(templatedir)/$$i .;	\
- 	    $(RM) $$i;						\
--	    ln -s $(templatedir)/$$i .;				\
-+	    $(LN_S) $(templatedir)/$$i .;				\
- 	  done)
- uninstall-local:
- 	@(echo cd $(DESTDIR)$(configdir);			\
-diff -ur fontconfig-2.11.0.orig/conf.d/Makefile.in fontconfig-2.11.0/conf.d/Makefile.in
---- fontconfig-2.11.0.orig/conf.d/Makefile.in	2014-02-06 16:51:06 -0500
-+++ fontconfig-2.11.0/conf.d/Makefile.in	2014-02-06 16:53:51 -0500
-@@ -632,9 +632,9 @@
- 	@(echo cd $(DESTDIR)$(configdir);			\
- 	  cd $(DESTDIR)$(configdir);				\
- 	  for i in $(CONF_LINKS); do				\
--	    echo $(RM) $$i";" ln -s $(templatedir)/$$i .;	\
-+	    echo $(RM) $$i";" $(LN_S) $(templatedir)/$$i .;	\
- 	    $(RM) $$i;						\
--	    ln -s $(templatedir)/$$i .;				\
-+	    $(LN_S) $(templatedir)/$$i .;				\
- 	  done)
- uninstall-local:
- 	@(echo cd $(DESTDIR)$(configdir);			\
+This file is part of MXE. See LICENSE.md for licensing information.
 
-diff -ur fontconfig-2.11.0.orig/conf.d/Makefile.am fontconfig-2.11.0/conf.d/Makefile.am
---- fontconfig-2.11.0.orig/conf.d/Makefile.am	2014-02-06 19:41:13 -0500
-+++ fontconfig-2.11.0/conf.d/Makefile.am	2014-02-06 19:54:52 -0500
-@@ -88,9 +88,9 @@
- 	@(echo cd $(DESTDIR)$(configdir);			\
- 	  cd $(DESTDIR)$(configdir);				\
- 	  for i in $(CONF_LINKS); do				\
--	    echo $(RM) $$i";" $(LN_S) $(templatedir)/$$i .;	\
-+	    echo $(RM) $$i";" $(LN_S) $(DESTDIR)$(templatedir)/$$i .;	\
- 	    $(RM) $$i;						\
--	    $(LN_S) $(templatedir)/$$i .;				\
-+	    $(LN_S) $(DESTDIR)$(templatedir)/$$i .;		\
- 	  done)
- uninstall-local:
- 	@(echo cd $(DESTDIR)$(configdir);			\
-diff -ur fontconfig-2.11.0.orig/conf.d/Makefile.in fontconfig-2.11.0/conf.d/Makefile.in
---- fontconfig-2.11.0.orig/conf.d/Makefile.in	2014-02-06 19:41:13 -0500
-+++ fontconfig-2.11.0/conf.d/Makefile.in	2014-02-06 19:54:00 -0500
-@@ -632,9 +632,9 @@
- 	@(echo cd $(DESTDIR)$(configdir);			\
- 	  cd $(DESTDIR)$(configdir);				\
- 	  for i in $(CONF_LINKS); do				\
--	    echo $(RM) $$i";" $(LN_S) $(templatedir)/$$i .;	\
-+	    echo $(RM) $$i";" $(LN_S) $(DESTDIR)$(templatedir)/$$i .;	\
- 	    $(RM) $$i;						\
--	    $(LN_S) $(templatedir)/$$i .;				\
-+	    $(LN_S) $(DESTDIR)$(templatedir)/$$i .;				\
- 	  done)
- uninstall-local:
- 	@(echo cd $(DESTDIR)$(configdir);			\
+From da6c9bfc3d57f3aa192972717cb5c84a56e1c422 Mon Sep 17 00:00:00 2001
+From: MXE
+Date: Tue, 05 Jul 2016 21:56:34 +0300
+Subject: [PATCH] fix mktemp_s
+
+
+diff --git a/configure.ac b/configure.ac
+index f8dadf1..bde05c8 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -160,7 +160,7 @@ AC_TYPE_PID_T
+ # Checks for library functions.
+ AC_FUNC_VPRINTF
+ AC_FUNC_MMAP
+-AC_CHECK_FUNCS([link mkstemp mkostemp _mktemp_s mkdtemp getopt getopt_long getprogname getexecname rand random lrand48 random_r rand_r readlink fstatvfs fstatfs lstat])
++AC_CHECK_FUNCS([link mkstemp mkostemp _mktemp mkdtemp getopt getopt_long getprogname getexecname rand random lrand48 random_r rand_r readlink fstatvfs fstatfs lstat])
+ 
+ dnl AC_CHECK_FUNCS doesn't check for header files.
+ dnl posix_fadvise() may be not available in older libc.
+diff --git a/src/fccompat.c b/src/fccompat.c
+index f4f3f5f..68a70ff 100644
+--- a/src/fccompat.c
++++ b/src/fccompat.c
+@@ -152,8 +152,8 @@ FcMakeTempfile (char *template)
+ 	fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC);
+     }
+ #  endif
+-#elif HAVE__MKTEMP_S
+-   if (_mktemp_s(template, strlen(template) + 1) != 0)
++#elif HAVE__MKTEMP
++   if (_mktemp(template) != 0)
+        return -1;
+    fd = FcOpen(template, O_RDWR | O_EXCL | O_CREAT, 0600);
+ #endif
+-- 
+1.8.4.5
+
