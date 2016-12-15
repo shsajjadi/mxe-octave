@@ -3,10 +3,10 @@
 
 PKG             := of-splines
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.3.1
-$(PKG)_CHECKSUM := bec64b727eb3f5af4f5f9e4496b80103c3f11651
+$(PKG)_VERSION  := 1.3.2
+$(PKG)_CHECKSUM := 49339e5ba31514d1c37871781bca13ef296bf087
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := splines
+$(PKG)_SUBDIR   := splines-$($(PKG)_VERSION)
 $(PKG)_FILE     := splines-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
