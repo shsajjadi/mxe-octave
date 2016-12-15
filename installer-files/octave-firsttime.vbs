@@ -9,7 +9,6 @@ OctavePath = fso.GetParentFolderName(WScript.ScriptFullName)
 Set fo = fso.GetFolder(OctavePath)
 OctavePath = fo.ShortPath
 Set fo = Nothing
-Set fso = Nothing
 
 ' set up path to ensure octave bin comes first
 Set wshSystemEnv = wshShell.Environment( "PROCESS" )
@@ -20,6 +19,13 @@ wshSystemEnv("TERM") = "cygwin"
 wshSystemEnv("GNUTERM") = "windows"
 
 wshSystemEnv("GS") = "gs.exe"
+
+If wshShell.ExpandEnvironmentStrings("%HOME%") = "%HOME%" Then
+  Home = wshSystemEnv("USERPROFILE")
+  Set fo = fso.GetFolder(Home)
+  wshSystemEnv("HOME") = fo.ShortPath
+  Set fo = Nothing
+End If
 
 ' set Qt plugin directory and path 
 Set objFSO = CreateObject("Scripting.FileSystemObject")
@@ -37,6 +43,7 @@ wshShell.CurrentDirectory = startpath
 wshShell.Run chr(34) & OctavePath & "\bin\octave-gui.exe" & Chr(34), 0
 
 ' free our objects
+Set fso = Nothing
 Set wshShell = Nothing
 Set wshSystemEnv = Nothing
 Set wshArgs = Nothing
