@@ -19,6 +19,12 @@ set TERM=cygwin
 set GNUTERM=windows
 set GS=gs.exe
 
+Rem set home if not already set
+if "%HOME%"=="" set HOME=%USERPROFILE%
+if "%HOME%"=="" set HOME=%HOMEDRIVE%%HOMEPATH%
+Rem set HOME to 8.3 format
+for %%I in ("%HOME%") do set HOME=%%~sI
+
 Rem   Check for args to see if we are told to start GUI
 Rem   with the --force-gui option or not (--no-gui)
 Rem   Otherwise assume starting as command line
