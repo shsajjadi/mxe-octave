@@ -130,7 +130,6 @@ SRC_FILES_1 := \
   glew.mk \
   glib.mk \
   glibmm.mk \
-  glpk-1-fixes.patch \
   glpk.mk \
   gmp.mk \
   gnuplot-1-fixes.patch \

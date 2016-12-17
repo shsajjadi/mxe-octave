@@ -3,12 +3,12 @@
 
 PKG             := glpk
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.55
-$(PKG)_CHECKSUM := 893058aada022a8dfc63c675ebcd7e7e86a3a363
+$(PKG)_VERSION  := 4.60
+$(PKG)_CHECKSUM := 4e55a3d2aa38b19c5bdd8a195738dbaf44e91e90
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := glpk-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/glpk/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := gmp
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://ftp.gnu.org/gnu/glpk/?C=M;O=D' | \
@@ -23,6 +23,7 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
+	--with-gmp \
         --prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)'
     $(MAKE) -C '$(1)/.build' -j 1 install DESTDIR='$(3)'
