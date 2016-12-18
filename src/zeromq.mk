@@ -3,11 +3,11 @@
 
 PKG             := zeromq
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.1.3
-$(PKG)_CHECKSUM := b7185724f2fd56d0face50047757ac2a04d26ca4
+$(PKG)_VERSION  := 4.1.6
+$(PKG)_CHECKSUM := b956df8c6f77c174683b51fbee67f99c94945651
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://download.zeromq.org/$($(PKG)_FILE)
+$(PKG)_URL      := http://github.com/$(PKG)/$(PKG)4-1/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := pthreads
 
 define $(PKG)_UPDATE
