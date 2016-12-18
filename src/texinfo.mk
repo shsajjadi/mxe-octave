@@ -3,8 +3,8 @@
 
 PKG             := texinfo
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 6.0
-$(PKG)_CHECKSUM := 110d45256c4219c88dc2fdb8c9c1a20749e4e7c5
+$(PKG)_VERSION  := 6.3
+$(PKG)_CHECKSUM := 29b16c646c7bc9cd351b2f1d8dafdce70e5377f6
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/texinfo/$($(PKG)_FILE)
