@@ -3,11 +3,11 @@
 
 PKG             := build-cmake
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.1.3
-$(PKG)_CHECKSUM := 5b9bb6e6f8c93335a0ef7b6c2d00a5273c2ea6cc
+$(PKG)_VERSION  := 3.7.1
+$(PKG)_CHECKSUM := d00c720847c0a2aff817c36377569efbb677fb08
 $(PKG)_SUBDIR   := cmake-$($(PKG)_VERSION)
 $(PKG)_FILE     := cmake-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://www.cmake.org/files/v3.1/$($(PKG)_FILE)
+$(PKG)_URL      := http://www.cmake.org/files/v3.7/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
