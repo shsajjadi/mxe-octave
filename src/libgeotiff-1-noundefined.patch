@@ -1,46 +1,55 @@
-diff -ur libgeotiff-1.4.0.orig/libxtiff/Makefile.am libgeotiff-1.4.0/libxtiff/Makefile.am
---- libgeotiff-1.4.0.orig/libxtiff/Makefile.am	2014-06-28 09:56:02.000000000 -0400
-+++ libgeotiff-1.4.0/libxtiff/Makefile.am	2014-06-28 11:57:04.000000000 -0400
-@@ -7,5 +7,5 @@
- AM_CFLAGS = -I../ $(TIFF_CFLAGS) 
- 
- libxtiff_la_SOURCES = xtiff.c
--
-+libxtiff_la_LIBADD = -ltiff
- noinst_LTLIBRARIES = libxtiff.la
-diff -ur libgeotiff-1.4.0.orig/Makefile.am libgeotiff-1.4.0/Makefile.am
---- libgeotiff-1.4.0.orig/Makefile.am	2014-06-28 09:56:02.000000000 -0400
-+++ libgeotiff-1.4.0/Makefile.am	2014-06-28 09:56:53.000000000 -0400
-@@ -108,7 +108,7 @@
-                              csv/unit_of_measure.c 
- endif
- 
--libgeotiff_la_LDFLAGS = -version-info 3:0:1
-+libgeotiff_la_LDFLAGS = -version-info 3:0:1 -no-undefined
- 
- libgeotiff_la_LIBADD = libxtiff/libxtiff.la
- 
-diff -ur libgeotiff-1.4.0.orig/Makefile.in libgeotiff-1.4.0/Makefile.in
---- libgeotiff-1.4.0.orig/Makefile.in	2014-06-28 09:56:02.000000000 -0400
-+++ libgeotiff-1.4.0/Makefile.in	2014-06-28 17:37:48.000000000 -0400
-@@ -448,7 +448,7 @@
- 	geo_get.c geo_names.c geo_new.c geo_normalize.c geo_print.c \
- 	geo_set.c geo_simpletags.c geo_tiffp.c geo_trans.c geo_write.c \
- 	geo_strtod.c geotiff_proj4.c $(am__append_1)
--libgeotiff_la_LDFLAGS = -version-info 3:0:1
-+libgeotiff_la_LDFLAGS = -version-info 3:0:1 -no-undefined
- libgeotiff_la_LIBADD = libxtiff/libxtiff.la
- lib_LTLIBRARIES = libgeotiff.la
- EXTRA_DIST = makefile.vc \
-diff -burN libgeotiff-1.4.0.orig/configure.ac libgeotiff-1.4.0/configure.ac
---- libgeotiff-1.4.0.orig/configure.ac	2015-06-21 03:50:03.341076086 +0200
-+++ libgeotiff-1.4.0/configure.ac	2015-06-21 03:50:39.741125191 +0200
-@@ -280,7 +280,7 @@
+diff -ur libgeotiff-1.4.2.orig/configure.ac libgeotiff-1.4.2/configure.ac
+--- libgeotiff-1.4.2.orig/configure.ac	2016-12-20 07:54:57.947571494 -0500
++++ libgeotiff-1.4.2/configure.ac	2016-12-20 08:04:22.867573204 -0500
+@@ -281,7 +281,7 @@
    PROJ_INC=-I$PROJ_INC
  
    AC_SUBST(PROJ_INC,$PROJ_INC)
 -  AC_DEFINE(HAVE_PROJECTS_H)
-+  AC_DEFINE([HAVE_PROJECTS_H], [], [Description])
++  AC_DEFINE([HAVE_PROJECTS_H],[],[D])
    AC_DEFINE(HAVE_LIBPROJ)
    AC_SUBST([HAVE_LIBPROJ])
    PROJ_CONFIG="yes"
+@@ -317,7 +317,7 @@
+ AM_CONDITIONAL([CSV_IS_CONFIG], [test ! x$CSV_CONFIG = xno])
+ 
+ 
+-AC_ARG_ENABLE(towgs84, [  --disable-towgs84       Disable WGS84 parameters for binary compatibility with pre-1.4.1], AC_DEFINE(GEO_NORMALIZE_DISABLE_TOWGS84))
++AC_ARG_ENABLE(towgs84, [  --disable-towgs84       Disable WGS84 parameters for binary compatibility with pre-1.4.1], AC_DEFINE([GEO_NORMALIZE_DISABLE_TOWGS84],[],[D]))
+ 
+ dnl #########################################################################
+ dnl Doxygen settings
+diff -ur libgeotiff-1.4.2.orig/libxtiff/Makefile.am libgeotiff-1.4.2/libxtiff/Makefile.am
+--- libgeotiff-1.4.2.orig/libxtiff/Makefile.am	2016-12-20 07:54:57.946488133 -0500
++++ libgeotiff-1.4.2/libxtiff/Makefile.am	2016-12-20 07:55:59.005822766 -0500
+@@ -7,5 +7,6 @@
+ AM_CFLAGS = -I../ $(TIFF_CFLAGS) 
+ 
+ libxtiff_la_SOURCES = xtiff.c
++libxtiff_la_LIBADD = -ltiff
+ 
+ noinst_LTLIBRARIES = libxtiff.la
+diff -ur libgeotiff-1.4.2.orig/Makefile.am libgeotiff-1.4.2/Makefile.am
+--- libgeotiff-1.4.2.orig/Makefile.am	2016-12-20 07:54:57.948654856 -0500
++++ libgeotiff-1.4.2/Makefile.am	2016-12-20 07:57:15.239801217 -0500
+@@ -110,7 +110,7 @@
+                              csv/unit_of_measure.c
+ endif
+ 
+-libgeotiff_la_LDFLAGS = -version-info 3:2:1
++libgeotiff_la_LDFLAGS = -version-info 3:2:1 -no-undefined
+ 
+ libgeotiff_la_LIBADD = libxtiff/libxtiff.la
+ 
+diff -ur libgeotiff-1.4.2.orig/Makefile.in libgeotiff-1.4.2/Makefile.in
+--- libgeotiff-1.4.2.orig/Makefile.in	2016-12-20 07:54:57.931321073 -0500
++++ libgeotiff-1.4.2/Makefile.in	2016-12-20 07:57:58.276334784 -0500
+@@ -567,7 +567,7 @@
+ 	geo_get.c geo_names.c geo_new.c geo_normalize.c geo_print.c \
+ 	geo_set.c geo_simpletags.c geo_tiffp.c geo_trans.c geo_write.c \
+ 	geo_strtod.c geotiff_proj4.c $(am__append_3)
+-libgeotiff_la_LDFLAGS = -version-info 3:2:1
++libgeotiff_la_LDFLAGS = -version-info 3:2:1 -no-undefined
+ libgeotiff_la_LIBADD = libxtiff/libxtiff.la
+ lib_LTLIBRARIES = libgeotiff.la
+ EXTRA_DIST = autogen.sh \
