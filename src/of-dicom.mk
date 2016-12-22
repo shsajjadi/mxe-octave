@@ -9,7 +9,7 @@ $(PKG)_REMOTE_SUBDIR :=
 $(PKG)_SUBDIR   := dicom
 $(PKG)_FILE     := dicom-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/octave/$($(PKG)_FILE)?download
-$(PKG)_DEPS     := gdcm
+$(PKG)_DEPS     := gdcm cmake
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://$(SOURCEFORGE_MIRROR)/projects/octave/files/Octave%20Forge%20Packages/Individual%20Package%20Releases/' | \
