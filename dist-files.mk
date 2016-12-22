@@ -51,6 +51,7 @@ SRC_FILES_1 := \
   cgal-1-fixes.patch \
   cgal.mk \
   cloog.mk \
+  cmake.mk \
   cminpack.mk \
   cppunit.mk \
   cunit.mk \
