@@ -3,8 +3,8 @@
 
 PKG             := libffi
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.1
-$(PKG)_CHECKSUM := cb373ef2115ec7c57913b84ca72eee14b10ccdc3
+$(PKG)_VERSION  := 3.2.1
+$(PKG)_CHECKSUM := 280c265b789e041c02e5c97815793dfc283fb1e6
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://sourceware.org/pub/$(PKG)/$($(PKG)_FILE)
@@ -21,6 +21,7 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(ENABLE_SHARED_OR_STATIC) \
 	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)/$(TARGET)' -j '$(JOBS)'
