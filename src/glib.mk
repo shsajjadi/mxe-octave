@@ -3,8 +3,8 @@
 
 PKG             := glib
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.36.3
-$(PKG)_CHECKSUM := aafba69934b9ba77cc8cb0e5d8105aa1d8463eba
+$(PKG)_VERSION  := 2.48.1
+$(PKG)_CHECKSUM := d59b6daf51dff21c6327734a99f1fb6c5328bcf9
 $(PKG)_SUBDIR   := glib-$($(PKG)_VERSION)
 $(PKG)_FILE     := glib-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/glib/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
@@ -54,7 +54,7 @@ define $(PKG)_BUILD
         --disable-inotify \
         --disable-modular-tests \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
-        PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' 
+        PKG_CONFIG_PATH='$(PKG_CONFIG_PATH)' 
 
     $(MAKE) -C '$(1)'    -j '$(JOBS)' 
     $(MAKE) -C '$(1)'    -j 1 install 
