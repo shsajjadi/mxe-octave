@@ -61,5 +61,6 @@ define $(PKG)_BUILD
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
         PKG_CONFIG_PATH='$(PKG_CONFIG_PATH)' \
         && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j '$(JOBS)' noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j 1 install noinst_PROGRAMS=  DESTDIR='$(3)'
 endef
