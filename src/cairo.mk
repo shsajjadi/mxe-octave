@@ -3,8 +3,8 @@
 
 PKG             := cairo
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.12.14
-$(PKG)_CHECKSUM := 9106ab09b2e7b9f90521b18dd4a7e9577eba6c15
+$(PKG)_VERSION  := 1.14.8
+$(PKG)_CHECKSUM := c6f7b99986f93c9df78653c3e6a3b5043f65145e
 $(PKG)_SUBDIR   := cairo-$($(PKG)_VERSION)
 $(PKG)_FILE     := cairo-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://cairographics.org/releases/$($(PKG)_FILE)
@@ -32,8 +32,6 @@ ifeq ($(MXE_SYSTEM),msvc)
 endif
 
 define $(PKG)_BUILD
-    $(SED) -i 's,libpng12,libpng,g'                          '$(1)/configure'
-    $(SED) -i 's,^\(Libs:.*\),\1 @CAIRO_NONPKGCONFIG_LIBS@,' '$(1)/src/cairo.pc.in'
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -57,10 +55,11 @@ define $(PKG)_BUILD
         --enable-ps \
         --enable-pdf \
         --enable-svg \
+	--disable-directfb \
         --disable-pthread \
         $($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
-        PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
+        PKG_CONFIG_PATH='$(PKG_CONFIG_PATH)' \
         && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install noinst_PROGRAMS=
 endef
