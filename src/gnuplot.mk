@@ -10,8 +10,20 @@ $(PKG)_FILE     := gnuplot-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://sourceforge.net/projects/gnuplot/files/gnuplot/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
+$(PKG)_EXTRAFLAGS :=
+
+
+$(PKG)_DEPS     += wxwidgets cairo  pango
+$(PKG)_EXTRAFLAGS += CAIRTERMS=1 CAIROLIBS=1 
+$(PKG)_EXTRAFLAGS += WXT=1 WX_CONFIG=$(MXE_TOOL_PREFIX)wx-config
+
+#ifeq ($(ENABLE_QT5),yes)
+#  $(PKG)_DEPS     += qt5
+#  $(PKG)_EXTRAFLAGS += QT=1 QT_DIR=$(HOST_PREFIX)/qt5
+#endif
+
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
-    $(PKG)_EXTRAFLAGS := ICONV_CFLAGS='-I$(HOST_INCDIR)' ICONV_LDFLAGS='-L$(HOST_LIBDIR)'
+    $(PKG)_EXTRAFLAGS += ICONV_CFLAGS='-I$(HOST_INCDIR)' ICONV_LDFLAGS='-L$(HOST_LIBDIR)'
 endif
 
 define $(PKG)_UPDATE
@@ -51,7 +63,6 @@ define $(PKG)_BUILD
     $(INSTALL) -m755 '$(1)/config/mingw/gnuplot.exe' '$(TOP_DIR)/gnuplot/bin/'
     $(INSTALL) -m755 '$(1)/config/mingw/wgnuplot.exe' '$(TOP_DIR)/gnuplot/bin/'
     $(INSTALL) -m644 '$(1)/src/win/wgnuplot.mnu' '$(TOP_DIR)/gnuplot/bin/'
-
 endef
 else
 ifeq ($(MXE_SYSTEM),msvc)

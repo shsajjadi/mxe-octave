@@ -123,3 +123,53 @@ diff -ur gnuplot-5.0.4.orig/src/syscfg.h gnuplot-5.0.4/src/syscfg.h
  #endif
  
  #ifdef HAVE_STRUCT_EXCEPTION_IN_MATH_H
+diff -ur gnuplot-5.0.4.orig/config/mingw/Makefile gnuplot-5.0.4/config/mingw/Makefile
+--- gnuplot-5.0.4.orig/config/mingw/Makefile	2016-12-27 08:55:41.906600912 -0500
++++ gnuplot-5.0.4/config/mingw/Makefile	2016-12-27 08:57:30.033448266 -0500
+@@ -101,6 +101,7 @@
+ # Uncomment the following lines to compile it.
+ #WXT=1
+ #CAIROLIBS=1
++WX_CONFIG ?= wx-config
+ 
+ # Build qt terminal?
+ #QT = 1
+@@ -422,9 +423,9 @@
+ 
+ ifdef WXT
+ 	CFLAGS += -DWXWIDGETS
+-	WXT_CXXFLAGS := $(shell wx-config --cxxflags)
++	WXT_CXXFLAGS := $(shell $(WX_CONFIG) --cxxflags)
+ 	CXXFLAGS += $(WXT_CXXFLAGS)
+-	WX_LIBS := $(shell wx-config --libs | sed -e "s+-Wl,--subsystem,windows++g" -e "s+-mwindows++g")
++	WX_LIBS := $(shell $(WX_CONFIG) --libs | sed -e "s+-Wl,--subsystem,windows++g" -e "s+-mwindows++g")
+ 	WX_OBJS = wxt_gui.$(O)
+ endif
+ 
+diff -ur gnuplot-5.0.4.orig/src/wxterminal/wxt_gui.h gnuplot-5.0.4/src/wxterminal/wxt_gui.h
+--- gnuplot-5.0.4.orig/src/wxterminal/wxt_gui.h	2016-12-27 12:29:33.624151543 -0500
++++ gnuplot-5.0.4/src/wxterminal/wxt_gui.h	2016-12-27 12:30:09.419977685 -0500
+@@ -174,7 +174,7 @@
+ #  ifndef _WIN32_WINNT 
+ #   define _WIN32_WINNT 0x0500
+ #  endif
+-#  include "Windows.h"
++#  include "windows.h"
+ #  include "win/wtext.h"
+ #  include "win/winmain.h"
+ # endif
+diff -ur gnuplot-5.0.4.orig/config/mingw/Makefile gnuplot-5.0.4/config/mingw/Makefile
+--- gnuplot-5.0.4.orig/config/mingw/Makefile	2016-12-27 12:42:32.612130064 -0500
++++ gnuplot-5.0.4/config/mingw/Makefile	2016-12-27 12:43:31.994500570 -0500
+@@ -108,9 +108,9 @@
+ # specify QT installation directory
+ #QT_DIR = /c/Qt/5.2.1/mingw48_32
+ ifndef MINGW64
+-QT_DIR = /d/Source/Qt-5.2.1-mingw/5.2.1/mingw48_32
++QT_DIR ?= /d/Source/Qt-5.2.1-mingw/5.2.1/mingw48_32
+ else
+-QT_DIR = /mingw64
++QT_DIR ?= /mingw64
+ endif
+ 
+ # Uncomment the following line to select the lua/tikz terminal
