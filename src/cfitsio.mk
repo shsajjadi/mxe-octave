@@ -55,5 +55,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' $($(PKG)_MAKE_FLAGS)
     $(MAKE) -C '$(1)' -j 1 install
 
+    if [ "$(MXE_SYSTEM)" == "mingw" ]; then \
+        $(INSTALL) '$(1)/libcfitsio$(LIBRARY_SUFFIX).dll' '$(HOST_BINDIR)'; \
+    fi
 endef
 endif
