@@ -62,5 +62,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= __install_wxrc___depname=
 
     $(INSTALL) -m755 '$(HOST_BINDIR)/wx-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)wx-config'
+    mv $(HOST_LIBDIR)/wxbase30*.dll $(HOST_BINDIR)/
+    mv $(HOST_LIBDIR)/wxmsw30*.dll $(HOST_BINDIR)/
 
 endef
