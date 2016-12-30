@@ -86,18 +86,27 @@ AC_ARG_ENABLE(windows-64,
     [build a Windows 64 cross compiler; resulting build will work only on 64-bit Windows systems])],
   [if test "$enableval" = yes; then ENABLE_WINDOWS_64=yes; fi], [])
 
-ENABLE_64=no
+ENABLE_64=yes
 AC_ARG_ENABLE(64,
-  [AS_HELP_STRING([--enable-64],
-    [(EXPERIMENTAL) use 64-bit integers for array dimensions and indexing])],
-  [if test "$enableval" = yes; then ENABLE_64=yes; fi], [])
+  [AS_HELP_STRING([--disable-64],
+    [don't use 64-bit integers for array dimensions and indexing])],
+  [if test "$enableval" = no; then ENABLE_64=no; fi], [])
 
-if test "$ENABLE_64" = yes && test "$ENABLE_WINDOWS_64" = no; then
-  AC_MSG_WARN([--enable-64 implies --enable-windows-64])
-  ENABLE_WINDOWS_64=yes
+ENABLE_FORTRAN_INT64=no
+AC_ARG_ENABLE(FORTRAN_INT64,
+  [AS_HELP_STRING([--enable-fortran-int64],
+    [use 64-bit integers for fortran (and other) numerical library code])],
+  [if test "$enableval" = yes; then ENABLE_FORTRAN_INT64=yes; fi], [])
+
+if test "$ENABLE_64" = yes || test "$ENABLE_FORTRAN_INT64" = yes; then
+  if test "$ENABLE_WINDOWS_64" = no; then
+    AC_MSG_WARN([--enable-64 or --enable-fortran-int64 implies --enable-windows-64])
+    ENABLE_WINDOWS_64=yes
+  fi
 fi
 
 AC_SUBST(ENABLE_64)
+AC_SUBST(ENABLE_FORTRAN_INT64)
 AC_SUBST(ENABLE_WINDOWS_64)
 
 BUILD_SHARED=yes

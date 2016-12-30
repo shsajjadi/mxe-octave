@@ -80,7 +80,10 @@ endif
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
   ifeq ($(ENABLE_64),yes)
-    $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 --without-qhull F77_INTEGER_8_FLAG=-fdefault-integer-8
+    $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 --without-qhull
+  endif
+  ifeq ($(ENABLE_FORTRAN_INT64),yes)
+    F77_INTEGER_8_FLAG=-fdefault-integer-8
   endif
 else
   ifeq ($(MXE_SYSTEM),mingw)
@@ -88,7 +91,10 @@ else
       FLTK_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)fltk-config' \
       gl_cv_func_gettimeofday_clobber=no
     ifeq ($(ENABLE_64),yes)
-      $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 --without-qhull F77_INTEGER_8_FLAG=-fdefault-integer-8 ax_blas_f77_func_ok=yes
+      $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 --without-qhull
+    endif
+    ifeq ($(ENABLE_FORTRAN_INT64),yes)
+      $(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS := F77_INTEGER_8_FLAG=-fdefault-integer-8 ax_blas_f77_func_ok=yes ax_blas_integer_size=8 octave_cv_sizeof_fortran_integer=8"
     endif
   endif
 endif
@@ -157,6 +163,7 @@ define $(PKG)_BUILD
         --enable-install-build-logs \
         $($(PKG)_CROSS_CONFIG_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
+        $($(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS) \

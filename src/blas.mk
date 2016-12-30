@@ -11,7 +11,7 @@ $(PKG)_URL      := http://www.netlib.org/$(PKG)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.eq.uc.pt/pub/software/math/netlib/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
-ifeq ($(ENABLE_64),yes)
+ifeq ($(ENABLE_FORTRAN_INT64),yes)
   $(PKG)_DEFAULT_INTEGER_8_FLAG := -fdefault-integer-8
 endif
 

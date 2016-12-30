@@ -47,13 +47,14 @@ USE_SYSTEM_X11_LIBS := @USE_SYSTEM_X11_LIBS@
 # binaries that require a 64-bit Windows system.
 ENABLE_WINDOWS_64 := @ENABLE_WINDOWS_64@
 
-# Attempt to build Octave and dependencies with 64-bit indexing
-# enabled (experimental; requires 64-bit system and compiler).
-# Note that 64-bit indexing is NOT required simply because you have
-# 64-bit operating system.  Building Octave with 64-bit indexing is
-# still experimental, so enabling this option is discouraged unless
-# you know what you are doing.
+# Build Octave with 64-bit indexing enabled (This is the default).
 ENABLE_64 := @ENABLE_64@
+
+# Build Fortran (and other) numerical library dependencies with
+# 64-bit indexing enabled (experimental; requires 64-bit system and
+# compiler).  The usual configuration is to build with ENABLE_64 but
+# not ENABLE_FORTRAN_INT64.
+ENABLE_FORTRAN_INT64 := @ENABLE_FORTRAN_INT64@
 
 # create binary octave forge tools.
 # if cross, compiling, this also means we will attempt to create cross mkoctfile

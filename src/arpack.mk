@@ -23,7 +23,7 @@ ifeq ($(USE_PIC_FLAG),yes)
   $(PKG)_CONFIGURE_PIC_OPTION := --with-pic
 endif
 
-ifeq ($(ENABLE_64),yes)
+ifeq ($(ENABLE_FORTRAN_INT64),yes)
   $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := FFLAGS="-g -O2 -fdefault-integer-8"
 endif
 
