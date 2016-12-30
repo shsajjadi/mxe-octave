@@ -10,8 +10,8 @@ $(PKG)_FILE     := qrupdate-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://sourceforge.net/projects/qrupdate/files/$($(PKG)_FILE)
 $(PKG)_DEPS     := blas lapack
 
-ifeq ($(ENABLE_64),yes)
-  $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := FFLAGS="-g -O2 -fdefault-integer-8"
+ifeq ($(ENABLE_FORTRAN_INT64),yes)
+  $(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS := FFLAGS="-g -O2 -fdefault-integer-8"
 endif
 
 define $(PKG)_UPDATE
@@ -30,7 +30,8 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
 	$(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
-        $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) && $(CONFIGURE_POST_HOOK)
+        $($(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS) \
+          && $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
 endef

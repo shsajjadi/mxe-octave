@@ -16,7 +16,7 @@ else
   $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES="-L$(HOST_PREFIX)/lib -lblas"
 endif
 
-ifeq ($(ENABLE_64),yes)
+ifeq ($(ENABLE_FORTRAN_INT64),yes)
   $(PKG)_DEFAULT_INTEGER_8_FLAG := -fdefault-integer-8
 endif
 

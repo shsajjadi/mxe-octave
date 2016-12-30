@@ -10,7 +10,7 @@ $(PKG)_FILE     := ITSOL_2.tar.gz
 $(PKG)_URL      := http://www-users.cs.umn.edu/~saad/software/ITSOL/itsol.php
 $(PKG)_DEPS     := blas
 
-ifeq ($(ENABLE_64),yes)
+ifeq ($(ENABLE_FORTRAN_INT64),yes)
   $(PKG)_DEFAULT_INTEGER_8_FLAG := -fdefault-integer-8
 endif
 

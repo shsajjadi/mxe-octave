@@ -41,7 +41,7 @@ $(PKG)_STATICLIBS_1 := \
 
 $(PKG)_CPPFLAGS := -DNTIMER
 
-ifeq ($(ENABLE_64),yes)
+ifeq ($(ENABLE_FORTRAN_INT64),yes)
   ifeq ($(MXE_WINDOWS_BUILD),yes)
     $(PKG)_CPPFLAGS += -DLONGBLAS='long long'
   else
