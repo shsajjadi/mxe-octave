@@ -238,6 +238,14 @@ AC_ARG_ENABLE([qt5],
   [if test "$enableval" = yes; then ENABLE_QT5=yes; fi], [])
 AC_SUBST(ENABLE_QT5)
 
+# install dependancy package docs (or not to save space)
+ENABLE_DEP_DOCS=no
+AC_ARG_ENABLE([dep-docs],
+	      [AS_HELP_STRING([--enable-dep-docs],
+			      [Enable install of dependancy package dos])],
+  [if test "$enableval" = yes; then ENABLE_DEP_DOCS=yes; fi], [])
+AC_SUBST(ENABLE_DEP_DOCS)
+
 
 ### Default is to cross compile for mingw.
 

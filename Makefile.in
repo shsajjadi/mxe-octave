@@ -96,6 +96,9 @@ ENABLE_DOCS := @ENABLE_DOCS@
 # Use openblas for octave
 ENABLE_OPENBLAS := @ENABLE_OPENBLAS@
 
+# Install dependancy pkg docs
+ENABLE_DEP_DOCS := @ENABLE_DEP_DOCS@
+
 # Look in lib64 directory.
 MXE_USE_LIB64_DIRECTORY := @ENABLE_LIB64_DIRECTORY@
 

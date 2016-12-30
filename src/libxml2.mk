@@ -34,4 +34,11 @@ define $(PKG)_BUILD
         --without-threads && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' noinst_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install noinst_PROGRAMS= DESTDIR='$(3)'
+
+    if [ "$(ENABLE_DEP_DOCS)" == "no" ]; then \
+      rm -rf "$(3)$(HOST_PREFIX)/share/gtk-doc"; \
+      rm -rf "$(3)$(HOST_PREFIX)/share/doc/$($(PKG)_SUBDIR)/html"; \
+      rm -rf "$(3)$(HOST_PREFIX)/share/doc/$($(PKG)_SUBDIR)/examples"; \
+    fi
 endef
+
