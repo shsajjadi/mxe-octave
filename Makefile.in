@@ -162,12 +162,15 @@ endif
 ifeq ($(ENABLE_DEP_DOCS),no)
   MXE_DISABLE_DOCS := \
     man_MANS= \
+    dist_man_MANS= \
     man1_MANS= \
+    dist_man1_MANS= \
     man2_MANS= \
     man3_MANS= \
+    dist_man3_MANS= \
     man4_MANS= \
     man5_MANS= \
-    dist_man_MANS= \
+    dist_man5_MANS= \
     doc_DATA= \
     dist_doc_DATA= \
     html_DATA= \
