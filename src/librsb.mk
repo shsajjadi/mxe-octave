@@ -32,4 +32,8 @@ define $(PKG)_BUILD
       $(INSTALL) -d '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
       $(INSTALL) -m755 '$(3)$(HOST_BINDIR)/librsb-config' '$(3)$(BUILD_TOOLS_PREFIX)/bin/librsb-config'; \
     fi
+
+    if [ "$(ENABLE_DEP_DOCS)" == "no" ]; then \
+      rm -rf "$(3)$(HOST_PREFIX)/share/doc/$(PKG)"; \
+    fi
 endef

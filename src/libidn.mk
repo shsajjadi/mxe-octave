@@ -25,5 +25,6 @@ define $(PKG)_BUILD
         --disable-csharp \
         --prefix='$(HOST_PREFIX)' \
         --with-libiconv-prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DIABLE_PROGS) DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
 endef
