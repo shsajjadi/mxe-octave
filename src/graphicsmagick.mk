@@ -54,4 +54,8 @@ define $(PKG)_BUILD
 	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS=
     $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= DESTDIR='$(3)'
+
+    if [ "$(ENABLE_DEP_DOCS)" == "no" ]; then \
+      rm -rf "$(3)$(HOST_PREFIX)/share/doc/GraphicsMagick"; \
+    fi
 endef

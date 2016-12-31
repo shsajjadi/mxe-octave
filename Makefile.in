@@ -158,6 +158,28 @@ else
   WITH_SHARED_OR_STATIC := --without-shared --with-static
 endif
 
+ifeq ($(ENABLE_DEP_DOCS),no)
+  MXE_DISABLE_DOCS := \
+    man_MANS= \
+    man1_MANS= \
+    man2_MANS= \
+    man3_MANS= \
+    man4_MANS= \
+    man5_MANS= \
+    dist_man_MANS= \
+    doc_DATA= \
+    dist_doc_DATA= \
+    html_DATA= \
+    dist_html_DATA= \
+    examples_DATA= \
+    dist_examples_SCRIPTS= \
+    INFO_DEPS= 
+else
+  MXE_DISABLE_DOCS :=
+endif
+
+MXE_DISABLE_PROGS := bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= 
+
 ifeq ($(USE_PIC_FLAG),yes)
   MXE_CC_PICFLAG := -fPIC
   MXE_CXX_PICFLAG := -fPIC

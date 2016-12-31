@@ -100,4 +100,8 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' 
     $(MAKE) -C '$(1)/.build' -j 1 install DESTDIR='$(3)'
+
+    if [ "$(ENABLE_DEP_DOCS)" == "no" ]; then \
+      rm -rf '$(3)$(HOST_PREFIX)/share/hdf5_examples'; \
+    fi
 endef
