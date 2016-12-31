@@ -26,5 +26,9 @@ define $(PKG)_BUILD
 	CC='$(MXE_CC)' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --disable-nls && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)'
+    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
+    if [ "$(ENABLE_DEP_DOCS)" == "no" ]; then \
+      rm -rf '$(3)$(HOST_PREFIX)/share'; \
+    fi
 endef

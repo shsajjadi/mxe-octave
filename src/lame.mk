@@ -24,5 +24,5 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-frontend
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)' $(MXE_DISABLE_DOCS)
 endef
