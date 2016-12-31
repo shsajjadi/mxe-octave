@@ -80,11 +80,11 @@ AC_ARG_WITH([ccache],
   [if test "$withval" = yes; then USE_CCACHE=yes; fi], [])
 AC_SUBST(USE_CCACHE)
 
-ENABLE_WINDOWS_64=no
+ENABLE_WINDOWS_64=yes
 AC_ARG_ENABLE(windows-64,
-  [AS_HELP_STRING([--enable-windows-64],
-    [build a Windows 64 cross compiler; resulting build will work only on 64-bit Windows systems])],
-  [if test "$enableval" = yes; then ENABLE_WINDOWS_64=yes; fi], [])
+  [AS_HELP_STRING([--disable-windows-64],
+    [don't build a Windows 64 cross compiler])],
+  [if test "$enableval" = no; then ENABLE_WINDOWS_64=no; fi], [])
 
 ENABLE_64=yes
 AC_ARG_ENABLE(64,
