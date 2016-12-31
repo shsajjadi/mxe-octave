@@ -212,7 +212,7 @@ else
     TAR  := tar
 endif
 
-REQUIREMENTS := bash bzip2 $(MAKE) openssl $(PATCH) $(PERL) \
+REQUIREMENTS := bash bzip2 $(MAKE) $(PATCH) $(PERL) \
                 $(SED) tar unzip wget
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
