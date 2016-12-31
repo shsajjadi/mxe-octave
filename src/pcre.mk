@@ -33,7 +33,12 @@ define $(PKG)_BUILD
         --disable-pcregrep-libbz2 \
         --disable-pcretest-libreadline && $(CONFIGURE_POST_HOOK)
     rm -f '$(HOST_PREFIX)'/share/man/man3/pcre16*.3
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DISABLE_PROGS) DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS) DESTDIR='$(3)'
+    if [ "$(ENABLE_DEP_DOCS)" == "no" ]; then \
+       rm -rf "$(3)$(HOST_PREFIX)/share/doc/pcre/html"; \
+       rm -rf "$(3)$(HOST_PREFIX)/share/man"; \
+    fi
     if [ $(MXE_NATIVE_BUILD) = no ]; then \
       $(INSTALL) -d '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
       $(INSTALL) -m755 '$(3)$(HOST_BINDIR)/pcre-config' '$(3)$(BUILD_TOOLS_PREFIX)/bin/pcre-config'; \

@@ -28,7 +28,7 @@ define $(PKG)_BUILD
         --without-openssl \
         --with-libgcrypt \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= html_DATA= DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
 
 ##    '$(MXE_CC)' \
 ##        -W -Wall -Werror -ansi -pedantic \

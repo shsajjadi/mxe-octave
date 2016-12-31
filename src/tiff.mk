@@ -27,7 +27,8 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --without-x && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DISABLE_PROGS) DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
 
     rm -f '$(3)$(HOST_LIBDIR)/libtiff.la'
     rm -f '$(3)$(HOST_LIBDIR)/libtiffxx.la'
