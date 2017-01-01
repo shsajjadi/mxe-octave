@@ -3,8 +3,8 @@
 
 PKG             := qtbase
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.7.0
-$(PKG)_CHECKSUM := ba835ff158932eebbf1ed9f678414923dfd7cce4
+$(PKG)_VERSION  := 5.7.1
+$(PKG)_CHECKSUM := a3ddcde8978d3a05bb4342fce364a792472a16e6
 $(PKG)_SUBDIR   := $(PKG)-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-opensource-src-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://download.qt.io/official_releases/qt/5.7/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
@@ -53,6 +53,7 @@ define $(PKG)_BUILD
             -system-pcre \
             -no-openssl \
             -dbus-linked \
+	    -no-pch \
             -v \
             $($(PKG)_CONFIGURE_OPTS)
 
