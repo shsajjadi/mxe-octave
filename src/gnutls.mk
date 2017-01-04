@@ -2,12 +2,12 @@
 # See index.html for further information.
 
 PKG             := gnutls
-$(PKG)_VERSION  := 3.3.15
-$(PKG)_CHECKSUM := d7f66b0aeaf48ff8621cc1913230635ef672f0a4
+$(PKG)_VERSION  := 3.4.17
+$(PKG)_CHECKSUM := 52dab0301022199a34888fa6ed97d92e602ccd60
 $(PKG)_SUBDIR   := gnutls-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnutls-$($(PKG)_VERSION).tar.xz
-$(PKG)_URL      := ftp://ftp.gnutls.org/gcrypt/gnutls/v3.3/$($(PKG)_FILE)
-$(PKG)_URL_2    := http://mirrors.dotsrc.org/gnupg/gnutls/v3.3/$($(PKG)_FILE)
+$(PKG)_URL      := ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/$($(PKG)_FILE)
+$(PKG)_URL_2    := http://mirrors.dotsrc.org/gnupg/gnutls/v3.4/$($(PKG)_FILE)
 $(PKG)_DEPS     := gettext nettle pcre zlib
 
 define $(PKG)_UPDATE
@@ -32,7 +32,6 @@ endif
 
 define $(PKG)_BUILD
     $(SED) -i 's, sed , $(SED) ,g' '$(1)/gl/tests/Makefile.am'
-    rm '$(1)/ltmain.sh'
     cd '$(1)' && autoreconf -fi  -I m4 -I gl/m4 -I src/libopts/m4
     if [ "$(MXE_NATIVE_BUILD)" = no ]; then \
       $(SED) -i 's/libopts_cv_with_libregex=no/libopts_cv_with_libregex=yes/g;' '$(1)/configure'; \
