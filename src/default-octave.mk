@@ -81,9 +81,8 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
   ifeq ($(ENABLE_64),yes)
     $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 --without-qhull
-  endif
-  ifeq ($(ENABLE_FORTRAN_INT64),yes)
-    F77_INTEGER_8_FLAG=-fdefault-integer-8
+  else
+    $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --disable-64
   endif
 else
   ifeq ($(MXE_SYSTEM),mingw)
@@ -92,11 +91,16 @@ else
       gl_cv_func_gettimeofday_clobber=no
     ifeq ($(ENABLE_64),yes)
       $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 --without-qhull
-    endif
-    ifeq ($(ENABLE_FORTRAN_INT64),yes)
-      $(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS := F77_INTEGER_8_FLAG=-fdefault-integer-8 ax_blas_f77_func_ok=yes ax_blas_integer_size=8 octave_cv_sizeof_fortran_integer=8"
+    else
+      $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --disable-64
     endif
   endif
+endif
+
+ifeq ($(ENABLE_FORTRAN_INT64),yes)
+  $(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS := F77_INTEGER_8_FLAG=-fdefault-integer-8 ax_blas_f77_func_ok=yes ax_blas_integer_size=8 octave_cv_sizeof_fortran_integer=8
+else
+  $(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS := ax_blas_f77_func_ok=yes ax_blas_integer_size=4 octave_cv_sizeof_fortran_integer=4
 endif
 
 ifeq ($(MXE_SYSTEM),msvc)
