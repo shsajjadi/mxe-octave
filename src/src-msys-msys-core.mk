@@ -3,11 +3,11 @@
 
 PKG             := src-msys-msys-core
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.0.18-1
-$(PKG)_CHECKSUM := bf78894fcb9ce74e88ea5c7120739170494f158c
+$(PKG)_VERSION  := 1.0.19-1
+$(PKG)_CHECKSUM := 8fe75384cecbbac86b030eb90eea0e01556cb460
 $(PKG)_REMOTE_SUBDIR := msys-core/msys-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
-$(PKG)_FILE     := msysCORE-$($(PKG)_VERSION)-msys-1.0.18-src.tar.lzma
+$(PKG)_FILE     := msysCORE-$($(PKG)_VERSION)-msys-1.0.19-src.tar.xz
 $(PKG)_URL      := $(MSYS_BASE_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/download
 $(PKG)_DEPS     := 
 
