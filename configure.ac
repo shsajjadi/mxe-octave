@@ -74,34 +74,49 @@ fi
 PKG_DIR=`(cd "$PKG_DIR"; pwd)`
 AC_SUBST(PKG_DIR)
 
-USE_CCACHE=no
 AC_ARG_WITH([ccache],
   [AS_HELP_STRING([--with-ccache], [use ccache (default: no)])],
-  [if test "$withval" = yes; then USE_CCACHE=yes; fi], [])
+  [case $withval in
+     no) USE_CCACHE=no ;;
+     yes) USE_CCACHE=yes ;;
+     *) AC_MSG_ERROR([bad value $enableval for --with-ccache]) ;;
+   esac], [USE_CCACHE=no])
 AC_SUBST(USE_CCACHE)
 
-ENABLE_WINDOWS_64=yes
 AC_ARG_ENABLE(windows-64,
   [AS_HELP_STRING([--disable-windows-64],
     [don't build a Windows 64 cross compiler])],
-  [if test "$enableval" = no; then ENABLE_WINDOWS_64=no; fi], [])
+  [case $enableval in
+     no) ENABLE_WINDOWS_64=no ;;
+     yes) ENABLE_WINDOWS_64=yes ;;
+     *) AC_MSG_ERROR([bad value $enableval for --enable-windows-64]) ;;
+   esac], [ENABLE_WINDOWS_64=yes])
 
-ENABLE_64=yes
 AC_ARG_ENABLE(64,
-  [AS_HELP_STRING([--disable-64],
-    [don't use 64-bit integers for array dimensions and indexing])],
-  [if test "$enableval" = no; then ENABLE_64=no; fi], [])
+  [AS_HELP_STRING([--enable-64],
+    [use 64-bit integers for array dimensions and indexing])],
+  [case $enableval in
+     no) ENABLE_64=no ;;
+     yes) ENABLE_64=yes ;;
+     *) AC_MSG_ERROR([bad value $enableval for --enable-64]) ;;
+   esac], [ENABLE_64=unknown])
 
-ENABLE_FORTRAN_INT64=no
-AC_ARG_ENABLE(FORTRAN_INT64,
+if test "$ENABLE_64" = unknown; then
+  ENABLE_64="$ENABLE_WINDOWS_64"
+fi
+
+AC_ARG_ENABLE(fortran-int64,
   [AS_HELP_STRING([--enable-fortran-int64],
     [use 64-bit integers for fortran (and other) numerical library code])],
-  [if test "$enableval" = yes; then ENABLE_FORTRAN_INT64=yes; fi], [])
+  [case $enableval in
+     no) ENABLE_FORTRAN_INT64=no ;;
+     yes) ENABLE_FORTRAN_INT64=yes ;;
+     *) AC_MSG_ERROR([bad value $enableval for --enable-fortran-int64]) ;;
+   esac], [ENABLE_FORTRAN_INT64=no])
 
 if test "$ENABLE_64" = yes || test "$ENABLE_FORTRAN_INT64" = yes; then
   if test "$ENABLE_WINDOWS_64" = no; then
-    AC_MSG_WARN([--enable-64 or --enable-fortran-int64 implies --enable-windows-64])
-    ENABLE_WINDOWS_64=yes
+    AC_MSG_ERROR([--enable-fortran-int64 and --enable-64 both require --enable-windows-64])
   fi
 fi
 
