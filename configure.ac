@@ -79,39 +79,39 @@ AC_ARG_WITH([ccache],
   [case $withval in
      no) USE_CCACHE=no ;;
      yes) USE_CCACHE=yes ;;
-     *) AC_MSG_ERROR([bad value $enableval for --with-ccache]) ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --with-ccache]) ;;
    esac], [USE_CCACHE=no])
 AC_SUBST(USE_CCACHE)
 
-AC_ARG_ENABLE(windows-64,
+AC_ARG_ENABLE([windows-64],
   [AS_HELP_STRING([--disable-windows-64],
     [don't build a Windows 64 cross compiler])],
   [case $enableval in
      no) ENABLE_WINDOWS_64=no ;;
      yes) ENABLE_WINDOWS_64=yes ;;
-     *) AC_MSG_ERROR([bad value $enableval for --enable-windows-64]) ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-windows-64]) ;;
    esac], [ENABLE_WINDOWS_64=yes])
 
-AC_ARG_ENABLE(64,
+AC_ARG_ENABLE([64],
   [AS_HELP_STRING([--enable-64],
     [use 64-bit integers for array dimensions and indexing])],
   [case $enableval in
      no) ENABLE_64=no ;;
      yes) ENABLE_64=yes ;;
-     *) AC_MSG_ERROR([bad value $enableval for --enable-64]) ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-64]) ;;
    esac], [ENABLE_64=unknown])
 
 if test "$ENABLE_64" = unknown; then
   ENABLE_64="$ENABLE_WINDOWS_64"
 fi
 
-AC_ARG_ENABLE(fortran-int64,
+AC_ARG_ENABLE([fortran-int64],
   [AS_HELP_STRING([--enable-fortran-int64],
     [use 64-bit integers for fortran (and other) numerical library code])],
   [case $enableval in
      no) ENABLE_FORTRAN_INT64=no ;;
      yes) ENABLE_FORTRAN_INT64=yes ;;
-     *) AC_MSG_ERROR([bad value $enableval for --enable-fortran-int64]) ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-fortran-int64]) ;;
    esac], [ENABLE_FORTRAN_INT64=no])
 
 if test "$ENABLE_64" = yes || test "$ENABLE_FORTRAN_INT64" = yes; then
@@ -124,152 +124,190 @@ AC_SUBST(ENABLE_64)
 AC_SUBST(ENABLE_FORTRAN_INT64)
 AC_SUBST(ENABLE_WINDOWS_64)
 
-BUILD_SHARED=yes
-AC_ARG_ENABLE(shared,
+AC_ARG_ENABLE([shared],
   [AS_HELP_STRING([--disable-shared], [Disable shared libraries])],
-  [if test "$enableval" = no; then BUILD_SHARED=no; fi], [])
+  [case "$enableval" in
+     no) BUILD_SHARED=no ;;
+     yes) BUILD_SHARED=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-shared]) ;;
+   esac], [BUILD_SHARED=yes])
 AC_SUBST(BUILD_SHARED)
 
-BUILD_STATIC=no
-AC_ARG_ENABLE(static,
+AC_ARG_ENABLE([static],
   [AS_HELP_STRING([--enable-static], [Enable static libraries])],
-  [if test "$enableval" = yes; then BUILD_STATIC=yes; fi], [])
+  [case "$enableval" in
+     no) BUILD_STATIC=no ;;
+     yes) BUILD_STATIC=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-static]) ;;
+   esac], [BUILD_STATIC=no])
 AC_SUBST(BUILD_STATIC)
 
-ENABLE_JIT=no
 AC_ARG_ENABLE([jit],
   [AS_HELP_STRING([--enable-jit], [Enable Octave JIT compiler])],
-  [if test "$enableval" = yes; then ENABLE_JIT=yes; fi], [])
+  [case "$enableval" in
+     no) ENABLE_JIT=no ;;
+     yes) ENABLE_JIT=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-jit]) ;;
+   esac], [ENABLE_JIT=no])
 AC_SUBST(ENABLE_JIT)
 
-ENABLE_JAVA=yes
 AC_ARG_ENABLE([java],
   [AS_HELP_STRING([--disable-java], [Disable Java/Octave interface])],
-  [if test "$enableval" = no; then ENABLE_JAVA=no; fi], [])
+  [case "$enableval" in
+     no) ENABLE_JAVA=no ;;
+     yes) ENABLE_JAVA=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-java]) ;;
+   esac], [ENABLE_JAVA=yes])
 AC_SUBST(ENABLE_JAVA)
 
-ENABLE_DOCS=yes
-AC_ARG_ENABLE([docs],
+AC_ARG_ENABLE([[docs]],
   [AS_HELP_STRING([--disable-docs], [Disable building Octave documentation])],
-  [if test "$enableval" = no; then ENABLE_DOCS=no; fi], [])
+  [case "$enableval" in
+     no) ENABLE_DOCS=no ;;
+     yes) ENABLE_DOCS=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-[docs]]) ;;
+   esac], [ENABLE_DOCS=yes])
 AC_SUBST(ENABLE_DOCS)
 
-MXE_NATIVE_BUILD=no
-AC_ARG_ENABLE([native-build],
+AC_ARG_ENABLE([[native-build]],
   [AS_HELP_STRING([--enable-native-build],
     [Enable native build (default is cross compile)])],
-  [if test "$enableval" = yes; then MXE_NATIVE_BUILD=yes; fi], [])
+  [case "$enableval" in
+     no) MXE_NATIVE_BUILD=no ;;
+     yes) MXE_NATIVE_BUILD=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-[native-build]]) ;;
+   esac], [MXE_NATIVE_BUILD=no])
 AC_SUBST(MXE_NATIVE_BUILD)
 
-USE_SYSTEM_FONTCONFIG=$MXE_NATIVE_BUILD
 AC_ARG_ENABLE([system-fontconfig],
   [AS_HELP_STRING([--enable-system-fontconfig],
     [Use fontconfig already installed on system])],
-  [if test "$enableval" = yes; then USE_SYSTEM_FONTCONFIG=yes; else USE_SYSTEM_FONTCONFIG=no; fi], [])
+  [case "$enableval" in
+     no) USE_SYSTEM_FONTCONFIG=no ;;
+     yes) USE_SYSTEM_FONTCONFIG=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-system-fontconfig]) ;;
+   esac], [USE_SYSTEM_FONTCONFIG=$MXE_NATIVE_BUILD])
 AC_SUBST(USE_SYSTEM_FONTCONFIG)
 
-USE_SYSTEM_X11_LIBS=$MXE_NATIVE_BUILD
 AC_ARG_ENABLE([system-x11-libs],
   [AS_HELP_STRING([--enable-system-x11-libs],
     [Use X11 libraries already installed on system])],
-  [if test "$enableval" = yes; then USE_SYSTEM_X11_LIBS=yes; else USE_SYSTEM_X11_LIBS=no; fi], [])
+  [case "$enableval" in
+     no) USE_SYSTEM_X11_LIBS=no ;;
+     yes) USE_SYSTEM_X11_LIBS=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-system-x11-libs]) ;;
+   esac], [USE_SYSTEM_X11_LIBS=$MXE_NATIVE_BUILD])
 AC_SUBST(USE_SYSTEM_X11_LIBS)
 
-USE_SYSTEM_GCC=$MXE_NATIVE_BUILD
 AC_ARG_ENABLE([system-gcc],
   [AS_HELP_STRING([--enable-system-gcc],
     [Use GCC already installed on system])],
-  [if test "$enableval" = yes; then USE_SYSTEM_GCC=yes; else USE_SYSTEM_GCC=no; fi], [])
+  [case "$enableval" in
+     no) USE_SYSTEM_GCC=no ;;
+     yes) USE_SYSTEM_GCC=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-system-gcc]) ;;
+   esac], [USE_SYSTEM_GCC=$MXE_NATIVE_BUILD])
 AC_SUBST(USE_SYSTEM_GCC)
 
-ENABLE_LIB64_DIRECTORY=no
-AC_ARG_ENABLE(lib64-directory,
+AC_ARG_ENABLE([lib64-directory],
   [AS_HELP_STRING([--enable-lib64-directory],
     [Search lib64 directory for libraries])],
-  [if test "$enableval" = yes; then ENABLE_LIB64_DIRECTORY=yes; fi], [])
+  [case "$enableval" in
+     no) ENABLE_LIB64_DIRECTORY=no ;;
+     yes) ENABLE_LIB64_DIRECTORY=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-lib64-directory]) ;;
+   esac], [ENABLE_LIB64_DIRECTORY=no])
 AC_SUBST(ENABLE_LIB64_DIRECTORY)
 
-USE_PIC_FLAG=no
 AC_ARG_ENABLE([pic-flag],
   [AS_HELP_STRING([--enable-pic-flag], [Compile with PIC flag])],
-  [if test "$enableval" = yes; then USE_PIC_FLAG=yes; fi], [])
+  [case "$enableval" in
+     no) USE_PIC_FLAG=no ;;
+     yes) USE_PIC_FLAG=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-pic-flag]) ;;
+   esac], [USE_PIC_FLAG=no])
 AC_SUBST(USE_PIC_FLAG)
 
-STRIP_DIST_FILES=yes
 AC_ARG_ENABLE([strip-dist-files],
   [AS_HELP_STRING([--disable-strip-dist-files], [Don't strip distributed files])],
-  [if test "$enableval" = no; then STRIP_DIST_FILES=no; fi], [])
+  [case "$enableval" in
+     no) STRIP_DIST_FILES=no ;;
+     yes) STRIP_DIST_FILES=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-strip-dist-files]) ;;
+   esac], [STRIP_DIST_FILES=yes])
 AC_SUBST(STRIP_DIST_FILES)
 
-ENABLE_OPENBLAS=yes
 AC_ARG_ENABLE([openblas],
   [AS_HELP_STRING([--disable-openblas],
     [Disable use of OpenBLAS in Octave])],
-  [if test "$enableval" = no; then ENABLE_OPENBLAS=no; fi], [])
+  [case "$enableval" in
+     no) ENABLE_OPENBLAS=no ;;
+     yes) ENABLE_OPENBLAS=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-openblas]) ;;
+   esac], [ENABLE_OPENBLAS=yes])
 AC_SUBST(ENABLE_OPENBLAS)
 
-ENABLE_QHULL_NO_STRICT_ALIASING_FLAG=no
 AC_ARG_ENABLE([qhull-no-strict-aliasing-flag],
   [AS_HELP_STRING([--enable-qhull-no-strict-aliasing-flag],
     [Compile Qhull with -fno-strict-aliasing flag])],
-  [if test "$enableval" = yes; then
-     ENABLE_QHULL_NO_STRICT_ALIASING_FLAG=yes;
-   fi], [])
+  [case "$enableval" in
+     no) ENABLE_QHULL_NO_STRICT_ALIASING_FLAG=no ;;
+     yes) ENABLE_QHULL_NO_STRICT_ALIASING_FLAG=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-qhull-no-strict-aliasing-flag]) ;;
+   esac], [ENABLE_QHULL_NO_STRICT_ALIASING_FLAG=no])
 AC_SUBST(ENABLE_QHULL_NO_STRICT_ALIASING_FLAG)
 
-ENABLE_OCTAVE=stable
 AC_ARG_ENABLE([octave],
   [AS_HELP_STRING([--enable-octave=stable],
     [Enable a specific build of Octave (stable, alpha, default)])],
-  [], [enableval=$ENABLE_OCTAVE])
-
-case $enableval in
- stable)
-   ENABLE_OCTAVE="stable-"
-   ;;
- alpha)
-   ENABLE_OCTAVE=""
-   ;;
- default)
-   ENABLE_OCTAVE="default-"
-   ;;
- *)
-   ENABLE_OCTAVE="stable-"
-   AC_MSG_WARN([Unknown octave type $enableval - using enable-octave=stable])
-   ;;
-esac
-   
+  [case $enableval in
+     stable) ENABLE_OCTAVE="stable-" ;;
+     alpha) ENABLE_OCTAVE="" ;;
+     default) ENABLE_OCTAVE="default-" ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-octave]) ;;
+   esac], [ENABLE_OCTAVE="stable-"])
 AC_SUBST(ENABLE_OCTAVE)
 
-ENABLE_BINARY_PACKAGES=no
 AC_ARG_ENABLE([binary-packages],
   [AS_HELP_STRING([--enable-binary-packages],
     [Enable creating binary Octave Forge packages])],
-  [if test "$enableval" = yes; then ENABLE_BINARY_PACKAGES=yes; fi], [])
+  [case "$enableval" in
+     no) ENABLE_BINARY_PACKAGES=no ;;
+     yes) ENABLE_BINARY_PACKAGES=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-binary-packages]) ;;
+   esac], [ENABLE_BINARY_PACKAGES=no])
 AC_SUBST(ENABLE_BINARY_PACKAGES)
 
-ENABLE_DEVEL_TOOLS=no
 AC_ARG_ENABLE([devel-tools],
   [AS_HELP_STRING([--enable-devel-tools],
     [Enable creating developer tools such as gdb])],
-  [if test "$enableval" = yes; then ENABLE_DEVEL_TOOLS=yes; fi], [])
+  [case "$enableval" in
+     no) ENABLE_DEVEL_TOOLS=no ;;
+     yes) ENABLE_DEVEL_TOOLS=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-devel-tools]) ;;
+   esac], [ENABLE_DEVEL_TOOLS=no])
 AC_SUBST(ENABLE_DEVEL_TOOLS)
 
-ENABLE_QT5=no
 AC_ARG_ENABLE([qt5],
   [AS_HELP_STRING([--enable-qt5],
     [Enable compile of GNU octave using Qt5 (Experimental)])],
-  [if test "$enableval" = yes; then ENABLE_QT5=yes; fi], [])
+  [case "$enableval" in
+     no) ENABLE_QT5=no ;;
+     yes) ENABLE_QT5=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-qt5]) ;;
+   esac], [ENABLE_QT5=no])
 AC_SUBST(ENABLE_QT5)
 
 # install dependancy package docs (or not to save space)
-ENABLE_DEP_DOCS=no
 AC_ARG_ENABLE([dep-docs],
 	      [AS_HELP_STRING([--enable-dep-docs],
 			      [Enable install of dependancy package dos])],
-  [if test "$enableval" = yes; then ENABLE_DEP_DOCS=yes; fi], [])
+  [case "$enableval" in
+     no) ENABLE_DEP_DOCS=no ;;
+     yes) ENABLE_DEP_DOCS=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-dep-docs]) ;;
+   esac], [ENABLE_DEP_DOCS=no])
 AC_SUBST(ENABLE_DEP_DOCS)
-
 
 ### Default is to cross compile for mingw.
 
