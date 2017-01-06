@@ -10,6 +10,9 @@
 ##
 ## The version number set in the mercurial sources for Octave must
 ## match the one used in src/default-octave.mk.
+##
+## We also install the resulting binary to run natively when
+## building packages during a cross build.
 
 ## Set PATH, PKG_CONFIG_PATH, and LD_LIBRARY_PATH to the original
 ## values from the environment so that we avoid the tools that we've
@@ -33,8 +36,9 @@ hg-octave-dist: $(BUILD_TOOLS) update-hg-octave-repo
 	mkdir .build && \
 	$(HG_OCTAVE_DIST_ENV_FLAGS) ./bootstrap && \
 	cd .build && \
-	$(HG_OCTAVE_DIST_ENV_FLAGS) ../configure && \
+	$(HG_OCTAVE_DIST_ENV_FLAGS) ../configure --prefix=$(ROOT_PREFIX) && \
 	$(HG_OCTAVE_DIST_ENV_FLAGS) make -j '$(JOBS)' all && \
+	$(HG_OCTAVE_DIST_ENV_FLAGS) make -j '$(JOBS)' install && \
 	$(HG_OCTAVE_DIST_ENV_FLAGS) make -j '$(JOBS)' dist && \
 	mv '$(default-octave_FILE)' '$(PKG_DIR)'
 
