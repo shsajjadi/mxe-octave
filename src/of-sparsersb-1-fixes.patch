@@ -1,0 +1,29 @@
+diff -ur a/src/sparsersb.cc b/src/sparsersb.cc
+--- a/src/sparsersb.cc	2016-10-02 15:08:13.000000000 -0400
++++ b/src/sparsersb.cc	2017-01-07 12:20:04.317822121 -0500
+@@ -74,7 +74,6 @@
+ #include <octave/ov-complex.h>
+ #include <octave/ops.h>
+ #include <octave/ov-typeinfo.h>
+-#include <octave/oct-alloc.h> /* DECLARE_OCTAVE_ALLOCATOR */
+ #if RSBOI_WANT_PRINT_PCT_OCTAVE_STYLE
+ #include <iomanip>	// std::setprecision
+ #endif
+@@ -1373,9 +1372,6 @@
+ 
+ 	private:
+ 	public:
+-#if !RSBOI_USE_PATCH_38143
+-		DECLARE_OCTAVE_ALLOCATOR
+-#endif /* RSBOI_USE_PATCH_38143   */
+ 			DECLARE_OV_TYPEID_FUNCTIONS_AND_DATA
+ };/* end of class octave_sparsersb_mtx definition  */
+ 
+@@ -1415,7 +1411,6 @@
+ 		return new octave_sparse_complex_matrix (v.sparse_complex_matrix_value());
+ }
+ 
+-DEFINE_OCTAVE_ALLOCATOR (octave_sparsersb_mtx)
+ DEFINE_OV_TYPEID_FUNCTIONS_AND_DATA (octave_sparsersb_mtx,
+ RSB_OI_TYPEINFO_STRING,
+ RSB_OI_TYPEINFO_TYPE)
