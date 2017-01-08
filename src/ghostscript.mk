@@ -28,10 +28,8 @@ endef
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   define $(PKG)_BUILD
-    # in native mingw, force it to use external lcm2
-    if [ "$(MXE_SYSTEM)" == "mingw" ]; then \
-        rm -rf '$(1)/lcms2'; \
-    fi
+    # force external lcm2
+    mv '$(1)/lcms2' '$(1)/lcms2.x'
     # force external libpng
     mv '$(1)/libpng' '$(1)/libpng.x'
     cd '$(1)' && autoreconf
