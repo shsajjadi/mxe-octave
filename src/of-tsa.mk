@@ -3,10 +3,10 @@
 
 PKG             := of-tsa
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.4.1
-$(PKG)_CHECKSUM := 3f2f6c6ca9e3ac7dec73f9294a18f1b35962a5dc
+$(PKG)_VERSION  := 4.4.5
+$(PKG)_CHECKSUM := b2d13fdfac29d360932144e726129359c1c6adf4
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := tsa
+$(PKG)_SUBDIR   := tsa-$($(PKG)_VERSION)
 $(PKG)_FILE     := tsa-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/octave/$($(PKG)_FILE)?download
 $(PKG)_DEPS     :=

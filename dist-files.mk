@@ -498,7 +498,6 @@ SRC_FILES_1 := \
   of-strings.mk \
   of-struct.mk \
   of-tisean.mk \
-  of-tsa-1-cross-fixes.patch \
   of-tsa.mk \
   of-video.mk \
   of-windows.mk \
