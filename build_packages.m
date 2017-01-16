@@ -44,7 +44,6 @@ unwind_protect
   try_install odepkg-0.8.5.tar.gz
   try_install linear-algebra-2.2.2.tar.gz
   try_install sockets-1.2.0.tar.gz
-  try_install zenity-0.5.7.tar.gz
   try_install data-smoothing-1.3.0.tar.gz
   try_install fuzzy-logic-toolkit-0.4.5.tar.gz
   try_install quaternion-2.4.0.tar.gz
