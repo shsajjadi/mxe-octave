@@ -14,7 +14,7 @@ $(PKG)_URL      := http://hydra.nixos.org/job/gnu/octave-default/tarball/latest/
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile osmesa pcre portaudio pstoedit qrupdate qscintilla readline suitesparse texinfo zlib
+$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile osmesa pcre portaudio pstoedit qhull qrupdate qscintilla readline suitesparse texinfo zlib
 
 ifeq ($(ENABLE_QT5),yes)
     $(PKG)_DEPS += qt5
@@ -34,9 +34,6 @@ ifeq ($(MXE_SYSTEM),mingw)
   endif
 endif
 
-ifeq ($(ENABLE_64),no)
-  $(PKG)_DEPS += qhull
-endif
 ifeq ($(ENABLE_JIT),yes)
   $(PKG)_DEPS += llvm
   $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --enable-jit
@@ -80,7 +77,7 @@ endif
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
   ifeq ($(ENABLE_64),yes)
-    $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 --without-qhull
+    $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64
   else
     $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --disable-64
   endif
@@ -90,7 +87,7 @@ else
       FLTK_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)fltk-config' \
       gl_cv_func_gettimeofday_clobber=no
     ifeq ($(ENABLE_64),yes)
-      $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 --without-qhull
+      $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64
     else
       $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --disable-64
     endif
