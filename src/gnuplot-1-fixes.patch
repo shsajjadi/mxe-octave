@@ -1,7 +1,26 @@
-diff -ur a/config/mingw/Makefile b/config/mingw/Makefile
---- a/config/mingw/Makefile	2016-03-31 12:40:56.000000000 +0900
-+++ b/config/mingw/Makefile	2016-08-09 12:56:38.576941000 +0900
-@@ -119,14 +119,14 @@
+diff -ur gnuplot-5.0.5.orig/config/mingw/Makefile gnuplot-5.0.5/config/mingw/Makefile
+--- gnuplot-5.0.5.orig/config/mingw/Makefile	2017-01-20 12:00:04.522364256 -0500
++++ gnuplot-5.0.5/config/mingw/Makefile	2017-01-20 12:10:38.856621795 -0500
+@@ -101,15 +101,16 @@
+ # Uncomment the following lines to compile it.
+ #WXT=1
+ #CAIROLIBS=1
++WX_CONFIG ?= wx-config
+ 
+ # Build qt terminal?
+ #QT = 1
+ # specify QT installation directory
+ #QT_DIR = /c/Qt/5.2.1/mingw48_32
+ ifndef MINGW64
+-QT_DIR = /d/Source/Qt-5.2.1-mingw/5.2.1/mingw48_32
++QT_DIR ?= /d/Source/Qt-5.2.1-mingw/5.2.1/mingw48_32
+ else
+-QT_DIR = /mingw64
++QT_DIR ?= /mingw64
+ endif
+ 
+ # Uncomment the following line to select the lua/tikz terminal
+@@ -119,14 +120,14 @@
  # Requires libcaca version 0.99.beta15 or newer. A post-beta18
  # svn version is recommended since it contains an improved
  # win32 backend.
@@ -18,7 +37,7 @@ diff -ur a/config/mingw/Makefile b/config/mingw/Makefile
  
  # Below you can adapt paths according to your software setup:
  
-@@ -155,7 +155,7 @@
+@@ -155,7 +156,7 @@
  DESTDIR = "$(PROGRAMFILES)/gnuplot"
  
  # Do you want some special optimization / flags?
@@ -27,7 +46,7 @@ diff -ur a/config/mingw/Makefile b/config/mingw/Makefile
  ifdef CLANG
  CFLAGS += -fcolor-diagnostics -fansi-escape-codes
  CFLAGS += -Wno-error=incompatible-ms-struct -Wno-ignored-attributes
-@@ -171,8 +171,8 @@
+@@ -171,8 +172,8 @@
  # http://go.microsoft.com/fwlink/?LinkId=154968
  # We need to explicitly set the correct path here since we also need
  # adjust the include and library paths.
@@ -38,7 +57,7 @@ diff -ur a/config/mingw/Makefile b/config/mingw/Makefile
  
  # Choose which resource compiler you want to use (GNU windres or MS rc):
  GNU_RC = 1
-@@ -186,7 +186,7 @@
+@@ -186,7 +187,7 @@
  
  # Inno Setup Compiler
  # get it from: http://www.jrsoftware.org/isdl.php
@@ -47,93 +66,6 @@ diff -ur a/config/mingw/Makefile b/config/mingw/Makefile
  
  # Directory that might contain extra files to be shipped with the installer.
  # This should include dependencies like DLLs, but also fontconfig configuration files.
-@@ -514,7 +514,7 @@
- FULLVERSION := $(MAINVERSION) patchlevel $(PATCHLEVEL)
- 
- 
--default: $(TARGET) $(MENUFILE) support
-+default: $(TARGET) $(MENUFILE) # support
- 
- console: 
- 	$(MAKE) TARGET=gnuplot.exe default
-@@ -556,8 +556,8 @@
- 	$(CC) -c $(CFLAGS) $(CFLAGSEXTRA) -MMD -MT '$*.$$(O)' -MF $*.d -o $@ $<
- 
- LDLIBS = -lkernel32 -lgdi32 -lwinspool -lcomdlg32 -lcomctl32 -ladvapi32 -lshell32 -lmsimg32 -lgdiplus
--LDLIBS += -lhtmlhelp
--LDFLAGS2 += -L$(HHWPATH)lib
-+#LDLIBS += -lhtmlhelp
-+#LDFLAGS2 += -L$(HHWPATH)lib
- ifdef MINGW64
- LDFLAGS2 += -L.
- endif
-diff -ur gnuplot-5.0.4.orig/src/command.c gnuplot-5.0.4/src/command.c
---- gnuplot-5.0.4.orig/src/command.c	2016-07-21 13:47:51.987062163 -0400
-+++ gnuplot-5.0.4/src/command.c	2016-07-21 13:48:27.860546987 -0400
-@@ -125,7 +125,7 @@
- # endif
- #endif /* _Windows */
- 
--#ifdef _Windows
-+#ifdef IGNORE_Windows
- # include <windows.h>
- # ifdef __MSC__
- #  include <malloc.h>
-@@ -2535,6 +2535,7 @@
- void
- help_command()
- {
-+#ifndef __MINGW32__
-     HWND parent;
- 
-     c_token++;
-@@ -2570,6 +2571,7 @@
-         link.fIndexOnFail = TRUE;
-         HtmlHelp(parent, winhelpname, HH_KEYWORD_LOOKUP, (DWORD_PTR)&link);
-     }
-+#endif
- }
- #else  /* !_Windows */
- #ifndef VMS
-diff -ur gnuplot-5.0.4.orig/src/internal.c gnuplot-5.0.4/src/internal.c
---- gnuplot-5.0.4.orig/src/internal.c	2016-07-21 13:47:52.006061890 -0400
-+++ gnuplot-5.0.4/src/internal.c	2016-07-21 13:48:27.861546973 -0400
-@@ -47,7 +47,7 @@
- 
- #include <math.h>
- 
--#ifndef _WIN64
-+#if !defined(__MINGW64_VERSION_MAJOR)
- /*
-  * FIXME: This is almost certainly out of date on linux, since the matherr
-  * mechanism has been replaced by math_error() and supposedly is only 
-diff -ur gnuplot-5.0.4.orig/src/syscfg.h gnuplot-5.0.4/src/syscfg.h
---- gnuplot-5.0.4.orig/src/syscfg.h	2016-07-21 13:47:51.994062063 -0400
-+++ gnuplot-5.0.4/src/syscfg.h	2016-07-21 13:49:02.401050952 -0400
-@@ -345,7 +345,11 @@
- #endif
- 
- #ifndef GP_MATHERR
--# define GP_MATHERR matherr
-+# if __MINGW32__
-+#  define GP_MATHERR _matherr
-+#else
-+#  define GP_MATHERR matherr
-+#endif
- #endif
- 
- #ifdef HAVE_STRUCT_EXCEPTION_IN_MATH_H
-diff -ur gnuplot-5.0.4.orig/config/mingw/Makefile gnuplot-5.0.4/config/mingw/Makefile
---- gnuplot-5.0.4.orig/config/mingw/Makefile	2016-12-27 08:55:41.906600912 -0500
-+++ gnuplot-5.0.4/config/mingw/Makefile	2016-12-27 08:57:30.033448266 -0500
-@@ -101,6 +101,7 @@
- # Uncomment the following lines to compile it.
- #WXT=1
- #CAIROLIBS=1
-+WX_CONFIG ?= wx-config
- 
- # Build qt terminal?
- #QT = 1
 @@ -422,9 +423,9 @@
  
  ifdef WXT
@@ -146,30 +78,78 @@ diff -ur gnuplot-5.0.4.orig/config/mingw/Makefile gnuplot-5.0.4/config/mingw/Mak
  	WX_OBJS = wxt_gui.$(O)
  endif
  
-diff -ur gnuplot-5.0.4.orig/src/wxterminal/wxt_gui.h gnuplot-5.0.4/src/wxterminal/wxt_gui.h
---- gnuplot-5.0.4.orig/src/wxterminal/wxt_gui.h	2016-12-27 12:29:33.624151543 -0500
-+++ gnuplot-5.0.4/src/wxterminal/wxt_gui.h	2016-12-27 12:30:09.419977685 -0500
-@@ -174,7 +174,7 @@
- #  ifndef _WIN32_WINNT 
- #   define _WIN32_WINNT 0x0500
- #  endif
--#  include "Windows.h"
-+#  include "windows.h"
- #  include "win/wtext.h"
- #  include "win/winmain.h"
- # endif
-diff -ur gnuplot-5.0.4.orig/config/mingw/Makefile gnuplot-5.0.4/config/mingw/Makefile
---- gnuplot-5.0.4.orig/config/mingw/Makefile	2016-12-27 12:42:32.612130064 -0500
-+++ gnuplot-5.0.4/config/mingw/Makefile	2016-12-27 12:43:31.994500570 -0500
-@@ -108,9 +108,9 @@
- # specify QT installation directory
- #QT_DIR = /c/Qt/5.2.1/mingw48_32
- ifndef MINGW64
--QT_DIR = /d/Source/Qt-5.2.1-mingw/5.2.1/mingw48_32
-+QT_DIR ?= /d/Source/Qt-5.2.1-mingw/5.2.1/mingw48_32
- else
--QT_DIR = /mingw64
-+QT_DIR ?= /mingw64
- endif
+@@ -514,7 +515,7 @@
+ FULLVERSION := $(MAINVERSION) patchlevel $(PATCHLEVEL)
  
- # Uncomment the following line to select the lua/tikz terminal
+ 
+-default: $(TARGET) $(MENUFILE) support
++default: $(TARGET) $(MENUFILE) #support
+ 
+ console: 
+ 	$(MAKE) TARGET=gnuplot.exe default
+@@ -556,8 +557,8 @@
+ 	$(CC) -c $(CFLAGS) $(CFLAGSEXTRA) -MMD -MT '$*.$$(O)' -MF $*.d -o $@ $<
+ 
+ LDLIBS = -lkernel32 -lgdi32 -lwinspool -lcomdlg32 -lcomctl32 -ladvapi32 -lshell32 -lmsimg32 -lgdiplus
+-LDLIBS += -lhtmlhelp
+-LDFLAGS2 += -L$(HHWPATH)lib
++#LDLIBS += -lhtmlhelp
++#LDFLAGS2 += -L$(HHWPATH)lib
+ ifdef MINGW64
+ LDFLAGS2 += -L.
+ endif
+diff -ur gnuplot-5.0.5.orig/src/command.c gnuplot-5.0.5/src/command.c
+--- gnuplot-5.0.5.orig/src/command.c	2017-01-20 12:00:04.431361673 -0500
++++ gnuplot-5.0.5/src/command.c	2017-01-20 12:04:46.221964530 -0500
+@@ -125,7 +125,7 @@
+ # endif
+ #endif /* _Windows */
+ 
+-#ifdef _Windows
++#ifdef IGNORE_Windows
+ # include <windows.h>
+ # ifdef __MSC__
+ #  include <malloc.h>
+@@ -2537,6 +2537,7 @@
+ void
+ help_command()
+ {
++#ifndef __MINGW32__
+     HWND parent;
+ 
+     c_token++;
+@@ -2572,6 +2573,7 @@
+         link.fIndexOnFail = TRUE;
+         HtmlHelp(parent, winhelpname, HH_KEYWORD_LOOKUP, (DWORD_PTR)&link);
+     }
++#endif
+ }
+ #else  /* !_Windows */
+ #ifndef VMS
+diff -ur gnuplot-5.0.5.orig/src/internal.c gnuplot-5.0.5/src/internal.c
+--- gnuplot-5.0.5.orig/src/internal.c	2017-01-20 12:00:04.456279047 -0500
++++ gnuplot-5.0.5/src/internal.c	2017-01-20 12:05:51.920459353 -0500
+@@ -47,7 +47,7 @@
+ 
+ #include <math.h>
+ 
+-#ifndef _WIN64
++#if !defined(__MINGW64_VERSION_MAJOR)
+ /*
+  * FIXME: This is almost certainly out of date on linux, since the matherr
+  * mechanism has been replaced by math_error() and supposedly is only 
+diff -ur gnuplot-5.0.5.orig/src/syscfg.h gnuplot-5.0.5/src/syscfg.h
+--- gnuplot-5.0.5.orig/src/syscfg.h	2017-01-20 12:00:04.441111950 -0500
++++ gnuplot-5.0.5/src/syscfg.h	2017-01-20 12:06:54.955043738 -0500
+@@ -346,6 +346,11 @@
+ 
+ #ifndef GP_MATHERR
+ # define GP_MATHERR matherr
++# if __MINGW32__
++#  define GP_MATHERR _matherr
++#else
++#  define GP_MATHERR matherr
++#endif
+ #endif
+ 
+ #ifdef HAVE_STRUCT_EXCEPTION_IN_MATH_H
