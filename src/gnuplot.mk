@@ -12,10 +12,11 @@ $(PKG)_DEPS     :=
 
 $(PKG)_EXTRAFLAGS :=
 
-
-$(PKG)_DEPS     += wxwidgets cairo  pango
-$(PKG)_EXTRAFLAGS += CAIROTERMS=1 CAIROLIBS=1 
-$(PKG)_EXTRAFLAGS += WXT=1 WX_CONFIG=$(MXE_TOOL_PREFIX)wx-config
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+    $(PKG)_DEPS     += wxwidgets cairo  pango
+    $(PKG)_EXTRAFLAGS += CAIROTERMS=1 CAIROLIBS=1 
+    $(PKG)_EXTRAFLAGS += WXT=1 WX_CONFIG=$(MXE_TOOL_PREFIX)wx-config
+endif
 
 #ifeq ($(ENABLE_QT5),yes)
 #  $(PKG)_DEPS     += qt5
