@@ -10,6 +10,11 @@ $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.freetds.org/pub/$(PKG)/stable/$($(PKG)_FILE)
 $(PKG)_DEPS     := libiconv gnutls
 
+$(PKG)_CONFIG_OPTS :=
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+    $(PKG)_CONFIG_OPTS += --disable-threadsafe
+endif
+
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package freetds.' >&2;
     echo $(freetds_VERSION)
@@ -30,10 +35,10 @@ define $(PKG)_BUILD
         --disable-rpath \
         --disable-dependency-tracking \
         $(ENABLE_SHARED_OR_STATIC) \
+        $($(PKG)_CONFIG_OPTS) \
         --enable-libiconv \
         --enable-msdblib \
         --enable-sspi \
-        --disable-threadsafe \
         --with-tdsver=7.2 \
         --with-gnutls \
         $($(PKG)_CONFIG_OPTS) \
