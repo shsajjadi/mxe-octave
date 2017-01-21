@@ -21,13 +21,10 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --disable-reference \
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install dist_doc_DATA=
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_DOCS)
 
-    '$(MXE_CC)' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_BINDIR)/test-gta.exe' \
-        `'$(MXE_PKG_CONFIG)' gta --cflags --libs`
 endef
