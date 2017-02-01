@@ -111,8 +111,11 @@ def create_pkgadddel (env, packdir, nm):
   if os.path.exists(packdir + "/src") == True:
     srcdir = packdir + "/src"
     files = list(srcdir + "/" + a for a in os.listdir(srcdir))
-    c_files = fnmatch.filter(files, "*.cc")
-    for f in c_files:
+    cc_files = fnmatch.filter(files, "*.cc")
+    cpp_files = fnmatch.filter(files, "*.cpp")
+    cxx_files = fnmatch.filter(files, "*.cxx")
+    for f in cc_files + cpp_files + cxx_files:
+      print ('check for ', f)
       for a in extract_pkg(f, '^//* *' + nm + ': *(.*)$'):
         archfid.write("%s\n" % str(a))
       for a in extract_pkg(f, '^/\** *' + nm + ': *(.*) *\*/$'):
