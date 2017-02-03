@@ -115,7 +115,6 @@ def create_pkgadddel (env, packdir, nm):
     cpp_files = fnmatch.filter(files, "*.cpp")
     cxx_files = fnmatch.filter(files, "*.cxx")
     for f in cc_files + cpp_files + cxx_files:
-      print ('check for ', f)
       for a in extract_pkg(f, '^//* *' + nm + ': *(.*)$'):
         archfid.write("%s\n" % str(a))
       for a in extract_pkg(f, '^/\** *' + nm + ': *(.*) *\*/$'):
