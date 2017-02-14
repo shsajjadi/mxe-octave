@@ -55,10 +55,10 @@ endif
 ## If we allow the system Qt libraries to be used, then these
 ## won't make sense.
 $(PKG)_QT_CONFIGURE_OPTIONS := \
-  MOC=$(MXE_MOC) \
-  UIC=$(MXE_UIC) \
-  RCC=$(MXE_RCC) \
-  LRELEASE=$(MXE_LRELEASE)
+  MOC_QTVER=$(MXE_MOC) \
+  UIC_QTVER=$(MXE_UIC) \
+  RCC_QTVER=$(MXE_RCC) \
+  LRELEASE_QTVER=$(MXE_LRELEASE)
 
 ifeq ($(ENABLE_QT5),yes)
   #$(PKG)_PKG_CONFIG_PATH := "$(HOST_LIBDIR)/pkgconfig"
