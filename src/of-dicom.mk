@@ -3,13 +3,19 @@
 
 PKG             := of-dicom
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.1.1
-$(PKG)_CHECKSUM := dfb7eccf6ccc39e52c27a5d885984eaa3a55d3d4
+$(PKG)_VERSION  := 0.2.0
+$(PKG)_CHECKSUM := 46d4be1f9f822451e8fd415fbea4c3d24aaba5db
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := dicom
+$(PKG)_SUBDIR   := dicom-$($(PKG)_VERSION)
 $(PKG)_FILE     := dicom-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/octave/$($(PKG)_FILE)?download
 $(PKG)_DEPS     := gdcm cmake
+
+ifeq ($(MXE_NATIVE_BUILD),no)
+$(PKG)_OPTIONS := CMAKE_BINARY="cmake -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'"
+else
+$(PKG)_OPTIONS := 
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://$(SOURCEFORGE_MIRROR)/projects/octave/files/Octave%20Forge%20Packages/Individual%20Package%20Releases/' | \
@@ -18,5 +24,5 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(OCTAVE_FORGE_PKG_BUILD)
+    $(call OCTAVE_FORGE_PKG_BUILD,$(1),$(2),$(3),$($(PKG)_OPTIONS))
 endef
