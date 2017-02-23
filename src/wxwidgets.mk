@@ -26,9 +26,9 @@ define $(PKG)_BUILD
         --enable-compat24 \
         --enable-compat26 \
         --enable-gui \
-        --enable-stl \
+        --disable-stl \
         --enable-threads \
-        --disable-unicode \
+        --enable-unicode \
         --disable-universal \
         --with-themes=all \
         --with-msw \
@@ -55,11 +55,13 @@ define $(PKG)_BUILD
         --without-hildon \
         --without-dmalloc \
         --without-odbc \
-        LIBS=" `'$(MXE_PKG_CONFIG)' --libs-only-l libtiff-4`"
+        LIBS=" `'$(MXE_PKG_CONFIG)' --libs-only-l libtiff-4`" \
+        CXXFLAGS='-std=gnu++11' \
+        CXXCPP='$(MXE_CXX) -E -std=gnu++11'
 
-    $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DISABLE_DOCS) $(MXE_DISABLE_PROGS)
 
-    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= __install_wxrc___depname=
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_DOCS) $(MXE_DISABLE_PROGS)  __install_wxrc___depname=
 
     $(INSTALL) -m755 '$(HOST_BINDIR)/wx-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)wx-config'
     mv $(HOST_LIBDIR)/wxbase30*.dll $(HOST_BINDIR)/

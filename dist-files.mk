@@ -686,6 +686,7 @@ SRC_FILES_1 := \
   winpcap.mk \
   wt-1-fixes.patch \
   wt.mk \
+  wxwidgets-1-c++11-related-fixes.patch \
   wxwidgets-test.cpp \
   wxwidgets.mk \
   x11.mk \
