@@ -46,7 +46,8 @@ ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
   else
     $(PKG)_CONFIGURE_ENV := \
       PSQL_LIBS="-lpq -lsecur32 `'$(MXE_PKG_CONFIG)'` -lws2_32" \
-      SYBASE_LIBS="-lsybdb `'$(MXE_PKG_CONFIG)' --libs-only-l gnutls` -liconv -lws2_32" 
+      SYBASE_LIBS="-lsybdb `'$(MXE_PKG_CONFIG)' --libs-only-l gnutls` -liconv -lws2_32" \
+      CXXFLAGS="-std=gnu++98"
     $(PKG)_CONFIGURE_DATABASE_OPTION += -system-sqlite
   endif
   # compile-in generic ODBC driver under Windows
