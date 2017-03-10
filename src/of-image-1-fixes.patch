@@ -1,0 +1,75 @@
+diff -uNr a/src/strel.cc b/src/strel.cc
+--- a/src/strel.cc	2016-10-21 10:19:56.258205086 -0400
++++ b/src/strel.cc	2017-03-10 11:12:46.682214821 -0500
+@@ -49,13 +49,13 @@
+       strel_args(0) = "arbitrary";
+       strel_args(1) = se;
+       // We are leaving the input check up to @strel
+-      se = feval ("strel", strel_args)(0);
++      se = octave::feval ("strel", strel_args)(0);
+       if (error_state)
+         return;
+     }
+ 
+-  nhood   = feval ("getnhood",  se)(0).bool_array_value ();
+-  height  = feval ("getheight", se)(0).array_value ();
++  nhood   = octave::feval ("getnhood",  se)(0).bool_array_value ();
++  height  = octave::feval ("getheight", se)(0).array_value ();
+ 
+   // Maybe we should handle this better but how?  This makes imerode
+   // and imdilate work with a [] strel
+@@ -68,8 +68,8 @@
+   ini_ctor ();
+   origin  = default_origin ();
+ 
+-  const octave_value se_seq       = feval ("getsequence", se)(0);
+-  const octave_idx_type seq_numel = feval ("numel", se_seq)(0).idx_type_value ();
++  const octave_value se_seq       = octave::feval ("getsequence", se)(0);
++  const octave_idx_type seq_numel = octave::feval ("numel", se_seq)(0).idx_type_value ();
+ 
+   // This is to emulate the strel_obj(idx) syntax in function form
+   static const char *fields[] = {"type", "subs", 0};
+@@ -86,10 +86,10 @@
+           ref.setfield ("subs", Cell (octave_value (subs+1)));
+           subsref_args(1) = ref;
+           // Equivalent to "selem = strel_obj(subs)"
+-          const octave_value_list elem = feval ("subsref", subsref_args)(0);
++          const octave_value_list elem = octave::feval ("subsref", subsref_args)(0);
+ 
+-          const boolNDArray elem_nhood  = feval ("getnhood",  elem)(0).bool_array_value ();
+-          const NDArray elem_height     = feval ("getheight", elem)(0).array_value ();
++          const boolNDArray elem_nhood  = octave::feval ("getnhood",  elem)(0).bool_array_value ();
++          const NDArray elem_height     = octave::feval ("getheight", elem)(0).array_value ();
+ 
+           decomposition.push_back (strel (elem_nhood, elem_height));
+         }
+diff -uNr a/src/watershed.cc b/src/watershed.cc
+--- a/src/watershed.cc	2016-10-21 10:19:56.258205086 -0400
++++ b/src/watershed.cc	2017-03-10 11:13:10.433094696 -0500
+@@ -57,7 +57,7 @@
+   args(0) = im;
+   args(1) = conn.mask;
+   args(2) = conn.mask;
+-  const octave_value gradient = feval ("mmgradm", args)(0);
++  const octave_value gradient = octave::feval ("mmgradm", args)(0);
+   return ov2T<T> (gradient);
+ }
+ 
+@@ -68,7 +68,7 @@
+   octave_value_list args (2);
+   args(0) = im;
+   args(1) = conn.mask;
+-  const octave_value regional_min = feval ("imregionalmin", args)(0);
++  const octave_value regional_min = octave::feval ("imregionalmin", args)(0);
+   return regional_min.bool_array_value ();
+ }
+ 
+@@ -78,7 +78,7 @@
+   octave_value_list args (2);
+   args(0) = bw;
+   args(1) = conn.mask;
+-  const octave_value label = feval ("bwlabeln", args)(0);
++  const octave_value label = octave::feval ("bwlabeln", args)(0);
+   return label.array_value ();
+ }
+ 
