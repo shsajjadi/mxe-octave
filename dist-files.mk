@@ -43,6 +43,7 @@ SRC_FILES_1 := \
   build-yasm.mk \
   bzip2-1-fixes.patch \
   bzip2.mk \
+  c-ares.mk \
   cairo-2-static-init.patch \
   cairo.mk \
   cairomm.mk \
