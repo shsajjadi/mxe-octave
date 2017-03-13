@@ -243,7 +243,6 @@ SRC_FILES_1 := \
   libiberty.mk \
   libical-test.c \
   libical.mk \
-  libiconv-1-fix.patch \
   libiconv.mk \
   libidn-1-fixes.patch \
   libidn-test.c \
