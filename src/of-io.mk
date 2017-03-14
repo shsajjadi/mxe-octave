@@ -3,10 +3,10 @@
 
 PKG             := of-io
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.4.5
-$(PKG)_CHECKSUM := 22ce66fbf42c35b24258376c6ef8a435bf7c662d
+$(PKG)_VERSION  := 2.4.6
+$(PKG)_CHECKSUM := 9a75b7afb4949f6d2b7877370ea1a2c33710ba68
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := io
+$(PKG)_SUBDIR   := io-$($(PKG)_VERSION)
 $(PKG)_FILE     := io-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
