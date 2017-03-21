@@ -639,6 +639,7 @@ SRC_FILES_1 := \
   src-msys-zlib.mk \
   stable-octave-1-docinstall.patch \
   stable-octave-1-fixes.patch \
+  stable-octave-2-appid-version.patch \
   stable-octave.mk \
   suitesparse-1.patch \
   suitesparse.mk \
