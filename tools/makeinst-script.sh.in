@@ -288,7 +288,7 @@ Section "Shortcuts"
  SetOutPath "\$INSTDIR"
 
  ; fix the shortcuts for appid
- ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$SMPROGRAMS\\Octave-$VERSION\\Octave (GUI).lnk" "gnu.octave"'
+ ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$SMPROGRAMS\\Octave-$VERSION\\Octave (GUI).lnk" "gnu.octave.$VERSION"'
 EOF
   # shortcut for cmd win
   if [ -f $OCTAVE_SOURCE/cmdshell.bat ]; then 
@@ -312,7 +312,7 @@ EOF
     CreateShortCut "\$desktop\\Octave-$VERSION (CLI).lnk" "\$INSTDIR\\octave.vbs" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
     CreateShortCut "\$desktop\\Octave-$VERSION (GUI).lnk" "\$INSTDIR\\octave.vbs" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
 
-    ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$desktop\\Octave-$VERSION (GUI).lnk" "gnu.octave"'
+    ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$desktop\\Octave-$VERSION (GUI).lnk" "gnu.octave.$VERSION"'
   \${Endif}
 
   ; BLAS set up
