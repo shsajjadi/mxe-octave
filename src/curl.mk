@@ -3,12 +3,12 @@
 
 PKG             := curl
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 7.52.1
-$(PKG)_CHECKSUM := d8a6f58eafb3ca83eab58009eb4e13831aeb8156
+$(PKG)_VERSION  := 7.53.1
+$(PKG)_CHECKSUM := fb57f4a94482a98c8d6aaae5dd7bc7dd9e9e28bf
 $(PKG)_SUBDIR   := curl-$($(PKG)_VERSION)
 $(PKG)_FILE     := curl-$($(PKG)_VERSION).tar.lzma
 $(PKG)_URL      := http://curl.haxx.se/download/$($(PKG)_FILE)
-$(PKG)_DEPS     := gnutls libidn libssh2
+$(PKG)_DEPS     := gnutls libidn2 libssh2
 
 $(PKG)_CONFIGURE_OPTS :=
 ifeq ($(MXE_WINDOWS_BUILD),yes)
@@ -30,7 +30,7 @@ define $(PKG)_BUILD
         $($(PKG)_CONFIGURE_OPTS) \
         --without-ssl \
         --with-gnutls \
-        --with-libidn \
+        --with-libidn2 \
         --enable-sspi \
         --enable-ipv6 \
         --with-libssh2 && $(CONFIGURE_POST_HOOK)
