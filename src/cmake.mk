@@ -3,8 +3,8 @@
 
 PKG             := cmake
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.7.1
-$(PKG)_CHECKSUM := d00c720847c0a2aff817c36377569efbb677fb08
+$(PKG)_VERSION  := 3.7.2
+$(PKG)_CHECKSUM := ea73af0c3c832e586bf2f82a13a708ea509d5a88
 $(PKG)_SUBDIR   := cmake-$($(PKG)_VERSION)
 $(PKG)_FILE     := cmake-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.cmake.org/files/v3.7/$($(PKG)_FILE)
