@@ -3,8 +3,8 @@
 
 PKG             := of-sparsersb
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.0.2
-$(PKG)_CHECKSUM := 7b824a830ddead0c9033e3863a8e1aa936dee540
+$(PKG)_VERSION  := 1.0.4
+$(PKG)_CHECKSUM := cd04144d25b29d743dcdb92d985ff71b80bbd696
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := sparsersb-$($(PKG)_VERSION)
 $(PKG)_FILE     := sparsersb-$($(PKG)_VERSION).tar.gz
