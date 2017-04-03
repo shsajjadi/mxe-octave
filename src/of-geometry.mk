@@ -3,8 +3,8 @@
 
 PKG             := of-geometry
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.1.1
-$(PKG)_CHECKSUM := 913c70e4478eb1f1eb51943cb203fd2a68af862d
+$(PKG)_VERSION  := 3.0.0
+$(PKG)_CHECKSUM := 445768bda46f857fb781767be3aabee943942a75
 $(PKG)_REMOTE_SUBDIR :=
 $(PKG)_SUBDIR   := geometry-$($(PKG)_VERSION)
 $(PKG)_FILE     := geometry-$($(PKG)_VERSION).tar.gz
