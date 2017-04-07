@@ -643,6 +643,7 @@ SRC_FILES_1 := \
   stable-octave.mk \
   suitesparse-1.patch \
   suitesparse.mk \
+  sundials-ida.mk \
   t4k_common.mk \
   taglib-1-static.patch \
   taglib.mk \
