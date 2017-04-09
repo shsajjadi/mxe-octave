@@ -1,0 +1,12 @@
+diff -ur sparsersb-1.0.5.orig/src/sparsersb.cc sparsersb-1.0.5/src/sparsersb.cc
+--- sparsersb-1.0.5.orig/src/sparsersb.cc	2017-04-08 17:49:45.120506400 -0400
++++ sparsersb-1.0.5/src/sparsersb.cc	2017-04-08 17:50:04.244313729 -0400
+@@ -311,7 +311,7 @@
+ 	// assumes tacitly that rsboi_idx_overflow(IA[i],JA[i])==false for i in 0..nnzA-1.
+ 	rsb_err_t errval = RSB_ERR_NO_ERROR;
+ 
+-	errval = rsb_mtx_get_coo(mtxAp, VA, (rsb_coo_idx_t *)IA, (rsb_coo_idx_ t*)JA, flags );
++	errval = rsb_mtx_get_coo(mtxAp, VA, (rsb_coo_idx_t *)IA, (rsb_coo_idx_t*)JA, flags );
+ 	rsb_nnz_idx_t nnzA = 0;
+ 	rsb_mtx_get_info(mtxAp,RSB_MIF_MATRIX_NNZ__TO__RSB_NNZ_INDEX_T,&nnzA); // FIXME: make this a member and use nnz()
+ 	rsboi_ri2oi((rsb_coo_idx_t *)IA,nnzA);
