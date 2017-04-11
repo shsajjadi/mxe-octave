@@ -851,6 +851,7 @@ TOOLS_FILES := $(addprefix tools/, $(TOOLS_FILES_1))
 
 FILES := \
   CNAME \
+  README \
   binary-dist-rules.mk \
   build_packages.m \
   configure \
