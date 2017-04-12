@@ -8,7 +8,7 @@ in modifying MXE to build shared libraries (.  Since then, MXE has been modified
 
 As stated here:
 http://lists.defectivebydesign.org/archive/html/mingw-cross-env-list/2013-10/msg00006.html
-I never intended to permanently fork MXE, I was only looking ofr a way
+I never intended to permanently fork MXE, I was only looking for a way
 to build Octave and all its dependencies, primarily for Windows
 systems.
 
@@ -43,4 +43,5 @@ new enough to build Octave.  I my experience, people using these old
 systems are not willing to use packages from EPEL or similar projects.
 
 John W. Eaton
+jwe@octave.org
 2017-04-11
