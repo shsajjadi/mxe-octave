@@ -32,6 +32,7 @@ SRC_FILES_1 := \
   build-gettext.mk \
   build-gperf.mk \
   build-libtool.mk \
+  build-lzip.mk \
   build-m4.mk \
   build-msvctools.mk \
   build-pkg-config-1-fixes.patch \
@@ -577,6 +578,11 @@ SRC_FILES_1 := \
   qt-test.pro \
   qt-test.ui \
   qt.mk \
+  qt5.mk \
+  qtbase.mk \
+  qttools.mk \
+  qtsvg.mk \
+  qtimageformats.mk \
   qwt-1-fixes.patch \
   qwt.mk \
   qwtplot3d-1-fixes.patch \
@@ -638,8 +644,7 @@ SRC_FILES_1 := \
   src-msys-wget.mk \
   src-msys-zip.mk \
   src-msys-zlib.mk \
-  stable-octave-1-docinstall.patch \
-  stable-octave-1-fixes.patch \
+  stable-octave-1-gnulib.patch \
   stable-octave-2-appid-version.patch \
   stable-octave.mk \
   suitesparse-1.patch \
@@ -682,8 +687,8 @@ SRC_FILES_1 := \
   wavpack-1-exec_prefix.patch \
   wavpack.mk \
   wget.mk \
-  win7appid.patch \
   win64-nsis.patch \
+  win7appid.mk \
   winpcap-1-fixes.patch \
   winpcap.mk \
   wt-1-fixes.patch \
@@ -857,6 +862,7 @@ FILES := \
   configure \
   configure.ac \
   dist-files.mk \
+  hg-octave-dist.mk \
   index.html \
   Makefile.in \
   octave-wrapper.in \
