@@ -1,0 +1,41 @@
+diff -uNr a/src/dicomdict.cpp b/src/dicomdict.cpp
+--- a/src/dicomdict.cpp	2011-12-20 15:52:53.000000000 -0500
++++ b/src/dicomdict.cpp	2017-04-27 09:05:53.295379421 -0400
+@@ -25,6 +25,8 @@
+  */
+ 
+ #include "octave/oct.h"
++#include "octave/octave.h"
++#include "octave/interpreter.h"
+ #include "octave/load-path.h"
+ 
+ #include "gdcm-2.0/gdcmDict.h"
+@@ -256,12 +258,23 @@
+ 	}
+ 
+ 	// find dic if it is anywhere in the search path (same path as for m-files etc)
++	std::string resolved_filename(filename);
++
+ #ifndef NOT_OCT
+-	const std::string resolved_filename=load_path::find_file(std::string(filename)) ;
+-#else
+-        // for debugging: if not running in octave, find_file always returns ""
+-	// so we just use the original filename
+-	const std::string resolved_filename(filename);
++        // Temporary fix.  Eventually, a pointer to the Octave
++        // interpreter should come from information passed to the
++        // DEFUN function that called us, not from global data.
++
++        octave::interpreter *interp = octave::application::the_interpreter ();
++
++        if (interp)
++          {
++            octave::load_path& lp = interp->get_load_path ();
++
++            resolved_filename = lp.find_file (std::string (filename));
++          }
++        else
++          warning ("load_dicom_dict: interpreter context missing");
+ #endif
+ 
+ 	std::ifstream fin(resolved_filename.c_str());
