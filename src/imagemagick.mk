@@ -12,7 +12,7 @@ $(PKG)_DEPS     := bzip2 ffmpeg fftw freetype jasper jpeg lcms libpng libtool op
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.imagemagick.org/' | \
-    $(SED) -n 's,.*<p>The current release is ImageMagick \([0-9][0-9.-]*\).*,\1,p' | \
+    $(SED) -n 's,.*<p>The current release is ImageMagick <a[^>]*>\([0-9][0-9.-]*\).*,\1,p' | \
     head -1
 endef
 

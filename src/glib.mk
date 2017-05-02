@@ -12,7 +12,7 @@ $(PKG)_DEPS     := gettext pcre libiconv zlib libffi dbus
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/browse/glib/refs/tags' | \
-    $(SED) -n "s,.*tag/?id=\([0-9]\+\.[0-9]*[02468]\.[^']*\).*,\1,p" | \
+    $(SED) -n "s,.*glib-\([0-9]\+\.[0-9]*[02468]\.[^']*\)\.tar.*,\1,p" | \
     head -1
 endef
 

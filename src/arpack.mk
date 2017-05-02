@@ -28,8 +28,9 @@ ifeq ($(ENABLE_FORTRAN_INT64),yes)
 endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package arpack.' >&2;
-    echo $(arpack_VERSION)
+    $(WGET) -q -O- 'https://github.com/opencollab/arpack-ng/releases' | \
+    $(SED) -n 's,.*href="/opencollab/arpack-ng/archive/\([0-9][^"]*\)\.tar.*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

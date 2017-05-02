@@ -12,8 +12,8 @@ $(PKG)_DEPS     := freeglut zlib openexr jpeg jasper lcms libmng libpng tiff sdl
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/p/openil/svn/HEAD/tree/tags/' | \
-    grep '<a href="' | \
-    $(SED) -n 's,.*<a href="release-\([0-9][^"]*\)".*,\1,p' | \
+    grep 'href="' | \
+    $(SED) -n 's,.*href="release-\([0-9][^"]*\)".*,\1,p' | \
     tail -1
 endef
 

@@ -12,9 +12,9 @@ $(PKG)_URL_2    := ftp://ftp.remotesensing.org/geos/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://geos.refractions.net/' | \
+    $(WGET) -q -O- 'http://download.osgeo.org/geos/' | \
     $(SED) -n 's,.*geos-\([0-9][^>]*\)\.tar.*,\1,p' | \
-    head -1
+    tail -1
 endef
 
 define $(PKG)_BUILD

@@ -12,7 +12,7 @@ $(PKG)_DEPS     := gtk2 libxml2
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/browse/gtksourceview/refs/tags' | \
-    $(SED) -n 's,.*>GTKSOURCEVIEW_\([0-9]\+_[0-9]*[02468]_[^<]*\)<.*,\1,p' | \
+    $(SED) -n 's,.*>GTKSOURCEVIEW_\([0-9]\+_[0-9]*[02468]_[^\.]*\)\.tar.*,\1,p' | \
     $(SED) 's,_,.,g' | \
     grep -v '^2\.9[0-9]\.' | \
     head -1

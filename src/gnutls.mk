@@ -11,12 +11,10 @@ $(PKG)_URL_2    := http://mirrors.dotsrc.org/gnupg/gnutls/v3.4/$($(PKG)_FILE)
 $(PKG)_DEPS     := gettext nettle pcre zlib
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.savannah.gnu.org/gitweb/?p=gnutls.git;a=tags' | \
-    grep '<a class="list name"' | \
-    $(SED) -n 's,.*<a[^>]*>gnutls_\([0-9]*_[0-9]*[012468]_[^<]*\)<.*,\1,p' | \
-    $(SED) 's,_,.,g' | \
-    grep -v '^2\.' | \
-    head -1
+    $(WGET) -q -O- https://gnupg.org/ftp/gcrypt/gnutls/v3.5/ | \
+    $(SED) -n 's,.*gnutls-\([1-9]\+\.[0-9]\+.[0-9]\+\)\..*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 $(PKG)_WINDOWS_CONFIGURE_OPTIONS := \
