@@ -13,7 +13,7 @@ $(PKG)_DEPS     := gtkglext gtkmm2
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/cgit/gtkglextmm/refs/tags' | \
     grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?id=\\([0-9][^']*\\)'.*,\\1,p" | \
+    $(SED) -n "s,.*<a href='[^']*/tag/?h=\\([0-9][^']*\\)'.*,\\1,p" | \
     grep -v '1\.1\.' | \
     head -1
 endef

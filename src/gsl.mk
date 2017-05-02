@@ -11,10 +11,10 @@ $(PKG)_URL      := http://ftp.gnu.org/gnu/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.savannah.gnu.org/gitweb/?p=$(PKG).git;a=tags' | \
-    grep '<a class="list subject"' | \
-    $(SED) -n 's,.*<a[^>]*>[^0-9>]*\([0-9][^<]*\)<.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://ftp.gnu.org/gnu/$(PKG)/' | \
+    $(SED) -n 's,.*<a href="gsl-\([0-9.]\+\).tar.gz".*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 ifeq ($(MXE_SYSTEM),msvc)

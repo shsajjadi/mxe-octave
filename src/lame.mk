@@ -11,9 +11,10 @@ $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_V
 $(PKG)_DEPS     := libiconv gettext
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://sourceforge.net/projects/lame/files/lame/' | \
-    $(SED) -n 's,.*/\([0-9][^"]*\)/".*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'http://sourceforge.net/projects/lame/files/lame/3.99' | \
+    $(SED) -n 's,.*lame-\([0-9][0-9.]*\)\.tar.*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
