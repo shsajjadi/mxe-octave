@@ -413,11 +413,11 @@ EOF
 
  ; didnt remove directory ? most likely from not all files removed
  IfErrors 0 uninstall_done
-    MessageBox MB_YESNO "One or more folders were not uninstalled because they contain extra files. Try to delete them?" IDNO uninstall_done
+    MessageBox MB_YESNO "One or more folders were not uninstalled because they contain extra files. Try to delete them?" /SD IDYES IDNO uninstall_done
     RMDir /r "\$INSTDIR"
 
     IfErrors 0 uninstall_done
-        MessageBox MB_YESNO "One of more files were still not uninstalled. Do you want to delete them on the next reboot?" IDNO uninstall_done
+        MessageBox MB_YESNO "One of more files were still not uninstalled. Do you want to delete them on the next reboot?" /SD IDYES IDNO uninstall_done
         RMDir /r /REBOOTOK "\$INSTDIR"
 uninstall_done:
 
@@ -445,7 +445,7 @@ is_winnt:
 
 is_winnt_10:
 
-  MessageBox MB_YESNO|MB_ICONEXCLAMATION "Setup has detected Windows 10 installed on your system. Octave is currently not fully tested on Windows 10. Testers are welcome to provide feedback. Do you want to proceed with the installation anyway?" IDYES done IDNO 0
+  MessageBox MB_YESNO|MB_ICONEXCLAMATION "Setup has detected Windows 10 installed on your system. Octave is currently not fully tested on Windows 10. Testers are welcome to provide feedback. Do you want to proceed with the installation anyway?" /SD IDYES IDYES done IDNO 0
   Abort
 is_winnt_XP:
 is_winnt_2003:
@@ -483,7 +483,7 @@ FunctionEnd
 Function CheckPrevInstallAndDest
   IfFileExists "\$INSTDIR\\bin\\octave.exe" inst_exists  inst_none
 inst_exists:
-  MessageBox MB_YESNO|MB_ICONEXCLAMATION "Another Octave installation has been detected at that destination. It is recommended to uninstall it if you intend to use the same installation directory. Do you want to proceed with the installation anyway?" IDYES inst_none IDNO 0
+  MessageBox MB_YESNO|MB_ICONEXCLAMATION "Another Octave installation has been detected at that destination. It is recommended to uninstall it if you intend to use the same installation directory. Do you want to proceed with the installation anyway?" /SD IDYES IDYES inst_none IDNO 0
   Abort 
   GoTo inst_end
 inst_none:
@@ -544,7 +544,7 @@ EOF
   IfErrors JRE_Error
 
  JRE_Error:
-  MessageBox MB_ICONEXCLAMATION|MB_YESNO "Octave has the capability to call Java libraries, but the installer was unable to find a Java Runtime Environment (JRE) on this system.  Octave will still function without a JRE, only certain specific functions will be disabled.  If a JRE is installed later, Octave should be able to detect and use it automatically.  Continue with installation?" IDYES continue
+  MessageBox MB_ICONEXCLAMATION|MB_YESNO "Octave has the capability to call Java libraries, but the installer was unable to find a Java Runtime Environment (JRE) on this system.  Octave will still function without a JRE, only certain specific functions will be disabled.  If a JRE is installed later, Octave should be able to detect and use it automatically.  Continue with installation?" /SD IDYES IDYES continue
   Abort
  continue:
   Pop \$R1
