@@ -1,6 +1,87 @@
-diff -uNr a/src/dicomdict.cpp b/src/dicomdict.cpp
---- a/src/dicomdict.cpp	2011-12-20 15:52:53.000000000 -0500
-+++ b/src/dicomdict.cpp	2017-04-27 09:05:53.295379421 -0400
+diff -r c6fc977bc48a src/Makefile.in
+--- a/src/Makefile.in	Thu Feb 23 08:34:52 2017 +0100
++++ b/src/Makefile.in	Tue May 16 08:25:04 2017 -0400
+@@ -4,6 +4,8 @@
+ GDCM_CPPFLAGS = @GDCM_CXXFLAGS@
+ GDCM_LIBS = @GDCM_LIBS@
+ 
++OCTAVE_DEFS = -DHAVE_OCTAVE_LOAD_PATH=@HAVE_OCTAVE_LOAD_PATH@
++
+ need_dict = dicominfo.oct dicomwrite.oct dicomlookup.oct
+ 
+ test_files = dicominfo.cpp dicomdict.cpp dicomread.cpp dicomlookup.cpp isdicom.cpp dicomuid.oct
+@@ -11,13 +13,13 @@
+ all: $(need_dict) dicomdict.oct dicomread.oct _gendicomdict.oct isdicom.oct dicomuid.oct
+ 
+ %.o: %.cpp
+-	$(MKOCTFILE) $(GDCM_CPPFLAGS) -c $<
++	$(MKOCTFILE) $(OCTAVE_DEFS) $(GDCM_CPPFLAGS) -c $<
+ 
+ $(need_dict): %.oct: %.cpp dicomdict.o
+-	$(MKOCTFILE) $(GDCM_CPPFLAGS) $(GDCM_LIBS) $^
++	$(MKOCTFILE) $(OCTAVE_DEFS) $(GDCM_CPPFLAGS) $(GDCM_LIBS) $^
+ 
+ %.oct: %.cpp
+-	$(MKOCTFILE) $(GDCM_CPPFLAGS) $(GDCM_LIBS) $<
++	$(MKOCTFILE) $(OCTAVE_DEFS) $(GDCM_CPPFLAGS) $(GDCM_LIBS) $<
+ 
+ clean:
+ 	$(RM) *.o *.oct *~
+diff -r c6fc977bc48a src/configure.ac
+--- a/src/configure.ac	Thu Feb 23 08:34:52 2017 +0100
++++ b/src/configure.ac	Tue May 16 08:25:04 2017 -0400
+@@ -6,9 +6,48 @@
+ 
+ AC_PROG_SED
+ 
++AC_PATH_PROG([MKOCTFILE], [mkoctfile])
++if test -z "$MKOCTFILE"; then
++  AC_MSG_ERROR([*** 'mkoctfile' not found.])
++fi
++
+ AC_PROG_CXX
+ AC_LANG(C++)
+ 
++## octave API tests
++save_CXX="$CXX"
++save_CXXFLAGS="$CXXFLAGS"
++CXX=`${MKOCTFILE} -p CXX`
++CXXFLAGS="$CXXFLAGS -I`$MKOCTFILE -p OCTINCLUDEDIR`"
++
++# need to use interpreter->get_load_path in dev version of octave,
++# prior to that methods of load_path were static
++AC_CACHE_CHECK(
++  [interpreter get_load_path],
++  [octave_cv_interpreter_get_load_path],
++  [AC_COMPILE_IFELSE(
++    [AC_LANG_PROGRAM([
++      #include <oct.h>
++      #include <octave.h>
++      #include <interpreter.h>
++      #include <load-path.h>
++      ],
++      [
++        octave::load_path &p = octave::application::the_interpreter ()->get_load_path ();
++      ])],
++    [octave_cv_interpreter_get_load_path=yes],
++    [octave_cv_interpreter_get_load_path=no])
++  ])
++if test "$octave_cv_interpreter_get_load_path" = "yes" ; then
++  HAVE_OCTAVE_LOAD_PATH=1
++else
++  HAVE_OCTAVE_LOAD_PATH=0
++fi
++AC_SUBST(HAVE_OCTAVE_LOAD_PATH)
++
++CC=$save_CXX
++CXXFLAGS=$save_CXXFLAGS
++
+ dnl
+ dnl GDCM headers are in a version specific path.  They use CMake and
+ dnl provide a project.cmake config file which has the correct flags to
+diff -r c6fc977bc48a src/dicomdict.cpp
+--- a/src/dicomdict.cpp	Thu Feb 23 08:34:52 2017 +0100
++++ b/src/dicomdict.cpp	Tue May 16 08:25:04 2017 -0400
 @@ -25,6 +25,8 @@
   */
  
@@ -9,33 +90,30 @@ diff -uNr a/src/dicomdict.cpp b/src/dicomdict.cpp
 +#include "octave/interpreter.h"
  #include "octave/load-path.h"
  
- #include "gdcm-2.0/gdcmDict.h"
-@@ -256,12 +258,23 @@
+ #include "gdcmDict.h"
+@@ -263,13 +265,20 @@
  	}
  
  	// find dic if it is anywhere in the search path (same path as for m-files etc)
 +	std::string resolved_filename(filename);
-+
  #ifndef NOT_OCT
 -	const std::string resolved_filename=load_path::find_file(std::string(filename)) ;
--#else
++#if HAVE_OCTAVE_LOAD_PATH == 1
++	octave::interpreter *interp = octave::application::the_interpreter ();
++	if (interp) {
++		octave::load_path& lp = interp->get_load_path ();
++		resolved_filename = lp.find_file (std::string (filename));
++	}
++	else
++		warning ("load_dicom_dict: interpreter context missing");
+ #else
 -        // for debugging: if not running in octave, find_file always returns ""
 -	// so we just use the original filename
 -	const std::string resolved_filename(filename);
-+        // Temporary fix.  Eventually, a pointer to the Octave
-+        // interpreter should come from information passed to the
-+        // DEFUN function that called us, not from global data.
-+
-+        octave::interpreter *interp = octave::application::the_interpreter ();
-+
-+        if (interp)
-+          {
-+            octave::load_path& lp = interp->get_load_path ();
-+
-+            resolved_filename = lp.find_file (std::string (filename));
-+          }
-+        else
-+          warning ("load_dicom_dict: interpreter context missing");
- #endif
+-#endif
++	resolved_filename=load_path::find_file(std::string(filename));
++#endif // HAVE_OCTAVE_LOAD_PATH
++#endif // NOT_OCT
  
  	std::ifstream fin(resolved_filename.c_str());
+ 	if (!fin) {
