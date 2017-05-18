@@ -428,8 +428,21 @@ Function CheckWinVer
   Push \$0
   Push \$1
 
+  ; try read new way of getting version
+  ReadRegStr \$0 HKLM "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion" CurrentMajorVersionNumber
+  ; since is DWORD reg value, error will be set, however will be "" if no value read
+  StrCmp \$0 "" is_less_than_win10
+  ReadRegStr \$1 HKLM "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion" CurrentMinorVersionNumber
+  StrCmp \$1 "" is_less_than_win10
+
+  StrCpy \$0 "\$0.\$1"
+  Goto is_winnt
+
+is_less_than_win10:
+  ClearErrors
   ReadRegStr \$0 HKLM "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion" CurrentVersion
   IfErrors is_error is_winnt
+
 is_winnt:
   StrCpy \$1 \$0 1
   StrCmp \$1 4 is_error ; Aborting installation for Windows versions older than Windows 2000
@@ -439,8 +452,10 @@ is_winnt:
   StrCmp \$0 "6.0" is_winnt_vista
   StrCmp \$0 "6.1" is_winnt_7
   StrCmp \$0 "6.2" is_winnt_8
-  StrCmp \$0 "6.3" is_winnt_10
+  StrCmp \$0 "6.3" is_winnt_8 ; win 8.1
+  StrCmp \$0 "10.0" is_winnt_10
   StrCmp \$1 6 is_winnt_10 ; Checking for future versions of Windows 10+
+  StrCmp \$1 1 is_winnt_10 ; Checking for future versions of Windows 10+
   Goto is_error
 
 is_winnt_10:
@@ -455,6 +470,7 @@ is_winnt_8:
   Goto done
 is_error:
   StrCpy \$1 \$0
+  ClearErrors
   ReadRegStr \$0 HKLM "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion" ProductName
   IfErrors 0 +4
   ReadRegStr \$0 HKLM "SOFTWARE\\Microsoft\\Windows\\CurrentVersion" Version
