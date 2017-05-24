@@ -61,7 +61,7 @@ diff -r c6fc977bc48a src/configure.ac
 +      #include <load-path.h>
 +      ],
 +      [
-+        octave::load_path &p = octave::application::the_interpreter ()->get_load_path ();
++        octave::load_path &p = octave::interpreter::the_interpreter ()->get_load_path ();
 +      ])],
 +    [octave_cv_interpreter_get_load_path=yes],
 +    [octave_cv_interpreter_get_load_path=no])
@@ -99,7 +99,7 @@ diff -r c6fc977bc48a src/dicomdict.cpp
  #ifndef NOT_OCT
 -	const std::string resolved_filename=load_path::find_file(std::string(filename)) ;
 +#if HAVE_OCTAVE_LOAD_PATH == 1
-+	octave::interpreter *interp = octave::application::the_interpreter ();
++	octave::interpreter *interp = octave::interpreter::the_interpreter ();
 +	if (interp) {
 +		octave::load_path& lp = interp->get_load_path ();
 +		resolved_filename = lp.find_file (std::string (filename));
