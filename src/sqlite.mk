@@ -3,8 +3,8 @@
 
 PKG             := sqlite
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3170000
-$(PKG)_CHECKSUM := 7bcff1c158ed9e2c0e159c1b4b6c36d4d65dff8c
+$(PKG)_VERSION  := 3190200
+$(PKG)_CHECKSUM := 597735a7039ebb105ea36366783ff0a3177f9131
 $(PKG)_SUBDIR   := $(PKG)-autoconf-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-autoconf-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.sqlite.org/2017/$($(PKG)_FILE)
@@ -17,6 +17,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    $(SED) -i 's/^Cflags/#Cflags/;' '$(1)/sqlite3.pc.in'
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
