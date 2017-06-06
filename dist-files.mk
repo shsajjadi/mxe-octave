@@ -664,7 +664,6 @@ SRC_FILES_1 := \
   transfig-1-fixes.patch \
   transfig.mk \
   tre.mk \
-  units-1-fixes.patch \
   units.mk \
   uuid.mk \
   vala.mk \
