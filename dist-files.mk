@@ -572,6 +572,7 @@ SRC_FILES_1 := \
   qscintilla-1-fixes.patch \
   qscintilla-2-matlab-fold.patch \
   qscintilla-3-matlab-block-comment.patch \
+  qscintilla-4-matlab-end-op.patch \
   qscintilla.mk \
   qt-1-cherrypicks.patch \
   qt-2-shared-tools-fixes.patch \

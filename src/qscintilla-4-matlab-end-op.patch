@@ -1,0 +1,37 @@
+diff -ur QScintilla_gpl-2.9.3.orig/lexers/LexMatlab.cpp QScintilla_gpl-2.9.3/lexers/LexMatlab.cpp
+--- QScintilla_gpl-2.9.3.orig/lexers/LexMatlab.cpp	2017-06-26 15:15:10.807062925 -0400
++++ QScintilla_gpl-2.9.3/lexers/LexMatlab.cpp	2017-06-28 11:28:33.474725694 -0400
+@@ -96,6 +96,9 @@
+ 	// of a string
+ 	bool transpose = false;
+ 
++	// count for brackets for when 'end' could be an operator not a keyword
++	int allow_end_op = 0;
++
+ 	// approximate position of first non space character in a line
+ 	int nonSpaceColumn = -1;
+ 	// approximate column position of the current character in a line
+@@ -150,6 +153,9 @@
+ 				char s[100];
+ 				sc.GetCurrentLowered(s, sizeof(s));
+ 				if (keywords.InList(s)) {
++					if (strcmp ("end", s) == 0 && allow_end_op > 0) {
++						sc.ChangeState(SCE_MATLAB_NUMBER);
++					}
+ 					sc.SetState(SCE_MATLAB_DEFAULT);
+ 					transpose = false;
+ 				} else {
+@@ -249,6 +255,12 @@
+ 			} else if (isalpha(sc.ch)) {
+ 				sc.SetState(SCE_MATLAB_KEYWORD);
+ 			} else if (isoperator(static_cast<char>(sc.ch)) || sc.ch == '@' || sc.ch == '\\') {
++				if (sc.ch == '(' || sc.ch == '[' || sc.ch == '{') {
++					allow_end_op ++;
++				} else if ((sc.ch == ')' || sc.ch == ']' || sc.ch == '}') && (allow_end_op > 0)) {
++					allow_end_op --;
++				}
++
+ 				if (sc.ch == ')' || sc.ch == ']' || sc.ch == '}') {
+ 					transpose = true;
+ 				} else {
+Only in QScintilla_gpl-2.9.3/lexers: .LexMatlab.cpp.swp
