@@ -85,7 +85,8 @@ else
   ifeq ($(MXE_SYSTEM),mingw)
     $(PKG)_CROSS_CONFIG_OPTIONS := \
       FLTK_CONFIG='$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)fltk-config' \
-      gl_cv_func_gettimeofday_clobber=no
+      gl_cv_func_gettimeofday_clobber=no \
+      gl_cv_func_tzset_clobber=no
     ifeq ($(ENABLE_64),yes)
       $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64
     else
