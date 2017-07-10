@@ -1,0 +1,97 @@
+diff -uNr a/src/packfields.cc b/src/packfields.cc
+--- a/src/packfields.cc	2015-05-27 11:43:57.000000000 -0400
++++ b/src/packfields.cc	2017-07-10 14:21:37.229291149 -0400
+@@ -15,10 +15,11 @@
+ 
+ #include <octave/oct.h>
+ #include <octave/utils.h>
++#include <octave/interpreter.h>
+ #include <octave/symtab.h>
+ #include <octave/oct-map.h>
+ 
+-DEFUN_DLD (packfields, args, ,
++DEFMETHOD_DLD (packfields, interp, args, ,
+   "-*- texinfo -*-\n\
+ @deftypefn {Loadable Function} {} packfields (@var{s_name}, @var{var1}, @var{var2}, @dots{})\n\
+ Create struct from variables.\n\
+@@ -44,6 +45,9 @@
+ 
+   if (nargin > 0)
+     {
++      octave::symbol_table::scope *curr_scope
++	= interp.require_current_scope ("packfields");
++
+       std::string struct_name = args (0).string_value ();
+       string_vector fld_names(nargin-1);
+       octave_value_list fld_vals(nargin-1);
+@@ -64,7 +68,7 @@
+           if (valid_identifier (fld_name))
+             {
+               fld_names(i) = fld_name;
+-              octave_value fld_val = symbol_table::varval (fld_name);
++              octave_value fld_val = curr_scope->varval (fld_name);
+               if (fld_val.is_defined ())
+                 fld_vals(i) = fld_val;
+               else
+@@ -77,7 +81,7 @@
+       if (! error_state)
+         {
+           // Force the symbol to be inserted in caller's scope.
+-          symbol_table::symbol_record& rec = symbol_table::insert (struct_name);
++	  octave::symbol_table::symbol_record& rec = curr_scope->insert (struct_name);
+ 
+           octave_value& struct_ref = rec.varref ();
+ 
+diff -uNr a/src/unpackfields.cc b/src/unpackfields.cc
+--- a/src/unpackfields.cc	2015-05-27 11:43:57.000000000 -0400
++++ b/src/unpackfields.cc	2017-07-10 14:21:30.893590654 -0400
+@@ -15,10 +15,11 @@
+ 
+ #include <octave/oct.h>
+ #include <octave/utils.h>
++#include <octave/interpreter.h>
+ #include <octave/symtab.h>
+ #include <octave/oct-map.h>
+ 
+-DEFUN_DLD (unpackfields, args, ,
++DEFMETHOD_DLD (unpackfields, interp, args, ,
+   "-*- texinfo -*-\n\
+ @deftypefn {Loadable Function} {} unpackfields (@var{s_name}, @var{fld1}, @var{fld2}, @dots{})\n\
+ Create variables from fields of a struct.\n\
+@@ -50,6 +51,9 @@
+ 
+   if (nargin > 0)
+     {
++      octave::symbol_table::scope *curr_scope
++	= interp.require_current_scope ("unpackfields");
++
+       std::string struct_name = args (0).string_value ();
+       string_vector fld_names(nargin-1);
+ 
+@@ -75,7 +79,7 @@
+       if (! error_state)
+         {
+           // Force the symbol to be inserted in caller's scope.
+-          octave_value struct_val = symbol_table::varval (struct_name);
++          octave_value struct_val = curr_scope->varval (struct_name);
+ 
+           if (struct_val.is_map ())
+             {
+@@ -89,7 +93,7 @@
+                     {
+                       octave_scalar_map::const_iterator iter = map.seek (fld_names(i));
+                       if (iter != map.end ())
+-                        symbol_table::assign (fld_names(i), map.contents (iter));
++                        curr_scope->assign (fld_names(i), map.contents (iter));
+                       else
+                         {
+                           error ("unpackfields: field %s does not exist", fld_names(i).c_str ());
+@@ -114,7 +118,7 @@
+                     break;
+ 
+                   if (val.is_defined ())
+-                    symbol_table::assign (fld_names(i), val);
++                    curr_scope->assign (fld_names(i), val);
+                 }
+             }
+         }
