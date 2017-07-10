@@ -397,6 +397,8 @@ def pkg (args):
 
   # work out what arch is etc from mkoctfile/config
   if env.prefix == "":
+    env.prefix = os.popen(env.octave_config + " -p OCTAVE_HOME").read().rstrip("\r\n")
+  if env.prefix == "":
     env.prefix = os.popen(env.octave_config + " -p PREFIX").read().rstrip("\r\n")
 
   env.arch = os.popen(env.octave_config + " -p CANONICAL_HOST_TYPE").read().rstrip("\r\n")
