@@ -1,7 +1,7 @@
-diff -ur QScintilla_gpl-2.9.3.orig/lexers/LexMatlab.cpp QScintilla_gpl-2.9.3/lexers/LexMatlab.cpp
---- QScintilla_gpl-2.9.3.orig/lexers/LexMatlab.cpp	2017-06-26 15:15:10.807062925 -0400
-+++ QScintilla_gpl-2.9.3/lexers/LexMatlab.cpp	2017-06-28 11:28:33.474725694 -0400
-@@ -96,6 +96,9 @@
+diff -ur QScintilla_gpl-2.10.1.orig/lexers/LexMatlab.cpp QScintilla_gpl-2.10.1/lexers/LexMatlab.cpp
+--- QScintilla_gpl-2.10.1.orig/lexers/LexMatlab.cpp	2017-07-05 08:21:58.527158553 -0400
++++ QScintilla_gpl-2.10.1/lexers/LexMatlab.cpp	2017-07-05 08:22:26.304941561 -0400
+@@ -97,6 +97,9 @@
  	// of a string
  	bool transpose = false;
  
@@ -11,7 +11,7 @@ diff -ur QScintilla_gpl-2.9.3.orig/lexers/LexMatlab.cpp QScintilla_gpl-2.9.3/lex
  	// approximate position of first non space character in a line
  	int nonSpaceColumn = -1;
  	// approximate column position of the current character in a line
-@@ -150,6 +153,9 @@
+@@ -151,6 +154,9 @@
  				char s[100];
  				sc.GetCurrentLowered(s, sizeof(s));
  				if (keywords.InList(s)) {
@@ -21,7 +21,7 @@ diff -ur QScintilla_gpl-2.9.3.orig/lexers/LexMatlab.cpp QScintilla_gpl-2.9.3/lex
  					sc.SetState(SCE_MATLAB_DEFAULT);
  					transpose = false;
  				} else {
-@@ -249,6 +255,12 @@
+@@ -250,6 +256,12 @@
  			} else if (isalpha(sc.ch)) {
  				sc.SetState(SCE_MATLAB_KEYWORD);
  			} else if (isoperator(static_cast<char>(sc.ch)) || sc.ch == '@' || sc.ch == '\\') {
@@ -34,4 +34,5 @@ diff -ur QScintilla_gpl-2.9.3.orig/lexers/LexMatlab.cpp QScintilla_gpl-2.9.3/lex
  				if (sc.ch == ')' || sc.ch == ']' || sc.ch == '}') {
  					transpose = true;
  				} else {
-Only in QScintilla_gpl-2.9.3/lexers: .LexMatlab.cpp.swp
+Only in QScintilla_gpl-2.10.1/lexers: LexMatlab.cpp.orig
+Only in QScintilla_gpl-2.10.1/lexers: LexMatlab.cpp.rej
