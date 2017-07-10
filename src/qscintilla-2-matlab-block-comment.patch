@@ -1,33 +1,32 @@
-diff -ur QScintilla_gpl-2.9.3.orig/lexers/LexMatlab.cpp QScintilla_gpl-2.9.3/lexers/LexMatlab.cpp
---- QScintilla_gpl-2.9.3.orig/lexers/LexMatlab.cpp	2017-01-18 08:06:39.577378613 -0500
-+++ QScintilla_gpl-2.9.3/lexers/LexMatlab.cpp	2017-01-18 08:21:30.775353161 -0500
-@@ -71,6 +71,16 @@
- 		return -1;
+diff -ur QScintilla_gpl-2.10.1.orig/lexers/LexMatlab.cpp QScintilla_gpl-2.10.1/lexers/LexMatlab.cpp
+--- QScintilla_gpl-2.10.1.orig/lexers/LexMatlab.cpp	2017-07-05 08:05:16.545914398 -0400
++++ QScintilla_gpl-2.10.1/lexers/LexMatlab.cpp	2017-07-05 08:19:56.616722104 -0400
+@@ -73,6 +73,15 @@
  	return 0;
  }
-+
-+static bool IsSpaceToEOL(unsigned int startPos, Accessor &styler) {
-+        int line = styler.GetLine(startPos);
-+	unsigned int eol_pos = styler.LineStart(line + 1) - 1;
-+	for (unsigned int i = startPos; i < eol_pos; i++) {
+ 
++static bool IsSpaceToEOL(Sci_PositionU startPos, Accessor &styler) {
++        Sci_Position line = styler.GetLine(startPos);
++	Sci_PositionU eol_pos = styler.LineStart(line + 1) - 1;
++	for (Sci_PositionU i = startPos; i < eol_pos; i++) {
 +		char ch = styler[i];
 +		if(!IsASpace(ch)) return false;
 +	}
 +	return true;
 +}
-  
+ 
  static void ColouriseMatlabOctaveDoc(
-             unsigned int startPos, int length, int initStyle,
-@@ -178,7 +188,7 @@
+             Sci_PositionU startPos, Sci_Position length, int initStyle,
+@@ -180,7 +189,7 @@
  			}
  		} else if (sc.state == SCE_MATLAB_COMMENT) {
  			// end or start of a nested a block comment?
 -			if( IsCommentChar(sc.ch) && sc.chNext == '}' && nonSpaceColumn == column) {
 +			if( IsCommentChar(sc.ch) && sc.chNext == '}' && nonSpaceColumn == column && IsSpaceToEOL(sc.currentPos+2, styler)) {
                             	if(commentDepth > 0) commentDepth --;
-  
+ 
  				curLine = styler.GetLine(sc.currentPos);
-@@ -190,7 +200,7 @@
+@@ -192,7 +201,7 @@
  					transpose = false;
  				}
                          }
@@ -36,7 +35,7 @@ diff -ur QScintilla_gpl-2.9.3.orig/lexers/LexMatlab.cpp QScintilla_gpl-2.9.3/lex
                          {
   				commentDepth ++;
  
-@@ -211,9 +221,12 @@
+@@ -213,9 +222,12 @@
  		// check start of a new state
  		if (sc.state == SCE_MATLAB_DEFAULT) {
  			if (IsCommentChar(sc.ch)) {
@@ -52,7 +51,7 @@ diff -ur QScintilla_gpl-2.9.3.orig/lexers/LexMatlab.cpp QScintilla_gpl-2.9.3/lex
  				curLine = styler.GetLine(sc.currentPos);
  				styler.SetLineState(curLine, commentDepth);
  				sc.SetState(SCE_MATLAB_COMMENT);
-@@ -287,9 +300,9 @@
+@@ -288,9 +300,9 @@
  		// a line that starts with a comment
  		if (style == SCE_MATLAB_COMMENT && IsComment(ch) && visibleChars == 0) {
  			// start/end of block comment 
@@ -64,3 +63,5 @@ diff -ur QScintilla_gpl-2.9.3.orig/lexers/LexMatlab.cpp QScintilla_gpl-2.9.3/lex
  				levelNext --;
  		}
  		// keyword
+Only in QScintilla_gpl-2.10.1/lexers: LexMatlab.cpp.orig
+Only in QScintilla_gpl-2.10.1/lexers: LexMatlab.cpp.rej

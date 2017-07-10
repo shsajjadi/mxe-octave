@@ -3,8 +3,8 @@
 
 PKG             := qscintilla
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.9.3
-$(PKG)_CHECKSUM := d62c36272f47a176177613dd8260961d50d0ed64
+$(PKG)_VERSION  := 2.10.1
+$(PKG)_CHECKSUM := f12499c18d80cb59fa46df3ee76ad2c66692e818
 $(PKG)_SUBDIR   := QScintilla_gpl-$($(PKG)_VERSION)
 $(PKG)_FILE     := QScintilla_gpl-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://sourceforge.net/projects/pyqt/files/QScintilla2/QScintilla-$($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -44,7 +44,8 @@ ifneq ($(MXE_NATIVE_BUILD),yes)
 endif
 
 define $(PKG)_BUILD
-    cd '$(1)/Qt4Qt5' && '$(MXE_QMAKE)' -makefile $($(PKG)_QMAKE_SPEC_OPTION) QMAKE_UIC=$(MXE_UIC) QMAKE_MOC=$(MXE_MOC)
+    cd '$(1)/Qt4Qt5' && '$(MXE_QMAKE)' -makefile $($(PKG)_QMAKE_SPEC_OPTION) QMAKE_UIC=$(MXE_UIC) \
+        QMAKE_MOC=$(MXE_MOC) QMAKE_CXXFLAGS='-std=c++11'
 
     if [ $(MXE_SYSTEM) = msvc ]; then \
         mkdir -p '$(3)' && \
@@ -59,14 +60,14 @@ define $(PKG)_BUILD
 
     if [ $(MXE_SYSTEM)$(ENABLE_QT5) = mingwyes ]; then \
         $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib'; \
-        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/bin/'; \
-        rm -f '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
-        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/libqscintilla2.a' '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/libqscintilla2-qt5.a'; \
+        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/$(LIBRARY_PREFIX)qscintilla2_qt5$(LIBRARY_SUFFIX).dll' '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/bin/'; \
+        rm -f '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/$(LIBRARY_PREFIX)qscintilla2_qt5$(LIBRARY_SUFFIX).dll'; \
     fi
     if [ $(MXE_SYSTEM)$(ENABLE_QT5) = mingwno ]; then \
         $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(HOST_BINDIR)'; \
-        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll' '$($(PKG)_INSTALL_ROOT)$(HOST_BINDIR)/'; \
-        rm -f '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2$(LIBRARY_SUFFIX).dll'; \
+        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2_qt4$(LIBRARY_SUFFIX).dll' '$($(PKG)_INSTALL_ROOT)$(HOST_BINDIR)/'; \
+        rm -f '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2_qt4$(LIBRARY_SUFFIX).dll'; \
+	$(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/libqscintilla2_qt4.a' '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/libqscintilla2.a'; \
     fi
 
 

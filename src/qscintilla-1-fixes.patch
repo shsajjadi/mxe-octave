@@ -1,12 +1,12 @@
-diff -ur QScintilla-gpl-2.9.2.orig/Qt4Qt5/qscintilla.pro QScintilla_gpl-2.9.2/Qt4Qt5/qscintilla.pro
---- QScintilla-gpl-2.9.2.orig/Qt4Qt5/qscintilla.pro	2016-09-09 09:27:33.180610774 -0400
-+++ QScintilla_gpl-2.9.2/Qt4Qt5/qscintilla.pro	2016-09-09 09:28:05.519426207 -0400
-@@ -24,7 +24,7 @@
+diff -ur QScintilla_gpl-2.10.1.orig/Qt4Qt5/qscintilla.pro QScintilla_gpl-2.10.1/Qt4Qt5/qscintilla.pro
+--- QScintilla_gpl-2.10.1.orig/Qt4Qt5/qscintilla.pro	2017-07-05 08:05:16.558914764 -0400
++++ QScintilla_gpl-2.10.1/Qt4Qt5/qscintilla.pro	2017-07-05 08:05:34.640424452 -0400
+@@ -23,7 +23,7 @@
+ !win32:VERSION = 13.0.0
  
  TEMPLATE = lib
- TARGET = qscintilla2
--CONFIG += qt warn_off release thread exceptions hide_symbols
+-CONFIG += qt warn_off thread exceptions hide_symbols
 +CONFIG += qt warn_off release thread exceptions
- INCLUDEPATH += . ../include ../lexlib ../src
  
- !CONFIG(staticlib) {
+ CONFIG(debug, debug|release) {
+     mac: {
