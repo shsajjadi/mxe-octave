@@ -3,11 +3,11 @@
 
 PKG             := wxwidgets
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.0.2
-$(PKG)_CHECKSUM := 6461eab4428c0a8b9e41781b8787510484dea800
+$(PKG)_VERSION  := 3.0.3
+$(PKG)_CHECKSUM := 3525306c926e208d9b0272aaa9c091b8c7264e5b
 $(PKG)_SUBDIR   := wxWidgets-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.bz2
-$(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/wxwindows/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/wxWidgets/wxWidgets/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := libiconv libpng jpeg tiff sdl zlib expat
 
 define $(PKG)_UPDATE
