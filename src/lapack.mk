@@ -2,8 +2,8 @@
 # See index.html for further information.
 
 PKG             := lapack
-$(PKG)_VERSION  := 3.5.0
-$(PKG)_CHECKSUM := 5870081889bf5d15fd977993daab29cf3c5ea970
+$(PKG)_VERSION  := 3.7.1
+$(PKG)_CHECKSUM := 84c4f7163b52b1bf1f6ca2193f6f48ed3dec0fab
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://www.netlib.org/$(PKG)/$($(PKG)_FILE)
@@ -50,13 +50,16 @@ define $(PKG)_BUILD
 endef
 else
 define $(PKG)_BUILD
-    cd '$(1)' && cmake \
+    mkdir '$(1)/build'
+    cd '$(1)/build' && cmake \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DCMAKE_AR='$(MXE_AR)' \
         -DCMAKE_RANLIB='$(MXE_RANLIB)' \
         -DCMAKE_Fortran_FLAGS='$($(PKG)_DEFAULT_INTEGER_8_FLAG)' \
+        -DBUILD_DEPRECATED=ON \
+        -DBUILD_SHARED_LIBS=$(if $(findstring yes,$(BUILD_SHARED)),ON,OFF) \
         $($(PKG)_BLAS_CONFIG_OPTS) \
-        .
-    $(MAKE) -C '$(1)/SRC' -j '$(JOBS)' VERBOSE=1 install DESTDIR='$(3)'
+        $(1)
+    $(MAKE) -C '$(1)/build/SRC' -j '$(JOBS)' VERBOSE=1 install DESTDIR='$(3)'
 endef
 endif
