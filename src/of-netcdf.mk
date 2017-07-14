@@ -18,5 +18,6 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    cd '$(1)/src' && source ./autogen.sh
     $(OCTAVE_FORGE_PKG_BUILD)
 endef
