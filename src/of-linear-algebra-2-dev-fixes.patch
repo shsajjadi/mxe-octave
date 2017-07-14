@@ -1,0 +1,355 @@
+diff -ur linear-algebra.orig/src/configure linear-algebra/src/configure
+--- linear-algebra.orig/src/configure	2017-07-13 15:57:44.643245981 -0400
++++ linear-algebra/src/configure	2017-07-13 16:02:41.757621133 -0400
+@@ -599,13 +599,9 @@
+ FFLAGS
+ F77
+ CPICFLAG
+-altopath
+-altmpath
+-altpath
+ xpath
+ opath
+ mpath
+-subver
+ ver
+ OCTAVE_CONFIG
+ MKOCTFILE
+@@ -664,9 +660,6 @@
+ with_mpath
+ with_opath
+ with_xpath
+-with_altpath
+-with_altmpath
+-with_altopath
+ '
+       ac_precious_vars='build_alias
+ host_alias
+@@ -1286,9 +1279,6 @@
+   --with-mpath            override path for m-files
+   --with-opath            override path for oct-files
+   --with-xpath            override path for executables
+-  --with-altpath          alternative functions install path prefix
+-  --with-altmpath         override path for alternative m-files
+-  --with-altopath         override path for alternative oct-files
+ 
+ Some influential environment variables:
+   CC          C compiler command
+@@ -2662,10 +2652,6 @@
+ 
+ 
+ 
+-
+-
+-
+-
+ # Check whether --with-path was given.
+ if test "${with_path+set}" = set; then :
+   withval=$with_path;  path=$withval
+@@ -2690,86 +2676,10 @@
+ fi
+ 
+ 
+-# Check whether --with-altpath was given.
+-if test "${with_altpath+set}" = set; then :
+-  withval=$with_altpath;  altpath=$withval
+-fi
+-
+-
+-# Check whether --with-altmpath was given.
+-if test "${with_altmpath+set}" = set; then :
+-  withval=$with_altmpath; altmpath=$withval
+-fi
+-
+-
+-# Check whether --with-altopath was given.
+-if test "${with_altopath+set}" = set; then :
+-  withval=$with_altopath; altopath=$withval
+-fi
+-
+-
+ if test -n "$path" ; then
+    test -z "$mpath" && mpath=$path
+    test -z "$opath" && opath=$path/oct
+    test -z "$xpath" && xpath=$path/bin
+-   test -z "$altpath" && altpath=$path-alternatives
+-fi
+-
+-if test -n "$altpath" ; then
+-   test -z "$altmpath" && altmpath=$altpath
+-   test -z "$altopath" && altopath=$altpath/oct
+-fi
+-
+-#if test -z "$mpath" || test -z "$opath" || test -z "$xpath" || test -z "$altmpath" || test -z "$altopath" || test -z "$ver" ; then
+-if test -z "$mpath" || test -z "$opath" || test -z "$xpath" || test -z "$ver" ; then
+-      cat > conftest.cc <<EOF
+-#include <octave/config.h>
+-#include <octave/version.h>
+-#include <octave/defaults.h>
+-
+-#define INFOV "\nINFOV=" OCTAVE_VERSION "\n"
+-
+-#define INFOH "\nINFOH=" OCTAVE_CANONICAL_HOST_TYPE "\n"
+-
+-#ifdef OCTAVE_LOCALVERFCNFILEDIR
+-# define INFOM "\nINFOM=" OCTAVE_LOCALVERFCNFILEDIR "\n"
+-#else
+-# define INFOM "\nINFOM=" OCTAVE_LOCALFCNFILEPATH "\n"
+-#endif
+-
+-#ifdef OCTAVE_LOCALVEROCTFILEDIR
+-# define INFOO "\nINFOO=" OCTAVE_LOCALVEROCTFILEDIR "\n"
+-#else
+-# define INFOO "\nINFOO=" OCTAVE_LOCALOCTFILEPATH  "\n"
+-#endif
+-
+-#ifdef OCTAVE_LOCALVERARCHLIBDIR
+-# define INFOX "\nINFOX=" OCTAVE_LOCALVERARCHLIBDIR  "\n"
+-#else
+-# define INFOX "\nINFOX=" OCTAVE_LOCALARCHLIBDIR  "\n"
+-#endif
+-
+-const char *infom = INFOM;
+-const char *infoo = INFOO;
+-const char *infox = INFOX;
+-const char *infoh = INFOH;
+-const char *infov = INFOV;
+-EOF
+-
+-      $MKOCTFILE conftest.cc || as_fn_error $? "Could not run $MKOCTFILE" "$LINENO" 5
+-
+-      eval `strings conftest.o | grep "^INFO.=" | sed -e "s,//.*$,,"`
+-   rm -rf conftest*
+-
+-      ver=`echo $INFOV | sed -e "s/\.//" -e "s/\..*$//"`
+-   subver=`echo $INFOV | sed -e "s/^[^.]*[.][^.]*[.]//"`
+-   alt_mbase=`echo $INFOM | sed -e "s,\/[^\/]*$,,"`
+-   alt_obase=`echo $INFOO | sed -e "s,/site.*$,/site,"`
+-   test -z "$mpath" && mpath=$INFOM/octave-forge
+-   test -z "$opath" && opath=$INFOO/octave-forge
+-   test -z "$xpath" && xpath=$INFOX
+-   test -z "$altmpath" && altmpath=$alt_mbase/octave-forge-alternatives/m
+-   test -z "$altopath" && altopath=$alt_obase/octave-forge-alternatives/oct/$INFOH
+ fi
+ 
+ 
+@@ -2880,6 +2790,7 @@
+ $as_echo "$OCTAVE_VERSION" >&6; }
+ 
+ 
++ver=`echo $OCTAVE_VERSION | sed -e "s/\.//" -e "s/\..*$//"`
+ 
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for CANONICAL_HOST_TYPE in octave-config" >&5
+ $as_echo_n "checking for CANONICAL_HOST_TYPE in octave-config... " >&6; }
+@@ -2897,6 +2808,34 @@
+ 
+ 
+ 
++if test -z "$mpath"; then
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LOCALVERFCNFILEDIR in octave-config" >&5
++$as_echo_n "checking for LOCALVERFCNFILEDIR in octave-config... " >&6; }
++mpath=`$OCTAVE_CONFIG -p LOCALVERFCNFILEDIR`
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $mpath" >&5
++$as_echo "$mpath" >&6; }
++
++
++fi
++if test -z "$opath"; then
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LOCALVEROCTFILEDIR in octave-config" >&5
++$as_echo_n "checking for LOCALVEROCTFILEDIR in octave-config... " >&6; }
++opath=`$OCTAVE_CONFIG -p LOCALVEROCTFILEDIR`
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $opath" >&5
++$as_echo "$opath" >&6; }
++
++
++fi
++if test -z "$xpath"; then
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LOCALVERARCHLIBDIR in octave-config" >&5
++$as_echo_n "checking for LOCALVERARCHLIBDIR in octave-config... " >&6; }
++xpath=`$OCTAVE_CONFIG -p LOCALVERARCHLIBDIR`
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $xpath" >&5
++$as_echo "$xpath" >&6; }
++
++
++fi
++
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ln -s works" >&5
+ $as_echo_n "checking whether ln -s works... " >&6; }
+ LN_S=$as_ln_s
+@@ -3065,9 +3004,6 @@
+    m-files:   $mpath
+    oct-files: $opath
+    binaries:  $xpath
+-alternatives:
+-   m-files:   $altmpath
+-   oct-files: $altopath
+ 
+ shell commands will install into the following directories:
+    binaries:  $bindir
+@@ -3077,8 +3013,8 @@
+ 
+ octave-forge is configured with
+    octave:      $OCTAVE (version $OCTAVE_VERSION)
+-   mkoctfile:	$MKOCTFILE for Octave $subver
+-   octave-config: $OCTAVE_CONFIG for Octave $subver"
++   mkoctfile:	$MKOCTFILE for Octave $OCTAVE_VERSION
++   octave-config: $OCTAVE_CONFIG for Octave $OCTAVE_VERSION"
+   ac_config_files="$ac_config_files $CONFIGURE_OUTPUTS"
+ 
+ 
+diff -ur linear-algebra.orig/src/configure.base linear-algebra/src/configure.base
+--- linear-algebra.orig/src/configure.base	2017-07-13 15:57:44.644246010 -0400
++++ linear-algebra/src/configure.base	2017-07-13 16:01:17.552247526 -0400
+@@ -53,13 +53,9 @@
+ test -z "$OCTAVE_CONFIG" &&    AC_MSG_WARN([no octave-config found on path])
+ 
+ AC_SUBST(ver)
+-AC_SUBST(subver)
+ AC_SUBST(mpath)
+ AC_SUBST(opath)
+ AC_SUBST(xpath)
+-AC_SUBST(altpath)
+-AC_SUBST(altmpath)
+-AC_SUBST(altopath)
+ 
+ AC_ARG_WITH(path, 
+ 	[  --with-path             install path prefix],
+@@ -73,83 +69,11 @@
+ AC_ARG_WITH(xpath,
+ 	[  --with-xpath            override path for executables],
+ 	[xpath=$withval])
+-AC_ARG_WITH(altpath, 
+-	[  --with-altpath          alternative functions install path prefix],
+-	[ altpath=$withval ])
+-AC_ARG_WITH(altmpath,
+-	[  --with-altmpath         override path for alternative m-files],
+-	[altmpath=$withval])
+-AC_ARG_WITH(altopath,
+-	[  --with-altopath         override path for alternative oct-files],
+-	[altopath=$withval])	
+ 
+ if test -n "$path" ; then
+    test -z "$mpath" && mpath=$path 
+    test -z "$opath" && opath=$path/oct 
+    test -z "$xpath" && xpath=$path/bin
+-   test -z "$altpath" && altpath=$path-alternatives
+-fi
+-
+-if test -n "$altpath" ; then
+-   test -z "$altmpath" && altmpath=$altpath 
+-   test -z "$altopath" && altopath=$altpath/oct 
+-fi
+-
+-dnl Don't query if path/ver are given in the configure environment
+-#if test -z "$mpath" || test -z "$opath" || test -z "$xpath" || test -z "$altmpath" || test -z "$altopath" || test -z "$ver" ; then
+-if test -z "$mpath" || test -z "$opath" || test -z "$xpath" || test -z "$ver" ; then
+-   dnl Construct program to get mkoctfile version and local install paths
+-   cat > conftest.cc <<EOF
+-#include <octave/config.h>
+-#include <octave/version.h>
+-#include <octave/defaults.h>
+-
+-#define INFOV "\nINFOV=" OCTAVE_VERSION "\n"
+-
+-#define INFOH "\nINFOH=" OCTAVE_CANONICAL_HOST_TYPE "\n"
+-
+-#ifdef OCTAVE_LOCALVERFCNFILEDIR
+-# define INFOM "\nINFOM=" OCTAVE_LOCALVERFCNFILEDIR "\n"
+-#else
+-# define INFOM "\nINFOM=" OCTAVE_LOCALFCNFILEPATH "\n"
+-#endif
+-
+-#ifdef OCTAVE_LOCALVEROCTFILEDIR
+-# define INFOO "\nINFOO=" OCTAVE_LOCALVEROCTFILEDIR "\n"
+-#else
+-# define INFOO "\nINFOO=" OCTAVE_LOCALOCTFILEPATH  "\n"
+-#endif
+-
+-#ifdef OCTAVE_LOCALVERARCHLIBDIR
+-# define INFOX "\nINFOX=" OCTAVE_LOCALVERARCHLIBDIR  "\n"
+-#else
+-# define INFOX "\nINFOX=" OCTAVE_LOCALARCHLIBDIR  "\n"
+-#endif
+-
+-const char *infom = INFOM;
+-const char *infoo = INFOO;
+-const char *infox = INFOX;
+-const char *infoh = INFOH;
+-const char *infov = INFOV;
+-EOF
+-
+-   dnl Compile program perhaps with a special version of mkoctfile
+-   $MKOCTFILE conftest.cc || AC_MSG_ERROR(Could not run $MKOCTFILE)
+-
+-   dnl Strip the config info from the compiled file
+-   eval `strings conftest.o | grep "^INFO.=" | sed -e "s,//.*$,,"`
+-   rm -rf conftest*
+-
+-   dnl set the appropriate variables if they are not already set
+-   ver=`echo $INFOV | sed -e "s/\.//" -e "s/\..*$//"`
+-   subver=`echo $INFOV | sed -e "[s/^[^.]*[.][^.]*[.]//]"`
+-   alt_mbase=`echo $INFOM | sed -e "[s,\/[^\/]*$,,]"`
+-   alt_obase=`echo $INFOO | sed -e "[s,/site.*$,/site,]"`
+-   test -z "$mpath" && mpath=$INFOM/octave-forge
+-   test -z "$opath" && opath=$INFOO/octave-forge
+-   test -z "$xpath" && xpath=$INFOX
+-   test -z "$altmpath" && altmpath=$alt_mbase/octave-forge-alternatives/m
+-   test -z "$altopath" && altopath=$alt_obase/octave-forge-alternatives/oct/$INFOH
+ fi
+ 
+ dnl *******************************************************************
+@@ -269,6 +193,7 @@
+ dnl should check that $(OCTAVE) --version matches $(MKOCTFILE) --version
+ AC_CHECK_PROG(OCTAVE,octave,octave)
+ OCTAVE_CONFIG_EVAL(VERSION,OCTAVE_VERSION)
++ver=`echo $OCTAVE_VERSION | sed -e "s/\.//" -e "s/\..*$//"`
+ 
+ dnl grab canonical host type so we can write system specific install stuff
+ OCTAVE_CONFIG_EVAL(CANONICAL_HOST_TYPE,canonical_host_type)
+@@ -276,6 +201,16 @@
+ dnl grab SHLEXT from octave config
+ OCTAVE_CONFIG_EVAL(SHLEXT,SHLEXT)
+ 
++if test -z "$mpath"; then
++OCTAVE_CONFIG_EVAL(LOCALVERFCNFILEDIR,mpath)
++fi
++if test -z "$opath"; then
++OCTAVE_CONFIG_EVAL(LOCALVEROCTFILEDIR,opath)
++fi
++if test -z "$xpath"; then
++OCTAVE_CONFIG_EVAL(LOCALVERARCHLIBDIR,xpath)
++fi
++ 
+ AC_PROG_LN_S
+ 
+ AC_PROG_RANLIB
+@@ -313,9 +248,6 @@
+    m-files:   $mpath
+    oct-files: $opath
+    binaries:  $xpath
+-alternatives:
+-   m-files:   $altmpath
+-   oct-files: $altopath
+ 
+ shell commands will install into the following directories:
+    binaries:  $bindir
+@@ -325,5 +257,5 @@
+ 
+ octave-forge is configured with
+    octave:      $OCTAVE (version $OCTAVE_VERSION)
+-   mkoctfile:	$MKOCTFILE for Octave $subver
+-   octave-config: $OCTAVE_CONFIG for Octave $subver"
++   mkoctfile:	$MKOCTFILE for Octave $OCTAVE_VERSION
++   octave-config: $OCTAVE_CONFIG for Octave $OCTAVE_VERSION"
+diff -ur linear-algebra.orig/src/Makeconf.in linear-algebra/src/Makeconf.in
+--- linear-algebra.orig/src/Makeconf.in	2017-07-13 15:57:44.644246010 -0400
++++ linear-algebra/src/Makeconf.in	2017-07-13 16:01:36.615784895 -0400
+@@ -59,8 +59,6 @@
+ MPATH = @mpath@
+ OPATH = @opath@
+ XPATH = @xpath@
+-ALTMPATH = @altmpath@
+-ALTOPATH = @altopath@
+ 
+ %.o: %.c ; $(MKOCTFILE) -c $<
+ %.o: %.f ; $(MKOCTFILE) -c $<

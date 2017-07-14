@@ -469,6 +469,7 @@ SRC_FILES_1 := \
   of-instrument-control.mk \
   of-io.mk \
   of-linear-algebra-1-cross-fixes.patch \
+  of-linear-algebra-2-dev-fixes.patch \
   of-linear-algebra.mk \
   of-lssa.mk \
   of-ltfat.mk \
