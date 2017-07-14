@@ -2,8 +2,8 @@
 # See index.html for further information.
 
 PKG             := gl2ps
-$(PKG)_VERSION  := 1.3.9
-$(PKG)_CHECKSUM := 3a827b0f5f6199011153f76c5617d445e8369baa
+$(PKG)_VERSION  := 1.4.0
+$(PKG)_CHECKSUM := a39a93d75050b9ee98bde4fc47bf6d9162bfc5cd
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)-source
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://geuz.org/$(PKG)/src/$($(PKG)_FILE)
