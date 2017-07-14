@@ -19,10 +19,12 @@ endef
 
 ifeq ($(MXE_SYSTEM)$(MXE_NATIVE_MINGW_BUILD),mingwno)
 define $(PKG)_BUILD
+    cd '$(1)/src' && source ./bootstrap
     $(OCTAVE_FORGE_PKG_BUILD,$(1),$(2),$(3),"BUILD_CXX=g++"))
 endef
 else
 define $(PKG)_BUILD
+    cd '$(1)/src' && source ./bootstrap
     $(OCTAVE_FORGE_PKG_BUILD)
 endef
 endif
