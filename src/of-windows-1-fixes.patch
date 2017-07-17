@@ -149,3 +149,15 @@ diff -r e250da446676 src/configure.base
  
  shell commands will install into the following directories:
     binaries:  $bindir
+diff -r caf31352f49e src/__COM__.cc
+--- a/src/__COM__.cc	Tue Jul 11 12:46:02 2017 -0400
++++ b/src/__COM__.cc	Mon Jul 17 11:50:43 2017 -0400
+@@ -151,6 +151,8 @@
+ 
+ 	bool is_defined(void) const { return true; }
+ 
++	bool isobject (void) const { return true; }
++
+ 	bool is_map (void) const { return true; }
+ 
+ 	string_vector map_keys(void) const;
