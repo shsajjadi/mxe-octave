@@ -3,8 +3,8 @@
 
 PKG             := ffmpeg
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.8.10
-$(PKG)_CHECKSUM := 8342f1132165ef561c50749c0fca3b04470d87a4
+$(PKG)_VERSION  := 3.3.2
+$(PKG)_CHECKSUM := 584544ced449e4a05f17711da33d7c46fd72f2e4
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://www.ffmpeg.org/releases/$($(PKG)_FILE)
@@ -33,7 +33,6 @@ define $(PKG)_BUILD
         --extra-libs='-mconsole' \
         --disable-debug \
         --disable-doc \
-        --enable-memalign-hack \
         --enable-avresample \
         --enable-gpl \
         --enable-version3 \
@@ -61,7 +60,6 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --disable-debug \
         --disable-doc \
-        --enable-memalign-hack \
         --enable-gpl \
         --enable-version3 \
         --disable-nonfree \
