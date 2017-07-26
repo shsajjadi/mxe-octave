@@ -3,11 +3,11 @@
 
 PKG             := zeromq
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.1.6
-$(PKG)_CHECKSUM := b956df8c6f77c174683b51fbee67f99c94945651
+$(PKG)_VERSION  := 4.2.1
+$(PKG)_CHECKSUM := 2145aef176dbc944822a9b4585273d17e9b9fb7b
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://github.com/$(PKG)/$(PKG)4-1/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := http://github.com/$(PKG)/libzmq/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := pthreads
 
 define $(PKG)_UPDATE
