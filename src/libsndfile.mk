@@ -26,7 +26,6 @@ define $(PKG)_BUILD
         --enable-sqlite \
         --enable-external-libs \
         --disable-octave \
-        --disable-alsa \
-        --disable-shave
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS= html_DATA=
+        --disable-alsa
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_PROGS)  $(MXE_DISABLE_DOCS)
 endef
