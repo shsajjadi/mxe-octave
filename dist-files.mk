@@ -20,6 +20,7 @@ SRC_FILES_1 := \
   boost-test.cpp \
   boost.mk \
   build-autoconf.mk \
+  build-automake-1-perl-5.patch \
   build-automake.mk \
   build-binutils.mk \
   build-bison.mk \
