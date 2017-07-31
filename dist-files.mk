@@ -27,8 +27,6 @@ SRC_FILES_1 := \
   build-cmake.mk \
   build-flex.mk \
   build-gawk.mk \
-  build-gcc-1-mingw-float.patch \
-  build-gcc-2-intrinsics.patch \
   build-gcc.mk \
   build-gettext.mk \
   build-gperf.mk \
@@ -100,8 +98,6 @@ SRC_FILES_1 := \
   ftgl.mk \
   gc.mk \
   gcab.mk \
-  gcc-1-mingw-float.patch \
-  gcc-2-darwin-no-pie.patch \
   gcc-cloog.mk \
   gcc-gmp.mk \
   gcc-isl.mk \
@@ -184,7 +180,6 @@ SRC_FILES_1 := \
   imagemagick.mk \
   inputproto.mk \
   intltool.mk \
-  isl-1-fixes.patch \
   isl.mk \
   itsol.mk \
   itstool.mk \
@@ -326,6 +321,7 @@ SRC_FILES_1 := \
   mingw-texinfo-1-fixes.patch \
   mingw-utils-1-portability-fix.patch \
   mingw-w64-1-float-h.patch \
+  mingw-w64-2-pthreads.patch \
   mingw-w64.mk \
   mingwrt.mk \
   mman-win32-1-include_name_change.patch \
@@ -419,8 +415,6 @@ SRC_FILES_1 := \
   mxml-test.c \
   mxml.mk \
   native-binutils.mk \
-  native-gcc-1-float.patch \
-  native-gcc-2-intrinsics.patch \
   native-gcc.mk \
   ncurses-1-gcc-5-fix.patch \
   ncurses.mk \

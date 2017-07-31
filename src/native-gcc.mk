@@ -3,10 +3,10 @@
 
 PKG             := native-gcc
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.9.4
-$(PKG)_CHECKSUM := 5bb0b783a57a62b11f1f9bd2aa37145da221d3d0
+$(PKG)_VERSION  := 7.1.0
+$(PKG)_CHECKSUM := a6dca81b25a97416211218f725b26f01e8063e05
 $(PKG)_SUBDIR   := gcc-$($(PKG)_VERSION)
-$(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.bz2
+$(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 
