@@ -3,8 +3,8 @@
 
 PKG             := gmp
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 6.1.1
-$(PKG)_CHECKSUM := 757d672e66d8e0afe60ca04735ab11c00d9346e4
+$(PKG)_VERSION  := 6.1.2
+$(PKG)_CHECKSUM := 366ded6a44cd108ba6b3f5b9a252eab3f3a95cdf
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := https://gmplib.org/download/gmp/$($(PKG)_FILE)

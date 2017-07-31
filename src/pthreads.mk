@@ -16,6 +16,12 @@ endef
 
 ifeq ($(MXE_SYSTEM)$(MXE_NATIVE_BUILD),mingwno)
 define $(PKG)_BUILD
+    # apply the mingw-w64 patches to the mingw sources
+    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/mingw-w64-*.patch)),
+      (cd '$(1)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
+    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(MXE_SYSTEM)-mingw-w64-*.patch)),
+      (cd '$(1)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
+
     cd '$(1)/mingw-w64-libraries/winpthreads' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \

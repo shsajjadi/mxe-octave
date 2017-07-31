@@ -3,8 +3,8 @@
 
 PKG             := cloog
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.18.1
-$(PKG)_CHECKSUM := 2dc70313e8e2c6610b856d627bce9c9c3f848077
+$(PKG)_VERSION  := 0.18.4
+$(PKG)_CHECKSUM := 8f7568ca1873f8d55bb694c8b9b83f7f4c6c1aa5
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://gcc.gnu.org/pub/gcc/infrastructure/$($(PKG)_FILE)
