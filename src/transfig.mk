@@ -3,10 +3,10 @@
 
 PKG             := transfig
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.2.6
-$(PKG)_CHECKSUM := 880acd94d679649da43ba5eea16e329b85840bcf
-$(PKG)_SUBDIR   := fig2dev-$($(PKG)_VERSION)-rc
-$(PKG)_FILE     := fig2dev-$($(PKG)_VERSION)-rc.tar.xz
+$(PKG)_VERSION  := 3.2.6a
+$(PKG)_CHECKSUM := e09145435f3306010eb006f9d7e118fccf77cd2b
+$(PKG)_SUBDIR   := fig2dev-$($(PKG)_VERSION)
+$(PKG)_FILE     := fig2dev-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/mcj/$($(PKG)_FILE)
 $(PKG)_DEPS     := jpeg libpng
 
