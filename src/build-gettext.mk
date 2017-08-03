@@ -3,8 +3,8 @@
 
 PKG             := build-gettext
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.19.5.1
-$(PKG)_CHECKSUM := bec084bc9e2ecfb9a30ce17a68b71865449f6c12
+$(PKG)_VERSION  := 0.19.8.1
+$(PKG)_CHECKSUM := b5d24ba2958c91fc5cc0058165837c99a0f58784
 $(PKG)_SUBDIR   := gettext-$($(PKG)_VERSION)
 $(PKG)_FILE     := gettext-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gettext/$($(PKG)_FILE)
@@ -26,5 +26,5 @@ define $(PKG)_BUILD
     if test x$(MXE_SYSTEM) = xmsvc; then \
         cd '$(1).build' && $(CONFIGURE_POST_HOOK); \
     fi
-    $(MAKE) -C '$(1).build' -j 1 install DESTDIR='$(3)'
+    $(MAKE) -C '$(1).build' -j 1 $(MXE_DISABLE_DOCS) install DESTDIR='$(3)'
 endef
