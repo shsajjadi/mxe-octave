@@ -250,7 +250,6 @@ SRC_FILES_1 := \
   libidn-1-fixes.patch \
   libidn-test.c \
   libidn.mk \
-  libidn2-1-fixes.patch \
   libidn2.mk \
   libircclient-1-fixes.patch \
   libircclient-test.cpp \
