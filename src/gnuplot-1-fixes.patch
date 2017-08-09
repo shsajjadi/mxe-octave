@@ -1,7 +1,7 @@
-diff -ur gnuplot-5.0.5.orig/config/mingw/Makefile gnuplot-5.0.5/config/mingw/Makefile
---- gnuplot-5.0.5.orig/config/mingw/Makefile	2017-01-20 12:00:04.522364256 -0500
-+++ gnuplot-5.0.5/config/mingw/Makefile	2017-01-20 12:10:38.856621795 -0500
-@@ -101,15 +101,16 @@
+diff -ur gnuplot-5.0.6.orig/config/mingw/Makefile gnuplot-5.0.6/config/mingw/Makefile
+--- gnuplot-5.0.6.orig/config/mingw/Makefile	2017-08-03 15:33:24.088765021 -0400
++++ gnuplot-5.0.6/config/mingw/Makefile	2017-08-03 15:39:44.802747844 -0400
+@@ -102,18 +102,19 @@
  # Uncomment the following lines to compile it.
  #WXT=1
  #CAIROLIBS=1
@@ -15,20 +15,16 @@ diff -ur gnuplot-5.0.5.orig/config/mingw/Makefile gnuplot-5.0.5/config/mingw/Mak
 -QT_DIR = /d/Source/Qt-5.2.1-mingw/5.2.1/mingw48_32
 +QT_DIR ?= /d/Source/Qt-5.2.1-mingw/5.2.1/mingw48_32
  else
+ ifdef M32
+-QT_DIR = /mingw32
++QT_DIR ?= /mingw32
+ else
 -QT_DIR = /mingw64
 +QT_DIR ?= /mingw64
  endif
+ endif
  
- # Uncomment the following line to select the lua/tikz terminal
-@@ -119,14 +120,14 @@
- # Requires libcaca version 0.99.beta15 or newer. A post-beta18
- # svn version is recommended since it contains an improved
- # win32 backend.
--CACA=1
-+#CACA=1
- 
- # Uncomment if you have libiconv
- ICONV=1
+@@ -131,7 +132,7 @@
  
  # Uncomment if you have libcerf
  # http://sourceforge.net/projects/libcerf/
@@ -37,16 +33,15 @@ diff -ur gnuplot-5.0.5.orig/config/mingw/Makefile gnuplot-5.0.5/config/mingw/Mak
  
  # Below you can adapt paths according to your software setup:
  
-@@ -155,7 +156,7 @@
- DESTDIR = "$(PROGRAMFILES)/gnuplot"
+@@ -160,6 +161,7 @@
  
  # Do you want some special optimization / flags?
--#CFLAGS +=
+ #CFLAGS +=
 +CFLAGS += -DDISABLE_SPACE_RAISES_CONSOLE
+ CWFLAGS += -Wno-unused-function
  ifdef CLANG
  CFLAGS += -fcolor-diagnostics -fansi-escape-codes
- CFLAGS += -Wno-error=incompatible-ms-struct -Wno-ignored-attributes
-@@ -171,8 +172,8 @@
+@@ -177,8 +179,8 @@
  # http://go.microsoft.com/fwlink/?LinkId=154968
  # We need to explicitly set the correct path here since we also need
  # adjust the include and library paths.
@@ -57,16 +52,16 @@ diff -ur gnuplot-5.0.5.orig/config/mingw/Makefile gnuplot-5.0.5/config/mingw/Mak
  
  # Choose which resource compiler you want to use (GNU windres or MS rc):
  GNU_RC = 1
-@@ -186,7 +187,7 @@
- 
- # Inno Setup Compiler
+@@ -194,7 +196,7 @@
  # get it from: http://www.jrsoftware.org/isdl.php
+ # Use unicode version of Inno Setup Compiler but not Standard version
+ # because the setup file of gnuplot installer is now encoded utf-8 with BOM.
 -ISCC = $(PROGRAMFILES32)/Inno\ Setup\ 5/iscc
 +#ISCC = $(PROGRAMFILES32)/Inno\ Setup\ 5/iscc
  
  # Directory that might contain extra files to be shipped with the installer.
  # This should include dependencies like DLLs, but also fontconfig configuration files.
-@@ -422,9 +423,9 @@
+@@ -445,9 +447,9 @@
  
  ifdef WXT
  	CFLAGS += -DWXWIDGETS
@@ -78,7 +73,7 @@ diff -ur gnuplot-5.0.5.orig/config/mingw/Makefile gnuplot-5.0.5/config/mingw/Mak
  	WX_OBJS = wxt_gui.$(O)
  endif
  
-@@ -514,7 +515,7 @@
+@@ -537,7 +539,7 @@
  FULLVERSION := $(MAINVERSION) patchlevel $(PATCHLEVEL)
  
  
@@ -87,7 +82,7 @@ diff -ur gnuplot-5.0.5.orig/config/mingw/Makefile gnuplot-5.0.5/config/mingw/Mak
  
  console: 
  	$(MAKE) TARGET=gnuplot.exe default
-@@ -556,8 +557,8 @@
+@@ -579,8 +581,8 @@
  	$(CC) -c $(CFLAGS) $(CFLAGSEXTRA) -MMD -MT '$*.$$(O)' -MF $*.d -o $@ $<
  
  LDLIBS = -lkernel32 -lgdi32 -lwinspool -lcomdlg32 -lcomctl32 -ladvapi32 -lshell32 -lmsimg32 -lgdiplus
@@ -98,9 +93,9 @@ diff -ur gnuplot-5.0.5.orig/config/mingw/Makefile gnuplot-5.0.5/config/mingw/Mak
  ifdef MINGW64
  LDFLAGS2 += -L.
  endif
-diff -ur gnuplot-5.0.5.orig/src/command.c gnuplot-5.0.5/src/command.c
---- gnuplot-5.0.5.orig/src/command.c	2017-01-20 12:00:04.431361673 -0500
-+++ gnuplot-5.0.5/src/command.c	2017-01-20 12:04:46.221964530 -0500
+diff -ur gnuplot-5.0.6.orig/src/command.c gnuplot-5.0.6/src/command.c
+--- gnuplot-5.0.6.orig/src/command.c	2017-08-03 15:33:24.065752872 -0400
++++ gnuplot-5.0.6/src/command.c	2017-08-03 15:41:32.160423062 -0400
 @@ -125,7 +125,7 @@
  # endif
  #endif /* _Windows */
@@ -110,7 +105,7 @@ diff -ur gnuplot-5.0.5.orig/src/command.c gnuplot-5.0.5/src/command.c
  # include <windows.h>
  # ifdef __MSC__
  #  include <malloc.h>
-@@ -2537,6 +2537,7 @@
+@@ -2543,6 +2543,7 @@
  void
  help_command()
  {
@@ -118,7 +113,7 @@ diff -ur gnuplot-5.0.5.orig/src/command.c gnuplot-5.0.5/src/command.c
      HWND parent;
  
      c_token++;
-@@ -2572,6 +2573,7 @@
+@@ -2578,6 +2579,7 @@
          link.fIndexOnFail = TRUE;
          HtmlHelp(parent, winhelpname, HH_KEYWORD_LOOKUP, (DWORD_PTR)&link);
      }
@@ -126,9 +121,9 @@ diff -ur gnuplot-5.0.5.orig/src/command.c gnuplot-5.0.5/src/command.c
  }
  #else  /* !_Windows */
  #ifndef VMS
-diff -ur gnuplot-5.0.5.orig/src/internal.c gnuplot-5.0.5/src/internal.c
---- gnuplot-5.0.5.orig/src/internal.c	2017-01-20 12:00:04.456279047 -0500
-+++ gnuplot-5.0.5/src/internal.c	2017-01-20 12:05:51.920459353 -0500
+diff -ur gnuplot-5.0.6.orig/src/internal.c gnuplot-5.0.6/src/internal.c
+--- gnuplot-5.0.6.orig/src/internal.c	2017-08-03 15:33:24.074757626 -0400
++++ gnuplot-5.0.6/src/internal.c	2017-08-03 15:41:59.832031188 -0400
 @@ -47,7 +47,7 @@
  
  #include <math.h>
@@ -138,18 +133,19 @@ diff -ur gnuplot-5.0.5.orig/src/internal.c gnuplot-5.0.5/src/internal.c
  /*
   * FIXME: This is almost certainly out of date on linux, since the matherr
   * mechanism has been replaced by math_error() and supposedly is only 
-diff -ur gnuplot-5.0.5.orig/src/syscfg.h gnuplot-5.0.5/src/syscfg.h
---- gnuplot-5.0.5.orig/src/syscfg.h	2017-01-20 12:00:04.441111950 -0500
-+++ gnuplot-5.0.5/src/syscfg.h	2017-01-20 12:06:54.955043738 -0500
-@@ -346,6 +346,11 @@
+diff -ur gnuplot-5.0.6.orig/src/syscfg.h gnuplot-5.0.6/src/syscfg.h
+--- gnuplot-5.0.6.orig/src/syscfg.h	2017-08-03 15:33:24.068754457 -0400
++++ gnuplot-5.0.6/src/syscfg.h	2017-08-03 15:44:56.806457805 -0400
+@@ -345,7 +345,11 @@
+ #endif
  
  #ifndef GP_MATHERR
- # define GP_MATHERR matherr
+-# define GP_MATHERR matherr
 +# if __MINGW32__
 +#  define GP_MATHERR _matherr
 +#else
 +#  define GP_MATHERR matherr
-+#endif
++# endif
  #endif
  
  #ifdef HAVE_STRUCT_EXCEPTION_IN_MATH_H
