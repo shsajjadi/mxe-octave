@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 1.8.14
 $(PKG)_CHECKSUM := 3c48bcb0d5fb21a3aa425ed035c08d8da3d5483a
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://www.hdfgroup.org/ftp/HDF5/releases/$(PKG)-$($(PKG)_VERSION)/src/$($(PKG)_FILE)
+$(PKG)_URL      := https://www.hdfgroup.org/ftp/HDF5/releases/$(PKG)-$(call SHORT_PKG_VERSION,$(PKG))/$(PKG)-$($(PKG)_VERSION)/src/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 ifeq ($(MXE_SYSTEM),mingw)
   ifneq ($(MXE_NATIVE_BUILD),yes)
