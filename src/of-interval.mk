@@ -14,6 +14,10 @@ ifeq ($(USE_SYSTEM_GCC),no)
   $(PKG)_DEPS += mpfr
 endif
 
+ifeq ($(ENABLE_BINARY_PACKAGES),yes)
+    $(PKG)_DEPS += $(OCTAVE_TARGET)
+endif
+
 ifeq ($(MXE_NATIVE_BUILD),no)
 $(PKG)_OPTIONS := CRLIBM_CONFIG_FLAGS='--host=$(TARGET)'
 else
