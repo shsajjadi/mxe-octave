@@ -11,6 +11,10 @@ $(PKG)_FILE     := dicom-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/octave/$($(PKG)_FILE)?download
 $(PKG)_DEPS     := gdcm cmake
 
+ifeq ($(ENABLE_BINARY_PACKAGES),yes)
+    $(PKG)_DEPS += $(OCTAVE_TARGET)
+endif
+
 ifeq ($(MXE_NATIVE_BUILD),no)
 $(PKG)_OPTIONS := CMAKE_BINARY="cmake -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'"
 else

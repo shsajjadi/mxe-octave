@@ -14,6 +14,10 @@ ifeq ($(USE_SYSTEM_GCC),no)
   $(PKG)_DEPS += libgomp
 endif
 
+ifeq ($(ENABLE_BINARY_PACKAGES),yes)
+    $(PKG)_DEPS += $(OCTAVE_TARGET)
+endif
+
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://$(SOURCEFORGE_MIRROR)/projects/octave/files/Octave%20Forge%20Packages/Individual%20Package%20Releases/' | \
     $(SED) -n 's,.*title="nurbs-\([0-9][^"]*\).tar.gz".*,\1,p' | \

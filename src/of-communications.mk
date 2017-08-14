@@ -11,6 +11,10 @@ $(PKG)_FILE     := communications-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := of-signal
 
+ifeq ($(ENABLE_BINARY_PACKAGES),yes)
+    $(PKG)_DEPS += $(OCTAVE_TARGET)
+endif
+
 $(PKG)_OPTIONS := comm_cv_hdf5_cppflags='-I$(HOST_INCDIR)' comm_cv_hdf5_ldflags='-L$(HOST_LIBDIR)' comm_cv_hdf5_libs=-lhdf5
 
 define $(PKG)_UPDATE

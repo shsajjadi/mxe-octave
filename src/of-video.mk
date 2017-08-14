@@ -11,6 +11,9 @@ $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := ffmpeg
 
+ifeq ($(ENABLE_BINARY_PACKAGES),yes)
+    $(PKG)_DEPS += $(OCTAVE_TARGET)
+endif
 
 ifeq ($(MXE_SYSTEM),mingw)
 $(PKG)_OPTIONS := ac_cv_func_realloc_0_nonnull=yes ac_cv_func_malloc_0_nonnull=yes
