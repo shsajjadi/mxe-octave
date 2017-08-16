@@ -1,14 +1,14 @@
-diff -ur gnuplot-5.0.6.orig/config/mingw/Makefile gnuplot-5.0.6/config/mingw/Makefile
---- gnuplot-5.0.6.orig/config/mingw/Makefile	2017-08-03 15:33:24.088765021 -0400
-+++ gnuplot-5.0.6/config/mingw/Makefile	2017-08-03 15:39:44.802747844 -0400
-@@ -102,18 +102,19 @@
+diff -ur gnuplot-5.0.7.orig/config/mingw/Makefile gnuplot-5.0.7/config/mingw/Makefile
+--- gnuplot-5.0.7.orig/config/mingw/Makefile	2017-08-16 07:56:54.950650715 -0400
++++ gnuplot-5.0.7/config/mingw/Makefile	2017-08-16 08:02:13.581632383 -0400
+@@ -101,18 +101,19 @@
  # Uncomment the following lines to compile it.
  #WXT=1
  #CAIROLIBS=1
 +WX_CONFIG ?= wx-config
  
  # Build qt terminal?
- #QT = 1
+ #QT=1
  # specify QT installation directory
  #QT_DIR = /c/Qt/5.2.1/mingw48_32
  ifndef MINGW64
@@ -24,7 +24,7 @@ diff -ur gnuplot-5.0.6.orig/config/mingw/Makefile gnuplot-5.0.6/config/mingw/Mak
  endif
  endif
  
-@@ -131,7 +132,7 @@
+@@ -130,7 +131,7 @@
  
  # Uncomment if you have libcerf
  # http://sourceforge.net/projects/libcerf/
@@ -33,7 +33,7 @@ diff -ur gnuplot-5.0.6.orig/config/mingw/Makefile gnuplot-5.0.6/config/mingw/Mak
  
  # Below you can adapt paths according to your software setup:
  
-@@ -160,6 +161,7 @@
+@@ -159,6 +160,7 @@
  
  # Do you want some special optimization / flags?
  #CFLAGS +=
@@ -41,7 +41,7 @@ diff -ur gnuplot-5.0.6.orig/config/mingw/Makefile gnuplot-5.0.6/config/mingw/Mak
  CWFLAGS += -Wno-unused-function
  ifdef CLANG
  CFLAGS += -fcolor-diagnostics -fansi-escape-codes
-@@ -177,8 +179,8 @@
+@@ -176,8 +178,8 @@
  # http://go.microsoft.com/fwlink/?LinkId=154968
  # We need to explicitly set the correct path here since we also need
  # adjust the include and library paths.
@@ -52,7 +52,7 @@ diff -ur gnuplot-5.0.6.orig/config/mingw/Makefile gnuplot-5.0.6/config/mingw/Mak
  
  # Choose which resource compiler you want to use (GNU windres or MS rc):
  GNU_RC = 1
-@@ -194,7 +196,7 @@
+@@ -193,7 +195,7 @@
  # get it from: http://www.jrsoftware.org/isdl.php
  # Use unicode version of Inno Setup Compiler but not Standard version
  # because the setup file of gnuplot installer is now encoded utf-8 with BOM.
@@ -61,7 +61,7 @@ diff -ur gnuplot-5.0.6.orig/config/mingw/Makefile gnuplot-5.0.6/config/mingw/Mak
  
  # Directory that might contain extra files to be shipped with the installer.
  # This should include dependencies like DLLs, but also fontconfig configuration files.
-@@ -445,9 +447,9 @@
+@@ -440,9 +442,9 @@
  
  ifdef WXT
  	CFLAGS += -DWXWIDGETS
@@ -73,7 +73,7 @@ diff -ur gnuplot-5.0.6.orig/config/mingw/Makefile gnuplot-5.0.6/config/mingw/Mak
  	WX_OBJS = wxt_gui.$(O)
  endif
  
-@@ -537,7 +539,7 @@
+@@ -532,7 +534,7 @@
  FULLVERSION := $(MAINVERSION) patchlevel $(PATCHLEVEL)
  
  
@@ -82,7 +82,7 @@ diff -ur gnuplot-5.0.6.orig/config/mingw/Makefile gnuplot-5.0.6/config/mingw/Mak
  
  console: 
  	$(MAKE) TARGET=gnuplot.exe default
-@@ -579,8 +581,8 @@
+@@ -574,8 +576,8 @@
  	$(CC) -c $(CFLAGS) $(CFLAGSEXTRA) -MMD -MT '$*.$$(O)' -MF $*.d -o $@ $<
  
  LDLIBS = -lkernel32 -lgdi32 -lwinspool -lcomdlg32 -lcomctl32 -ladvapi32 -lshell32 -lmsimg32 -lgdiplus
@@ -93,9 +93,10 @@ diff -ur gnuplot-5.0.6.orig/config/mingw/Makefile gnuplot-5.0.6/config/mingw/Mak
  ifdef MINGW64
  LDFLAGS2 += -L.
  endif
-diff -ur gnuplot-5.0.6.orig/src/command.c gnuplot-5.0.6/src/command.c
---- gnuplot-5.0.6.orig/src/command.c	2017-08-03 15:33:24.065752872 -0400
-+++ gnuplot-5.0.6/src/command.c	2017-08-03 15:41:32.160423062 -0400
+Only in gnuplot-5.0.7/config/mingw: Makefile.orig
+diff -ur gnuplot-5.0.7.orig/src/command.c gnuplot-5.0.7/src/command.c
+--- gnuplot-5.0.7.orig/src/command.c	2017-08-16 07:56:54.917649785 -0400
++++ gnuplot-5.0.7/src/command.c	2017-08-16 08:02:13.581632383 -0400
 @@ -125,7 +125,7 @@
  # endif
  #endif /* _Windows */
@@ -105,7 +106,7 @@ diff -ur gnuplot-5.0.6.orig/src/command.c gnuplot-5.0.6/src/command.c
  # include <windows.h>
  # ifdef __MSC__
  #  include <malloc.h>
-@@ -2543,6 +2543,7 @@
+@@ -2557,6 +2557,7 @@
  void
  help_command()
  {
@@ -113,7 +114,7 @@ diff -ur gnuplot-5.0.6.orig/src/command.c gnuplot-5.0.6/src/command.c
      HWND parent;
  
      c_token++;
-@@ -2578,6 +2579,7 @@
+@@ -2592,6 +2593,7 @@
          link.fIndexOnFail = TRUE;
          HtmlHelp(parent, winhelpname, HH_KEYWORD_LOOKUP, (DWORD_PTR)&link);
      }
@@ -121,9 +122,10 @@ diff -ur gnuplot-5.0.6.orig/src/command.c gnuplot-5.0.6/src/command.c
  }
  #else  /* !_Windows */
  #ifndef VMS
-diff -ur gnuplot-5.0.6.orig/src/internal.c gnuplot-5.0.6/src/internal.c
---- gnuplot-5.0.6.orig/src/internal.c	2017-08-03 15:33:24.074757626 -0400
-+++ gnuplot-5.0.6/src/internal.c	2017-08-03 15:41:59.832031188 -0400
+Only in gnuplot-5.0.7/src: command.c.orig
+diff -ur gnuplot-5.0.7.orig/src/internal.c gnuplot-5.0.7/src/internal.c
+--- gnuplot-5.0.7.orig/src/internal.c	2017-08-16 07:56:54.932650208 -0400
++++ gnuplot-5.0.7/src/internal.c	2017-08-16 08:02:13.582632412 -0400
 @@ -47,7 +47,7 @@
  
  #include <math.h>
@@ -133,9 +135,9 @@ diff -ur gnuplot-5.0.6.orig/src/internal.c gnuplot-5.0.6/src/internal.c
  /*
   * FIXME: This is almost certainly out of date on linux, since the matherr
   * mechanism has been replaced by math_error() and supposedly is only 
-diff -ur gnuplot-5.0.6.orig/src/syscfg.h gnuplot-5.0.6/src/syscfg.h
---- gnuplot-5.0.6.orig/src/syscfg.h	2017-08-03 15:33:24.068754457 -0400
-+++ gnuplot-5.0.6/src/syscfg.h	2017-08-03 15:44:56.806457805 -0400
+diff -ur gnuplot-5.0.7.orig/src/syscfg.h gnuplot-5.0.7/src/syscfg.h
+--- gnuplot-5.0.7.orig/src/syscfg.h	2017-08-16 07:56:54.921649898 -0400
++++ gnuplot-5.0.7/src/syscfg.h	2017-08-16 08:02:13.582632412 -0400
 @@ -345,7 +345,11 @@
  #endif
  

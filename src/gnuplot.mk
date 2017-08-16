@@ -3,8 +3,8 @@
 
 PKG             := gnuplot
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.0.6
-$(PKG)_CHECKSUM := f7b8948166b22e5bd658d5cf7579716f4821dba0
+$(PKG)_VERSION  := 5.0.7
+$(PKG)_CHECKSUM := 6cdb03ebd096ef020f4653a1f4faf76ba9bce495
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnuplot-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://sourceforge.net/projects/gnuplot/files/gnuplot/$($(PKG)_VERSION)/$($(PKG)_FILE)
