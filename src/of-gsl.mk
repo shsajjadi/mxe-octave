@@ -3,8 +3,8 @@
 
 PKG             := of-gsl
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.0.0
-$(PKG)_CHECKSUM := 2732fd71d378d1ca97ebec63d824df0f362612d4
+$(PKG)_VERSION  := 2.1.0
+$(PKG)_CHECKSUM := ff83fac134cb13ab25c0833e96d1e5855516e36f
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := gsl-$($(PKG)_VERSION)
 $(PKG)_FILE     := gsl-$($(PKG)_VERSION).tar.gz
