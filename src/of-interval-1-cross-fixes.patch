@@ -1,21 +1,21 @@
-diff -ur interval-2.1.0.orig/src/Makefile interval-2.1.0/src/Makefile
---- interval-2.1.0.orig/src/Makefile	2017-01-12 07:52:23.327056830 -0500
-+++ interval-2.1.0/src/Makefile	2017-01-12 07:54:54.896233652 -0500
-@@ -18,6 +18,8 @@
- ## Use important flags in XTRA_CFLAGS for OpenMP (workaround for bug #45280)
- CFLAG_OPENMP   =$(findstring -fopenmp,$(shell $(MKOCTFILE) -p XTRA_CFLAGS))
+diff -ur interval-3.0.0.orig/src/Makefile interval-3.0.0/src/Makefile
+--- interval-3.0.0.orig/src/Makefile	2017-08-22 12:31:47.602400636 -0400
++++ interval-3.0.0/src/Makefile	2017-08-22 12:33:50.151855098 -0400
+@@ -29,6 +29,8 @@
+ CONF_FLAG_SSE2 ?=--enable-sse2
+ endif
  
 +CRLIBM_CONFIG_FLAGS ?=
 +
  all: $(OBJ)
  
  ## crlibm api oct-file
-@@ -37,7 +39,7 @@
+@@ -48,7 +50,7 @@
  crlibm/crlibm_private.o: crlibm/crlibm_config.h
  	$(MAKE) -C crlibm CFLAGS+="$(shell $(MKOCTFILE) -p CPICFLAG) -Wno-div-by-zero -Wno-unused-variable -Wno-unused-but-set-variable"
  crlibm/crlibm_config.h:
--	(cd crlibm && ./configure --disable-dependency-tracking --enable-sse2)
-+	(cd crlibm && ./configure --disable-dependency-tracking --enable-sse2 $(CRLIBM_CONFIG_FLAGS) )
+-	(cd crlibm && ./configure --disable-dependency-tracking $(CONF_FLAG_SSE2))
++	(cd crlibm && ./configure --disable-dependency-tracking $(CONF_FLAG_SSE2) $(CRLIBM_CONFIG_FLAGS))
  
  ## GNU MPFR api oct-files
- mpfr_matrix_mul_d.oct mpfr_matrix_sqr_d.oct : mpfr_%.oct: mpfr_%.cc mpfr_commons.cc
+ mpfr_matrix_mul_d.oct mpfr_matrix_sqr_d.oct : mpfr_%.oct: mpfr_%.cc mpfr_commons.h
