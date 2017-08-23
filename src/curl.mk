@@ -3,12 +3,12 @@
 
 PKG             := curl
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 7.55.0
-$(PKG)_CHECKSUM := e84367eeff395838bac42c7514af86647d7b710a
+$(PKG)_VERSION  := 7.55.1
+$(PKG)_CHECKSUM := 2fc638445ba70cf47882f9f6ace5ebff29fdd191
 $(PKG)_SUBDIR   := curl-$($(PKG)_VERSION)
 $(PKG)_FILE     := curl-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://curl.haxx.se/download/$($(PKG)_FILE)
-$(PKG)_DEPS     := gnutls libidn2 libssh2
+$(PKG)_DEPS     := gnutls libidn2 libssh2 pthreads
 
 $(PKG)_CONFIGURE_OPTS :=
 ifeq ($(MXE_WINDOWS_BUILD),yes)
