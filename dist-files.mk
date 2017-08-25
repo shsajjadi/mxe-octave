@@ -448,7 +448,6 @@ SRC_FILES_1 := \
   of-database-1-cross-fixes.patch \
   of-database-2-dev-fixes.patch \
   of-database.mk \
-  of-dataframe-1-fixes.patch \
   of-dataframe.mk \
   of-dicom-1-fixes.patch \
   of-dicom.mk \
