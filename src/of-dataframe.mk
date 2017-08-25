@@ -3,8 +3,8 @@
 
 PKG             := of-dataframe
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.1.0
-$(PKG)_CHECKSUM := b7755073f8954f0d595f35a083a37ec5cc77089a
+$(PKG)_VERSION  := 1.2.0
+$(PKG)_CHECKSUM := 3d00ea119d3f9e0bf75b148858f7994b4210eb2d
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := dataframe-$($(PKG)_VERSION)
 $(PKG)_FILE     := dataframe-$($(PKG)_VERSION).tar.gz
