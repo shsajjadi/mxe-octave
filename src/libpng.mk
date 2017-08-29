@@ -3,8 +3,8 @@
 
 PKG             := libpng
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.6.31
-$(PKG)_CHECKSUM := de695064363df331734466981ef7f6546ef516bf
+$(PKG)_VERSION  := 1.6.32
+$(PKG)_CHECKSUM := 161d91d15cfd739773e0a73b41032b9f27322914
 $(PKG)_SUBDIR   := libpng-$($(PKG)_VERSION)
 $(PKG)_FILE     := libpng-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)$(subst .,,$(call SHORT_PKG_VERSION,$(PKG)))/$($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -33,8 +33,9 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
 	$($(PKG)_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
 
-    rm -f '$(3)$(HOST_LIBDIR)/libpng.la'
-    rm -f '$(3)$(HOST_LIBDIR)/libpng15.la'
+    if [ ! "x$(MXE_NATIVE_BUILD)" = "xyes" ]; then \
+      $(LN_SF) '$(HOST_BINDIR)/libpng-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)libpng-config'; \
+    fi
 endef
