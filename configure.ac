@@ -37,10 +37,10 @@ dnl OCTAVE_CHECK_LIB_TERMLIB
 ### ensure /bin/sh is the default shell so this can be safely ignored by
 ### almost everyone.  However, when building for Android, for example,
 ### this will need to be set.
-SHELL=bash
+SHELL=/bin/bash
 AC_ARG_WITH([shell],
   [AS_HELP_STRING([--with-shell=SHELL],
-    [use SHELL as the shell interpreter (default: bash)])])
+    [use SHELL as the shell interpreter (default: /bin/bash)])])
 case $with_shell in
   no)
     AC_MSG_ERROR([A shell interpreter is required])
