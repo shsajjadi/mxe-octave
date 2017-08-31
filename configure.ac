@@ -289,13 +289,13 @@ AC_ARG_ENABLE([devel-tools],
 AC_SUBST(ENABLE_DEVEL_TOOLS)
 
 AC_ARG_ENABLE([qt5],
-  [AS_HELP_STRING([--enable-qt5],
-    [Enable compile of GNU octave using Qt5 (Experimental)])],
+  [AS_HELP_STRING([--disable-qt5],
+    [Build GNU Octave using Qt 4 instead of the default Qt 5])],
   [case "$enableval" in
      no) ENABLE_QT5=no ;;
      yes) ENABLE_QT5=yes ;;
      *) AC_MSG_ERROR([bad value "$enableval" for --enable-qt5]) ;;
-   esac], [ENABLE_QT5=no])
+   esac], [ENABLE_QT5=yes])
 AC_SUBST(ENABLE_QT5)
 
 # install dependancy package docs (or not to save space)
