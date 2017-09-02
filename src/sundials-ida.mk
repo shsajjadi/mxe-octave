@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 375a061259b06f3ae46c218b7d5473c60a46e3f8
 $(PKG)_SUBDIR   := ida-$($(PKG)_VERSION)
 $(PKG)_FILE     := ida-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://computation.llnl.gov/projects/sundials/download/$($(PKG)_FILE)
-$(PKG)_DEPS     := lapack libgomp
+$(PKG)_DEPS     := lapack libgomp suitesparse
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
@@ -19,6 +19,10 @@ define $(PKG)_BUILD
     mkdir '$(1).build'
     cd '$(1).build' && cmake \
         -DEXAMPLES_ENABLE=OFF \
+        -DKLU_ENABLE=ON \
+        -DKLU_INCLUDE_DIR=$(HOST_INCDIR)/suitesparse \
+        -DKLU_LIBRARY_DIR=$(HOST_LIBDIR) \
+        -DSUITESPARSECONFIG_LIBRARY=$(HOST_LIBDIR)/libsuitesparseconfig.dll.a \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         '$(1)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)' install DESTDIR='$(3)' VERBOSE=1
