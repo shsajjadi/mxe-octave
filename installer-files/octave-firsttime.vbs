@@ -16,7 +16,7 @@ wshSystemEnv("PATH") = OctavePath & "\bin;" & wshSystemEnv("PATH")
 
 ' set terminal type
 wshSystemEnv("TERM") = "cygwin"
-wshSystemEnv("GNUTERM") = "windows"
+wshSystemEnv("GNUTERM") = "wxt"
 
 wshSystemEnv("GS") = "gs.exe"
 

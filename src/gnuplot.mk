@@ -18,10 +18,10 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
     $(PKG)_EXTRAFLAGS += WXT=1 WX_CONFIG=$(MXE_TOOL_PREFIX)wx-config
 endif
 
-#ifeq ($(ENABLE_QT5),yes)
-#  $(PKG)_DEPS     += qt5
-#  $(PKG)_EXTRAFLAGS += QT=1 QT_DIR=$(HOST_PREFIX)/qt5
-#endif
+ifeq ($(ENABLE_QT5),yes)
+  $(PKG)_DEPS     += qt5
+  $(PKG)_EXTRAFLAGS += QT=1 QT_DIR="$(HOST_PREFIX)/qt5" QT_BIN_DIR="$(BUILD_TOOLS_PREFIX)/bin"
+endif
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
     $(PKG)_EXTRAFLAGS += ICONV_CFLAGS='-I$(HOST_INCDIR)' ICONV_LDFLAGS='-L$(HOST_LIBDIR)'
@@ -41,6 +41,11 @@ define $(PKG)_BUILD
     $(INSTALL) -m755 '$(1)/config/mingw/gnuplot.exe' '$(3)$(HOST_BINDIR)'
     $(INSTALL) -m755 '$(1)/config/mingw/wgnuplot.exe' '$(3)$(HOST_BINDIR)'
     $(INSTALL) -m644 '$(1)/src/win/wgnuplot.mnu' '$(3)$(HOST_BINDIR)'
+
+    if [ "$(ENABLE_QT5)" == "yes" ]; then \
+      make -C '$(1)/config/mingw' $($(PKG)_EXTRAFLAGS) CC='$(MXE_CC)' CXX='$(MXE_CXX) -std=gnu++11' RC='$(MXE_WINDRES)' -j '$(JOBS)' TARGET=gnuplot_qt.exe gnuplot_qt.exe; \
+      $(INSTALL) -m755 '$(1)/config/mingw/gnuplot_qt.exe' '$(3)$(HOST_BINDIR)'; \
+    fi
 
     # config files
     $(INSTALL) -d '$(3)$(HOST_PREFIX)/share'
