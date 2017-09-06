@@ -16,7 +16,7 @@ set PATH=%OCT_HOME%qt5\bin;%OCT_HOME%bin;%PATH%
 Rem   Set up any environment vars we may need
 
 set TERM=cygwin
-set GNUTERM=windows
+set GNUTERM=wxt
 set GS=gs.exe
 
 Rem set home if not already set

@@ -151,3 +151,22 @@ diff -ur gnuplot-5.0.7.orig/src/syscfg.h gnuplot-5.0.7/src/syscfg.h
  #endif
  
  #ifdef HAVE_STRUCT_EXCEPTION_IN_MATH_H
+diff -ur gnuplot-5.0.7.orig/config/mingw/Makefile gnuplot-5.0.7/config/mingw/Makefile
+--- gnuplot-5.0.7.orig/config/mingw/Makefile	2017-09-07 17:47:19.588554741 -0400
++++ gnuplot-5.0.7/config/mingw/Makefile	2017-09-07 17:52:11.565785085 -0400
+@@ -468,10 +468,11 @@
+ 		moc_QtGnuplotWidget.o moc_QtGnuplotScene.o \
+ 		moc_QtGnuplotEvent.o qrc_QtGnuplotResource.o
+ #
+-	MOC = $(QT_DIR)/bin/moc
+-	UIC = $(QT_DIR)/bin/uic
+-	RCC = $(QT_DIR)/bin/rcc
+-	LRELEASE = $(QT_DIR)/bin/lrelease
++        QT_BIN_DIR ?= $(QT_DIR)/bin
++	MOC ?= $(QT_BIN_DIR)/moc
++	UIC ?= $(QT_BIN_DIR)/uic
++	RCC ?= $(QT_BIN_DIR)/rcc
++	LRELEASE ?= $(QT_BIN_DIR)/lrelease
+ 	QT_FILES_TARGETS  = qrc_QtGnuplotResource.cpp ui_QtGnuplotSettings.h moc_QtGnuplotWindow.cpp moc_QtGnuplotApplication.cpp 
+ 	QT_FILES_TARGETS += moc_QtGnuplotWidget.cpp moc_QtGnuplotScene.cpp moc_QtGnuplotEvent.cpp
+ 	QT_TRANSLATION = qtgnuplot_fr.qm qtgnuplot_ja.qm

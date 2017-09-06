@@ -10,7 +10,7 @@ Rem   comes first.
 set PATH=%OCTAVE_HOME%qt5\bin;%OCTAVE_HOME%bin;%PATH%
 set TERM=cygwin
 set GS=gs.exe
-set GNUTERM=windows
+set GNUTERM=wxt
 
 Rem set home if not already set
 if "%HOME%"=="" set HOME=%USERPROFILE%
