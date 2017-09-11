@@ -31,6 +31,9 @@ define $(PKG)_BUILD
         -DGDCM_BUILD_SHARED_LIBS:BOOL=TRUE \
         -DGDCM_USE_SYSTEM_ZLIB:BOOL=TRUE \
 	-DGDCM_USE_SYSTEM_EXPAT:BOOL=TRUE \
+        -DGDCM_BUILD_TESTING:BOOL=FALSE \
+        -DGDCM_DOCUMENTATION:BOOL=FALSE \
+        -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=FALSE \
         ../$($(PKG)_SUBDIR)
     cd '$(1)/../.build' && \
         env -u MAKE -u MAKEFLAGS nmake && \
@@ -43,6 +46,9 @@ define $(PKG)_BUILD
         $($(PKG)_CMAKE_OPTS) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'  \
         -DGDCM_BUILD_SHARED_LIBS:BOOL=TRUE \
+        -DGDCM_BUILD_TESTING:BOOL=FALSE \
+        -DGDCM_DOCUMENTATION:BOOL=FALSE \
+        -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=FALSE \
         ../$($(PKG)_SUBDIR)
     make -C $(1)/../.build -j $(JOBS) 
     make -C $(1)/../.build -j 1 install DESTDIR=$(3)
