@@ -3,10 +3,10 @@
 
 PKG             := build-gcc
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 7.1.0
-$(PKG)_CHECKSUM := a6dca81b25a97416211218f725b26f01e8063e05
+$(PKG)_VERSION  := 7.2.0
+$(PKG)_CHECKSUM := 08a88199ed94fdf4940d118ba3c07028245cd5b7
 $(PKG)_SUBDIR   := gcc-$($(PKG)_VERSION)
-$(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.gz
+$(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 
