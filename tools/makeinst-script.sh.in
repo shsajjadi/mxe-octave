@@ -91,6 +91,8 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 
 ; additional logic
 !include LogicLib.nsh
+; File funcs
+!include FileFunc.nsh
 
 
 !define MUI_ABORTWARNING
@@ -280,39 +282,66 @@ SectionEnd
 ; start menu (currently hardcoded)
 Section "Shortcuts"
 
- CreateDirectory "\$SMPROGRAMS\\Octave-$VERSION"
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
+ CreateDirectory "\$SMPROGRAMS\\GNU Octave $VERSION"
+ CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
  SetOutPath "%USERPROFILE%"
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave-$VERSION (CLI).lnk" "\$INSTDIR\\octave.vbs" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
- CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Octave-$VERSION (GUI).lnk" "\$INSTDIR\\octave.vbs" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (CLI).lnk" "\$INSTDIR\\octave.vbs" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (GUI).lnk" "\$INSTDIR\\octave.vbs" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
  SetOutPath "\$INSTDIR"
 
  ; fix the shortcuts for appid
- ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$SMPROGRAMS\\Octave-$VERSION\\Octave-$VERSION (GUI).lnk" "gnu.octave.$VERSION"'
+ ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (GUI).lnk" "gnu.octave.$VERSION"'
 EOF
   # shortcut for cmd win
   if [ -f $OCTAVE_SOURCE/cmdshell.bat ]; then 
-    echo "CreateShortCut '\$SMPROGRAMS\\Octave-$VERSION\\Bash Shell.lnk' '\$INSTDIR\\cmdshell.bat' '' '' 0" >> $OUTFILE
+    echo "CreateShortCut '\$SMPROGRAMS\\GNU Octave $VERSION\\Bash Shell.lnk' '\$INSTDIR\\cmdshell.bat' '' '' 0" >> $OUTFILE
   fi
   # if we have documentation files, create shortcuts
   if [ -d $OCTAVE_SOURCE/share/doc/octave ]; then
     cat >> $OUTFILE << EOF
-    CreateDirectory "\$SMPROGRAMS\\Octave-$VERSION\\Documentation"
-    CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Documentation\\Octave C++ Classes (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.pdf" "" "" 0
-    CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Documentation\\Octave C++ Classes (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.html\\index.html" "" "" 0
-    CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Documentation\\Octave (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\octave.pdf" "" "" 0
-    CreateShortCut "\$SMPROGRAMS\\Octave-$VERSION\\Documentation\\Octave (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\octave.html\\index.html" "" "" 0
+    CreateDirectory "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation"
+    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave C++ Classes (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.pdf" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave C++ Classes (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.html\\index.html" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\octave.pdf" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\octave.html\\index.html" "" "" 0
 EOF
   fi
  
   cat >> $OUTFILE << EOF
 
   \${If} \$InstallShortcuts == \${BST_CHECKED}
-    SetOutPath "%USERPROFILE%"
-    CreateShortCut "\$desktop\\Octave-$VERSION (CLI).lnk" "\$INSTDIR\\octave.vbs" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
-    CreateShortCut "\$desktop\\Octave-$VERSION (GUI).lnk" "\$INSTDIR\\octave.vbs" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
 
-    ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$desktop\\Octave-$VERSION (GUI).lnk" "gnu.octave.$VERSION"'
+    ; get latest octave and create shortcuts to it
+    Push \$R0
+    Push \$R1
+    Push \$R2
+
+    Call GetLatestOctave
+    Pop \$R1 ; Ver
+
+    ; if no version found - need set INST DIR and VER will use
+    StrCmp \$R1 "" set_ver_str
+
+    ; valid install found - get info from registry
+    ReadRegStr \$R0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "UninstallString"
+    \${GetParent} \$R0 \$R0
+    ReadRegStr \$R2 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "DisplayIcon"
+    GoTo have_ver_str
+set_ver_str:
+    StrCpy \$R1 "$VERSION"
+    StrCpy \$R0 "\$INSTDIR"
+    StrCpy \$R2 "\$INSTDIR\\$ICON"
+
+have_ver_str:
+    SetOutPath "%USERPROFILE%"
+    CreateShortCut "\$desktop\\GNU Octave (CLI).lnk" "\$R0\\octave.vbs" "--no-gui" "\$R2" 0 SW_SHOWMINIMIZED
+    CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "\$R0\\octave.vbs" "--force-gui" "\$R2" 0 SW_SHOWMINIMIZED
+
+    ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave (GUI).lnk" "gnu.octave.\$R1"'
+
+    Pop \$R2
+    Pop \$R1
+    Pop \$R0
   \${Endif}
 
   ; BLAS set up
@@ -386,14 +415,50 @@ not_registered_file:
  DeleteRegKey HKLM "Software\\Octave-$VERSION"
 
  ; Remove shortcuts
- Delete "\$SMPROGRAMS\\Octave-$VERSION\\Documentation\\*.*"
- RMDir "\$SMPROGRAMS\\Octave-$VERSION\\Documentation"
+ Delete "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\*.*"
+ RMDir "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation"
 
- Delete "\$SMPROGRAMS\\Octave-$VERSION\\*.*"
- RMDir "\$SMPROGRAMS\\Octave-$VERSION"
+ Delete "\$SMPROGRAMS\\GNU Octave $VERSION\\*.*"
+ RMDir "\$SMPROGRAMS\\GNU Octave $VERSION"
 
- Delete "\$desktop\\Octave-$VERSION (CLI).lnk" 
- Delete "\$desktop\\Octave-$VERSION (GUI).lnk" 
+ ; TODO: only delete if no other version of octave available
+
+ Push \$R0
+ Push \$R1
+ Push \$R2
+
+ Call un.GetLatestOctave
+ Pop \$R1 ; Ver
+
+ ; no installs detected - remove shortcuts
+ StrCmp \$R1 "" remove_desktop_shortcuts
+
+ ; if install detected, get the path and icon
+ ReadRegStr \$R0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "UninstallString"
+ \${GetParent} \$R0 \$R0
+ 
+ ReadRegStr \$R2 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "DisplayIcon"
+
+ IfFileExists "\$desktop\\GNU Octave (CLI).lnk" 0 check_gui_shortcut 
+ SetOutPath "%USERPROFILE%"
+ CreateShortCut "\$desktop\\GNU Octave (CLI).lnk" "\$R0\\octave.vbs" "--no-gui" "\$R2" 0 SW_SHOWMINIMIZED
+
+check_gui_shortcut:
+ IfFileExists "\$desktop\\GNU Octave (GUI).lnk" 0 done_remove_desktop_shortcuts
+ SetOutPath "%USERPROFILE%"
+ CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "\$R0\\octave.vbs" "--force-gui" "\$R2" 0 SW_SHOWMINIMIZED
+ ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave (GUI).lnk" "gnu.octave.\$R1"'
+
+ GoTo done_remove_desktop_shortcuts
+
+remove_desktop_shortcuts:
+ Delete "\$desktop\\GNU Octave (CLI).lnk" 
+ Delete "\$desktop\\GNU Octave (GUI).lnk" 
+
+done_remove_desktop_shortcuts:
+ Pop \$R2
+ Pop \$R1
+ Pop \$R0
 
  ; delete generated qt.conf file
  Delete "\$INSTDIR\\bin\\qt.conf"
@@ -422,6 +487,49 @@ EOF
 uninstall_done:
 
 SectionEnd
+
+; function to get latest version of octave installed
+!macro GET_LATEST_OCTAVE un
+Function \${un}GetLatestOctave
+  Push \$R0
+  Push \$R1
+  Push \$R2
+  Push \$R3
+
+  StrCpy \$R0 ""
+  StrCpy \$R1 0
+
+  ; loop through installed programs to find octave installs
+octave_ver_loop:
+  EnumRegKey \$R2 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\" \$R1
+  StrCmp \$R2 "" latest_octave_done
+
+  ; len(octave) = 6
+  StrCpy \$R3 \$R2 6
+  StrCmp \$R3 "Octave" +1 next_ver_loop
+
+  ; to verify the install check with the installer exists have uninstaller
+  ReadRegStr \$R3 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\\$R2" "UninstallString"
+  ifFileExists \$R3 0 next_ver_loop
+
+  ; grab version part of octave
+  StrCpy \$R0 \$R2 "" 7
+
+next_ver_loop:
+  IntOp \$R1 \$R1 + 1
+  GoTo octave_ver_loop 
+
+latest_octave_done:
+  Pop \$R3
+  Pop \$R2
+  Pop \$R1
+  Exch \$R0
+  ; stack now has octave version on top
+FunctionEnd
+!macroend
+
+!insertmacro GET_LATEST_OCTAVE ""
+!insertmacro GET_LATEST_OCTAVE "un."
 
 ; Function to detect Windows version and abort if Octave is unsupported in the current platform
 Function CheckWinVer
@@ -503,7 +611,6 @@ inst_exists:
   Abort 
   GoTo inst_end
 inst_none:
-
 
   ; check for spaces in dest filename
   Push \$R0
