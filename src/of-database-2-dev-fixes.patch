@@ -42,3 +42,24 @@ diff -r d85ae875cc23 src/configure.ac
  LIBS=$TLIBS
  LDFLAGS=$TLDFLAGS
  CXXFLAGS=$TCXXFLAGS
+diff -r d34d55e54a26 src/command.cc
+--- a/src/command.cc	Thu Jul 20 11:28:22 2017 +0200
++++ b/src/command.cc	Mon Sep 18 18:26:07 2017 -0400
+@@ -305,7 +305,7 @@
+           valid = 0;
+           _p_error ("%s: wrong number of given returned types",
+                     caller.c_str ());
+-          return octave_value_list ();
++          return octave_value (octave_value_list ());
+         }
+       rtypes_given = true;
+     }
+@@ -437,7 +437,7 @@
+     }
+ 
+   if (! valid)
+-    return octave_value_list ();
++    return octave_value (octave_value_list ());
+   else
+     {
+       ret.assign ("data", octave_value (data));
