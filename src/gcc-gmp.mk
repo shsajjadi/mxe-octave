@@ -2,13 +2,13 @@
 # See index.html for further information.
 
 PKG             := gcc-gmp
-$(PKG)_IGNORE    = $(gmp_IGNORE)
-$(PKG)_VERSION  := $(gmp_VERSION)
-$(PKG)_CHECKSUM  = $(gmp_CHECKSUM)
-$(PKG)_SUBDIR    = $(gmp_SUBDIR)
-$(PKG)_FILE      = $(gmp_FILE)
-$(PKG)_URL       = $(gmp_URL)
-$(PKG)_URL_2     = $(gmp_URL_2)
+$(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 6.1.2
+$(PKG)_CHECKSUM := 366ded6a44cd108ba6b3f5b9a252eab3f3a95cdf
+$(PKG)_SUBDIR   := gmp-$($(PKG)_VERSION)
+$(PKG)_FILE     := gmp-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := https://gmplib.org/download/gmp/$($(PKG)_FILE)
+$(PKG)_URL_2    := ftp://ftp.cs.tu-berlin.de/pub/gnu/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE

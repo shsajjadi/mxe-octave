@@ -2,13 +2,12 @@
 # See index.html for further information.
 
 PKG             := gcc-isl
-$(PKG)_IGNORE    = $(isl_IGNORE)
-$(PKG)_VERSION   = $(isl_VERSION)
-$(PKG)_CHECKSUM  = $(isl_CHECKSUM)
-$(PKG)_SUBDIR    = $(isl_SUBDIR)
-$(PKG)_FILE      = $(isl_FILE)
-$(PKG)_URL       = $(isl_URL)
-$(PKG)_URL_2     = $(isl_URL_2)
+$(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.16.1
+$(PKG)_CHECKSUM := c5a2b201bf05229647e73203c0bf2d9679d4d21f
+$(PKG)_SUBDIR   := isl-$($(PKG)_VERSION)
+$(PKG)_FILE     := isl-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := ftp://gcc.gnu.org/pub/gcc/infrastructure/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc-gmp
 
 define $(PKG)_UPDATE

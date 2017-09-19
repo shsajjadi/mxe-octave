@@ -2,13 +2,13 @@
 # See index.html for further information.
 
 PKG             := gcc-mpfr
-$(PKG)_IGNORE    = $(mpfr_IGNORE)
-$(PKG)_VERSION   = $(mpfr_VERSION)
-$(PKG)_CHECKSUM  = $(mpfr_CHECKSUM)
-$(PKG)_SUBDIR    = $(mpfr_SUBDIR)
-$(PKG)_FILE      = $(mpfr_FILE)
-$(PKG)_URL       = $(mpfr_URL)
-$(PKG)_URL_2     = $(mpfr_URL_2)
+$(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.1.5
+$(PKG)_CHECKSUM := c0fab77c6da4cb710c81cc04092fb9bea11a9403
+$(PKG)_SUBDIR   := mpfr-$($(PKG)_VERSION)
+$(PKG)_FILE     := mpfr-$($(PKG)_VERSION).tar.xz
+$(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/$(PKG)/$($(PKG)_FILE)
+$(PKG)_URL_2    := http://www.mpfr.org/mpfr-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc-gmp
 
 define $(PKG)_UPDATE

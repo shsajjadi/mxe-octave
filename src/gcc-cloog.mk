@@ -2,13 +2,12 @@
 # See index.html for further information.
 
 PKG             := gcc-cloog
-$(PKG)_IGNORE    = $(cloog_IGNORE)
-$(PKG)_VERSION   = $(cloog_VERSION)
-$(PKG)_CHECKSUM  = $(cloog_CHECKSUM)
-$(PKG)_SUBDIR    = $(cloog_SUBDIR)
-$(PKG)_FILE      = $(cloog_FILE)
-$(PKG)_URL       = $(cloog_URL)
-$(PKG)_URL_2     = $(cloog_URL_2)
+$(PKG)_IGNORE   := 
+$(PKG)_VERSION  := 0.18.4
+$(PKG)_CHECKSUM := 8f7568ca1873f8d55bb694c8b9b83f7f4c6c1aa5
+$(PKG)_SUBDIR   := cloog-$($(PKG)_VERSION)
+$(PKG)_FILE     := cloog-$($(PKG)_VERSION).tar.gz
+$(PKG)_URL      := ftp://gcc.gnu.org/pub/gcc/infrastructure/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc-gmp gcc-isl
 
 define $(PKG)_UPDATE

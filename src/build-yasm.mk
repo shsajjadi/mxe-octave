@@ -2,12 +2,12 @@
 # See index.html for further information.
 
 PKG             := build-yasm
-$(PKG)_IGNORE    = $(yasm_IGNORE)
-$(PKG)_VERSION  := $(yasm_VERSION)
-$(PKG)_CHECKSUM  = $(yasm_CHECKSUM)
-$(PKG)_SUBDIR    = $(yasm_SUBDIR)
-$(PKG)_FILE      = $(yasm_FILE)
-$(PKG)_URL       = $(yasm_URL)
+$(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.3.0
+$(PKG)_CHECKSUM := b7574e9f0826bedef975d64d3825f75fbaeef55e
+$(PKG)_SUBDIR   := yasm-$($(PKG)_VERSION)
+$(PKG)_FILE     := yasm-$($(PKG)_VERSION).tar.gz
+$(PKG)_URL      := http://www.tortall.net/projects/$(PKG)/releases/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
