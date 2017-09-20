@@ -637,7 +637,7 @@ $(STAMP_DIR)/check-requirements: $(MAKEFILE)
 	@echo '[check requirements]'
 	$(foreach REQUIREMENT,$(REQUIREMENTS),$(call CHECK_REQUIREMENT,$(REQUIREMENT)))
 ifneq ($(MXE_NATIVE_BUILD),yes)
-	@if ! octave --version | head -1 | grep ' \($($(OCTAVE_TARGET)_VERSION)\)$$' >/dev/null; then \
+	@if ! octave -W --version | head -1 | grep ' \($($(OCTAVE_TARGET)_VERSION)\)$$' >/dev/null; then \
 	  echo "Warning - could not find native build version $($(OCTAVE_TARGET)_VERSION) of octave - some packages may fail, but continuing"; \
 	fi
 endif
