@@ -2,12 +2,12 @@
 # See index.html for further information.
 
 PKG             := osmesa
-$(PKG)_VERSION  := 10.2.2
-$(PKG)_CHECKSUM := 2cc7c5b80fd2ddbf540acf47dbaec68e8cab16a4
-$(PKG)_SUBDIR   := Mesa-$($(PKG)_VERSION)
-$(PKG)_FILE     := MesaLib-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := ftp://ftp.freedesktop.org/pub/mesa/older-versions/10.x/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := 
+$(PKG)_VERSION  := 17.2.1
+$(PKG)_CHECKSUM := 7429e74a0ef12ea9d60b41b2b852898b3da0b238
+$(PKG)_SUBDIR   := mesa-$($(PKG)_VERSION)
+$(PKG)_FILE     := mesa-$($(PKG)_VERSION).tar.xz
+$(PKG)_URL      := ftp://ftp.freedesktop.org/pub/mesa/$($(PKG)_FILE)
+$(PKG)_DEPS     := build-mako zlib
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
@@ -41,10 +41,10 @@ else
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
-        --enable-osmesa --disable-dri --disable-egl --disable-xvmc \
-        --disable-glx --disable-shared-glapi --disable-gallium-llvm \
+        --enable-osmesa --disable-gbm --disable-dri --disable-egl \
+        --disable-xvmc --disable-glx --disable-llvm \
         --with-gallium-drivers="" --with-dri-drivers="" \
-        --with-egl-platforms="" --enable-texture-float \
+        --with-platforms="" --enable-texture-float \
         && $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
