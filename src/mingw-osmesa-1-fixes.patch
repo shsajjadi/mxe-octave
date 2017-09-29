@@ -1,29 +1,14 @@
-diff -uNr a/scons/gallium.py b/scons/gallium.py
---- a/scons/gallium.py	2014-06-25 00:33:39.000000000 -0400
-+++ b/scons/gallium.py	2015-02-15 12:07:49.271713764 -0500
-@@ -529,10 +529,6 @@
-         else:
-             env['_LIBFLAGS'] = '-Wl,--start-group ' + env['_LIBFLAGS'] + ' -Wl,--end-group'
-         if env['platform'] == 'windows':
--            # Avoid depending on gcc runtime DLLs
--            linkflags += ['-static-libgcc']
--            if 'w64' in env['CC'].split('-'):
--                linkflags += ['-static-libstdc++']
-             # Handle the @xx symbol munging of DLL exports
-             shlinkflags += ['-Wl,--enable-stdcall-fixup']
-             #shlinkflags += ['-Wl,--kill-at']
-diff -ur Mesa-10.2.2.orig/scons/crossmingw.py Mesa-10.2.2/scons/crossmingw.py
---- Mesa-10.2.2.orig/scons/crossmingw.py       2015-06-12 06:33:42.524589500 -0400
-+++ Mesa-10.2.2/scons/crossmingw.py    2015-06-12 22:12:26.181163800 -0400
-@@ -160,7 +160,11 @@
-     env.Append(SHLIBEMITTER = [shlib_emitter])
-     env['LINK'] = mingw_prefix + 'g++'
-     env['AR'] = mingw_prefix + 'ar'
-+    if not SCons.Util.WhereIs(env['AR']):
-+        env['AR'] = env['CC'] + '-ar'
-     env['RANLIB'] = mingw_prefix + 'ranlib'
-+    if not SCons.Util.WhereIs(env['RANLIB']):
-+        env['RANLIB'] = env['CC'] + '-ranlib'
-     env['LINK'] = mingw_prefix + 'g++'
-     env['AS'] = mingw_prefix + 'as'
-     env['WIN32DEFPREFIX']        = ''
+diff -uNr a/src/mesa/main/imports.h b/src/mesa/main/imports.h
+--- a/src/mesa/main/imports.h	2017-09-17 19:03:22.000000000 -0400
++++ b/src/mesa/main/imports.h	2017-10-02 09:54:19.341817963 -0400
+@@ -357,10 +357,6 @@
+ #define snprintf _snprintf
+ #endif
+ 
+-#if defined(_WIN32) && !defined(strtok_r)
+-#define strtok_r strtok_s
+-#endif
+-
+ #ifdef __cplusplus
+ }
+ #endif
