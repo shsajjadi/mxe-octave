@@ -18,22 +18,53 @@ define $(PKG)_UPDATE
     tail -1
 endef
 
+$(PKG)_CONFIGURE_CROSS_COMPILE_OPTION :=
+$(PKG)_CONFIGURE_DATABASE_OPTION :=
+$(PKG)_CONFIGURE_ENV :=
+$(PKG)_CONFIGURE_INCLUDE_OPTION := -I '$(HOST_INCDIR)/freetype2'
+$(PKG)_CONFIGURE_LIBPATH_OPTION :=
+$(PKG)_CONFIGURE_PLATFORM_OPTION :=
+
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)'
+  $(PKG)_CONFIGURE_LIBPATH_OPTION += -L '$(HOST_LIBDIR)'
+  ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
+    $(PKG)_CONFIGURE_LIBPATH_OPTION += -L '$(HOST_LIB64DIR)'
+  endif
+  $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)/dbus-1.0'
+  $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_LIBDIR)/dbus-1.0/include'
+else
+  $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION := \
+    -device-option CROSS_COMPILE=$(MXE_TOOL_PREFIX)
+endif
+
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_CONFIGURE_ENV := PSQL_LIBS="-lpq -lsecur32 -lws2_32"
+  $(PKG)_CONFIGURE_PLATFORM_OPTION := -platform win32-g++
+  $(PKG)_CONFIGURE_DATABASE_OPTION += \
+    -system-sqlite -plugin-sql-sqlite -plugin-sql-odbc -plugin-sql-psql
+else
+  $(PKG)_CONFIGURE_DATABASE_OPTION += -system-sqlite
+endif
+
 define $(PKG)_BUILD
     # ICU is buggy. See #653. TODO: reenable it some time in the future.
     cd '$(1)' && \
-        PSQL_LIBS="-lpq -lsecur32 -lws2_32" \
+        $($(PKG)_CONFIGURE_ENV) \
         ./configure \
+            $($(PKG)_CONFIGURE_INCLUDE_OPTION) \
+            $($(PKG)_CONFIGURE_LIBPATH_OPTION) \
             -opensource \
             -c++std c++11 \
             -confirm-license \
-            -xplatform win32-g++ \
-            -device-option CROSS_COMPILE=$(MXE_TOOL_PREFIX) \
+            $($(PKG)_CONFIGURE_PLATFORM_OPTION) \
+            $($(PKG)_CONFIGURE_CROSS_COMPILE_OPTION) \
             -device-option PKG_CONFIG='$(MXE_PKG_CONFIG)' \
             -force-pkg-config \
             -no-use-gold-linker \
             -release \
             -shared \
-            -prefix '$(HOST_PREFIX)/qt5' \
+            -prefix '$(HOST_PREFIX)' \
             -hostprefix '$(BUILD_TOOLS_PREFIX)' \
             -no-icu \
             -opengl desktop \
@@ -41,9 +72,7 @@ define $(PKG)_BUILD
             -accessibility \
             -nomake examples \
             -nomake tests \
-            -plugin-sql-sqlite \
-            -plugin-sql-odbc \
-            -plugin-sql-psql \
+            $($(PKG)_CONFIGURE_DATABASE_OPTION) \
             -system-zlib \
             -system-libpng \
             -system-libjpeg \
@@ -54,29 +83,20 @@ define $(PKG)_BUILD
             -no-openssl \
             -dbus-linked \
 	    -no-pch \
+            -no-xcb \
             -v \
             $($(PKG)_CONFIGURE_OPTS)
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    rm -rf '$(HOST_PREFIX)/qt5'
     $(MAKE) -C '$(1)' -j 1 install
 
-# remove this
-    if [ "$(MXE_NATIVE_BUILD)" = "xxno" ]; then \
-        for f in moc qdbuscpp2xml qdbusxml2cpp qlalr qmake rcc uic; do \
-          mv "$(HOST_PREFIX)/qt5/bin/$$f" "$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)$$f-qt5"; \
-        done; \
+    if [ "$(MXE_NATIVE_BUILD)" = "no" ]; then \
+        ln -sf '$(BUILD_TOOLS_PREFIX)/bin/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'qmake-qt5; \
+        ln -sf '$(BUILD_TOOLS_PREFIX)/bin/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'moc; \
+        ln -sf '$(BUILD_TOOLS_PREFIX)/bin/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'uic; \
+        ln -sf '$(BUILD_TOOLS_PREFIX)/bin/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'rcc; \
+        ln -sf '$(BUILD_TOOLS_PREFIX)/bin/lrelease' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'lrelease; \
     fi
- 
-    #ln -sf '$(HOST_PREFIX)/qt5/bin/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'qmake-qt5
-    ln -sf '$(BUILD_TOOLS_PREFIX)/bin/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'qmake-qt5
-    ln -sf '$(BUILD_TOOLS_PREFIX)/bin/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'moc
-    ln -sf '$(BUILD_TOOLS_PREFIX)/bin/uic' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'uic
-    ln -sf '$(BUILD_TOOLS_PREFIX)/bin/rcc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'rcc
-    ln -sf '$(BUILD_TOOLS_PREFIX)/bin/lrelease' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'lrelease
-
-    # setup cmake toolchain
-    #echo 'set(CMAKE_SYSTEM_PREFIX_PATH "$(PREFIX)/$(TARGET)/qt5" ${CMAKE_SYSTEM_PREFIX_PATH})' > '$(CMAKE_TOOLCHAIN_DIR)/$(PKG).cmake'
 
 endef
 
