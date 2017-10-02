@@ -70,7 +70,6 @@ define $(PKG)_BUILD
         --enable-libvorbis \
         --enable-libmp3lame \
         --enable-libxvid \
-        --disable-libfaac \
         --enable-libopencore-amrnb \
         --enable-libopencore-amrwb \
         --enable-libx264 \
