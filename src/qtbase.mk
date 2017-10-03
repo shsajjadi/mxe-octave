@@ -25,6 +25,15 @@ $(PKG)_CONFIGURE_INCLUDE_OPTION := -I '$(HOST_INCDIR)/freetype2'
 $(PKG)_CONFIGURE_LIBPATH_OPTION :=
 $(PKG)_CONFIGURE_PLATFORM_OPTION :=
 
+## These are needed whether cross compiling or not.
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_CONFIGURE_ENV := PSQL_LIBS="-lpq -lsecur32 -lws2_32"
+  $(PKG)_CONFIGURE_DATABASE_OPTION += \
+    -system-sqlite -plugin-sql-sqlite -plugin-sql-odbc -plugin-sql-psql
+else
+  $(PKG)_CONFIGURE_DATABASE_OPTION += -system-sqlite
+endif
+
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)'
   $(PKG)_CONFIGURE_LIBPATH_OPTION += -L '$(HOST_LIBDIR)'
@@ -33,18 +42,15 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
   endif
   $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)/dbus-1.0'
   $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_LIBDIR)/dbus-1.0/include'
+  ifeq ($(MXE_WINDOWS_BUILD),yes)
+    $(PKG)_CONFIGURE_PLATFORM_OPTION := -platform win32-g++
+  endif
 else
   $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION := \
     -device-option CROSS_COMPILE=$(MXE_TOOL_PREFIX)
-endif
-
-ifeq ($(MXE_WINDOWS_BUILD),yes)
-  $(PKG)_CONFIGURE_ENV := PSQL_LIBS="-lpq -lsecur32 -lws2_32"
-  $(PKG)_CONFIGURE_PLATFORM_OPTION := -platform win32-g++
-  $(PKG)_CONFIGURE_DATABASE_OPTION += \
-    -system-sqlite -plugin-sql-sqlite -plugin-sql-odbc -plugin-sql-psql
-else
-  $(PKG)_CONFIGURE_DATABASE_OPTION += -system-sqlite
+  ifeq ($(MXE_WINDOWS_BUILD),yes)
+    $(PKG)_CONFIGURE_PLATFORM_OPTION := -xplatform win32-g++
+  endif
 endif
 
 define $(PKG)_BUILD
