@@ -21,9 +21,16 @@ endef
 $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION :=
 $(PKG)_CONFIGURE_DATABASE_OPTION :=
 $(PKG)_CONFIGURE_ENV :=
-$(PKG)_CONFIGURE_INCLUDE_OPTION := -I '$(HOST_INCDIR)/freetype2'
+$(PKG)_CONFIGURE_INCLUDE_OPTION :=
 $(PKG)_CONFIGURE_LIBPATH_OPTION :=
 $(PKG)_CONFIGURE_PLATFORM_OPTION :=
+
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_CONFIGURE_PREFIX_OPTION := -prefix '$(HOST_PREFIX)/qt5'
+else
+  $(PKG)_CONFIGURE_PREFIX_OPTION := -prefix '$(HOST_PREFIX)'
+  $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)/freetype2'
+endif
 
 ## These are needed whether cross compiling or not.
 ifeq ($(MXE_WINDOWS_BUILD),yes)
@@ -70,7 +77,7 @@ define $(PKG)_BUILD
             -no-use-gold-linker \
             -release \
             -shared \
-            -prefix '$(HOST_PREFIX)' \
+            $($(PKG)_CONFIGURE_PREFIX_OPTION) \
             -hostprefix '$(BUILD_TOOLS_PREFIX)' \
             -no-icu \
             -opengl desktop \
