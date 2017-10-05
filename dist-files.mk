@@ -705,6 +705,7 @@ SRC_FILES_1 := \
   xau.mk \
   xcb-proto.mk \
   xcb.mk \
+  xcursor.mk \
   xdamage.mk \
   xdmcp.mk \
   xerces-1-fix-pkgconfig.patch \

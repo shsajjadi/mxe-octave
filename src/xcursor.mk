@@ -1,14 +1,14 @@
 # This file is part of MXE.
 # See index.html for further information.
 
-PKG             := x11
+PKG             := xcursor
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.6.2
-$(PKG)_CHECKSUM := 351ae5bad88bb2b54b7f749f6096b518a3b13b29
-$(PKG)_SUBDIR   := libX11-$($(PKG)_VERSION)
-$(PKG)_FILE     := libX11-$($(PKG)_VERSION).tar.gz
+$(PKG)_VERSION  := 1.1.14
+$(PKG)_CHECKSUM := 89870756758439f9216ddf5f2d3dca56570fc6b7
+$(PKG)_SUBDIR   := libXcursor-$($(PKG)_VERSION)
+$(PKG)_FILE     := libXcursor-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
-$(PKG)_DEPS     := inputproto kbproto xcb xcursor xextproto xproto xtrans
+$(PKG)_DEPS     := 
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD
