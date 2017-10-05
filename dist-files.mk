@@ -311,6 +311,7 @@ SRC_FILES_1 := \
   lzo.mk \
   matio.mk \
   mdbtools.mk \
+  mesa-1-fixes.patch \
   mesa.mk \
   mingw-cairo-1-ssize-t-defined.patch \
   mingw-cfitsio-1-fixes.patch \

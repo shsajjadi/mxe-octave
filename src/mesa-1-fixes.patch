@@ -1,0 +1,13 @@
+diff -uNr a/scons/gallium.py b/scons/gallium.py
+--- a/scons/gallium.py	2017-09-17 19:03:22.000000000 -0400
++++ b/scons/gallium.py	2017-10-04 19:24:29.499373623 -0400
+@@ -580,9 +580,6 @@
+                 '-Wl,--dynamicbase', # ASLR
+             ]
+             # Avoid depending on gcc runtime DLLs
+-            linkflags += ['-static-libgcc']
+-            if 'w64' in env['CC'].split('-'):
+-                linkflags += ['-static-libstdc++']
+             # Handle the @xx symbol munging of DLL exports
+             shlinkflags += ['-Wl,--enable-stdcall-fixup']
+             #shlinkflags += ['-Wl,--kill-at']
