@@ -36,11 +36,15 @@ USE_CCACHE := @USE_CCACHE@
 USE_SYSTEM_GCC := @USE_SYSTEM_GCC@
 
 # Set to "yes" to use the version of fontconfig already installed
-# on your system (default is yes if doing native build). 
+# on your system (default is yes if doing native build).
 USE_SYSTEM_FONTCONFIG := @USE_SYSTEM_FONTCONFIG@
 
+# Set to "yes" to use the OpenGL libraries already installed
+# on your system (default is yes).
+USE_SYSTEM_OPENGL := @USE_SYSTEM_OPENGL@
+
 # Set to "yes" to use the X11 libraries already installed
-# on your system (default is yes if doing native build). 
+# on your system (default is yes if doing native build).
 USE_SYSTEM_X11_LIBS := @USE_SYSTEM_X11_LIBS@
 
 # Build compiler for 64-bit Windows.  Using this option will build

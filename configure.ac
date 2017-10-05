@@ -189,6 +189,16 @@ AC_ARG_ENABLE([system-fontconfig],
    esac], [USE_SYSTEM_FONTCONFIG=$MXE_NATIVE_BUILD])
 AC_SUBST(USE_SYSTEM_FONTCONFIG)
 
+AC_ARG_ENABLE([system-opengl],
+  [AS_HELP_STRING([--disable-system-opengl],
+    [Use OpenGL libraries already installed on system])],
+  [case "$enableval" in
+     no) USE_SYSTEM_OPENGL=no ;;
+     yes) USE_SYSTEM_OPENGL=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --enable-system-opengl]) ;;
+   esac], [USE_SYSTEM_OPENGL=yes])
+AC_SUBST(USE_SYSTEM_OPENGL)
+
 AC_ARG_ENABLE([system-x11-libs],
   [AS_HELP_STRING([--enable-system-x11-libs],
     [Use X11 libraries already installed on system])],

@@ -311,6 +311,7 @@ SRC_FILES_1 := \
   lzo.mk \
   matio.mk \
   mdbtools.mk \
+  mesa.mk \
   mingw-cairo-1-ssize-t-defined.patch \
   mingw-cfitsio-1-fixes.patch \
   mingw-epstool-1-fixes.patch \
@@ -319,8 +320,8 @@ SRC_FILES_1 := \
   mingw-hdf5-1.patch \
   mingw-libgcrypt-1-fixes.patch \
   mingw-libmng-1-noundefines.patch \
+  mingw-mesa-1-fixes.patch \
   mingw-openssl-3-libdeps.patch \
-  mingw-osmesa-1-fixes.patch \
   mingw-portaudio-1-pkgconfig.patch \
   mingw-texinfo-1-fixes.patch \
   mingw-utils-1-portability-fix.patch \
@@ -520,7 +521,6 @@ SRC_FILES_1 := \
   openscenegraph.mk \
   openssl-1-fixes.patch \
   openssl.mk \
-  osmesa.mk \
   pango.mk \
   pangomm.mk \
   pcre.mk \
