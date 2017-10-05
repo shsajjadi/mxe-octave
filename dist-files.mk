@@ -66,6 +66,7 @@ SRC_FILES_1 := \
   default-octave.mk \
   devil-1-png.patch \
   devil.mk \
+  dri2proto.mk \
   eigen.mk \
   epstool.mk \
   exiv2-issue847.patch \
@@ -131,6 +132,7 @@ SRC_FILES_1 := \
   glib.mk \
   glibmm.mk \
   glpk.mk \
+  glproto.mk \
   gmp.mk \
   gnuplot-1-fixes.patch \
   gnuplot.mk \
@@ -211,6 +213,7 @@ SRC_FILES_1 := \
   libcroco.mk \
   libdnet-1-fixes.patch \
   libdnet.mk \
+  libdrm.mk \
   libevent.mk \
   libf2c-1.patch \
   libf2c.mk \
@@ -293,6 +296,7 @@ SRC_FILES_1 := \
   libxml++.mk \
   libxml2-1-fixes.patch \
   libxml2.mk \
+  libxshmfence.mk \
   libxslt.mk \
   llvm.mk \
   log4cxx-1-gcc.4.4.patch \
