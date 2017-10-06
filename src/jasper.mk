@@ -20,6 +20,8 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && autoreconf && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        $(CONFIGURE_CPPFLAGS) \
+        $(CONFIGURE_LDFLAGS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --enable-libjpeg \
