@@ -12,6 +12,9 @@ $(PKG)_DEPS     := dbus freetds freetype fontconfig jpeg libpng pcre postgresql 
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
+ifeq ($(USE_SYSTEM_OPENGL),no)
+  $(PKG)_DEPS += mesa
+endif
 ifeq ($(MXE_WINDOWS_BUILD),no)
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += x11 xext xfixes xdmcp xrender xfixes xdamage xt xxf86vm
