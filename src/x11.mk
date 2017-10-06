@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 351ae5bad88bb2b54b7f749f6096b518a3b13b29
 $(PKG)_SUBDIR   := libX11-$($(PKG)_VERSION)
 $(PKG)_FILE     := libX11-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
-$(PKG)_DEPS     := inputproto kbproto xcb xcursor xextproto xproto xtrans
+$(PKG)_DEPS     := inputproto kbproto xcb xextproto xproto xtrans
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD

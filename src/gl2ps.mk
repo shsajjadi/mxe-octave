@@ -8,6 +8,9 @@ $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)-source
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://geuz.org/$(PKG)/src/$($(PKG)_FILE)
 $(PKG)_DEPS     := libpng zlib
+ifeq ($(USE_SYSTEM_OPENGL),no)
+  $(PKG)_DEPS += mesa glu
+endif
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
     ifeq ($(MXE_SYSTEM),msvc)

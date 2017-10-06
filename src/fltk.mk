@@ -16,8 +16,11 @@ else ifeq ($(MXE_SYSTEM),msvc)
 else
   $(PKG)_DEPS   += pthreads freetype
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
-    $(PKG)_DEPS += x11 xext xrender xdmcp
+    $(PKG)_DEPS += x11 xcursor xext xrender xdmcp
   endif
+endif
+ifeq ($(USE_SYSTEM_OPENGL),no)
+  $(PKG)_DEPS += mesa glu
 endif
 
 define $(PKG)_UPDATE
