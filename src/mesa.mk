@@ -15,7 +15,8 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
 else
   ifeq ($(USE_SYSTEM_OPENGL),yes)
     $(PKG)_CONFIGURE_OPENGL_OPTIONS := \
-      --disable-opengl --disable-dri --disable-glx \
+      --disable-opengl --disable-gles1 --disable-gles2 \
+      --disable-dri --disable-glx \
       --with-gallium-drivers="" --with-dri-drivers="" \
       --with-platforms=""
   else
