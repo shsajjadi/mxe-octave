@@ -1,14 +1,14 @@
 # This file is part of MXE.
 # See index.html for further information.
 
-PKG             := xcb
+PKG             := xcb-util-wm
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.11
-$(PKG)_CHECKSUM := 69a2f447a10918d005c33a8391492d0443533df7
-$(PKG)_SUBDIR   := libxcb-$($(PKG)_VERSION)
-$(PKG)_FILE     := libxcb-$($(PKG)_VERSION).tar.gz
+$(PKG)_VERSION  := 0.4.1
+$(PKG)_CHECKSUM := 7006c52b961c123355320bfc30477cdf90c8bbb7
+$(PKG)_SUBDIR   := xcb-util-wm-$($(PKG)_VERSION)
+$(PKG)_FILE     := xcb-util-wm-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/xcb/$($(PKG)_FILE)
-$(PKG)_DEPS     := pthread-stubs util-macros xau xcb-proto
+$(PKG)_DEPS     := 
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD

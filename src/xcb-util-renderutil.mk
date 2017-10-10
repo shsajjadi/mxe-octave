@@ -1,14 +1,14 @@
 # This file is part of MXE.
 # See index.html for further information.
 
-PKG             := xcb
-$(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.11
-$(PKG)_CHECKSUM := 69a2f447a10918d005c33a8391492d0443533df7
-$(PKG)_SUBDIR   := libxcb-$($(PKG)_VERSION)
-$(PKG)_FILE     := libxcb-$($(PKG)_VERSION).tar.gz
+PKG             := xcb-util-renderutil
+$(PKG)_IGNORE   := 
+$(PKG)_VERSION  := 0.3.9
+$(PKG)_CHECKSUM := cb533b1d039f833f070e7d6398c221a31d30d5e2
+$(PKG)_SUBDIR   := xcb-util-renderutil-$($(PKG)_VERSION)
+$(PKG)_FILE     := xcb-util-renderutil-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/xcb/$($(PKG)_FILE)
-$(PKG)_DEPS     := pthread-stubs util-macros xau xcb-proto
+$(PKG)_DEPS     := xcb
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD
