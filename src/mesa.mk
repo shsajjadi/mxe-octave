@@ -15,13 +15,14 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
 else
   ifeq ($(USE_SYSTEM_OPENGL),yes)
     $(PKG)_CONFIGURE_OPENGL_OPTIONS := \
-      --disable-opengl --disable-gles1 --disable-gles2 \
+      --disable-opengl --disable-egl --disable-gles1 --disable-gles2 \
       --disable-dri --disable-glx \
       --with-gallium-drivers="" --with-dri-drivers="" \
       --with-platforms=""
   else
     $(PKG)_CONFIGURE_OPENGL_OPTIONS := \
-      --enable-opengl --enable-dri --enable-glx="dri" \
+      --enable-opengl --enable-egl --enable-gles1 --enable-gles2 \
+      --enable-dri --enable-glx="dri" \
       --with-gallium-drivers="" --with-dri-drivers="swrast" \
       --with-platforms="x11"
     ifeq ($(USE_SYSTEM_X11_LIBS),no)
@@ -65,7 +66,6 @@ else
         $($(PKG)_CONFIGURE_OPENGL_OPTIONS) \
         --enable-osmesa \
         --disable-gbm \
-        --disable-egl \
         --disable-xvmc \
         --disable-llvm \
         --enable-texture-float \
