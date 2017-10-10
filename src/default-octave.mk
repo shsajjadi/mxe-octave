@@ -64,9 +64,11 @@ ifeq ($(ENABLE_QT5),yes)
   #$(PKG)_PKG_CONFIG_PATH := "$(HOST_LIBDIR)/pkgconfig"
   $(PKG)_PKG_CONFIG_PATH := "$(HOST_PREFIX)/qt5/lib/pkgconfig:$(HOST_LIBDIR)/pkgconfig"
   $(PKG)_QTDIR := $(HOST_PREFIX)/qt5
+  $(PKG)_QT_CONFIGURE_OPTIONS += octave_cv_lib_qscintilla="-lqscintilla2_qt5"
 else
   $(PKG)_PKG_CONFIG_PATH := "$(HOST_LIBDIR)/pkgconfig"
   $(PKG)_QTDIR := $(HOST_PREFIX)
+  $(PKG)_QT_CONFIGURE_OPTIONS += octave_cv_lib_qscintilla="-lqscintilla2_qt4"
 endif
 
 
