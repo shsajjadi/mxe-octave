@@ -35,12 +35,15 @@ $(PKG)_CONFIGURE_ENV :=
 $(PKG)_CONFIGURE_INCLUDE_OPTION :=
 $(PKG)_CONFIGURE_LIBPATH_OPTION :=
 $(PKG)_CONFIGURE_PLATFORM_OPTION :=
+$(PKG)_CONFIGURE_OPTS :=
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   $(PKG)_CONFIGURE_PREFIX_OPTION := -prefix '$(HOST_PREFIX)/qt5'
+  $(PKG)_CONFIGURE_OPTS += -no-xcb
 else
   $(PKG)_CONFIGURE_PREFIX_OPTION := -prefix '$(HOST_PREFIX)'
   $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)/freetype2'
+  $(PKG)_CONFIGURE_OPTS += -qpa xcb -xcb
 endif
 
 ## These are needed whether cross compiling or not.
@@ -78,6 +81,7 @@ define $(PKG)_BUILD
         ./configure \
             $($(PKG)_CONFIGURE_INCLUDE_OPTION) \
             $($(PKG)_CONFIGURE_LIBPATH_OPTION) \
+            -no-strip \
             -opensource \
             -c++std c++11 \
             -confirm-license \
@@ -86,7 +90,6 @@ define $(PKG)_BUILD
             -device-option PKG_CONFIG='$(MXE_PKG_CONFIG)' \
             -force-pkg-config \
             -no-use-gold-linker \
-            -release \
             -shared \
             $($(PKG)_CONFIGURE_PREFIX_OPTION) \
             -hostprefix '$(BUILD_TOOLS_PREFIX)' \
@@ -106,8 +109,7 @@ define $(PKG)_BUILD
             -system-pcre \
             -no-openssl \
             -dbus-linked \
-	    -no-pch \
-            -no-xcb \
+            -no-pch \
             -v \
             $($(PKG)_CONFIGURE_OPTS)
 
