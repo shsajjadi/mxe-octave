@@ -1,4 +1,4 @@
- # This file is part of MXE.
+# This file is part of MXE.
 # See index.html for further information.
 
 PKG             := qtbase
@@ -76,6 +76,7 @@ endif
 
 define $(PKG)_BUILD
     # ICU is buggy. See #653. TODO: reenable it some time in the future.
+    # Use -qt-doubleconversion until we build our own version.
     cd '$(1)' && \
         $($(PKG)_CONFIGURE_ENV) \
         ./configure \
@@ -107,6 +108,7 @@ define $(PKG)_BUILD
             -fontconfig \
             -system-freetype \
             -system-pcre \
+            -qt-doubleconversion \
             -no-openssl \
             -dbus-linked \
             -no-pch \
