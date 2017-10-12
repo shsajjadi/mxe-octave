@@ -1,0 +1,73 @@
+diff -uNr a/src/configure b/src/configure
+--- a/src/configure	2016-12-20 12:05:08.000000000 -0500
++++ b/src/configure	2017-10-12 14:13:16.956665770 -0400
+@@ -587,7 +587,7 @@
+ ac_subst_vars='LTLIBOBJS
+ LIBOBJS
+ have_libportaudio
+-MKOCTFILE_CHECK
++MKOCTFILE
+ ac_ct_CXX
+ CXXFLAGS
+ CXX
+@@ -3082,11 +3082,11 @@
+ set dummy mkoctfile; ac_word=$2
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+ $as_echo_n "checking for $ac_word... " >&6; }
+-if ${ac_cv_prog_MKOCTFILE_CHECK+:} false; then :
++if ${ac_cv_prog_MKOCTFILE+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+-  if test -n "$MKOCTFILE_CHECK"; then
+-  ac_cv_prog_MKOCTFILE_CHECK="$MKOCTFILE_CHECK" # Let the user override the test.
++  if test -n "$MKOCTFILE"; then
++  ac_cv_prog_MKOCTFILE="$MKOCTFILE" # Let the user override the test.
+ else
+ as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+ for as_dir in $PATH
+@@ -3095,7 +3095,7 @@
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+-    ac_cv_prog_MKOCTFILE_CHECK=""yes""
++    ac_cv_prog_MKOCTFILE="mkoctfile"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+   fi
+@@ -3105,17 +3105,17 @@
+ 
+ fi
+ fi
+-MKOCTFILE_CHECK=$ac_cv_prog_MKOCTFILE_CHECK
+-if test -n "$MKOCTFILE_CHECK"; then
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $MKOCTFILE_CHECK" >&5
+-$as_echo "$MKOCTFILE_CHECK" >&6; }
++MKOCTFILE=$ac_cv_prog_MKOCTFILE
++if test -n "$MKOCTFILE"; then
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $MKOCTFILE" >&5
++$as_echo "$MKOCTFILE" >&6; }
+ else
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+ fi
+ 
+ 
+-if test "$MKOCTFILE_CHECK" != "yes" ; then
++if test -z "$MKOCTFILE"; then
+     as_fn_error $? "Please install mkoctfile." "$LINENO" 5
+ fi
+ 
+diff -uNr a/src/configure.ac b/src/configure.ac
+--- a/src/configure.ac	2016-12-20 12:05:08.000000000 -0500
++++ b/src/configure.ac	2017-10-12 14:08:11.627023155 -0400
+@@ -26,8 +26,8 @@
+ #fi
+ 
+ dnl Check for MKOCTFILE
+-AC_CHECK_PROG(MKOCTFILE_CHECK,mkoctfile,"yes")
+-if test "$MKOCTFILE_CHECK" != "yes" ; then
++AC_CHECK_PROG(MKOCTFILE,mkoctfile,mkoctfile)
++if test -z "$MKOCTFILE"; then
+     AC_MSG_ERROR([Please install mkoctfile.])
+ fi
+ 
