@@ -14,7 +14,7 @@ ifeq ($(USE_SYSTEM_FONTCONFIG),no)
 endif
 ifeq ($(MXE_WINDOWS_BUILD),no)
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
-    $(PKG)_DEPS += x11 xext xfixes xdmcp xrender xfixes xdamage xt xxf86vm
+    $(PKG)_DEPS += xdamage xdmcp xext xfixes xi xrender xt xxf86vm x11 xcb xcb-util xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm
   endif
 endif
 
@@ -142,11 +142,14 @@ define $(PKG)_BUILD
         -prefix $($(PKG)_PREFIX) \
         -script \
         -no-iconv \
+        -no-icu \
         -opengl desktop \
         -no-webkit \
         -no-pch \
         -no-phonon \
         -no-phonon-backend \
+        -no-xinerama \
+        -no-xrandr \
         -accessibility \
         -nomake demos \
         -nomake docs \
