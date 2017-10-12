@@ -598,6 +598,7 @@ SRC_FILES_1 := \
   readline-2-event-hook.patch \
   readline.mk \
   renderproto.mk \
+  s2tc.mk \
   sdl-test.c \
   sdl.mk \
   sdl_image-test.c \

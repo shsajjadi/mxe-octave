@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 7429e74a0ef12ea9d60b41b2b852898b3da0b238
 $(PKG)_SUBDIR   := mesa-$($(PKG)_VERSION)
 $(PKG)_FILE     := mesa-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.freedesktop.org/pub/mesa/$($(PKG)_FILE)
-$(PKG)_DEPS     := build-mako zlib
+$(PKG)_DEPS     := build-mako s2tc zlib
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   ifeq ($(USE_SYSTEM_OPENGL),no)
     $(PKG)_CONFIGURE_OPENGL_OPTIONS := libgl-gdi
