@@ -149,6 +149,8 @@ ifeq ($(MXE_SYSTEM), gnu-linux)
       mv $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION) \
 	 $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION).real; \
       $(SED) < octave-wrapper.in \
+	-e "s|@GCC_VERSION@|$(native-gcc_VERSION)|" \
+	-e "s|@GCC_ARCH@|$(TARGET)|" \
 	-e "s|@OCTAVE_VERSION@|$($(OCTAVE_TARGET)_VERSION)|" \
 	-e "s|@GNUPLOT_MAJOR_MINOR_VERSION@|$(shell echo $(gnuplot_VERSION) | $(SED) -e 's/\(^[0-9][0-9]*\.[0-9][0-9]*\)\..*/\1/')|" \
 	-e "s|@PROGRAM_NAME@|$$f|" > $$f-t \
