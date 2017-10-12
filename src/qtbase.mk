@@ -77,6 +77,7 @@ endif
 define $(PKG)_BUILD
     # ICU is buggy. See #653. TODO: reenable it some time in the future.
     # Use -qt-doubleconversion until we build our own version.
+    # Disable libproxy until we can build our own package.
     cd '$(1)' && \
         $($(PKG)_CONFIGURE_ENV) \
         ./configure \
@@ -111,6 +112,7 @@ define $(PKG)_BUILD
             -qt-doubleconversion \
             -no-openssl \
             -dbus-linked \
+            -no-libproxy \
             -no-pch \
             -v \
             $($(PKG)_CONFIGURE_OPTS)
