@@ -472,6 +472,7 @@ SRC_FILES_1 := \
   of-linear-algebra-2-dev-fixes.patch \
   of-linear-algebra.mk \
   of-lssa.mk \
+  of-ltfat-1-fixes.patch \
   of-ltfat.mk \
   of-mapping.mk \
   of-miscellaneous-1-fixes.patch \
@@ -503,6 +504,7 @@ SRC_FILES_1 := \
   of-struct.mk \
   of-tisean.mk \
   of-tsa.mk \
+  of-video-1-fixes.patch \
   of-video.mk \
   of-windows-1-fixes.patch \
   of-windows.mk \
