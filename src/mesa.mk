@@ -22,12 +22,12 @@ else
   else
     $(PKG)_CONFIGURE_OPENGL_OPTIONS := \
       --enable-opengl --enable-egl --enable-gles1 --enable-gles2 \
-      --enable-dri --enable-glx="dri" \
-      --with-gallium-drivers="" --with-dri-drivers="swrast" \
+      --with-gallium-drivers="swrast" --with-dri-drivers="" \
       --with-platforms="x11"
     ifeq ($(USE_SYSTEM_X11_LIBS),no)
       $(PKG)_DEPS += dri2proto glproto libdrm libxshmfence x11 xdamage xext xfixes
     endif
+    $(PKG)_DEPS += llvm
   endif
 endif
 
@@ -67,7 +67,6 @@ else
         --enable-osmesa \
         --disable-gbm \
         --disable-xvmc \
-        --disable-llvm \
         --enable-texture-float \
         && $(CONFIGURE_POST_HOOK)
 
