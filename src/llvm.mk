@@ -36,9 +36,14 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
       $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
     endef
   else
-    echo "unsupported LLVM configuration" && 1>&2
-    exit 1
+    define $(PKG)_BUILD
+      echo "unsupported LLVM configuration" 1>&2
+      exit 1
+    endef
   endif
 else
-  echo "unsupported LLVM configuration" 1>&2 && exit 1
+  define $(PKG)_BUILD
+    echo "unsupported LLVM configuration" 1>&2
+    exit 1
+  endef
 endif
