@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 42c6b1f733fe13a3eba135f5025b22cb68450f91
 $(PKG)_SUBDIR   := freetype-$($(PKG)_VERSION)
 $(PKG)_FILE     := freetype-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/freetype/freetype2/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := zlib
+$(PKG)_DEPS     := libpng zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/freetype/files/freetype2/' | \
