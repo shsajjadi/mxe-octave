@@ -63,18 +63,14 @@ define $(PKG)_BUILD
         $(MAKE) -C '$(1)/Qt4Qt5' -j 1 install INSTALL_ROOT='$($(PKG)_INSTALL_ROOT)'; \
     fi
 
-    if [ $(MXE_SYSTEM)$(ENABLE_QT5) = mingwyes ]; then \
-        $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib'; \
-        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/$(LIBRARY_PREFIX)qscintilla2_qt5$(LIBRARY_SUFFIX).dll' '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/bin/'; \
-        rm -f '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/$(LIBRARY_PREFIX)qscintilla2_qt5$(LIBRARY_SUFFIX).dll'; \
+    if [ $(MXE_SYSTEM) = mingw ]; then \
+      $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(HOST_BINDIR)'; \
+      if [ $(ENABLE_QT5) = yes ]; then \
+        mv '$($(PKG)_INSTALL_ROOT)$(HOST_PREFIX)/qt5/lib/qscintilla2_qt5.dll' '$($(PKG)_INSTALL_ROOT)$(HOST_BINDIR)'; \
+      else \
+        mv '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/qscintilla2_qt4.dll' '$($(PKG)_INSTALL_ROOT)$(HOST_BINDIR)/'; \
+      fi; \
     fi
-    if [ $(MXE_SYSTEM)$(ENABLE_QT5) = mingwno ]; then \
-        $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(HOST_BINDIR)'; \
-        $(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2_qt4$(LIBRARY_SUFFIX).dll' '$($(PKG)_INSTALL_ROOT)$(HOST_BINDIR)/'; \
-        rm -f '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)qscintilla2_qt4$(LIBRARY_SUFFIX).dll'; \
-	$(INSTALL) -m755 '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/libqscintilla2_qt4.a' '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/libqscintilla2.a'; \
-    fi
-
 
     # Qmake under MSVC uses Win32 paths. When combining this with
     # DESTDIR usage (or equivalent), the real Win32 directory hierarchy
