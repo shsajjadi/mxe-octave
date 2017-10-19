@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 08295ae27abe2718f7be01f490e7a08353060291
 $(PKG)_SUBDIR   := s2tc-$($(PKG)_VERSION)
 $(PKG)_FILE     := s2tc-$($(PKG)_VERSION).zip
 $(PKG)_URL      := https://github.com/divVerent/s2tc/archive/v$($(PKG)_VERSION).zip
-$(PKG)_DEPS     := 
+$(PKG)_DEPS     := mesa-proto
 
 define $(PKG)_BUILD
   cd '$(1)' && ./autogen.sh
