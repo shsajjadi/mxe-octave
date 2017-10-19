@@ -3,11 +3,11 @@
 
 PKG             := renderproto
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.11
-$(PKG)_CHECKSUM := 69c6cbae5e67d3a47b31dbf4d711607545e1bb05
+$(PKG)_VERSION  := 0.11.1
+$(PKG)_CHECKSUM := 7ae9868a358859fe539482b02414aa15c2d8b1e4
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/proto/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/proto/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

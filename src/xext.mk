@@ -4,10 +4,10 @@
 PKG             := xext
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 1.3.3
-$(PKG)_CHECKSUM := 8e221b6f706c43106a1c8aebe1229d86859d1ebf
+$(PKG)_CHECKSUM := 43abab84101159563e68d9923353cc0b3af44f07
 $(PKG)_SUBDIR   := libXext-$($(PKG)_VERSION)
-$(PKG)_FILE     := libXext-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libXext-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := xextproto xproto
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

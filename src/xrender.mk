@@ -3,11 +3,11 @@
 
 PKG             := xrender
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.9.8
-$(PKG)_CHECKSUM := 6fa642737be327cd7166995a626d429669e16a76
+$(PKG)_VERSION  := 0.9.10
+$(PKG)_CHECKSUM := d55106de9260c2377c19d271d9b677744a6c7e81
 $(PKG)_SUBDIR   := libXrender-$($(PKG)_VERSION)
-$(PKG)_FILE     := libXrender-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libXrender-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := xproto renderproto
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

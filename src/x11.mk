@@ -3,11 +3,11 @@
 
 PKG             := x11
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.6.2
-$(PKG)_CHECKSUM := 351ae5bad88bb2b54b7f749f6096b518a3b13b29
+$(PKG)_VERSION  := 1.6.5
+$(PKG)_CHECKSUM := c32155467508dfe783f9296ef22ee6ed53cae7df
 $(PKG)_SUBDIR   := libX11-$($(PKG)_VERSION)
-$(PKG)_FILE     := libX11-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libX11-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := inputproto kbproto xcb xextproto xproto xtrans
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

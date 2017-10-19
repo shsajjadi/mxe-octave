@@ -3,11 +3,11 @@
 
 PKG             := inputproto
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.3
-$(PKG)_CHECKSUM := 60ee91839805cb13039e2ffba84279c346b9b2ed
+$(PKG)_VERSION  := 2.3.2
+$(PKG)_CHECKSUM := 62b29a0c3b4ede9d129a0598cc6becf628a2158a
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/proto/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/proto/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE

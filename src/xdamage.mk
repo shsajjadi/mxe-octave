@@ -4,10 +4,10 @@
 PKG             := xdamage
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 1.1.4
-$(PKG)_CHECKSUM := f357e25af6fe05ae76af2acf2250969652f3a1b0
+$(PKG)_CHECKSUM := c3fc0f4b02dce2239bf46c82a5f06b06585720ae
 $(PKG)_SUBDIR   := libXdamage-$($(PKG)_VERSION)
-$(PKG)_FILE     := libXdamage-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libXdamage-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := damageproto xfixes fixesproto xextproto x11
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

@@ -3,11 +3,11 @@
 
 PKG             := xxf86vm
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.1.3
-$(PKG)_CHECKSUM := a66a298471f33ba7d63bc76db14fdb3f89319a20
+$(PKG)_VERSION  := 1.1.4
+$(PKG)_CHECKSUM := 78ef18ca2be157131899e01c62679e247409a13f
 $(PKG)_SUBDIR   := libXxf86vm-$($(PKG)_VERSION)
-$(PKG)_FILE     := libXxf86vm-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libXxf86vm-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := xproto x11 xextproto xext xf86vidmodeproto
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

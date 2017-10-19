@@ -4,10 +4,10 @@
 PKG             := xft
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 2.3.2
-$(PKG)_CHECKSUM := 0568a360a9f3ca97bdcdaf61535bf9d0bdae80db
+$(PKG)_CHECKSUM := e025d790a7b6c4d283a78d8df06615cb10278e2d
 $(PKG)_SUBDIR   := libXft-$($(PKG)_VERSION)
-$(PKG)_FILE     := libXft-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/releases/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libXft-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := kbproto xrender fontconfig freetype
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 1.7.9
 $(PKG)_CHECKSUM := 70d1148c39c0eaa7d7c18370f20709383271f669
 $(PKG)_SUBDIR   := libXi-$($(PKG)_VERSION)
 $(PKG)_FILE     := libXi-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := inputproto xext xextproto xproto x11
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

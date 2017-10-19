@@ -4,10 +4,10 @@
 PKG             := xextproto
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 7.3.0
-$(PKG)_CHECKSUM := f9dd1fa2d8ed6261dee193a8f8f7a61a4cb398ef
+$(PKG)_CHECKSUM := b8d736342dcb73b71584d99a1cb9806d93c25ff8
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/proto/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/proto/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

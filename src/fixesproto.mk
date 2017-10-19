@@ -4,10 +4,10 @@
 PKG             := fixesproto
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 5.0
-$(PKG)_CHECKSUM := 9efd241f9769fd6eec0cf74f338740a1f80c5885
+$(PKG)_CHECKSUM := ab605af5da8c98c0c2f8b2c578fed7c864ee996a
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/proto/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/proto/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE

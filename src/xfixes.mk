@@ -3,11 +3,11 @@
 
 PKG             := xfixes
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.0.1
-$(PKG)_CHECKSUM := 88e9fe9c3288feb5362fe97fa7ae534f724b75e3
+$(PKG)_VERSION  := 5.0.3
+$(PKG)_CHECKSUM := ca86342d129c02435a9ee46e38fdf1a04d6b4b91
 $(PKG)_SUBDIR   := libXfixes-$($(PKG)_VERSION)
-$(PKG)_FILE     := libXfixes-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libXfixes-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := fixesproto xextproto xproto x11
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

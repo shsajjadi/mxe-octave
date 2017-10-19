@@ -3,11 +3,11 @@
 
 PKG             := xt
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.1.4
-$(PKG)_CHECKSUM := a691f0ddf664e21b12781ea0724297cd063a3452
+$(PKG)_VERSION  := 1.1.5
+$(PKG)_CHECKSUM := c79e2c4f7de5259a2ade458817a139b66a043d59
 $(PKG)_SUBDIR   := libXt-$($(PKG)_VERSION)
-$(PKG)_FILE     := libXt-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libXt-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := sm ice x11 xproto kbproto
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

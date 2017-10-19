@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 0.4.0
 $(PKG)_CHECKSUM := c9c9361781911a47b28f74fc6ebe0abd1273fae4
 $(PKG)_SUBDIR   := xcb-util-image-$($(PKG)_VERSION)
 $(PKG)_FILE     := xcb-util-image-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/xcb/$($(PKG)_FILE)
+$(PKG)_URL      := http://www.x.org/archive/individual/xcb/$($(PKG)_FILE)
 $(PKG)_DEPS     := xcb xcb-util xproto
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

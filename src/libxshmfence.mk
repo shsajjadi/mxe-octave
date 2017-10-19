@@ -4,10 +4,10 @@
 PKG             := libxshmfence
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 1.2
-$(PKG)_CHECKSUM := 5745d9977d8d0374f37548a96384bf27190aa5ab
+$(PKG)_CHECKSUM := a2ebe90e5595afca4db93a4359732af43b2b8c69
 $(PKG)_SUBDIR   := libxshmfence-$($(PKG)_VERSION)
-$(PKG)_FILE     := libxshmfence-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := https://www.x.org/releases/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libxshmfence-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := xproto
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
