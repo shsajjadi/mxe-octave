@@ -38,6 +38,10 @@ $(PKG)_CONFIGURE_PLATFORM_OPTION :=
 $(PKG)_CONFIGURE_OPTS :=
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
+  ## I haven't been able to change this to be just $(HOST_PREFIX),
+  ## though I would prefer to do that.  If it is changed, then
+  ## there are a number of other places that will need to be adjusted.
+  ## --jwe
   $(PKG)_CONFIGURE_PREFIX_OPTION := -prefix '$(HOST_PREFIX)/qt5'
   $(PKG)_CONFIGURE_OPTS += -no-xcb
 else
@@ -120,6 +124,32 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
 
+    if [ $(MXE_WINDOWS_BUILD) = yes ]; then \
+      $(INSTALL) -d '$(HOST_BINDIR)'; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Concurrentd.dll '$(HOST_BINDIR)'/Qt5Concurrentd.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Concurrent.dll '$(HOST_BINDIR)'/Qt5Concurrent.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Cored.dll '$(HOST_BINDIR)'/Qt5Cored.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Core.dll '$(HOST_BINDIR)'/Qt5Core.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5DBusd.dll '$(HOST_BINDIR)'/Qt5DBusd.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5DBus.dll '$(HOST_BINDIR)'/Qt5DBus.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Guid.dll '$(HOST_BINDIR)'/Qt5Guid.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Gui.dll '$(HOST_BINDIR)'/Qt5Gui.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Networkd.dll '$(HOST_BINDIR)'/Qt5Networkd.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Network.dll '$(HOST_BINDIR)'/Qt5Network.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5OpenGLd.dll '$(HOST_BINDIR)'/Qt5OpenGLd.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5OpenGL.dll '$(HOST_BINDIR)'/Qt5OpenGL.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5PrintSupportd.dll '$(HOST_BINDIR)'/Qt5PrintSupportd.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5PrintSupport.dll '$(HOST_BINDIR)'/Qt5PrintSupport.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Sqld.dll '$(HOST_BINDIR)'/Qt5Sqld.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Sql.dll '$(HOST_BINDIR)'/Qt5Sql.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Testd.dll '$(HOST_BINDIR)'/Qt5Testd.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Test.dll '$(HOST_BINDIR)'/Qt5Test.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Widgetsd.dll '$(HOST_BINDIR)'/Qt5Widgetsd.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Widgets.dll '$(HOST_BINDIR)'/Qt5Widgets.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Xmld.dll '$(HOST_BINDIR)'/Qt5Xmld.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Xml.dll '$(HOST_BINDIR)'/Qt5Xml.dll; \
+    fi
+
     if [ "$(MXE_NATIVE_BUILD)" = "no" ]; then \
         ln -sf '$(BUILD_TOOLS_PREFIX)/bin/qmake' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'qmake-qt5; \
         ln -sf '$(BUILD_TOOLS_PREFIX)/bin/moc' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)'moc; \
@@ -129,4 +159,3 @@ define $(PKG)_BUILD
     fi
 
 endef
-

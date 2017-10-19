@@ -18,4 +18,10 @@ define $(PKG)_BUILD
     cd '$(1)' && '$(MXE_QMAKE)'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install
+
+    if [ $(MXE_WINDOWS_BUILD) = yes ]; then \
+      $(INSTALL) -d '$(HOST_BINDIR)'; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Svgd.dll '$(HOST_BINDIR)'/Qt5Svgd.dll; \
+      mv '$(HOST_PREFIX)'/qt5/bin/Qt5Svg.dll '$(HOST_BINDIR)'/Qt5Svg.dll; \
+    fi
 endef
