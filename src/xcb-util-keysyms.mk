@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 0.4.0
 $(PKG)_CHECKSUM := ff02ee8ac22c53848af50c0a6a6b00feb002c1cb
 $(PKG)_SUBDIR   := xcb-util-keysyms-$($(PKG)_VERSION)
 $(PKG)_FILE     := xcb-util-keysyms-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/xcb/$($(PKG)_FILE)
+$(PKG)_URL      := http://www.x.org/archive/individual/xcb/$($(PKG)_FILE)
 $(PKG)_DEPS     := xproto
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

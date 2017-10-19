@@ -3,11 +3,11 @@
 
 PKG             := xcb-proto
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.11
-$(PKG)_CHECKSUM := dd06c90b17954b96527028e9f5a108fb92cd8694
+$(PKG)_VERSION  := 1.12
+$(PKG)_CHECKSUM := e93da374ecef9359370edc0160bcb8b2a2f7d9f6
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/xcb/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/xcb/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

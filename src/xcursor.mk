@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 1.1.14
 $(PKG)_CHECKSUM := 89870756758439f9216ddf5f2d3dca56570fc6b7
 $(PKG)_SUBDIR   := libXcursor-$($(PKG)_VERSION)
 $(PKG)_FILE     := libXcursor-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := fixesproto x11 xfixes xrender
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

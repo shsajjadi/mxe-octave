@@ -4,10 +4,10 @@
 PKG             := ice
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 1.0.9
-$(PKG)_CHECKSUM := f16102adcfbc11bb78da4aff7a9cb28009828c9f
+$(PKG)_CHECKSUM := 3c3a857a117ce48a1947a16860056e77cd494fdf
 $(PKG)_SUBDIR   := libICE-$($(PKG)_VERSION)
-$(PKG)_FILE     := libICE-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libICE-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := xproto xtrans
 
 define $(PKG)_UPDATE

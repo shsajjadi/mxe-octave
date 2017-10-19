@@ -4,10 +4,10 @@
 PKG             := xtrans
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 1.3.5
-$(PKG)_CHECKSUM := 0e94776e31fd29e323edc7f2a8ee10794d63c24c
+$(PKG)_CHECKSUM := 2d3ae1839d841f568bc481c6116af7d2a9f9ba59
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

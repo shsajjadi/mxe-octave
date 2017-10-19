@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 1.19.1
 $(PKG)_CHECKSUM := 386e993ba339e561aa6d93073a4dcbab24e30bad
 $(PKG)_SUBDIR   := util-macros-$($(PKG)_VERSION)
 $(PKG)_FILE     := util-macros-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/util/$($(PKG)_FILE)
+$(PKG)_URL      := http://www.x.org/archive/individual/util/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

@@ -4,10 +4,10 @@
 PKG             := sm
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 1.2.2
-$(PKG)_CHECKSUM := d8ac4f24e6a2783387982828c695f2716e337a13
+$(PKG)_CHECKSUM := e6d5dab6828dfd296e564518d2ed0a349a25a714
 $(PKG)_SUBDIR   := libSM-$($(PKG)_VERSION)
-$(PKG)_FILE     := libSM-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libSM-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := ice xproto xtrans
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

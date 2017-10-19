@@ -3,11 +3,11 @@
 
 PKG             := xdmcp
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.1.1
-$(PKG)_CHECKSUM := 62f1a6011df19c0b9ad60cbffd23cb36c0edfb95
+$(PKG)_VERSION  := 1.1.2
+$(PKG)_CHECKSUM := 3c09eabb0617c275b5ab09fae021d279a4832cac
 $(PKG)_SUBDIR   := libXdmcp-$($(PKG)_VERSION)
-$(PKG)_FILE     := libXdmcp-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libXdmcp-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

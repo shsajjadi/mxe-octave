@@ -4,10 +4,10 @@
 PKG             := xf86vidmodeproto
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 2.3.1
-$(PKG)_CHECKSUM := b11943e6be5fe8e3c651bd220dc1d2d3ebdd9c92
+$(PKG)_CHECKSUM := 11d54c3210887631ea71e8f8030a77692e964fc4
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/proto/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/proto/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

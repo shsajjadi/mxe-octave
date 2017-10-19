@@ -4,10 +4,10 @@
 PKG             := damageproto
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 1.2.1
-$(PKG)_CHECKSUM := 6df5eccd2914ecb7c24ec0099b477aa5943c22ab
+$(PKG)_CHECKSUM := bd0f0f4dc8f37eaabd9279d10fe2889710507358
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/proto/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/proto/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE

@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 0.4.1
 $(PKG)_CHECKSUM := 7006c52b961c123355320bfc30477cdf90c8bbb7
 $(PKG)_SUBDIR   := xcb-util-wm-$($(PKG)_VERSION)
 $(PKG)_FILE     := xcb-util-wm-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/xcb/$($(PKG)_FILE)
+$(PKG)_URL      := http://www.x.org/archive/individual/xcb/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

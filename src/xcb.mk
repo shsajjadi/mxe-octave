@@ -3,11 +3,11 @@
 
 PKG             := xcb
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.11
-$(PKG)_CHECKSUM := 69a2f447a10918d005c33a8391492d0443533df7
+$(PKG)_VERSION  := 1.12
+$(PKG)_CHECKSUM := 2f03490d1c75c8a3f902f74b717af6501773926a
 $(PKG)_SUBDIR   := libxcb-$($(PKG)_VERSION)
-$(PKG)_FILE     := libxcb-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/xcb/$($(PKG)_FILE)
+$(PKG)_FILE     := libxcb-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/xcb/$($(PKG)_FILE)
 $(PKG)_DEPS     := pthread-stubs util-macros xau xcb-proto
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

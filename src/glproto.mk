@@ -4,10 +4,10 @@
 PKG             := glproto
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 1.4.17
-$(PKG)_CHECKSUM := d13f5733fc3b5ef95ca5eec11cf097dcf505b1fb
+$(PKG)_CHECKSUM := 20e061c463bed415051f0f89e968e331a2078551
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := https://www.x.org/releases/individual/proto/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := https://www.x.org/archive/individual/proto/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

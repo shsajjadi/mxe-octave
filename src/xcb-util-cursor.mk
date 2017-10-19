@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 0.1.3
 $(PKG)_CHECKSUM := 26562eb6d4151307f7b6a53453d360ecfc0563ac
 $(PKG)_SUBDIR   := xcb-util-cursor-$($(PKG)_VERSION)
 $(PKG)_FILE     := xcb-util-cursor-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/xcb/$($(PKG)_FILE)
+$(PKG)_URL      := http://www.x.org/archive/individual/xcb/$($(PKG)_FILE)
 $(PKG)_DEPS     := xcb xcb-util-image xcb-util-renderutil
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)

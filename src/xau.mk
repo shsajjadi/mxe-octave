@@ -4,10 +4,10 @@
 PKG             := xau
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 1.0.8
-$(PKG)_CHECKSUM := 2544aa44737897832d9bf80151f30f7e0bb4f341
+$(PKG)_CHECKSUM := d9512d6869e022d4e9c9d33f6d6199eda4ad096b
 $(PKG)_SUBDIR   := libXau-$($(PKG)_VERSION)
-$(PKG)_FILE     := libXau-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://xorg.freedesktop.org/archive/individual/lib/$($(PKG)_FILE)
+$(PKG)_FILE     := libXau-$($(PKG)_VERSION).tar.bz2
+$(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := xproto
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
