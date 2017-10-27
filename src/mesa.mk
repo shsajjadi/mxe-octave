@@ -7,10 +7,11 @@ $(PKG)_CHECKSUM := 7429e74a0ef12ea9d60b41b2b852898b3da0b238
 $(PKG)_SUBDIR   := mesa-$($(PKG)_VERSION)
 $(PKG)_FILE     := mesa-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.freedesktop.org/pub/mesa/$($(PKG)_FILE)
-$(PKG)_DEPS     := build-mako s2tc zlib
+$(PKG)_DEPS     := build-mako zlib
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   ifeq ($(USE_SYSTEM_OPENGL),no)
     $(PKG)_SCONS_OPENGL_OPTIONS := libgl-gdi
+    $(PKG)_DEPS += s2tc
   endif
 else
   ifeq ($(USE_SYSTEM_OPENGL),yes)
@@ -27,7 +28,7 @@ else
     ifeq ($(USE_SYSTEM_X11_LIBS),no)
       $(PKG)_DEPS += dri2proto glproto libdrm libxshmfence x11 xdamage xext xfixes
     endif
-    $(PKG)_DEPS += llvm
+    $(PKG)_DEPS += llvm s2tc
   endif
 endif
 
