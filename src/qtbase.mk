@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := a3ddcde8978d3a05bb4342fce364a792472a16e6
 $(PKG)_SUBDIR   := $(PKG)-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-opensource-src-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://download.qt.io/official_releases/qt/5.7/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
-$(PKG)_DEPS     := dbus freetds freetype fontconfig jpeg libpng pcre postgresql sqlite zlib
+$(PKG)_DEPS     := dbus freetds freetype fontconfig icu4c jpeg libjbig libpng libproxy pcre postgresql sqlite zlib
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
@@ -79,7 +79,6 @@ else
 endif
 
 define $(PKG)_BUILD
-    # ICU is buggy. See #653. TODO: reenable it some time in the future.
     # Use -qt-doubleconversion until we build our own version.
     # Disable libproxy until we can build our own package.
     cd '$(1)' && \
@@ -99,7 +98,7 @@ define $(PKG)_BUILD
             -shared \
             $($(PKG)_CONFIGURE_PREFIX_OPTION) \
             -hostprefix '$(BUILD_TOOLS_PREFIX)' \
-            -no-icu \
+            -icu \
             -opengl desktop \
             -no-glib \
             -accessibility \
@@ -116,7 +115,7 @@ define $(PKG)_BUILD
             -qt-doubleconversion \
             -no-openssl \
             -dbus-linked \
-            -no-libproxy \
+            -libproxy \
             -no-pch \
             -v \
             $($(PKG)_CONFIGURE_OPTS)
