@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := a3ddcde8978d3a05bb4342fce364a792472a16e6
 $(PKG)_SUBDIR   := $(PKG)-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-opensource-src-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://download.qt.io/official_releases/qt/5.7/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
-$(PKG)_DEPS     := dbus freetds freetype fontconfig icu4c jpeg libjbig libpng libproxy pcre postgresql sqlite zlib
+$(PKG)_DEPS     := dbus double-conversion freetds freetype fontconfig icu4c jpeg libjbig libpng libproxy pcre postgresql sqlite zlib
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
@@ -79,8 +79,6 @@ else
 endif
 
 define $(PKG)_BUILD
-    # Use -qt-doubleconversion until we build our own version.
-    # Disable libproxy until we can build our own package.
     cd '$(1)' && \
         $($(PKG)_CONFIGURE_ENV) \
         ./configure \
@@ -112,7 +110,7 @@ define $(PKG)_BUILD
             -fontconfig \
             -system-freetype \
             -system-pcre \
-            -qt-doubleconversion \
+            -system-doubleconversion \
             -no-openssl \
             -dbus-linked \
             -libproxy \
