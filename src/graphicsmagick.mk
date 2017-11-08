@@ -8,10 +8,16 @@ $(PKG)_CHECKSUM := 2cc885d1b157996aa14c98e34f7aa17815d00c41
 $(PKG)_SUBDIR   := GraphicsMagick-$($(PKG)_VERSION)
 $(PKG)_FILE     := GraphicsMagick-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := zlib bzip2 jpeg jasper lcms libpng tiff freetype libxml2
+$(PKG)_DEPS     := zlib bzip2 libjbig jpeg jasper lcms libpng tiff freetype libxml2
 ifneq ($(MXE_SYSTEM),msvc)
     $(PKG)_DEPS += pthreads libtool
 endif
+
+$(PKG)_CONFIGURE_OPTIONS :=
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+    $(PKG)_CONFIGURE_OPTIONS += ac_cv_func_clock_getres=no ac_cv_func_clock_gettime=no
+endif
+
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/' | \
@@ -23,6 +29,7 @@ define $(PKG)_BUILD
     # This can be removed once the patch "graphicsmagick-1-fix-xml2-config.patch" is accepted by upstream
     cd '$(1)' && autoconf
     cd '$(1)' && ./configure \
+        $($(PKG)_CONFIGURE_OPTIONS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
          $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
@@ -36,7 +43,7 @@ define $(PKG)_BUILD
         --without-dps \
         --without-fpx \
         --without-gslib \
-        --without-jbig \
+        --with-jbig \
         --with-jpeg \
         --with-jp2 \
         --with-lcms2 \
