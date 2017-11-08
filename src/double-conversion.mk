@@ -1,0 +1,29 @@
+# This file is part of MXE.
+# See index.html for further information.
+
+PKG             := double-conversion
+$(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.0.0
+$(PKG)_CHECKSUM := d900d4d946beb493a03cd6c9b180ed2bcbd0f20e
+$(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
+$(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz
+$(PKG)_URL      := https://github.com/google/$(PKG)/archive/v$($(PKG)_VERSION).tar.gz
+$(PKG)_DEPS     :=
+
+$(PKG)_CMAKE_FLAGS :=
+
+define $(PKG)_UPDATE
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
+endef
+
+define $(PKG)_BUILD
+    cd '$(1)' && cmake \
+        $($(PKG)_CMAKE_FLAGS) \
+        -DBUILD_TESTING=no \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+        .
+
+    $(MAKE) -C '$(1)' -j '$(JOBS)' VERBOSE=1
+    $(MAKE) -C '$(1)' -j '1' VERBOSE=1 DESTDIR='$(3)' install
+endef
