@@ -16,7 +16,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(MAKE) -C '$(1)' -j '$(JOBS)'  CC=$(MXE_CC) AR=$(MXE_AR) LD=$(MXE_LD) CPPFLAGS='-I$(HOST_PREFIX)/include' LDFLAGS='-L$(HOST_PREFIX)/lib' lib
+    $(MAKE) -C '$(1)' -j '$(JOBS)'  CC=$(MXE_CC) AR=$(MXE_AR) LD=$(MXE_LD) CPPFLAGS='-I$(HOST_PREFIX)/include $(MXE_CC_PICFLAG)' LDFLAGS='-L$(HOST_PREFIX)/lib' lib
     $(INSTALL) -d '$(HOST_LIBDIR)'
     $(INSTALL) -d '$(HOST_BINDIR)'
     if [ "x$(BUILD_STATIC)" == "xyes" ]; then \
