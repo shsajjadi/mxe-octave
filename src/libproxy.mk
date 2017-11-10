@@ -28,9 +28,11 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' VERBOSE=1
     $(MAKE) -C '$(1)' -j '1' VERBOSE=1 DESTDIR='$(3)' install
 
+    ## Note error in installed .dll.a file name.
     if [ $(MXE_SYSTEM) = mingw ]; then \
         $(INSTALL) -d '$(3)$(HOST_BINDIR)'; \
         $(INSTALL) '$(3)$(HOST_LIBDIR)/libproxy.dll' '$(3)$(HOST_BINDIR)/'; \
         rm -f '$(3)$(HOST_LIBDIR)/libproxy.dll'; \
+        mv '$(3)$(HOST_LIBDIR)/liblibproxy.dll.a' '$(3)$(HOST_LIBDIR)/libproxy.dll.a'; \
     fi
 endef
