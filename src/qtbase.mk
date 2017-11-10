@@ -8,14 +8,32 @@ $(PKG)_CHECKSUM := a3ddcde8978d3a05bb4342fce364a792472a16e6
 $(PKG)_SUBDIR   := $(PKG)-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-opensource-src-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://download.qt.io/official_releases/qt/5.7/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
-$(PKG)_DEPS     := dbus double-conversion freetds freetype fontconfig icu4c jpeg libjbig libpng libproxy pcre postgresql sqlite zlib
+$(PKG)_DEPS     := dbus double-conversion freetds freetype fontconfig jpeg libjbig libpng libproxy pcre postgresql sqlite zlib
+
+$(PKG)_CONFIGURE_CROSS_COMPILE_OPTION :=
+$(PKG)_CONFIGURE_DATABASE_OPTION :=
+$(PKG)_CONFIGURE_ENV :=
+$(PKG)_CONFIGURE_INCLUDE_OPTION :=
+$(PKG)_CONFIGURE_LIBPATH_OPTION :=
+$(PKG)_CONFIGURE_PLATFORM_OPTION :=
+$(PKG)_CONFIGURE_OPTS :=
+
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
 ifeq ($(USE_SYSTEM_OPENGL),no)
   $(PKG)_DEPS += mesa
 endif
-ifeq ($(MXE_WINDOWS_BUILD),no)
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  ifeq ($(ENABLE_WINDOWS64),yes)
+    $(PKG)_DEPS += icu4c
+    $(PKG)_CONFIGURE_OPTS += -icu
+  else
+    $(PKG)_CONFIGURE_OPTS += -no-icu
+  endif
+else
+  $(PKG)_DEPS += icu4c
+  $(PKG)_CONFIGURE_OPTS += -icu
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += xdamage xdmcp xext xfixes xi xrender xt xxf86vm x11 xcb xcb-util xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm
   endif
@@ -28,14 +46,6 @@ define $(PKG)_UPDATE
     sort |
     tail -1
 endef
-
-$(PKG)_CONFIGURE_CROSS_COMPILE_OPTION :=
-$(PKG)_CONFIGURE_DATABASE_OPTION :=
-$(PKG)_CONFIGURE_ENV :=
-$(PKG)_CONFIGURE_INCLUDE_OPTION :=
-$(PKG)_CONFIGURE_LIBPATH_OPTION :=
-$(PKG)_CONFIGURE_PLATFORM_OPTION :=
-$(PKG)_CONFIGURE_OPTS :=
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   ## I haven't been able to change this to be just $(HOST_PREFIX),
@@ -96,7 +106,6 @@ define $(PKG)_BUILD
             -shared \
             $($(PKG)_CONFIGURE_PREFIX_OPTION) \
             -hostprefix '$(BUILD_TOOLS_PREFIX)' \
-            -icu \
             -opengl desktop \
             -no-glib \
             -accessibility \
