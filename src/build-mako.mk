@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 1.0.7
 $(PKG)_CHECKSUM := bf0c1f4cdfca4dd37bc0c9f83e984a0558268b42
 $(PKG)_SUBDIR   := Mako-$($(PKG)_VERSION)
 $(PKG)_FILE     := Mako-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://pypi.python.org/packages/eb/f3/67579bb486517c0d49547f9697e36582cd19dafb5df9e687ed8e22de57fa/$($(PKG)_FILE)
+$(PKG)_URL      := https://pypi.python.org/packages/eb/f3/67579bb486517c0d49547f9697e36582cd19dafb5df9e687ed8e22de57fa/$($(PKG)_FILE)
 $(PKG)_DEPS     := build-python build-markupsafe build-setuptools
 
 define $(PKG)_UPDATE
