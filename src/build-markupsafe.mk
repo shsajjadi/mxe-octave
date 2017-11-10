@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 1.0
 $(PKG)_CHECKSUM := 9072e80a7faa0f49805737a48f3d871eb1c48728
 $(PKG)_SUBDIR   := MarkupSafe-$($(PKG)_VERSION)
 $(PKG)_FILE     := MarkupSafe-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://pypi.python.org/packages/4d/de/32d741db316d8fdb7680822dd37001ef7a448255de9699ab4bfcbdf4172b/$($(PKG)_FILE)
+$(PKG)_URL      := https://pypi.python.org/packages/4d/de/32d741db316d8fdb7680822dd37001ef7a448255de9699ab4bfcbdf4172b/$($(PKG)_FILE)
 $(PKG)_DEPS     := build-python build-setuptools
 
 define $(PKG)_UPDATE
