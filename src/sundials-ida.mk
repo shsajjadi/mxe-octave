@@ -3,10 +3,10 @@
 
 PKG             := sundials-ida
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.9.0
-$(PKG)_CHECKSUM := 375a061259b06f3ae46c218b7d5473c60a46e3f8
-$(PKG)_SUBDIR   := ida-$($(PKG)_VERSION)
-$(PKG)_FILE     := ida-$($(PKG)_VERSION).tar.gz
+$(PKG)_VERSION  := 2.7.0
+$(PKG)_CHECKSUM := 3559c375ce9f875542e4a39978908f91792e6d57
+$(PKG)_SUBDIR   := sundials-$($(PKG)_VERSION)
+$(PKG)_FILE     := sundials-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://computation.llnl.gov/projects/sundials/download/$($(PKG)_FILE)
 $(PKG)_DEPS     := lapack libgomp suitesparse
 
@@ -24,6 +24,13 @@ define $(PKG)_BUILD
         -DKLU_LIBRARY_DIR=$(HOST_LIBDIR) \
         -DSUITESPARSECONFIG_LIBRARY=$(HOST_LIBDIR)/libsuitesparseconfig.dll.a \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+	-DBUILD_ARKODE=OFF \
+	-DBUILD_CVODE=OFF \
+	-DBUILD_CVODES=OFF \
+	-DBUILD_IDA=ON \
+	-DBUILD_IDAS=OFF \
+	-DBUILD_KINSOL=OFF \
+	-DBUILD_CPODES=OFF \
         '$(1)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)' install DESTDIR='$(3)' VERBOSE=1
 
