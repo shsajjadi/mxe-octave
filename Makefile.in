@@ -746,9 +746,11 @@ define OCTAVE_FORGE_PKG_BUILD
     else \
       cd '$(1)/..' && \
       tar cfz $($(PKG)_FILE) $($(PKG)_SUBDIR) && \
-         OCTAVE_CONFIG=$(MXE_OCTAVECONFIG) TMP="$(1)/.." \
-         MKOCTFILE=$(MXE_MKOCTFILE) MAKE=$(MAKE) CONFIGURE_OPTIONS="$(HOST_AND_BUILD_CONFIGURE_OPTIONS)" $(4) \
-         $(TOP_DIR)/tools/pkg-install.py -verbose "$($(PKG)_FILE)"; \
+        OCTAVE_CONFIG=$(MXE_OCTAVECONFIG) TMP="$(1)/.." \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
+        MKOCTFILE=$(MXE_MKOCTFILE) MAKE=$(MAKE) \
+        CONFIGURE_OPTIONS="$(HOST_AND_BUILD_CONFIGURE_OPTIONS)" $(4) \
+        $(TOP_DIR)/tools/pkg-install.py -verbose "$($(PKG)_FILE)"; \
      fi
 endef
 endif
