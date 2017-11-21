@@ -10,6 +10,10 @@ $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://www.x.org/archive/individual/proto/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
+define $(PKG)_UPDATE
+    $(WGET) -q -O- http://www.x.org/archive/individual/proto/ | $(SED) -n 's|.*dri2proto-\(.*\).tar.*|\1|p'| $(SORT) -V | tail -1
+endef
+
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD
   endef

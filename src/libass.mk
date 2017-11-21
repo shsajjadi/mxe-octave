@@ -11,9 +11,9 @@ $(PKG)_URL      := http://libass.googlecode.com/files/$($(PKG)_FILE)
 $(PKG)_DEPS     := freetype fontconfig fribidi
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://code.google.com/p/libass/downloads/list?sort=-uploaded' | \
-    $(SED) -n 's,.*libass-\([0-9][^<]*\)\.tar.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://github.com/libass/libass/tags' | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

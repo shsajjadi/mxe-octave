@@ -17,7 +17,7 @@ endif
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/browse/libgsf/refs/tags' | \
     grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?id=LIBGSF_\\([0-9]*_[0-9]*[02468]_[^<]*\\)'.*,\\1,p" | \
+    $(SED) -n "s,.*<a href='[^']*/tag/?h=LIBGSF_\\([0-9]*_[0-9]*[02468]_[^<]*\\)'.*,\\1,p" | \
     $(SED) 's,_,.,g' | \
     head -1
 endef

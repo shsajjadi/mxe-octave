@@ -11,7 +11,7 @@ $(PKG)_URL      := http://www.ics.forth.gr/~lourakis/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     := lapack blas libf2c
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- "http://www.ics.forth.gr/~lourakis/levmar/"  | \
+    $(WGET) --user-agent=MXE -q -O- "http://www.ics.forth.gr/~lourakis/levmar/"  | \
     $(SED) -n 's_.*Latest:.*levmar-\([0-9]\.[0-9]\).*_\1_ip' | \
     head -1;
 endef

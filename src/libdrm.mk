@@ -10,6 +10,12 @@ $(PKG)_FILE     := libdrm-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://dri.freedesktop.org/libdrm/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
+define $(PKG)_UPDATE
+    $(WGET) -q -O- 'https://dri.freedesktop.org/libdrm/' | \
+    $(SED) -n 's|.*libdrm-\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
+endef
+
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD
   endef
