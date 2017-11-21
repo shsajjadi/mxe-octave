@@ -40,12 +40,15 @@ hg-octave-dist: $(BUILD_TOOLS) update-hg-octave-repo
 	$(HG_OCTAVE_DIST_ENV_FLAGS) make -j '$(JOBS)' all && \
 	$(HG_OCTAVE_DIST_ENV_FLAGS) make -j '$(JOBS)' install && \
 	$(HG_OCTAVE_DIST_ENV_FLAGS) make -j '$(JOBS)' dist && \
-	mv '$(default-octave_FILE)' '$(PKG_DIR)'
+	mv '$($(OCTAVE_TARGET)_FILE)' '$(PKG_DIR)'
 
 .PHONY: update-hg-octave-repo
 update-hg-octave-repo:
 	if [ -d octave-hg-repo ]; then \
-	  cd octave-hg-repo && hg pull -u; \
+	  cd octave-hg-repo \
+	    && hg pull && hg update $(hg-octave-branch); \
 	else \
-	  hg clone http://octave.org/hg/octave octave-hg-repo; \
+	  hg clone http://octave.org/hg/octave octave-hg-repo \
+	    && cd octave-hg-repo \
+	    && hg pull && hg update $(hg-octave-branch); \
 	fi
