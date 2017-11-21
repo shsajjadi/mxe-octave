@@ -11,9 +11,9 @@ $(PKG)_URL      := ftp://ftp.gnu.org/gnu/libidn/$($(PKG)_FILE)
 $(PKG)_DEPS     := gettext libiconv libunistring
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://gitlab.com/jas/libidn2/tags' | \
-    $(SED) -n 's,^libidn2-\([0-9\.]*)$,\1,p' | \
-    head -1
+    $(WGET) -q -O- https://ftp.gnu.org/gnu/libidn/ | \
+    $(SED) -n 's,.*libidn2-\([0-9][^t]*\).tar.gz.*,\1,p' | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

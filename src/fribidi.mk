@@ -11,8 +11,8 @@ $(PKG)_URL      := http://fribidi.org/download/$($(PKG)_FILE)
 $(PKG)_DEPS     := glib
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://fribidi.org/download/?C=M;O=D' | \
-    $(SED) -n 's,.*<a href="fribidi-\([0-9][^"]*\)\.tar.*,\1,p' | \
+    $(WGET) -q -O- https://github.com/fribidi/fribidi/tags | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
     head -1
 endef
 

@@ -7,11 +7,11 @@ $(PKG)_VERSION  := 1.53.0
 $(PKG)_CHECKSUM := e6dd1b62ceed0a51add3dda6f3fc3ce0f636a7f3
 $(PKG)_SUBDIR   := boost_$(subst .,_,$($(PKG)_VERSION))
 $(PKG)_FILE     := boost_$(subst .,_,$($(PKG)_VERSION)).tar.bz2
-$(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/boost/boost/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := https://$(SOURCEFORGE_MIRROR)/project/boost/boost/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := zlib bzip2 expat
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.boost.org/users/download/' | \
+    $(WGET) -q -O- 'https://sourceforge.net/projects/boost/files/boost/' | \
     $(SED) -n 's,.*/boost/\([0-9][^"/]*\)/".*,\1,p' | \
     grep -v beta | \
     head -1
