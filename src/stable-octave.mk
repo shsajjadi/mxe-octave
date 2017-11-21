@@ -1,10 +1,12 @@
 # This file is part of MXE.
 # See index.html for further information.
 
+## This can now build from hg stable so we omit the package checksum.
+
 PKG             := stable-octave
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 4.2.1
-$(PKG)_CHECKSUM := 057dbaa30d0ef75e84db30aeda623a2561b0d547
+$(PKG)_CHECKSUM := ## No checksum
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.lz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
