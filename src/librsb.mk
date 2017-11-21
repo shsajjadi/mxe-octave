@@ -11,8 +11,8 @@ $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     := libgomp
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://sourceforge.net/projects/librsb/files/librsb/' | \
-    $(SED) -n 's,.*/\([0-9][^"]*\)/".*,\1,p' | \
+    $(WGET) -q -O- 'https://sourceforge.net/projects/librsb/files/' | \
+    $(SED) -n 's|.*librsb-\([0-9\.]*[-rc0-9]*\)\.tar.gz\/download.*|\1|p' | \
     head -1
 endef
 
