@@ -18,9 +18,7 @@ endif
 $(PKG)_OPTIONS := comm_cv_hdf5_cppflags='-I$(HOST_INCDIR)' comm_cv_hdf5_ldflags='-L$(HOST_LIBDIR)' comm_cv_hdf5_libs=-lhdf5
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://$(SOURCEFORGE_MIRROR)/projects/octave/files/Octave%20Forge%20Packages/Individual%20Package%20Releases/' | \
-    $(SED) -n 's,.*title="communications-\([0-9][^"]*\).tar.gz".*,\1,p' | \
-    head -1
+    $(OCTAVE_FORGE_PKG_UPDATE)
 endef
 
 define $(PKG)_BUILD
