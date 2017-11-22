@@ -13,7 +13,7 @@ $(PKG)_DEPS     := cairomm glibmm pango
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.gnome.org/browse/pangomm/refs/tags' | \
     grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?id=\\([0-9][^']*\\)'.*,\\1,p" | \
+    $(SED) -n "s,.*<a href='[^']*/tag/?h=\\([0-9][^']*\\)'.*,\\1,p" | \
     head -1
 endef
 
