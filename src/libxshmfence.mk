@@ -10,6 +10,13 @@ $(PKG)_FILE     := libxshmfence-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := xproto
 
+define $(PKG)_UPDATE
+    $(WGET) -q -O- 'http://www.x.org/archive/individual/lib/' | \
+    $(SED) -n 's|.*href="libxshmfence-\([0-9\.]*\).tar.*|\1|p' | $(SORT) -V | \
+    tail -1
+endef
+
+
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD
   endef

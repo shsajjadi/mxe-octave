@@ -13,7 +13,7 @@ $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- '$(MSYS_EXTENSION_URL)/crypt' | \
-    $(SED) -n 's,.*title="libcrypt-\([0-9][^"]*\)".*,\1,p' | \
+    $(SED) -n 's,.*title="crypt-\([0-9][^"]*\)".*,\1,p' | \
     head -1
 endef
 

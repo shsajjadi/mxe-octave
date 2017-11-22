@@ -11,9 +11,9 @@ $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/nsis/NSIS 2/$($(PKG)_VER
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://sourceforge.net/p/nsis/code/HEAD/tree/NSIS/tags/' | \
-    grep '<a href="' | \
-    $(SED) -n 's,.*<a href="v\([0-9]\)\([^"]*\)".*,\1.\2,p' | \
+    $(WGET) -q -O- 'https://sourceforge.net/p/nsis/code/HEAD/tree/NSIS/tags/' | \
+    grep 'title="v' | \
+    $(SED) -n 's,.*href="v\([0-9]\)\([^"]*\)".*,\1.\2,p' | \
     tail -1
 endef
 ifeq ($(ENABLE_WINDOWS_64),yes)

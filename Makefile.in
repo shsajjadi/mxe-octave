@@ -759,6 +759,12 @@ define OCTAVE_FORGE_PKG_BUILD
 endef
 endif
 
+define OCTAVE_FORGE_PKG_UPDATE
+    $(WGET) -q -O- 'https://sourceforge.net/projects/octave/files/Octave%20Forge%20Packages/Individual%20Package%20Releases/' | \
+    $(SED) -n 's,.*title="$(subst of-,,$(PKG))-\([0-9][^"]*\).tar.gz".*,\1,p' | \
+    head -1
+endef
+
 define PKG_RULE
 .PHONY: download-$(1)
 download-$(1): $(addprefix download-,$($(1)_DEPS))
@@ -882,6 +888,10 @@ define UPDATE
 endef
 update:
 	$(foreach PKG,$(PKGS),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))))
+
+.PHONY: update-octaveforge
+update-octaveforge:
+	$(foreach PKG,$(OCTAVE_FORGE_PACKAGES),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))))
 
 update-checksum-%:
 	$(call DOWNLOAD_PKG_ARCHIVE,$*)

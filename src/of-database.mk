@@ -16,9 +16,7 @@ ifeq ($(ENABLE_BINARY_PACKAGES),yes)
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://$(SOURCEFORGE_MIRROR)/projects/octave/files/Octave%20Forge%20Packages/Individual%20Package%20Releases/' | \
-    $(SED) -n 's,.*title="database-\([0-9][^"]*\).tar.gz".*,\1,p' | \
-    head -1
+    $(OCTAVE_FORGE_PKG_UPDATE)
 endef
 
 ifeq ($(MXE_SYSTEM)$(MXE_NATIVE_MINGW_BUILD),mingwno)
