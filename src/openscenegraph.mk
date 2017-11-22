@@ -17,7 +17,7 @@ else
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.openscenegraph.org/downloads/developer_releases/?C=M;O=D' | \
+    $(WGET) -q -O- 'http://www.openscenegraph.org/index.php/download-section/stable-releases' | \
     $(SED) -n 's,.*OpenSceneGraph-\([0-9]*\.[0-9]*[02468]\.[^<]*\)\.zip.*,\1,p' | \
     grep -v rc | \
     $(SORT) -V | \
