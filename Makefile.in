@@ -209,7 +209,7 @@ SORT       := $(shell gsort --help >/dev/null 2>&1 && echo g)sort
 ## The --compression option for wget is new in 1.19.2 and now without
 ## using --compression=none, wget seems to uncompress .gz archives
 ## automatically?!?
-WGET_COMP  := $(shell wget --compression=none --help >/dev/null && echo x--compression=none | $(SED) 's/x//')
+WGET_COMP  := $(shell wget --compression=none --help >/dev/null 2>&1 && echo x--compression=none | $(SED) 's/x//')
 WGET       := wget $(WGET_COMP) --no-check-certificate \
                    --user-agent=$(shell wget --version | \
                    $(SED) -n 's,GNU \(Wget\) \([0-9.]*\).*,\1/\2,p')
