@@ -3,7 +3,7 @@
 
 PKG             := build-automake
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.15.1
+$(PKG)_VERSION  := 1.11.6
 $(PKG)_CHECKSUM := 29d7832b148e2157e03ad0d3620fbb7f5a13bc21
 $(PKG)_SUBDIR   := automake-$($(PKG)_VERSION)
 $(PKG)_FILE     := automake-$($(PKG)_VERSION).tar.gz
