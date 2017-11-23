@@ -11,8 +11,9 @@ $(PKG)_URL      := http://download.savannah.gnu.org/releases/lzip/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- http://download.savannah.gnu.org/releases/lzip | \
+    $(SED) -n 's,.*<a href="lzip-\([0-9][\.0-9]*\)\.tar\.gz.*,\1,p' | \
+    $(SORT) -V | tail -1
 endef
 
 define $(PKG)_BUILD

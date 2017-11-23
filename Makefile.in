@@ -893,6 +893,10 @@ update:
 update-octaveforge:
 	$(foreach PKG,$(OCTAVE_FORGE_PACKAGES),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))))
 
+.PHONY: update-build-tools
+update-build-tools:
+	$(foreach PKG,$(BUILD_TOOLS),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))))
+
 update-checksum-%:
 	$(call DOWNLOAD_PKG_ARCHIVE,$*)
 	$(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1 '"`$(call PKG_CHECKSUM,$*)`"'/' '$(TOP_DIR)/src/$*.mk'

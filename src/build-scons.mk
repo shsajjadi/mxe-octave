@@ -15,8 +15,9 @@ else
 endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- https://sourceforge.net/projects/scons/files/scons/ | \
+    $(SED) -n 's|.*<tr title=\"\([0-9][^"]*\)".*|\1|p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

@@ -11,8 +11,10 @@ $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gawk/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'http://ftp.gnu.org/gnu/gawk/?C=M;O=D' | \
+    $(SED) -n 's,.*<a href="gawk-\([0-9\.]*\)\.tar.*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)

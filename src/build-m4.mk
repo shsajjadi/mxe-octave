@@ -11,8 +11,10 @@ $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/m4/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'http://ftp.gnu.org/gnu/m4/?C=M;O=D' | \
+    $(SED) -n 's,.*<a href="m4-\([0-9\.]*\)\.tar.*,\1,p' | \
+    $(SORT) -V |
+    tail -1
 endef
 
 define $(PKG)_BUILD
