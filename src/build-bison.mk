@@ -11,8 +11,10 @@ $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/bison/$($(PKG)_FILE)
 $(PKG)_DEPS     := build-xz
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'http://ftp.gnu.org/gnu/bison/?C=M;O=D' | \
+    $(SED) -n 's,.*<a href="bison-\([0-9\.]*\)\.tar.*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

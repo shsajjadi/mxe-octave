@@ -11,8 +11,10 @@ $(PKG)_URL      := http://pkgconfig.freedesktop.org/releases/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'http://pkgconfig.freedesktop.org/releases/' | \
+    $(SED) -n 's,.*<a href="pkg-config-\([0-9\.]*\)\.tar.*,\1,p' | \
+    $(SORT) -V |
+    tail -1
 endef
 
 # native mingw needs to be told an architechure for the internal glib to build
