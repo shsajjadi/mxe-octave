@@ -3,8 +3,8 @@
 
 PKG             := build-gperf
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.0.4
-$(PKG)_CHECKSUM := e32d4aff8f0c730c9a56554377b2c6d82d0951b8
+$(PKG)_VERSION  := 3.1
+$(PKG)_CHECKSUM := e3c0618c2d2e5586eda9498c867d5e4858a3b0e2
 $(PKG)_SUBDIR   := gperf-$($(PKG)_VERSION)
 $(PKG)_FILE     := gperf-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gperf/$($(PKG)_FILE)
