@@ -3,8 +3,8 @@
 
 PKG             := build-pkg-config
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.28
-$(PKG)_CHECKSUM := 71853779b12f958777bffcb8ca6d849b4d3bed46
+$(PKG)_VERSION  := 0.29.2
+$(PKG)_CHECKSUM := 76e501663b29cb7580245720edfb6106164fad2b
 $(PKG)_SUBDIR   := pkg-config-$($(PKG)_VERSION)
 $(PKG)_FILE     := pkg-config-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://pkgconfig.freedesktop.org/releases/$($(PKG)_FILE)
