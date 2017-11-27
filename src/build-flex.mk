@@ -3,12 +3,12 @@
 
 PKG             := build-flex
 $(PKG)_IGNORE   := 
-$(PKG)_VERSION  := 2.5.39
-$(PKG)_CHECKSUM := 267794c709d5c50f2dcb48ff5d8dcbbfe40f953e
+$(PKG)_VERSION  := 2.6.4
+$(PKG)_CHECKSUM := ec5653f673ec8f6e3f07d5e730008cee54d2ce02
 $(PKG)_SUBDIR   := flex-$($(PKG)_VERSION)
-$(PKG)_FILE     := flex-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://prdownloads.sourceforge.net/flex/$($(PKG)_FILE)
-$(PKG)_DEPS     := 
+$(PKG)_FILE     := flex-$($(PKG)_VERSION).tar.lz
+$(PKG)_URL      := https://github.com/westes/flex/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_DEPS     := build-lzip
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://github.com/westes/flex/tags' | \
