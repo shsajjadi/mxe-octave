@@ -70,7 +70,7 @@ define $(PKG)_BUILD
     esac
 
     # build GCC and support libraries
-    cd '$(1)' && autoreconf
+    cd '$(1)' && aclocal && libtoolize && autoreconf
     mkdir '$(1)/.build'
     cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
