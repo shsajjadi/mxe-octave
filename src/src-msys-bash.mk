@@ -3,11 +3,11 @@
 
 PKG             := src-msys-bash
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.1.17-4
-$(PKG)_CHECKSUM := 6ec21594c64d7e95081fb77d19c687a08857c885
+$(PKG)_VERSION  := 3.1.23-1
+$(PKG)_CHECKSUM := be0978971617fdf9832a40415fd243bc26a228ff
 $(PKG)_REMOTE_SUBDIR := bash/bash-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
-$(PKG)_FILE     := bash-$($(PKG)_VERSION)-msys-1.0.16-src.tar.lzma
+$(PKG)_FILE     := bash-$($(PKG)_VERSION)-msys-1.0.18-src.tar.xz
 $(PKG)_URL      := $(MSYS_BASE_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/download
 $(PKG)_DEPS     := 
 define $(PKG)_UPDATE
