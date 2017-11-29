@@ -3,11 +3,11 @@
 
 PKG             := src-msys-dos2unix
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 6.0.3-1
-$(PKG)_CHECKSUM := 93b813726244ae1b2382014552de2e16b74f1e9f
+$(PKG)_VERSION  := 7.3.2-1
+$(PKG)_CHECKSUM := 66f6e21dba7e9cf3ebe2c93772d75bfe1eff13a0
 $(PKG)_REMOTE_SUBDIR := dos2unix/dos2unix-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
-$(PKG)_FILE     := dos2unix-$($(PKG)_VERSION)-msys-1.0.17-src.tar.lzma
+$(PKG)_FILE     := dos2unix-$($(PKG)_VERSION)-msys-1.0.18-src.tar.lzma
 $(PKG)_URL      := $(MSYS_EXTENSION_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/download
 $(PKG)_DEPS     := 
 
