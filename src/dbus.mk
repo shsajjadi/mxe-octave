@@ -12,7 +12,7 @@ $(PKG)_DEPS     := expat
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://cgit.freedesktop.org/dbus/dbus/refs/tags' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?id=[^0-9]*\\([0-9][^']*\\)'.*,\\1,p" | \
+    $(SED) -n "s,.*<a href='[^']*/tag/?h=[^0-9]*\\([0-9][^']*\\)'.*,\\1,p" | \
     grep -v '^1\.[01234]\.' | \
     head -1
 endef

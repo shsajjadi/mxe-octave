@@ -11,9 +11,10 @@ $(PKG)_URL      := ftp://ftp.unidata.ucar.edu/pub/netcdf/old/$($(PKG)_FILE)
 $(PKG)_DEPS     := curl hdf5
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.unidata.ucar.edu/downloads/netcdf/current/index.jsp' | \
-    $(SED) -n 's,.*netcdf-\([0-9][^>]*\)\.tar.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'ftp://ftp.unidata.ucar.edu/pub/netcdf/old/' | \
+    $(SED) -n 's,.*netcdf-\([0-9]\.[^>]*\)\.tar.*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
