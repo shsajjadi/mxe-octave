@@ -12,7 +12,7 @@ $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://dri.freedesktop.org/libdrm/' | \
-    $(SED) -n 's|.*libdrm-\([^"]*\).*|\1|p' | $(SORT) -V | \
+    $(SED) -n s|.*libdrm-\([0-9\.]*\)\.tar.*|\1|p' | $(SORT) -V | \
     tail -1
 endef
 
