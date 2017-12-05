@@ -3,8 +3,8 @@
 
 PKG             := libdrm
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.4.83
-$(PKG)_CHECKSUM := b80228d235805e46f0d8e62ab1f7231ebd2fd67e
+$(PKG)_VERSION  := 2.4.88
+$(PKG)_CHECKSUM := 4c187a55ce622c623491c6f873fc672a96b60a15
 $(PKG)_SUBDIR   := libdrm-$($(PKG)_VERSION)
 $(PKG)_FILE     := libdrm-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://dri.freedesktop.org/libdrm/$($(PKG)_FILE)
@@ -12,7 +12,7 @@ $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://dri.freedesktop.org/libdrm/' | \
-    $(SED) -n s|.*libdrm-\([0-9\.]*\)\.tar.*|\1|p' | $(SORT) -V | \
+    $(SED) -n 's|.*libdrm-\([0-9\.]*\)\.tar.*|\1|p' | $(SORT) -V | \
     tail -1
 endef
 
