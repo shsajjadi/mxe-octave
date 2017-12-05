@@ -3,17 +3,17 @@
 
 PKG             := wxwidgets
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.0.3
-$(PKG)_CHECKSUM := 3525306c926e208d9b0272aaa9c091b8c7264e5b
+$(PKG)_VERSION  := 3.0.3.1
+$(PKG)_CHECKSUM := ea785822d0f1c3290707bda6da570e596b3ec85a
 $(PKG)_SUBDIR   := wxWidgets-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.bz2
 $(PKG)_URL      := https://github.com/wxWidgets/wxWidgets/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := libiconv libpng jpeg tiff sdl zlib expat
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://sourceforge.net/projects/wxwindows/files/' | \
-    $(SED) -n 's,.*/\([0-9][^"9]*\)/".*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://github.com//wxWidgets/wxWidgets/tags' | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | grep -v '^3\.1' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
