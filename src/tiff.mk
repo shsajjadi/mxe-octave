@@ -3,8 +3,8 @@
 
 PKG             := tiff
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.0.8
-$(PKG)_CHECKSUM := 88717c97480a7976c94d23b6d9ed4ac74715267f
+$(PKG)_VERSION  := 4.0.9
+$(PKG)_CHECKSUM := 87d4543579176cc568668617c22baceccd568296
 $(PKG)_SUBDIR   := tiff-$($(PKG)_VERSION)
 $(PKG)_FILE     := tiff-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.osgeo.org/libtiff/$($(PKG)_FILE)
@@ -15,7 +15,7 @@ ifneq ($(MXE_SYSTEM),msvc)
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.remotesensing.org/libtiff/' | \
+    $(WGET) -q -O- 'http://simplesystems.org/libtiff/' | \
     $(SED) -n 's,.*>v\([0-9][^<]*\)<.*,\1,p' | \
     head -1
 endef
