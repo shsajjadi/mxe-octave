@@ -323,7 +323,6 @@ SRC_FILES_1 := \
   mingw-libgcrypt-1-fixes.patch \
   mingw-libmng-1-noundefines.patch \
   mingw-mesa-1-fixes.patch \
-  mingw-openssl-3-libdeps.patch \
   mingw-portaudio-1-pkgconfig.patch \
   mingw-s2tc-1-fixes.patch \
   mingw-texinfo-1-fixes.patch \
