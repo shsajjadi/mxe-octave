@@ -1,6 +1,6 @@
-diff -r c570624ba1cd src/packfields.cc
---- a/src/packfields.cc	Thu Jul 20 13:15:55 2017 -0400
-+++ b/src/packfields.cc	Thu Jul 20 13:36:57 2017 -0400
+diff -uNr a/src/packfields.cc b/src/packfields.cc
+--- a/src/packfields.cc	2015-05-27 11:43:57.000000000 -0400
++++ b/src/packfields.cc	2017-12-07 15:09:12.838253308 -0500
 @@ -15,10 +15,15 @@
  
  #include <octave/oct.h>
@@ -22,7 +22,7 @@ diff -r c570624ba1cd src/packfields.cc
    if (nargin > 0)
      {
 +#ifdef DEFMETHOD_DLD
-+      octave::symbol_table::scope *curr_scope
++      octave::symbol_table::scope curr_scope
 +       = interp.require_current_scope ("packfields");
 +#endif
 +
@@ -35,29 +35,84 @@ diff -r c570624ba1cd src/packfields.cc
                fld_names(i) = fld_name;
 +
 +#ifdef DEFMETHOD_DLD
-+              octave_value fld_val = curr_scope->varval (fld_name);
++              octave_value fld_val = curr_scope.varval (fld_name);
 +#else
                octave_value fld_val = symbol_table::varval (fld_name);
 +#endif
                if (fld_val.is_defined ())
                  fld_vals(i) = fld_val;
                else
-@@ -77,8 +92,11 @@
+@@ -76,46 +91,27 @@
+ 
        if (! error_state)
          {
-           // Force the symbol to be inserted in caller's scope.
-+#ifdef DEFMETHOD_DLD
-+          octave::symbol_table::symbol_record& rec = curr_scope->insert (struct_name);
-+#else
-           symbol_table::symbol_record& rec = symbol_table::insert (struct_name);
+-          // Force the symbol to be inserted in caller's scope.
+-          symbol_table::symbol_record& rec = symbol_table::insert (struct_name);
 -
+-          octave_value& struct_ref = rec.varref ();
+-
+-          // If not defined, use struct ().
+-          if (! struct_ref.is_defined ())
+-            struct_ref = octave_scalar_map ();
+-
+-          if (struct_ref.is_map ())
+-            {
+-              // Fast code for a built-in struct.
+-              octave_scalar_map map = struct_ref.scalar_map_value ();
+-
+-              if (! error_state)
+-                {
+-                  // Do the actual work.
+-                  struct_ref = octave_value (); // Unshare map.
+-                  for (octave_idx_type i = 0; i < nargin-1; i++)
+-                    map.assign (fld_names(i), fld_vals(i));
+-                  struct_ref = map;
+-                }
+-              else
+-                error ("packfields: structure must have singleton dimensions");
+-            }
+-          else
+-            {
+-              // General case.
+-              struct_ref.make_unique ();
+-              std::list<octave_value_list> idx (1);
+-
+-              for (octave_idx_type i = 0; i < nargin-1; i++)
+-                {
+-                  idx.front () = args(i+1); // Save one string->octave_value conversion.
+-                  struct_ref = struct_ref.subsasgn (".", idx, fld_vals (i));
+-
+-                  if (error_state)
+-                    break;
+-                }
+-            }
++#ifdef DEFMETHOD_DLD
++          octave_value struct_val = curr_scope.varval (struct_name);
++#else
++          octave_value struct_val = symbol_table::varval (struct_name);
 +#endif
-           octave_value& struct_ref = rec.varref ();
- 
-           // If not defined, use struct ().
-diff -r c570624ba1cd src/unpackfields.cc
---- a/src/unpackfields.cc	Thu Jul 20 13:15:55 2017 -0400
-+++ b/src/unpackfields.cc	Thu Jul 20 13:36:57 2017 -0400
++
++          octave_scalar_map map;
++
++          if (struct_val.is_defined () && struct_val.is_map ())
++            map = struct_val.scalar_map_value ();
++
++          for (octave_idx_type i = 0; i < nargin-1; i++)
++            map.assign (fld_names(i), fld_vals(i));
++
++          struct_val = map;
++
++#ifdef DEFMETHOD_DLD
++          curr_scope.assign (struct_name, struct_val);
++#else
++          symbol_table::assign (struct_name, struct_val);
++#endif
+         }
+     }
+   else
+diff -uNr a/src/unpackfields.cc b/src/unpackfields.cc
+--- a/src/unpackfields.cc	2015-05-27 11:43:57.000000000 -0400
++++ b/src/unpackfields.cc	2017-12-07 15:09:12.842253124 -0500
 @@ -15,10 +15,15 @@
  
  #include <octave/oct.h>
@@ -79,7 +134,7 @@ diff -r c570624ba1cd src/unpackfields.cc
    if (nargin > 0)
      {
 +#ifdef DEFMETHOD_DLD
-+      octave::symbol_table::scope *curr_scope
++      octave::symbol_table::scope curr_scope
 +       = interp.require_current_scope ("unpackfields");
 +#endif
 +
@@ -91,7 +146,7 @@ diff -r c570624ba1cd src/unpackfields.cc
          {
            // Force the symbol to be inserted in caller's scope.
 +#ifdef DEFMETHOD_DLD
-+          octave_value struct_val = curr_scope->varval (struct_name);
++          octave_value struct_val = curr_scope.varval (struct_name);
 +#else
            octave_value struct_val = symbol_table::varval (struct_name);
 -
@@ -104,7 +159,7 @@ diff -r c570624ba1cd src/unpackfields.cc
                        octave_scalar_map::const_iterator iter = map.seek (fld_names(i));
                        if (iter != map.end ())
 +#ifdef DEFMETHOD_DLD
-+                        curr_scope->assign (fld_names(i), map.contents (iter));
++                        curr_scope.assign (fld_names(i), map.contents (iter));
 +#else
                          symbol_table::assign (fld_names(i), map.contents (iter));
 +#endif
@@ -116,7 +171,7 @@ diff -r c570624ba1cd src/unpackfields.cc
  
                    if (val.is_defined ())
 +#ifdef DEFMETHOD_DLD
-+                    curr_scope->assign (fld_names(i), val);
++                    curr_scope.assign (fld_names(i), val);
 +#else
                      symbol_table::assign (fld_names(i), val);
 +#endif
