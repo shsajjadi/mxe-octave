@@ -28,8 +28,9 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
 endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package gnuplot.' >&2;
-    echo $(gnuplot_VERSION)
+    $(WGET) -q -O- 'http://sourceforge.net/projects/gnuplot/files/gnuplot/' | \
+    $(SED) -n 's,.*/\([0-9][^"]*\)/".*,\1,p' | \
+    head -1
 endef
 
 ifeq ($(MXE_SYSTEM),mingw)
