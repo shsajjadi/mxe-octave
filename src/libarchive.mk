@@ -14,7 +14,7 @@ define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://www.libarchive.org/downloads/' | \
     $(SED) -n 's,.*libarchive-\([0-9][^<]*\)\.tar.*,\1,p' | \
     $(SORT) -V | \
-    head -1
+    tail -1
 endef
 
 define $(PKG)_BUILD

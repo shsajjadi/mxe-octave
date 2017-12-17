@@ -16,7 +16,9 @@ ifeq ($(ENABLE_FORTRAN_INT64),yes)
 endif
 
 define $(PKG)_UPDATE
-    echo 1
+    $(WGET) -q -O- ftp://ftp.eq.uc.pt/pub/software/math/netlib/blas/ | \
+    $(SED) -n 's|.*>blas-\([0-9\.]*\).tgz<.*|\1|p' | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
