@@ -25,6 +25,7 @@ SRC_FILES_1 := \
   build-binutils.mk \
   build-bison.mk \
   build-cmake.mk \
+  build-flex-1-fixes.patch \
   build-flex.mk \
   build-gawk.mk \
   build-gcc.mk \
