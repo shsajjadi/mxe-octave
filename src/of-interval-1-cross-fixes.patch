@@ -1,7 +1,7 @@
-diff -ur interval-3.0.0.orig/src/Makefile interval-3.0.0/src/Makefile
---- interval-3.0.0.orig/src/Makefile	2017-08-22 12:31:47.602400636 -0400
-+++ interval-3.0.0/src/Makefile	2017-08-22 12:33:50.151855098 -0400
-@@ -29,6 +29,8 @@
+diff -ur interval-3.1.0.orig/src/Makefile interval-3.1.0/src/Makefile
+--- interval-3.1.0.orig/src/Makefile	2017-12-21 12:38:19.524166411 -0500
++++ interval-3.1.0/src/Makefile	2017-12-21 12:43:27.693376135 -0500
+@@ -31,6 +31,8 @@
  CONF_FLAG_SSE2 ?=--enable-sse2
  endif
  
@@ -10,12 +10,12 @@ diff -ur interval-3.0.0.orig/src/Makefile interval-3.0.0/src/Makefile
  all: $(OBJ)
  
  ## crlibm api oct-file
-@@ -48,7 +50,7 @@
- crlibm/crlibm_private.o: crlibm/crlibm_config.h
- 	$(MAKE) -C crlibm CFLAGS+="$(shell $(MKOCTFILE) -p CPICFLAG) -Wno-div-by-zero -Wno-unused-variable -Wno-unused-but-set-variable"
- crlibm/crlibm_config.h:
--	(cd crlibm && ./configure --disable-dependency-tracking $(CONF_FLAG_SSE2))
-+	(cd crlibm && ./configure --disable-dependency-tracking $(CONF_FLAG_SSE2) $(CRLIBM_CONFIG_FLAGS))
+@@ -50,7 +52,7 @@
+ $(BUNDLED_CRLIBM_DIR)/crlibm_private.o: $(BUNDLED_CRLIBM_DIR)/crlibm_config.h
+ 	$(MAKE) -C $(BUNDLED_CRLIBM_DIR) CFLAGS+="$(shell $(MKOCTFILE) -p CPICFLAG) -Wno-div-by-zero -Wno-unused-variable -Wno-unused-but-set-variable"
+ $(BUNDLED_CRLIBM_DIR)/crlibm_config.h:
+-	(cd $(BUNDLED_CRLIBM_DIR) && ./configure --disable-dependency-tracking $(CONF_FLAG_SSE2))
++	(cd $(BUNDLED_CRLIBM_DIR) && ./configure --disable-dependency-tracking $(CONF_FLAG_SSE2) $(CRLIBM_CONFIG_FLAGS))
  
  ## GNU MPFR api oct-files
  mpfr_matrix_mul_d.oct mpfr_matrix_sqr_d.oct : mpfr_%.oct: mpfr_%.cc mpfr_commons.h
