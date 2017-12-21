@@ -14,7 +14,8 @@ define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://git.savannah.gnu.org/gitweb/?p=libidn.git;a=tags' | \
     grep '<a class="list subject"' | \
     $(SED) -n 's,.*<a[^>]*>\([0-9][^<]*\)<.*,\1,p' | \
-    head -1
+    $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
