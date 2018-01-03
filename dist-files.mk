@@ -34,11 +34,14 @@ SRC_FILES_1 := \
   build-libtool.mk \
   build-lzip.mk \
   build-m4.mk \
+  build-mako.mk \
+  build-markupsafe.mk \
   build-msvctools.mk \
   build-pkg-config-1-fixes.patch \
   build-pkg-config.mk \
   build-python.mk \
   build-scons.mk \
+  build-setuptools.mk \
   build-texinfo.mk \
   build-xz.mk \
   build-yasm.mk \
@@ -67,6 +70,7 @@ SRC_FILES_1 := \
   default-octave.mk \
   devil-1-png.patch \
   devil.mk \
+  double-conversion.mk \
   dri2proto.mk \
   eigen.mk \
   epstool.mk \
@@ -134,6 +138,7 @@ SRC_FILES_1 := \
   glibmm.mk \
   glpk.mk \
   glproto.mk \
+  glu.mk \
   gmp.mk \
   gnuplot-1-fixes.patch \
   gnuplot.mk \
@@ -177,6 +182,7 @@ SRC_FILES_1 := \
   hunspell-test.cpp \
   hunspell.mk \
   ice.mk \
+  icu4c.mk \
   id3lib-1-win32.patch \
   id3lib.mk \
   ilmbase.mk \
@@ -253,6 +259,7 @@ SRC_FILES_1 := \
   libircclient-1-fixes.patch \
   libircclient-test.cpp \
   libircclient.mk \
+  libjbig.mk \
   liblo.mk \
   libmad.mk \
   libmikmod-1-fixes.patch \
@@ -274,6 +281,7 @@ SRC_FILES_1 := \
   libpaper.mk \
   libpng-test.c \
   libpng.mk \
+  libproxy.mk \
   librsb.mk \
   librsvg-1-fixes.patch \
   librsvg-test.c \
@@ -672,6 +680,7 @@ SRC_FILES_1 := \
   transfig.mk \
   tre.mk \
   units.mk \
+  util-macros.mk \
   uuid.mk \
   vala.mk \
   vcdimager-1-configure.patch \
@@ -708,6 +717,12 @@ SRC_FILES_1 := \
   xapian-core.mk \
   xau.mk \
   xcb-proto.mk \
+  xcb-util-cursor.mk \
+  xcb-util-image.mk \
+  xcb-util-keysyms.mk \
+  xcb-util-renderutil.mk \
+  xcb-util-wm.mk \
+  xcb-util.mk \
   xcb.mk \
   xcursor.mk \
   xdamage.mk \
@@ -720,6 +735,7 @@ SRC_FILES_1 := \
   xf86vidmodeproto.mk \
   xfixes.mk \
   xft.mk \
+  xi.mk \
   xine-lib-1-configure_ac.patch \
   xine-lib-2-build_fixes.patch \
   xine-lib-3-more_build_fixes.patch \
