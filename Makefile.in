@@ -149,6 +149,10 @@ $(shell mkdir -p $(ROOT_PREFIX))
 $(shell mkdir -p $(BUILD_TOOLS_PREFIX))
 $(shell mkdir -p $(HOST_PREFIX))
 
+## The mk-hg-id.sh script will be executed each time Make runs.  It will
+## update the HG-ID file in the build tree.
+$(shell $(TOP_DIR)/tools/mk-hg-id.sh "$(TOP_DIR)")
+
 # At least one package uses --with instead of --enable.  
 ifeq ($(BUILD_SHARED),yes)
   ifeq ($(BUILD_STATIC),yes)

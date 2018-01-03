@@ -869,6 +869,7 @@ TOOLS_FILES_1 := \
   install-sh \
   make-shared-from-static \
   makeinst-script.sh.in \
+  mk-hg-id.sh \
   patch-tool-mxe \
   pkg-install.py \
   s3-fetch-and-sync \
