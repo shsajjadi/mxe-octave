@@ -1,0 +1,55 @@
+diff -uNr a/src/base-lu.cc b/src/base-lu.cc
+--- a/src/base-lu.cc	2018-01-09 18:06:56.797829797 -0500
++++ b/src/base-lu.cc	2018-01-09 18:11:42.805590710 -0500
+@@ -21,10 +21,6 @@
+ 
+ */
+ 
+-#ifdef HAVE_CONFIG_H
+-#include <config.h>
+-#endif
+-
+ #include "base-lu.h"
+ 
+ template <class lu_type>
+diff -uNr a/src/configure.ac b/src/configure.ac
+--- a/src/configure.ac	2018-01-09 18:06:59.461715775 -0500
++++ b/src/configure.ac	2018-01-09 18:25:15.510841692 -0500
+@@ -96,21 +96,5 @@
+   PKG_CPPFLAGS="$PKG_CPPFLAGS -DHAVE_OCTAVE_BASE_VALUE_PRINT_CONST=1"
+ fi
+ 
+-comm_save_CXXFLAGS=$CXXFLAGS
+-CXXFLAGS="$CXXFLAGS $comm_CXXFLAGS"
+-AC_LANG_PUSH(C++)
+-AC_CHECK_HEADER([octave/ls-oct-ascii.h], [PKG_CPPFLAGS="$PKG_CPPFLAGS -DHAVE_OCTAVE_ASCII_H=1"], [], 
+-[
+-#include <octave/config.h>
+-#incude <octave/ov.h>
+-])
+-AC_CHECK_HEADER([octave/ls-oct-text.h], [PKG_CPPFLAGS="$PKG_CPPFLAGS -DHAVE_OCTAVE_TEXT_H=1"], [], 
+-[
+-#include <octave/config.h>
+-#include <octave/ov.h>
+-])
+-AC_LANG_POP(C++)
+-CXXFLAGS=$comm_save_CXXFLAGS
+-
+ AC_CONFIG_FILES([Makefile])
+ AC_OUTPUT
+diff -uNr a/src/ov-galois.cc b/src/ov-galois.cc
+--- a/src/ov-galois.cc	2018-01-09 18:06:59.461715775 -0500
++++ b/src/ov-galois.cc	2018-01-09 18:24:45.776112372 -0500
+@@ -29,11 +29,7 @@
+ #include <octave/pr-output.h>
+ 
+ 
+-#if defined(HAVE_OCTAVE_TEXT_H)
+-#  include <octave/ls-oct-text.h>
+-#else
+-#  include <octave/ls-oct-ascii.h>
+-#endif
++#include <octave/ls-oct-text.h>
+ 
+ #include "galois.h"
+ #include "ov-galois.h"
