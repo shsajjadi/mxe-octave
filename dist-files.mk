@@ -451,6 +451,9 @@ SRC_FILES_1 := \
   octave.mk \
   of-actuarial.mk \
   of-communications-1-fixes.patch \
+  of-communications-2-fixes.patch \
+  of-communications-3-fixes.patch \
+  of-communications-4-fixes.patch \
   of-communications.mk \
   of-control.mk \
   of-data-smoothing.mk \
