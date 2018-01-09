@@ -499,6 +499,7 @@ SRC_FILES_1 := \
   of-quaternion-1-cross-fixes.patch \
   of-quaternion.mk \
   of-queueing.mk \
+  of-signal-1-fixes.patch \
   of-signal.mk \
   of-sockets-1-cross-fixes.patch \
   of-sockets.mk \

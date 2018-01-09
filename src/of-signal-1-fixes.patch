@@ -1,0 +1,22 @@
+diff -uNr a/src/sosfilt.cc b/src/sosfilt.cc
+--- a/src/sosfilt.cc	2015-05-25 20:22:36.846411059 -0400
++++ b/src/sosfilt.cc	2018-01-09 15:50:16.018191246 -0500
+@@ -13,7 +13,6 @@
+ // You should have received a copy of the GNU General Public License along with
+ // this program; if not, see <http://www.gnu.org/licenses/>.
+ 
+-#include <octave/config.h>
+ #include <octave/defun-dld.h>
+ #include <octave/error.h>
+ #include <octave/gripes.h>
+diff -uNr a/src/upfirdn.cc b/src/upfirdn.cc
+--- a/src/upfirdn.cc	2015-05-25 20:22:36.846411059 -0400
++++ b/src/upfirdn.cc	2018-01-09 15:50:13.514305277 -0500
+@@ -13,7 +13,6 @@
+ // You should have received a copy of the GNU General Public License along with
+ // this program; if not, see <http://www.gnu.org/licenses/>.
+ 
+-#include <octave/config.h>
+ #include <octave/defun-dld.h>
+ #include <octave/error.h>
+ #include <octave/gripes.h>
