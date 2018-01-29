@@ -13,7 +13,7 @@ $(PKG)_DEPS     := ffmpeg flac lame libgomp libmad libsndfile vorbis
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/sox/files/sox/' | \
-    $(SED) -n 's,.*/\([0-9][^"]*\)/".*,\1,p' | \
+    $(SED) -n 's,.*tr title="\([0-9][^"]*\)".*,\1,p' | \
     head -1
 endef
 
