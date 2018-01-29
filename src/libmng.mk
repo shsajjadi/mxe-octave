@@ -12,7 +12,7 @@ $(PKG)_DEPS     := zlib jpeg lcms
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/libmng/files/libmng-devel/' | \
-    $(SED) -n 's,.*/\([0-9][^"]*\)/".*,\1,p' | \
+    $(SED) -n 's,.*tr title="\([0-9][^"]*\)".*,\1,p' | \
     head -1
 endef
 

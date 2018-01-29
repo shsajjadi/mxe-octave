@@ -12,7 +12,7 @@ $(PKG)_DEPS     := libpng zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/freetype/files/freetype2/' | \
-    $(SED) -n 's,.*/\([0-9][^"]*\)/".*,\1,p' | \
+    $(SED) -n 's,.*tr title="\([0-9][^"]*\)".*,\1,p' | \
     head -1
 endef
 
