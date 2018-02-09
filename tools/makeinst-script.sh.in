@@ -231,6 +231,8 @@ Section "MainFiles"
 
   File "$OCTAVE_SOURCE/fc_update.bat"
 
+  File "$OCTAVE_SOURCE/HG-ID"
+
   ; distro files
 EOF
   if [ -f $OCTAVE_SOURCE/cmdshell.bat ]; then 
