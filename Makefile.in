@@ -769,6 +769,20 @@ define OCTAVE_FORGE_PKG_UPDATE
     head -1
 endef
 
+define PREPARE_PKG_SOURCE
+    ( cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1),$(TAR)) ) || \
+	    $(if $(TAR2), \
+		 ( rm -rf '$(2)'; mkdir -p '$(2)'; \
+		   cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1),$(TAR2)) ), \
+		 false )
+    test ! -d '$(TOP_DIR)/src/$(1)' || cp -a '$(TOP_DIR)/src/$(1)' '$(2)'
+    cd '$(2)/$($(1)_SUBDIR)'
+    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(1)-*.patch)),
+	(cd '$(2)/$($(1)_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
+    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(MXE_SYSTEM)-$(1)-*.patch)),
+	(cd '$(2)/$($(1)_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
+endef
+
 define PKG_RULE
 .PHONY: download-$(1)
 download-$(1): $(addprefix download-,$($(1)_DEPS))
@@ -826,17 +840,7 @@ build-only-$(1):
 	$(if $(value $(1)_BUILD),
 	    rm -rf   '$(2)' '$(2)-install'
 	    mkdir -p '$(2)'
-	    ( cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1),$(TAR)) ) || \
-		    $(if $(TAR2), \
-		         ( rm -rf '$(2)'; mkdir -p '$(2)'; \
-		           cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1),$(TAR2)) ), \
-			 false )
-	    test ! -d '$(TOP_DIR)/src/$(1)' || cp -a '$(TOP_DIR)/src/$(1)' '$(2)'
-	    cd '$(2)/$($(1)_SUBDIR)'
-	    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(1)-*.patch)),
-	        (cd '$(2)/$($(1)_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
-	    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(MXE_SYSTEM)-$(1)-*.patch)),
-	        (cd '$(2)/$($(1)_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
+	    $$(call PREPARE_PKG_SOURCE,$(1),$(2))
 	    $$(call $(1)_BUILD,$(2)/$($(1)_SUBDIR),$(TOP_DIR)/src/$(1)-test,$(2)-install)
 	    if [ -d '$(2)-install' ]; then \
                 $(call GENERATE_FILE_LIST,$(1),$(2)-install); \
