@@ -21,6 +21,7 @@ define $(PKG)_BUILD
     cd '$(1)' && patch -p1 < $(TOP_DIR)/src/win64-nsis.patch
 
     cd '$(1)' && scons VERBOSE=1 \
+        PATH='$(PATH)' \
         MINGW_CROSS_PREFIX='$(MXE_TOOL_PREFIX)' \
         PREFIX='$(BUILD_TOOLS_PREFIX)' \
         APPEND_LIBPATH='$(HOST_PREFIX)/lib32' \
@@ -31,6 +32,7 @@ endef
 else
 define $(PKG)_BUILD
     cd '$(1)' && scons VERBOSE=1 \
+        PATH='$(PATH)' \
         MINGW_CROSS_PREFIX='$(MXE_TOOL_PREFIX)' \
         PREFIX='$(BUILD_TOOLS_PREFIX)' \
         `[ -d /usr/local/include ] && echo APPEND_CPPPATH=/usr/local/include` \
