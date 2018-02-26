@@ -438,6 +438,7 @@ SRC_FILES_1 := \
   nettle.mk \
   npp.mk \
   nsis-1-fixes.patch \
+  nsis-2-fixes.patch \
   nsis.mk \
   ocaml-core-1-fixes.patch \
   ocaml-core-test.ml \
@@ -710,7 +711,6 @@ SRC_FILES_1 := \
   wavpack-1-exec_prefix.patch \
   wavpack.mk \
   wget.mk \
-  win64-nsis.patch \
   win7appid.mk \
   winpcap-1-fixes.patch \
   winpcap.mk \
