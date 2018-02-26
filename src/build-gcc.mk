@@ -31,7 +31,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     --disable-nls \
     --without-x \
     --disable-win32-registry \
-    --enable-threads=win32
+    --enable-threads=posix
   ifneq ($(TARGET),x86_64-w64-mingw32)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
     --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
@@ -53,16 +53,24 @@ ifeq ($(MXE_SYSTEM),mingw)
     endef
   endif
   define $(PKG)_BUILD_SYSTEM_RUNTIME
+    # install mingw-w64 headers
+    $(call PREPARE_PKG_SOURCE,mingw-w64,$(1))
+    mkdir '$(1).headers'
+    cd '$(1).headers' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-headers/configure' \
+        --host='$(TARGET)' \
+        --prefix='$(HOST_PREFIX)' \
+        --enable-sdk=all \
+        --enable-idl \
+        --enable-secure-api \
+        $(mingw-w64-headers_CONFIGURE_OPTS)
+    $(MAKE) -C '$(1).headers' install
+
     # build standalone gcc
+    $($(PKG)_CONFIGURE)
     $(MAKE) -C '$(1).build' -j '$(JOBS)' all-gcc
     $(MAKE) -C '$(1).build' -j 1 install-gcc
 
     # build mingw-w64-crt
-    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,mingw-w64,$(TAR))
-    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/mingw-w64-*.patch)),
-      (cd '$(1)/$(mingw-w64_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
-    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(MXE_SYSTEM)-mingw-w64-*.patch)),
-      (cd '$(1)/$(mingw-w64_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
     mkdir '$(1).crt-build'
     cd '$(1).crt-build' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-crt/configure' \
 	--host='$(TARGET)' \
@@ -70,6 +78,15 @@ ifeq ($(MXE_SYSTEM),mingw)
 	--with-sysroot='$(HOST_PREFIX)'
     $(MAKE) -C '$(1).crt-build' -j '$(JOBS)' || $(MAKE) -C '$(1).crt-build' -j '$(JOBS)'
     $(MAKE) -C '$(1).crt-build' -j 1 install
+
+    # build posix threads
+    mkdir '$(1).pthreads'
+    cd '$(1).pthreads' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-libraries/winpthreads/configure' \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        --prefix='$(HOST_PREFIX)' \
+        $(ENABLE_SHARED_OR_STATIC)
+    $(MAKE) -C '$(1).pthreads' -j '$(JOBS)' || $(MAKE) -C '$(1).pthreads' -j '$(JOBS)'
+    $(MAKE) -C '$(1).pthreads' -j 1 install
   endef
 endif
 
@@ -83,7 +100,7 @@ ifneq ($(MXE_NATIVE_BUILD),yes)
 
   ifeq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += --with-sysroot='$(BUILD_TOOLS_PREFIX)' \
-      --enable-multilib  --with-host-libstdcxx="-lstdc++" --with-system-zlib \
+      --disable-multilib  --with-host-libstdcxx="-lstdc++" --with-system-zlib \
       --enable-64bit --enable-fully-dynamic-string
   else
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += --with-sysroot='$(HOST_PREFIX)' \
@@ -121,8 +138,6 @@ endef
 
 define $(PKG)_BUILD
   $($(PKG)_PRE_BUILD)
-
-  $($(PKG)_CONFIGURE)
 
   $($(PKG)_BUILD_SYSTEM_RUNTIME)
 
