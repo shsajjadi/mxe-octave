@@ -25,7 +25,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     --without-x \
     --disable-win32-registry \
     --with-native-system-header-dir='$(HOST_PREFIX)/include' \
-    --enable-threads=win32 
+    --enable-threads=posix
   ifneq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
       $(ENABLE_SHARED_OR_STATIC) \
