@@ -79,7 +79,7 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 \${StrRep}
 ######################################################################
 ; MUI settings
-!include "MUI.nsh"
+!include "MUI2.nsh"
 
 ; custom dialogs
 !include nsDialogs.nsh

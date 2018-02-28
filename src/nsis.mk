@@ -18,7 +18,10 @@ endef
 
 ifeq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_PREBUILD = \
-        $(SED) -i 's/pei-i386/pei-x86-64/' '$(1)/SCons/Config/linker_script'
+        $(SED) -i 's/pei-i386/pei-x86-64/' '$(1)/SCons/Config/linker_script' && \
+        $(SED) -i 's/m_target_type=TARGET_X86ANSI/m_target_type=TARGET_AMD64/' '$(1)/Source/build.cpp' 
+
+    $(PKG)_TARGET_SCON_OPTIONS := TARGET_ARCH=amd64
 endif
 
 define $(PKG)_BUILD
@@ -27,7 +30,7 @@ define $(PKG)_BUILD
         PATH='$(PATH)' \
         MINGW_CROSS_PREFIX='$(MXE_TOOL_PREFIX)' \
         PREFIX='$(BUILD_TOOLS_PREFIX)' \
-        SKIPPLUGINS='System' \
+        $($(PKG)_TARGET_SCON_OPTIONS) \
         SKIPUTILS='MakeLangId,Makensisw,NSIS Menu,zip2exe' \
         NSIS_MAX_STRLEN=8192 \
         install
