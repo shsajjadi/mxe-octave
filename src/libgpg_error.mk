@@ -3,12 +3,12 @@
 
 PKG             := libgpg_error
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.26
-$(PKG)_CHECKSUM := 9a926e7ee6309e539313443555535d49a2a5c9f1
+$(PKG)_VERSION  := 1.27
+$(PKG)_CHECKSUM := a428758999ff573e62d06892e3d2c0b0f335787c
 $(PKG)_SUBDIR   := libgpg-error-$($(PKG)_VERSION)
 $(PKG)_FILE     := libgpg-error-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnupg.org/gcrypt/libgpg-error/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := gettext libiconv
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'ftp://ftp.gnupg.org/gcrypt/libgpg-error/' | \
@@ -17,6 +17,8 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    cd '$(1)/src/syscfg' && ln -s lock-obj-pub.mingw32.h lock-obj-pub.mingw32.static.h
+    cd '$(1)/src/syscfg' && ln -s lock-obj-pub.mingw32.h lock-obj-pub.mingw32.shared.h
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
@@ -24,6 +26,10 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         --disable-nls \
         --disable-languages && $(CONFIGURE_POST_HOOK)
+    if [ $(MXE_WINDOWS_BUILD) = yes ]; then \
+      $(SED) -i 's/-lgpg-error/-lgpg-error -lintl -liconv/;' '$(1)/src/gpg-error-config'; \
+      $(SED) -i 's/host_os = mingw32.*/host_os = mingw32/' '$(1)/src/Makefile'; \
+    fi
     $(MAKE) -C '$(1)/src' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
     $(MAKE) -C '$(1)/src' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
     if [ $(MXE_NATIVE_BUILD) = no ]; then \

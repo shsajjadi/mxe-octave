@@ -3,8 +3,8 @@
 
 PKG             := libgcrypt
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.7.6
-$(PKG)_CHECKSUM := d2b9e0f413064cfc67188f80d3cbda887c755a62
+$(PKG)_VERSION  := 1.8.2
+$(PKG)_CHECKSUM := ab8aae5d7a68f8e0988f90e11e7f6a4805af5c8d
 $(PKG)_SUBDIR   := libgcrypt-$($(PKG)_VERSION)
 $(PKG)_FILE     := libgcrypt-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnupg.org/gcrypt/libgcrypt/$($(PKG)_FILE)
@@ -18,13 +18,12 @@ define $(PKG)_UPDATE
 endef
 
 ifeq ($(TARGET),x86_64-w64-mingw32)
-  $(PKG)_TARGET_CONFIGURE_OPTIONS := ac_cv_sys_symbol_underscore=no
+  $(PKG)_TARGET_CONFIGURE_OPTIONS := ac_cv_sys_symbol_underscore=no --disable-padlock-support
 else
   $(PKG)_TARGET_CONFIGURE_OPTIONS :=
 endif
 
 define $(PKG)_BUILD
-    sed -i -e '/^ *;/d' -e '/^ *$$/d' '$(1)/src/libgcrypt.def'
     cd '$(1)' && ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
@@ -40,4 +39,12 @@ define $(PKG)_BUILD
       $(INSTALL) -d '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
       $(INSTALL) -m755 '$(3)$(HOST_BINDIR)/libgcrypt-config' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)libgcrypt-config'; \
     fi
+    # create pkg-config file
+    $(INSTALL) -d '$(3)$(HOST_LIBDIR)/pkgconfig'
+    (echo 'Name: $(PKG)'; \
+     echo 'Version: $($(PKG)_VERSION)'; \
+     echo 'Description: $(PKG)'; \
+     echo 'Libs: ' "`$(MXE_TOOL_PREFIX)libgcrypt-config --libs`"; \
+     echo 'Cflags: ' "`$(MXE_TOOL_PREFIX)libgcrypt-config --cflags`";) \
+     > '$(3)$(HOST_LIBDIR)/pkgconfig/$(PKG).pc'
 endef
