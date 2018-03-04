@@ -1,6 +1,6 @@
-diff -uNr a/SCons/Config/gnu b/SCons/Config/gnu
---- a/SCons/Config/gnu	2017-10-06 15:30:20.000000000 -0400
-+++ b/SCons/Config/gnu	2018-02-26 09:36:48.769368160 -0500
+diff -ur nsis-3.03-src.orig/SCons/Config/gnu nsis-3.03-src/SCons/Config/gnu
+--- nsis-3.03-src.orig/SCons/Config/gnu	2018-03-03 19:38:08.620291177 -0500
++++ nsis-3.03-src/SCons/Config/gnu	2018-03-03 19:38:20.109576191 -0500
 @@ -45,11 +45,6 @@
  defenv['MSVCRT_FLAG'] = ''
  defenv['STDCALL'] = '"__attribute__((__stdcall__))"'
@@ -13,11 +13,10 @@ diff -uNr a/SCons/Config/gnu b/SCons/Config/gnu
  ### defines
  
  defenv.Append(CPPDEFINES = [('NSISCALL', '$STDCALL')])
-@@ -140,8 +135,6 @@
- plugin_env.Append(LINKFLAGS = ['-mwindows'])        # build windows executables
+@@ -141,7 +136,6 @@
  plugin_env.Append(LINKFLAGS = ['$ALIGN_FLAG'])      # 512 bytes align
  plugin_env.Append(LINKFLAGS = ['$MAP_FLAG'])        # generate map file
--plugin_env.Append(LINKFLAGS = ['-static-libgcc'])   # remove libgcc*.dll dependency
+ plugin_env.Append(LINKFLAGS = ['-static-libgcc'])   # remove libgcc*.dll dependency
 -plugin_env.Append(LINKFLAGS = ['-static-libstdc++']) # remove libstdc++*.dll dependency
  
  plugin_uenv = plugin_env.Clone()
