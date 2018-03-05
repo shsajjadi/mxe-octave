@@ -52,7 +52,8 @@ ifeq ($(MXE_SYSTEM),mingw)
       fi
     endef
   endif
-  define $(PKG)_BUILD_SYSTEM_RUNTIME
+  define $(PKG)_INSTALL_SYSTEM_HEADERS
+    $($(PKG)_PRE_BUILD)
     # install mingw-w64 headers
     $(call PREPARE_PKG_SOURCE,mingw-w64,$(1))
     mkdir '$(1).headers'
@@ -64,9 +65,9 @@ ifeq ($(MXE_SYSTEM),mingw)
         --enable-secure-api \
         $(mingw-w64-headers_CONFIGURE_OPTS)
     $(MAKE) -C '$(1).headers' install
-
+  endef
+  define $(PKG)_BUILD_SYSTEM_RUNTIME
     # build standalone gcc
-    $($(PKG)_CONFIGURE)
     $(MAKE) -C '$(1).build' -j '$(JOBS)' all-gcc
     $(MAKE) -C '$(1).build' -j 1 install-gcc
 
@@ -137,11 +138,16 @@ define $(PKG)_CONFIGURE
 endef
 
 define $(PKG)_BUILD
-  $($(PKG)_PRE_BUILD)
+  # Windows only.
+  $($(PKG)_INSTALL_SYSTEM_HEADERS)
 
+  # All systems.
+  $($(PKG)_CONFIGURE)
+
+  # Windows only.
   $($(PKG)_BUILD_SYSTEM_RUNTIME)
 
-  # build rest of gcc
+  # Build rest of gcc.
   $(MAKE) -C '$(1).build' -j '$(JOBS)'
   $(MAKE) -C '$(1).build' -j 1 install
 
