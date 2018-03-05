@@ -642,10 +642,6 @@ Function CheckJRE
 ;  1 - JAVA_HOME environment variable
 ;  2 - the registry
 EOF
-  # use 64 bit reg to look for java
-  if [ "$ENABLE64" == "yes" ]; then
-    echo "SetRegView 64" >> $OUTFILE
-  fi
   cat >> $OUTFILE << EOF
 
   Push \$R0
@@ -675,10 +671,6 @@ EOF
   Pop \$R1
   Pop \$R0
 EOF
-  # put reg back to 32 (our version of nsis is a 32 bit app)
-  if [ "$ENABLE64" == "yes" ]; then
-    echo "SetRegView 32" >> $OUTFILE
-  fi
   cat >> $OUTFILE << EOF
 
 FunctionEnd
