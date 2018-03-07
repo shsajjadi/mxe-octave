@@ -12,7 +12,7 @@ $(PKG)_DEPS     := gnutls libidn2 libssh2 pthreads
 
 $(PKG)_CONFIGURE_OPTS :=
 ifeq ($(MXE_WINDOWS_BUILD),yes)
-    $(PKG)_CONFIGURE_OPTS := "--with-winssl"
+    $(PKG)_CONFIGURE_OPTS := --with-winssl --with-default-ssl-backend=schannel
 endif
 
 define $(PKG)_UPDATE
