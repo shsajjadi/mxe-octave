@@ -11,8 +11,9 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/glib/$(call SHORT_PKG_
 $(PKG)_DEPS     := gettext pcre libiconv zlib libffi dbus
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/glib/refs/tags' | \
-    $(SED) -n "s,.*glib-\([0-9]\+\.[0-9]*[02468]\.[^']*\)\.tar.*,\1,p" | \
+    $(WGET) -q -O- 'https://github.com/GNOME/glib/tags' | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | \
+    $(SORT) -Vr | \
     head -1
 endef
 
