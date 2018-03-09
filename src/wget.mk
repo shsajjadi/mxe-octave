@@ -10,8 +10,8 @@ $(PKG)_URL      := http://ftp.gnu.org/gnu/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     := pthreads gnutls libntlm libidn
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.savannah.gnu.org/cgit/wget.git/refs/' | \
-    $(SED) -n "s,.*<a href='/cgit/wget.git/tag/?id=v\([0-9.]*\)'>.*,\1,p" | \
+    $(WGET) -q -O- 'https://git.savannah.gnu.org/cgit/wget.git/refs/' | \
+    $(SED) -n "s,.*<a href='/cgit/wget.git/tag/?h=v\([0-9.]*\)'>.*,\1,p" | \
     head -1
 endef
 

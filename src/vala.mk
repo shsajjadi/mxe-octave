@@ -11,8 +11,9 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/$(PKG)/$(call SHORT_PK
 $(PKG)_DEPS     := glib
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/$(PKG)/refs/tags' | \
-    $(SED) -n "s,.*tag/?id=\([0-9]\+\.[0-9]*[02468]\.[^']*\).*,\1,p" | \
+    $(WGET) -q -O- 'https://github.com/GNOME/$(PKG)/tags' | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | \
+    $(SORT) -Vr | \
     head -1
 endef
 

@@ -10,6 +10,11 @@ $(PKG)_FILE     := s2tc-$($(PKG)_VERSION).zip
 $(PKG)_URL      := https://github.com/divVerent/s2tc/archive/v$($(PKG)_VERSION).zip
 $(PKG)_DEPS     := mesa-proto
 
+define $(PKG)_UPDATE
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
+endef
+
 define $(PKG)_BUILD
   cd '$(1)' && ./autogen.sh
   mkdir '$(1)/.build'

@@ -7,12 +7,13 @@ $(PKG)_VERSION  := 3.2.3
 $(PKG)_CHECKSUM := d3870671a303d64878a1c9fe22765a643e515051
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/witty/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/emweb/wt/archive/$($(PKG)_VERSION).tar.gz
 $(PKG)_DEPS     := boost openssl libharu graphicsmagick pango postgresql sqlite
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://sourceforge.net/projects/witty/files/wt/' | \
-    $(SED) -n 's,.*<a href="/projects/witty/files/wt/\([0-9][^>]*\)/.*,\1,p' | \
+    $(WGET) -q -O- 'https://github.com/emweb/wt/tags' | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | \
+    $(SORT) -Vr | \
     head -1
 endef
 

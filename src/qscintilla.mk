@@ -24,9 +24,8 @@ endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.riverbankcomputing.com/software/qscintilla/download' | \
-        grep QScintilla-gpl | \
-        head -n 1 | \
-        $(SED) -n 's,.*QScintilla-gpl-\([0-9][^>]*\)\.zip.*,\1,p'
+        $(SED) -n 's,.*QScintilla[_-]gpl-\([0-9][^>]*\)\.zip.*,\1,p' | \
+        head -n 1 
 endef
 
 ifneq ($(MXE_NATIVE_BUILD),yes)

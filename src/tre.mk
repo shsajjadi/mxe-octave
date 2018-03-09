@@ -12,7 +12,7 @@ $(PKG)_URL_2    := http://ftp.debian.org/debian/pool/main/t/$(PKG)/$(PKG)_$($(PK
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://laurikari.net/tre/download.html' | \
+    $(WGET) -q -O- 'https://laurikari.net/tre/download/' | \
     $(SED) -n 's,.*tre-\([a-z0-9][^>]*\)\.tar.*,\1,p' | \
     head -1
 endef
