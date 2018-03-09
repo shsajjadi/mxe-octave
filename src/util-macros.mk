@@ -10,6 +10,11 @@ $(PKG)_FILE     := util-macros-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://www.x.org/archive/individual/util/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
+define $(PKG)_UPDATE
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
+endef
+
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD
   endef

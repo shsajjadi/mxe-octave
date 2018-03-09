@@ -23,8 +23,8 @@ endif
 
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://downloads.webmproject.org/releases/webm/index.html' | \
-    $(SED) -n 's,.*libvpx-\([0-9][^>]*\)\.tar.*,\1,p' | \
+    $(WGET) -q -O- 'https://github.com/webmproject/libvpx/tags' | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | \
     $(SORT) -Vr | \
     head -1
 endef

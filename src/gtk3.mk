@@ -11,11 +11,11 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/gtk+/$(call SHORT_PKG_
 $(PKG)_DEPS     := gettext libpng jpeg tiff jasper glib atk pango cairo gdk-pixbuf
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/gtk+/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n 's,.*<a[^>]*>\([0-9]*\.[0-9]*[02468]\.[^<]*\)<.*,\1,p' | \
+    $(WGET) -q -O- 'https://github.com/GNOME/gtk/tags' | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | \
     grep -v '^3\.9' | \
     grep '^3\.' | \
+    $(SORT) -Vr | \
     head -1
 endef
 

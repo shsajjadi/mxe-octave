@@ -10,3 +10,9 @@ $(PKG)_DEPS     := $(patsubst $(TOP_DIR)/src/%.mk,%,\
 $(PKG)_FILE      = $(subst qtbase,qtimageformats,$(qtbase_FILE))
 $(PKG)_URL       = $(subst qtbase,qtimageformats,$(qtbase_URL))
 $(PKG)_CHECKSUM := #No checksum
+
+define $(PKG)_UPDATE
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
+endef
+

@@ -910,7 +910,8 @@ define UPDATE
 
 endef
 update:
-	$(foreach PKG,$(PKGS),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))))
+	$(foreach PKG,$(PKGS),\
+		$(if $($(PKG)_UPDATE),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))),$(info Warning: No update rule for $(PKG))))
 
 .PHONY: update-octaveforge
 update-octaveforge:
