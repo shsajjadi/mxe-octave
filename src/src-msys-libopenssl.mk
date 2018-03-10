@@ -13,7 +13,7 @@ $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- '$(MSYS_EXTENSION_URL)/openssl' | \
-    $(SED) -n 's,.*title="libopenssl-\([0-9][^"]*\)".*,\1,p' | \
+    $(SED) -n 's,.*title="openssl-\([0-9][^"]*\)".*,\1,p' | \
     head -1
 endef
 
