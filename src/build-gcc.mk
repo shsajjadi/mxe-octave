@@ -36,7 +36,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
     --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
     --with-native-system-header-dir='/include' \
-      --disable-sjlj-exceptions
+    --disable-sjlj-exceptions
   else
     define $(PKG)_PRE_BUILD
       echo "Shortcuts"
@@ -97,15 +97,12 @@ ifneq ($(MXE_NATIVE_BUILD),yes)
     --build='$(BUILD_SYSTEM)' \
     --with-as='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-as' \
     --with-ld='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-ld' \
-    --with-nm='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-nm'
+    --with-nm='$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)-nm' \
+    --disable-multilib  --with-host-libstdcxx="-lstdc++" --with-system-zlib
 
   ifeq ($(ENABLE_WINDOWS_64),yes)
-    $(PKG)_SYSDEP_CONFIGURE_OPTIONS += --with-sysroot='$(BUILD_TOOLS_PREFIX)' \
-      --disable-multilib  --with-host-libstdcxx="-lstdc++" --with-system-zlib \
+    $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
       --enable-64bit --enable-fully-dynamic-string
-  else
-    $(PKG)_SYSDEP_CONFIGURE_OPTIONS += --with-sysroot='$(HOST_PREFIX)' \
-      --disable-multilib
   endif
 else
   $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \

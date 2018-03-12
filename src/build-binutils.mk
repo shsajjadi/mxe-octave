@@ -12,16 +12,9 @@ $(PKG)_URL_2    := ftp://ftp.cs.tu-berlin.de/pub/gnu/binutils/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 ifneq ($(MXE_NATIVE_BUILD),yes)
-ifneq ($(ENABLE_WINDOWS_64),yes)
-  define $(PKG)_POST_BUILD
-    $(INSTALL) -d '$(3)/$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
-    mv $(addprefix $(3)/$(HOST_PREFIX)/bin/, ar as dlltool ld ld.bfd nm objcopy objdump ranlib strip) '$(3)/$(BUILD_TOOLS_PREFIX)/bin/$(TARGET)'
-  endef
-else
   define $(PKG)_POST_BUILD
     rm $(addprefix $(3)/$(HOST_PREFIX)/bin/, ar as dlltool ld ld.bfd nm objcopy objdump ranlib strip)
   endef
-endif
 endif
 
 define $(PKG)_UPDATE
@@ -37,18 +30,9 @@ else
   $(PKG)_SYSDEP_CONFIGURE_OPTIONS := \
     --target='$(TARGET)' \
     --build='$(BUILD_SYSTEM)' \
-
-  ifeq ($(ENABLE_WINDOWS_64),yes)
-    $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
-      --enable-multilib \
-      --with-sysroot='$(BUILD_TOOLS_PREFIX)' \
-      --enable-targets=x86_64-w64-mingw32,i686-w64-mingw32
-  else
-    $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
-      --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
-      --disable-multilib \
-      --with-sysroot='$(HOST_PREFIX)'
-  endif
+    --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
+    --disable-multilib \
+    --with-sysroot='$(HOST_PREFIX)'
 endif
 
 define $(PKG)_BUILD

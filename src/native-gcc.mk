@@ -25,15 +25,15 @@ ifeq ($(MXE_SYSTEM),mingw)
     --without-x \
     --disable-win32-registry \
     --with-native-system-header-dir='$(HOST_PREFIX)/include' \
-    --enable-threads=posix
+    --enable-threads=posix \
+    --disable-multilib
+
   ifneq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
-      $(ENABLE_SHARED_OR_STATIC) \
-      --disable-multilib \
       --disable-sjlj-exceptions
   else
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
-      --enable-multilib --enable-64bit --disable-shared
+      --enable-64bit
   endif
 else
   $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
