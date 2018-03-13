@@ -3,10 +3,10 @@
 
 PKG             := of-control
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.0.0
-$(PKG)_CHECKSUM := ee3f4b1e0ee719d2d877b57905c7e31ef76adcbd
+$(PKG)_VERSION  := 3.1.0
+$(PKG)_CHECKSUM := 573d9256c6c49b9b2940347ef0c8772fc7cbdfce
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := control
+$(PKG)_SUBDIR   := control-$($(PKG)_VERSION)
 $(PKG)_FILE     := control-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 

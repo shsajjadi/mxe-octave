@@ -32,7 +32,7 @@ unwind_protect
   try_install miscellaneous-1.2.1.tar.gz
   try_install struct-1.0.14.tar.gz
   try_install optim-1.5.2.tar.gz
-  try_install control-3.0.0.tar.gz
+  try_install control-3.1.0.tar.gz
   try_install signal-1.3.2.tar.gz
   try_install communications-1.2.1.tar.gz
   try_install image-2.6.2.tar.gz
