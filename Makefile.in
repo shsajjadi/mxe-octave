@@ -65,11 +65,11 @@ stable_64_mismatch = false
 ifeq ($(OCTAVE_TARGET),stable-octave)
   ifeq ($(ENABLE_64),yes)
     ifeq ($(ENABLE_FORTRAN_INT64),no)
-      $(error --enable-64 and --enable-fortran-int-64 must match for stable-octave)
+      $(error --enable-64 and --enable-fortran-int64 must match for stable-octave)
     endif
   else
     ifeq ($(ENABLE_FORTRAN_INT64),yes)
-      $(error --enable-64 and --enable-fortran-int-64 must match for stable-octave)
+      $(error --enable-64 and --enable-fortran-int64 must match for stable-octave)
     endif
   endif
 endif
