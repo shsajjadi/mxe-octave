@@ -3,8 +3,8 @@
 
 PKG             := libxshmfence
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.2
-$(PKG)_CHECKSUM := a2ebe90e5595afca4db93a4359732af43b2b8c69
+$(PKG)_VERSION  := 1.3
+$(PKG)_CHECKSUM := 3472218fc0e8ee8183533d22dbcd4bbe90bf3ab8
 $(PKG)_SUBDIR   := libxshmfence-$($(PKG)_VERSION)
 $(PKG)_FILE     := libxshmfence-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
