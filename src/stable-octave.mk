@@ -1,19 +1,20 @@
 # This file is part of MXE.
 # See index.html for further information.
 
-## This can now build from hg stable so we omit the package checksum.
+## We omit the package checksum so that we don't have to update it
+## each time the tarball changes on the hydra site.
 
-PKG             := stable-octave
+PKG             := default-octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.2.2
+$(PKG)_VERSION  := 4.3.0+
 $(PKG)_CHECKSUM := ## No checksum
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
-$(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.lz
-$(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
+$(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
+$(PKG)_URL      := http://hydra.nixos.org/job/gnu/octave-default/tarball/latest/download
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile mesa pcre portaudio pstoedit qhull qrupdate qscintilla readline suitesparse texinfo zlib
+$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile mesa pcre portaudio pstoedit qhull qrupdate qscintilla readline sundials-ida suitesparse texinfo zlib
 
 ifeq ($(ENABLE_QT5),yes)
     $(PKG)_DEPS += qt5
@@ -26,11 +27,13 @@ ifeq ($(MXE_WINDOWS_BUILD),no)
     $(PKG)_DEPS += x11 xext
   endif
 endif
+
 ifeq ($(MXE_SYSTEM),mingw)
   ifeq ($(USE_SYSTEM_GCC),no)
     $(PKG)_DEPS     += libgomp
   endif
 endif
+
 ifeq ($(ENABLE_JIT),yes)
   $(PKG)_DEPS += llvm
   $(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS := --enable-jit
@@ -52,19 +55,22 @@ endif
 ## If we allow the system Qt libraries to be used, then these
 ## won't make sense.
 $(PKG)_QT_CONFIGURE_OPTIONS := \
-  MOC=$(MXE_MOC) \
-  UIC=$(MXE_UIC) \
-  RCC=$(MXE_RCC) \
-  LRELEASE=$(MXE_LRELEASE)
+  MOC_QTVER=$(MXE_MOC) \
+  UIC_QTVER=$(MXE_UIC) \
+  RCC_QTVER=$(MXE_RCC) \
+  LRELEASE_QTVER=$(MXE_LRELEASE)
 
 ifeq ($(ENABLE_QT5),yes)
   #$(PKG)_PKG_CONFIG_PATH := "$(HOST_LIBDIR)/pkgconfig"
   $(PKG)_PKG_CONFIG_PATH := "$(HOST_PREFIX)/qt5/lib/pkgconfig:$(HOST_LIBDIR)/pkgconfig"
   $(PKG)_QTDIR := $(HOST_PREFIX)/qt5
+  $(PKG)_QT_CONFIGURE_OPTIONS += octave_cv_lib_qscintilla="-lqscintilla2_qt5"
 else
   $(PKG)_PKG_CONFIG_PATH := "$(HOST_LIBDIR)/pkgconfig"
   $(PKG)_QTDIR := $(HOST_PREFIX)
+  $(PKG)_QT_CONFIGURE_OPTIONS += octave_cv_lib_qscintilla="-lqscintilla2_qt4"
 endif
+
 
 ifneq ($(ENABLE_DOCS),yes)
   $(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS := --disable-docs
@@ -73,7 +79,9 @@ endif
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
   ifeq ($(ENABLE_64),yes)
-    $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 F77_INTEGER_8_FLAG=-fdefault-integer-8
+    $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64
+  else
+    $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --disable-64
   endif
 else
   ifeq ($(MXE_SYSTEM),mingw)
@@ -82,9 +90,17 @@ else
       gl_cv_func_gettimeofday_clobber=no \
       gl_cv_func_tzset_clobber=no
     ifeq ($(ENABLE_64),yes)
-      $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64 F77_INTEGER_8_FLAG=-fdefault-integer-8 ax_blas_f77_func_ok=yes
+      $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --enable-64
+    else
+      $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := --disable-64
     endif
   endif
+endif
+
+ifeq ($(ENABLE_FORTRAN_INT64),yes)
+  $(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS := F77_INTEGER_8_FLAG=-fdefault-integer-8 ax_blas_f77_func_ok=yes ax_blas_integer_size=8 octave_cv_sizeof_fortran_integer=8
+else
+  $(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS := ax_blas_f77_func_ok=yes ax_blas_integer_size=4 octave_cv_sizeof_fortran_integer=4
 endif
 
 ifeq ($(MXE_SYSTEM),msvc)
@@ -151,6 +167,7 @@ define $(PKG)_BUILD
         --enable-install-build-logs \
         $($(PKG)_CROSS_CONFIG_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
+        $($(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JIT_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_DOCS_CONFIGURE_OPTIONS) \
@@ -159,6 +176,8 @@ define $(PKG)_BUILD
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
         PKG_CONFIG_PATH=$($(PKG)_PKG_CONFIG_PATH) \
         && $(CONFIGURE_POST_HOOK)
+
+    $(MAKE) -C '$(1)/.build/libgnu'
 
     ## We want both of these install steps so that we install in the
     ## location set by the configure --prefix option, and the other
