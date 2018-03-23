@@ -16,9 +16,7 @@ define $(PKG)_UPDATE
     tail -1
 endef
 
-ifeq ($(MXE_NATIVE_BUILD),no)
-  $(PKG)_CONFIGURE_OPTIONS := ac_cv_func_reallocarray=no
-endif
+$(PKG)_CONFIGURE_OPTIONS := ac_cv_func_reallocarray=no
 
 define $(PKG)_BUILD
     mkdir '$(1).build'
