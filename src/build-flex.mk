@@ -16,9 +16,13 @@ define $(PKG)_UPDATE
     tail -1
 endef
 
+ifeq ($(MXE_NATIVE_BUILD),no)
+  $(PKG)_CONFIGURE_OPTIONS := ac_cv_func_reallocarray=no
+endif
+
 define $(PKG)_BUILD
     mkdir '$(1).build'
-    cd    '$(1).build' && '$(1)/configure' \
+    cd    '$(1).build' && '$(1)/configure' $($(PKG)_CONFIGURE_OPTIONS) \
         --prefix='$(BUILD_TOOLS_PREFIX)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     $(MAKE) -C '$(1).build' -j 1 install
