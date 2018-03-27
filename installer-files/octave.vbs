@@ -48,7 +48,7 @@ Next
 
 ' start octave-gui, either with console shown or hidden
 If GUI_MODE = 1 then
-  wshShell.Run chr(34) & OctavePath & "\bin\octave-gui.exe" & Chr(34) & AllArgs, 0
+  wshShell.Run chr(34) & OctavePath & "\bin\octave-gui.exe --gui" & Chr(34) & AllArgs, 0
 Else
   wshShell.Run chr(34) & OctavePath & "\bin\octave-gui.exe" & Chr(34) & AllArgs, 1
 End If
