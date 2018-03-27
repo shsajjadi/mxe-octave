@@ -40,7 +40,8 @@ End If
 startpath = wshShell.ExpandEnvironmentStrings("%UserProfile%")
 wshShell.CurrentDirectory = startpath
 
-wshShell.Run chr(34) & OctavePath & "\bin\octave-gui.exe --gui" & Chr(34), 0
+GUIArg = " " & chr(34) & "--gui" & chr(34)
+wshShell.Run chr(34) & OctavePath & "\bin\octave-gui.exe" & Chr(34) & GUIArg, 0
 
 ' free our objects
 Set fso = Nothing
