@@ -31,10 +31,10 @@ if "%HOME%"=="" set HOME=%HOMEDRIVE%%HOMEPATH%
 Rem set HOME to 8.3 format
 for %%I in ("%HOME%") do set HOME=%%~sI
 
-Rem   Check for args to see if we are told to start GUI (--gui, --force-gui)
-Rem   or not (--no-gui).
-Rem   If nothing is specified, start the GUI.
-set GUI_MODE=1
+Rem   Check for args to determine if GUI (--gui, --force-gui)
+Rem   or CLI (--no-gui) should be started.
+Rem   If nothing is specified, start the CLI.
+set GUI_MODE=0
 :checkargs
 if -%1-==-- goto args_done
 
@@ -54,12 +54,10 @@ goto checkargs
 
 :args_done
 
-Rem   Start Octave (this detaches and immediately returns):
+Rem   Start Octave (this detaches and immediately returns).
 if %GUI_MODE%==1 (
   start octave-gui.exe --gui %*
 ) else (
   start octave-cli.exe %*
 )
 
-Rem   Close the batch file's cmd.exe window
-exit
