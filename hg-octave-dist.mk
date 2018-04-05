@@ -48,7 +48,7 @@ update-hg-octave-repo:
 	  cd octave-hg-repo \
 	    && hg pull && hg update $(hg-octave-branch); \
 	else \
-	  hg clone http://octave.org/hg/octave octave-hg-repo \
+	  hg clone https://hg.savannah.gnu.org/hgweb/octave octave-hg-repo \
 	    && cd octave-hg-repo \
 	    && hg pull && hg update $(hg-octave-branch); \
 	fi
