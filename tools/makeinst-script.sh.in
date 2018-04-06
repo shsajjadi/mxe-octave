@@ -647,22 +647,28 @@ EOF
   Push \$R0
   Push \$R1
 
-  ; use javaw.exe to avoid dosbox.
-  ; use java.exe to keep stdout/stderr
-  !define JAVAEXE "javaw.exe"
-
+  # get the version
   ClearErrors
-  ReadEnvStr \$R0 "JAVA_HOME"
-  StrCpy \$R0 "\$R0\\bin\\\${JAVAEXE}"
-  IfErrors 0 continue  ;; 1) found it in JAVA_HOME
-
+  ReadEnvStr \$R1 "JAVA_VERSION"
+  StrCmp \$R1 "" 0 have_java_version
   ClearErrors
+  ReadRegStr \$R1 HKLM "SOFTWARE\\JavaSoft\\JRE" "CurrentVersion"
+  IfErrors 0 have_java_version
   ReadRegStr \$R1 HKLM "SOFTWARE\\JavaSoft\\Java Runtime Environment" "CurrentVersion"
-  ReadRegStr \$R0 HKLM "SOFTWARE\\JavaSoft\\Java Runtime Environment\\\$R1" "JavaHome"
-  StrCpy \$R0 "\$R0\\bin\\\${JAVAEXE}"
+  IfErrors JRE_Error have_java_version
 
-  IfErrors 0 continue  ;; 2) found it in the registry
-  IfErrors JRE_Error
+ have_java_version:
+  ClearErrors
+  ReadRegStr \$R0 HKLM "SOFTWARE\\JavaSoft\\JRE\\\$R1" "RuntimeLib"
+  IfErrors 0 have_java_runtime
+  ReadRegStr \$R0 HKLM "SOFTWARE\\JavaSoft\\Java Runtime Environment\\\$R1" "RuntimeLib"
+  IfErrors JRE_Error have_java_runtime 
+
+ have_java_runtime:
+  # have runtime in R0 - check actual file is there
+  StrCmp \$R0 "" JRE_Error 0
+  ClearErrors
+  IfFileExists \$R0 continue JRE_Error
 
  JRE_Error:
   MessageBox MB_ICONEXCLAMATION|MB_YESNO "Octave has the capability to call Java libraries, but the installer was unable to find a Java Runtime Environment (JRE) on this system.  Octave will still function without a JRE, only certain specific functions will be disabled.  If a JRE is installed later, Octave should be able to detect and use it automatically.  Continue with installation?" /SD IDYES IDYES continue
