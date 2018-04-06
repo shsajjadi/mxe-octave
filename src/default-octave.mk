@@ -10,7 +10,7 @@ $(PKG)_VERSION  := 4.5.0+
 $(PKG)_CHECKSUM := ## No checksum
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://hydra.nixos.org/job/gnu/octave-default/tarball/latest/download
+$(PKG)_URL      := https://hydra.nixos.org/job/gnu/octave-default/tarball/latest/download
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif

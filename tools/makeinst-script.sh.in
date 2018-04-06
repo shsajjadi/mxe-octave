@@ -41,7 +41,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
   cat >> $OUTFILE << EOF
 !define APP_NAME "GNU Octave"
 !define COMP_NAME "GNU Project"
-!define WEB_SITE "http://www.octave.org"
+!define WEB_SITE "https://www.octave.org"
 !define VERSION "$VERSION.0"
 !define OCTAVE_VERSION "$OCTAVE_VERSION"
 !define COPYRIGHT "Copyright © 2013 John W. Eaton and others."
