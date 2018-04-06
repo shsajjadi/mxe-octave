@@ -499,7 +499,7 @@ ifeq ($(MXE_SYSTEM),msvc)
   MAKE_SHARED_FROM_STATIC_OPTIONS := --windowsdll --msvc --libprefix '$(LIBRARY_PREFIX)' --libsuffix '$(LIBRARY_SUFFIX)'
 endif
 
-OCTAVE_FORGE_BASE_URL := 'http://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
+OCTAVE_FORGE_BASE_URL := 'https://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
 ## Packages removed from list because build is broken:
 ##   sparsersb: configure script needs many fixes for syntax
 ##              configure script fails for cross compiling because
