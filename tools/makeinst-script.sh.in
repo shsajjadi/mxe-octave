@@ -44,7 +44,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
 !define WEB_SITE "https://www.octave.org"
 !define VERSION "$VERSION.0"
 !define OCTAVE_VERSION "$OCTAVE_VERSION"
-!define COPYRIGHT "Copyright © 2013 John W. Eaton and others."
+!define COPYRIGHT "Copyright © 2013-2018 John W. Eaton and others."
 !define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
 !define INSTALLER_FILES "$TOPDIR/installer-files"
 !define INSTALLER_NAME "octave-$OCTAVE_VERSION-installer.exe"
