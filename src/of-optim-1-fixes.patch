@@ -1,0 +1,129 @@
+diff -uNr a/src/__bfgsmin.cc b/src/__bfgsmin.cc
+--- a/src/__bfgsmin.cc	2016-09-18 13:31:55.000000000 -0400
++++ b/src/__bfgsmin.cc	2018-04-09 12:24:30.969197504 -0400
+@@ -260,7 +260,7 @@
+       found_improvement = __bisectionstep(step, obj, f, f_args, x, dx, minarg, verbose);
+     }
+   else found_improvement = 1;
+-  if (xisnan(obj)) {
++  if (octave::math::isnan(obj)) {
+     obj = obj_0;
+     if (verbose) warning("__stepsize: objective function crash in Newton step, falling back to bisection");
+     found_improvement = __bisectionstep(step, obj, f, f_args, x, dx, minarg, verbose);
+diff -uNr a/src/error-helpers.cc b/src/error-helpers.cc
+--- a/src/error-helpers.cc	2016-09-18 13:31:55.000000000 -0400
++++ b/src/error-helpers.cc	2018-04-09 12:17:15.913535622 -0400
+@@ -24,7 +24,7 @@
+ // call verror
+ #ifdef HAVE_OCTAVE_VERROR_ARG_EXC
+ void
+-c_verror (octave_execution_exception& e, const char *fmt, ...)
++c_verror (octave::execution_exception& e, const char *fmt, ...)
+ {
+   va_list args;
+   va_start (args, fmt);
+@@ -33,7 +33,7 @@
+ }
+ #else
+ void
+-c_verror (const octave_execution_exception&, const char *fmt, ...)
++c_verror (const octave::execution_exception&, const char *fmt, ...)
+ {
+   va_list args;
+   va_start (args, fmt);
+diff -uNr a/src/error-helpers.h b/src/error-helpers.h
+--- a/src/error-helpers.h	2016-09-18 13:31:55.000000000 -0400
++++ b/src/error-helpers.h	2018-04-09 12:17:51.079891166 -0400
+@@ -21,9 +21,9 @@
+ 
+ // call verror
+ #ifdef HAVE_OCTAVE_VERROR_ARG_EXC
+-void c_verror (octave_execution_exception&, const char *, ...);
++void c_verror (octave::execution_exception&, const char *, ...);
+ #else
+-void c_verror (const octave_execution_exception&, const char *, ...);
++void c_verror (const octave::execution_exception&, const char *, ...);
+ #endif
+ 
+ // call verror
+@@ -33,7 +33,7 @@
+ // both if Octave uses exceptions for errors and if it still uses
+ // error_state. In the latter case return 'retval'.
+ #ifdef HAVE_OCTAVE_ERROR_STATE
+-  // can throw octave_execution_exception despite of this
++  // can throw octave::execution_exception despite of this
+   #define CHECK_ERROR(code, retval, ...)      \
+     try \
+       { \
+@@ -46,7 +46,7 @@
+             return retval; \
+           } \
+       } \
+-    catch (octave_execution_exception& e) \
++    catch (octave::execution_exception& e)	\
+       { \
+         c_verror (e, __VA_ARGS__); \
+  \
+@@ -58,7 +58,7 @@
+       { \
+         code ; \
+       } \
+-    catch (octave_execution_exception& e) \
++    catch (octave::execution_exception& e)	\
+       { \
+         c_verror (e, __VA_ARGS__); \
+  \
+@@ -70,7 +70,7 @@
+ // Octave doesn't throw exceptions for errors but still uses
+ // error_state.
+ #ifdef HAVE_OCTAVE_ERROR_STATE
+-  // can throw octave_execution_exception despite of this
++  // can throw octave::execution_exception despite of this
+   #define CHECK_ERROR_EXIT1(code, ...) \
+     try \
+       { \
+@@ -83,7 +83,7 @@
+             exit (1); \
+           } \
+       } \
+-    catch (octave_execution_exception& e) \
++    catch (octave::execution_exception& e)	\
+       { \
+         c_verror (e, __VA_ARGS__); \
+  \
+@@ -95,7 +95,7 @@
+       { \
+         code ; \
+       } \
+-    catch (octave_execution_exception& e) \
++    catch (octave::execution_exception& e)	\
+       { \
+         c_verror (e, __VA_ARGS__); \
+  \
+@@ -107,7 +107,7 @@
+ // Octave uses exceptions for errors and if it still uses
+ // error_state. In the latter case reset error_state to 0.
+ #ifdef HAVE_OCTAVE_ERROR_STATE
+-  // can throw octave_execution_exception despite of this
++  // can throw octave::execution_exception despite of this
+   #define SET_ERR(code, err) \
+     err = false; \
+  \
+@@ -120,7 +120,7 @@
+             err = true; \
+           } \
+       } \
+-    catch (octave_execution_exception&) \
++    catch (octave::execution_exception&)	\
+       { \
+         err = true; \
+       }
+@@ -130,7 +130,7 @@
+       { \
+         code ; \
+       } \
+-    catch (octave_execution_exception&) \
++    catch (octave::execution_exception&)	\
+       { \
+         err = true; \
+       }

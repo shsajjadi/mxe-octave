@@ -1,22 +1,202 @@
+diff -uNr a/src/cl2bp.cc b/src/cl2bp.cc
+--- a/src/cl2bp.cc	2015-05-25 20:22:36.842410900 -0400
++++ b/src/cl2bp.cc	2018-04-09 12:48:37.336964071 -0400
+@@ -84,27 +84,27 @@
+ 
+   const int m = args(0).int_value(true);
+   if (error_state) {
+-    gripe_wrong_type_arg("cl2bp", args (0));
++    err_wrong_type_arg("cl2bp", args (0));
+     return retval;
+   }
+   const double w1 = args(1).double_value();
+   if (error_state) {
+-    gripe_wrong_type_arg("cl2bp", args (1));
++    err_wrong_type_arg("cl2bp", args (1));
+     return retval;
+   }
+   const double w2 = args(2).double_value();
+   if (error_state) {
+-    gripe_wrong_type_arg("cl2bp", args (2));
++    err_wrong_type_arg("cl2bp", args (2));
+     return retval;
+   }
+   const ColumnVector up_vector(args(3).vector_value());
+   if (error_state) {
+-    gripe_wrong_type_arg("cl2bp", args (3));
++    err_wrong_type_arg("cl2bp", args (3));
+     return retval;
+   }
+   const ColumnVector lo_vector(args(4).vector_value());
+   if (error_state) {
+-    gripe_wrong_type_arg("cl2bp", args (4));
++    err_wrong_type_arg("cl2bp", args (4));
+     return retval;
+   }
+   if (up_vector.length() != 3 || lo_vector.length() != 3) {
+@@ -121,7 +121,7 @@
+ 
+   const int L = args(5).int_value(true);
+   if (error_state) {
+-    gripe_wrong_type_arg("cl2bp", args (5));
++    err_wrong_type_arg("cl2bp", args (5));
+     return retval;
+   }
+   if (L > 1000000) {
+diff -uNr a/src/medfilt1.cc b/src/medfilt1.cc
+--- a/src/medfilt1.cc	2015-05-25 20:22:36.846411059 -0400
++++ b/src/medfilt1.cc	2018-04-09 12:48:37.336964071 -0400
+@@ -186,14 +186,14 @@
+       return retval;
+     }
+ 
+-  if (args(0).is_complex_type())
++  if (args(0).iscomplex())
+     {
+       error("medfilt1 cannot process complex vectors");
+       return retval;
+     }
+ 
+   int n=3;    // length of the filter (default 3)
+-  if (nargin > 1) n = NINT(args(1).double_value());
++  if (nargin > 1) n = octave::math::nint(args(1).double_value());
+   if (n < 1)
+     {
+       error ("medfilt1 filter length must be at least 1");
+diff -uNr a/src/remez.cc b/src/remez.cc
+--- a/src/remez.cc	2015-05-25 20:22:36.846411059 -0400
++++ b/src/remez.cc	2018-04-09 12:48:37.340963884 -0400
+@@ -784,7 +784,7 @@
+     return retval;
+   }
+ 
+-  int numtaps = NINT (args(0).double_value()) + 1; // #coeff = filter order+1
++  int numtaps = octave::math::nint (args(0).double_value()) + 1; // #coeff = filter order+1
+   if (numtaps < 4) {
+     error("remez: number of taps must be an integer greater than 3");
+     return retval;
+@@ -841,7 +841,7 @@
+     if (args(4).is_string() && !args(3).is_string())
+       stype = args(4).string_value();
+     else if (args(4).is_real_scalar())
+-      density = NINT(args(4).double_value());
++      density = octave::math::nint(args(4).double_value());
+     else {
+       error("remez: incorrect argument list");
+       return retval;
+@@ -850,7 +850,7 @@
+   if (nargin > 5) {
+     if (args(5).is_real_scalar()
+         && !args(4).is_real_scalar())
+-      density = NINT(args(5).double_value());
++      density = octave::math::nint(args(5).double_value());
+     else {
+       error("remez: incorrect argument list");
+       return retval;
 diff -uNr a/src/sosfilt.cc b/src/sosfilt.cc
 --- a/src/sosfilt.cc	2015-05-25 20:22:36.846411059 -0400
-+++ b/src/sosfilt.cc	2018-01-09 15:50:16.018191246 -0500
-@@ -13,7 +13,6 @@
++++ b/src/sosfilt.cc	2018-04-09 12:52:45.933287424 -0400
+@@ -13,10 +13,9 @@
  // You should have received a copy of the GNU General Public License along with
  // this program; if not, see <http://www.gnu.org/licenses/>.
  
 -#include <octave/config.h>
  #include <octave/defun-dld.h>
  #include <octave/error.h>
- #include <octave/gripes.h>
+-#include <octave/gripes.h>
++#include <octave/errwarn.h>
+ #include <octave/oct-obj.h>
+ #include <octave/pager.h>
+ #include <octave/quit.h>
+@@ -52,7 +51,7 @@
+ 
+   if (error_state)
+     {
+-      gripe_wrong_type_arg("sosfilt",args(0));
++      err_wrong_type_arg("sosfilt",args(0));
+       return retval;
+     }
+ 
+@@ -66,7 +65,7 @@
+ 
+   if (error_state)
+     {
+-      gripe_wrong_type_arg("sosfilt",args(1));
++      err_wrong_type_arg("sosfilt",args(1));
+       return retval;
+     }
+ 
 diff -uNr a/src/upfirdn.cc b/src/upfirdn.cc
 --- a/src/upfirdn.cc	2015-05-25 20:22:36.846411059 -0400
-+++ b/src/upfirdn.cc	2018-01-09 15:50:13.514305277 -0500
-@@ -13,7 +13,6 @@
++++ b/src/upfirdn.cc	2018-04-09 12:52:37.249695083 -0400
+@@ -13,10 +13,9 @@
  // You should have received a copy of the GNU General Public License along with
  // this program; if not, see <http://www.gnu.org/licenses/>.
  
 -#include <octave/config.h>
  #include <octave/defun-dld.h>
  #include <octave/error.h>
- #include <octave/gripes.h>
+-#include <octave/gripes.h>
++#include <octave/errwarn.h>
+ #include <octave/oct-obj.h>
+ #include <octave/pager.h>
+ #include <octave/quit.h>
+@@ -105,7 +104,7 @@
+ 
+   if (error_state)
+     {
+-      gripe_wrong_type_arg ("upfirdn", args (1));
++      err_wrong_type_arg ("upfirdn", args (1));
+       return retval;
+     }
+ 
+@@ -113,7 +112,7 @@
+ 
+   if (error_state)
+     {
+-      gripe_wrong_type_arg ("upfirdn", args (2));
++      err_wrong_type_arg ("upfirdn", args (2));
+       return retval;
+     }
+ 
+@@ -121,7 +120,7 @@
+ 
+   if (error_state)
+     {
+-      gripe_wrong_type_arg ("upfirdn", args (3));
++      err_wrong_type_arg ("upfirdn", args (3));
+       return retval;
+     }
+ 
+@@ -131,19 +130,19 @@
+       Matrix x = args (0).matrix_value ();
+       if (error_state)
+         {
+-          gripe_wrong_type_arg ("upfirdn", args (0));
++          err_wrong_type_arg ("upfirdn", args (0));
+           return retval;
+         }
+ 
+       Matrix y = upfirdn (x, h, p, q);
+       retval (0) = y;
+     }
+-  else if (args (0).is_complex_type ())
++  else if (args (0).iscomplex ())
+     {
+       ComplexMatrix x = args (0).complex_matrix_value ();
+       if (error_state)
+         {
+-          gripe_wrong_type_arg ("upfirdn", args (0));
++          err_wrong_type_arg ("upfirdn", args (0));
+           return retval;
+         }
+ 
+@@ -152,7 +151,7 @@
+     }
+   else
+     {
+-      gripe_wrong_type_arg ("upfirdn", args (0));
++      err_wrong_type_arg ("upfirdn", args (0));
+       return retval;
+     }
+ 

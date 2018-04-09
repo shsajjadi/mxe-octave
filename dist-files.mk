@@ -455,22 +455,26 @@ SRC_FILES_1 := \
   of-communications-2-fixes.patch \
   of-communications-3-fixes.patch \
   of-communications-4-fixes.patch \
+  of-communications-5-fixes.patch \
   of-communications.mk \
   of-control.mk \
   of-data-smoothing.mk \
   of-database-1-cross-fixes.patch \
   of-database-2-dev-fixes.patch \
+  of-database-3-fixes.patch \
   of-database.mk \
   of-dataframe.mk \
   of-dicom-1-fixes.patch \
   of-dicom.mk \
   of-financial.mk \
   of-fits-1-cross-fixes.patch \
+  of-fits-2-fixes.patch \
   of-fits.mk \
   of-fl-core-1-fixes.patch \
   of-fl-core.mk \
   of-fuzzy-logic-toolkit.mk \
   of-ga.mk \
+  of-general-1-fixes.patch \
   of-general-1-symtab-fixes.patch \
   of-general.mk \
   of-generate_html.mk \
@@ -484,6 +488,7 @@ SRC_FILES_1 := \
   of-linear-algebra-1-cross-fixes.patch \
   of-linear-algebra-2-dev-fixes.patch \
   of-linear-algebra-3-fixes.patch \
+  of-linear-algebra-4-fixes.patch \
   of-linear-algebra.mk \
   of-lssa.mk \
   of-ltfat-1-fixes.patch \
@@ -502,6 +507,7 @@ SRC_FILES_1 := \
   of-odepkg-1-fixes.patch \
   of-odepkg-2-fixes.patch \
   of-odepkg.mk \
+  of-optim-1-fixes.patch \
   of-optim.mk \
   of-quaternion-1-cross-fixes.patch \
   of-quaternion.mk \
@@ -518,6 +524,7 @@ SRC_FILES_1 := \
   of-stk.mk \
   of-strings-1-fixes.patch \
   of-strings.mk \
+  of-struct-1-fixes.patch \
   of-struct.mk \
   of-tisean.mk \
   of-tsa.mk \

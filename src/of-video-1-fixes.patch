@@ -123,3 +123,18 @@ diff -uNr a/src/configure.ac b/src/configure.ac
    AC_MSG_ERROR([mkoctfile required to install $PACKAGE_NAME])
  fi
  
+diff -uNr a/src/aviinfo.cc b/src/aviinfo.cc
+--- a/src/aviinfo.cc	2017-05-28 10:27:02.824900272 -0400
++++ b/src/aviinfo.cc	2018-04-09 15:26:03.042616699 -0400
+@@ -39,9 +39,9 @@
+   // remove -Wno-deprecated-delarations from src/Makefile.in; remember
+   // to adjust 'Depends' to Octave >= 4.2 in DESCRIPTION)
+ 
+-  octave_time file_mod = file_stat (fn).mtime ();
++  octave::sys::time file_mod = octave::sys::file_stat (fn).mtime ();
+ 
+-  return octave_localtime (file_mod).strftime ("%d-%b-%Y %H:%M:%S");
++  return octave::sys::localtime (file_mod).strftime ("%d-%b-%Y %H:%M:%S");
+ }
+ 
+ DEFUN_DLD(aviinfo, args, ,
