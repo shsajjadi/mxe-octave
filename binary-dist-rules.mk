@@ -1,8 +1,20 @@
 
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  ifeq ($(ENABLE_WINDOWS_64),yes)
+    ifeq ($(ENABLE_64),yes)
+      OCTAVE_PLATFORM_SUFFIX := -w64-64
+    else
+      OCTAVE_PLATFORM_SUFFIX := -w64
+    endif
+  else
+      OCTAVE_PLATFORM_SUFFIX := -w32
+  endif
+endif
+
 ifeq ($(OCTAVE_TARGET),stable-octave)
-  OCTAVE_DIST_NAME := octave-$($(OCTAVE_TARGET)_VERSION)
+  OCTAVE_DIST_NAME := octave-$($(OCTAVE_TARGET)_VERSION)$(OCTAVE_PLATFORM_SUFFIX)
 else
-  OCTAVE_DIST_NAME := octave-$(DATE)
+  OCTAVE_DIST_NAME := octave-$(DATE)$(OCTAVE_PLATFORM_SUFFIX)
 endif
 
 OCTAVE_DIST_DIR := $(TOP_BUILD_DIR)/dist/$(OCTAVE_DIST_NAME)
@@ -182,7 +194,7 @@ define make-installer-file
     rm -f $(OCTAVE_NSI_FILE); \
   fi
   echo "generating installer script..."
-  $(TOP_BUILD_DIR)/tools/makeinst-script.sh $(OCTAVE_DIST_DIR) $(OCTAVE_NSI_FILE)
+  $(TOP_BUILD_DIR)/tools/makeinst-script.sh $(OCTAVE_DIST_DIR) $(OCTAVE_DIST_NAME)-installer.exe $(OCTAVE_NSI_FILE)
   echo "generating installer..."
   $(TARGET)-makensis $(OCTAVE_NSI_FILE) > $(TOP_BUILD_DIR)/dist/nsis.log
 endef
@@ -192,6 +204,15 @@ $(OCTAVE_DIST_NAME)-installer.exe: nsis binary-dist-files
 
 .PHONY: nsis-installer
 nsis-installer: $(OCTAVE_DIST_NAME)-installer.exe
+
+define make-7z-dist
+  echo "generating 7z file..."
+  cd $(TOP_BUILD_DIR)/dist && p7zip -k $(OCTAVE_DIST_NAME)
+endef
+
+.PHONY: 7z-dist
+7z-dist: binary-dist-files
+	@$(make-7z-dist)
 
 define make-zip-dist
   echo "generating zip file..."
