@@ -1,16 +1,15 @@
 #! /bin/bash
 set -e
 
-if [ $# != 2 ]; then
-  echo "usage: makeinst-script.sh dist-dir output-script-name" 1>&2
+if [ $# != 3 ]; then
+  echo "usage: makeinst-script.sh dist-dir installer-name output-script-name" 1>&2
   exit 1
 fi
 
-OUTFILE="$2"
+INSTALLER_NAME="$2"
+OUTFILE="$3"
 TOPDIR=@abs_top_srcdir@
 TOP_BUILD_DIR=@abs_top_builddir@
-
-ENABLE64="@ENABLE_WINDOWS_64@"
 
 OCTAVE_SOURCE=`basename $1`
 
@@ -47,7 +46,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
 !define COPYRIGHT "Copyright © 2013-2018 John W. Eaton and others."
 !define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
 !define INSTALLER_FILES "$TOPDIR/installer-files"
-!define INSTALLER_NAME "octave-$OCTAVE_VERSION-installer.exe"
+!define INSTALLER_NAME "$INSTALLER_NAME"
 !define MAIN_APP_EXE "octave-firsttime.vbs"
 !define INSTALL_TYPE "SetShellVarContext current"
 !define PRODUCT_ROOT_KEY "HKLM"
