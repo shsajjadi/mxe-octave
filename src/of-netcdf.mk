@@ -3,10 +3,10 @@
 
 PKG             := of-netcdf
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.0.11
-$(PKG)_CHECKSUM := 904b15a7f22b0b4adb49d54500d196389e732f95
+$(PKG)_VERSION  := 1.0.12
+$(PKG)_CHECKSUM := 81245738de96385d1b073715859e5c00bdeede31
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := netcdf
+$(PKG)_SUBDIR   := netcdf-$($(PKG)_VERSION)
 $(PKG)_FILE     := netcdf-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := netcdf
@@ -16,12 +16,9 @@ ifeq ($(ENABLE_BINARY_PACKAGES),yes)
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'https://sourceforge.net/projects/octave/files/Octave%20Forge%20Packages/Individual%20Package%20Releases/' | \
-    $(SED) -n 's,.*title="netcdf-\([0-9][^"]*\).tar.gz".*,\1,p' | \
-    head -1
+    $(OCTAVE_FORGE_PKG_UPDATE)
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)/src' && source ./autogen.sh
     $(OCTAVE_FORGE_PKG_BUILD)
 endef
