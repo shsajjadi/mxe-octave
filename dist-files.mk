@@ -529,7 +529,6 @@ SRC_FILES_1 := \
   of-tsa.mk \
   of-video-1-fixes.patch \
   of-video.mk \
-  of-windows-1-fixes.patch \
   of-windows.mk \
   of-zenity.mk \
   of-zeromq.mk \
