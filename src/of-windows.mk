@@ -3,10 +3,10 @@
 
 PKG             := of-windows
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.2.4
-$(PKG)_CHECKSUM := 025cb4c9456d11b7a0a5aa540901894d7ff9f6db
+$(PKG)_VERSION  := 1.3.0
+$(PKG)_CHECKSUM := c6894b4707dd9c3a1afb2f153cabd66400b415dc
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := windows
+$(PKG)_SUBDIR   := windows-$($(PKG)_VERSION)
 $(PKG)_FILE     := windows-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
@@ -20,6 +20,5 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd $(1)/src && source autogen.sh
     $(OCTAVE_FORGE_PKG_BUILD)
 endef

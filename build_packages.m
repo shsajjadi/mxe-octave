@@ -39,7 +39,7 @@ unwind_protect
   try_install io-2.4.10.tar.gz
   try_install statistics-1.3.0.tar.gz
   try_install geometry-3.0.0.tar.gz
-  try_install windows-1.2.4.tar.gz
+  try_install windows-1.3.0.tar.gz
   try_install odepkg-0.8.5.tar.gz
   try_install linear-algebra-2.2.2.tar.gz
   try_install sockets-1.2.0.tar.gz
