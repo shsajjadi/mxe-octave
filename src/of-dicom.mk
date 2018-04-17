@@ -3,8 +3,8 @@
 
 PKG             := of-dicom
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.2.0
-$(PKG)_CHECKSUM := 46d4be1f9f822451e8fd415fbea4c3d24aaba5db
+$(PKG)_VERSION  := 0.2.1
+$(PKG)_CHECKSUM := 122636971340ddc826c8aa35b244d07e66f9e4ac
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := dicom-$($(PKG)_VERSION)
 $(PKG)_FILE     := dicom-$($(PKG)_VERSION).tar.gz
@@ -26,6 +26,5 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)/src' && autoreconf -fi
-    $(call OCTAVE_FORGE_PKG_BUILD,$(1),$(2),$(3),$($(PKG)_OPTIONS))
+    $(OCTAVE_FORGE_PKG_BUILD)
 endef
