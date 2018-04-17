@@ -464,7 +464,6 @@ SRC_FILES_1 := \
   of-database-3-fixes.patch \
   of-database.mk \
   of-dataframe.mk \
-  of-dicom-1-fixes.patch \
   of-dicom.mk \
   of-financial.mk \
   of-fits-1-cross-fixes.patch \
