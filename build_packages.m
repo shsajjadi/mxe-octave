@@ -49,7 +49,7 @@ unwind_protect
   try_install fits-1.0.7.tar.gz
   try_install tsa-4.4.5.tar.gz
   try_install dicom-0.2.1.tar.gz
-  try_install netcdf-1.0.11.tar.gz
+  try_install netcdf-1.0.12.tar.gz
   try_install ltfat-2.2.0.tar.gz
   try_install database-2.4.2.tar.gz
   try_install instrument-control-0.3.0.tar.gz

@@ -496,7 +496,6 @@ SRC_FILES_1 := \
   of-miscellaneous-1-fixes.patch \
   of-miscellaneous.mk \
   of-nan.mk \
-  of-netcdf-1-fixes.patch \
   of-netcdf.mk \
   of-nurbs-1-fixes.patch \
   of-nurbs.mk \
