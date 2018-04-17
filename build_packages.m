@@ -72,6 +72,7 @@ unwind_protect
   try_install video-1.2.4.tar.gz
   try_install zeromq-1.3.0.tar.gz
   try_install gsl-2.1.0.tar.gz
+  try_install optiminterp-0.3.5.tar.gz
 
 unwind_protect_cleanup
   echo_executing_commands (orig_echo);
