@@ -70,7 +70,7 @@ unwind_protect
   try_install tisean-0.2.3.tar.gz
   try_install sparsersb-1.0.5.tar.gz
   try_install video-1.2.4.tar.gz
-  try_install zeromq-1.2.1.tar.gz
+  try_install zeromq-1.3.0.tar.gz
   try_install gsl-2.1.0.tar.gz
 
 unwind_protect_cleanup

@@ -3,10 +3,10 @@
 
 PKG             := of-zeromq
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.2.1
-$(PKG)_CHECKSUM := c0df6116aef7e12e6a3b970bac42d30e0f2b7d33
+$(PKG)_VERSION  := 1.3.0
+$(PKG)_CHECKSUM := 158bd74a02f2a0131d5adb035947d7a94ae7a80d
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := zeromq
+$(PKG)_SUBDIR   := zeromq-$($(PKG)_VERSION)
 $(PKG)_FILE     := zeromq-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := zeromq
