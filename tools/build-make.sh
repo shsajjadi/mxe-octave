@@ -6,7 +6,7 @@ set -e
 
 top_dir=`pwd`
 
-make_ver="3.82"
+make_ver="4.1"
 make_dir="make-$make_ver"
 make_pkg="$make_dir.tar.gz"
 
