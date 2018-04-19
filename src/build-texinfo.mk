@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 0f8e69781e28ec102b6a9487b093c440f5bb8545
 $(PKG)_SUBDIR   := texinfo-$($(PKG)_VERSION)
 $(PKG)_FILE     := texinfo-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/texinfo/$($(PKG)_FILE)
-$(PKG)_DEPS     := 
+$(PKG)_DEPS     := build-perl
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://ftp.gnu.org/gnu/texinfo/?C=M;O=D' | \
