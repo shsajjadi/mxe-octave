@@ -41,6 +41,7 @@ SRC_FILES_1 := \
   build-pkg-config.mk \
   build-python.mk \
   build-scons.mk \
+  build-sed.mk \
   build-setuptools.mk \
   build-texinfo.mk \
   build-xz.mk \
