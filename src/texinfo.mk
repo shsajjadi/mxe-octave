@@ -20,7 +20,12 @@ define $(PKG)_UPDATE
     echo $(texinfo_VERSION)
 endef
 
-define $(PKG)_BUILD
+ifeq ($(MXE_NATIVE_BUILD),yes)
+  ## We already have texinfo from the build-texinfo package.
+  define $(PKG)_BUILD
+  endef
+else
+  define $(PKG)_BUILD
     mkdir '$(1).build'
     cd '$(1).build' && '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
@@ -31,6 +36,9 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1).build/gnulib/lib' -j '$(JOBS)'
     $(MAKE) -C '$(1).build/util' -j '$(JOBS)'
     $(MAKE) -C '$(1).build/tp' -j '$(JOBS)'
+
+    $(SED) -i '1 s|^.*$$|#! /usr/bin/env perl|' '$(1).build/tp/texi2any' '$(1).build/util/txixml2texi'
+
     $(MAKE) -C '$(1).build/tp' -j 1 install DESTDIR='$(3)'
     $(MAKE) -C '$(1).build/util' -j 1 install DESTDIR='$(3)'
 
@@ -46,4 +54,5 @@ define $(PKG)_BUILD
         $(MAKE) -C '$(1).build/info' -j '$(JOBS)' ginfo.exe; \
         $(INSTALL) '$(1).build/info/ginfo.exe' '$(3)$(HOST_BINDIR)/info.exe'; \
     fi
-endef
+  endef
+endif

@@ -26,6 +26,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1).build/util' -j '$(JOBS)'
     $(MAKE) -C '$(1).build/tp' -j '$(JOBS)'
 
+    $(SED) -i '1 s|^.*$$|#! /usr/bin/env perl|' '$(1).build/tp/texi2any' '$(1).build/util/txixml2texi'
+
     $(MAKE) -C '$(1).build/gnulib/lib' -j 1 install DESTDIR='$(3)'
     $(MAKE) -C '$(1).build/util' -j 1 install DESTDIR='$(3)'
     $(MAKE) -C '$(1).build/tp' -j 1 install DESTDIR='$(3)'
