@@ -8,7 +8,11 @@ $(PKG)_CHECKSUM := 1153d845f62a4bc04ff035460e227b4a12fcb6fb
 $(PKG)_SUBDIR   := cmake-$($(PKG)_VERSION)
 $(PKG)_FILE     := cmake-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.cmake.org/files/v$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
-$(PKG)_DEPS     := 
+ifeq ($(USE_SYSTEM_GCC),yes)
+  $(PKG)_DEPS   :=
+else
+  $(PKG)_DEPS   := build-gcc
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://www.cmake.org/cmake/resources/software.html' | \
