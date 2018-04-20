@@ -323,6 +323,7 @@ SRC_FILES_1 := \
   matio.mk \
   mdbtools.mk \
   mesa-1-fixes.patch \
+  mesa-2-fixes.patch \
   mesa-proto.mk \
   mesa.mk \
   mingw-cairo-1-ssize-t-defined.patch \
