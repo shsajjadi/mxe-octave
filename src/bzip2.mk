@@ -54,6 +54,7 @@ define $(PKG)_BUILD
     $(INSTALL) -m755 '$(1)/libbz2.so.1.0.6' '$(3)$(HOST_LIBDIR)'
     rm -f '$(3)$(HOST_LIBDIR)/libbz2.so.1.0'
     $(LN_SF) libbz2.so.1.0.6 '$(3)$(HOST_LIBDIR)/libbz2.so.1.0'
+    $(LN_SF) libbz2.so.1.0 '$(3)$(HOST_LIBDIR)/libbz2.so'
     $(INSTALL) -d '$(3)$(HOST_INCDIR)'
     $(INSTALL) -m644 '$(1)/bzlib.h' '$(3)$(HOST_INCDIR)'
 endef
