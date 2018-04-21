@@ -17,10 +17,12 @@ define $(PKG)_UPDATE
     tail -1
 endef
 
+## Don't use --disable-static when configuring gdb as that will
+## disable building the required libbfd.a library.
+
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-        $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --with-system-readline \
         CONFIG_SHELL=$(SHELL)
