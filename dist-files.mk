@@ -497,6 +497,7 @@ SRC_FILES_1 := \
   of-ltfat.mk \
   of-mapping.mk \
   of-miscellaneous-1-fixes.patch \
+  of-miscellaneous-2-fixes.patch \
   of-miscellaneous.mk \
   of-nan.mk \
   of-netcdf.mk \
