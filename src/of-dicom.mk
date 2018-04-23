@@ -26,5 +26,5 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    $(OCTAVE_FORGE_PKG_BUILD)
+    $(call OCTAVE_FORGE_PKG_BUILD,$(1),$(2),$(3),$($(PKG)_OPTIONS))
 endef
