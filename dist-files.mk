@@ -480,6 +480,7 @@ SRC_FILES_1 := \
   of-general-1-symtab-fixes.patch \
   of-general.mk \
   of-generate_html.mk \
+  of-geometry-1-fixes.patch \
   of-geometry.mk \
   of-gsl.mk \
   of-image.mk \
