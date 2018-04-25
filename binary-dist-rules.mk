@@ -103,6 +103,9 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       if [ "$(ENABLE_DEVEL_TOOLS)" = "yes" ]; then \
         cp $(TOP_DIR)/installer-files/cmdshell.bat $(OCTAVE_DIST_DIR)/; \
       fi
+      echo "  updating script config tool references..."
+      find '$(OCTAVE_DIST_DIR)/bin' -type f -name "*-config" \
+        -exec $(SED) -i 's|$(HOST_PREFIX)|/usr|g;s|$(BUILD_TOOLS_PREFIX)|/usr|g' {} \; ;
       cp $(TOP_DIR)/installer-files/fc_update.bat $(OCTAVE_DIST_DIR)/
     endef
   else
