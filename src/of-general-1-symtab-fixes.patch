@@ -122,7 +122,7 @@ diff -uNr a/src/unpackfields.cc b/src/unpackfields.cc
  #include <octave/oct-map.h>
  
 +#ifdef DEFMETHOD_DLD
-+DEFMETHOD_DLD (packfields, interp, args, ,
++DEFMETHOD_DLD (unpackfields, interp, args, ,
 +#else
  DEFUN_DLD (unpackfields, args, ,
 +#endif
