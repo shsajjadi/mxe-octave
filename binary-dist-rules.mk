@@ -1,7 +1,7 @@
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   ifeq ($(ENABLE_WINDOWS_64),yes)
-    ifeq ($(ENABLE_64),yes)
+    ifeq ($(ENABLE_FORTRAN_INT64),yes)
       OCTAVE_PLATFORM_SUFFIX := -w64-64
     else
       OCTAVE_PLATFORM_SUFFIX := -w64
