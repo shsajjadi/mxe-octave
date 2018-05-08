@@ -60,21 +60,6 @@ ENABLE_64 := @ENABLE_64@
 # not ENABLE_FORTRAN_INT64.
 ENABLE_FORTRAN_INT64 := @ENABLE_FORTRAN_INT64@
 
-## FIXME: this will need to change when Octave 4.4 is released as stable.
-stable_64_mismatch = false
-ifeq ($(OCTAVE_TARGET),stable-octave)
-  ifeq ($(ENABLE_64),yes)
-    ifeq ($(ENABLE_FORTRAN_INT64),no)
-      $(error --enable-64 and --enable-fortran-int64 must match for stable-octave)
-    endif
-  else
-    ifeq ($(ENABLE_FORTRAN_INT64),yes)
-      $(error --enable-64 and --enable-fortran-int64 must match for stable-octave)
-    endif
-  endif
-endif
-
-
 # create binary octave forge tools.
 # if cross, compiling, this also means we will attempt to create cross mkoctfile
 ENABLE_BINARY_PACKAGES := @ENABLE_BINARY_PACKAGES@
