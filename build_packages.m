@@ -28,7 +28,7 @@ unwind_protect
   endif
 
   % install the packages
-  try_install general-2.0.0.tar.gz
+  try_install general-2.1.0.tar.gz
   try_install miscellaneous-1.2.1.tar.gz
   try_install struct-1.0.14.tar.gz
   try_install optim-1.5.2.tar.gz
