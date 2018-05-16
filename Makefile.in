@@ -206,6 +206,7 @@ PKG_CDN            := d1yihgixbnrglp.cloudfront.net
 
 SHELL := @SHELL@
 
+GREP       ?= grep
 INSTALL    := $(shell ginstall --help >/dev/null 2>&1 && echo g)install
 PATCH      := $(shell gpatch --help >/dev/null 2>&1 && echo g)patch
 SED        := $(shell gsed --help >/dev/null 2>&1 && echo g)sed

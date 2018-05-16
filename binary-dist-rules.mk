@@ -132,7 +132,7 @@ ifeq ($(STRIP_DIST_FILES),yes)
   ifeq ($(MXE_WINDOWS_BUILD),yes)
     define strip-dist-files
       echo "stripping files..."
-      for f in `find $(OCTAVE_DIST_DIR) -name '*.dll' -o -name '*.exe' -o -name '*.oct'`; do \
+      for f in `find $(OCTAVE_DIST_DIR) -name '*.dll' -o -name '*.exe' -o -name '*.oct' | $(GREP) -v "notepad++" `; do \
 	$(MXE_STRIP) $$f; \
       done
     endef
