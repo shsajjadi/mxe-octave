@@ -527,7 +527,6 @@ SRC_FILES_1 := \
   of-stk.mk \
   of-strings-1-fixes.patch \
   of-strings.mk \
-  of-struct-1-fixes.patch \
   of-struct.mk \
   of-tisean.mk \
   of-tsa.mk \
