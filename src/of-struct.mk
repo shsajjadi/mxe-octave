@@ -3,8 +3,8 @@
 
 PKG             := of-struct
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.0.14
-$(PKG)_CHECKSUM := c017ae121f2c9535704c677e64ea5fd2ac7b88f5
+$(PKG)_VERSION  := 1.0.15
+$(PKG)_CHECKSUM := 2a5d1eef49e2fb7685cbbd3eff0dea45dd5c760a
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := struct-$($(PKG)_VERSION)
 $(PKG)_FILE     := struct-$($(PKG)_VERSION).tar.gz
