@@ -520,6 +520,7 @@ SRC_FILES_1 := \
   of-sparsersb.mk \
   of-specfun.mk \
   of-splines.mk \
+  of-statistics-1-cross.patch \
   of-statistics.mk \
   of-stk.mk \
   of-strings-1-fixes.patch \
