@@ -462,9 +462,6 @@ SRC_FILES_1 := \
   of-communications.mk \
   of-control.mk \
   of-data-smoothing.mk \
-  of-database-1-cross-fixes.patch \
-  of-database-2-dev-fixes.patch \
-  of-database-3-fixes.patch \
   of-database.mk \
   of-dataframe.mk \
   of-dicom-1-fixes.patch \
