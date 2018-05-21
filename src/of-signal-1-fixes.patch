@@ -1,202 +1,118 @@
-diff -uNr a/src/cl2bp.cc b/src/cl2bp.cc
---- a/src/cl2bp.cc	2015-05-25 20:22:36.842410900 -0400
-+++ b/src/cl2bp.cc	2018-04-09 12:48:37.336964071 -0400
-@@ -84,27 +84,27 @@
+# HG changeset patch
+# User Mike Miller <mtmiller@octave.org>
+# Date 1525815613 25200
+# Node ID 3cbff3de1ebcb28a87ca0e0f8342ea393db19908
+# Parent  36e6b83ee1a1b178c58c14c5077038d7a6614118
+medfilt1: rewrite memory management, fix build error on MinGW (bug #53849)
+
+* medfilt1.cc (sorted_window::sorted_window): Make buf a unique_ptr. Use
+member initialiation list. (sorted_window::~sorted_window): Delete.
+(sorted_window::init): Use fill_n instead of bzero. (sorted_window::replace,
+sorted_window::add, sorted_window::remove): Update syntax to dereference
+offsets into buf.
+
+diff -r 36e6b83ee1a1 -r 3cbff3de1ebc src/medfilt1.cc
+--- a/src/medfilt1.cc	Sun May 06 10:17:15 2018 +0200
++++ b/src/medfilt1.cc	Tue May 08 14:40:13 2018 -0700
+@@ -27,9 +27,8 @@
+  One dimensional median filter, for real double variables.
+  */
  
-   const int m = args(0).int_value(true);
-   if (error_state) {
--    gripe_wrong_type_arg("cl2bp", args (0));
-+    err_wrong_type_arg("cl2bp", args (0));
-     return retval;
-   }
-   const double w1 = args(1).double_value();
-   if (error_state) {
--    gripe_wrong_type_arg("cl2bp", args (1));
-+    err_wrong_type_arg("cl2bp", args (1));
-     return retval;
-   }
-   const double w2 = args(2).double_value();
-   if (error_state) {
--    gripe_wrong_type_arg("cl2bp", args (2));
-+    err_wrong_type_arg("cl2bp", args (2));
-     return retval;
-   }
-   const ColumnVector up_vector(args(3).vector_value());
-   if (error_state) {
--    gripe_wrong_type_arg("cl2bp", args (3));
-+    err_wrong_type_arg("cl2bp", args (3));
-     return retval;
-   }
-   const ColumnVector lo_vector(args(4).vector_value());
-   if (error_state) {
--    gripe_wrong_type_arg("cl2bp", args (4));
-+    err_wrong_type_arg("cl2bp", args (4));
-     return retval;
-   }
-   if (up_vector.length() != 3 || lo_vector.length() != 3) {
-@@ -121,7 +121,7 @@
+-//#ifdef HAVE_CONFIG_H
+-//#  include "config.h"
+-//#endif
++#include <algorithm>
++#include <memory>
  
-   const int L = args(5).int_value(true);
-   if (error_state) {
--    gripe_wrong_type_arg("cl2bp", args (5));
-+    err_wrong_type_arg("cl2bp", args (5));
-     return retval;
-   }
-   if (L > 1000000) {
-diff -uNr a/src/medfilt1.cc b/src/medfilt1.cc
---- a/src/medfilt1.cc	2015-05-25 20:22:36.846411059 -0400
-+++ b/src/medfilt1.cc	2018-04-09 12:48:37.336964071 -0400
-@@ -186,14 +186,14 @@
-       return retval;
-     }
+ #include "oct.h"
+ #include "defun-dld.h"
+@@ -44,7 +43,7 @@
+ // Keeps NaNs at the "top" (after Inf)
+ class sorted_window
+ {
+-  double *buf;
++  std::unique_ptr<double[]> buf;
+   octave_idx_type  numel;
+   octave_idx_type  numNaN;
+   bool nan_if_any_is;
+@@ -70,16 +69,8 @@
+   // If  skip_nan  then the median will consider only valid numbers within
+   // the window.  
+   sorted_window (octave_idx_type width, bool skip_nan = true)
+-    {
+-      numel = 0;
+-      nan_if_any_is = ! skip_nan;
+-      buf = new double [width];
+-    }
+-
+-  ~sorted_window ()
+-    {
+-      delete [] buf;
+-    }
++    : buf (new double [width]), numel (0), numNaN (0),
++      nan_if_any_is (! skip_nan) { }
  
--  if (args(0).is_complex_type())
-+  if (args(0).iscomplex())
-     {
-       error("medfilt1 cannot process complex vectors");
-       return retval;
-     }
+   // Initialize to contain  seed,  and  zeros  additional zeros.
+   void init (const double *seed, octave_idx_type num, octave_idx_type stride,
+@@ -88,7 +79,7 @@
+       numel = zeros;
+       numNaN = 0;
  
-   int n=3;    // length of the filter (default 3)
--  if (nargin > 1) n = NINT(args(1).double_value());
-+  if (nargin > 1) n = octave::math::nint(args(1).double_value());
-   if (n < 1)
-     {
-       error ("medfilt1 filter length must be at least 1");
-diff -uNr a/src/remez.cc b/src/remez.cc
---- a/src/remez.cc	2015-05-25 20:22:36.846411059 -0400
-+++ b/src/remez.cc	2018-04-09 12:48:37.340963884 -0400
-@@ -784,7 +784,7 @@
-     return retval;
-   }
+-      bzero (buf, zeros * sizeof (double));
++      std::fill_n (&buf[0], zeros, 0.0);
  
--  int numtaps = NINT (args(0).double_value()) + 1; // #coeff = filter order+1
-+  int numtaps = octave::math::nint (args(0).double_value()) + 1; // #coeff = filter order+1
-   if (numtaps < 4) {
-     error("remez: number of taps must be an integer greater than 3");
-     return retval;
-@@ -841,7 +841,7 @@
-     if (args(4).is_string() && !args(3).is_string())
-       stype = args(4).string_value();
-     else if (args(4).is_real_scalar())
--      density = NINT(args(4).double_value());
-+      density = octave::math::nint(args(4).double_value());
-     else {
-       error("remez: incorrect argument list");
-       return retval;
-@@ -850,7 +850,7 @@
-   if (nargin > 5) {
-     if (args(5).is_real_scalar()
-         && !args(4).is_real_scalar())
--      density = NINT(args(5).double_value());
-+      density = octave::math::nint(args(5).double_value());
-     else {
-       error("remez: incorrect argument list");
-       return retval;
-diff -uNr a/src/sosfilt.cc b/src/sosfilt.cc
---- a/src/sosfilt.cc	2015-05-25 20:22:36.846411059 -0400
-+++ b/src/sosfilt.cc	2018-04-09 12:52:45.933287424 -0400
-@@ -13,10 +13,9 @@
- // You should have received a copy of the GNU General Public License along with
- // this program; if not, see <http://www.gnu.org/licenses/>.
- 
--#include <octave/config.h>
- #include <octave/defun-dld.h>
- #include <octave/error.h>
--#include <octave/gripes.h>
-+#include <octave/errwarn.h>
- #include <octave/oct-obj.h>
- #include <octave/pager.h>
- #include <octave/quit.h>
-@@ -52,7 +51,7 @@
- 
-   if (error_state)
-     {
--      gripe_wrong_type_arg("sosfilt",args(0));
-+      err_wrong_type_arg("sosfilt",args(0));
-       return retval;
-     }
- 
-@@ -66,7 +65,7 @@
- 
-   if (error_state)
-     {
--      gripe_wrong_type_arg("sosfilt",args(1));
-+      err_wrong_type_arg("sosfilt",args(1));
-       return retval;
-     }
- 
-diff -uNr a/src/upfirdn.cc b/src/upfirdn.cc
---- a/src/upfirdn.cc	2015-05-25 20:22:36.846411059 -0400
-+++ b/src/upfirdn.cc	2018-04-09 12:52:37.249695083 -0400
-@@ -13,10 +13,9 @@
- // You should have received a copy of the GNU General Public License along with
- // this program; if not, see <http://www.gnu.org/licenses/>.
- 
--#include <octave/config.h>
- #include <octave/defun-dld.h>
- #include <octave/error.h>
--#include <octave/gripes.h>
-+#include <octave/errwarn.h>
- #include <octave/oct-obj.h>
- #include <octave/pager.h>
- #include <octave/quit.h>
-@@ -105,7 +104,7 @@
- 
-   if (error_state)
-     {
--      gripe_wrong_type_arg ("upfirdn", args (1));
-+      err_wrong_type_arg ("upfirdn", args (1));
-       return retval;
-     }
- 
-@@ -113,7 +112,7 @@
- 
-   if (error_state)
-     {
--      gripe_wrong_type_arg ("upfirdn", args (2));
-+      err_wrong_type_arg ("upfirdn", args (2));
-       return retval;
-     }
- 
-@@ -121,7 +120,7 @@
- 
-   if (error_state)
-     {
--      gripe_wrong_type_arg ("upfirdn", args (3));
-+      err_wrong_type_arg ("upfirdn", args (3));
-       return retval;
-     }
- 
-@@ -131,19 +130,19 @@
-       Matrix x = args (0).matrix_value ();
-       if (error_state)
-         {
--          gripe_wrong_type_arg ("upfirdn", args (0));
-+          err_wrong_type_arg ("upfirdn", args (0));
-           return retval;
+       // Insert from seed.  Could sort if it is large
+       num *= stride;
+@@ -106,7 +97,7 @@
+           n_pos = find (next);
+           p_pos = find (prev, n_pos);
+           if (n_pos != p_pos)
+-            std::copy_backward (buf + n_pos, buf + p_pos, buf + p_pos + 1);
++            std::copy_backward (&buf[n_pos], &buf[p_pos], &buf[p_pos + 1]);
          }
- 
-       Matrix y = upfirdn (x, h, p, q);
-       retval (0) = y;
-     }
--  else if (args (0).is_complex_type ())
-+  else if (args (0).iscomplex ())
-     {
-       ComplexMatrix x = args (0).complex_matrix_value ();
-       if (error_state)
+       else if (next > prev)
          {
--          gripe_wrong_type_arg ("upfirdn", args (0));
-+          err_wrong_type_arg ("upfirdn", args (0));
-           return retval;
+@@ -114,7 +105,7 @@
+           n_pos = find (next, p_pos);
+           if (n_pos != p_pos)
+             {
+-              std::copy (buf + p_pos + 1, buf + n_pos, buf + p_pos);
++              std::copy (&buf[p_pos + 1], &buf[n_pos], &buf[p_pos]);
+               n_pos--;            // position shifts due to deletion of p_pos
+             }
          }
- 
-@@ -152,7 +151,7 @@
-     }
-   else
-     {
--      gripe_wrong_type_arg ("upfirdn", args (0));
-+      err_wrong_type_arg ("upfirdn", args (0));
-       return retval;
-     }
- 
+@@ -123,13 +114,13 @@
+           if (next == next)
+             {
+               n_pos = find (next);
+-              std::copy_backward (buf + n_pos, buf + numel - 1, buf + numel);
++              std::copy_backward (&buf[n_pos], &buf[numel - 1], &buf[numel]);
+               numNaN--;
+             }
+           else if (prev == prev)
+             {
+               p_pos = find (prev);
+-              std::copy (buf + p_pos + 1, buf + numel, buf + p_pos);
++              std::copy (&buf[p_pos + 1], &buf[numel], &buf[p_pos]);
+               n_pos = numel - 1;
+               numNaN++;
+             }
+@@ -151,7 +142,7 @@
+         {
+           n_pos = find (next);
+           if (n_pos < numel)
+-            std::copy_backward (buf + n_pos, buf + numel, buf + numel + 1);
++            std::copy_backward (&buf[n_pos], &buf[numel], &buf[numel + 1]);
+         }
+       else              // NaN stored at end, so nothing to move.
+         {
+@@ -170,7 +161,7 @@
+       if (prev == prev)
+         {
+           p_pos = find (prev);
+-          std::copy (buf + p_pos + 1, buf + numel, buf + p_pos);
++          std::copy (&buf[p_pos + 1], &buf[numel], &buf[p_pos]);
+         }
+       else                  // NaN stored at end, so nothing to move.
+         numNaN--;
+

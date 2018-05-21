@@ -3,8 +3,8 @@
 
 PKG             := of-signal
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.3.2
-$(PKG)_CHECKSUM := 74843718f51417f49459384b3f2670b2ba3093ac
+$(PKG)_VERSION  := 1.4.0
+$(PKG)_CHECKSUM := 2a2e8d19e28ff63df89130cc1bb832b477ff4587
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := signal-$($(PKG)_VERSION)
 $(PKG)_FILE     := signal-$($(PKG)_VERSION).tar.gz
