@@ -58,6 +58,6 @@ Rem   Start Octave (this detaches and immediately returns).
 if %GUI_MODE%==1 (
   start octave-gui.exe --gui %*
 ) else (
-  start octave-cli.exe %*
+  octave-cli.exe %*
 )
 
