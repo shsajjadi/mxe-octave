@@ -15,11 +15,10 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/libgsf/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?h=LIBGSF_\\([0-9]*_[0-9]*[02468]_[^<]*\\)'.*,\\1,p" | \
-    $(SED) 's,_,.,g' | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/libgsf/tags | \
+    $(SED) -n 's|.*releases/tag/LIBGSF_\([^"]*\).*|\1|p' | \
+    $(SED) 's,_,.,g' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

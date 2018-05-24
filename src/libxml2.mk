@@ -15,10 +15,9 @@ ifneq ($(MXE_SYSTEM),msvc)
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/libxml2/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?h=v\\([0-9][^']*\\)'.*,\\1,p" | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/libxml2/tags | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | grep -v 'rc' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

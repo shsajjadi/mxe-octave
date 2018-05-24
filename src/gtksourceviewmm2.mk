@@ -11,12 +11,9 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/gtksourceviewmm/$(call
 $(PKG)_DEPS     := gtkmm2 gtksourceview
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/cgit/gtksourceviewmm/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?h=gtksourceviewmm-\\([0-9][^']*\\)'.*,\\1,p" | \
-    grep -v '^2\.9[0-9]\.' | \
-    grep '^2\.' | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/gtksourceviewmm/tags | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | grep -v '^2\.9[0-9]\.' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

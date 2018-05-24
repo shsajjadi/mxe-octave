@@ -11,7 +11,6 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/gtksourceview/$(call S
 $(PKG)_DEPS     := gtk2 libxml2
 
 define $(PKG)_UPDATE
-
     $(WGET) -q -O- https://github.com/GNOME/gtksourceview/tags | \
     $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | grep -v '^2\.9[0-9]\.' | $(SORT) -V | \
     tail -1

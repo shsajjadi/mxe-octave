@@ -11,10 +11,9 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/pangomm/$(call SHORT_P
 $(PKG)_DEPS     := cairomm glibmm pango
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/pangomm/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?h=\\([0-9][^']*\\)'.*,\\1,p" | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/pangomm/tags | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
