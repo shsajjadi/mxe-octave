@@ -11,10 +11,9 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/glibmm/$(call SHORT_PK
 $(PKG)_DEPS     := glib libsigc++
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/glibmm/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n 's,.*<a[^>]*>\([0-9]*\.[0-9]*[02468]\.[^<]*\)<.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/glibmm/tags | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
