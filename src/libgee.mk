@@ -11,11 +11,9 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/libgee/$(call SHORT_PK
 $(PKG)_DEPS     := glib
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/libgee/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?h=LIBGEE_\\([0-9]*_[0-9]*_[^<]*\\)'.*,\\1,p" | \
-    $(SED) 's,_,.,g' | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/libgee/tags | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

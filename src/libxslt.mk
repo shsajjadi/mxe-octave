@@ -11,10 +11,9 @@ $(PKG)_URL      := ftp://xmlsoft.org/libxslt/$($(PKG)_FILE)
 $(PKG)_DEPS     := libxml2 libgcrypt
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/libxslt/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?h=v\\([0-9][^']*\\)'.*,\\1,p" | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/libxslt/tags | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
