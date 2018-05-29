@@ -24,6 +24,7 @@ SRC_FILES_1 := \
   build-automake.mk \
   build-binutils.mk \
   build-bison.mk \
+  build-cmake-1-fixes.patch \
   build-cmake.mk \
   build-flex-1-fixes.patch \
   build-flex.mk \
@@ -58,6 +59,7 @@ SRC_FILES_1 := \
   cgal-1-fixes.patch \
   cgal.mk \
   cloog.mk \
+  cmake-1-fixes.patch \
   cmake.mk \
   cminpack.mk \
   cppunit.mk \
