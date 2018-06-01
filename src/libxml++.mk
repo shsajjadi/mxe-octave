@@ -11,8 +11,8 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/GNOME/sources/libxml++/$(call SHORT_
 $(PKG)_DEPS     := libxml2 glibmm
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- https://github.com/GNOME/libxmlplusplus/tags | \
-    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    $(WGET) -q -O- https://gitlab.gnome.org/GNOME/libxmlplusplus/tags | \
+    $(SED) -n 's|.*/tags/\([0-9][^"]*\).*|\1|p' | $(SORT) -V | \
     tail -1
 endef
 
