@@ -475,6 +475,7 @@ EOF
 # last bit of the uninstaller
   cat >> $OUTFILE << EOF
  Delete "\$INSTDIR\\*.*"
+ ClearErrors
  RmDir "\$INSTDIR"
 
  ; didnt remove directory ? most likely from not all files removed
