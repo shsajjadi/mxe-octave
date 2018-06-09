@@ -4,7 +4,7 @@
 PKG             := src-msys-dos2unix
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 7.4.0-1
-$(PKG)_CHECKSUM := 040f02f82e191b78557bf757bd2421ca048a93e5
+$(PKG)_CHECKSUM := d30eec43661495eaa05456259404832277fe3e06
 $(PKG)_REMOTE_SUBDIR := dos2unix/dos2unix-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := dos2unix-$($(PKG)_VERSION)-msys-1.0.19-src.tar.lzma
