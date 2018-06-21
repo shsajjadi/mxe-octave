@@ -1,0 +1,50 @@
+diff -uNr a/driver/others/Makefile b/driver/others/Makefile
+--- a/driver/others/Makefile	2018-05-23 09:12:20.000000000 -0400
++++ b/driver/others/Makefile	2018-06-20 10:11:42.783308770 -0400
+@@ -1,7 +1,7 @@
+ TOPDIR	= ../..
+ include ../../Makefile.system
+ 
+-COMMONOBJS	 = memory.$(SUFFIX) xerbla.$(SUFFIX) c_abs.$(SUFFIX) z_abs.$(SUFFIX) openblas_set_num_threads.$(SUFFIX) openblas_get_num_threads.$(SUFFIX) openblas_get_num_procs.$(SUFFIX) openblas_get_config.$(SUFFIX) openblas_get_parallel.$(SUFFIX) openblas_error_handle.$(SUFFIX) openblas_env.$(SUFFIX)
++COMMONOBJS	 = memory.$(SUFFIX) c_abs.$(SUFFIX) z_abs.$(SUFFIX) openblas_set_num_threads.$(SUFFIX) openblas_get_num_threads.$(SUFFIX) openblas_get_num_procs.$(SUFFIX) openblas_get_config.$(SUFFIX) openblas_get_parallel.$(SUFFIX) openblas_error_handle.$(SUFFIX) openblas_env.$(SUFFIX)
+ 
+ #COMMONOBJS	+= slamch.$(SUFFIX) slamc3.$(SUFFIX) dlamch.$(SUFFIX)  dlamc3.$(SUFFIX)
+ 
+@@ -71,14 +71,11 @@
+ endif
+ 
+ ifeq ($(DYNAMIC_ARCH), 1)
+-HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) dynamic.$(SUFFIX)
++HPLOBJS = memory.$(SUFFIX) dynamic.$(SUFFIX)
+ else
+-HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) parameter.$(SUFFIX)
++HPLOBJS = memory.$(SUFFIX) parameter.$(SUFFIX)
+ endif
+ 
+-xerbla.$(SUFFIX) : xerbla.c
+-	$(CC) $(CFLAGS) -c $< -o $(@F)
+-
+ dynamic.$(SUFFIX) : dynamic.c
+ 	$(CC) $(CFLAGS) -c $< -o $(@F)
+ 
+@@ -166,9 +163,6 @@
+ mulx.$(SUFFIX) : $(ARCH)/mulx.c
+ 	$(CC) $(CFLAGS) -c -DXDOUBLE -UCOMPLEX $< -o $(@F)
+ 
+-xerbla.$(PSUFFIX) : xerbla.c
+-	$(CC) $(PFLAGS) -c $< -o $(@F)
+-
+ parameter.$(PSUFFIX) : parameter.c ../../param.h
+ 	$(CC) $(PFLAGS) -c $< -o $(@F)
+ 
+diff -uNr a/exports/gensymbol b/exports/gensymbol
+--- a/exports/gensymbol	2018-05-23 09:12:20.000000000 -0400
++++ b/exports/gensymbol	2018-06-20 10:10:00.468225478 -0400
+@@ -38,7 +38,6 @@
+     zhbmv,zhemm,zhemv,zher2,zher2k,zher,zherk,zhpmv,zhpr2,
+     zhpr,zrotg,zscal,zswap,zsymm,zsyr2k,zsyrk,ztbmv,
+     ztbsv,ztpmv,ztpsv,ztrmm,ztrmv,ztrsm,ztrsv,
+-    xerbla,
+     saxpby,daxpby,caxpby,zaxpby,
+     sgeadd,dgeadd,cgeadd,zgeadd,
+     somatcopy,

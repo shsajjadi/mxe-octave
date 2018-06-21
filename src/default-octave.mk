@@ -185,6 +185,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
 
     if [ "x$(MXE_SYSTEM)" == "xmingw" ]; then \
+      $(INSTALL) '$(3)/$(HOST_BINDIR)/libxerbla.dll' '$(3)$(HOST_BINDIR)/libxerbla-octave.dll'; \
       cp '$(1)/.build/src/.libs/octave-gui.exe' '$(3)$(HOST_BINDIR)'; \
       if [ "x$(ENABLE_BINARY_PACKAGES)" == "xyes" ]; then \
         mkdir -p '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \

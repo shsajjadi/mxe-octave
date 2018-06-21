@@ -11,9 +11,15 @@ $(PKG)_URL_2    := ftp://ftp.eq.uc.pt/pub/software/math/netlib/$(PKG)/$($(PKG)_F
 $(PKG)_DEPS     := blas
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
-  $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES=$(HOST_BINDIR)/libblas.dll
+  $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES="$(HOST_BINDIR)/libblas.dll $(HOST_BINDIR)/libxerbla.dll"
 else
-  $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES="-L$(HOST_PREFIX)/lib -lblas"
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES="-L$(HOST_PREFIX)/lib -lblas -lxerbla" -DBLAS_LINKER_FLAGS="-L$(HOST_PREFIX)/lib -lblas -lxerbla"
+  $(PKG)_BLAS_LIBS := -lblas -lxerbla
+else
+  $(PKG)_BLAS_CONFIG_OPTS := -DBLAS_LIBRARIES="-L$(HOST_PREFIX)/lib -lblas" -DBLAS_LINKER_FLAGS="-L$(HOST_PREFIX)/lib -lblas"
+  $(PKG)_BLAS_LIBS := -lblas
+endif
 endif
 
 ifeq ($(ENABLE_FORTRAN_INT64),yes)
@@ -38,7 +44,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' VERBOSE=1 lapacklib
 
     if [ $(BUILD_SHARED) = yes ]; then \
-        $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/liblapack.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)' -lblas; \
+        $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/liblapack.a' --install '$(INSTALL)' --libdir '$(HOST_LIBDIR)' --bindir '$(HOST_BINDIR)' $($(PKG)_BLAS_LIBS); \
     fi
 
     $(INSTALL) -d '$(HOST_LIBDIR)/pkgconfig' 
