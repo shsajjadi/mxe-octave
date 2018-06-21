@@ -1,0 +1,24 @@
+diff -uNr a/SRC/CMakeLists.txt b/SRC/CMakeLists.txt
+--- a/SRC/CMakeLists.txt	2017-06-17 18:46:53.000000000 -0400
++++ b/SRC/CMakeLists.txt	2018-06-20 12:10:39.078671922 -0400
+@@ -37,7 +37,7 @@
+ 
+ set(ALLAUX ilaenv.f ieeeck.f lsamen.f iparmq.f iparam2stage.F
+    ilaprec.f ilatrans.f ilauplo.f iladiag.f chla_transtype.f
+-   ../INSTALL/ilaver.f ../INSTALL/lsame.f xerbla.f xerbla_array.f
++   ../INSTALL/ilaver.f ../INSTALL/lsame.f xerbla_array.f
+    ../INSTALL/slamch.f)
+ 
+ set(SCLAUX
+diff -uNr a/SRC/Makefile b/SRC/Makefile
+--- a/SRC/Makefile	2017-06-17 18:46:53.000000000 -0400
++++ b/SRC/Makefile	2018-06-20 11:48:05.702370314 -0400
+@@ -56,7 +56,7 @@
+ #
+ #######################################################################
+ 
+-ALLAUX = ilaenv.o ieeeck.o lsamen.o xerbla.o xerbla_array.o iparmq.o iparam2stage.o \
++ALLAUX = ilaenv.o ieeeck.o lsamen.o xerbla_array.o iparmq.o iparam2stage.o \
+    ilaprec.o ilatrans.o ilauplo.o iladiag.o chla_transtype.o \
+    ../INSTALL/ilaver.o ../INSTALL/lsame.o ../INSTALL/slamch.o
+ 

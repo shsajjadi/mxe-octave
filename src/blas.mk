@@ -21,17 +21,29 @@ define $(PKG)_UPDATE
     tail -1
 endef
 
+$(PKG)_TARGETS =  BLASLIB=libblas.a
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_TARGETS += XERBLALIB=libxerbla.a
+  $(PKG)_LIBXERBLA = -lxerbla
+endif
+
 define $(PKG)_BUILD
     $(SED) -i 's,$$(FORTRAN),$(MXE_F77) $(MXE_F77_PICFLAG) $($(PKG)_DEFAULT_INTEGER_8_FLAG),g' '$(1)/Makefile'
-    $(MAKE) -C '$(1)' -j '$(JOBS)'
-    cd '$(1)' && $(MXE_AR) cr libblas.a *.o
+    $(MAKE) -C '$(1)' ARCH=$(MXE_AR) RANLIB=$(MXE_RANLIB) $($(PKG)_TARGETS) -j '$(JOBS)'
 
     if [ $(BUILD_SHARED) = yes ]; then \
-      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/libblas.a' --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)'; \
+      if [ -n "$($(PKG)_LIBXERBLA)" ]; then \
+        $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/libxerbla.a' --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)'; \
+        $(INSTALL) '$(3)/$(HOST_BINDIR)/libxerbla.dll' '$(3)$(HOST_BINDIR)/libxerbla-blas.dll'; \
+      fi; \
+      $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_F77)' '$(1)/libblas.a' --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)' $($(PKG)_LIBXERBLA); \
     fi
 
     if [ $(BUILD_STATIC) = yes ]; then \
       $(INSTALL) -d '$(3)$(HOST_LIBDIR)'; \
       $(INSTALL) '$(1)/libblas.a' '$(3)$(HOST_LIBDIR)/'; \
+      if [ -n "$($(PKG)_LIBXERBLA)" ]; then \
+        $(INSTALL) '$(1)/libxerbla.a' '$(3)$(HOST_LIBDIR)/'; \
+      fi; \
     fi
 endef
