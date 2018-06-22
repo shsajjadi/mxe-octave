@@ -3,12 +3,12 @@
 
 PKG             := qtbase
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.7.1
-$(PKG)_CHECKSUM := a3ddcde8978d3a05bb4342fce364a792472a16e6
-$(PKG)_SUBDIR   := $(PKG)-opensource-src-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-opensource-src-$($(PKG)_VERSION).tar.xz
-$(PKG)_URL      := http://download.qt.io/official_releases/qt/5.7/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
-$(PKG)_DEPS     := dbus double-conversion freetds freetype fontconfig jpeg libjbig libpng libproxy pcre postgresql sqlite zlib
+$(PKG)_VERSION  := 5.11.0
+$(PKG)_CHECKSUM := 277bfe3ebbead8096f6a16416db522179404d41e
+$(PKG)_SUBDIR   := $(PKG)-everywhere-src-$($(PKG)_VERSION)
+$(PKG)_FILE     := $(PKG)-everywhere-src-$($(PKG)_VERSION).tar.xz
+$(PKG)_URL      := http://download.qt.io/official_releases/qt/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
+$(PKG)_DEPS     := dbus double-conversion freetds freetype fontconfig jpeg libjbig libpng libproxy pcre2 postgresql sqlite zlib
 
 $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION :=
 $(PKG)_CONFIGURE_DATABASE_OPTION :=
@@ -88,6 +88,11 @@ else
   endif
 endif
 
+$(PKG)_CONFIGURE_ENV += \
+    PKG_CONFIG="$(MXE_PKG_CONFIG)" \
+    PKG_CONFIG_SYSROOT_DIR="/" \
+    PKG_CONFIG_LIBDIR="$(PKG_CONFIG_PATH)"
+
 define $(PKG)_BUILD
     cd '$(1)' && \
         $($(PKG)_CONFIGURE_ENV) \
@@ -101,6 +106,7 @@ define $(PKG)_BUILD
             $($(PKG)_CONFIGURE_PLATFORM_OPTION) \
             $($(PKG)_CONFIGURE_CROSS_COMPILE_OPTION) \
             -device-option PKG_CONFIG='$(MXE_PKG_CONFIG)' \
+            -pkg-config \
             -force-pkg-config \
             -no-use-gold-linker \
             -shared \
