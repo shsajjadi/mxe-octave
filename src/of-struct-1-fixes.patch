@@ -115,3 +115,15 @@ diff -uNr a/src/error-helpers.h b/src/error-helpers.h
        { \
          err = true; \
        }
+diff -r e0a0e577f1ae src/error-helpers.cc
+--- a/src/error-helpers.cc	Fri Jun 22 07:52:08 2018 -0400
++++ b/src/error-helpers.cc	Fri Jun 22 07:56:28 2018 -0400
+@@ -18,7 +18,7 @@
+ */
+ 
+ #include <octave/oct.h>
+-
++#include <iostream>
+ #include "error-helpers.h"
+ 
+ // call verror

@@ -1,0 +1,12 @@
+diff -r 7cfa3e9df6e4 src/error-helpers.cc
+--- a/src/error-helpers.cc	Thu May 24 21:19:27 2018 +0200
++++ b/src/error-helpers.cc	Fri Jun 22 08:16:46 2018 -0400
+@@ -18,7 +18,7 @@
+ */
+ 
+ #include <octave/oct.h>
+-
++#include <iostream>
+ #include "error-helpers.h"
+ 
+ // call verror
