@@ -4,7 +4,7 @@
 PKG             := qtimageformats
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION   = $(qtbase_VERSION)
-$(PKG)_CHECKSUM := 4cf8e6183e8280adcd6765c5ae1d2ea27a868a1f
+$(PKG)_CHECKSUM := d1382ddb54d0e95d226815c051b4a02c4d935bc7
 $(PKG)_SUBDIR    = $(subst qtbase,qtimageformats,$(qtbase_SUBDIR))
 $(PKG)_FILE      = $(subst qtbase,qtimageformats,$(qtbase_FILE))
 $(PKG)_URL       = $(subst qtbase,qtimageformats,$(qtbase_URL))
