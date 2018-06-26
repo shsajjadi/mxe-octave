@@ -14,6 +14,10 @@ ifeq ($(ENABLE_FORTRAN_INT64),yes)
   $(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS := FFLAGS="-g -O2 -fdefault-integer-8"
 endif
 
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_XERBLA_LIB_MAKE_OPTION := XERBLA_LIB="-lxerbla"
+endif
+
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package qrupdate.' >&2;
     echo $(qrupdate_VERSION)
@@ -33,5 +37,6 @@ define $(PKG)_BUILD
         $($(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS) \
           && $(CONFIGURE_POST_HOOK)
 
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' \
+        $($(PKG)_XERBLA_LIB_MAKE_OPTION) install DESTDIR='$(3)'
 endef
