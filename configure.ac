@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.62])
 AC_INIT([MXE-Octave], [0.0.35], [https://octave.org/bugs.html], [mxe-octave])
 
-AC_CONFIG_SRCDIR([src/octave.mk])
+AC_CONFIG_SRCDIR([src/default-octave.mk])
 AC_CONFIG_AUX_DIR([tools])
 
 ### Check for bootstrap tools.  This list is probably not complete yet.
@@ -269,10 +269,9 @@ AC_SUBST(ENABLE_QHULL_NO_STRICT_ALIASING_FLAG)
 
 AC_ARG_ENABLE([octave],
   [AS_HELP_STRING([--enable-octave=stable],
-    [Enable a specific build of Octave (stable, alpha, default)])],
+    [Enable a specific build of Octave (stable, default)])],
   [case $enableval in
      stable) ENABLE_OCTAVE="stable-" ;;
-     alpha) ENABLE_OCTAVE="" ;;
      default) ENABLE_OCTAVE="default-" ;;
      *) AC_MSG_ERROR([bad value "$enableval" for --enable-octave]) ;;
    esac], [ENABLE_OCTAVE="stable-"])
