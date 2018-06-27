@@ -22,7 +22,9 @@ else
     $(PKG)_DEPS += qt
 endif
 
-ifeq ($(MXE_WINDOWS_BUILD),no)
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_WITH_BLAS_CONFIGURE_OPTIONS := --with-blas="-lblas -lxerbla"
+else
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += x11 xext
   endif
@@ -166,6 +168,7 @@ define $(PKG)_BUILD
         --disable-silent-rules \
         --enable-install-build-logs \
         $($(PKG)_CROSS_CONFIG_OPTIONS) \
+        $($(PKG)_WITH_BLAS_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \
