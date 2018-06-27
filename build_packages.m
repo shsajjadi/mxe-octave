@@ -55,7 +55,7 @@ unwind_protect
   try_install instrument-control-0.3.1.tar.gz
   try_install generate_html-0.3.1.tar.gz
   try_install financial-0.5.1.tar.gz
-  try_install stk-2.4.2.tar.gz
+  try_install stk-2.5.1.tar.gz
   try_install splines-1.3.2.tar.gz
   try_install dataframe-1.2.0.tar.gz
   try_install lssa-0.1.2.tar.gz
