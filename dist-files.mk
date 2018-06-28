@@ -623,6 +623,9 @@ SRC_FILES_1 := \
   readline-1-sigwinch.patch \
   readline-2-event-hook.patch \
   readline.mk \
+  release-octave-1-gnulib.patch \
+  release-octave-1-qt.patch \
+  release-octave.mk \
   renderproto.mk \
   s2tc.mk \
   sdl-test.c \

@@ -1,23 +1,44 @@
 # This file is part of MXE.
 # See index.html for further information.
 
-## This set of rules is intended for building the latest sources from
-## the default branch of the Octave hg archive.  The $(PKG)_URL is
-## intentionally set to an invalid value.  You must create a tar.lz
-## file from the default branch of the Octave hg archive separately
-## and place it in the directory where mxe-octave package sources are
-## found.
+## This set of rules is intended for building the latest released
+## version of Octave found on ftp.gnu.org using the current
+## packages found in the mxe-octave archive.  To reproduce the binary
+## builds for Windows that are distributed on ftp.gnu.org, you must
+## choose the revision of mxe-octave that matches the release you
+## wish to reproduce.  Those should be tagged in the mxe-octave archive
+## with tags like "octave-release-4.4.0".  The options used to build are
+##
+##   --enable-octave=release
+##   --enable-binary-packages
+##   --enable-devel-tools
+##   --enable-qt5
+##   --disable-system-opengl
+##
+## and one of the following
+##
+##   * 64-bit Windows build; 32-bit integers for Fortran
+##     (including BLAS and LAPACK libraries) which is the typical
+##     configuration for all Linux distributions:
+##
+##       --enable-windows-64 --enable-64 --disable-fortran-int64
+##
+##   * 64-bit Windows build; 64-bit integers for Fortran
+##     (including BLAS and LAPACK libraries):
+##
+##       --enable-windows-64 --enable-64 --enable-fortran-int64
+##
+##   * 32-bit Windows build:
+##
+##       --disable-windows-64 --disable-64 --disable-fortran-int64
 
-## We omit the package checksum so that we don't have to update it
-## each time the tarball changes.
-
-PKG             := default-octave
+PKG             := release-octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.0.0
-$(PKG)_CHECKSUM := ## No checksum
+$(PKG)_VERSION  := 4.4.0
+$(PKG)_CHECKSUM := 2f682e2843d45d858ed7bf603f569d6b0acd2fb9
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.lz
-$(PKG)_URL      := http://not.a.valid.url/$($(PKG)_FILE)
+$(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
@@ -29,9 +50,7 @@ else
     $(PKG)_DEPS += qt
 endif
 
-ifeq ($(MXE_WINDOWS_BUILD),yes)
-  $(PKG)_WITH_BLAS_CONFIGURE_OPTIONS := --with-blas="-lblas -lxerbla"
-else
+ifeq ($(MXE_WINDOWS_BUILD),no)
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += x11 xext
   endif
@@ -175,7 +194,6 @@ define $(PKG)_BUILD
         --disable-silent-rules \
         --enable-install-build-logs \
         $($(PKG)_CROSS_CONFIG_OPTIONS) \
-        $($(PKG)_WITH_BLAS_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \
@@ -195,7 +213,6 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
 
     if [ "x$(MXE_SYSTEM)" == "xmingw" ]; then \
-      $(INSTALL) '$(3)/$(HOST_BINDIR)/libxerbla.dll' '$(3)$(HOST_BINDIR)/libxerbla-octave.dll'; \
       cp '$(1)/.build/src/.libs/octave-gui.exe' '$(3)$(HOST_BINDIR)'; \
       if [ "x$(ENABLE_BINARY_PACKAGES)" == "xyes" ]; then \
         mkdir -p '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
