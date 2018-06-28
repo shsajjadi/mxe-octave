@@ -1,16 +1,23 @@
 # This file is part of MXE.
 # See index.html for further information.
 
+## This set of rules is intended for building the latest sources from
+## the stable branch of the Octave hg archive.  The $(PKG)_URL is
+## intentionally set to an invalid value.  You must create a tar.lz
+## file from the stable branch of the Octave hg archive separately
+## and place it in the directory where mxe-octave package sources
+## are found.
+
 ## We omit the package checksum so that we don't have to update it
-## each time the tarball changes on the hydra site.
+## each time the tarball changes.
 
 PKG             := stable-octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.4.0
-$(PKG)_CHECKSUM := 2f682e2843d45d858ed7bf603f569d6b0acd2fb9
+$(PKG)_VERSION  := 4.4.0+
+$(PKG)_CHECKSUM := ## No checksum
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.lz
-$(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
+$(PKG)_URL      := http://not.a.valid.url/$($(PKG)_FILE)
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif

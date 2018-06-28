@@ -269,12 +269,13 @@ AC_SUBST(ENABLE_QHULL_NO_STRICT_ALIASING_FLAG)
 
 AC_ARG_ENABLE([octave],
   [AS_HELP_STRING([--enable-octave=stable],
-    [Enable a specific build of Octave (stable, default)])],
+    [Enable a specific build of Octave (release, stable, default)])],
   [case $enableval in
+     release) ENABLE_OCTAVE="release-" ;;
      stable) ENABLE_OCTAVE="stable-" ;;
      default) ENABLE_OCTAVE="default-" ;;
      *) AC_MSG_ERROR([bad value "$enableval" for --enable-octave]) ;;
-   esac], [ENABLE_OCTAVE="stable-"])
+   esac], [ENABLE_OCTAVE="release-"])
 AC_SUBST(ENABLE_OCTAVE)
 
 AC_ARG_ENABLE([binary-packages],
