@@ -29,7 +29,9 @@ else
     $(PKG)_DEPS += qt
 endif
 
-ifeq ($(MXE_WINDOWS_BUILD),no)
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_WITH_BLAS_CONFIGURE_OPTIONS := --with-blas="-lblas -lxerbla"
+else
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += x11 xext
   endif
@@ -173,6 +175,7 @@ define $(PKG)_BUILD
         --disable-silent-rules \
         --enable-install-build-logs \
         $($(PKG)_CROSS_CONFIG_OPTIONS) \
+        $($(PKG)_WITH_BLAS_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \
@@ -192,6 +195,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
 
     if [ "x$(MXE_SYSTEM)" == "xmingw" ]; then \
+      $(INSTALL) '$(3)/$(HOST_BINDIR)/libxerbla.dll' '$(3)$(HOST_BINDIR)/libxerbla-octave.dll'; \
       cp '$(1)/.build/src/.libs/octave-gui.exe' '$(3)$(HOST_BINDIR)'; \
       if [ "x$(ENABLE_BINARY_PACKAGES)" == "xyes" ]; then \
         mkdir -p '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
