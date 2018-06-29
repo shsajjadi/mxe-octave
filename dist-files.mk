@@ -489,7 +489,6 @@ SRC_FILES_1 := \
   of-linear-algebra-4-fixes.patch \
   of-linear-algebra.mk \
   of-lssa.mk \
-  of-ltfat-1-fixes.patch \
   of-ltfat.mk \
   of-mapping.mk \
   of-miscellaneous-1-fixes.patch \
