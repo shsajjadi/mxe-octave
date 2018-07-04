@@ -29,6 +29,11 @@ ICON=`find $OCTAVE_SOURCE -name octave-logo.ico -printf "%P\n" | head -1 | sed '
 # extract version number
 OCTAVE_VERSION=`head -1 $MXEDIR/octave/octave-version`
 VERSION=`echo $OCTAVE_VERSION | sed -n 's,\([0-9\.]*\).*,\1,p'`
+if [ `echo $VERSION | grep -o '\.' | wc -l` -le 2 ]; then
+  INSTALLER_VERSION="$VERSION.0"
+else
+  INSTALLER_VERSION=$VERSION
+fi
 
 # estimated size of installed files
 SIZE=`du -slk $OCTAVE_SOURCE | awk '{print \$1}'`
@@ -41,7 +46,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
 !define APP_NAME "GNU Octave"
 !define COMP_NAME "GNU Project"
 !define WEB_SITE "https://www.octave.org"
-!define VERSION "$VERSION.0"
+!define VERSION "$INSTALLER_VERSION"
 !define OCTAVE_VERSION "$OCTAVE_VERSION"
 !define COPYRIGHT "Copyright © 2013-2018 John W. Eaton and others."
 !define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
