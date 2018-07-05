@@ -209,7 +209,9 @@ FunctionEnd
 Function .onInit
   Call CheckWinVer
   Call CheckCurrVersion
-  Call CheckJRE
+  \${If} @ENABLE_JAVA@ == yes
+    Call CheckJRE
+  \${EndIf} 
   InitPluginsDir
 FunctionEnd
 
