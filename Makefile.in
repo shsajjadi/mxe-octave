@@ -200,9 +200,14 @@ ifeq ($(USE_PIC_FLAG),yes)
 endif
 
 JOBS               := 1
-SOURCEFORGE_MIRROR := freefr.dl.sourceforge.net
-PKG_MIRROR         := s3.amazonaws.com/mxe-pkg
-PKG_CDN            := d1yihgixbnrglp.cloudfront.net
+SOURCEFORGE_MIRROR := downloads.sourceforge.net
+MXE_MIRROR         := https://mirror.mxe.cc/pkg
+MXE_OCTAVE_MIRROR  := https://octave.org/mxe-pkg-src
+PKG_MIRROR         := https://s3.amazonaws.com/mxe-pkg
+PKG_CDN            := http://d1yihgixbnrglp.cloudfront.net
+GITLAB_BACKUP      := https://gitlab.com/starius/mxe-backup2/raw/master
+# reorder as required, ensuring final one is a http fallback
+MIRROR_SITES       := GITLAB_BACKUP MXE_MIRROR PKG_MIRROR PKG_CDN MXE_OCTAVE_MIRROR
 
 SHELL := @SHELL@
 
@@ -214,10 +219,12 @@ SORT       := $(shell gsort --help >/dev/null 2>&1 && echo g)sort
 ## The --compression option for wget is new in 1.19.2 and now without
 ## using --compression=none, wget seems to uncompress .gz archives
 ## automatically?!?
-WGET_COMP  := $(shell wget --compression=none --help >/dev/null 2>&1 && echo x--compression=none | $(SED) 's/x//')
-WGET       := wget $(WGET_COMP) --no-check-certificate \
-                   --user-agent=$(shell wget --version | \
-                   $(SED) -n 's,GNU \(Wget\) \([0-9.]*\).*,\1/\2,p')
+WGET_TOOL   = wget
+WGET_COMP  := $(shell $(WGET_TOOL) --compression=none --help >/dev/null 2>&1 && echo x--compression=none | $(SED) 's/x//')
+DEFAULT_UA := $(shell $(WGET_TOOL) --version | $(SED) -n 's,GNU \(Wget\) \([0-9.]*\).*,\1/\2,p')
+WGET        = $(WGET_TOOL) $(WGET_COMP) --no-check-certificate \
+                 --user-agent='$(or $($(1)_UA),$(DEFAULT_UA))'
+
 # The MSYS GNU tar does not support long uid/gid, leading to unpacking
 # errors for some archives. Bsdtar does not have that limitation, so
 # use it on Win32 platform if GNU tar fails to unpack the archive.
@@ -536,20 +543,40 @@ PKG_CHECKSUM = \
 CHECK_PKG_ARCHIVE = \
     [ -f '$(PKG_DIR)/$($(1)_FILE)' -a \( -z "$($(1)_CHECKSUM)" -o '$($(1)_CHECKSUM)' == "`$$(call PKG_CHECKSUM,$(1))`" \) ]
 
+ESCAPE_PKG = \
+	echo '$($(1)_FILE)' | perl -lpe 's/([^A-Za-z0-9])/sprintf("%%%02X", ord($$$$1))/seg'
+
+BACKUP_DOWNLOAD = \
+    (echo "MXE Warning! Downloading $(1) from backup." >&2 && \
+    ($(foreach SITE,$(MIRROR_SITES), \
+        $(WGET) -O '$(TMP_FILE)' $($(SITE))/`$(call ESCAPE_PKG,$(1))` || ) false))
+
 DOWNLOAD_PKG_ARCHIVE = \
-    mkdir -p '$(PKG_DIR)' && \
-    $(if $($(1)_URL_2), \
-        ( $(WGET) -T 30 -t 3 -O- '$($(1)_URL)' || \
-          $(WGET) -O- '$($(1)_URL_2)' || \
-          $(WGET) -O- '$(PKG_MIRROR)/$($(1)_FILE)' || \
-          $(WGET) -O- '$(PKG_CDN)/$($(1)_FILE)' ), \
-        ( $(WGET) -O- '$($(1)_URL)' || \
-          $(WGET) -O- '$(PKG_MIRROR)/$($(1)_FILE)' || \
-          $(WGET) -O- '$(PKG_CDN)/$($(1)_FILE)' )) \
-    $(if $($(1)_FIX_GZIP), \
-        | gzip -d | gzip -9n, \
-        ) \
-    > '$(PKG_DIR)/$($(1)_FILE)' || rm -f '$(PKG_DIR)/$($(1)_FILE)'
+    $(eval TMP_FILE := $(PKG_DIR)/.tmp-$($(1)_FILE)) \
+    $(if $($(1)_SOURCE_TREE),\
+        true\
+    $(else),\
+        mkdir -p '$(PKG_DIR)' && ( \
+            ($(WGET) -T 30 -t 3 -O '$(TMP_FILE)' '$($(1)_URL)' && \
+             $(call CHECK_PKG_ARCHIVE,$(1),'$(TMP_FILE)')) \
+            $(if $($(1)_URL_2), \
+                || (echo "MXE Warning! Downloading $(1) from second URL." >&2 && \
+                    $(WGET) -T 30 -t 3 -O '$(TMP_FILE)' '$($(1)_URL_2)' && \
+                    $(call CHECK_PKG_ARCHIVE,$(1),'$(TMP_FILE)'))) \
+            $(if $(MXE_NO_BACKUP_DL),, \
+                || $(BACKUP_DOWNLOAD)) \
+        ) && cat '$(TMP_FILE)' \
+        $(if $($(1)_FIX_GZIP), \
+            | gzip -d | gzip -9n, \
+            ) \
+        > '$(PKG_DIR)/$($(1)_FILE)' && \
+        $(if $(CREATE_SUFFIXED_ARCHIVE),cp '$(PKG_DIR)/$($(1)_FILE)' '$(PKG_DIR)/$($(1)_FILE)_$($(1)_CHECKSUM)' &&) \
+        rm '$(TMP_FILE)' || \
+        ( echo; \
+          echo 'Download failed!'; \
+          echo; \
+          rm -f '$(PKG_DIR)/$($(1)_FILE)' '$(TMP_FILE)'; )\
+    )
 
 ifeq ($(IGNORE_SETTINGS),yes)
     $(info [ignore settings.mk])
