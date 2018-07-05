@@ -538,10 +538,14 @@ UNPACK_PKG_ARCHIVE = \
     $(if $(value $(1)_FILE),$(call UNPACK_ARCHIVE,$(PKG_DIR)/$($(1)_FILE),$(1),$(2)),true)
 
 PKG_CHECKSUM = \
-    openssl sha1 '$(PKG_DIR)/$($(1)_FILE)' 2>/dev/null | $(SED) -n 's,^.*\([0-9a-f]\{40\}\)$$,\1,p'
+    openssl sha1 $(or $(2),'$(PKG_DIR)/$($(1)_FILE)') 2>/dev/null | $(SED) -n 's,^.*\([0-9a-f]\{40\}\)$$,\1,p'
 
 CHECK_PKG_ARCHIVE = \
-    [ -f '$(PKG_DIR)/$($(1)_FILE)' -a \( -z "$($(1)_CHECKSUM)" -o '$($(1)_CHECKSUM)' == "`$$(call PKG_CHECKSUM,$(1))`" \) ]
+    $(if $($(1)_SOURCE_TREE),\
+        echo '[local]' '$(1)' '$($(1)_SOURCE_TREE)' \
+    $(else),$(if $(SKIP_CHECHSUM),true, \
+        [ '$($(1)_CHECKSUM)' == "`$$(call PKG_CHECKSUM,$(1),$(2))`" ]\
+    ))
 
 ESCAPE_PKG = \
 	echo '$($(1)_FILE)' | perl -lpe 's/([^A-Za-z0-9])/sprintf("%%%02X", ord($$$$1))/seg'
@@ -811,11 +815,30 @@ endef
 
 define PKG_RULE
 .PHONY: download-$(1)
-download-$(1): $(addprefix download-,$($(1)_DEPS))
-	if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
-	    $(call DOWNLOAD_PKG_ARCHIVE,$(1)); \
-	    $(call CHECK_PKG_ARCHIVE,$(1)) || { echo 'Wrong checksum!'; exit 1; }; \
-	fi
+.PHONY: download-$($(1)_FILE)
+download-$(1): download-$($(1)_FILE)
+download-$($(1)_FILE)::
+	$(and $($(1)_URL),
+	@$$(if $$(REMOVE_DOWNLOAD),rm -f '$(PKG_DIR)/$($(1)_FILE)')
+	@if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
+	    echo '[download]' '$($(1)_FILE)'; \
+	    [ -d '$(LOG_DIR)/$(TIMESTAMP)' ] || mkdir -p '$(LOG_DIR)/$(TIMESTAMP)'; \
+	    ($(call DOWNLOAD_PKG_ARCHIVE,$(1))) &> '$(LOG_DIR)/$(TIMESTAMP)/$(1)-download'; \
+	    grep 'MXE Warning' '$(LOG_DIR)/$(TIMESTAMP)/$(1)-download'; \
+	    ln -sf '$(TIMESTAMP)/$(1)-download' '$(LOG_DIR)/$(1)-download'; \
+	    if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
+	        echo; \
+	        echo 'Download failed or wrong checksum of package $(1)!'; \
+	        echo '------------------------------------------------------------'; \
+	        $(if $(findstring undefined, $(origin MXE_VERBOSE)),\
+	            tail -n 10 '$(LOG_DIR)/$(1)-download' | $(SED) -n '/./p';, \
+	            $(SED) -n '/./p' '$(LOG_DIR)/$(1)-download';) \
+	        echo '------------------------------------------------------------'; \
+	        echo '[log]      $(LOG_DIR)/$(1)-download'; \
+	        echo; \
+	        exit 1; \
+	    fi; \
+	fi)
 
 .PHONY: $(1)
 $(1): $(STAMP_DIR)/$(1)
@@ -825,27 +848,12 @@ $(STAMP_DIR)/$(1): $(TOP_DIR)/src/$(1).mk \
                           $(wildcard $(TOP_DIR)/src/$(1)-test*) \
 			  $(shell test -d $(TOPDIR)/src/$(1) && find $(TOPDIR)/src/$(1) -type f) \
                           $(addprefix $(STAMP_DIR)/,$($(1)_DEPS)) \
-                          | check-requirements
-	@[ -d '$(LOG_DIR)/$(TIMESTAMP)' ] || mkdir -p '$(LOG_DIR)/$(TIMESTAMP)'
-	@if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
-	    echo '[download] $(1)'; \
-	    touch '$(LOG_DIR)/$(TIMESTAMP)/$(1)-download'; \
-	    ln -sf '$(TIMESTAMP)/$(1)-download' '$(LOG_DIR)/$(1)-download'; \
-	    ($(call DOWNLOAD_PKG_ARCHIVE,$(1))) &> '$(LOG_DIR)/$(1)-download'; \
-	    if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
-	        echo; \
-	        echo 'Wrong checksum of package $(1)!'; \
-	        echo '------------------------------------------------------------'; \
-	        tail -n 10 '$(LOG_DIR)/$(1)-download' | $(SED) -n '/./p'; \
-	        echo '------------------------------------------------------------'; \
-	        echo '[log]      $(LOG_DIR)/$(1)-download'; \
-	        echo; \
-	        exit 1; \
-	    fi; \
-	fi
+                          | check-requirements \
+                          $(addprefix download-,$(1))
 	$(if $(value $(1)_BUILD),
 	    @echo '[build]    $(1)'
 	    ,)
+	@[ -d '$(LOG_DIR)/$(TIMESTAMP)' ] || mkdir -p '$(LOG_DIR)/$(TIMESTAMP)'
 	@touch '$(LOG_DIR)/$(TIMESTAMP)/$(1)'
 	@ln -sf '$(TIMESTAMP)/$(1)' '$(LOG_DIR)/$(1)'
 	@if ! (time $(MAKE) -f '$(MAKEFILE)' 'build-only-$(1)') &> '$(LOG_DIR)/$(1)'; then \
