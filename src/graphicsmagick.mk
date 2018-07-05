@@ -3,8 +3,8 @@
 
 PKG             := graphicsmagick
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.3.28
-$(PKG)_CHECKSUM := f72a8f3f6de27990612ee3e713b2fece1ad898ac
+$(PKG)_VERSION  := 1.3.30
+$(PKG)_CHECKSUM := e9b1f6b84739eef3e112d4905e3d72b1e6983abd
 $(PKG)_SUBDIR   := GraphicsMagick-$($(PKG)_VERSION)
 $(PKG)_FILE     := GraphicsMagick-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
