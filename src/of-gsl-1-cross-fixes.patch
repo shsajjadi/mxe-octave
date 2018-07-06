@@ -1,6 +1,6 @@
 diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
 --- gsl-2.1.1.orig/src/configure	2018-07-06 11:04:59.193071031 -0400
-+++ gsl-2.1.1/src/configure	2018-07-06 11:55:15.227815924 -0400
++++ gsl-2.1.1/src/configure	2018-07-06 12:16:07.882705089 -0400
 @@ -623,15 +623,20 @@
  EGREP
  GREP
@@ -212,7 +212,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  cat >config.log <<_ACEOF
  This file contains any messages produced by compilers while
  running configure, to aid debugging if configure makes a mistake.
-@@ -2138,26 +2173,24 @@
+@@ -2138,16 +2173,16 @@
  
  test -z "$MKOCTFILE" && as_fn_error $? "mkoctfile not found" "$LINENO" 5
  
@@ -223,43 +223,35 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
  $as_echo_n "checking for $ac_word... " >&6; }
 -if ${ac_cv_path_OCTAVE+:} false; then :
-+if ${ac_cv_prog_OCTAVE_CONFIG+:} false; then :
++if ${ac_cv_path_OCTAVE_CONFIG+:} false; then :
    $as_echo_n "(cached) " >&6
  else
 -  case $OCTAVE in
--  [\\/]* | ?:[\\/]*)
++  case $OCTAVE_CONFIG in
+   [\\/]* | ?:[\\/]*)
 -  ac_cv_path_OCTAVE="$OCTAVE" # Let the user override the test with a path.
--  ;;
--  *)
--  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-+  if test -n "$OCTAVE_CONFIG"; then
-+  ac_cv_prog_OCTAVE_CONFIG="$OCTAVE_CONFIG" # Let the user override the test.
-+else
-+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
- for as_dir in $PATH
- do
-   IFS=$as_save_IFS
++  ac_cv_path_OCTAVE_CONFIG="$OCTAVE_CONFIG" # Let the user override the test with a path.
+   ;;
+   *)
+   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+@@ -2157,7 +2192,7 @@
    test -z "$as_dir" && as_dir=.
      for ac_exec_ext in '' $ac_executable_extensions; do
    if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
 -    ac_cv_path_OCTAVE="$as_dir/$ac_word$ac_exec_ext"
-+    ac_cv_prog_OCTAVE_CONFIG=""
++    ac_cv_path_OCTAVE_CONFIG="$as_dir/$ac_word$ac_exec_ext"
      $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
      break 2
    fi
-@@ -2165,33 +2198,30 @@
-   done
- IFS=$as_save_IFS
- 
--  ;;
--esac
+@@ -2168,30 +2203,28 @@
+   ;;
+ esac
  fi
 -OCTAVE=$ac_cv_path_OCTAVE
 -if test -n "$OCTAVE"; then
 -  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $OCTAVE" >&5
 -$as_echo "$OCTAVE" >&6; }
-+fi
-+OCTAVE_CONFIG=$ac_cv_prog_OCTAVE_CONFIG
++OCTAVE_CONFIG=$ac_cv_path_OCTAVE_CONFIG
 +if test -n "$OCTAVE_CONFIG"; then
 +  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $OCTAVE_CONFIG" >&5
 +$as_echo "$OCTAVE_CONFIG" >&6; }
@@ -295,7 +287,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  
  
  
-@@ -2203,48 +2233,222 @@
+@@ -2203,48 +2236,222 @@
  
  
  
@@ -548,7 +540,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  else
  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
  for as_dir in $PATH
-@@ -2253,7 +2457,7 @@
+@@ -2253,7 +2460,7 @@
    test -z "$as_dir" && as_dir=.
      for ac_exec_ext in '' $ac_executable_extensions; do
    if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
@@ -557,7 +549,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
      $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
      break 2
    fi
-@@ -2263,32 +2467,32 @@
+@@ -2263,32 +2470,32 @@
  
  fi
  fi
@@ -601,7 +593,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  else
  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
  for as_dir in $PATH
-@@ -2297,7 +2501,7 @@
+@@ -2297,7 +2504,7 @@
    test -z "$as_dir" && as_dir=.
      for ac_exec_ext in '' $ac_executable_extensions; do
    if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
@@ -610,7 +602,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
      $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
      break 2
    fi
-@@ -2307,21 +2511,21 @@
+@@ -2307,21 +2514,21 @@
  
  fi
  fi
@@ -639,7 +631,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
    else
      case $cross_compiling:$ac_tool_warned in
  yes:)
-@@ -2329,14 +2533,20 @@
+@@ -2329,14 +2536,20 @@
  $as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
  ac_tool_warned=yes ;;
  esac
@@ -663,7 +655,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  set X $ac_compile
  ac_compiler=$2
  for ac_option in --version -v -V -qversion; do
-@@ -2376,8 +2586,8 @@
+@@ -2376,8 +2589,8 @@
  # Try to create an executable without -o first, disregard a.out.
  # It will help us diagnose broken compilers, and finding out an intuition
  # of exeext.
@@ -674,7 +666,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  ac_link_default=`$as_echo "$ac_link" | sed 's/ -o *conftest[^ ]*//'`
  
  # The possible output files:
-@@ -2447,14 +2657,14 @@
+@@ -2447,14 +2660,14 @@
  
  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
@@ -692,7 +684,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_file" >&5
  $as_echo "$ac_file" >&6; }
  ac_exeext=$ac_cv_exeext
-@@ -2548,7 +2758,7 @@
+@@ -2548,7 +2761,7 @@
      else
  	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
@@ -701,7 +693,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  If you meant to cross compile, use \`--host'.
  See \`config.log' for more details" "$LINENO" 5; }
      fi
-@@ -2610,6 +2820,353 @@
+@@ -2610,6 +2823,353 @@
  $as_echo "$ac_cv_objext" >&6; }
  OBJEXT=$ac_cv_objext
  ac_objext=$OBJEXT
@@ -1055,7 +1047,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C++ compiler" >&5
  $as_echo_n "checking whether we are using the GNU C++ compiler... " >&6; }
  if ${ac_cv_cxx_compiler_gnu+:} false; then :
-@@ -2725,6 +3282,23 @@
+@@ -2725,6 +3285,23 @@
      CXXFLAGS=
    fi
  fi
@@ -1079,7 +1071,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  ac_ext=cpp
  ac_cpp='$CXXCPP $CPPFLAGS'
  ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-@@ -2732,6 +3306,9 @@
+@@ -2732,6 +3309,9 @@
  ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
  
  
@@ -1089,7 +1081,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  ac_ext=cpp
  ac_cpp='$CXXCPP $CPPFLAGS'
  ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-@@ -3179,17 +3756,18 @@
+@@ -3179,17 +3759,18 @@
  fi
  rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
  
@@ -1113,7 +1105,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cos in -lm" >&5
  $as_echo_n "checking for cos in -lm... " >&6; }
  if ${ac_cv_lib_m_cos+:} false; then :
-@@ -3215,7 +3793,7 @@
+@@ -3215,7 +3796,7 @@
    return 0;
  }
  _ACEOF
@@ -1122,7 +1114,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
    ac_cv_lib_m_cos=yes
  else
    ac_cv_lib_m_cos=no
-@@ -3262,7 +3840,7 @@
+@@ -3262,7 +3843,7 @@
    return 0;
  }
  _ACEOF
@@ -1131,7 +1123,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
    ac_cv_lib_gslcblas_cblas_dgemm=yes
  else
    ac_cv_lib_gslcblas_cblas_dgemm=no
-@@ -3309,7 +3887,7 @@
+@@ -3309,7 +3890,7 @@
    return 0;
  }
  _ACEOF
@@ -1140,7 +1132,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
    ac_cv_lib_gsl_gsl_message=yes
  else
    ac_cv_lib_gsl_gsl_message=no
-@@ -3336,7 +3914,7 @@
+@@ -3336,7 +3917,7 @@
  # Auto-generated tests for GSL functions
  for ac_func in gsl_sf_clausen_e
  do :
@@ -1149,7 +1141,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_clausen_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CLAUSEN_E 1
-@@ -3349,7 +3927,7 @@
+@@ -3349,7 +3930,7 @@
  
  for ac_func in gsl_sf_clausen_e
  do :
@@ -1158,7 +1150,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_clausen_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CLAUSEN_E 1
-@@ -3362,7 +3940,7 @@
+@@ -3362,7 +3943,7 @@
  
  for ac_func in gsl_sf_dawson_e
  do :
@@ -1167,7 +1159,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_dawson_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DAWSON_E 1
-@@ -3375,7 +3953,7 @@
+@@ -3375,7 +3956,7 @@
  
  for ac_func in gsl_sf_dawson_e
  do :
@@ -1176,7 +1168,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_dawson_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DAWSON_E 1
-@@ -3388,7 +3966,7 @@
+@@ -3388,7 +3969,7 @@
  
  for ac_func in gsl_sf_debye_1_e
  do :
@@ -1185,7 +1177,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_debye_1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DEBYE_1_E 1
-@@ -3401,7 +3979,7 @@
+@@ -3401,7 +3982,7 @@
  
  for ac_func in gsl_sf_debye_1_e
  do :
@@ -1194,7 +1186,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_debye_1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DEBYE_1_E 1
-@@ -3414,7 +3992,7 @@
+@@ -3414,7 +3995,7 @@
  
  for ac_func in gsl_sf_debye_2_e
  do :
@@ -1203,7 +1195,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_debye_2_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DEBYE_2_E 1
-@@ -3427,7 +4005,7 @@
+@@ -3427,7 +4008,7 @@
  
  for ac_func in gsl_sf_debye_2_e
  do :
@@ -1212,7 +1204,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_debye_2_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DEBYE_2_E 1
-@@ -3440,7 +4018,7 @@
+@@ -3440,7 +4021,7 @@
  
  for ac_func in gsl_sf_debye_3_e
  do :
@@ -1221,7 +1213,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_debye_3_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DEBYE_3_E 1
-@@ -3453,7 +4031,7 @@
+@@ -3453,7 +4034,7 @@
  
  for ac_func in gsl_sf_debye_3_e
  do :
@@ -1230,7 +1222,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_debye_3_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DEBYE_3_E 1
-@@ -3466,7 +4044,7 @@
+@@ -3466,7 +4047,7 @@
  
  for ac_func in gsl_sf_debye_4_e
  do :
@@ -1239,7 +1231,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_debye_4_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DEBYE_4_E 1
-@@ -3479,7 +4057,7 @@
+@@ -3479,7 +4060,7 @@
  
  for ac_func in gsl_sf_debye_4_e
  do :
@@ -1248,7 +1240,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_debye_4_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DEBYE_4_E 1
-@@ -3492,7 +4070,7 @@
+@@ -3492,7 +4073,7 @@
  
  for ac_func in gsl_sf_debye_5_e
  do :
@@ -1257,7 +1249,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_debye_5_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DEBYE_5_E 1
-@@ -3505,7 +4083,7 @@
+@@ -3505,7 +4086,7 @@
  
  for ac_func in gsl_sf_debye_6_e
  do :
@@ -1266,7 +1258,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_debye_6_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DEBYE_6_E 1
-@@ -3518,7 +4096,7 @@
+@@ -3518,7 +4099,7 @@
  
  for ac_func in gsl_sf_dilog_e
  do :
@@ -1275,7 +1267,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_dilog_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DILOG_E 1
-@@ -3531,7 +4109,7 @@
+@@ -3531,7 +4112,7 @@
  
  for ac_func in gsl_sf_erf_e
  do :
@@ -1284,7 +1276,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_erf_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ERF_E 1
-@@ -3544,7 +4122,7 @@
+@@ -3544,7 +4125,7 @@
  
  for ac_func in gsl_sf_erf_e
  do :
@@ -1293,7 +1285,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_erf_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ERF_E 1
-@@ -3557,7 +4135,7 @@
+@@ -3557,7 +4138,7 @@
  
  for ac_func in gsl_sf_erfc_e
  do :
@@ -1302,7 +1294,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_erfc_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ERFC_E 1
-@@ -3570,7 +4148,7 @@
+@@ -3570,7 +4151,7 @@
  
  for ac_func in gsl_sf_erfc_e
  do :
@@ -1311,7 +1303,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_erfc_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ERFC_E 1
-@@ -3583,7 +4161,7 @@
+@@ -3583,7 +4164,7 @@
  
  for ac_func in gsl_sf_log_erfc_e
  do :
@@ -1320,7 +1312,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_log_erfc_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LOG_ERFC_E 1
-@@ -3596,7 +4174,7 @@
+@@ -3596,7 +4177,7 @@
  
  for ac_func in gsl_sf_log_erfc_e
  do :
@@ -1329,7 +1321,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_log_erfc_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LOG_ERFC_E 1
-@@ -3609,7 +4187,7 @@
+@@ -3609,7 +4190,7 @@
  
  for ac_func in gsl_sf_erf_Z_e
  do :
@@ -1338,7 +1330,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_erf_Z_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ERF_Z_E 1
-@@ -3622,7 +4200,7 @@
+@@ -3622,7 +4203,7 @@
  
  for ac_func in gsl_sf_erf_Z_e
  do :
@@ -1347,7 +1339,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_erf_Z_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ERF_Z_E 1
-@@ -3635,7 +4213,7 @@
+@@ -3635,7 +4216,7 @@
  
  for ac_func in gsl_sf_erf_Q_e
  do :
@@ -1356,7 +1348,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_erf_Q_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ERF_Q_E 1
-@@ -3648,7 +4226,7 @@
+@@ -3648,7 +4229,7 @@
  
  for ac_func in gsl_sf_erf_Q_e
  do :
@@ -1365,7 +1357,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_erf_Q_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ERF_Q_E 1
-@@ -3661,7 +4239,7 @@
+@@ -3661,7 +4242,7 @@
  
  for ac_func in gsl_sf_hazard_e
  do :
@@ -1374,7 +1366,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hazard_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HAZARD_E 1
-@@ -3674,7 +4252,7 @@
+@@ -3674,7 +4255,7 @@
  
  for ac_func in gsl_sf_hazard_e
  do :
@@ -1383,7 +1375,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hazard_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HAZARD_E 1
-@@ -3687,7 +4265,7 @@
+@@ -3687,7 +4268,7 @@
  
  for ac_func in gsl_sf_expm1_e
  do :
@@ -1392,7 +1384,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_expm1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPM1_E 1
-@@ -3700,7 +4278,7 @@
+@@ -3700,7 +4281,7 @@
  
  for ac_func in gsl_sf_expm1_e
  do :
@@ -1401,7 +1393,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_expm1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPM1_E 1
-@@ -3713,7 +4291,7 @@
+@@ -3713,7 +4294,7 @@
  
  for ac_func in gsl_sf_exprel_e
  do :
@@ -1410,7 +1402,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_exprel_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPREL_E 1
-@@ -3726,7 +4304,7 @@
+@@ -3726,7 +4307,7 @@
  
  for ac_func in gsl_sf_exprel_e
  do :
@@ -1419,7 +1411,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_exprel_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPREL_E 1
-@@ -3739,7 +4317,7 @@
+@@ -3739,7 +4320,7 @@
  
  for ac_func in gsl_sf_exprel_2_e
  do :
@@ -1428,7 +1420,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_exprel_2_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPREL_2_E 1
-@@ -3752,7 +4330,7 @@
+@@ -3752,7 +4333,7 @@
  
  for ac_func in gsl_sf_exprel_2_e
  do :
@@ -1437,7 +1429,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_exprel_2_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPREL_2_E 1
-@@ -3765,7 +4343,7 @@
+@@ -3765,7 +4346,7 @@
  
  for ac_func in gsl_sf_expint_E1_e
  do :
@@ -1446,7 +1438,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_expint_E1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPINT_E1_E 1
-@@ -3778,7 +4356,7 @@
+@@ -3778,7 +4359,7 @@
  
  for ac_func in gsl_sf_expint_E1_e
  do :
@@ -1455,7 +1447,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_expint_E1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPINT_E1_E 1
-@@ -3791,7 +4369,7 @@
+@@ -3791,7 +4372,7 @@
  
  for ac_func in gsl_sf_expint_E2_e
  do :
@@ -1464,7 +1456,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_expint_E2_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPINT_E2_E 1
-@@ -3804,7 +4382,7 @@
+@@ -3804,7 +4385,7 @@
  
  for ac_func in gsl_sf_expint_E2_e
  do :
@@ -1473,7 +1465,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_expint_E2_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPINT_E2_E 1
-@@ -3817,7 +4395,7 @@
+@@ -3817,7 +4398,7 @@
  
  for ac_func in gsl_sf_expint_Ei_e
  do :
@@ -1482,7 +1474,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_expint_Ei_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPINT_EI_E 1
-@@ -3830,7 +4408,7 @@
+@@ -3830,7 +4411,7 @@
  
  for ac_func in gsl_sf_expint_Ei_e
  do :
@@ -1491,7 +1483,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_expint_Ei_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPINT_EI_E 1
-@@ -3843,7 +4421,7 @@
+@@ -3843,7 +4424,7 @@
  
  for ac_func in gsl_sf_Shi_e
  do :
@@ -1500,7 +1492,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_Shi_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_SHI_E 1
-@@ -3856,7 +4434,7 @@
+@@ -3856,7 +4437,7 @@
  
  for ac_func in gsl_sf_Shi_e
  do :
@@ -1509,7 +1501,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_Shi_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_SHI_E 1
-@@ -3869,7 +4447,7 @@
+@@ -3869,7 +4450,7 @@
  
  for ac_func in gsl_sf_Chi_e
  do :
@@ -1518,7 +1510,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_Chi_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CHI_E 1
-@@ -3882,7 +4460,7 @@
+@@ -3882,7 +4463,7 @@
  
  for ac_func in gsl_sf_Chi_e
  do :
@@ -1527,7 +1519,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_Chi_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CHI_E 1
-@@ -3895,7 +4473,7 @@
+@@ -3895,7 +4476,7 @@
  
  for ac_func in gsl_sf_expint_3_e
  do :
@@ -1536,7 +1528,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_expint_3_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPINT_3_E 1
-@@ -3908,7 +4486,7 @@
+@@ -3908,7 +4489,7 @@
  
  for ac_func in gsl_sf_expint_3_e
  do :
@@ -1545,7 +1537,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_expint_3_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPINT_3_E 1
-@@ -3921,7 +4499,7 @@
+@@ -3921,7 +4502,7 @@
  
  for ac_func in gsl_sf_Si_e
  do :
@@ -1554,7 +1546,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_Si_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_SI_E 1
-@@ -3934,7 +4512,7 @@
+@@ -3934,7 +4515,7 @@
  
  for ac_func in gsl_sf_Si_e
  do :
@@ -1563,7 +1555,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_Si_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_SI_E 1
-@@ -3947,7 +4525,7 @@
+@@ -3947,7 +4528,7 @@
  
  for ac_func in gsl_sf_Ci_e
  do :
@@ -1572,7 +1564,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_Ci_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CI_E 1
-@@ -3960,7 +4538,7 @@
+@@ -3960,7 +4541,7 @@
  
  for ac_func in gsl_sf_Ci_e
  do :
@@ -1581,7 +1573,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_Ci_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CI_E 1
-@@ -3973,7 +4551,7 @@
+@@ -3973,7 +4554,7 @@
  
  for ac_func in gsl_sf_atanint_e
  do :
@@ -1590,7 +1582,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_atanint_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ATANINT_E 1
-@@ -3986,7 +4564,7 @@
+@@ -3986,7 +4567,7 @@
  
  for ac_func in gsl_sf_atanint_e
  do :
@@ -1599,7 +1591,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_atanint_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ATANINT_E 1
-@@ -3999,7 +4577,7 @@
+@@ -3999,7 +4580,7 @@
  
  for ac_func in gsl_sf_fermi_dirac_mhalf_e
  do :
@@ -1608,7 +1600,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_fermi_dirac_mhalf_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_FERMI_DIRAC_MHALF_E 1
-@@ -4012,7 +4590,7 @@
+@@ -4012,7 +4593,7 @@
  
  for ac_func in gsl_sf_fermi_dirac_mhalf_e
  do :
@@ -1617,7 +1609,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_fermi_dirac_mhalf_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_FERMI_DIRAC_MHALF_E 1
-@@ -4025,7 +4603,7 @@
+@@ -4025,7 +4606,7 @@
  
  for ac_func in gsl_sf_fermi_dirac_half_e
  do :
@@ -1626,7 +1618,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_fermi_dirac_half_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_FERMI_DIRAC_HALF_E 1
-@@ -4038,7 +4616,7 @@
+@@ -4038,7 +4619,7 @@
  
  for ac_func in gsl_sf_fermi_dirac_half_e
  do :
@@ -1635,7 +1627,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_fermi_dirac_half_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_FERMI_DIRAC_HALF_E 1
-@@ -4051,7 +4629,7 @@
+@@ -4051,7 +4632,7 @@
  
  for ac_func in gsl_sf_fermi_dirac_3half_e
  do :
@@ -1644,7 +1636,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_fermi_dirac_3half_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_FERMI_DIRAC_3HALF_E 1
-@@ -4064,7 +4642,7 @@
+@@ -4064,7 +4645,7 @@
  
  for ac_func in gsl_sf_fermi_dirac_3half_e
  do :
@@ -1653,7 +1645,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_fermi_dirac_3half_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_FERMI_DIRAC_3HALF_E 1
-@@ -4077,7 +4655,7 @@
+@@ -4077,7 +4658,7 @@
  
  for ac_func in gsl_sf_gamma_e
  do :
@@ -1662,7 +1654,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gamma_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMA_E 1
-@@ -4090,7 +4668,7 @@
+@@ -4090,7 +4671,7 @@
  
  for ac_func in gsl_sf_gamma_e
  do :
@@ -1671,7 +1663,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gamma_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMA_E 1
-@@ -4103,7 +4681,7 @@
+@@ -4103,7 +4684,7 @@
  
  for ac_func in gsl_sf_lngamma_e
  do :
@@ -1680,7 +1672,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lngamma_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNGAMMA_E 1
-@@ -4116,7 +4694,7 @@
+@@ -4116,7 +4697,7 @@
  
  for ac_func in gsl_sf_lngamma_e
  do :
@@ -1689,7 +1681,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lngamma_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNGAMMA_E 1
-@@ -4129,7 +4707,7 @@
+@@ -4129,7 +4710,7 @@
  
  for ac_func in gsl_sf_gammastar_e
  do :
@@ -1698,7 +1690,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gammastar_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMASTAR_E 1
-@@ -4142,7 +4720,7 @@
+@@ -4142,7 +4723,7 @@
  
  for ac_func in gsl_sf_gammastar_e
  do :
@@ -1707,7 +1699,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gammastar_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMASTAR_E 1
-@@ -4155,7 +4733,7 @@
+@@ -4155,7 +4736,7 @@
  
  for ac_func in gsl_sf_gammainv_e
  do :
@@ -1716,7 +1708,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gammainv_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMAINV_E 1
-@@ -4168,7 +4746,7 @@
+@@ -4168,7 +4749,7 @@
  
  for ac_func in gsl_sf_gammainv_e
  do :
@@ -1725,7 +1717,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gammainv_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMAINV_E 1
-@@ -4181,7 +4759,7 @@
+@@ -4181,7 +4762,7 @@
  
  for ac_func in gsl_sf_lambert_W0_e
  do :
@@ -1734,7 +1726,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lambert_W0_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LAMBERT_W0_E 1
-@@ -4194,7 +4772,7 @@
+@@ -4194,7 +4775,7 @@
  
  for ac_func in gsl_sf_gammastar_e
  do :
@@ -1743,7 +1735,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gammastar_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMASTAR_E 1
-@@ -4207,7 +4785,7 @@
+@@ -4207,7 +4788,7 @@
  
  for ac_func in gsl_sf_lambert_W0_e
  do :
@@ -1752,7 +1744,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lambert_W0_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LAMBERT_W0_E 1
-@@ -4220,7 +4798,7 @@
+@@ -4220,7 +4801,7 @@
  
  for ac_func in gsl_sf_lambert_Wm1_e
  do :
@@ -1761,7 +1753,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lambert_Wm1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LAMBERT_WM1_E 1
-@@ -4233,7 +4811,7 @@
+@@ -4233,7 +4814,7 @@
  
  for ac_func in gsl_sf_lambert_Wm1_e
  do :
@@ -1770,7 +1762,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lambert_Wm1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LAMBERT_WM1_E 1
-@@ -4246,7 +4824,7 @@
+@@ -4246,7 +4827,7 @@
  
  for ac_func in gsl_sf_log_1plusx_e
  do :
@@ -1779,7 +1771,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_log_1plusx_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LOG_1PLUSX_E 1
-@@ -4259,7 +4837,7 @@
+@@ -4259,7 +4840,7 @@
  
  for ac_func in gsl_sf_log_1plusx_e
  do :
@@ -1788,7 +1780,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_log_1plusx_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LOG_1PLUSX_E 1
-@@ -4272,7 +4850,7 @@
+@@ -4272,7 +4853,7 @@
  
  for ac_func in gsl_sf_log_1plusx_mx_e
  do :
@@ -1797,7 +1789,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_log_1plusx_mx_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LOG_1PLUSX_MX_E 1
-@@ -4285,7 +4863,7 @@
+@@ -4285,7 +4866,7 @@
  
  for ac_func in gsl_sf_log_1plusx_mx_e
  do :
@@ -1806,7 +1798,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_log_1plusx_mx_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LOG_1PLUSX_MX_E 1
-@@ -4298,7 +4876,7 @@
+@@ -4298,7 +4879,7 @@
  
  for ac_func in gsl_sf_psi_e
  do :
@@ -1815,7 +1807,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_psi_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_PSI_E 1
-@@ -4311,7 +4889,7 @@
+@@ -4311,7 +4892,7 @@
  
  for ac_func in gsl_sf_psi_e
  do :
@@ -1824,7 +1816,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_psi_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_PSI_E 1
-@@ -4324,7 +4902,7 @@
+@@ -4324,7 +4905,7 @@
  
  for ac_func in gsl_sf_psi_1piy_e
  do :
@@ -1833,7 +1825,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_psi_1piy_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_PSI_1PIY_E 1
-@@ -4337,7 +4915,7 @@
+@@ -4337,7 +4918,7 @@
  
  for ac_func in gsl_sf_psi_1piy_e
  do :
@@ -1842,7 +1834,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_psi_1piy_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_PSI_1PIY_E 1
-@@ -4350,7 +4928,7 @@
+@@ -4350,7 +4931,7 @@
  
  for ac_func in gsl_sf_synchrotron_1_e
  do :
@@ -1851,7 +1843,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_synchrotron_1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_SYNCHROTRON_1_E 1
-@@ -4363,7 +4941,7 @@
+@@ -4363,7 +4944,7 @@
  
  for ac_func in gsl_sf_synchrotron_1_e
  do :
@@ -1860,7 +1852,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_synchrotron_1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_SYNCHROTRON_1_E 1
-@@ -4376,7 +4954,7 @@
+@@ -4376,7 +4957,7 @@
  
  for ac_func in gsl_sf_synchrotron_2_e
  do :
@@ -1869,7 +1861,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_synchrotron_2_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_SYNCHROTRON_2_E 1
-@@ -4389,7 +4967,7 @@
+@@ -4389,7 +4970,7 @@
  
  for ac_func in gsl_sf_synchrotron_2_e
  do :
@@ -1878,7 +1870,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_synchrotron_2_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_SYNCHROTRON_2_E 1
-@@ -4402,7 +4980,7 @@
+@@ -4402,7 +4983,7 @@
  
  for ac_func in gsl_sf_transport_2_e
  do :
@@ -1887,7 +1879,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_transport_2_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_TRANSPORT_2_E 1
-@@ -4415,7 +4993,7 @@
+@@ -4415,7 +4996,7 @@
  
  for ac_func in gsl_sf_transport_2_e
  do :
@@ -1896,7 +1888,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_transport_2_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_TRANSPORT_2_E 1
-@@ -4428,7 +5006,7 @@
+@@ -4428,7 +5009,7 @@
  
  for ac_func in gsl_sf_transport_3_e
  do :
@@ -1905,7 +1897,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_transport_3_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_TRANSPORT_3_E 1
-@@ -4441,7 +5019,7 @@
+@@ -4441,7 +5022,7 @@
  
  for ac_func in gsl_sf_transport_3_e
  do :
@@ -1914,7 +1906,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_transport_3_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_TRANSPORT_3_E 1
-@@ -4454,7 +5032,7 @@
+@@ -4454,7 +5035,7 @@
  
  for ac_func in gsl_sf_transport_4_e
  do :
@@ -1923,7 +1915,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_transport_4_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_TRANSPORT_4_E 1
-@@ -4467,7 +5045,7 @@
+@@ -4467,7 +5048,7 @@
  
  for ac_func in gsl_sf_transport_4_e
  do :
@@ -1932,7 +1924,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_transport_4_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_TRANSPORT_4_E 1
-@@ -4480,7 +5058,7 @@
+@@ -4480,7 +5061,7 @@
  
  for ac_func in gsl_sf_transport_5_e
  do :
@@ -1941,7 +1933,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_transport_5_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_TRANSPORT_5_E 1
-@@ -4493,7 +5071,7 @@
+@@ -4493,7 +5074,7 @@
  
  for ac_func in gsl_sf_transport_5_e
  do :
@@ -1950,7 +1942,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_transport_5_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_TRANSPORT_5_E 1
-@@ -4506,7 +5084,7 @@
+@@ -4506,7 +5087,7 @@
  
  for ac_func in gsl_sf_sinc_e
  do :
@@ -1959,7 +1951,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_sinc_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_SINC_E 1
-@@ -4519,7 +5097,7 @@
+@@ -4519,7 +5100,7 @@
  
  for ac_func in gsl_sf_sinc_e
  do :
@@ -1968,7 +1960,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_sinc_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_SINC_E 1
-@@ -4532,7 +5110,7 @@
+@@ -4532,7 +5113,7 @@
  
  for ac_func in gsl_sf_lnsinh_e
  do :
@@ -1977,7 +1969,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lnsinh_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNSINH_E 1
-@@ -4545,7 +5123,7 @@
+@@ -4545,7 +5126,7 @@
  
  for ac_func in gsl_sf_lnsinh_e
  do :
@@ -1986,7 +1978,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lnsinh_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNSINH_E 1
-@@ -4558,7 +5136,7 @@
+@@ -4558,7 +5139,7 @@
  
  for ac_func in gsl_sf_lncosh_e
  do :
@@ -1995,7 +1987,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lncosh_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNCOSH_E 1
-@@ -4571,7 +5149,7 @@
+@@ -4571,7 +5152,7 @@
  
  for ac_func in gsl_sf_lncosh_e
  do :
@@ -2004,7 +1996,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lncosh_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNCOSH_E 1
-@@ -4584,7 +5162,7 @@
+@@ -4584,7 +5165,7 @@
  
  for ac_func in gsl_sf_bessel_Jn_e
  do :
@@ -2013,7 +2005,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Jn_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_JN_E 1
-@@ -4597,7 +5175,7 @@
+@@ -4597,7 +5178,7 @@
  
  for ac_func in gsl_sf_bessel_Jn_e
  do :
@@ -2022,7 +2014,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Jn_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_JN_E 1
-@@ -4610,7 +5188,7 @@
+@@ -4610,7 +5191,7 @@
  
  for ac_func in gsl_sf_bessel_Yn_e
  do :
@@ -2031,7 +2023,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Yn_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_YN_E 1
-@@ -4623,7 +5201,7 @@
+@@ -4623,7 +5204,7 @@
  
  for ac_func in gsl_sf_bessel_Yn_e
  do :
@@ -2040,7 +2032,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Yn_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_YN_E 1
-@@ -4636,7 +5214,7 @@
+@@ -4636,7 +5217,7 @@
  
  for ac_func in gsl_sf_bessel_In_e
  do :
@@ -2049,7 +2041,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_In_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_IN_E 1
-@@ -4649,7 +5227,7 @@
+@@ -4649,7 +5230,7 @@
  
  for ac_func in gsl_sf_bessel_In_e
  do :
@@ -2058,7 +2050,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_In_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_IN_E 1
-@@ -4662,7 +5240,7 @@
+@@ -4662,7 +5243,7 @@
  
  for ac_func in gsl_sf_bessel_In_scaled_e
  do :
@@ -2067,7 +2059,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_In_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_IN_SCALED_E 1
-@@ -4675,7 +5253,7 @@
+@@ -4675,7 +5256,7 @@
  
  for ac_func in gsl_sf_bessel_In_scaled_e
  do :
@@ -2076,7 +2068,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_In_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_IN_SCALED_E 1
-@@ -4688,7 +5266,7 @@
+@@ -4688,7 +5269,7 @@
  
  for ac_func in gsl_sf_bessel_Kn_e
  do :
@@ -2085,7 +2077,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Kn_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KN_E 1
-@@ -4701,7 +5279,7 @@
+@@ -4701,7 +5282,7 @@
  
  for ac_func in gsl_sf_bessel_Kn_e
  do :
@@ -2094,7 +2086,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Kn_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KN_E 1
-@@ -4714,7 +5292,7 @@
+@@ -4714,7 +5295,7 @@
  
  for ac_func in gsl_sf_bessel_Kn_scaled_e
  do :
@@ -2103,7 +2095,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Kn_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KN_SCALED_E 1
-@@ -4727,7 +5305,7 @@
+@@ -4727,7 +5308,7 @@
  
  for ac_func in gsl_sf_bessel_Kn_scaled_e
  do :
@@ -2112,7 +2104,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Kn_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KN_SCALED_E 1
-@@ -4740,7 +5318,7 @@
+@@ -4740,7 +5321,7 @@
  
  for ac_func in gsl_sf_bessel_jl_e
  do :
@@ -2121,7 +2113,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_jl_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_JL_E 1
-@@ -4753,7 +5331,7 @@
+@@ -4753,7 +5334,7 @@
  
  for ac_func in gsl_sf_bessel_jl_e
  do :
@@ -2130,7 +2122,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_jl_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_JL_E 1
-@@ -4766,7 +5344,7 @@
+@@ -4766,7 +5347,7 @@
  
  for ac_func in gsl_sf_bessel_yl_e
  do :
@@ -2139,7 +2131,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_yl_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_YL_E 1
-@@ -4779,7 +5357,7 @@
+@@ -4779,7 +5360,7 @@
  
  for ac_func in gsl_sf_bessel_yl_e
  do :
@@ -2148,7 +2140,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_yl_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_YL_E 1
-@@ -4792,7 +5370,7 @@
+@@ -4792,7 +5373,7 @@
  
  for ac_func in gsl_sf_bessel_il_scaled_e
  do :
@@ -2157,7 +2149,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_il_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_IL_SCALED_E 1
-@@ -4805,7 +5383,7 @@
+@@ -4805,7 +5386,7 @@
  
  for ac_func in gsl_sf_bessel_il_scaled_e
  do :
@@ -2166,7 +2158,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_il_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_IL_SCALED_E 1
-@@ -4818,7 +5396,7 @@
+@@ -4818,7 +5399,7 @@
  
  for ac_func in gsl_sf_bessel_kl_scaled_e
  do :
@@ -2175,7 +2167,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_kl_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KL_SCALED_E 1
-@@ -4831,7 +5409,7 @@
+@@ -4831,7 +5412,7 @@
  
  for ac_func in gsl_sf_bessel_kl_scaled_e
  do :
@@ -2184,7 +2176,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_kl_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KL_SCALED_E 1
-@@ -4844,7 +5422,7 @@
+@@ -4844,7 +5425,7 @@
  
  for ac_func in gsl_sf_exprel_n_e
  do :
@@ -2193,7 +2185,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_exprel_n_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPREL_N_E 1
-@@ -4857,7 +5435,7 @@
+@@ -4857,7 +5438,7 @@
  
  for ac_func in gsl_sf_exprel_n_e
  do :
@@ -2202,7 +2194,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_exprel_n_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXPREL_N_E 1
-@@ -4870,7 +5448,7 @@
+@@ -4870,7 +5451,7 @@
  
  for ac_func in gsl_sf_fermi_dirac_int_e
  do :
@@ -2211,7 +2203,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_fermi_dirac_int_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_FERMI_DIRAC_INT_E 1
-@@ -4883,7 +5461,7 @@
+@@ -4883,7 +5464,7 @@
  
  for ac_func in gsl_sf_fermi_dirac_int_e
  do :
@@ -2220,7 +2212,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_fermi_dirac_int_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_FERMI_DIRAC_INT_E 1
-@@ -4896,7 +5474,7 @@
+@@ -4896,7 +5477,7 @@
  
  for ac_func in gsl_sf_taylorcoeff_e
  do :
@@ -2229,7 +2221,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_taylorcoeff_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_TAYLORCOEFF_E 1
-@@ -4909,7 +5487,7 @@
+@@ -4909,7 +5490,7 @@
  
  for ac_func in gsl_sf_taylorcoeff_e
  do :
@@ -2238,7 +2230,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_taylorcoeff_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_TAYLORCOEFF_E 1
-@@ -4922,7 +5500,7 @@
+@@ -4922,7 +5503,7 @@
  
  for ac_func in gsl_sf_legendre_Pl_e
  do :
@@ -2247,7 +2239,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_Pl_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_PL_E 1
-@@ -4933,7 +5511,7 @@
+@@ -4933,7 +5514,7 @@
  
  for ac_func in gsl_sf_legendre_Pl_e
  do :
@@ -2256,7 +2248,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_Pl_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_PL_E 1
-@@ -4944,7 +5522,7 @@
+@@ -4944,7 +5525,7 @@
  
  for ac_func in gsl_sf_legendre_Ql_e
  do :
@@ -2265,7 +2257,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_Ql_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_QL_E 1
-@@ -4957,7 +5535,7 @@
+@@ -4957,7 +5538,7 @@
  
  for ac_func in gsl_sf_legendre_Ql_e
  do :
@@ -2274,7 +2266,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_Ql_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_QL_E 1
-@@ -4970,7 +5548,7 @@
+@@ -4970,7 +5551,7 @@
  
  for ac_func in gsl_sf_mathieu_a_e
  do :
@@ -2283,7 +2275,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_mathieu_a_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_MATHIEU_A_E 1
-@@ -4983,7 +5561,7 @@
+@@ -4983,7 +5564,7 @@
  
  for ac_func in gsl_sf_mathieu_b_e
  do :
@@ -2292,7 +2284,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_mathieu_b_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_MATHIEU_B_E 1
-@@ -4996,7 +5574,7 @@
+@@ -4996,7 +5577,7 @@
  
  for ac_func in gsl_sf_psi_n_e
  do :
@@ -2301,7 +2293,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_psi_n_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_PSI_N_E 1
-@@ -5009,7 +5587,7 @@
+@@ -5009,7 +5590,7 @@
  
  for ac_func in gsl_sf_psi_n_e
  do :
@@ -2310,7 +2302,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_psi_n_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_PSI_N_E 1
-@@ -5022,7 +5600,7 @@
+@@ -5022,7 +5603,7 @@
  
  for ac_func in gsl_sf_bessel_Jnu_e
  do :
@@ -2319,7 +2311,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Jnu_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_JNU_E 1
-@@ -5035,7 +5613,7 @@
+@@ -5035,7 +5616,7 @@
  
  for ac_func in gsl_sf_bessel_Jnu_e
  do :
@@ -2328,7 +2320,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Jnu_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_JNU_E 1
-@@ -5048,7 +5626,7 @@
+@@ -5048,7 +5629,7 @@
  
  for ac_func in gsl_sf_bessel_Ynu_e
  do :
@@ -2337,7 +2329,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Ynu_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_YNU_E 1
-@@ -5061,7 +5639,7 @@
+@@ -5061,7 +5642,7 @@
  
  for ac_func in gsl_sf_bessel_Ynu_e
  do :
@@ -2346,7 +2338,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Ynu_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_YNU_E 1
-@@ -5074,7 +5652,7 @@
+@@ -5074,7 +5655,7 @@
  
  for ac_func in gsl_sf_bessel_Inu_e
  do :
@@ -2355,7 +2347,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Inu_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_INU_E 1
-@@ -5087,7 +5665,7 @@
+@@ -5087,7 +5668,7 @@
  
  for ac_func in gsl_sf_bessel_Inu_e
  do :
@@ -2364,7 +2356,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Inu_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_INU_E 1
-@@ -5100,7 +5678,7 @@
+@@ -5100,7 +5681,7 @@
  
  for ac_func in gsl_sf_bessel_Inu_scaled_e
  do :
@@ -2373,7 +2365,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Inu_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_INU_SCALED_E 1
-@@ -5113,7 +5691,7 @@
+@@ -5113,7 +5694,7 @@
  
  for ac_func in gsl_sf_bessel_Inu_scaled_e
  do :
@@ -2382,7 +2374,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Inu_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_INU_SCALED_E 1
-@@ -5126,7 +5704,7 @@
+@@ -5126,7 +5707,7 @@
  
  for ac_func in gsl_sf_bessel_Knu_e
  do :
@@ -2391,7 +2383,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Knu_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KNU_E 1
-@@ -5139,7 +5717,7 @@
+@@ -5139,7 +5720,7 @@
  
  for ac_func in gsl_sf_bessel_Knu_e
  do :
@@ -2400,7 +2392,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Knu_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KNU_E 1
-@@ -5152,7 +5730,7 @@
+@@ -5152,7 +5733,7 @@
  
  for ac_func in gsl_sf_bessel_lnKnu_e
  do :
@@ -2409,7 +2401,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_lnKnu_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_LNKNU_E 1
-@@ -5165,7 +5743,7 @@
+@@ -5165,7 +5746,7 @@
  
  for ac_func in gsl_sf_bessel_lnKnu_e
  do :
@@ -2418,7 +2410,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_lnKnu_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_LNKNU_E 1
-@@ -5178,7 +5756,7 @@
+@@ -5178,7 +5759,7 @@
  
  for ac_func in gsl_sf_bessel_Knu_scaled_e
  do :
@@ -2427,7 +2419,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Knu_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KNU_SCALED_E 1
-@@ -5191,7 +5769,7 @@
+@@ -5191,7 +5772,7 @@
  
  for ac_func in gsl_sf_bessel_Knu_scaled_e
  do :
@@ -2436,7 +2428,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Knu_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KNU_SCALED_E 1
-@@ -5204,7 +5782,7 @@
+@@ -5204,7 +5785,7 @@
  
  for ac_func in gsl_sf_exp_mult_e
  do :
@@ -2445,7 +2437,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_exp_mult_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXP_MULT_E 1
-@@ -5217,7 +5795,7 @@
+@@ -5217,7 +5798,7 @@
  
  for ac_func in gsl_sf_exp_mult_e
  do :
@@ -2454,7 +2446,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_exp_mult_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_EXP_MULT_E 1
-@@ -5230,7 +5808,7 @@
+@@ -5230,7 +5811,7 @@
  
  for ac_func in gsl_sf_fermi_dirac_inc_0_e
  do :
@@ -2463,7 +2455,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_fermi_dirac_inc_0_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_FERMI_DIRAC_INC_0_E 1
-@@ -5243,7 +5821,7 @@
+@@ -5243,7 +5824,7 @@
  
  for ac_func in gsl_sf_fermi_dirac_inc_0_e
  do :
@@ -2472,7 +2464,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_fermi_dirac_inc_0_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_FERMI_DIRAC_INC_0_E 1
-@@ -5256,7 +5834,7 @@
+@@ -5256,7 +5837,7 @@
  
  for ac_func in gsl_sf_poch_e
  do :
@@ -2481,7 +2473,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_poch_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_POCH_E 1
-@@ -5269,7 +5847,7 @@
+@@ -5269,7 +5850,7 @@
  
  for ac_func in gsl_sf_poch_e
  do :
@@ -2490,7 +2482,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_poch_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_POCH_E 1
-@@ -5282,7 +5860,7 @@
+@@ -5282,7 +5863,7 @@
  
  for ac_func in gsl_sf_lnpoch_e
  do :
@@ -2499,7 +2491,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lnpoch_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNPOCH_E 1
-@@ -5295,7 +5873,7 @@
+@@ -5295,7 +5876,7 @@
  
  for ac_func in gsl_sf_lnpoch_e
  do :
@@ -2508,7 +2500,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lnpoch_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNPOCH_E 1
-@@ -5308,7 +5886,7 @@
+@@ -5308,7 +5889,7 @@
  
  for ac_func in gsl_sf_pochrel_e
  do :
@@ -2517,7 +2509,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_pochrel_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_POCHREL_E 1
-@@ -5321,7 +5899,7 @@
+@@ -5321,7 +5902,7 @@
  
  for ac_func in gsl_sf_pochrel_e
  do :
@@ -2526,7 +2518,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_pochrel_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_POCHREL_E 1
-@@ -5334,7 +5912,7 @@
+@@ -5334,7 +5915,7 @@
  
  for ac_func in gsl_sf_gamma_inc_Q_e
  do :
@@ -2535,7 +2527,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gamma_inc_Q_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMA_INC_Q_E 1
-@@ -5347,7 +5925,7 @@
+@@ -5347,7 +5928,7 @@
  
  for ac_func in gsl_sf_gamma_inc_Q_e
  do :
@@ -2544,7 +2536,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gamma_inc_Q_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMA_INC_Q_E 1
-@@ -5360,7 +5938,7 @@
+@@ -5360,7 +5941,7 @@
  
  for ac_func in gsl_sf_gamma_inc_P_e
  do :
@@ -2553,7 +2545,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gamma_inc_P_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMA_INC_P_E 1
-@@ -5373,7 +5951,7 @@
+@@ -5373,7 +5954,7 @@
  
  for ac_func in gsl_sf_gamma_inc_P_e
  do :
@@ -2562,7 +2554,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gamma_inc_P_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMA_INC_P_E 1
-@@ -5386,7 +5964,7 @@
+@@ -5386,7 +5967,7 @@
  
  for ac_func in gsl_sf_gamma_inc_e
  do :
@@ -2571,7 +2563,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gamma_inc_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMA_INC_E 1
-@@ -5399,7 +5977,7 @@
+@@ -5399,7 +5980,7 @@
  
  for ac_func in gsl_sf_gamma_inc_e
  do :
@@ -2580,7 +2572,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gamma_inc_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GAMMA_INC_E 1
-@@ -5412,7 +5990,7 @@
+@@ -5412,7 +5993,7 @@
  
  for ac_func in gsl_sf_beta_e
  do :
@@ -2589,7 +2581,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_beta_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BETA_E 1
-@@ -5425,7 +6003,7 @@
+@@ -5425,7 +6006,7 @@
  
  for ac_func in gsl_sf_beta_e
  do :
@@ -2598,7 +2590,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_beta_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BETA_E 1
-@@ -5438,7 +6016,7 @@
+@@ -5438,7 +6019,7 @@
  
  for ac_func in gsl_sf_lnbeta_e
  do :
@@ -2607,7 +2599,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lnbeta_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNBETA_E 1
-@@ -5451,7 +6029,7 @@
+@@ -5451,7 +6032,7 @@
  
  for ac_func in gsl_sf_lnbeta_e
  do :
@@ -2616,7 +2608,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lnbeta_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNBETA_E 1
-@@ -5464,7 +6042,7 @@
+@@ -5464,7 +6045,7 @@
  
  for ac_func in gsl_sf_hyperg_0F1_e
  do :
@@ -2625,7 +2617,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hyperg_0F1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HYPERG_0F1_E 1
-@@ -5477,7 +6055,7 @@
+@@ -5477,7 +6058,7 @@
  
  for ac_func in gsl_sf_hyperg_0F1_e
  do :
@@ -2634,7 +2626,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hyperg_0F1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HYPERG_0F1_E 1
-@@ -5490,7 +6068,7 @@
+@@ -5490,7 +6071,7 @@
  
  for ac_func in gsl_sf_conicalP_half_e
  do :
@@ -2643,7 +2635,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_conicalP_half_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CONICALP_HALF_E 1
-@@ -5503,7 +6081,7 @@
+@@ -5503,7 +6084,7 @@
  
  for ac_func in gsl_sf_conicalP_half_e
  do :
@@ -2652,7 +2644,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_conicalP_half_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CONICALP_HALF_E 1
-@@ -5516,7 +6094,7 @@
+@@ -5516,7 +6097,7 @@
  
  for ac_func in gsl_sf_conicalP_mhalf_e
  do :
@@ -2661,7 +2653,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_conicalP_mhalf_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CONICALP_MHALF_E 1
-@@ -5529,7 +6107,7 @@
+@@ -5529,7 +6110,7 @@
  
  for ac_func in gsl_sf_conicalP_mhalf_e
  do :
@@ -2670,7 +2662,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_conicalP_mhalf_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CONICALP_MHALF_E 1
-@@ -5542,7 +6120,7 @@
+@@ -5542,7 +6123,7 @@
  
  for ac_func in gsl_sf_conicalP_0_e
  do :
@@ -2679,7 +2671,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_conicalP_0_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CONICALP_0_E 1
-@@ -5555,7 +6133,7 @@
+@@ -5555,7 +6136,7 @@
  
  for ac_func in gsl_sf_conicalP_0_e
  do :
@@ -2688,7 +2680,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_conicalP_0_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CONICALP_0_E 1
-@@ -5568,7 +6146,7 @@
+@@ -5568,7 +6149,7 @@
  
  for ac_func in gsl_sf_conicalP_1_e
  do :
@@ -2697,7 +2689,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_conicalP_1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CONICALP_1_E 1
-@@ -5581,7 +6159,7 @@
+@@ -5581,7 +6162,7 @@
  
  for ac_func in gsl_sf_conicalP_1_e
  do :
@@ -2706,7 +2698,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_conicalP_1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CONICALP_1_E 1
-@@ -5594,7 +6172,7 @@
+@@ -5594,7 +6175,7 @@
  
  for ac_func in gsl_sf_airy_Ai_e
  do :
@@ -2715,7 +2707,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Ai_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_AI_E 1
-@@ -5607,7 +6185,7 @@
+@@ -5607,7 +6188,7 @@
  
  for ac_func in gsl_sf_airy_Ai_e
  do :
@@ -2724,7 +2716,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Ai_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_AI_E 1
-@@ -5620,7 +6198,7 @@
+@@ -5620,7 +6201,7 @@
  
  for ac_func in gsl_sf_airy_Bi_e
  do :
@@ -2733,7 +2725,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Bi_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_BI_E 1
-@@ -5633,7 +6211,7 @@
+@@ -5633,7 +6214,7 @@
  
  for ac_func in gsl_sf_airy_Bi_e
  do :
@@ -2742,7 +2734,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Bi_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_BI_E 1
-@@ -5646,7 +6224,7 @@
+@@ -5646,7 +6227,7 @@
  
  for ac_func in gsl_sf_airy_Ai_scaled_e
  do :
@@ -2751,7 +2743,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Ai_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_AI_SCALED_E 1
-@@ -5659,7 +6237,7 @@
+@@ -5659,7 +6240,7 @@
  
  for ac_func in gsl_sf_airy_Ai_scaled_e
  do :
@@ -2760,7 +2752,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Ai_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_AI_SCALED_E 1
-@@ -5672,7 +6250,7 @@
+@@ -5672,7 +6253,7 @@
  
  for ac_func in gsl_sf_airy_Bi_scaled_e
  do :
@@ -2769,7 +2761,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Bi_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_BI_SCALED_E 1
-@@ -5685,7 +6263,7 @@
+@@ -5685,7 +6266,7 @@
  
  for ac_func in gsl_sf_airy_Bi_scaled_e
  do :
@@ -2778,7 +2770,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Bi_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_BI_SCALED_E 1
-@@ -5698,7 +6276,7 @@
+@@ -5698,7 +6279,7 @@
  
  for ac_func in gsl_sf_airy_Ai_deriv_e
  do :
@@ -2787,7 +2779,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Ai_deriv_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_AI_DERIV_E 1
-@@ -5711,7 +6289,7 @@
+@@ -5711,7 +6292,7 @@
  
  for ac_func in gsl_sf_airy_Ai_deriv_e
  do :
@@ -2796,7 +2788,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Ai_deriv_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_AI_DERIV_E 1
-@@ -5724,7 +6302,7 @@
+@@ -5724,7 +6305,7 @@
  
  for ac_func in gsl_sf_airy_Bi_deriv_e
  do :
@@ -2805,7 +2797,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Bi_deriv_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_BI_DERIV_E 1
-@@ -5737,7 +6315,7 @@
+@@ -5737,7 +6318,7 @@
  
  for ac_func in gsl_sf_airy_Bi_deriv_e
  do :
@@ -2814,7 +2806,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Bi_deriv_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_BI_DERIV_E 1
-@@ -5750,7 +6328,7 @@
+@@ -5750,7 +6331,7 @@
  
  for ac_func in gsl_sf_airy_Ai_deriv_scaled_e
  do :
@@ -2823,7 +2815,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Ai_deriv_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_AI_DERIV_SCALED_E 1
-@@ -5763,7 +6341,7 @@
+@@ -5763,7 +6344,7 @@
  
  for ac_func in gsl_sf_airy_Ai_deriv_scaled_e
  do :
@@ -2832,7 +2824,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Ai_deriv_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_AI_DERIV_SCALED_E 1
-@@ -5776,7 +6354,7 @@
+@@ -5776,7 +6357,7 @@
  
  for ac_func in gsl_sf_airy_Bi_deriv_scaled_e
  do :
@@ -2841,7 +2833,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Bi_deriv_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_BI_DERIV_SCALED_E 1
-@@ -5789,7 +6367,7 @@
+@@ -5789,7 +6370,7 @@
  
  for ac_func in gsl_sf_airy_Bi_deriv_scaled_e
  do :
@@ -2850,7 +2842,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_Bi_deriv_scaled_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_BI_DERIV_SCALED_E 1
-@@ -5802,7 +6380,7 @@
+@@ -5802,7 +6383,7 @@
  
  for ac_func in gsl_sf_ellint_Kcomp_e
  do :
@@ -2859,7 +2851,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_Kcomp_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_KCOMP_E 1
-@@ -5815,7 +6393,7 @@
+@@ -5815,7 +6396,7 @@
  
  for ac_func in gsl_sf_ellint_Kcomp_e
  do :
@@ -2868,7 +2860,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_Kcomp_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_KCOMP_E 1
-@@ -5828,7 +6406,7 @@
+@@ -5828,7 +6409,7 @@
  
  for ac_func in gsl_sf_ellint_Ecomp_e
  do :
@@ -2877,7 +2869,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_Ecomp_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_ECOMP_E 1
-@@ -5841,7 +6419,7 @@
+@@ -5841,7 +6422,7 @@
  
  for ac_func in gsl_sf_ellint_Ecomp_e
  do :
@@ -2886,7 +2878,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_Ecomp_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_ECOMP_E 1
-@@ -5854,7 +6432,7 @@
+@@ -5854,7 +6435,7 @@
  
  for ac_func in gsl_sf_ellint_E_e
  do :
@@ -2895,7 +2887,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_E_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_E_E 1
-@@ -5867,7 +6445,7 @@
+@@ -5867,7 +6448,7 @@
  
  for ac_func in gsl_sf_ellint_F_e
  do :
@@ -2904,7 +2896,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_F_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_F_E 1
-@@ -5880,7 +6458,7 @@
+@@ -5880,7 +6461,7 @@
  
  for ac_func in gsl_sf_ellint_Pcomp_e
  do :
@@ -2913,7 +2905,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_Pcomp_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_PCOMP_E 1
-@@ -5893,7 +6471,7 @@
+@@ -5893,7 +6474,7 @@
  
  for ac_func in gsl_sf_ellint_RC_e
  do :
@@ -2922,7 +2914,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_RC_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_RC_E 1
-@@ -5906,7 +6484,7 @@
+@@ -5906,7 +6487,7 @@
  
  for ac_func in gsl_sf_ellint_D_e
  do :
@@ -2931,7 +2923,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_D_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_D_E 1
-@@ -5919,7 +6497,7 @@
+@@ -5919,7 +6500,7 @@
  
  for ac_func in gsl_sf_ellint_P_e
  do :
@@ -2940,7 +2932,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_P_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_P_E 1
-@@ -5932,7 +6510,7 @@
+@@ -5932,7 +6513,7 @@
  
  for ac_func in gsl_sf_ellint_RD_e
  do :
@@ -2949,7 +2941,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_RD_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_RD_E 1
-@@ -5945,7 +6523,7 @@
+@@ -5945,7 +6526,7 @@
  
  for ac_func in gsl_sf_ellint_RF_e
  do :
@@ -2958,7 +2950,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_RF_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_RF_E 1
-@@ -5958,7 +6536,7 @@
+@@ -5958,7 +6539,7 @@
  
  for ac_func in gsl_sf_ellint_RJ_e
  do :
@@ -2967,7 +2959,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_ellint_RJ_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ELLINT_RJ_E 1
-@@ -5971,7 +6549,7 @@
+@@ -5971,7 +6552,7 @@
  
  for ac_func in gsl_sf_airy_zero_Ai_e
  do :
@@ -2976,7 +2968,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_zero_Ai_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_ZERO_AI_E 1
-@@ -5984,7 +6562,7 @@
+@@ -5984,7 +6565,7 @@
  
  for ac_func in gsl_sf_airy_zero_Ai_e
  do :
@@ -2985,7 +2977,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_zero_Ai_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_ZERO_AI_E 1
-@@ -5997,7 +6575,7 @@
+@@ -5997,7 +6578,7 @@
  
  for ac_func in gsl_sf_airy_zero_Bi_e
  do :
@@ -2994,7 +2986,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_zero_Bi_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_ZERO_BI_E 1
-@@ -6010,7 +6588,7 @@
+@@ -6010,7 +6591,7 @@
  
  for ac_func in gsl_sf_airy_zero_Bi_e
  do :
@@ -3003,7 +2995,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_zero_Bi_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_ZERO_BI_E 1
-@@ -6023,7 +6601,7 @@
+@@ -6023,7 +6604,7 @@
  
  for ac_func in gsl_sf_airy_zero_Ai_deriv_e
  do :
@@ -3012,7 +3004,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_zero_Ai_deriv_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_ZERO_AI_DERIV_E 1
-@@ -6036,7 +6614,7 @@
+@@ -6036,7 +6617,7 @@
  
  for ac_func in gsl_sf_airy_zero_Ai_deriv_e
  do :
@@ -3021,7 +3013,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_zero_Ai_deriv_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_ZERO_AI_DERIV_E 1
-@@ -6049,7 +6627,7 @@
+@@ -6049,7 +6630,7 @@
  
  for ac_func in gsl_sf_airy_zero_Bi_deriv_e
  do :
@@ -3030,7 +3022,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_zero_Bi_deriv_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_ZERO_BI_DERIV_E 1
-@@ -6062,7 +6640,7 @@
+@@ -6062,7 +6643,7 @@
  
  for ac_func in gsl_sf_airy_zero_Bi_deriv_e
  do :
@@ -3039,7 +3031,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_airy_zero_Bi_deriv_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_AIRY_ZERO_BI_DERIV_E 1
-@@ -6075,7 +6653,7 @@
+@@ -6075,7 +6656,7 @@
  
  for ac_func in gsl_sf_bessel_zero_J0_e
  do :
@@ -3048,7 +3040,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_zero_J0_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_ZERO_J0_E 1
-@@ -6088,7 +6666,7 @@
+@@ -6088,7 +6669,7 @@
  
  for ac_func in gsl_sf_bessel_zero_J0_e
  do :
@@ -3057,7 +3049,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_zero_J0_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_ZERO_J0_E 1
-@@ -6101,7 +6679,7 @@
+@@ -6101,7 +6682,7 @@
  
  for ac_func in gsl_sf_bessel_zero_J1_e
  do :
@@ -3066,7 +3058,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_zero_J1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_ZERO_J1_E 1
-@@ -6114,7 +6692,7 @@
+@@ -6114,7 +6695,7 @@
  
  for ac_func in gsl_sf_bessel_zero_J1_e
  do :
@@ -3075,7 +3067,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_zero_J1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_ZERO_J1_E 1
-@@ -6127,7 +6705,7 @@
+@@ -6127,7 +6708,7 @@
  
  for ac_func in gsl_sf_psi_1_int_e
  do :
@@ -3084,7 +3076,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_psi_1_int_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_PSI_1_INT_E 1
-@@ -6140,7 +6718,7 @@
+@@ -6140,7 +6721,7 @@
  
  for ac_func in gsl_sf_psi_1_int_e
  do :
@@ -3093,7 +3085,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_psi_1_int_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_PSI_1_INT_E 1
-@@ -6153,7 +6731,7 @@
+@@ -6153,7 +6734,7 @@
  
  for ac_func in gsl_sf_conicalP_cyl_reg_e
  do :
@@ -3102,7 +3094,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_conicalP_cyl_reg_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CONICALP_CYL_REG_E 1
-@@ -6166,7 +6744,7 @@
+@@ -6166,7 +6747,7 @@
  
  for ac_func in gsl_sf_conicalP_sph_reg_e
  do :
@@ -3111,7 +3103,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_conicalP_sph_reg_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CONICALP_SPH_REG_E 1
-@@ -6179,7 +6757,7 @@
+@@ -6179,7 +6760,7 @@
  
  for ac_func in gsl_sf_gegenpoly_n_e
  do :
@@ -3120,7 +3112,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gegenpoly_n_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GEGENPOLY_N_E 1
-@@ -6192,7 +6770,7 @@
+@@ -6192,7 +6773,7 @@
  
  for ac_func in gsl_sf_laguerre_n_e
  do :
@@ -3129,7 +3121,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_laguerre_n_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LAGUERRE_N_E 1
-@@ -6205,7 +6783,7 @@
+@@ -6205,7 +6786,7 @@
  
  for ac_func in gsl_sf_mathieu_ce_e
  do :
@@ -3138,7 +3130,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_mathieu_ce_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_MATHIEU_CE_E 1
-@@ -6218,7 +6796,7 @@
+@@ -6218,7 +6799,7 @@
  
  for ac_func in gsl_sf_mathieu_se_e
  do :
@@ -3147,7 +3139,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_mathieu_se_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_MATHIEU_SE_E 1
-@@ -6231,7 +6809,7 @@
+@@ -6231,7 +6812,7 @@
  
  for ac_func in gsl_sf_hyperg_U_int_e
  do :
@@ -3156,7 +3148,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hyperg_U_int_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HYPERG_U_INT_E 1
-@@ -6244,7 +6822,7 @@
+@@ -6244,7 +6825,7 @@
  
  for ac_func in gsl_sf_hyperg_1F1_int_e
  do :
@@ -3165,7 +3157,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hyperg_1F1_int_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HYPERG_1F1_INT_E 1
-@@ -6257,7 +6835,7 @@
+@@ -6257,7 +6838,7 @@
  
  for ac_func in gsl_sf_legendre_Plm_e
  do :
@@ -3174,7 +3166,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_Plm_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_PLM_E 1
-@@ -6268,7 +6846,7 @@
+@@ -6268,7 +6849,7 @@
  
  for ac_func in gsl_sf_legendre_Plm_e
  do :
@@ -3183,7 +3175,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_Plm_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_PLM_E 1
-@@ -6279,7 +6857,7 @@
+@@ -6279,7 +6860,7 @@
  
  for ac_func in gsl_sf_legendre_sphPlm_e
  do :
@@ -3192,7 +3184,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_sphPlm_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_SPHPLM_E 1
-@@ -6290,7 +6868,7 @@
+@@ -6290,7 +6871,7 @@
  
  for ac_func in gsl_sf_legendre_sphPlm_e
  do :
@@ -3201,7 +3193,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_sphPlm_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_SPHPLM_E 1
-@@ -6301,7 +6879,7 @@
+@@ -6301,7 +6882,7 @@
  
  for ac_func in gsl_sf_hydrogenicR_e
  do :
@@ -3210,7 +3202,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hydrogenicR_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HYDROGENICR_E 1
-@@ -6314,7 +6892,7 @@
+@@ -6314,7 +6895,7 @@
  
  for ac_func in gsl_sf_mathieu_Mc_e
  do :
@@ -3219,7 +3211,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_mathieu_Mc_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_MATHIEU_MC_E 1
-@@ -6327,7 +6905,7 @@
+@@ -6327,7 +6908,7 @@
  
  for ac_func in gsl_sf_mathieu_Ms_e
  do :
@@ -3228,7 +3220,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_mathieu_Ms_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_MATHIEU_MS_E 1
-@@ -6340,7 +6918,7 @@
+@@ -6340,7 +6921,7 @@
  
  for ac_func in gsl_sf_bessel_zero_Jnu_e
  do :
@@ -3237,7 +3229,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_zero_Jnu_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_ZERO_JNU_E 1
-@@ -6353,7 +6931,7 @@
+@@ -6353,7 +6934,7 @@
  
  for ac_func in gsl_sf_hyperg_U_e
  do :
@@ -3246,7 +3238,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hyperg_U_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HYPERG_U_E 1
-@@ -6366,7 +6944,7 @@
+@@ -6366,7 +6947,7 @@
  
  for ac_func in gsl_sf_hyperg_U_e
  do :
@@ -3255,7 +3247,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hyperg_U_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HYPERG_U_E 1
-@@ -6379,7 +6957,7 @@
+@@ -6379,7 +6960,7 @@
  
  for ac_func in gsl_sf_hyperg_1F1_e
  do :
@@ -3264,7 +3256,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hyperg_1F1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HYPERG_1F1_E 1
-@@ -6392,7 +6970,7 @@
+@@ -6392,7 +6973,7 @@
  
  for ac_func in gsl_sf_hyperg_1F1_e
  do :
@@ -3273,7 +3265,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hyperg_1F1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HYPERG_1F1_E 1
-@@ -6405,7 +6983,7 @@
+@@ -6405,7 +6986,7 @@
  
  for ac_func in gsl_sf_hyperg_2F0_e
  do :
@@ -3282,7 +3274,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hyperg_2F0_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HYPERG_2F0_E 1
-@@ -6418,7 +6996,7 @@
+@@ -6418,7 +6999,7 @@
  
  for ac_func in gsl_sf_hyperg_2F0_e
  do :
@@ -3291,7 +3283,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hyperg_2F0_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HYPERG_2F0_E 1
-@@ -6431,7 +7009,7 @@
+@@ -6431,7 +7012,7 @@
  
  for ac_func in gsl_sf_beta_inc_e
  do :
@@ -3300,7 +3292,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_beta_inc_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BETA_INC_E 1
-@@ -6444,7 +7022,7 @@
+@@ -6444,7 +7025,7 @@
  
  for ac_func in gsl_sf_hyperg_2F1_e
  do :
@@ -3309,7 +3301,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hyperg_2F1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HYPERG_2F1_E 1
-@@ -6457,7 +7035,7 @@
+@@ -6457,7 +7038,7 @@
  
  for ac_func in gsl_sf_fact_e
  do :
@@ -3318,7 +3310,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_fact_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_FACT_E 1
-@@ -6470,7 +7048,7 @@
+@@ -6470,7 +7051,7 @@
  
  for ac_func in gsl_sf_doublefact_e
  do :
@@ -3327,7 +3319,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_doublefact_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_DOUBLEFACT_E 1
-@@ -6483,7 +7061,7 @@
+@@ -6483,7 +7064,7 @@
  
  for ac_func in gsl_sf_lnfact_e
  do :
@@ -3336,7 +3328,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lnfact_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNFACT_E 1
-@@ -6496,7 +7074,7 @@
+@@ -6496,7 +7077,7 @@
  
  for ac_func in gsl_sf_lndoublefact_e
  do :
@@ -3345,7 +3337,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lndoublefact_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNDOUBLEFACT_E 1
-@@ -6509,7 +7087,7 @@
+@@ -6509,7 +7090,7 @@
  
  for ac_func in gsl_sf_choose_e
  do :
@@ -3354,7 +3346,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_choose_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_CHOOSE_E 1
-@@ -6522,7 +7100,7 @@
+@@ -6522,7 +7103,7 @@
  
  for ac_func in gsl_sf_lnchoose_e
  do :
@@ -3363,7 +3355,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_lnchoose_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LNCHOOSE_E 1
-@@ -6535,7 +7113,7 @@
+@@ -6535,7 +7116,7 @@
  
  for ac_func in gsl_sf_coupling_3j_e
  do :
@@ -3372,7 +3364,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_coupling_3j_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_COUPLING_3J_E 1
-@@ -6548,7 +7126,7 @@
+@@ -6548,7 +7129,7 @@
  
  for ac_func in gsl_sf_coupling_3j_e
  do :
@@ -3381,7 +3373,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_coupling_3j_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_COUPLING_3J_E 1
-@@ -6561,7 +7139,7 @@
+@@ -6561,7 +7142,7 @@
  
  for ac_func in gsl_sf_coupling_6j_e
  do :
@@ -3390,7 +3382,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_coupling_6j_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_COUPLING_6J_E 1
-@@ -6574,7 +7152,7 @@
+@@ -6574,7 +7155,7 @@
  
  for ac_func in gsl_sf_coupling_6j_e
  do :
@@ -3399,7 +3391,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_coupling_6j_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_COUPLING_6J_E 1
-@@ -6587,7 +7165,7 @@
+@@ -6587,7 +7168,7 @@
  
  for ac_func in gsl_sf_coupling_9j_e
  do :
@@ -3408,7 +3400,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_coupling_9j_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_COUPLING_9J_E 1
-@@ -6600,7 +7178,7 @@
+@@ -6600,7 +7181,7 @@
  
  for ac_func in gsl_sf_coupling_9j_e
  do :
@@ -3417,7 +3409,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_coupling_9j_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_COUPLING_9J_E 1
-@@ -6613,7 +7191,7 @@
+@@ -6613,7 +7194,7 @@
  
  for ac_func in gsl_sf_bessel_jl_array
  do :
@@ -3426,7 +3418,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_jl_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_JL_ARRAY 1
-@@ -6626,7 +7204,7 @@
+@@ -6626,7 +7207,7 @@
  
  for ac_func in gsl_sf_bessel_jl_steed_array
  do :
@@ -3435,7 +3427,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_jl_steed_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_JL_STEED_ARRAY 1
-@@ -6639,7 +7217,7 @@
+@@ -6639,7 +7220,7 @@
  
  for ac_func in gsl_sf_bessel_il_scaled_array
  do :
@@ -3444,7 +3436,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_il_scaled_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_IL_SCALED_ARRAY 1
-@@ -6652,7 +7230,7 @@
+@@ -6652,7 +7233,7 @@
  
  for ac_func in gsl_sf_bessel_kl_scaled_array
  do :
@@ -3453,7 +3445,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_kl_scaled_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KL_SCALED_ARRAY 1
-@@ -6665,7 +7243,7 @@
+@@ -6665,7 +7246,7 @@
  
  for ac_func in gsl_sf_bessel_yl_array
  do :
@@ -3462,7 +3454,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_yl_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_YL_ARRAY 1
-@@ -6678,7 +7256,7 @@
+@@ -6678,7 +7259,7 @@
  
  for ac_func in gsl_sf_legendre_Pl_array
  do :
@@ -3471,7 +3463,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_Pl_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_PL_ARRAY 1
-@@ -6691,7 +7269,7 @@
+@@ -6691,7 +7272,7 @@
  
  for ac_func in gsl_sf_gegenpoly_array
  do :
@@ -3480,7 +3472,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_gegenpoly_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_GEGENPOLY_ARRAY 1
-@@ -6704,7 +7282,7 @@
+@@ -6704,7 +7285,7 @@
  
  for ac_func in gsl_sf_bessel_In_array
  do :
@@ -3489,7 +3481,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_In_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_IN_ARRAY 1
-@@ -6717,7 +7295,7 @@
+@@ -6717,7 +7298,7 @@
  
  for ac_func in gsl_sf_bessel_In_scaled_array
  do :
@@ -3498,7 +3490,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_In_scaled_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_IN_SCALED_ARRAY 1
-@@ -6730,7 +7308,7 @@
+@@ -6730,7 +7311,7 @@
  
  for ac_func in gsl_sf_bessel_Jn_array
  do :
@@ -3507,7 +3499,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Jn_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_JN_ARRAY 1
-@@ -6743,7 +7321,7 @@
+@@ -6743,7 +7324,7 @@
  
  for ac_func in gsl_sf_bessel_Kn_array
  do :
@@ -3516,7 +3508,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Kn_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KN_ARRAY 1
-@@ -6756,7 +7334,7 @@
+@@ -6756,7 +7337,7 @@
  
  for ac_func in gsl_sf_bessel_Kn_scaled_array
  do :
@@ -3525,7 +3517,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Kn_scaled_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_KN_SCALED_ARRAY 1
-@@ -6769,7 +7347,7 @@
+@@ -6769,7 +7350,7 @@
  
  for ac_func in gsl_sf_bessel_Yn_array
  do :
@@ -3534,7 +3526,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_bessel_Yn_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_BESSEL_YN_ARRAY 1
-@@ -6782,7 +7360,7 @@
+@@ -6782,7 +7363,7 @@
  
  for ac_func in gsl_sf_legendre_Plm_array
  do :
@@ -3543,7 +3535,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_Plm_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_PLM_ARRAY 1
-@@ -6793,7 +7371,7 @@
+@@ -6793,7 +7374,7 @@
  
  for ac_func in gsl_sf_legendre_Plm_deriv_array
  do :
@@ -3552,7 +3544,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_Plm_deriv_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_PLM_DERIV_ARRAY 1
-@@ -6804,7 +7382,7 @@
+@@ -6804,7 +7385,7 @@
  
  for ac_func in gsl_sf_legendre_sphPlm_array
  do :
@@ -3561,7 +3553,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_sphPlm_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_SPHPLM_ARRAY 1
-@@ -6815,7 +7393,7 @@
+@@ -6815,7 +7396,7 @@
  
  for ac_func in gsl_sf_legendre_sphPlm_array
  do :
@@ -3570,7 +3562,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_sphPlm_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_SPHPLM_ARRAY 1
-@@ -6826,7 +7404,7 @@
+@@ -6826,7 +7407,7 @@
  
  for ac_func in gsl_sf_legendre_sphPlm_deriv_array
  do :
@@ -3579,7 +3571,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_sphPlm_deriv_array" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_SPHPLM_DERIV_ARRAY 1
-@@ -6837,7 +7415,7 @@
+@@ -6837,7 +7418,7 @@
  
  for ac_func in gsl_sf_legendre_array_e
  do :
@@ -3588,7 +3580,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_array_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_ARRAY_E 1
-@@ -6850,7 +7428,7 @@
+@@ -6850,7 +7431,7 @@
  
  for ac_func in gsl_sf_legendre_deriv_array_e
  do :
@@ -3597,7 +3589,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_deriv_array_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_DERIV_ARRAY_E 1
-@@ -6863,7 +7441,7 @@
+@@ -6863,7 +7444,7 @@
  
  for ac_func in gsl_sf_legendre_deriv2_array_e
  do :
@@ -3606,7 +3598,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_legendre_deriv2_array_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_LEGENDRE_DERIV2_ARRAY_E 1
-@@ -6876,7 +7454,7 @@
+@@ -6876,7 +7457,7 @@
  
  for ac_func in gsl_sf_zeta_e
  do :
@@ -3615,7 +3607,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_zeta_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ZETA_E 1
-@@ -6889,7 +7467,7 @@
+@@ -6889,7 +7470,7 @@
  
  for ac_func in gsl_sf_zeta_e
  do :
@@ -3624,7 +3616,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_zeta_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ZETA_E 1
-@@ -6902,7 +7480,7 @@
+@@ -6902,7 +7483,7 @@
  
  for ac_func in gsl_sf_zeta_e
  do :
@@ -3633,7 +3625,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_zeta_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ZETA_E 1
-@@ -6915,7 +7493,7 @@
+@@ -6915,7 +7496,7 @@
  
  for ac_func in gsl_sf_zeta_int_e
  do :
@@ -3642,7 +3634,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_zeta_int_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ZETA_INT_E 1
-@@ -6928,7 +7506,7 @@
+@@ -6928,7 +7509,7 @@
  
  for ac_func in gsl_sf_zeta_int_e
  do :
@@ -3651,7 +3643,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_zeta_int_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ZETA_INT_E 1
-@@ -6941,7 +7519,7 @@
+@@ -6941,7 +7522,7 @@
  
  for ac_func in gsl_sf_zetam1_e
  do :
@@ -3660,7 +3652,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_zetam1_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ZETAM1_E 1
-@@ -6954,7 +7532,7 @@
+@@ -6954,7 +7535,7 @@
  
  for ac_func in gsl_sf_zetam1_int_e
  do :
@@ -3669,7 +3661,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_zetam1_int_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ZETAM1_INT_E 1
-@@ -6967,7 +7545,7 @@
+@@ -6967,7 +7548,7 @@
  
  for ac_func in gsl_sf_eta_e
  do :
@@ -3678,7 +3670,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_eta_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ETA_E 1
-@@ -6980,7 +7558,7 @@
+@@ -6980,7 +7561,7 @@
  
  for ac_func in gsl_sf_eta_e
  do :
@@ -3687,7 +3679,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_eta_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ETA_E 1
-@@ -6993,7 +7571,7 @@
+@@ -6993,7 +7574,7 @@
  
  for ac_func in gsl_sf_eta_int_e
  do :
@@ -3696,7 +3688,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_eta_int_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ETA_INT_E 1
-@@ -7006,7 +7584,7 @@
+@@ -7006,7 +7587,7 @@
  
  for ac_func in gsl_sf_eta_int_e
  do :
@@ -3705,7 +3697,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_eta_int_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_ETA_INT_E 1
-@@ -7019,7 +7597,7 @@
+@@ -7019,7 +7600,7 @@
  
  for ac_func in gsl_sf_hzeta_e
  do :
@@ -3714,7 +3706,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  if test "x$ac_cv_func_gsl_sf_hzeta_e" = xyes; then :
    cat >>confdefs.h <<_ACEOF
  #define HAVE_GSL_SF_HZETA_E 1
-@@ -7032,7 +7610,7 @@
+@@ -7032,7 +7613,7 @@
  
  for ac_func in gsl_sf_hzeta_e
  do :
@@ -3725,7 +3717,7 @@ diff -ur gsl-2.1.1.orig/src/configure gsl-2.1.1/src/configure
  #define HAVE_GSL_SF_HZETA_E 1
 diff -ur gsl-2.1.1.orig/src/configure.ac gsl-2.1.1/src/configure.ac
 --- gsl-2.1.1.orig/src/configure.ac	2018-07-06 11:04:59.199071174 -0400
-+++ gsl-2.1.1/src/configure.ac	2018-07-06 11:55:14.309794063 -0400
++++ gsl-2.1.1/src/configure.ac	2018-07-06 12:16:06.825679865 -0400
 @@ -28,24 +28,23 @@
  AC_PATH_PROG([MKOCTFILE],[mkoctfile])
  test -z "$MKOCTFILE" && AC_MSG_ERROR([mkoctfile not found])
@@ -3735,7 +3727,7 @@ diff -ur gsl-2.1.1.orig/src/configure.ac gsl-2.1.1/src/configure.ac
 -test -z "$OCTAVE" && AC_MSG_ERROR([octave not found])
 -
 +dnl Check for octave-config
-+AC_CHECK_PROG([OCTAVE_CONFIG],[octave-config])
++AC_PATH_PROG([OCTAVE_CONFIG],[octave-config])
 +test -z "$OCTAVE_CONFIG" &&  AC_MSG_ERROR([octave-config not found])
 +
 +AC_DEFUN(OCTAVE_CONFIG_EVAL,
@@ -3806,7 +3798,7 @@ diff -ur gsl-2.1.1.orig/src/configure.ac gsl-2.1.1/src/configure.ac
  
 diff -ur gsl-2.1.1.orig/src/configure.ac.in gsl-2.1.1/src/configure.ac.in
 --- gsl-2.1.1.orig/src/configure.ac.in	2018-07-06 11:04:59.193071031 -0400
-+++ gsl-2.1.1/src/configure.ac.in	2018-07-06 11:55:10.080693352 -0400
++++ gsl-2.1.1/src/configure.ac.in	2018-07-06 12:16:00.987540545 -0400
 @@ -24,24 +24,23 @@
  AC_PATH_PROG([MKOCTFILE],[mkoctfile])
  test -z "$MKOCTFILE" && AC_MSG_ERROR([mkoctfile not found])
@@ -3816,7 +3808,7 @@ diff -ur gsl-2.1.1.orig/src/configure.ac.in gsl-2.1.1/src/configure.ac.in
 -test -z "$OCTAVE" && AC_MSG_ERROR([octave not found])
 -
 +dnl Check for octave-config
-+AC_CHECK_PROG([OCTAVE_CONFIG],[octave-config])
++AC_PATH_PROG([OCTAVE_CONFIG],[octave-config])
 +test -z "$OCTAVE_CONFIG" &&  AC_MSG_ERROR([octave-config not found])
 +
 +AC_DEFUN(OCTAVE_CONFIG_EVAL,
