@@ -89,11 +89,16 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
       echo "  refblas..."
       cp $(OCTAVE_DIST_DIR)/bin/libblas.dll $(OCTAVE_DIST_DIR)/bin/librefblas.dll
-      echo "  octave.bat..."
-      cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)/
+      echo "  octave.vbs..."
       cp $(TOP_DIR)/installer-files/octave.vbs $(OCTAVE_DIST_DIR)/
       cp $(TOP_DIR)/installer-files/octave-firsttime.vbs $(OCTAVE_DIST_DIR)/
+      cp $(TOP_DIR)/installer-files/fc_update.bat $(OCTAVE_DIST_DIR)/
       cp $(TOP_BUILD_DIR)/HG-ID $(OCTAVE_DIST_DIR)/
+      echo "  updating octave .exe to script files..."
+      rm -f $(OCTAVE_DIST_DIR)/bin/octave.exe
+      rm -f $(OCTAVE_DIST_DIR)/bin/octave-$($(OCTAVE_TARGET)_VERSION).exe
+      cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)/bin/octave.bat
+      cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)/bin/octave-$($(OCTAVE_TARGET)_VERSION).bat
       echo "  updating libtool references..."
       find '$(OCTAVE_DIST_DIR)/' -type f -name "*.la" \
         -exec $(SED) -i 's|$(HOST_PREFIX)|/usr|g;s|$(BUILD_TOOLS_PREFIX)|/usr|g' {} \; ;
@@ -106,7 +111,6 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       echo "  updating script config tool references..."
       find '$(OCTAVE_DIST_DIR)/bin' -type f -name "*-config" \
         -exec $(SED) -i 's|$(HOST_PREFIX)|/usr|g;s|$(BUILD_TOOLS_PREFIX)|/usr|g' {} \; ;
-      cp $(TOP_DIR)/installer-files/fc_update.bat $(OCTAVE_DIST_DIR)/
     endef
   else
     define copy-windows-dist-files
@@ -116,9 +120,15 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       cp $(TOP_DIR)/installer-files/README.html $(OCTAVE_DIST_DIR)/
       echo "  refblas..."
       cp $(OCTAVE_DIST_DIR)/bin/libblas.dll $(OCTAVE_DIST_DIR)/bin/librefblas.dll
-      echo "  octave.bat..."
-      cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)/
+      echo "  octave.vbs..."
+      cp $(TOP_DIR)/installer-files/octave.vbs $(OCTAVE_DIST_DIR)/
+      cp $(TOP_DIR)/installer-files/octave-firsttime.vbs $(OCTAVE_DIST_DIR)/
       cp $(TOP_DIR)/installer-files/fc_update.bat $(OCTAVE_DIST_DIR)/
+      echo "  updating octave .exe to script files..."
+      rm -f $(OCTAVE_DIST_DIR)/bin/octave.exe
+      rm -f $(OCTAVE_DIST_DIR)/bin/octave-$($(OCTAVE_TARGET)_VERSION).exe
+      cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)/bin/octave.bat
+      cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)/bin/octave-$($(OCTAVE_TARGET)_VERSION).bat
     endef
   endif
 endif

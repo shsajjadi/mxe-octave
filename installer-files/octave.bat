@@ -1,10 +1,12 @@
+:; # if running from bash, recall using cmd.exe
+:; cmd.exe //c "$0" "$@"; exit $?
 @echo off
 Rem   Find Octave's install directory through cmd.exe variables.
-Rem   This batch file should reside in Octaves installation subdir!
+Rem   This batch file should reside in Octaves installation bin dir!
 Rem
 Rem   This trick finds the location where the batch file resides.
 Rem   Note: the result ends with a backslash.
-set OCT_HOME=%~dp0
+set OCT_HOME=%~dp0\.\..\
 Rem Convert to 8.3 format so we don't have to worry about spaces.
 for %%I in ("%OCT_HOME%") do set OCT_HOME=%%~sI
 

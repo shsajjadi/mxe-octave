@@ -229,12 +229,10 @@ Section "MainFiles"
   SetOutPath "\$INSTDIR" 
   File "$OCTAVE_SOURCE/README.html"
 
-  ; include the octave.bat file
+  ; include octave.vbs and other scripts
   SetOutPath "\$INSTDIR" 
-  File "$OCTAVE_SOURCE/octave.bat"
   File "$OCTAVE_SOURCE/octave.vbs"
   File "$OCTAVE_SOURCE/octave-firsttime.vbs"
-
   File "$OCTAVE_SOURCE/fc_update.bat"
 
   File "$OCTAVE_SOURCE/HG-ID"
@@ -614,7 +612,7 @@ FunctionEnd
 
 ; Check whether prev install is here and no spaces in dest name
 Function CheckPrevInstallAndDest
-  IfFileExists "\$INSTDIR\\bin\\octave.exe" inst_exists  inst_none
+  IfFileExists "\$INSTDIR\\bin\\octave-cli.exe" inst_exists  inst_none
 inst_exists:
   MessageBox MB_YESNO|MB_ICONEXCLAMATION "Another Octave installation has been detected at that destination. It is recommended to uninstall it if you intend to use the same installation directory. Do you want to proceed with the installation anyway?" /SD IDYES IDYES inst_none IDNO 0
   Abort 
