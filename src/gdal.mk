@@ -18,7 +18,6 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    # The option '--without-threads' means native win32 threading without pthread.
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -28,7 +27,6 @@ define $(PKG)_BUILD
         --with-ogr \
         --with-vfk \
         --with-pam \
-        --without-threads \
         --with-libz='$(HOST_PREFIX)' \
         --with-png='$(HOST_PREFIX)' \
         --with-libtiff='$(HOST_PREFIX)' \
