@@ -1,0 +1,12 @@
+diff -ur miscellaneous-1.2.1.orig/inst/units.m miscellaneous-1.2.1/inst/units.m
+--- miscellaneous-1.2.1.orig/inst/units.m	2018-07-11 12:44:26.038777666 -0400
++++ miscellaneous-1.2.1/inst/units.m	2018-07-11 12:45:50.033750024 -0400
+@@ -107,7 +107,7 @@
+ 
+ function fpath = check_units ()
+   ## See bug #38270 about why we're checking this way.
+-  fpath = file_in_path (getenv ("PATH"), sprintf ("units%s", octave_config_info ("EXEEXT")));
++  fpath = file_in_path (getenv ("PATH"), sprintf ("units%s", __octave_config_info__ ("EXEEXT")));
+   if (isempty (fpath))
+     error ("units: %s\nVerify that GNU units is installed in the current path.",
+            rawoutput);
