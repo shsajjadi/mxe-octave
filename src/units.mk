@@ -21,6 +21,13 @@ define $(PKG)_BUILD
         --prefix='$(HOST_PREFIX)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) 
 
+    # override units and localalemap from what configure detected for cross mingw
+    if [ "$(MXE_SYSTEM)$(MXE_NATIVE_BUILD)" == "mingwno" ]; then \
+        $(SED) -i -e 's,UNITSFILE=\\\".*definitions.units\\\",UNITSFILE=\\\"definitions.units\\\",g' \
+	    -e 's,LOCALEMAP=\\\".*locale_map.txt\\\",LOCALEMAP=\\\"locale_map.txt\\\",g' \
+	    '$(1)/Makefile'; \
+    fi
+
     $(MAKE) -C '$(1)' -j '$(JOBS)' 
     $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
 endef
