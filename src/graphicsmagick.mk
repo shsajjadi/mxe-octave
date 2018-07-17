@@ -35,7 +35,7 @@ define $(PKG)_BUILD
          $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --prefix='$(HOST_PREFIX)' \
         --disable-openmp \
-        --without-modules \
+        --with-modules \
         --with-threads \
         --with-magick-plus-plus \
         --without-perl \

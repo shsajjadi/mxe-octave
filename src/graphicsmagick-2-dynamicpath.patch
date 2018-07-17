@@ -1,0 +1,71 @@
+diff -ur GraphicsMagick-1.3.30.orig/magick/blob.c GraphicsMagick-1.3.30/magick/blob.c
+--- GraphicsMagick-1.3.30.orig/magick/blob.c	2018-07-16 08:55:01.552444311 -0400
++++ GraphicsMagick-1.3.30/magick/blob.c	2018-07-17 09:27:05.584144673 -0400
+@@ -1955,6 +1955,29 @@
+   AddConfigurePath(path_map,&path_index,MagickLibConfigPath,exception);
+ # endif /* defined(MagickLibConfigPath) */
+ 
++#if defined(MSWINDOWS)
++  {
++    char buf[FILENAME_MAX+100];
++    if (GetModuleFileName(NULL, buf, FILENAME_MAX + 1))
++    {
++      char *ptr = strrchr(buf, '\\');
++      if(ptr) {
++	*(ptr+1) = 0;
++        strcat(buf, "..\\lib\\");
++        strcat(buf, MagickShareConfigSubDir);
++        strcat(buf, "\\");
++        AddConfigurePath(path_map,&path_index,buf,exception);
++
++	*(ptr+1) = 0;
++        strcat(buf, "..\\share\\");
++        strcat(buf, MagickLibConfigSubDir);
++        strcat(buf, "\\");
++        AddConfigurePath(path_map,&path_index,buf,exception);
++      }
++    }
++  }
++#endif
++
+ # if defined(MSWINDOWS) && !(defined(MagickLibConfigPath) || defined(MagickShareConfigPath))
+   {
+     char
+Only in GraphicsMagick-1.3.30/magick: .blob.c.swp
+diff -ur GraphicsMagick-1.3.30.orig/magick/module.c GraphicsMagick-1.3.30/magick/module.c
+--- GraphicsMagick-1.3.30.orig/magick/module.c	2018-07-16 08:55:01.539443999 -0400
++++ GraphicsMagick-1.3.30/magick/module.c	2018-07-17 08:22:22.161123799 -0400
+@@ -1021,6 +1021,33 @@
+           start += length+1;
+         }
+     }
++#if defined(MSWINDOWS)
++  {
++    char buf[FILENAME_MAX+100];
++    if (GetModuleFileName(NULL, buf, FILENAME_MAX + 1))
++    {
++      char *ptr = strrchr(buf, '\\');
++      if(ptr)
++      {
++	*(ptr+1) = 0;
++        strcat(buf, "..\\lib\\");
++        switch (module_type)
++        {
++        case MagickCoderModule:
++        default:
++          strcat(buf, MagickCoderModulesSubdir);
++          break;
++        case MagickFilterModule:
++          strcat(buf, MagickFilterModulesSubdir);
++	  break;
++        }
++        strcat(buf, "\\");
++        AddModulePath(path_map,&path_index,buf,exception);
++      }
++    }
++  }
++#endif
++
+ 
+ #if defined(UseInstalledMagick)
+ # if defined(MagickCoderModulesPath)
