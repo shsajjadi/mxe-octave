@@ -148,6 +148,7 @@ SRC_FILES_1 := \
   gnutls-test.c \
   gnutls.mk \
   graphicsmagick-1-fix-xml2-config.patch \
+  graphicsmagick-2-dynamicpath.patch \
   graphicsmagick-test.cpp \
   graphicsmagick.mk \
   gsl-test.c \
