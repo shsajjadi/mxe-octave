@@ -22,6 +22,7 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
+        --localstatedir=/var \
         --with-xml=expat \
         --disable-tests \
         --disable-verbose-mode \
