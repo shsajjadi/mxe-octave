@@ -69,6 +69,7 @@ SRC_FILES_1 := \
   dcmtk-1-fixes.patch \
   dcmtk-2-ming64.patch \
   dcmtk.mk \
+  default-octave-1-gnulib.patch \
   default-octave.mk \
   devil-1-png.patch \
   devil.mk \
@@ -327,15 +328,19 @@ SRC_FILES_1 := \
   mesa-2-fixes.patch \
   mesa-proto.mk \
   mesa.mk \
+  mingw-blas-1-xerbla.patch \
   mingw-cairo-1-ssize-t-defined.patch \
   mingw-cfitsio-1-fixes.patch \
   mingw-epstool-1-fixes.patch \
   mingw-glib-1-fixes.patch \
   mingw-glib-2-fixes.patch \
+  mingw-glpk-1-fixes.patch \
   mingw-hdf5-1.patch \
+  mingw-lapack-1-xerbla.patch \
   mingw-libgcrypt-1-fixes.patch \
   mingw-libmng-1-noundefines.patch \
   mingw-mesa-1-fixes.patch \
+  mingw-openblas-1-xerbla.patch \
   mingw-portaudio-1-pkgconfig.patch \
   mingw-s2tc-1-fixes.patch \
   mingw-texinfo-1-fixes.patch \
@@ -481,9 +486,9 @@ SRC_FILES_1 := \
   of-gsl-1-cross-fixes.patch \
   of-gsl.mk \
   of-image.mk \
+  of-instrument-control.mk \
   of-interval-1-cross-fixes.patch \
   of-interval.mk \
-  of-instrument-control.mk \
   of-io.mk \
   of-linear-algebra-1-cross-fixes.patch \
   of-linear-algebra-2-dev-fixes.patch \
@@ -520,6 +525,7 @@ SRC_FILES_1 := \
   of-sockets-1-cross-fixes.patch \
   of-sockets.mk \
   of-sparsersb.mk \
+  of-specfun-1-cross-fixes.patch \
   of-specfun.mk \
   of-splines.mk \
   of-statistics-1-cross.patch \
@@ -527,8 +533,9 @@ SRC_FILES_1 := \
   of-stk.mk \
   of-strings-1-fixes.patch \
   of-strings.mk \
-  of-struct.mk \
   of-struct-1-fixes.patch \
+  of-struct.mk \
+  of-tisean-1-fixes.patch \
   of-tisean.mk \
   of-tsa.mk \
   of-video-1-fixes.patch \
@@ -553,6 +560,7 @@ SRC_FILES_1 := \
   pango.mk \
   pangomm.mk \
   pcre.mk \
+  pcre2.mk \
   pdcurses.mk \
   pdflib_lite-1-mingw.patch \
   pdflib_lite.mk \
@@ -611,10 +619,13 @@ SRC_FILES_1 := \
   qt-test.ui \
   qt.mk \
   qt5.mk \
+  qtbase-1-fixes.patch \
   qtbase.mk \
-  qttools.mk \
-  qtsvg.mk \
+  qtimageformats-1.patch \
   qtimageformats.mk \
+  qtsvg.mk \
+  qttools-1.patch \
+  qttools.mk \
   qwt-1-fixes.patch \
   qwt.mk \
   qwtplot3d-1-fixes.patch \
@@ -631,6 +642,7 @@ SRC_FILES_1 := \
   release-octave.mk \
   renderproto.mk \
   s2tc.mk \
+  sdl-1-xdata.patch \
   sdl-test.c \
   sdl.mk \
   sdl_image-test.c \
@@ -681,7 +693,6 @@ SRC_FILES_1 := \
   src-msys-zip.mk \
   src-msys-zlib.mk \
   stable-octave-1-gnulib.patch \
-  stable-octave-1-qt.patch \
   stable-octave.mk \
   suitesparse-1.patch \
   suitesparse.mk \
@@ -724,6 +735,7 @@ SRC_FILES_1 := \
   wavpack-1-exec_prefix.patch \
   wavpack.mk \
   wget.mk \
+  win64-nsis.patch \
   win7appid.mk \
   winpcap-1-fixes.patch \
   winpcap.mk \
@@ -899,6 +911,7 @@ TOOLS_FILES_1 := \
 TOOLS_FILES := $(addprefix tools/, $(TOOLS_FILES_1))
 
 FILES := \
+  HG-ID \
   CNAME \
   README \
   binary-dist-rules.mk \
