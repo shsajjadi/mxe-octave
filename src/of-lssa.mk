@@ -3,10 +3,10 @@
 
 PKG             := of-lssa
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.1.2
-$(PKG)_CHECKSUM := ea22c20223a04bd8e6e2c1b09342f5c153111b9b
+$(PKG)_VERSION  := 0.1.3
+$(PKG)_CHECKSUM := 3ad6f43d0dcdd4c38c33653f1f384056b942d1fe
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := lssa
+$(PKG)_SUBDIR   := lssa-$($(PKG)_VERSION)
 $(PKG)_FILE     := lssa-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
