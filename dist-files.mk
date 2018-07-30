@@ -325,7 +325,6 @@ SRC_FILES_1 := \
   matio.mk \
   mdbtools.mk \
   mesa-1-fixes.patch \
-  mesa-2-fixes.patch \
   mesa-proto.mk \
   mesa.mk \
   mingw-blas-1-xerbla.patch \
@@ -339,7 +338,6 @@ SRC_FILES_1 := \
   mingw-lapack-1-xerbla.patch \
   mingw-libgcrypt-1-fixes.patch \
   mingw-libmng-1-noundefines.patch \
-  mingw-mesa-1-fixes.patch \
   mingw-openblas-1-xerbla.patch \
   mingw-portaudio-1-pkgconfig.patch \
   mingw-s2tc-1-fixes.patch \
