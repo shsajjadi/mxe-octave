@@ -44,10 +44,16 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
 else
   ifneq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_SYSDEP_CMAKE_OPTIONS += \
-      -DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-win32'
+      -DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-win32' \
+      -DLLVM_TARGETS_TO_BUILD='X86_64'
   else
     $(PKG)_SYSDEP_CMAKE_OPTIONS += \
-      -DLLVM_DEFAULT_TARGET_TRIPLE='x86-pc-win32'
+      -DLLVM_DEFAULT_TARGET_TRIPLE='x86-pc-win32' \
+      -DLLVM_TARGETS_TO_BUILD='X86'
+  endif
+  ifeq ($(USE_CCACHE),yes)
+    $(PKG)_CCACHE_OPTIONS += \
+      -DLLVM_CCACHE_BUILD=On
   endif
   # build cross-compiler
   define $(PKG)_BUILD
@@ -59,17 +65,15 @@ else
       -DLLVM_BUILD_LLVM_DYLIB=On \
       -DLLVM_LINK_LLVM_DYLIB=On \
       -DLLVM_VERSION_SUFFIX= \
-      -DLLVM_TARGETS_TO_BUILD='X86' \
-      -DLLVM_TARGET_ARCH='X86' \
       $($(PKG)_SYSDEP_CMAKE_OPTIONS) \
       -DCROSS_TOOLCHAIN_FLAGS_NATIVE=-DCMAKE_TOOLCHAIN_FILE='$(CMAKE_NATIVE_TOOLCHAIN_FILE)' \
       -DLLVM_BUILD_EXAMPLES=Off \
       -DLLVM_INCLUDE_EXAMPLES=Off \
       -DLLVM_BUILD_TESTS=Off \
       -DLLVM_INCLUDE_TESTS=Off \
-      -DLLVM_ENABLE_BACKTRACES=Off
+      -DLLVM_ENABLE_BACKTRACES=Off \
+      $($(PKG)_CCACHE_OPTIONS)
     $(MAKE) -C '$(1)/.build' -j $(JOBS) llvm-tblgen
-    $(MAKE) -C '$(1)/.build' -j $(JOBS) intrinsics_gen
     $(MAKE) -C '$(1)/.build' -j $(JOBS) install DESTDIR='$(3)'
   endef
 endif
