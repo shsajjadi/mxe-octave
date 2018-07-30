@@ -3,8 +3,8 @@
 
 PKG             := llvm
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.0.0
-$(PKG)_CHECKSUM := 7b0fd212ecc38461e392cbdcbe6a1d4944138a04
+$(PKG)_VERSION  := 6.0.1
+$(PKG)_CHECKSUM := 09a6316c5225cab255ba12391e7abe5ff4d28935
 $(PKG)_SUBDIR   := llvm-$($(PKG)_VERSION).src
 $(PKG)_FILE     := llvm-$($(PKG)_VERSION).src.tar.xz
 $(PKG)_URL      := http://releases.llvm.org/$($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -42,8 +42,34 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     endef
   endif
 else
+  ifneq ($(ENABLE_WINDOWS_64),yes)
+    $(PKG)_SYSDEP_CMAKE_OPTIONS += \
+      -DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-win32'
+  else
+    $(PKG)_SYSDEP_CMAKE_OPTIONS += \
+      -DLLVM_DEFAULT_TARGET_TRIPLE='x86-pc-win32'
+  endif
+  # build cross-compiler
   define $(PKG)_BUILD
-    echo "unsupported LLVM configuration" 1>&2
-    exit 1
+    mkdir '$(1)/.build'
+    cd '$(1)/.build' && 'cmake' .. \
+      $($(PKG)_CMAKE_FLAGS) \
+      -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+      -DLLVM_BUILD_TOOLS=OFF \
+      -DLLVM_BUILD_LLVM_DYLIB=On \
+      -DLLVM_LINK_LLVM_DYLIB=On \
+      -DLLVM_VERSION_SUFFIX= \
+      -DLLVM_TARGETS_TO_BUILD='X86' \
+      -DLLVM_TARGET_ARCH='X86' \
+      $($(PKG)_SYSDEP_CMAKE_OPTIONS) \
+      -DCROSS_TOOLCHAIN_FLAGS_NATIVE=-DCMAKE_TOOLCHAIN_FILE='$(CMAKE_NATIVE_TOOLCHAIN_FILE)' \
+      -DLLVM_BUILD_EXAMPLES=Off \
+      -DLLVM_INCLUDE_EXAMPLES=Off \
+      -DLLVM_BUILD_TESTS=Off \
+      -DLLVM_INCLUDE_TESTS=Off \
+      -DLLVM_ENABLE_BACKTRACES=Off
+    $(MAKE) -C '$(1)/.build' -j $(JOBS) llvm-tblgen
+    $(MAKE) -C '$(1)/.build' -j $(JOBS) intrinsics_gen
+    $(MAKE) -C '$(1)/.build' -j $(JOBS) install DESTDIR='$(3)'
   endef
 endif

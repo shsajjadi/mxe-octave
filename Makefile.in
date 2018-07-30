@@ -514,6 +514,7 @@ MAKE_SHARED_FROM_STATIC := \
   $(TOP_DIR)/tools/make-shared-from-static $(MAKE_SHARED_FROM_STATIC_OPTIONS)
 
 CMAKE_TOOLCHAIN_FILE := $(HOST_PREFIX)/share/cmake/mxe-conf.cmake
+CMAKE_NATIVE_TOOLCHAIN_FILE := $(TOP_DIR)/usr/share/cmake/native-conf.cmake
 
 # unexport any environment variables that might cause trouble
 unexport AR CC CFLAGS C_INCLUDE_PATH CPATH CPLUS_INCLUDE_PATH CPP F77 FFLAGS
@@ -623,7 +624,7 @@ all-targets: $(OCTAVE_TARGET)
 .PHONY: all-packages
 all-packages: $(PKGS)
 
-$(PKGS): $(BUILD_TOOLS) cmake-toolchain-file.stamp
+$(PKGS): $(BUILD_TOOLS) cmake-toolchain-file.stamp cmake-native-toolchain-file.stamp
 
 .PHONY: msys-base
 msys-base:  $(MSYS_BASE_PACKAGES)
@@ -1009,6 +1010,23 @@ cmake-toolchain-file.stamp:
 	@echo [creating CMake toolchain file]
 	@$(build-cmake-toolchain-file)
 	@touch cmake-toolchain-file.stamp
+	@echo [done]
+
+define build-native-cmake-toolchain-file
+    # create the native CMake toolchain file
+    [ -d '$(dir $(CMAKE_NATIVE_TOOLCHAIN_FILE))' ] || mkdir -p '$(dir $(CMAKE_NATIVE_TOOLCHAIN_FILE))'
+    (echo 'set(CMAKE_C_COMPILER $(CC))'; \
+     echo 'set(CMAKE_CXX_COMPILER $(CXX))'; \
+     echo 'set(CMAKE_Fortran_COMPILER $(F77))'; \
+     echo 'set(CMAKE_RC_COMPILER $(WINDRES))'; \
+     echo 'set(CMAKE_BUILD_TYPE Release CACHE STRING "Debug|Release|RelWithDebInfo|MinSizeRel")') \
+    > '$(CMAKE_NATIVE_TOOLCHAIN_FILE)'
+endef
+
+cmake-native-toolchain-file.stamp:
+	@echo [creating native CMake toolchain file]
+	@$(build-native-cmake-toolchain-file)
+	@touch cmake-native-toolchain-file.stamp
 	@echo [done]
 
 # Files to distribute
