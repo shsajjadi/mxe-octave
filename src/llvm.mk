@@ -26,7 +26,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
         -DLLVM_BUILD_LLVM_DYLIB=On \
         -DLLVM_LINK_LLVM_DYLIB=On \
         -DLLVM_VERSION_SUFFIX= \
-        -DLLVM_TARGETS_TO_BUILD='X86' \
+        -DLLVM_TARGETS_TO_BUILD='X86_64' \
 	-DLLVM_BUILD_EXAMPLES=Off \
 	-DLLVM_INCLUDE_EXAMPLES=Off \
 	-DLLVM_BUILD_TESTS=Off \
@@ -42,7 +42,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     endef
   endif
 else
-  ifneq ($(ENABLE_WINDOWS_64),yes)
+  ifeq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_SYSDEP_CMAKE_OPTIONS += \
       -DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-win32' \
       -DLLVM_TARGETS_TO_BUILD='X86_64'
