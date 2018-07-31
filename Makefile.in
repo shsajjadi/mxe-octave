@@ -900,7 +900,7 @@ clean:
 	rm -rf $(STAMP_DIR) $(MSYS_INFO_DIR) $(LOG_DIR)
 	rm -rf $(MSYS_BASE_DIR) $(MSYS_EXTENSION_DIR) $(NOTEPAD_BASE_DIR)
 	rm -rf native-tools cross-tools octave gnuplot
-	rm -f Makefile cmake-toolchain-file.stamp
+	rm -f Makefile cmake-toolchain-file.stamp cmake-native-toolchain-file.stamp
 	rm -f tools/set-mxe-env.sh
 
 .PHONY: realclean
