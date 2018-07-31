@@ -26,7 +26,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
         -DLLVM_BUILD_LLVM_DYLIB=On \
         -DLLVM_LINK_LLVM_DYLIB=On \
         -DLLVM_VERSION_SUFFIX= \
-        -DLLVM_TARGETS_TO_BUILD='X86_64' \
+        -DLLVM_TARGETS_TO_BUILD='X86' \
 	-DLLVM_BUILD_EXAMPLES=Off \
 	-DLLVM_INCLUDE_EXAMPLES=Off \
 	-DLLVM_BUILD_TESTS=Off \
@@ -43,9 +43,10 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
   endif
 else
   ifeq ($(ENABLE_WINDOWS_64),yes)
+    ## WTF, setting LLVM_TARGETS_TO_BUILD to X64_64 doesn't work here?
     $(PKG)_SYSDEP_CMAKE_OPTIONS += \
       -DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-pc-win32' \
-      -DLLVM_TARGETS_TO_BUILD='X86_64'
+      -DLLVM_TARGETS_TO_BUILD='X86'
   else
     $(PKG)_SYSDEP_CMAKE_OPTIONS += \
       -DLLVM_DEFAULT_TARGET_TRIPLE='x86-pc-win32' \
