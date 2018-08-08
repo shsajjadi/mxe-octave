@@ -163,15 +163,15 @@ Function octaveOptionsPage
 
   \${NSD_CreateCheckBox} 0 0 100% 12u "Install for all users"
   Pop \$InstallAllUsersCtrl
-  \${NSD_SetState} \$InstallAllUsersCtrl \${BST_CHECKED}
+  \${NSD_SetState} \$InstallAllUsersCtrl \$InstallAllUsers
 
   \${NSD_CreateCheckBox} 0 20 100% 12u "Create desktop shortcuts"
   Pop \$InstallShortcutsCtrl
-  \${NSD_SetState} \$InstallShortcutsCtrl \${BST_CHECKED}
+  \${NSD_SetState} \$InstallShortcutsCtrl \$InstallShortcuts
 
   \${NSD_CreateCheckBox} 0 40 100% 12u "Register .m file type with Octave"
   Pop \$RegisterOctaveFileTypeCtrl
-  \${NSD_SetState} \$RegisterOctaveFileTypeCtrl \${BST_CHECKED}
+  \${NSD_SetState} \$RegisterOctaveFileTypeCtrl \$RegisterOctaveFileType
 
   \${NSD_CreateLabel} 0 70 110u 12u "BLAS library implementation:"
   Pop \$0
@@ -207,6 +207,12 @@ FunctionEnd
 ######################################################################
 
 Function .onInit
+  ; set default options
+  StrCpy \$InstallAllUsers \${BST_CHECKED}
+  StrCpy \$InstallShortcuts \${BST_CHECKED}
+  StrCpy \$RegisterOctaveFileType  \${BST_CHECKED}
+  StrCpy \$InstallBlasLib 0
+
   Call CheckWinVer
   Call CheckCurrVersion
   \${If} @ENABLE_JAVA@ == yes
@@ -217,7 +223,6 @@ FunctionEnd
 
 ; file section
 Section "MainFiles"
-
   ; set context based on whether installing for user or all
   \${If} \$InstallAllUsers == \${BST_CHECKED}
     SetShellVarContext all
