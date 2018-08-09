@@ -578,15 +578,12 @@ is_winnt:
   StrCmp \$1 1 is_winnt_10 ; Checking for future versions of Windows 10+
   Goto is_error
 
-is_winnt_10:
-
-  MessageBox MB_YESNO|MB_ICONEXCLAMATION "Setup has detected Windows 10 installed on your system. Octave is currently not fully tested on Windows 10. Testers are welcome to provide feedback. Do you want to proceed with the installation anyway?" /SD IDYES IDYES done IDNO 0
-  Abort
 is_winnt_XP:
 is_winnt_2003:
 is_winnt_vista:
 is_winnt_7:
 is_winnt_8:
+is_winnt_10:
   Goto done
 is_error:
   StrCpy \$1 \$0
