@@ -11,7 +11,7 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
   endif
 endif
 
-ifeq ($(OCTAVE_TARGET),stable-octave)
+ifeq ($(OCTAVE_TARGET),release-octave)
   OCTAVE_DIST_NAME := octave-$($(OCTAVE_TARGET)_VERSION)$(OCTAVE_PLATFORM_SUFFIX)
 else
   OCTAVE_DIST_NAME := octave-$(DATE)$(OCTAVE_PLATFORM_SUFFIX)
