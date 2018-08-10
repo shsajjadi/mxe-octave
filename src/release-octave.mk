@@ -34,8 +34,8 @@
 
 PKG             := release-octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.4.0
-$(PKG)_CHECKSUM := 2f682e2843d45d858ed7bf603f569d6b0acd2fb9
+$(PKG)_VERSION  := 4.4.1
+$(PKG)_CHECKSUM := 6d432c22c48a200214f4369f3c874dd779b1e70b
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.lz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
@@ -154,7 +154,7 @@ else
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)
-  $(PKG)_EXTRA_CONFIGURE_OPTIONS += --with-x=no
+  $(PKG)_EXTRA_CONFIGURE_OPTIONS += --with-x=no --with-blas="-lblas -lxerbla"
 endif
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
