@@ -29,7 +29,8 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
 
   ifeq ($(USE_MSYS2),yes)
     WINDOWS_BINARY_DIST_DEPS += \
-      msys2
+      msys2 \
+      msys2-sources
 
     ifeq ($(ENABLE_WINDOWS_64),yes)
       OCTAVE_ADD_PATH := /mingw64
