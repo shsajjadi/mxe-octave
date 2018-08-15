@@ -16,12 +16,22 @@ OCTAVE_SOURCE=`basename $1`
 cd `dirname $1`
 MXEDIR=`cd ..; pwd`
 
-if [ -e $OCTAVE_SOURCE/bin/libopenblas.dll ]; then
+if [ "@USE_MSYS2@" == "yes" ]; then
+  if [ "@ENABLE_WINDOWS_64@" == "yes" ]; then
+    OCTAVE_SUBDIR=mingw64
+  else
+    OCTAVE_SUBDIR=mingw32
+  fi
+else
+  OCTAVE_SUBDIR=
+fi
+
+
+if [ -e $OCTAVE_SOURCE/$OCTAVE_SUBDIR/bin/libopenblas.dll ]; then
   DEFAULT_BLAS="OpenBLAS"
 else
   DEFAULT_BLAS="Reference BLAS"
 fi
-
 
 # find octave shortcut icon
 ICON=`find $OCTAVE_SOURCE -name octave-logo.ico -printf "%P\n" | head -1 | sed 's,/,\\\\,g'`
@@ -180,7 +190,7 @@ Function octaveOptionsPage
   Pop \$InstallBlasLibCtrl
 EOF
    # add option to install libopenblas if we have the dll present
-   if [ -e $OCTAVE_SOURCE/bin/libopenblas.dll ]; then
+   if [ -e $OCTAVE_SOURCE/$OCTAVE_SUBDIR/bin/libopenblas.dll ]; then
      cat >> $OUTFILE << EOF
   \${NSD_CB_AddString} \$InstallBlasLibCtrl "OpenBLAS"
 EOF
@@ -239,6 +249,7 @@ Section "MainFiles"
   File "$OCTAVE_SOURCE/octave.vbs"
   File "$OCTAVE_SOURCE/octave-firsttime.vbs"
   File "$OCTAVE_SOURCE/fc_update.bat"
+  File "$OCTAVE_SOURCE/post-install.bat"
 
   File "$OCTAVE_SOURCE/HG-ID"
 
@@ -263,14 +274,17 @@ EOF
  ; add qt.conf
  Push \$0
  \${StrRep} '\$0' '\$INSTDIR' '\\' '/'
- WriteINIStr "\$INSTDIR\\bin\\qt.conf" "Paths" "Prefix" "\$0"
- WriteINIStr "\$INSTDIR\\bin\\qt.conf" "Paths" "Translations" "translations"
+ WriteINIStr "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf" "Paths" "Prefix" "\$0"
+ WriteINIStr "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf" "Paths" "Translations" "translations"
  Pop \$0
 
- ; run fc-cache updater
+ ; run post-install script
  GetFullPathName /SHORT \$1 \$INSTDIR
- DetailPrint "Building font cache (may take a while)"
- ExecWait "\$1\\fc_update.bat"
+ DetailPrint "Running post install script (May take a while) ..."
+ ;ExecWait "\$1\\post-install.bat"
+ ; run in hidden console window
+ nsExec::Exec /TIMEOUT=30000 '"\$1\\post-install.bat"'
+ Pop \$0
 SectionEnd
 
 Section make_uninstaller
@@ -301,7 +315,9 @@ Section "Shortcuts"
  SetOutPath "\$INSTDIR"
 
  ; fix the shortcuts for appid
- ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (GUI).lnk" "gnu.octave.$VERSION"'
+ ; run in hidden console window
+ nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (GUI).lnk" "gnu.octave.$VERSION"'
+ Pop \$0
 EOF
   # shortcut for cmd win
   if [ -f $OCTAVE_SOURCE/cmdshell.bat ]; then 
@@ -348,7 +364,8 @@ have_ver_str:
     CreateShortCut "\$desktop\\GNU Octave (CLI).lnk" "\$R0\\octave.vbs" "--no-gui" "\$R2" 0 SW_SHOWMINIMIZED
     CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "\$R0\\octave.vbs" "--force-gui" "\$R2" 0 SW_SHOWMINIMIZED
 
-    ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave (GUI).lnk" "gnu.octave.\$R1"'
+    nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave (GUI).lnk" "gnu.octave.\$R1"'
+    Pop \$0
 
     Pop \$R2
     Pop \$R1
@@ -358,10 +375,10 @@ have_ver_str:
   ; BLAS set up
   \${If} \$InstallBlasLib == 1
     ; Reference BLAS
-    CopyFiles /SILENT "\$INSTDIR\\bin\\librefblas.dll" "\$INSTDIR\\bin\\libblas.dll"
+    CopyFiles /SILENT "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\librefblas.dll" "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\libblas.dll"
   \${Else}
     ; OpenBLAS
-    CopyFiles /SILENT "\$INSTDIR\\bin\\libopenblas.dll" "\$INSTDIR\\bin\\libblas.dll"
+    CopyFiles /SILENT "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\libopenblas.dll" "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\libblas.dll"
   \${EndIf}
 
 SectionEnd
@@ -381,13 +398,6 @@ no_back_type:
     WriteRegStr HKCR ".m" "" "Octave.Document.$VERSION"
     WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "RegisteredFileType" 1
   \${EndIf}
-SectionEnd
-
-Section "InstallPackages"
-  ; fix the installed packages (if any)
-  GetFullPathName /SHORT \$1 \$INSTDIR
-  SetOutPath "\$1"
-  ExecWait '"\$1\\bin\\octave-cli.exe" --no-gui -W -H -f -q --eval "pkg rebuild"' \$0
 SectionEnd
 
 Section "Uninstall"
@@ -458,7 +468,8 @@ check_gui_shortcut:
  IfFileExists "\$desktop\\GNU Octave (GUI).lnk" 0 done_remove_desktop_shortcuts
  SetOutPath "%USERPROFILE%"
  CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "\$R0\\octave.vbs" "--force-gui" "\$R2" 0 SW_SHOWMINIMIZED
- ExecWait '"\$INSTDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave (GUI).lnk" "gnu.octave.\$R1"'
+ nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave (GUI).lnk" "gnu.octave.\$R1"'
+ Pop \$0
 
  GoTo done_remove_desktop_shortcuts
 
@@ -472,7 +483,7 @@ done_remove_desktop_shortcuts:
  Pop \$R0
 
  ; delete generated qt.conf file
- Delete "\$INSTDIR\\bin\\qt.conf"
+ Delete "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf"
 EOF
 
 # insert dir list (backwards order) for uninstall files
@@ -614,7 +625,8 @@ FunctionEnd
 
 ; Check whether prev install is here and no spaces in dest name
 Function CheckPrevInstallAndDest
-  IfFileExists "\$INSTDIR\\bin\\octave-cli.exe" inst_exists  inst_none
+  IfFileExists "\$INSTDIR\\bin\\octave-cli.exe" inst_exists  0
+  IfFileExists "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\octave-cli.exe" inst_exists  inst_none
 inst_exists:
   MessageBox MB_YESNO|MB_ICONEXCLAMATION "Another Octave installation has been detected at that destination. It is recommended to uninstall it if you intend to use the same installation directory. Do you want to proceed with the installation anyway?" /SD IDYES IDYES inst_none IDNO 0
   Abort 

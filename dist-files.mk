@@ -890,6 +890,129 @@ SRC_MSVCTOOLS_MATH_FILES_1 := \
 SRC_MSVCTOOLS_MATH_FILES := \
   $(addprefix src/build-msvctools/math/, $(SRC_MSVCTOOLS_MATH_FILES_1))
 
+SRC_MSYS2_FILES_1 := \
+  msys2-bash.mk \
+  msys2-coreutils.mk \
+  msys2-diffutils.mk \
+  msys2-dos2unix.mk \
+  msys2-filesystem.mk \
+  msys2-findutils.mk \
+  msys2-gawk.mk \
+  msys2-gcc-libs.mk \
+  msys2-gmp.mk \
+  msys2-gnupg.mk \
+  msys2-grep.mk \
+  msys2-gzip.mk \
+  msys2-icu.mk \
+  msys2-info.mk \
+  msys2-keyring.mk \
+  msys2-less.mk \
+  msys2-libassuan.mk \
+  msys2-libbz2.mk \
+  msys2-libexpat.mk \
+  msys2-libffi.mk \
+  msys2-libgnutls.mk \
+  msys2-libgpg-error.mk \
+  msys2-libgpgme.mk \
+  msys2-libhogweed.mk \
+  msys2-libiconv.mk \
+  msys2-libidn2.mk \
+  msys2-libintl.mk \
+  msys2-libksba.mk \
+  msys2-liblzma.mk \
+  msys2-libmetalink.mk \
+  msys2-libnettle.mk \
+  msys2-libnpth.mk \
+  msys2-libopenssl.mk \
+  msys2-libp11-kit.mk \
+  msys2-libpcre.mk \
+  msys2-libpsl.mk \
+  msys2-libreadline.mk \
+  msys2-libsqlite.mk \
+  msys2-libtasn1.mk \
+  msys2-libunistring.mk \
+  msys2-libutil-linux.mk \
+  msys2-libxml2.mk \
+  msys2-make.mk \
+  msys2-mintty.mk \
+  msys2-mpfr.mk \
+  msys2-ncurses.mk \
+  msys2-pacman-mirrors.mk \
+  msys2-pacman.mk \
+  msys2-patch.mk \
+  msys2-runtime.mk \
+  msys2-sed.mk \
+  msys2-tar.mk \
+  msys2-unzip.mk \
+  msys2-wget.mk \
+  msys2-zip.mk \
+  msys2-zlib.mk
+
+SRC_MSYS2_FILES := \
+  $(addprefix src/, $(SRC_MSYS2_FILES_1))
+
+SRC_MSYS2_SRC_FILES := \
+  src-msys2-bash.mk \
+  src-msys2-coreutils.mk \
+  src-msys2-diffutils.mk \
+  src-msys2-dos2unix.mk \
+  src-msys2-filesystem.mk \
+  src-msys2-findutils.mk \
+  src-msys2-gawk.mk \
+  src-msys2-gcc-libs.mk \
+  src-msys2-gmp.mk \
+  src-msys2-gnupg.mk \
+  src-msys2-grep.mk \
+  src-msys2-gzip.mk \
+  src-msys2-icu.mk \
+  src-msys2-info.mk \
+  src-msys2-keyring.mk \
+  src-msys2-less.mk \
+  src-msys2-libassuan.mk \
+  src-msys2-libbz2.mk \
+  src-msys2-libexpat.mk \
+  src-msys2-libffi.mk \
+  src-msys2-libgcrypt.mk \
+  src-msys2-libgnutls.mk \
+  src-msys2-libgpg-error.mk \
+  src-msys2-libgpgme.mk \
+  src-msys2-libhogweed.mk \
+  src-msys2-libiconv.mk \
+  src-msys2-libidn2.mk \
+  src-msys2-libintl.mk \
+  src-msys2-libksba.mk \
+  src-msys2-liblzma.mk \
+  src-msys2-libmetalink.mk \
+  src-msys2-libnettle.mk \
+  src-msys2-libnpth.mk \
+  src-msys2-libopenssl.mk \
+  src-msys2-libp11-kit.mk \
+  src-msys2-libpcre.mk \
+  src-msys2-libpsl.mk \
+  src-msys2-libreadline.mk \
+  src-msys2-libsqlite.mk \
+  src-msys2-libtasn1.mk \
+  src-msys2-libunistring.mk \
+  src-msys2-libutil-linux.mk \
+  src-msys2-libxml2.mk \
+  src-msys2-make.mk \
+  src-msys2-mintty.mk \
+  src-msys2-mpfr.mk \
+  src-msys2-ncurses.mk \
+  src-msys2-pacman-mirrors.mk \
+  src-msys2-pacman.mk \
+  src-msys2-patch.mk \
+  src-msys2-runtime.mk \
+  src-msys2-sed.mk \
+  src-msys2-tar.mk \
+  src-msys2-unzip.mk \
+  src-msys2-wget.mk \
+  src-msys2-zip.mk \
+  src-msys2-zlib.mk
+
+SRC_MSYS2_SRC_FILES := \
+  $(addprefix src/, $(SRC_MSYS2_SRC_FILES_1))
+
 TOOLS_FILES_1 := \
   build-make.sh \
   config.guess \
@@ -899,6 +1022,7 @@ TOOLS_FILES_1 := \
   make-shared-from-static \
   makeinst-script.sh.in \
   mk-hg-id.sh \
+  msys2-install.py \
   patch-tool-mxe \
   pkg-install.py \
   s3-fetch-and-sync \
@@ -924,6 +1048,7 @@ FILES := \
 
 INSTALL_FILES_1 := \
   cmdshell.bat \
+  post-install.bat \
   fc_update.bat \
   gpl-3.0.txt \
   octave.bat \
@@ -932,14 +1057,19 @@ INSTALL_FILES_1 := \
   octave-firsttime.vbs \
   octave-hdr.bmp \
   octave-logo.ico \
+  post-install.bat \
   README.html
 INSTALL_FILES := $(addprefix installer-files/, $(INSTALL_FILES_1))
 
 DIST_FILES := \
   $(SRC_FILES) \
+  $(SRC_MSYS2_FILES) \
+  $(SRC_MSYS2_SRC_FILES) \
   $(SRC_MSVCTOOLS_FILES) \
   $(SRC_MSVCTOOLS_COMPAT_FILES) \
   $(SRC_MSVCTOOLS_MATH_FILES) \
   $(TOOLS_FILES) \
   $(FILES) \
   $(INSTALL_FILES)
+
+

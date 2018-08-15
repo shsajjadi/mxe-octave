@@ -5,6 +5,22 @@ Set wshShell = CreateObject( "WScript.Shell" )
 ' get the directory that script resides in
 Set fso = CreateObject("Scripting.FileSystemObject")
 OctavePath = fso.GetParentFolderName(WScript.ScriptFullName)
+
+' ctavePath is now the root of the install folder, but for msys2,
+' OctavePath should be OctavePath/mingw64 or OctavePath/ming32
+MSysType = "MSYS"
+MSysPath = OctavePath
+Set objFSO = CreateObject("Scripting.FileSystemObject")
+If objFSO.FileExists(OctavePath & "\mingw64\bin\octave-cli.exe") Then
+  MSysPath = OctavePath & "\usr"
+  MSysType = "MINGW64"
+  OctavePath = OctavePath & "\mingw64" 
+ ElseIf objFSO.FileExists(OctavePath & "\mingw32\bin\octave-cli.exe") Then
+  MSysPath = OctavePath & "\usr"
+  MSysType = "MINGW32"
+  OctavePath = OctavePath & "\mingw32" 
+End If
+
 ' get path as a 8.3 path
 Set fo = fso.GetFolder(OctavePath)
 OctavePath = fo.ShortPath
@@ -12,7 +28,12 @@ Set fo = Nothing
 
 ' set up path to ensure octave bin comes first
 Set wshSystemEnv = wshShell.Environment( "PROCESS" )
+if OctavePath <> MSysPath Then
+  wshSystemEnv("PATH") = MSysPath  & "\bin;" & wshSystemEnv("PATH")
+End If
 wshSystemEnv("PATH") = OctavePath & "\bin;" & wshSystemEnv("PATH")
+
+wshSystemEnv("MSYSTEM") = MSysType
 
 ' set terminal type
 wshSystemEnv("TERM") = "cygwin"
@@ -28,7 +49,6 @@ If wshShell.ExpandEnvironmentStrings("%HOME%") = "%HOME%" Then
 End If
 
 ' set Qt plugin directory and path 
-Set objFSO = CreateObject("Scripting.FileSystemObject")
 If objFSO.FolderExists(OctavePath & "\qt5\bin") Then
   wshSystemEnv("PATH") = OctavePath & "\qt5\bin;" & wshSystemEnv("PATH")
   wshSystemEnv("QT_PLUGIN_PATH") = OctavePath & "\qt5\plugins"

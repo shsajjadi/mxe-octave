@@ -70,6 +70,9 @@ ENABLE_DEVEL_TOOLS := @ENABLE_DEVEL_TOOLS@
 # use qt5 instead of qt4
 ENABLE_QT5 := @ENABLE_QT5@
 
+# Set to "yes" to use msys2
+USE_MSYS2 := @USE_MSYS2@
+
 # Should match what config.guess prints for your system.
 # If cross compiling, you must set it manually (defaults are set by configure).
 ifeq ($(MXE_NATIVE_BUILD),yes)
@@ -446,7 +449,17 @@ ifeq ($(MXE_SYSTEM),mingw)
     MSYS_BASE_SOURCES := $(addprefix src-,$(MSYS_BASE_PACKAGES))
     PKGS += $(MSYS_BASE_SOURCES)
 
-     NOTEPAD_BASE_DIR := $(TOP_BUILD_DIR)/notepad++
+    NOTEPAD_BASE_DIR := $(TOP_BUILD_DIR)/notepad++
+
+    MSYS2_ARCH = $(shell echo $(TARGET) | $(SED) -n 's|\([^-]*\).*|\1|p')
+    MSYS2_PACKAGES := $(shell $(SED) -n 's/^.* class="package">\([^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html' | $(GREP) msys2-)
+    MSYS2_SOURCES := $(addprefix src-,$(MSYS2_PACKAGES))
+    PKGS += $(MSYS2_SOURCES)
+    MSYS2_BASE_URL := https://sourceforge.net/projects/msys2/files/REPOS/MSYS2
+    MSYS2_URL := $(MSYS2_BASE_URL)/$(MSYS2_ARCH)
+    MSYS2_SRC_URL := $(MSYS2_BASE_URL)/Sources
+    MSYS2_DIR := $(TOP_BUILD_DIR)/msys2
+
   endif
 else ifeq ($(MXE_SYSTEM),msvc)
   MXE_WINDOWS_BUILD := yes
@@ -631,6 +644,20 @@ msys-base:  $(MSYS_BASE_PACKAGES)
 
 .PHONY: msys-base-sources
 msys-base-sources:  $(MSYS_BASE_SOURCES)
+
+define MSYS2_PKG_BUILD
+  cd '$(1)/' && \
+  mkdir -p '$(3)' && \
+  (tar cf $(3)/$($(PKG)_FILE) '.') && \
+  (TMP="$(3)" \
+  $(TOP_DIR)/tools/msys2-install.py --verbose --msys-dir="$(MSYS2_DIR)" "$(3)/$($(PKG)_FILE)")
+endef
+
+.PHONY: msys2
+msys2:  $(MSYS2_PACKAGES)
+
+.PHONY: msys2-sources
+msys2-sources:  $(MSYS2_SOURCES)
 
 .PHONY: octave-forge-packages
 octave-forge-packages: $(OCTAVE_FORGE_DEPS) $(OCTAVE_FORGE_PACKAGES)
@@ -899,6 +926,7 @@ clean:
 	rm -rf $(call TMP_DIR,*) $(BUILD_TOOLS_PREFIX)
 	rm -rf $(STAMP_DIR) $(MSYS_INFO_DIR) $(LOG_DIR)
 	rm -rf $(MSYS_BASE_DIR) $(MSYS_EXTENSION_DIR) $(NOTEPAD_BASE_DIR)
+	rm -rf $(MSYS2_DIR)
 	rm -rf native-tools cross-tools octave gnuplot
 	rm -f Makefile cmake-toolchain-file.stamp cmake-native-toolchain-file.stamp
 	rm -f tools/set-mxe-env.sh

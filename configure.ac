@@ -83,6 +83,15 @@ AC_ARG_WITH([ccache],
    esac], [USE_CCACHE=no])
 AC_SUBST(USE_CCACHE)
 
+AC_ARG_WITH([msys2],
+  [AS_HELP_STRING([--with-msys2], [use msys2 in windows distribution (default: no)])],
+  [case $withval in
+     no) USE_MSYS2=no ;;
+     yes) USE_MSYS2=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --with-msys]) ;;
+   esac], [USE_MSYS2=no])
+AC_SUBST(USE_MSYS2)
+
 AC_ARG_ENABLE([windows-64],
   [AS_HELP_STRING([--disable-windows-64],
     [don't build a Windows 64 cross compiler])],
