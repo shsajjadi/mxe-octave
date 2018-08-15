@@ -19,5 +19,15 @@ if "%HOME%"=="" set HOME=%HOMEDRIVE%%HOMEPATH%
 Rem set HOME to 8.3 format
 for %%I in ("%HOME%") do set HOME=%%~sI
 
-%OCTAVE_HOME%\bin\bash.exe --login -i
+set MSYSDIR=%OCTAVE_HOME%
+set MSYSTEM=MSYS
+
+Rem if no msys-1.0, must be msys2
+if NOT EXIST %OCTAVE_HOME%\bin\msys-1.0.dll set MSYSDIR=%OCTAVE_HOME%\usr
+
+Rem 32 or 64 bit
+if EXIST %OCTAVE_HOME%\mingw32\bin\octave-cli.exe set MSYSTEM=MINGW32
+if EXIST %OCTAVE_HOME%\mingw64\bin\octave-cli.exe set MSYSTEM=MINGW64
+
+%MSYSDIR%\bin\bash.exe --login -i
 
