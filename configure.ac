@@ -84,12 +84,12 @@ AC_ARG_WITH([ccache],
 AC_SUBST(USE_CCACHE)
 
 AC_ARG_WITH([msys2],
-  [AS_HELP_STRING([--with-msys2], [use msys2 in windows distribution (default: no)])],
+  [AS_HELP_STRING([--with-msys2], [use msys2 in windows distribution (default: yes)])],
   [case $withval in
      no) USE_MSYS2=no ;;
      yes) USE_MSYS2=yes ;;
-     *) AC_MSG_ERROR([bad value "$enableval" for --with-msys]) ;;
-   esac], [USE_MSYS2=no])
+     *) AC_MSG_ERROR([bad value "$enableval" for --with-msys2]) ;;
+   esac], [USE_MSYS2=yes])
 AC_SUBST(USE_MSYS2)
 
 AC_ARG_ENABLE([windows-64],
