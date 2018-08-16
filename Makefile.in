@@ -1063,7 +1063,9 @@ include $(TOP_DIR)/dist-files.mk
 PACKAGE_VERSION := @PACKAGE_VERSION@
 PACKAGE_TARNAME := @PACKAGE_TARNAME@
 
-distdir := $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
+DIST_FILE_VERSION := $(shell if [ -f HG-ID ]; then cat HG-ID; else echo $(PACKAGE_VERSION); fi)
+
+distdir := $(PACKAGE_TARNAME)-$(DIST_FILE_VERSION)
 
 .PHONY: dist
 dist:
