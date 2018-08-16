@@ -912,6 +912,7 @@ SRC_MSYS2_FILES_1 := \
   msys2-libexpat.mk \
   msys2-libffi.mk \
   msys2-libgnutls.mk \
+  msys2-libgcrypt.mk \
   msys2-libgpg-error.mk \
   msys2-libgpgme.mk \
   msys2-libhogweed.mk \
@@ -951,7 +952,7 @@ SRC_MSYS2_FILES_1 := \
 SRC_MSYS2_FILES := \
   $(addprefix src/, $(SRC_MSYS2_FILES_1))
 
-SRC_MSYS2_SRC_FILES := \
+SRC_MSYS2_SRC_FILES_1 := \
   src-msys2-bash.mk \
   src-msys2-coreutils.mk \
   src-msys2-diffutils.mk \
