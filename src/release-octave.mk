@@ -35,6 +35,7 @@
 PKG             := release-octave
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 4.4.1
+$(PKG)_WIN_VERSION := 4.4.1.0
 $(PKG)_CHECKSUM := 6d432c22c48a200214f4369f3c874dd779b1e70b
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.lz
@@ -54,7 +55,10 @@ ifeq ($(USE_SYSTEM_OPENGL),no)
   $(PKG)_DEPS += mesa
 endif
 
-ifeq ($(MXE_WINDOWS_BUILD),no)
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_WITH_BLAS_CONFIGURE_OPTIONS := --with-blas="-lblas -lxerbla"
+else
+  $(PKG)_WITH_BLAS_CONFIGURE_OPTIONS := --with-blas="-lblas"
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += x11 xext
   endif
@@ -154,7 +158,7 @@ else
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)
-  $(PKG)_EXTRA_CONFIGURE_OPTIONS += --with-x=no --with-blas="-lblas -lxerbla"
+  $(PKG)_EXTRA_CONFIGURE_OPTIONS += --with-x=no
 endif
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
@@ -198,6 +202,7 @@ define $(PKG)_BUILD
         --disable-silent-rules \
         --enable-install-build-logs \
         $($(PKG)_CROSS_CONFIG_OPTIONS) \
+        $($(PKG)_WITH_BLAS_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_JAVA_CONFIGURE_OPTIONS) \
@@ -217,6 +222,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
 
     if [ "x$(MXE_SYSTEM)" == "xmingw" ]; then \
+      $(INSTALL) '$(3)/$(HOST_BINDIR)/libxerbla.dll' '$(3)$(HOST_BINDIR)/libxerbla-octave.dll'; \
       cp '$(1)/.build/src/.libs/octave-gui.exe' '$(3)$(HOST_BINDIR)'; \
       if [ "x$(ENABLE_BINARY_PACKAGES)" == "xyes" ]; then \
         mkdir -p '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
@@ -234,5 +240,5 @@ define $(PKG)_BUILD
     fi
 
     # create a file with latest installed octave rev in it
-    echo "$($(PKG)_VERSION)" > $(TOP_BUILD_DIR)/octave/octave-version
+    echo "$($(PKG)_WIN_VERSION)" > $(TOP_BUILD_DIR)/octave/octave-version
 endef
