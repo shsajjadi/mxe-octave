@@ -37,6 +37,7 @@ endif
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   $(PKG)_WITH_BLAS_CONFIGURE_OPTIONS := --with-blas="-lblas -lxerbla"
 else
+  $(PKG)_WITH_BLAS_CONFIGURE_OPTIONS := --with-blas="-lblas"
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += x11 xext
   endif
