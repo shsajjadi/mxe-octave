@@ -8,7 +8,10 @@ $(PKG)_CHECKSUM := 32267c5fcaa1439a5fbf7606d27dc4fafba9e504
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/xine/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := faad2 ffmpeg flac fontconfig freetype graphicsmagick libiconv libmng pthreads sdl speex theora vorbis wavpack zlib libmpcdec libcdio vcdimager mman-win32 libmad a52dec libmodplug
+ifeq ($(USE_SYSTEM_FONTCONFIG),no)
+  $(PKG)_FONTCONFIG := fontconfig
+endif
+$(PKG)_DEPS     := faad2 ffmpeg flac $($(PKG)_FONTCONFIG) freetype graphicsmagick libiconv libmng pthreads sdl speex theora vorbis wavpack zlib libmpcdec libcdio vcdimager mman-win32 libmad a52dec libmodplug
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://hg.debian.org/hg/xine-lib/xine-lib/tags' | \

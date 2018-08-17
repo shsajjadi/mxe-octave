@@ -8,7 +8,10 @@ $(PKG)_CHECKSUM := 66c56fc07246b66ba649c83e996fd2085ea2f9e2
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := https://bitbucket.org/libgd/gd-libgd/downloads/$(PKG)-$($(PKG)_VERSION).tar.xz
-$(PKG)_DEPS     := fontconfig freetype libpng jpeg tiff zlib
+ifeq ($(USE_SYSTEM_FONTCONFIG),no)
+  $(PKG)_FONTCONFIG := fontconfig
+endif
+$(PKG)_DEPS     := $($(PKG)_FONTCONFIG) freetype libpng jpeg tiff zlib
 
 ifneq ($(MXE_SYSTEM),msvc)
     $(PKG)_DEPS += pthreads

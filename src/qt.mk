@@ -9,9 +9,6 @@ $(PKG)_SUBDIR   := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.qt.io/official_releases/qt/4.8/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := postgresql freetds zlib libpng jpeg libmng tiff sqlite dbus
-ifeq ($(USE_SYSTEM_FONTCONFIG),no)
-  $(PKG)_FONTCONFIG := fontconfig
-endif
 ifeq ($(MXE_WINDOWS_BUILD),no)
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += xdamage xdmcp xext xfixes xi xrender xt xxf86vm x11 xcb xcb-util xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm
