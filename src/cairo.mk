@@ -8,7 +8,10 @@ $(PKG)_CHECKSUM := c6f7b99986f93c9df78653c3e6a3b5043f65145e
 $(PKG)_SUBDIR   := cairo-$($(PKG)_VERSION)
 $(PKG)_FILE     := cairo-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://cairographics.org/releases/$($(PKG)_FILE)
-$(PKG)_DEPS     := zlib libpng fontconfig freetype pixman glib
+ifeq ($(USE_SYSTEM_FONTCONFIG),no)
+  $(PKG)_FONTCONFIG := fontconfig
+endif
+$(PKG)_DEPS     := zlib libpng $($(PKG)_FONTCONFIG) freetype pixman glib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://cairographics.org/releases/?C=M;O=D' | \

@@ -8,7 +8,10 @@ $(PKG)_CHECKSUM := 18db616204416936ef969e1c387b7a2f4e8b039b
 $(PKG)_SUBDIR   := pango-$($(PKG)_VERSION)
 $(PKG)_FILE     := pango-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/pango/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
-$(PKG)_DEPS     := fontconfig freetype cairo glib
+ifeq ($(USE_SYSTEM_FONTCONFIG),no)
+  $(PKG)_FONTCONFIG := fontconfig
+endif
+$(PKG)_DEPS     := $($(PKG)_FONTCONFIG) freetype cairo glib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- https://github.com/GNOME/pango/tags | \

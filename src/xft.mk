@@ -8,7 +8,10 @@ $(PKG)_CHECKSUM := e025d790a7b6c4d283a78d8df06615cb10278e2d
 $(PKG)_SUBDIR   := libXft-$($(PKG)_VERSION)
 $(PKG)_FILE     := libXft-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
-$(PKG)_DEPS     := kbproto xrender fontconfig freetype
+ifeq ($(USE_SYSTEM_FONTCONFIG),no)
+  $(PKG)_FONTCONFIG := fontconfig
+endif
+$(PKG)_DEPS     := kbproto xrender $($(PKG)_FONTCONFIG) freetype
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD

@@ -8,7 +8,10 @@ $(PKG)_CHECKSUM :=
 $(PKG)_SUBDIR   := $(PKG)-everywhere-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-src-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://download.qt.io/official_releases/qt/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
-$(PKG)_DEPS     := dbus double-conversion freetds freetype fontconfig jpeg libjbig libpng libproxy pcre2 postgresql sqlite zlib
+ifeq ($(USE_SYSTEM_FONTCONFIG),no)
+  $(PKG)_FONTCONFIG := fontconfig
+endif
+$(PKG)_DEPS     := dbus double-conversion freetds freetype $($(PKG)_FONTCONFIG) jpeg libjbig libpng libproxy pcre2 postgresql sqlite zlib
 
 $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION :=
 $(PKG)_CONFIGURE_DATABASE_OPTION :=
@@ -18,9 +21,6 @@ $(PKG)_CONFIGURE_LIBPATH_OPTION :=
 $(PKG)_CONFIGURE_PLATFORM_OPTION :=
 $(PKG)_CONFIGURE_OPTS :=
 
-ifeq ($(USE_SYSTEM_FONTCONFIG),no)
-  $(PKG)_FONTCONFIG := fontconfig
-endif
 ifeq ($(USE_SYSTEM_OPENGL),no)
   $(PKG)_DEPS += mesa
 endif
