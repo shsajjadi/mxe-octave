@@ -690,6 +690,7 @@ SRC_FILES_1 := \
   src-msys-zip.mk \
   src-msys-zlib.mk \
   stable-octave-1-gnulib.patch \
+  stable-octave-1-qt.patch \
   stable-octave.mk \
   suitesparse-1.patch \
   suitesparse.mk \
