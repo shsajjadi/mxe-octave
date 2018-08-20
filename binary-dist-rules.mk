@@ -130,9 +130,14 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       if [ "$(ENABLE_DEVEL_TOOLS)" = "yes" ]; then \
         cp $(TOP_DIR)/installer-files/cmdshell.bat $(OCTAVE_DIST_DIR)/; \
       fi
-      echo "  updating script config tool references..."
-      find '$(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin' -type f -name "*-config" \
-        -exec $(SED) -i 's|$(HOST_PREFIX)|/usr|g;s|$(BUILD_TOOLS_PREFIX)|/usr|g' {} \; ;
+      echo "  updating script tool references..."
+      #find '$(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin' -type f ! -name "*.*" \
+      #  -exec $(SED) -i 's|$(HOST_PREFIX)|/$(OCTAVE_ADD_PATH)|g;s|$(BUILD_TOOLS_PREFIX)|/$(OCTAVE_ADD_PATH)|g' {} \; ;
+      find '$(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin' -type f ! -name "*.*" \
+        -exec sh -c 'test `head -c2 {}` = "#!" && $(SED) -i "s|$(HOST_PREFIX)|/$(OCTAVE_ADD_PATH)|g;s|$(BUILD_TOOLS_PREFIX)|/$(OCTAVE_ADD_PATH)|g" {}' \; ;
+      # some additional script files to fix
+      $(SED) -i "s|datadir = '/usr/share'|datadir = '$(OCTAVE_ADD_PATH)/share'|g" '$(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin/makeinfo'
+
     endef
   else
     define copy-windows-dist-files
