@@ -909,6 +909,7 @@ SRC_MSYS2_FILES_1 := \
   msys2-less.mk \
   msys2-libassuan.mk \
   msys2-libbz2.mk \
+  msys2-libcrypt.mk \
   msys2-libexpat.mk \
   msys2-libffi.mk \
   msys2-libgnutls.mk \
@@ -941,6 +942,7 @@ SRC_MSYS2_FILES_1 := \
   msys2-pacman-mirrors.mk \
   msys2-pacman.mk \
   msys2-patch.mk \
+  msys2-perl.mk \
   msys2-runtime.mk \
   msys2-sed.mk \
   msys2-tar.mk \
@@ -971,6 +973,7 @@ SRC_MSYS2_SRC_FILES_1 := \
   src-msys2-less.mk \
   src-msys2-libassuan.mk \
   src-msys2-libbz2.mk \
+  src-msys2-libcrypt.mk \
   src-msys2-libexpat.mk \
   src-msys2-libffi.mk \
   src-msys2-libgcrypt.mk \
@@ -1003,6 +1006,7 @@ SRC_MSYS2_SRC_FILES_1 := \
   src-msys2-pacman-mirrors.mk \
   src-msys2-pacman.mk \
   src-msys2-patch.mk \
+  src-msys2-perl.mk \
   src-msys2-runtime.mk \
   src-msys2-sed.mk \
   src-msys2-tar.mk \
