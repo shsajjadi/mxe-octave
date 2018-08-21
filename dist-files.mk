@@ -635,6 +635,7 @@ SRC_FILES_1 := \
   readline-1-sigwinch.patch \
   readline-2-event-hook.patch \
   readline.mk \
+  release-octave-1-defaults.patch \
   release-octave-1-gnulib.patch \
   release-octave.mk \
   renderproto.mk \
@@ -689,6 +690,7 @@ SRC_FILES_1 := \
   src-msys-wget.mk \
   src-msys-zip.mk \
   src-msys-zlib.mk \
+  stable-octave-1-defaults.patch \
   stable-octave-1-gnulib.patch \
   stable-octave.mk \
   suitesparse-1.patch \
