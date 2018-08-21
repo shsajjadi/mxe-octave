@@ -324,13 +324,13 @@ EOF
     echo "CreateShortCut '\$SMPROGRAMS\\GNU Octave $VERSION\\Bash Shell.lnk' '\$INSTDIR\\cmdshell.bat' '' '' 0" >> $OUTFILE
   fi
   # if we have documentation files, create shortcuts
-  if [ -d $OCTAVE_SOURCE/share/doc/octave ]; then
+  if [ -d $OCTAVE_SOURCE/$OCTAVE_SUBDIR/share/doc/octave ]; then
     cat >> $OUTFILE << EOF
     CreateDirectory "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation"
-    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave C++ Classes (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.pdf" "" "" 0
-    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave C++ Classes (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\liboctave.html\\index.html" "" "" 0
-    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave (PDF).lnk" "\$INSTDIR\\share\\doc\\octave\\octave.pdf" "" "" 0
-    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave (HTML).lnk" "\$INSTDIR\\share\\doc\\octave\\octave.html\\index.html" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave C++ Classes (PDF).lnk" "\$INSTDIR\\$OCTAVE_SUBDIR\\share\\doc\\octave\\liboctave.pdf" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave C++ Classes (HTML).lnk" "\$INSTDIR\\$OCTAVE_SUBDIR\\share\\doc\\octave\\liboctave.html\\index.html" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave (PDF).lnk" "\$INSTDIR\\$OCTAVE_SUBDIR\\share\\doc\\octave\\octave.pdf" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave (HTML).lnk" "\$INSTDIR\\$OCTAVE_SUBDIR\\share\\doc\\octave\\octave.html\\index.html" "" "" 0
 EOF
   fi
  
