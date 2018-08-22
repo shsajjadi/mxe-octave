@@ -41,12 +41,6 @@ ifeq ($(MXE_SYSTEM),mingw)
     define $(PKG)_PRE_BUILD
       echo "Shortcuts"
       # create shortcuts
-      if ! [ -L $(HOST_PREFIX)/lib64 ]; then \
-        ln -s $(HOST_PREFIX)/lib $(HOST_PREFIX)/lib64; \
-      fi
-      if ! [ -d $(HOST_PREFIX)/lib32 ]; then \
-        mkdir -p $(HOST_PREFIX)/lib32; \
-      fi
       if ! [ -L $(BUILD_TOOLS_PREFIX)/mingw ]; then \
         ln -s $(HOST_PREFIX) $(BUILD_TOOLS_PREFIX)/mingw; \
       fi
@@ -76,6 +70,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     cd '$(1).crt-build' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-crt/configure' \
 	--host='$(TARGET)' \
 	--prefix='$(HOST_PREFIX)' \
+	$(if $(filter $(TARGET), x86_64-w64-mingw32),--disable-lib32) \
 	--with-sysroot='$(HOST_PREFIX)'
     $(MAKE) -C '$(1).crt-build' -j '$(JOBS)' || $(MAKE) -C '$(1).crt-build' -j '$(JOBS)'
     $(MAKE) -C '$(1).crt-build' -j 1 install
@@ -102,7 +97,7 @@ ifneq ($(MXE_NATIVE_BUILD),yes)
 
   ifeq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
-      --enable-64bit --enable-fully-dynamic-string
+      --enable-64bit --disable-32bit --enable-fully-dynamic-string
   endif
 else
   $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
@@ -155,7 +150,6 @@ define $(PKG)_BUILD
   if [ -f $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/lib32/libgcc_s.a ]; then \
     mv $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/lib32/libgcc_s.a $(BUILD_TOOLS_PREFIX)/lib/gcc/$(TARGET)/$($(PKG)_VERSION)/32/libgcc_s.a; \
   fi
-
 
   # create pkg-config script
   if [ '$(MXE_NATIVE_BUILD)' = 'no' ]; then \
