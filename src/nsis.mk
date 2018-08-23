@@ -28,7 +28,7 @@ define $(PKG)_BUILD
     $($(PKG)_PREBUILD)
     cd '$(1)' && scons VERBOSE=1 \
         PATH='$(PATH)' \
-        MINGW_CROSS_PREFIX='$(MXE_TOOL_PREFIX)' \
+        XGCC_W32_PREFIX='$(MXE_TOOL_PREFIX)' \
         PREFIX='$(BUILD_TOOLS_PREFIX)' \
         $($(PKG)_TARGET_SCON_OPTIONS) \
         SKIPUTILS='MakeLangId,Makensisw,NSIS Menu,zip2exe' \
