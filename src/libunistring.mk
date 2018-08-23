@@ -3,8 +3,8 @@
 
 PKG             := libunistring
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.9.9
-$(PKG)_CHECKSUM := 8d86107da1e099d999e93712374fbd8550bedc9e
+$(PKG)_VERSION  := 0.9.10
+$(PKG)_CHECKSUM := 1e7493a3ad8c4a1e514600b768c7229576fe5125
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/$(PKG)/$($(PKG)_FILE)
