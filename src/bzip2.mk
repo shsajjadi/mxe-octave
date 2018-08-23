@@ -7,14 +7,12 @@ $(PKG)_VERSION  := 1.0.6
 $(PKG)_CHECKSUM := 3f89f861209ce81a6bab1fd1998c0ef311712002
 $(PKG)_SUBDIR   := bzip2-$($(PKG)_VERSION)
 $(PKG)_FILE     := bzip2-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://www.bzip.org/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := https://src.fedoraproject.org/repo/pkgs/$(PKG)/$($(PKG)_FILE)/00b516f4704d4a7cb50a1d97e6e8e15b/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.bzip.org/downloads.html' | \
-    grep 'bzip2-' | \
-    $(SED) -n 's,.*bzip2-\([0-9][^>]*\)\.tar.*,\1,p' | \
-    head -1
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
 endef
 
 ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
