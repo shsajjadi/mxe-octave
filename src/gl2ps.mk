@@ -19,7 +19,7 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
 endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package octave.' >&2;
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
     echo $(gl2ps_VERSION)
 endef
 
