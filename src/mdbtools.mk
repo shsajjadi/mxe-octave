@@ -13,8 +13,7 @@ $(PKG)_DEPS     := glib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://github.com/brianb/mdbtools/tags' | \
-    grep '<a href="/brianb/mdbtools/archive/' | \
-    $(SED) -n 's,.*href="/brianb/mdbtools/archive/\([0-9][^"_]*\)\.tar.*,\1,p' | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | \
     head -1
 endef
 
