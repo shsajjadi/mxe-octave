@@ -17,9 +17,7 @@ $(PKG)_URL      := $(MSYS2_URL)/$($(PKG)_FILE)/download
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- '$(MSYS2_BASE_URL)/' | \
-    $(SED) -n 's,.*title="$($(PKG)_NAME)-\([0-9][^"]*\)".*,\1,p' | \
-    head -1
+    $(MSYS2_PKG_UPDATE)
 endef
 
 define $(PKG)_BUILD
