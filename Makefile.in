@@ -653,6 +653,13 @@ define MSYS2_PKG_BUILD
   $(TOP_DIR)/tools/msys2-install.py --verbose --msys-dir="$(MSYS2_DIR)" "$(3)/$($(PKG)_FILE)")
 endef
 
+define MSYS2_PKG_UPDATE
+  $(WGET) -q -O- '$(MSYS2_URL)/' | \
+  $(GREP) $($(PKG)_NAME) |
+  $(SED) -n 's,.*title="$($(PKG)_NAME)-\(r\?[0-9][^-]*-[0-9]*\)-[^\.]*\.pkg\.tar\.xz".*,\1,p' | \
+  head -1
+endef
+
 .PHONY: msys2
 msys2:  $(MSYS2_PACKAGES)
 
