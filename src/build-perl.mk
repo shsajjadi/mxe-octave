@@ -10,9 +10,9 @@ $(PKG)_FILE     := perl-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.cpan.org/src/5.0/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
-ifeq ($(BUILD_SHARED),yes)
-  $(PKG)_CONFIGURE_ARGS := -Duseshrplib
-endif
+#ifeq ($(BUILD_SHARED),yes)
+#  $(PKG)_CONFIGURE_ARGS := -Duseshrplib
+#endif
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD
