@@ -10,9 +10,10 @@ $(PKG)_FILE     := perl-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.cpan.org/src/5.0/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
-#ifeq ($(BUILD_SHARED),yes)
-#  $(PKG)_CONFIGURE_ARGS := -Duseshrplib
-#endif
+ifeq ($(BUILD_SHARED),yes)
+  ## Without this, building libproxy fails.
+  $(PKG)_CONFIGURE_ARGS := -Duseshrplib
+endif
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD
@@ -27,5 +28,7 @@ else
       && $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(INSTALL) -m755 '$(1)/libperl.so' '$(3)/$(HOST_LIBDIR)'
+
   endef
 endif
