@@ -18,8 +18,10 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
 endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package gdcm.' >&2;
-    echo $(gdcm_VERSION)
+    $(WGET) -q -O- 'http://sourceforge.net/projects/gdcm/files/gdcm 2.x/' | \
+    $(SED) -n 's,.*title=\"GDCM \([0-9.]*\)\".*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 ifeq ($(MXE_SYSTEM),msvc)
