@@ -57,7 +57,7 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
 else
   $(PKG)_CONFIGURE_PREFIX_OPTION := -prefix '$(HOST_PREFIX)'
   $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)/freetype2'
-  $(PKG)_CONFIGURE_OPTS += -qpa xcb -xcb
+  $(PKG)_CONFIGURE_OPTS += -qpa xcb -qt-xcb
 endif
 
 ## These are needed whether cross compiling or not.
