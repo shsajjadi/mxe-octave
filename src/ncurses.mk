@@ -30,14 +30,13 @@ else
 endif
 endif
 
-define $(PKG)_BUILD
-    cd '$(1)' && ./configure \
+$(PKG)_COMMON_CONFIG_OPTS := \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix=$(HOST_PREFIX) \
         --disable-home-terminfo \
+        --with-termlib \
         --enable-sp-funcs \
-        --enable-term-driver \
         --enable-interop \
         --without-debug \
         --without-ada \
@@ -46,13 +45,37 @@ define $(PKG)_BUILD
         CONFIG_SITE=/dev/null \
         $($(PKG)_CONFIG_OPTS)
 
+define $(PKG)_BUILD
+
+    ## Normal char version:
+
+    mkdir '$(1)/.build' && cd '$(1)/.build' && ../configure \
+        $($(PKG)_COMMON_CONFIG_OPTS)
+
     # MSVC generates invalid code in panel library when using -O2
     # command-line flag. Bug is reported. Disable optimization for
     # the time being.
     if test x$(MXE_SYSTEM) = xmsvc; then \
-        find '$(1)' -name Makefile \
+        find '$(1)/.build' -name Makefile \
             -exec $(SED) -i 's,-\<O2\>,,' {} \; ; \
     fi
 
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
+
+    ## Wide char version:
+
+    mkdir '$(1)/.build-widec' && cd '$(1)/.build-widec' && ../configure \
+        --enable-widec \
+        $($(PKG)_COMMON_CONFIG_OPTS)
+
+    # MSVC generates invalid code in panel library when using -O2
+    # command-line flag. Bug is reported. Disable optimization for
+    # the time being.
+    if test x$(MXE_SYSTEM) = xmsvc; then \
+        find '$(1)/.build-widec' -name Makefile \
+            -exec $(SED) -i 's,-\<O2\>,,' {} \; ; \
+    fi
+
+    $(MAKE) -C '$(1)/.build-widec' -j '$(JOBS)' install DESTDIR='$(3)'
+
 endef
