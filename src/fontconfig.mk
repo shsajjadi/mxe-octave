@@ -3,12 +3,12 @@
 
 PKG             := fontconfig
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.12.6
-$(PKG)_CHECKSUM := cae963814ba4bc41f3c96876604d33fc3abfc572
+$(PKG)_VERSION  := 2.13.0
+$(PKG)_CHECKSUM := b7bcc5d47211b7bbac35bb221860407db3601f5b
 $(PKG)_SUBDIR   := fontconfig-$($(PKG)_VERSION)
 $(PKG)_FILE     := fontconfig-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://fontconfig.org/release/$($(PKG)_FILE)
-$(PKG)_DEPS     := freetype expat
+$(PKG)_DEPS     := freetype expat gettext
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://fontconfig.org/release/' | \
