@@ -44,10 +44,12 @@ else
 
     # octave-cli needs info to display help
     # for cross build, need build native tools in order to build info
+    # for cross build that will use msys2, we do not need info as wil use
+    # the msys2 version
     if [ "x$(MXE_NATIVE_BUILD)" = "xyes" ]; then \
         $(MAKE) -C '$(1).build/info' -j '$(JOBS)'; \
         $(MAKE) -C '$(1).build/info' -j 1 install DESTDIR='$(3)'; \
-    else \
+    elif [ "x$(USE_MSYS2)" = "xno" ]; then \
         $(MAKE) -C '$(1).build/tools/gnulib/lib' -j $(JOBS); \
         $(MAKE) -C '$(1).build/tools/info' -j $(JOBS) makedoc; \
         $(MAKE) -C '$(1).build/info' -j 1 funs.h; \
