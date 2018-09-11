@@ -4,8 +4,8 @@
 # ncurses
 PKG             := ncurses
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 6.0
-$(PKG)_CHECKSUM := acd606135a5124905da770803c05f1f20dd3b21c
+$(PKG)_VERSION  := 6.1
+$(PKG)_CHECKSUM := 57acf6bc24cacd651d82541929f726f4def780cc
 $(PKG)_SUBDIR   := ncurses-$($(PKG)_VERSION)
 $(PKG)_FILE     := ncurses-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/pub/gnu/ncurses/$($(PKG)_FILE)
@@ -28,6 +28,10 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
 else
   $(PKG)_CONFIG_OPTS := --with-normal $(WITH_SHARED_OR_STATIC)
 endif
+endif
+
+ifeq ($(MXE_WINDOWS_BUILD),no)
+  $(PKG)_CONFIG_OPTS += --with-versioned-syms
 endif
 
 $(PKG)_COMMON_CONFIG_OPTS := \
