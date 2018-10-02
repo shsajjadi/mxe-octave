@@ -11,7 +11,7 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/gtk+/$(call SHORT_PKG_
 $(PKG)_DEPS     := gettext libpng jpeg tiff jasper glib atk pango cairo gdk-pixbuf
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'https://github.com/GNOME/gtk/tags' | \
+    $(WGET) -q -O- 'https://github.com/GNOME/gtk/tags?after=3.23.0' | \
     $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | \
     grep -v '^2\.9' | \
     grep '^2\.' | \
