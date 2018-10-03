@@ -108,7 +108,6 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 ; File funcs
 !include FileFunc.nsh
 
-
 !define MUI_ABORTWARNING
 !define MUI_UNABORTWARNING
 !define MUI_HEADERIMAGE
@@ -222,6 +221,31 @@ Function .onInit
   StrCpy \$InstallShortcuts \${BST_CHECKED}
   StrCpy \$RegisterOctaveFileType  \${BST_CHECKED}
   StrCpy \$InstallBlasLib 0
+
+  ; process cmand line options
+  \${GetParameters} \$R0
+  ClearErrors
+  \${GetOptions} "\$R0" "/REGISTER_FILE_TYPES=" \$0
+  IfErrors no_register_opt
+  \${If} \$0 == 0
+     StrCpy \$RegisterOctaveFileType  \${BST_UNCHECKED}
+  \${EndIf}
+no_register_opt:
+  ClearErrors
+  \${GetOptions} "\$R0" "/INSTALL_SHORTCUTS=" \$0
+  IfErrors no_shortcuts_opt
+  \${If} \$0 == 0
+     StrCpy \$InstallShortcuts \${BST_UNCHECKED}
+  \${EndIf}
+no_shortcuts_opt:
+  ClearErrors
+  \${GetOptions} "\$R0" "/INSTALL_ALL_USERS=" \$0
+  IfErrors no_all_users_opt
+  \${If} \$0 == 0
+     StrCpy \$InstallAllUsers \${BST_UNCHECKED}
+  \${EndIf}
+no_all_users_opt:
+  ClearErrors
 
   Call CheckWinVer
   Call CheckCurrVersion
