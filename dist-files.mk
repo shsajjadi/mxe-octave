@@ -92,7 +92,6 @@ SRC_FILES_1 := \
   fltk-2-uuid-mod.patch \
   fltk-test.cpp \
   fltk.mk \
-  fontconfig-1.patch \
   fontconfig.mk \
   freeglut-1-fixes.patch \
   freeglut-test.c \
