@@ -30,6 +30,7 @@ MXE_NATIVE_BUILD := @MXE_NATIVE_BUILD@
 
 # Set to "yes" to use ccache
 USE_CCACHE := @USE_CCACHE@
+CCACHE := @CCACHE@
 
 # Set to "yes" to use the versions of GCC and binutils already
 # installed on your system (default is yes if doing native build).
@@ -622,12 +623,12 @@ ccache-links:
 	@mkdir -p usr/bin/ccache && \
 	for f in gcc g++ gfortran; do \
 	  if test ! -e usr/bin/ccache/$(MXE_TOOL_PREFIX)$$f; then \
-	    ln -s /usr/bin/ccache usr/bin/ccache/$(MXE_TOOL_PREFIX)$$f; \
+	    ln -s "$(CCACHE)" usr/bin/ccache/$(MXE_TOOL_PREFIX)$$f; \
 	  fi; \
 	done && \
 	for f in gcc g++ gfortran; do \
 	  if test ! -e usr/bin/ccache/$$f; then \
-	    ln -s /usr/bin/ccache usr/bin/ccache/$$f; \
+	    ln -s "$(CCACHE)" usr/bin/ccache/$$f; \
 	  fi; \
 	done
 

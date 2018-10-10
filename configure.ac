@@ -82,7 +82,7 @@ AC_ARG_WITH([ccache],
      *) AC_MSG_ERROR([bad value "$enableval" for --with-ccache]) ;;
    esac], [USE_CCACHE=no])
 if test "$USE_CCACHE" = yes; then
-  AC_CHECK_PROG(CCACHE, ccache, ccache)
+  AC_PATH_PROG(CCACHE, ccache)
   if test -z "$CCACHE"; then
     AC_MSG_WARN([ccache program not found; not using ccache for build])
     USE_CCACHE=no
