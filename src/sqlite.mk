@@ -18,13 +18,12 @@ endef
 
 define $(PKG)_BUILD
     $(SED) -i 's/^Cflags/#Cflags/;' '$(1)/sqlite3.pc.in'
-    cd '$(1)' && ./configure \
+    cd '$(1)' && autoreconf && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         CFLAGS="-Os -DSQLITE_ENABLE_COLUMN_METADATA" \
-        --disable-readline \
-        --disable-threadsafe
+        --disable-readline
     $(MAKE) -C '$(1)' -j 1
     $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
 endef
