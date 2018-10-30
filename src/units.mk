@@ -3,8 +3,8 @@
 
 PKG             := units
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.17
-$(PKG)_CHECKSUM := d00211095d2433f7dea08c323e6fbd0a65e867dd
+$(PKG)_VERSION  := 2.18
+$(PKG)_CHECKSUM := 3ba440bf75390714345185481abb730569caf927
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/$(PKG)/$($(PKG)_FILE)
