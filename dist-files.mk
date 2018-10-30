@@ -597,7 +597,6 @@ SRC_FILES_1 := \
   qdbm-test.c \
   qdbm.mk \
   qhull-1-fixes.patch \
-  qhull-2-fixes.patch \
   qhull.mk \
   qjson-1-static.patch \
   qjson.mk \
