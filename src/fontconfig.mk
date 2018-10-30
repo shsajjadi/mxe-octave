@@ -9,6 +9,9 @@ $(PKG)_SUBDIR   := fontconfig-$($(PKG)_VERSION)
 $(PKG)_FILE     := fontconfig-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://fontconfig.org/release/$($(PKG)_FILE)
 $(PKG)_DEPS     := freetype expat gettext
+ifeq ($(MXE_WINDOWS_BUILD),no)
+  $(PKG)_DEPS += util-linux
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://fontconfig.org/release/' | \
