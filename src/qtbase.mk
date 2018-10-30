@@ -41,7 +41,7 @@ endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- http://download.qt-project.org/official_releases/qt/$(call SHORT_PKG_VERSION,$(PKG))/ | \
-    $(SED) -n 's,.*href="\(5\.[0-9]\.[^/]*\)/".*,\1,p' | \
+    $(SED) -n 's,.*href="\(5\.[0-9]\+\.[^/]*\)/".*,\1,p' | \
     grep -iv -- '-rc' | \
     sort |
     tail -1
