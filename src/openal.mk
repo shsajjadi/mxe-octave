@@ -4,16 +4,15 @@
 PKG             := openal
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 1.15.1
-$(PKG)_CHECKSUM := a0e73a46740c52ccbde38a3912c5b0fd72679ec8
+$(PKG)_CHECKSUM := 018a9cd414db6b2ba5924261a59f34e8ce7b603a
 $(PKG)_SUBDIR   := openal-soft-$($(PKG)_VERSION)
-$(PKG)_FILE     := openal-soft-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://kcat.strangesoft.net/openal-releases/$($(PKG)_FILE)
+$(PKG)_FILE     := openal-soft-$($(PKG)_VERSION).tar.gz
+$(PKG)_URL      := https://github.com/kcat/openal-soft/archive/$($(PKG)_FILE)
 $(PKG)_DEPS     := portaudio
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://kcat.strangesoft.net/openal-releases/?C=M;O=D' | \
-    $(SED) -n 's,.*"openal-soft-\([0-9][^"]*\)\.tar.*,\1,p' | \
-    $(SORT) -V | \
+    $(WGET) -q -O- 'https://github.com/kcat/openal-soft/tags' | \
+    $(SED) -n 's|.*releases/tag/openal-soft-\([^"]*\).*|\1|p' | $(SORT) -V | \
     tail -1
 endef
 
