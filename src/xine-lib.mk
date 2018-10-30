@@ -14,10 +14,10 @@ endif
 $(PKG)_DEPS     := faad2 ffmpeg flac $($(PKG)_FONTCONFIG) freetype graphicsmagick libiconv libmng pthreads sdl speex theora vorbis wavpack zlib libmpcdec libcdio vcdimager mman-win32 libmad a52dec libmodplug
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://hg.debian.org/hg/xine-lib/xine-lib/tags' | \
-    $(SED) -n 's,>,\n,gp' | \
-    $(SED) -n 's,^\([0-9][^< ]*\)<.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://sourceforge.net/p/xine/xine-lib-1.2/ref/default/tags/' | \
+    $(SED) -n 's,.*xine-lib-1.2/ci/\([0-9][^/]*\)/.*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
