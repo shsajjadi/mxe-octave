@@ -11,8 +11,10 @@ $(PKG)_URL      := https://www.cl.cam.ac.uk/~mgk25/jbigkit/download/$($(PKG)_FIL
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'https://www.cl.cam.ac.uk/~mgk25/jbigkit/CHANGES' |  \
+    $(SED) -n 's,.*version \([0-9][^ ]*\) (.*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
