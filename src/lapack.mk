@@ -2,10 +2,10 @@
 # See index.html for further information.
 
 PKG             := lapack
-$(PKG)_VERSION  := 3.7.1
-$(PKG)_CHECKSUM := 84c4f7163b52b1bf1f6ca2193f6f48ed3dec0fab
+$(PKG)_VERSION  := 3.8.0
+$(PKG)_CHECKSUM := 55ac9d6be510883c5442c8aca967722cdf58fb29
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.netlib.org/$(PKG)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.eq.uc.pt/pub/software/math/netlib/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     := blas
