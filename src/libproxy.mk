@@ -7,14 +7,15 @@ $(PKG)_VERSION  := 0.4.15
 $(PKG)_CHECKSUM := 5261bf6875feef15a706b34e7c010619f484e92f
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.xz
-$(PKG)_URL      := https://github.com/libproxy/libproxy/releases/download/0.4.15/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/libproxy/libproxy/releases/download/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 $(PKG)_CMAKE_FLAGS :=
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'https://github.com/libproxy/libproxy/tags' | \
+    $(SED) -n 's|.*releases/tag/\([0-9][^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
