@@ -3,8 +3,8 @@
 
 PKG             := of-image
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.8.0
-$(PKG)_CHECKSUM := 440450f0b8806408b7c9da2ff255d7537be49a3d
+$(PKG)_VERSION  := 2.8.1
+$(PKG)_CHECKSUM := 623c4c9a7cb928613fb3dfa6884211f10a2ffb65
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := image-$($(PKG)_VERSION)
 $(PKG)_FILE     := image-$($(PKG)_VERSION).tar.gz
