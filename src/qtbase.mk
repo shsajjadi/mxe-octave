@@ -25,7 +25,7 @@ ifeq ($(USE_SYSTEM_OPENGL),no)
   $(PKG)_DEPS += mesa
 endif
 ifeq ($(MXE_WINDOWS_BUILD),yes)
-  ifeq ($(ENABLE_WINDOWS64),yes)
+  ifeq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_DEPS += icu4c
     $(PKG)_CONFIGURE_OPTS += -icu
   else
