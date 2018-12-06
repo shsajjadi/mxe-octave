@@ -1,15 +1,18 @@
 PKG             := icu4c
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 60.1
-$(PKG)_CHECKSUM := 6403724943613c4f796a802ab9f944d0f7a62c26
+$(PKG)_VERSION  := 63.1
+$(PKG)_CHECKSUM := ad523232f19af1c698c6489f8e15f7e9824f1662
 $(PKG)_SUBDIR   := icu
 $(PKG)_FILE     := $(PKG)-$(subst .,_,$($(PKG)_VERSION))-src.tgz
 $(PKG)_URL      := http://download.icu-project.org/files/icu4c/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'https://github.com/unicode-org/icu/tags' | \
+    $(SED) -n 's|.*releases/tag/release-\([0-9\-]*\).*|\1|p' | \
+    $(SED) 's|-|\.|g' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 ifeq ($(MXE_NATIVE_BUILD),no)
