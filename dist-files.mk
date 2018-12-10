@@ -34,6 +34,7 @@ SRC_FILES_1 := \
   build-libtool.mk \
   build-lzip.mk \
   build-m4.mk \
+  build-m4-glib2-28.patch \
   build-mako.mk \
   build-markupsafe.mk \
   build-msvctools.mk \
