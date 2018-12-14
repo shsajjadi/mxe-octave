@@ -3,8 +3,8 @@
 
 PKG             := mingw-w64
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.0.4
-$(PKG)_CHECKSUM := aa854d36acf575307b6b839f7ee12aa97f66af29
+$(PKG)_VERSION  := 6.0.0
+$(PKG)_CHECKSUM := 4cffb043060d88d6bf0f382e4d92019263670ca6
 $(PKG)_SUBDIR   := $(PKG)-v$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-v$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$(PKG)-release/$($(PKG)_FILE)
