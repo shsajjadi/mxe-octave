@@ -21,7 +21,7 @@ OCTAVE_DIST_DIR := $(TOP_BUILD_DIR)/dist/$(OCTAVE_DIST_NAME)
 
 OCTAVE_NSI_FILE := $(TOP_BUILD_DIR)/dist/octave.nsi
 
-OCTAVE_ADD_PATH :=
+OCTAVE_ADD_PATH := /
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   TAR_H_OPTION := -h
   WINDOWS_BINARY_DIST_DEPS := \
@@ -134,7 +134,7 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       #find '$(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin' -type f ! -name "*.*" \
       #  -exec $(SED) -i 's|$(HOST_PREFIX)|/$(OCTAVE_ADD_PATH)|g;s|$(BUILD_TOOLS_PREFIX)|/$(OCTAVE_ADD_PATH)|g' {} \; ;
       find '$(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin' -type f ! -name "*.*" \
-        -exec sh -c 'test `head -c2 {}` = "#!" && $(SED) -i "s|$(HOST_PREFIX)|/$(OCTAVE_ADD_PATH)|g;s|$(BUILD_TOOLS_PREFIX)|/$(OCTAVE_ADD_PATH)|g" {}' \; ;
+        -exec sh -c 'test `head -c2 {}` = "#!" && $(SED) -i "s|$(HOST_PREFIX)|$(OCTAVE_ADD_PATH)|g;s|$(BUILD_TOOLS_PREFIX)|$(OCTAVE_ADD_PATH)|g" {}' \; ;
       # some additional script files to fix
       $(SED) -i "s|datadir = '/usr/share'|datadir = '$(OCTAVE_ADD_PATH)/share'|g" '$(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin/makeinfo'
 
