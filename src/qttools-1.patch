@@ -22,3 +22,9 @@ index 722b32e..66ce5bf 100644
 -- 
 2.1.2
 
+diff -ur qttools-everywhere-src-5.12.0.orig/qttools.pro qttools-everywhere-src-5.12.0/qttools.pro
+--- qttools-everywhere-src-5.12.0.orig/qttools.pro	2018-12-18 15:49:35.257716175 -0500
++++ qttools-everywhere-src-5.12.0/qttools.pro	2018-12-18 15:56:24.812146947 -0500
+@@ -1,2 +1 @@
+-load(qt_find_clang)
+ load(qt_parts)
