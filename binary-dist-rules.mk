@@ -171,7 +171,9 @@ ifeq ($(STRIP_DIST_FILES),yes)
     define strip-dist-files
       echo "stripping files..."
       for f in `find $(OCTAVE_DIST_DIR) -name '*.dll' -o -name '*.exe' -o -name '*.oct' | $(GREP) -v "notepad++" `; do \
-	$(MXE_STRIP) $$f; \
+        if [ "$$(head -n1 $$f | cut -c1-2)" != "#!" ]; then \
+          $(MXE_STRIP) $$f; \
+        fi; \
       done
     endef
   else
