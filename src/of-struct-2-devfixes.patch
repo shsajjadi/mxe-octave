@@ -1,0 +1,12 @@
+diff -ur struct-1.0.15.orig/src/structcat.cc struct-1.0.15/src/structcat.cc
+--- struct-1.0.15.orig/src/structcat.cc	2019-01-02 12:23:45.625511373 -0500
++++ struct-1.0.15/src/structcat.cc	2019-01-02 12:25:21.571914227 -0500
+@@ -132,7 +132,7 @@
+ 
+   for (octave_idx_type i = m1_id; i < n_args; i++)
+     {
+-      if (! args(i).is_map ())
++      if (! args(i).isstruct ())
+         {
+           error ("%s: some argument not a structure", fname.c_str ());
+ 

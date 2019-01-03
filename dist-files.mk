@@ -534,6 +534,7 @@ SRC_FILES_1 := \
   of-strings-1-fixes.patch \
   of-strings.mk \
   of-struct-1-fixes.patch \
+  of-struct-2-devfixes.patch \
   of-struct.mk \
   of-tisean-1-fixes.patch \
   of-tisean.mk \
