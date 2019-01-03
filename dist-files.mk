@@ -516,6 +516,7 @@ SRC_FILES_1 := \
   of-optiminterp-1-dev-fixes.patch \
   of-optiminterp.mk \
   of-quaternion-1-cross-fixes.patch \
+  of-quaternion-2-dev-fixes.patch \
   of-quaternion.mk \
   of-queueing.mk \
   of-signal-1-fixes.patch \
