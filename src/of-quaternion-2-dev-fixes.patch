@@ -1,0 +1,14 @@
+diff -ur quaternion.orig/src/is_real_array.cc quaternion/src/is_real_array.cc
+--- quaternion.orig/src/is_real_array.cc	2019-01-02 13:53:40.766144030 -0500
++++ quaternion/src/is_real_array.cc	2019-01-02 13:54:35.459444478 -0500
+@@ -46,8 +46,8 @@
+         {
+             // args(i).ndims () should be always >= 2
+             if (args(i).ndims () < 2
+-                || ! ((args(i).is_numeric_type () && args(i).is_real_type ())
+-                      || args(i).is_bool_type ()))
++                || ! ((args(i).isnumeric () && args(i).isreal ())
++                      || args(i).islogical ()))
+             {
+                 retval = false;
+                 break;
