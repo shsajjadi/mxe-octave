@@ -513,6 +513,7 @@ SRC_FILES_1 := \
   of-odepkg.mk \
   of-optim-1-fixes.patch \
   of-optim.mk \
+  of-optiminterp-1-dev-fixes.patch \
   of-optiminterp.mk \
   of-quaternion-1-cross-fixes.patch \
   of-quaternion.mk \
