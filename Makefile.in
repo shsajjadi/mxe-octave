@@ -452,7 +452,7 @@ ifeq ($(MXE_SYSTEM),mingw)
 
     NOTEPAD_BASE_DIR := $(TOP_BUILD_DIR)/notepad++
 
-    MSYS2_ARCH = $(shell echo $(TARGET) | $(SED) -n 's|\([^-]*\).*|\1|p')
+    MSYS2_ARCH ?= $(shell echo $(TARGET) | $(SED) -n 's|\([^-]*\).*|\1|p')
     MSYS2_PACKAGES := $(shell $(SED) -n 's/^.* class="package">\([^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html' | $(GREP) msys2-)
     MSYS2_SOURCES := $(addprefix src-,$(MSYS2_PACKAGES))
     PKGS += $(MSYS2_SOURCES)
@@ -980,6 +980,48 @@ update-build-tools:
 update-checksum-%:
 	$(call DOWNLOAD_PKG_ARCHIVE,$*)
 	$(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1 '"`$(call PKG_CHECKSUM,$*)`"'/' '$(TOP_DIR)/src/$*.mk'
+
+.PHONY: update-msys2
+PKG_MK_CHECKSUM = \
+    $(GREP) _CHECKSUM '$(TOP_DIR)/src/$(1).mk' 2>/dev/null | $(SED) -n 's,^.*\([0-9a-f]\{40\}\)$$,\1,p'
+define MSYS2_UPDATE
+    $(if $(2),
+        $(if $(filter $(2),$($(1)_IGNORE)),
+            $(info IGNORED  $(1)  $(2)),
+            $(if $(filter $(2),$($(1)_VERSION)x),
+                $(info .        $(1)  $(2)),
+                $(info NEW      $(1)  $($(1)_VERSION) --> $(2))
+                $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $(2)/' '$(TOP_DIR)/src/$(1).mk'
+                $(SED) -i 's/^\([^ ]*_i686_CS *:=\).*/\1/' '$(TOP_DIR)/src/$(1).mk'
+                $(SED) -i 's/^\([^ ]*_x86_64_CS *:=\).*/\1/' '$(TOP_DIR)/src/$(1).mk'
+                $(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1/' '$(TOP_DIR)/src/$(1).mk'
+                MSYS2_ARCH=x86_64 $(MAKE) -f '$(MAKEFILE)' 'update-checksum-$(1)' \
+                    || { $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $($(1)_VERSION)/' '$(TOP_DIR)/src/$(1).mk'; \
+		         $(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1 $$($$(PKG)_CS)/' '$(TOP_DIR)/src/$(1).mk'; \
+			 $(SED) -i 's/^\([^ ]*_i686_CS *:=\).*/\1 $($(1)_i686_CS)' '$(TOP_DIR)/src/$(1).mk'; \
+			 $(SED) -i 's/^\([^ ]*_x86_64_CS *:=\).*/\1 $($(1)_x86_64_CS)' '$(TOP_DIR)/src/$(1).mk'; \
+                         exit 1; }
+	        $(SED) -i 's/^\([^ ]*_x86_64_CS *:=\).*/\1 '"`$(call PKG_MK_CHECKSUM,$(1))`"'/' '$(TOP_DIR)/src/$(1).mk'
+                $(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1/' '$(TOP_DIR)/src/$(1).mk'
+                MSYS2_ARCH=i686 $(MAKE) -f '$(MAKEFILE)' 'update-checksum-$(1)' \
+                    || { $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $($(1)_VERSION)/' '$(TOP_DIR)/src/$(1).mk'; \
+		         $(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1 $$($$(PKG)_CS)/' '$(TOP_DIR)/src/$(1).mk'; \
+			 $(SED) -i 's/^\([^ ]*_i686_CS *:=\).*/\1 $($(1)_i686_CS)' '$(TOP_DIR)/src/$(1).mk'; \
+                         exit 1; }
+	        $(SED) -i 's/^\([^ ]*_i686_CS *:=\).*/\1 '"`$(call PKG_MK_CHECKSUM,$(1))`"'/' '$(TOP_DIR)/src/$(1).mk'
+		$(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1 $$($$(PKG)_CS)/' '$(TOP_DIR)/src/$(1).mk'
+                $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $(2)/' '$(TOP_DIR)/src/src-$(1).mk'
+                $(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1/' '$(TOP_DIR)/src/src-$(1).mk'
+                $(MAKE) -f '$(MAKEFILE)' 'update-checksum-src-$(1)' \
+                    || { $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $(src-$(1)_VERSION)/' '$(TOP_DIR)/src/src-$(1).mk'; \
+                         exit 1; }
+		)),
+        $(error Unable to update version number of package $(1)))
+endef
+update-msys2:
+	#$(MSYS2_PACKAGES)
+	$(foreach PKG,$(MSYS2_PACKAGES),$(call MSYS2_UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))))
+
 
 cleanup-style:
 	@$(foreach FILE,$(wildcard $(addprefix $(TOP_DIR)/,Makefile index.html CNAME src/*.mk src/*test.* tools/*)),\

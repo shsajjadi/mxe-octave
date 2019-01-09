@@ -4,9 +4,9 @@
 PKG             := msys2-libhogweed
 $(PKG)_NAME     := libhogweed
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.4-1
-$(PKG)_x86_64_CS := 783b8bfc1e2721c616b30c82e83372d19a472cae
-$(PKG)_i686_CS  := 2352f37afa3de71fe0d4a03d95748f44ea986cbb
+$(PKG)_VERSION  := 3.4.1-1
+$(PKG)_x86_64_CS := 06edc590e1a1fb19ebea6cb3b3904aee7c16704b
+$(PKG)_i686_CS  := f9958b38af317949cafa5cd8c6a7fbb164976276
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
