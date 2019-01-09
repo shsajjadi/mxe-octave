@@ -4,8 +4,8 @@
 PKG             := src-msys2-libgnutls
 $(PKG)_NAME     := gnutls
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.6.3-1
-$(PKG)_CHECKSUM := a0e0fd4ea33d168aa712a7e354237871b513ebdd
+$(PKG)_VERSION  := 3.6.5-1
+$(PKG)_CHECKSUM := 5d5ae3d70563bbaf7e738c0e5b961aec7db7b0cb
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download

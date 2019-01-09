@@ -4,8 +4,8 @@
 PKG             := src-msys2-pacman
 $(PKG)_NAME     := pacman
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.2.1.6186.3f17679-1
-$(PKG)_CHECKSUM := 2fca74931bbcedb6c42112ebcbdd5c1c0c3cc2b0
+$(PKG)_VERSION  := 5.1.2-1
+$(PKG)_CHECKSUM := 0743e1ac505e0163d1340fa94cb46969b4dff644
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download

@@ -4,9 +4,9 @@
 PKG             := msys2-libnpth
 $(PKG)_NAME     := libnpth
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.5-1
-$(PKG)_x86_64_CS := a376962e506ffa05e057726a9521f2be35693c76
-$(PKG)_i686_CS  := d6e6c94c198da9efc0d230ead2dde6ea8fc2d1f3
+$(PKG)_VERSION  := 1.6-1
+$(PKG)_x86_64_CS := c2394449c65ebf2df1709c5def7054690e570b0a
+$(PKG)_i686_CS  := 3fde6864fe80a41f3fbab805788191acb5d9d5ae
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 

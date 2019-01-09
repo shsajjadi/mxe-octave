@@ -4,8 +4,8 @@
 PKG             := src-msys2-ncurses
 $(PKG)_NAME     := ncurses
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 6.1.20180526-1
-$(PKG)_CHECKSUM := 0a439a06d88fb114857d6f9a923da41954264094
+$(PKG)_VERSION  := 6.1.20180908-1
+$(PKG)_CHECKSUM := 3908672368bd67b30151cb369e58b096fd5f441a
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download
