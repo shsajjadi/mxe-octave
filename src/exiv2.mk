@@ -12,7 +12,7 @@ $(PKG)_DEPS     := libiconv zlib expat
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.exiv2.org/archive.html' | \
-    grep 'href="releases/exiv2-' | \
+    grep 'href="/releases/exiv2-' | \
     $(SED) -n 's,.*exiv2-\([0-9][^>]*\)\.tar.*,\1,p' | \
     head -1
 endef
