@@ -3,8 +3,8 @@
 
 PKG             := libxml2
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.9.8
-$(PKG)_CHECKSUM := 66bcefd98a6b7573427cf66f9d3841b59eb5b8c3
+$(PKG)_VERSION  := 2.9.9
+$(PKG)_CHECKSUM := 96686d1dd9fddf3b35a28b1e2e4bbacac889add3
 $(PKG)_SUBDIR   := libxml2-$($(PKG)_VERSION)
 $(PKG)_FILE     := libxml2-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://xmlsoft.org/libxml2/$($(PKG)_FILE)
