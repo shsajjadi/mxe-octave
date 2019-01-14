@@ -2,9 +2,9 @@
 # See index.html for further information.
 
 PKG             := gdal
-$(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.3.2
-$(PKG)_CHECKSUM := 78404d604069016cf87b027b223d036f9a010d45
+$(PKG)_IGNORE   :
+$(PKG)_VERSION  := 2.4.0
+$(PKG)_CHECKSUM := 3420ae8a9644ce652339ecbad18f9024279cd2ba
 $(PKG)_SUBDIR   := gdal-$($(PKG)_VERSION)
 $(PKG)_FILE     := gdal-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.osgeo.org/gdal/$($(PKG)_VERSION)/$($(PKG)_FILE)
