@@ -1,0 +1,943 @@
+# HG changeset patch
+# User Doug Stewart
+# Date 1546452658 18000
+#      Wed Jan 02 13:10:58 2019 -0500
+# Node ID 1daba0a585562de91c4078183460f325bf879683
+# Parent  fa91b35bee7151b8d81cfcb92d6d0ce6454f98d8
+bug #55361 getting ready for Octave 5
+
+diff -r fa91b35bee71 -r 1daba0a58556 src/__control_helper_functions__.cc
+--- a/src/__control_helper_functions__.cc	Fri May 04 04:10:35 2018 +0200
++++ b/src/__control_helper_functions__.cc	Wed Jan 02 13:10:58 2019 -0500
+@@ -6,7 +6,7 @@
+ #include "is_zp_vector.cc"
+ #include "lti_input_idx.cc"
+ 
+-#include "nfields2.cc"  // delete this if support for Octave 3.8 gets dropped
++// #include "nfields2.cc"  // delete this if support for Octave 3.8 gets dropped
+ 
+ 
+ 
+# HG changeset patch
+# User Doug Stewart
+# Date 1546468344 18000
+#      Wed Jan 02 17:32:24 2019 -0500
+# Node ID e8c2f63907da0ec4729ba4f33c2d54d674838d45
+# Parent  1daba0a585562de91c4078183460f325bf879683
+is_matrix.cc bug #55361 getting ready for Octave 5
+
+diff -r 1daba0a58556 -r e8c2f63907da src/is_matrix.cc
+--- a/src/is_matrix.cc	Wed Jan 02 13:10:58 2019 -0500
++++ b/src/is_matrix.cc	Wed Jan 02 17:32:24 2019 -0500
+@@ -48,8 +48,8 @@
+     {
+         for (octave_idx_type i = 0; i < nargin; i++)
+         {
+-            if (args(i).ndims () != 2 || ! args(i).is_numeric_type ()
+-                || ! (args(i).is_complex_type () || args(i).is_real_type ())
++            if (args(i).ndims () != 2 || ! args(i).isnumeric ()
++                || ! (args(i).iscomplex () || args(i).isreal ())
+                 || (args(i).array_value().isfinite().all().all()(0) != true))
+             {
+                 retval = false;
+# HG changeset patch
+# User Doug Stewart
+# Date 1546468851 18000
+#      Wed Jan 02 17:40:51 2019 -0500
+# Node ID a72e758cab961c2a25ab9b8319a9f101c9d8d037
+# Parent  e8c2f63907da0ec4729ba4f33c2d54d674838d45
+bug #55361 getting ready for Octave 5
+
+diff -r e8c2f63907da -r a72e758cab96 src/is_real_matrix.cc
+--- a/src/is_real_matrix.cc	Wed Jan 02 17:32:24 2019 -0500
++++ b/src/is_real_matrix.cc	Wed Jan 02 17:40:51 2019 -0500
+@@ -48,8 +48,8 @@
+     {
+         for (octave_idx_type i = 0; i < nargin; i++)
+         {
+-            if (args(i).ndims () != 2 || ! args(i).is_numeric_type ()
+-                || ! args(i).is_real_type ()
++            if (args(i).ndims () != 2 || ! args(i).isnumeric ()
++                || ! args(i).isreal ()
+                 || (args(i).array_value().isfinite().all().all()(0) != true))
+             {
+                 retval = false;
+diff -r e8c2f63907da -r a72e758cab96 src/is_real_scalar.cc
+--- a/src/is_real_scalar.cc	Wed Jan 02 17:32:24 2019 -0500
++++ b/src/is_real_scalar.cc	Wed Jan 02 17:40:51 2019 -0500
+@@ -48,8 +48,8 @@
+     {
+         for (octave_idx_type i = 0; i < nargin; i++)
+         {
+             if (args(i).ndims () != 2 || ! args(i).is_scalar_type ()
+-                || ! args(i).is_numeric_type () || ! args(i).is_real_type ()
++                || ! args(i).isnumeric () || ! args(i).isreal ()
+                 || (args(i).array_value().isfinite().all().all()(0) != true))
+             {
+                 retval = false;
+# HG changeset patch
+# User Doug Stewart
+# Date 1546469478 18000
+#      Wed Jan 02 17:51:18 2019 -0500
+# Node ID 0462251d1ef7923540e49c73a8376e87688c0590
+# Parent  a72e758cab961c2a25ab9b8319a9f101c9d8d037
+bug #55361 getting ready for Octave 5
+
+diff -r a72e758cab96 -r 0462251d1ef7 src/is_real_square_matrix.cc
+--- a/src/is_real_square_matrix.cc	Wed Jan 02 17:40:51 2019 -0500
++++ b/src/is_real_square_matrix.cc	Wed Jan 02 17:51:18 2019 -0500
+@@ -49,7 +49,7 @@
+         for (octave_idx_type i = 0; i < nargin; i++)
+         {
+             if (args(i).ndims () != 2 || args(i).rows () != args(i).columns ()
+-                || ! args(i).is_numeric_type () || ! args(i).is_real_type ()
++                || ! args(i).isnumeric () || ! args(i).isreal ()
+                 || (args(i).array_value().isfinite().all().all()(0) != true))
+             {
+                 retval = false;
+diff -r a72e758cab96 -r 0462251d1ef7 src/is_real_vector.cc
+--- a/src/is_real_vector.cc	Wed Jan 02 17:40:51 2019 -0500
++++ b/src/is_real_vector.cc	Wed Jan 02 17:51:18 2019 -0500
+@@ -49,7 +49,7 @@
+         for (octave_idx_type i = 0; i < nargin; i++)
+         {
+             if (args(i).ndims () != 2 || ! (args(i).rows () == 1 || args(i).columns () == 1)
+-                || ! args(i).is_numeric_type () || ! args(i).is_real_type ()
++                || ! args(i).isnumeric () || ! args(i).isreal ()
+                 || (args(i).array_value().isfinite().all().all()(0) != true))
+             {
+                 retval = false;
+diff -r a72e758cab96 -r 0462251d1ef7 src/is_zp_vector.cc
+--- a/src/is_zp_vector.cc	Wed Jan 02 17:40:51 2019 -0500
++++ b/src/is_zp_vector.cc	Wed Jan 02 17:51:18 2019 -0500
+@@ -50,8 +50,8 @@
+         {
+             if (args(i).ndims () != 2
+                 || (args(i).rows () > 1 && args(i).columns () > 1)
+-                || ! args(i).is_numeric_type ()
+-                || ! (args(i).is_complex_type () || args(i).is_real_type ())
++                || ! args(i).isnumeric ()
++                || ! (args(i).iscomplex () || args(i).isreal ())
+                 || (args(i).array_value().isfinite().all().all()(0) != true))
+             {
+                 retval = false;
+diff -r a72e758cab96 -r 0462251d1ef7 src/lti_input_idx.cc
+--- a/src/lti_input_idx.cc	Wed Jan 02 17:40:51 2019 -0500
++++ b/src/lti_input_idx.cc	Wed Jan 02 17:51:18 2019 -0500
+@@ -60,7 +60,7 @@
+   octave_idx_type nargin = args.length ();
+ 
+   // first, check whether a cell is passed
+-  if (nargin == 1 && args(0).is_defined () && args(0).is_cell ())
++  if (nargin == 1 && args(0).is_defined () && args(0).iscell ())
+   {
+     octave_idx_type len = args(0).cell_value().numel();
+     octave_idx_type idx = len;
+@@ -87,7 +87,7 @@
+     //    and after strings) are not recognized as objects.
+     //      ss (a, b, ltisys, c, d, 'key', val, 'lti', ltisys)
+     if (len > 0 && idx > 0
+-        && args(0).cell_value().elem(idx-1).is_object ())
++        && args(0).cell_value().elem(idx-1).isobject ())
+     {
+       offset = 1;
+     }
+# HG changeset patch
+# User Doug Stewart
+# Date 1546532608 18000
+#      Thu Jan 03 11:23:28 2019 -0500
+# Node ID 6f05c32bbbafa758c1d76995e8aab914a67db499
+# Parent  23110e3e6cc745e01e00586ac3cc13d596d8e216
+removed F77_exception_encounterd  obsolete
+
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ab01od.cc
+--- a/src/sl_ab01od.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ab01od.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -72,7 +72,7 @@
+         Matrix a = args(0).matrix_value ();
+         Matrix b = args(1).matrix_value ();
+         double tol = args(2).double_value ();
+-
++f77_exception_encountered
+         F77_INT n = TO_F77_INT (a.rows ());      // n: number of states
+         F77_INT m = TO_F77_INT (b.columns ());   // m: number of inputs
+ 
+@@ -116,8 +116,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("__sl_ab01od__: exception in SLICOT subroutine AB01OD");
++//        if (f77_exception_encountered)
++//            error ("__sl_ab01od__: exception in SLICOT subroutine AB01OD");
+             
+         if (info != 0)
+             error ("__sl_ab01od__: AB01OD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ab04md.cc
+--- a/src/sl_ab04md.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ab04md.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -111,8 +111,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("__sl_ab04md__: exception in SLICOT subroutine AB04MD");
++//        if (f77_exception_encountered)
++//            error ("__sl_ab04md__: exception in SLICOT subroutine AB04MD");
+ 
+         if (info != 0)
+             error ("__sl_ab04md__: AB04MD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ab08nd.cc
+--- a/src/sl_ab08nd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ab08nd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -149,8 +149,8 @@
+                   iwork, dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("ss: zero: __sl_ab08nd__: exception in SLICOT subroutine AB08ND");
++//        if (f77_exception_encountered)
++//            error ("ss: zero: __sl_ab08nd__: exception in SLICOT subroutine AB08ND");
+             
+         if (info != 0)
+             error ("ss: zero: __sl_ab08nd__: AB08ND returned info = %d", info);
+@@ -186,8 +186,8 @@
+                   work, lwork,
+                   info2));
+                                  
+-        if (f77_exception_encountered)
+-            error ("ss: zero: __sl_ab08nd__: exception in LAPACK subroutine DGGEV");
++//        if (f77_exception_encountered)
++//            error ("ss: zero: __sl_ab08nd__: exception in LAPACK subroutine DGGEV");
+             
+         if (info2 != 0)
+             error ("ss: zero: __sl_ab08nd__: DGGEV returned info = %d", info2);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ab09hd.cc
+--- a/src/sl_ab09hd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ab09hd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -174,8 +174,8 @@
+                   bwork,
+                   iwarn, info));
+ 
+-        if (f77_exception_encountered)
+-            error ("bstmodred: exception in SLICOT subroutine AB09HD");
++//        if (f77_exception_encountered)
++//           error ("bstmodred: exception in SLICOT subroutine AB09HD");
+ 
+ 
+         static const char* err_msg[] = {
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ab09id.cc
+--- a/src/sl_ab09id.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ab09id.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -315,8 +315,8 @@
+                   dwork, ldwork,
+                   iwarn, info));
+ 
+-        if (f77_exception_encountered)
+-            error ("modred: exception in SLICOT subroutine AB09ID");
++//        if (f77_exception_encountered)
++//            error ("modred: exception in SLICOT subroutine AB09ID");
+ 
+ 
+         static const char* err_msg[] = {
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ab09jd.cc
+--- a/src/sl_ab09jd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ab09jd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -290,8 +290,8 @@
+                   dwork, ldwork,
+                   iwarn, info));
+ 
+-        if (f77_exception_encountered)
+-            error ("hnamodred: exception in SLICOT subroutine AB09JD");
++//        if (f77_exception_encountered)
++//            error ("hnamodred: exception in SLICOT subroutine AB09JD");
+ 
+ 
+         static const char* err_msg[] = {
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ab13ad.cc
+--- a/src/sl_ab13ad.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ab13ad.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -98,7 +98,7 @@
+         
+         // workspace
+         F77_INT ldwork = max (1, n*(max (n, m, p) + 5) + n*(n+1)/2);
+-        
++        f77_exception_encountered
+         OCTAVE_LOCAL_BUFFER (double, dwork, ldwork);
+         
+         // error indicators
+@@ -118,8 +118,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("hsvd: __sl_ab13ad__: exception in SLICOT subroutine AB13AD");
++//        if (f77_exception_encountered)
++//            error ("hsvd: __sl_ab13ad__: exception in SLICOT subroutine AB13AD");
+             
+         if (info != 0)
+             error ("hsvd: __sl_ab13ad__: AB13AD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ab13bd.cc
+--- a/src/sl_ab13bd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ab13bd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -22,7 +22,7 @@
+ <http://www.slicot.org>
+ 
+ Author: Lukas Reichlin <lukas.reichlin@gmail.com>
+-Created: November 2009
++Created: November 2009f77_exception_encountered
+ Version: 0.5
+ 
+ */
+@@ -118,8 +118,8 @@
+                          iwarn,
+                          info);
+ 
+-        if (f77_exception_encountered)
+-            error ("lti: norm: __sl_ab13bd__: exception in SLICOT subroutine AB13BD");
++//       if (f77_exception_encountered)
++//            error ("lti: norm: __sl_ab13bd__: exception in SLICOT subroutine AB13BD");
+             
+         if (info != 0)
+             error ("lti: norm: __sl_ab13bd__: AB13BD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ab13dd.cc
+--- a/src/sl_ab13dd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ab13dd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -143,8 +143,8 @@
+                   cwork, lcwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("lti: norm: __sl_ab13dd__: exception in SLICOT subroutine AB13DD");
++//       if (f77_exception_encountered)
++//            error ("lti: norm: __sl_ab13dd__: exception in SLICOT subroutine AB13DD");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ag08bd.cc
+--- a/src/sl_ag08bd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ag08bd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -152,8 +152,8 @@
+                   iwork, dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("dss: zero: __sl_ag08bd__: exception in SLICOT subroutine AG08BD");
++//        if (f77_exception_encountered)
++//            error ("dss: zero: __sl_ag08bd__: exception in SLICOT subroutine AG08BD");
+             
+         if (info != 0)
+             error ("dss: zero: __sl_ag08bd__: AG08BD returned info = %d", info);
+@@ -182,7 +182,7 @@
+         OCTAVE_LOCAL_BUFFER (double, work, lwork);
+         
+         F77_INT info2;
+-        
++        f77_exception_encountered
+         F77_XFCN (dggev, DGGEV,
+                  (jobvl, jobvr,
+                   nfz,
+@@ -195,8 +195,8 @@
+                   work, lwork,
+                   info2));
+                                  
+-        if (f77_exception_encountered)
+-            error ("dss: zero: __sl_ag08bd__: exception in LAPACK subroutine DGGEV");
++//        if (f77_exception_encountered)
++//            error ("dss: zero: __sl_ag08bd__: exception in LAPACK subroutine DGGEV");
+             
+         if (info2 != 0)
+             error ("dss: zero: __sl_ag08bd__: DGGEV returned info = %d", info2);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ib01ad.cc
+--- a/src/sl_ib01ad.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ib01ad.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -330,8 +330,8 @@
+                       iwarn_a, info_a));
+ 
+ 
+-            if (f77_exception_encountered)
+-                error ("ident: exception in SLICOT subroutine IB01AD");
++//            if (f77_exception_encountered)
++//                error ("ident: exception in SLICOT subroutine IB01AD");
+ 
+             static const char* err_msg[] = {
+                 "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ib01cd.cc
+--- a/src/sl_ib01cd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ib01cd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -159,8 +159,8 @@
+                       iwarn_c, info_c));
+ 
+ 
+-            if (f77_exception_encountered)
+-                error ("__sl_ib01cd__: exception in SLICOT subroutine IB01CD");
++//            if (f77_exception_encountered)
++//                error ("__sl_ib01cd__: exception in SLICOT subroutine IB01CD");
+ 
+             static const char* err_msg_c[] = {
+                 "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_ident.cc
+--- a/src/sl_ident.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_ident.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -366,8 +366,8 @@
+                       iwarn_a, info_a));
+ 
+ 
+-            if (f77_exception_encountered)
+-                error ("ident: exception in SLICOT subroutine IB01AD");
++//            if (f77_exception_encountered)
++//                error ("ident: exception in SLICOT subroutine IB01AD");
+ 
+             static const char* err_msg[] = {
+                 "0: OK",
+@@ -545,8 +545,8 @@
+                   iwarn_b, info_b));
+ 
+ 
+-        if (f77_exception_encountered)
+-            error ("ident: exception in SLICOT subroutine IB01BD");
++//        if (f77_exception_encountered)
++//            error ("ident: exception in SLICOT subroutine IB01BD");
+ 
+         static const char* err_msg_b[] = {
+             "0: OK",
+@@ -667,8 +667,8 @@
+                       iwarn_c, info_c));
+ 
+ 
+-            if (f77_exception_encountered)
+-                error ("ident: exception in SLICOT subroutine IB01CD");
++//            if (f77_exception_encountered)
++//                error ("ident: exception in SLICOT subroutine IB01CD");
+ 
+             static const char* err_msg_c[] = {
+                 "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_mb05nd.cc
+--- a/src/sl_mb05nd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_mb05nd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -93,8 +93,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("__sl_mb05nd__: exception in SLICOT subroutine MB05ND");
++//        if (f77_exception_encountered)
++//            error ("__sl_mb05nd__: exception in SLICOT subroutine MB05ND");
+         
+         if (info > 0)
+         {
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb01bd.cc
+--- a/src/sl_sb01bd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb01bd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -23,7 +23,7 @@
+ 
+ Author: Lukas Reichlin <lukas.reichlin@gmail.com>
+ Created: November 2009
+-Version: 0.6
++Version: 0.6f77_exception_encountered
+ 
+ */
+ 
+@@ -121,8 +121,8 @@
+                   dwork, ldwork,
+                   iwarn, info));
+ 
+-        if (f77_exception_encountered)
+-            error ("place: __sl_sb01bd__: exception in SLICOT subroutine SB01BD");
++//       if (f77_exception_encountered)
++//            error ("place: __sl_sb01bd__: exception in SLICOT subroutine SB01BD");
+             
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb02od.cc
+--- a/src/sl_sb02od.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb02od.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -170,8 +170,8 @@
+                   bwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("are: __sl_sb02od__: exception in SLICOT subroutine SB02OD");
++//        if (f77_exception_encountered)
++//            error ("are: __sl_sb02od__: exception in SLICOT subroutine SB02OD");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb03md.cc
+--- a/src/sl_sb03md.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb03md.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -118,8 +118,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("lyap: __sl_sb03md__: exception in SLICOT subroutine SB03MD");
++//        if (f77_exception_encountered)
++//            error ("lyap: __sl_sb03md__: exception in SLICOT subroutine SB03MD");
+ 
+         if (info != 0)
+             error ("lyap: __sl_sb03md__: SB03MD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb03od.cc
+--- a/src/sl_sb03od.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb03od.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -115,8 +115,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("lyapchol: __sl_sb03od__: exception in SLICOT subroutine SB03OD");
++//        if (f77_exception_encountered)
++//            error ("lyapchol: __sl_sb03od__: exception in SLICOT subroutine SB03OD");
+ 
+         if (info != 0)
+             error ("lyapchol: __sl_sb03od__: SB03OD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb04md.cc
+--- a/src/sl_sb04md.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb04md.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -96,8 +96,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("lyap: __sl_sb04md__: exception in SLICOT subroutine SB04MD");
++//        if (f77_exception_encountered)
++//            error ("lyap: __sl_sb04md__: exception in SLICOT subroutine SB04MD");
+ 
+         if (info != 0)
+             error ("lyap: __sl_sb04md__: SB04MD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb04qd.cc
+--- a/src/sl_sb04qd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb04qd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -96,8 +96,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("dlyap: __sl_sb04qd__: exception in SLICOT subroutine SB04QD");
++//        if (f77_exception_encountered)
++//            error ("dlyap: __sl_sb04qd__: exception in SLICOT subroutine SB04QD");
+ 
+         if (info != 0)
+             error ("dlyap: __sl_sb04qd__: SB04QD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb10ad.cc
+--- a/src/sl_sb10ad.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb10ad.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -189,8 +189,8 @@
+                   bwork, lbwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("hinfsyn: __sl_sb10ad__: exception in SLICOT subroutine SB10AD");
++//        if (f77_exception_encountered)
++//            error ("hinfsyn: __sl_sb10ad__: exception in SLICOT subroutine SB10AD");
+ 
+         static const char* err_msg[] = {
+             "0: successful exit",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb10dd.cc
+--- a/src/sl_sb10dd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb10dd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -150,8 +150,8 @@
+                   bwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("hinfsyn: __sl_sb10dd__: exception in SLICOT subroutine SB10DD");
++//        if (f77_exception_encountered)
++//            error ("hinfsyn: __sl_sb10dd__: exception in SLICOT subroutine SB10DD");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb10ed.cc
+--- a/src/sl_sb10ed.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb10ed.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -138,8 +138,8 @@
+                   bwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("h2syn: __sl_sb10ed__: exception in SLICOT subroutine SB10ED");
++ //       if (f77_exception_encountered)
++ //           error ("h2syn: __sl_sb10ed__: exception in SLICOT subroutine SB10ED");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb10fd.cc
+--- a/src/sl_sb10fd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb10fd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -143,8 +143,8 @@
+                   bwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("hinfsyn: __sl_sb10fd__: exception in SLICOT subroutine SB10FD");
++//        if (f77_exception_encountered)
++//            error ("hinfsyn: __sl_sb10fd__: exception in SLICOT subroutine SB10FD");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb10hd.cc
+--- a/src/sl_sb10hd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb10hd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -135,8 +135,8 @@
+                   bwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("h2syn: __sl_sb10hd__: exception in SLICOT subroutine SB10HD");
++//        if (f77_exception_encountered)
++//            error ("h2syn: __sl_sb10hd__: exception in SLICOT subroutine SB10HD");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb10id.cc
+--- a/src/sl_sb10id.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb10id.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -127,8 +127,8 @@
+                   bwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("ncfsyn: __sl_sb10id__: exception in SLICOT subroutine SB10ID");
++//        if (f77_exception_encountered)
++//            error ("ncfsyn: __sl_sb10id__: exception in SLICOT subroutine SB10ID");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb10jd.cc
+--- a/src/sl_sb10jd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb10jd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -100,8 +100,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("__sl_sb10jd__: exception in SLICOT subroutine SB10JD");
++//        if (f77_exception_encountered)
++//            error ("__sl_sb10jd__: exception in SLICOT subroutine SB10JD");
+ 
+         if (info != 0)
+             error ("__sl_sb10jd__: SB10JD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb10kd.cc
+--- a/src/sl_sb10kd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb10kd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -123,8 +123,8 @@
+                   bwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("ncfsyn: slsb10kd: exception in SLICOT subroutine SB10KD");
++//        if (f77_exception_encountered)
++//            error ("ncfsyn: slsb10kd: exception in SLICOT subroutine SB10KD");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb10yd.cc
+--- a/src/sl_sb10yd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb10yd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -141,8 +141,8 @@
+                   zwork, lzwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("fitfrd: __sl_sb10yd__: exception in SLICOT subroutine SB10YD");
++//        if (f77_exception_encountered)
++//            error ("fitfrd: __sl_sb10yd__: exception in SLICOT subroutine SB10YD");
+             
+         if (info != 0)
+             error ("fitfrd: __sl_sb10yd__: SB10YD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb10zd.cc
+--- a/src/sl_sb10zd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb10zd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -130,8 +130,8 @@
+                   bwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("ncfsyn: __sl_sb10zd__: exception in SLICOT subroutine SB10ZD");
++//        if (f77_exception_encountered)
++//            error ("ncfsyn: __sl_sb10zd__: exception in SLICOT subroutine SB10ZD");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb16ad.cc
+--- a/src/sl_sb16ad.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb16ad.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -261,8 +261,8 @@
+                   iwarn, info));
+ 
+ 
+-        if (f77_exception_encountered)
+-            error ("conred: exception in SLICOT subroutine SB16AD");
++//        if (f77_exception_encountered)
++//            error ("conred: exception in SLICOT subroutine SB16AD");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb16bd.cc
+--- a/src/sl_sb16bd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb16bd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -225,8 +225,8 @@
+                   iwarn, info));
+ 
+ 
+-        if (f77_exception_encountered)
+-            error ("cfconred: exception in SLICOT subroutine SB16BD");
++//        if (f77_exception_encountered)
++//            error ("cfconred: exception in SLICOT subroutine SB16BD");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sb16cd.cc
+--- a/src/sl_sb16cd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sb16cd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -190,8 +190,8 @@
+                   iwarn, info));
+ 
+ 
+-        if (f77_exception_encountered)
+-            error ("fwcfconred: exception in SLICOT subroutine SB16CD");
++//        if (f77_exception_encountered)
++//            error ("fwcfconred: exception in SLICOT subroutine SB16CD");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sg02ad.cc
+--- a/src/sl_sg02ad.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sg02ad.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -179,8 +179,8 @@
+                   bwork,
+                   iwarn, info));
+ 
+-        if (f77_exception_encountered)
+-            error ("are: __sl_sg02ad__: exception in SLICOT subroutine SG02AD");
++//        if (f77_exception_encountered)
++//            error ("are: __sl_sg02ad__: exception in SLICOT subroutine SG02AD");
+ 
+         static const char* err_msg[] = {
+             "0: OK",
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sg03ad.cc
+--- a/src/sl_sg03ad.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sg03ad.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -132,8 +132,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("lyap: __sl_sg03ad__: exception in SLICOT subroutine SG03AD");
++//        if (f77_exception_encountered)
++//            error ("lyap: __sl_sg03ad__: exception in SLICOT subroutine SG03AD");
+ 
+         if (info != 0)
+             error ("lyap: __sl_sg03ad__: SG03AD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_sg03bd.cc
+--- a/src/sl_sg03bd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_sg03bd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -123,8 +123,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("lyap: __sl_sg03bd__: exception in SLICOT subroutine SG03BD");
++//        if (f77_exception_encountered)
++//            error ("lyap: __sl_sg03bd__: exception in SLICOT subroutine SG03BD");
+ 
+         if (info != 0)
+             error ("lyap: __sl_sg03bd__: SG03BD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_tb01id.cc
+--- a/src/sl_tb01id.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_tb01id.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -95,8 +95,8 @@
+                   scale.fortran_vec (),
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("ss: prescale: __sl_tb01id__: exception in SLICOT subroutine TB01ID");
++//        if (f77_exception_encountered)
++//            error ("ss: prescale: __sl_tb01id__: exception in SLICOT subroutine TB01ID");
+             
+         if (info != 0)
+             error ("ss: prescale: __sl_tb01id__: TB01ID returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_tb01pd.cc
+--- a/src/sl_tb01pd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_tb01pd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -119,8 +119,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("ss: minreal: __sl_tb01pd__: exception in SLICOT subroutine TB01PD");
++//        if (f77_exception_encountered)
++//            error ("ss: minreal: __sl_tb01pd__: exception in SLICOT subroutine TB01PD");
+             
+         if (info != 0)
+             error ("ss: minreal: __sl_tb01pd__: TB01PD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_tb01ud.cc
+--- a/src/sl_tb01ud.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_tb01ud.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -116,8 +116,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("__sl_tb01ud__: exception in SLICOT subroutine TB01UD");
++//        if (f77_exception_encountered)
++//            error ("__sl_tb01ud__: exception in SLICOT subroutine TB01UD");
+             
+         if (info != 0)
+             error ("__sl_tb01ud__: TB01UD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_tb04bd.cc
+--- a/src/sl_tb04bd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_tb04bd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -131,8 +131,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("ss2tf: __sl_tb04bd__: exception in SLICOT subroutine TB04BD");
++//        if (f77_exception_encountered)
++//            error ("ss2tf: __sl_tb04bd__: exception in SLICOT subroutine TB04BD");
+ 
+         if (info != 0)
+             error ("ss2tf: __sl_tb04bd__: TB04BD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_td04ad.cc
+--- a/src/sl_td04ad.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_td04ad.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -130,8 +130,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("tf2ss: __sl_td04ad__: exception in SLICOT subroutine TD04AD");
++//        if (f77_exception_encountered)
++//            error ("tf2ss: __sl_td04ad__: exception in SLICOT subroutine TD04AD");
+ 
+         if (info != 0)
+             error ("tf2ss: __sl_td04ad__: TD04AD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_tg01ad.cc
+--- a/src/sl_tg01ad.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_tg01ad.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -105,8 +105,8 @@
+                   dwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("ss: prescale: __sl_tg01ad__: exception in SLICOT subroutine TG01AD");
++//        if (f77_exception_encountered)
++//            error ("ss: prescale: __sl_tg01ad__: exception in SLICOT subroutine TG01AD");
+             
+         if (info != 0)
+             error ("ss: prescale: __sl_tg01ad__: TG01AD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_tg01fd.cc
+--- a/src/sl_tg01fd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_tg01fd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -130,8 +130,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("__sl_tg01fd__: exception in SLICOT subroutine TG01FD");
++//        if (f77_exception_encountered)
++//            error ("__sl_tg01fd__: exception in SLICOT subroutine TG01FD");
+             
+         if (info != 0)
+             error ("__sl_tg01fd__: TG01FD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_tg01hd.cc
+--- a/src/sl_tg01hd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_tg01hd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -122,8 +122,8 @@
+                   iwork, dwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("__sl_tg01hd__: exception in SLICOT subroutine TG01HD");
++//        if (f77_exception_encountered)
++//            error ("__sl_tg01hd__: exception in SLICOT subroutine TG01HD");
+             
+         if (info != 0)
+             error ("__sl_tg01hd__: TG01HD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_tg01id.cc
+--- a/src/sl_tg01id.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_tg01id.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -124,8 +124,8 @@
+                   iwork, dwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("__sl_tg01id__: exception in SLICOT subroutine TG01ID");
++//        if (f77_exception_encountered)
++//            error ("__sl_tg01id__: exception in SLICOT subroutine TG01ID");
+             
+         if (info != 0)
+             error ("__sl_tg01id__: TG01ID returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_tg01jd.cc
+--- a/src/sl_tg01jd.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_tg01jd.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -189,8 +189,8 @@
+                   dwork, ldwork,
+                   info));
+ 
+-        if (f77_exception_encountered)
+-            error ("dss: minreal: __sl_tg01jd__: exception in SLICOT subroutine TG01JD");
++//        if (f77_exception_encountered)
++//            error ("dss: minreal: __sl_tg01jd__: exception in SLICOT subroutine TG01JD");
+             
+         if (info != 0)
+             error ("dss: minreal: __sl_tg01jd__: TG01JD returned info = %d", info);
+diff -r 23110e3e6cc7 -r 6f05c32bbbaf src/sl_tg04bx.cc
+--- a/src/sl_tg04bx.cc	Thu Jan 03 09:19:49 2019 -0500
++++ b/src/sl_tg04bx.cc	Thu Jan 03 11:23:28 2019 -0500
+@@ -106,8 +106,8 @@
+                   gain,
+                   iwork));
+                   
+-        if (f77_exception_encountered)
+-            error ("dss: zero: __sl_tg04bx__: exception in TG04BX");
++//        if (f77_exception_encountered)
++//            error ("dss: zero: __sl_tg04bx__: exception in TG04BX");
+ 
+         // return values
+         retval(0) = octave_value (gain);
+# HG changeset patch
+# User Doug Stewart
+# Date 1546533621 18000
+#      Thu Jan 03 11:40:21 2019 -0500
+# Node ID 3243832f441cd1cc8417b02bf37f3253204be681
+# Parent  6f05c32bbbafa758c1d76995e8aab914a67db499
+removed F77_exception_encounterd  obsolete
+
+diff -r 6f05c32bbbaf -r 3243832f441c src/sl_ab01od.cc
+--- a/src/sl_ab01od.cc	Thu Jan 03 11:23:28 2019 -0500
++++ b/src/sl_ab01od.cc	Thu Jan 03 11:40:21 2019 -0500
+@@ -72,7 +72,7 @@
+         Matrix a = args(0).matrix_value ();
+         Matrix b = args(1).matrix_value ();
+         double tol = args(2).double_value ();
+-f77_exception_encountered
++//    f77_exception_encountered
+         F77_INT n = TO_F77_INT (a.rows ());      // n: number of states
+         F77_INT m = TO_F77_INT (b.columns ());   // m: number of inputs
+ 
+diff -r 6f05c32bbbaf -r 3243832f441c src/sl_ab13ad.cc
+--- a/src/sl_ab13ad.cc	Thu Jan 03 11:23:28 2019 -0500
++++ b/src/sl_ab13ad.cc	Thu Jan 03 11:40:21 2019 -0500
+@@ -98,7 +98,7 @@
+         
+         // workspace
+         F77_INT ldwork = max (1, n*(max (n, m, p) + 5) + n*(n+1)/2);
+-        f77_exception_encountered
++//        f77_exception_encountered
+         OCTAVE_LOCAL_BUFFER (double, dwork, ldwork);
+         
+         // error indicators
+diff -r 6f05c32bbbaf -r 3243832f441c src/sl_ag08bd.cc
+--- a/src/sl_ag08bd.cc	Thu Jan 03 11:23:28 2019 -0500
++++ b/src/sl_ag08bd.cc	Thu Jan 03 11:40:21 2019 -0500
+@@ -182,7 +182,7 @@
+         OCTAVE_LOCAL_BUFFER (double, work, lwork);
+         
+         F77_INT info2;
+-        f77_exception_encountered
++//        f77_exception_encountered
+         F77_XFCN (dggev, DGGEV,
+                  (jobvl, jobvr,
+                   nfz,
