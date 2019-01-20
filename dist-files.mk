@@ -462,6 +462,7 @@ SRC_FILES_1 := \
   of-communications-4-fixes.patch \
   of-communications-5-fixes.patch \
   of-communications.mk \
+  of-control-1-deprecated.patch \
   of-control.mk \
   of-data-smoothing.mk \
   of-database-1-fixes.patch \
