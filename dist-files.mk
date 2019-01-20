@@ -515,6 +515,7 @@ SRC_FILES_1 := \
   of-odepkg-3-deprecated.patch \
   of-odepkg.mk \
   of-optim-1-fixes.patch \
+  of-optim-2-deprecated.patch \
   of-optim.mk \
   of-optiminterp-1-dev-fixes.patch \
   of-optiminterp.mk \
