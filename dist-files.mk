@@ -461,6 +461,7 @@ SRC_FILES_1 := \
   of-communications-3-fixes.patch \
   of-communications-4-fixes.patch \
   of-communications-5-fixes.patch \
+  of-communications-6-deprecated.patch \
   of-communications.mk \
   of-control-1-deprecated.patch \
   of-control.mk \
