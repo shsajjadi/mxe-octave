@@ -12,13 +12,17 @@ diff -uNr a/scons/gallium.py b/scons/gallium.py
              shlinkflags += ['-Wl,--enable-stdcall-fixup']
              #shlinkflags += ['-Wl,--kill-at']
 diff -uNr a/scons/llvm.py b/scons/llvm.py
---- a/scons/llvm.py	2018-07-27 09:52:17.000000000 -0400
-+++ b/scons/llvm.py	2018-07-30 10:16:26.424580230 -0400
-@@ -122,6 +122,7 @@
+--- a/scons/llvm.py	2018-12-27 17:02:01.000000000 +0100
++++ b/scons/llvm.py	2019-01-21 18:47:28.456846140 +0100
+@@ -122,10 +122,7 @@
                  'LLVMIRReader', 'LLVMAsmParser',
                  'LLVMDemangle', 'LLVMGlobalISel', 'LLVMDebugInfoMSF',
                  'LLVMBinaryFormat',
 +                'version', 'uuid', 'ole32', 'oleaut32', 'z',
              ])
+-            if env['platform'] == 'windows' and env['crosscompile']:
+-                # LLVM 5.0 requires MinGW w/ pthreads due to use of std::thread and friends.
+-                assert env['gcc']
+-                env['CXX'] = env['CXX'] + '-posix'
          elif llvm_version >= distutils.version.LooseVersion('4.0'):
              env.Prepend(LIBS = [

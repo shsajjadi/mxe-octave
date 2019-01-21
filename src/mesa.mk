@@ -2,8 +2,8 @@
 # See index.html for further information.
 
 PKG             := mesa
-$(PKG)_VERSION  := 18.1.5
-$(PKG)_CHECKSUM := 1ca7d5f5d12c95f8da137be34223229b9f0594fe
+$(PKG)_VERSION  := 18.2.8
+$(PKG)_CHECKSUM := 6a16cb828c9b4fc244f1af45960f01e90ab03553
 $(PKG)_SUBDIR   := mesa-$($(PKG)_VERSION)
 $(PKG)_FILE     := mesa-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.freedesktop.org/pub/mesa/$($(PKG)_FILE)
@@ -48,6 +48,10 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
     $(INSTALL) -d '$(3)$(HOST_INCDIR)/GL';
     for f in '$(1)/include/GL/*.h' ; do \
       $(INSTALL) -m 644 $$f '$(3)$(HOST_INCDIR)/GL'; \
+    done
+    $(INSTALL) -d '$(3)$(HOST_INCDIR)/KHR';
+    for f in '$(1)/include/KHR/*.h' ; do \
+      $(INSTALL) -m 644 $$f '$(3)$(HOST_INCDIR)/KHR'; \
     done
 
     if [ -f '$(1)/build/windows-$($(PKG)_MACHINE)/gallium/targets/libgl-gdi/opengl32.dll' ]; then \

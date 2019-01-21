@@ -20,6 +20,10 @@ ifeq ($(USE_SYSTEM_OPENGL),no)
     for f in '$(1)/include/GL/*.h' ; do \
       $(INSTALL) -m 644 $$f '$(3)$(HOST_INCDIR)/GL'; \
     done
+    $(INSTALL) -d '$(3)$(HOST_INCDIR)/KHR';
+    for f in '$(1)/include/KHR/*.h' ; do \
+      $(INSTALL) -m 644 $$f '$(3)$(HOST_INCDIR)/KHR'; \
+    done
   endef
 else
   define $(PKG)_BUILD
