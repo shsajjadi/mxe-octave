@@ -526,6 +526,7 @@ SRC_FILES_1 := \
   of-signal.mk \
   of-sockets-1-cross-fixes.patch \
   of-sockets.mk \
+  of-sparsersb-1-deprecated.patch \
   of-sparsersb.mk \
   of-specfun-1-deprecated.patch \
   of-specfun.mk \
