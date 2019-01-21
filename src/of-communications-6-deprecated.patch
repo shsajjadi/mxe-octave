@@ -1,0 +1,427 @@
+diff -r 91279e205a70 src/galois.h
+--- a/src/galois.h	Sun Jan 20 19:13:40 2019 +0100
++++ b/src/galois.h	Sun Jan 20 19:55:05 2019 +0100
+@@ -22,6 +22,7 @@
+ #define octave_galois_int_h 1
+ 
+ #include <octave/mx-base.h>
++#include <octave/ov-typeinfo.h>
+ 
+ #include "galoisfield.h"
+ #include "base-lu.h"
+@@ -150,12 +151,12 @@
+   pivot_type ptype;
+ };
+ 
+-void install_gm_gm_ops (void);
+-void install_gm_m_ops (void);
+-void install_m_gm_ops (void);
+-void install_gm_s_ops (void);
+-void install_s_gm_ops (void);
+-void install_fil_gm_ops (void);
++void install_gm_gm_ops (octave::type_info& ti);
++void install_gm_m_ops (octave::type_info& ti);
++void install_m_gm_ops (octave::type_info& ti);
++void install_gm_s_ops (octave::type_info& ti);
++void install_s_gm_ops (octave::type_info& ti);
++void install_fil_gm_ops (octave::type_info& ti);
+ 
+ galois elem_pow (const galois& a, const galois& b);
+ galois elem_pow (const galois& a, const Matrix& b);
+diff -r 91279e205a70 src/gf.cc
+--- a/src/gf.cc	Sun Jan 20 19:13:40 2019 +0100
++++ b/src/gf.cc	Sun Jan 20 19:55:05 2019 +0100
+@@ -116,13 +116,16 @@
+   if (!galois_type_loaded)
+     {
+       octave_galois::register_type ();
+-      install_gm_gm_ops ();
+-      install_m_gm_ops ();
+-      install_gm_m_ops ();
+-      install_s_gm_ops ();
+-      install_gm_s_ops ();
++      interp.mlock ();
++
++      octave::type_info& ti = interp.get_type_info ();
++
++      install_gm_gm_ops (ti);
++      install_m_gm_ops (ti);
++      install_gm_m_ops (ti);
++      install_s_gm_ops (ti);
++      install_gm_s_ops (ti);
+       galois_type_loaded = true;
+-      interp.mlock ();
+     }
+ 
+   retval = new octave_galois (data, m, primpoly);
+diff -r 91279e205a70 src/op-gm-gm.cc
+--- a/src/op-gm-gm.cc	Sun Jan 20 19:13:40 2019 +0100
++++ b/src/op-gm-gm.cc	Sun Jan 20 19:55:05 2019 +0100
+@@ -18,7 +18,7 @@
+ // program with any Open Source program, as defined by the Open Source
+ // Initiative (www.opensource.org)
+ 
+-#include <octave/oct-obj.h>
++#include <octave/ovl.h>
+ #include <octave/ops.h>
+ 
+ #include "galois.h"
+@@ -86,36 +86,36 @@
+ DEFASSIGNOP_FN (assign, galois, galois, assign)
+ 
+ void
+-install_gm_gm_ops (void)
++install_gm_gm_ops (octave::type_info& ti)
+ {
+-  INSTALL_UNOP (op_not, octave_galois, not);
+-  INSTALL_UNOP (op_uminus, octave_galois, uminus);
+-  INSTALL_UNOP (op_uplus, octave_galois, uplus);
+-  INSTALL_UNOP (op_transpose, octave_galois, transpose);
+-  INSTALL_UNOP (op_hermitian, octave_galois, transpose);
++  INSTALL_UNOP_TI (ti, op_not, octave_galois, not);
++  INSTALL_UNOP_TI (ti, op_uminus, octave_galois, uminus);
++  INSTALL_UNOP_TI (ti, op_uplus, octave_galois, uplus);
++  INSTALL_UNOP_TI (ti, op_transpose, octave_galois, transpose);
++  INSTALL_UNOP_TI (ti, op_hermitian, octave_galois, transpose);
+ 
+-  INSTALL_BINOP (op_add, octave_galois, octave_galois, add);
+-  INSTALL_BINOP (op_sub, octave_galois, octave_galois, sub);
+-  INSTALL_BINOP (op_mul, octave_galois, octave_galois, mul);
+-  INSTALL_BINOP (op_div, octave_galois, octave_galois, div);
+-  INSTALL_BINOP (op_pow, octave_galois, octave_galois, pow);
+-  INSTALL_BINOP (op_ldiv, octave_galois, octave_galois, ldiv);
+-  INSTALL_BINOP (op_lt, octave_galois, octave_galois, lt);
+-  INSTALL_BINOP (op_le, octave_galois, octave_galois, le);
+-  INSTALL_BINOP (op_eq, octave_galois, octave_galois, eq);
+-  INSTALL_BINOP (op_ge, octave_galois, octave_galois, ge);
+-  INSTALL_BINOP (op_gt, octave_galois, octave_galois, gt);
+-  INSTALL_BINOP (op_ne, octave_galois, octave_galois, ne);
+-  INSTALL_BINOP (op_el_mul, octave_galois, octave_galois, el_mul);
+-  INSTALL_BINOP (op_el_div, octave_galois, octave_galois, el_div);
+-  INSTALL_BINOP (op_el_pow, octave_galois, octave_galois, el_pow);
+-  INSTALL_BINOP (op_el_ldiv, octave_galois, octave_galois, el_ldiv);
+-  INSTALL_BINOP (op_el_and, octave_galois, octave_galois, el_and);
+-  INSTALL_BINOP (op_el_or, octave_galois, octave_galois, el_or);
++  INSTALL_BINOP_TI (ti, op_add, octave_galois, octave_galois, add);
++  INSTALL_BINOP_TI (ti, op_sub, octave_galois, octave_galois, sub);
++  INSTALL_BINOP_TI (ti, op_mul, octave_galois, octave_galois, mul);
++  INSTALL_BINOP_TI (ti, op_div, octave_galois, octave_galois, div);
++  INSTALL_BINOP_TI (ti, op_pow, octave_galois, octave_galois, pow);
++  INSTALL_BINOP_TI (ti, op_ldiv, octave_galois, octave_galois, ldiv);
++  INSTALL_BINOP_TI (ti, op_lt, octave_galois, octave_galois, lt);
++  INSTALL_BINOP_TI (ti, op_le, octave_galois, octave_galois, le);
++  INSTALL_BINOP_TI (ti, op_eq, octave_galois, octave_galois, eq);
++  INSTALL_BINOP_TI (ti, op_ge, octave_galois, octave_galois, ge);
++  INSTALL_BINOP_TI (ti, op_gt, octave_galois, octave_galois, gt);
++  INSTALL_BINOP_TI (ti, op_ne, octave_galois, octave_galois, ne);
++  INSTALL_BINOP_TI (ti, op_el_mul, octave_galois, octave_galois, el_mul);
++  INSTALL_BINOP_TI (ti, op_el_div, octave_galois, octave_galois, el_div);
++  INSTALL_BINOP_TI (ti, op_el_pow, octave_galois, octave_galois, el_pow);
++  INSTALL_BINOP_TI (ti, op_el_ldiv, octave_galois, octave_galois, el_ldiv);
++  INSTALL_BINOP_TI (ti, op_el_and, octave_galois, octave_galois, el_and);
++  INSTALL_BINOP_TI (ti, op_el_or, octave_galois, octave_galois, el_or);
+ 
+-  INSTALL_G_CATOP (octave_galois, octave_galois, gm_gm);
++  INSTALL_CATOP_TI (ti, octave_galois, octave_galois, gm_gm);
+ 
+-  INSTALL_ASSIGNOP (op_asn_eq, octave_galois, octave_galois, assign);
++  INSTALL_ASSIGNOP_TI (ti, op_asn_eq, octave_galois, octave_galois, assign);
+ }
+ 
+ /*
+diff -r 91279e205a70 src/op-gm-m.cc
+--- a/src/op-gm-m.cc	Sun Jan 20 19:13:40 2019 +0100
++++ b/src/op-gm-m.cc	Sun Jan 20 19:55:05 2019 +0100
+@@ -75,31 +75,31 @@
+ }
+ 
+ void
+-install_gm_m_ops (void)
++install_gm_m_ops (octave::type_info& ti)
+ {
+-  INSTALL_BINOP (op_add, octave_galois, octave_matrix, add);
+-  INSTALL_BINOP (op_sub, octave_galois, octave_matrix, sub);
+-  INSTALL_BINOP (op_mul, octave_galois, octave_matrix, mul);
+-  INSTALL_BINOP (op_div, octave_galois, octave_matrix, div);
+-  INSTALL_BINOP (op_pow, octave_galois, octave_matrix, pow);
+-  INSTALL_BINOP (op_ldiv, octave_galois, octave_matrix, ldiv);
+-  INSTALL_BINOP (op_lt, octave_galois, octave_matrix, lt);
+-  INSTALL_BINOP (op_le, octave_galois, octave_matrix, le);
+-  INSTALL_BINOP (op_eq, octave_galois, octave_matrix, eq);
+-  INSTALL_BINOP (op_ge, octave_galois, octave_matrix, ge);
+-  INSTALL_BINOP (op_gt, octave_galois, octave_matrix, gt);
+-  INSTALL_BINOP (op_ne, octave_galois, octave_matrix, ne);
+-  INSTALL_BINOP (op_el_mul, octave_galois, octave_matrix, el_mul);
+-  INSTALL_BINOP (op_el_div, octave_galois, octave_matrix, el_div);
+-  INSTALL_BINOP (op_el_pow, octave_galois, octave_matrix, el_pow);
+-  INSTALL_BINOP (op_el_ldiv, octave_galois, octave_matrix, el_ldiv);
+-  INSTALL_BINOP (op_el_and, octave_galois, octave_matrix, el_and);
+-  INSTALL_BINOP (op_el_or, octave_galois, octave_matrix, el_or);
++  INSTALL_BINOP_TI (ti, op_add, octave_galois, octave_matrix, add);
++  INSTALL_BINOP_TI (ti, op_sub, octave_galois, octave_matrix, sub);
++  INSTALL_BINOP_TI (ti, op_mul, octave_galois, octave_matrix, mul);
++  INSTALL_BINOP_TI (ti, op_div, octave_galois, octave_matrix, div);
++  INSTALL_BINOP_TI (ti, op_pow, octave_galois, octave_matrix, pow);
++  INSTALL_BINOP_TI (ti, op_ldiv, octave_galois, octave_matrix, ldiv);
++  INSTALL_BINOP_TI (ti, op_lt, octave_galois, octave_matrix, lt);
++  INSTALL_BINOP_TI (ti, op_le, octave_galois, octave_matrix, le);
++  INSTALL_BINOP_TI (ti, op_eq, octave_galois, octave_matrix, eq);
++  INSTALL_BINOP_TI (ti, op_ge, octave_galois, octave_matrix, ge);
++  INSTALL_BINOP_TI (ti, op_gt, octave_galois, octave_matrix, gt);
++  INSTALL_BINOP_TI (ti, op_ne, octave_galois, octave_matrix, ne);
++  INSTALL_BINOP_TI (ti, op_el_mul, octave_galois, octave_matrix, el_mul);
++  INSTALL_BINOP_TI (ti, op_el_div, octave_galois, octave_matrix, el_div);
++  INSTALL_BINOP_TI (ti, op_el_pow, octave_galois, octave_matrix, el_pow);
++  INSTALL_BINOP_TI (ti, op_el_ldiv, octave_galois, octave_matrix, el_ldiv);
++  INSTALL_BINOP_TI (ti, op_el_and, octave_galois, octave_matrix, el_and);
++  INSTALL_BINOP_TI (ti, op_el_or, octave_galois, octave_matrix, el_or);
+ 
+-  INSTALL_G_CATOP (octave_galois, octave_matrix, gm_m);
++  INSTALL_CATOP_TI (ti, octave_galois, octave_matrix, gm_m);
+ 
+-  INSTALL_ASSIGNOP (op_asn_eq, octave_galois, octave_matrix, assign);
+-  INSTALL_ASSIGNCONV (octave_base_value, octave_galois, octave_matrix);
++  INSTALL_ASSIGNOP_TI (ti, op_asn_eq, octave_galois, octave_matrix, assign);
++  INSTALL_ASSIGNCONV_TI (ti, octave_base_value, octave_galois, octave_matrix);
+ }
+ 
+ /*
+diff -r 91279e205a70 src/op-gm-s.cc
+--- a/src/op-gm-s.cc	Sun Jan 20 19:13:40 2019 +0100
++++ b/src/op-gm-s.cc	Sun Jan 20 19:55:05 2019 +0100
+@@ -79,30 +79,30 @@
+ }
+ 
+ void
+-install_gm_s_ops (void)
++install_gm_s_ops (octave::type_info& ti)
+ {
+-  INSTALL_BINOP (op_add, octave_galois, octave_scalar, add);
+-  INSTALL_BINOP (op_sub, octave_galois, octave_scalar, sub);
+-  INSTALL_BINOP (op_mul, octave_galois, octave_scalar, mul);
+-  INSTALL_BINOP (op_div, octave_galois, octave_scalar, div);
+-  INSTALL_BINOP (op_pow, octave_galois, octave_scalar, pow);
+-  INSTALL_BINOP (op_ldiv, octave_galois, octave_scalar, ldiv);
+-  INSTALL_BINOP (op_lt, octave_galois, octave_scalar, lt);
+-  INSTALL_BINOP (op_le, octave_galois, octave_scalar, le);
+-  INSTALL_BINOP (op_eq, octave_galois, octave_scalar, eq);
+-  INSTALL_BINOP (op_ge, octave_galois, octave_scalar, ge);
+-  INSTALL_BINOP (op_gt, octave_galois, octave_scalar, gt);
+-  INSTALL_BINOP (op_ne, octave_galois, octave_scalar, ne);
+-  INSTALL_BINOP (op_el_mul, octave_galois, octave_scalar, el_mul);
+-  INSTALL_BINOP (op_el_div, octave_galois, octave_scalar, el_div);
+-  INSTALL_BINOP (op_el_pow, octave_galois, octave_scalar, el_pow);
+-  INSTALL_BINOP (op_el_ldiv, octave_galois, octave_scalar, el_ldiv);
+-  INSTALL_BINOP (op_el_and, octave_galois, octave_scalar, el_and);
+-  INSTALL_BINOP (op_el_or, octave_galois, octave_scalar, el_or);
++  INSTALL_BINOP_TI (ti, op_add, octave_galois, octave_scalar, add);
++  INSTALL_BINOP_TI (ti, op_sub, octave_galois, octave_scalar, sub);
++  INSTALL_BINOP_TI (ti, op_mul, octave_galois, octave_scalar, mul);
++  INSTALL_BINOP_TI (ti, op_div, octave_galois, octave_scalar, div);
++  INSTALL_BINOP_TI (ti, op_pow, octave_galois, octave_scalar, pow);
++  INSTALL_BINOP_TI (ti, op_ldiv, octave_galois, octave_scalar, ldiv);
++  INSTALL_BINOP_TI (ti, op_lt, octave_galois, octave_scalar, lt);
++  INSTALL_BINOP_TI (ti, op_le, octave_galois, octave_scalar, le);
++  INSTALL_BINOP_TI (ti, op_eq, octave_galois, octave_scalar, eq);
++  INSTALL_BINOP_TI (ti, op_ge, octave_galois, octave_scalar, ge);
++  INSTALL_BINOP_TI (ti, op_gt, octave_galois, octave_scalar, gt);
++  INSTALL_BINOP_TI (ti, op_ne, octave_galois, octave_scalar, ne);
++  INSTALL_BINOP_TI (ti, op_el_mul, octave_galois, octave_scalar, el_mul);
++  INSTALL_BINOP_TI (ti, op_el_div, octave_galois, octave_scalar, el_div);
++  INSTALL_BINOP_TI (ti, op_el_pow, octave_galois, octave_scalar, el_pow);
++  INSTALL_BINOP_TI (ti, op_el_ldiv, octave_galois, octave_scalar, el_ldiv);
++  INSTALL_BINOP_TI (ti, op_el_and, octave_galois, octave_scalar, el_and);
++  INSTALL_BINOP_TI (ti, op_el_or, octave_galois, octave_scalar, el_or);
+ 
+-  INSTALL_G_CATOP (octave_galois, octave_scalar, gm_s);
++  INSTALL_CATOP_TI (ti, octave_galois, octave_scalar, gm_s);
+ 
+-  INSTALL_ASSIGNOP (op_asn_eq, octave_galois, octave_scalar, assign);
++  INSTALL_ASSIGNOP_TI (ti, op_asn_eq, octave_galois, octave_scalar, assign);
+ }
+ 
+ /*
+diff -r 91279e205a70 src/op-m-gm.cc
+--- a/src/op-m-gm.cc	Sun Jan 20 19:13:40 2019 +0100
++++ b/src/op-m-gm.cc	Sun Jan 20 19:55:05 2019 +0100
+@@ -76,30 +76,30 @@
+ DEFASSIGNOP_FN (assign, matrix, galois, assign)
+ 
+ void
+-install_m_gm_ops (void)
++install_m_gm_ops (octave::type_info& ti)
+ {
+-  INSTALL_BINOP (op_add, octave_matrix, octave_galois, add);
+-  INSTALL_BINOP (op_sub, octave_matrix, octave_galois, sub);
+-  INSTALL_BINOP (op_mul, octave_matrix, octave_galois, mul);
+-  INSTALL_BINOP (op_div, octave_matrix, octave_galois, div);
+-  INSTALL_BINOP (op_pow, octave_matrix, octave_galois, pow);
+-  INSTALL_BINOP (op_ldiv, octave_matrix, octave_galois, ldiv);
+-  INSTALL_BINOP (op_lt, octave_matrix, octave_galois, lt);
+-  INSTALL_BINOP (op_le, octave_matrix, octave_galois, le);
+-  INSTALL_BINOP (op_eq, octave_matrix, octave_galois, eq);
+-  INSTALL_BINOP (op_ge, octave_matrix, octave_galois, ge);
+-  INSTALL_BINOP (op_gt, octave_matrix, octave_galois, gt);
+-  INSTALL_BINOP (op_ne, octave_matrix, octave_galois, ne);
+-  INSTALL_BINOP (op_el_mul, octave_matrix, octave_galois, el_mul);
+-  INSTALL_BINOP (op_el_div, octave_matrix, octave_galois, el_div);
+-  INSTALL_BINOP (op_el_pow, octave_matrix, octave_galois, el_pow);
+-  INSTALL_BINOP (op_el_ldiv, octave_matrix, octave_galois, el_ldiv);
+-  INSTALL_BINOP (op_el_and, octave_matrix, octave_galois, el_and);
+-  INSTALL_BINOP (op_el_or, octave_matrix, octave_galois, el_or);
++  INSTALL_BINOP_TI (ti, op_add, octave_matrix, octave_galois, add);
++  INSTALL_BINOP_TI (ti, op_sub, octave_matrix, octave_galois, sub);
++  INSTALL_BINOP_TI (ti, op_mul, octave_matrix, octave_galois, mul);
++  INSTALL_BINOP_TI (ti, op_div, octave_matrix, octave_galois, div);
++  INSTALL_BINOP_TI (ti, op_pow, octave_matrix, octave_galois, pow);
++  INSTALL_BINOP_TI (ti, op_ldiv, octave_matrix, octave_galois, ldiv);
++  INSTALL_BINOP_TI (ti, op_lt, octave_matrix, octave_galois, lt);
++  INSTALL_BINOP_TI (ti, op_le, octave_matrix, octave_galois, le);
++  INSTALL_BINOP_TI (ti, op_eq, octave_matrix, octave_galois, eq);
++  INSTALL_BINOP_TI (ti, op_ge, octave_matrix, octave_galois, ge);
++  INSTALL_BINOP_TI (ti, op_gt, octave_matrix, octave_galois, gt);
++  INSTALL_BINOP_TI (ti, op_ne, octave_matrix, octave_galois, ne);
++  INSTALL_BINOP_TI (ti, op_el_mul, octave_matrix, octave_galois, el_mul);
++  INSTALL_BINOP_TI (ti, op_el_div, octave_matrix, octave_galois, el_div);
++  INSTALL_BINOP_TI (ti, op_el_pow, octave_matrix, octave_galois, el_pow);
++  INSTALL_BINOP_TI (ti, op_el_ldiv, octave_matrix, octave_galois, el_ldiv);
++  INSTALL_BINOP_TI (ti, op_el_and, octave_matrix, octave_galois, el_and);
++  INSTALL_BINOP_TI (ti, op_el_or, octave_matrix, octave_galois, el_or);
+ 
+-  INSTALL_G_CATOP (octave_matrix, octave_galois, m_gm);
++  INSTALL_CATOP_TI (ti, octave_matrix, octave_galois, m_gm);
+ 
+-  INSTALL_ASSIGNOP (op_asn_eq, octave_matrix, octave_galois, assign);
++  INSTALL_ASSIGNOP_TI (ti, op_asn_eq, octave_matrix, octave_galois, assign);
+   //INSTALL_ASSIGNCONV (octave_base_value, octave_matrix, octave_galois);
+ }
+ 
+diff -r 91279e205a70 src/op-s-gm.cc
+--- a/src/op-s-gm.cc	Sun Jan 20 19:13:40 2019 +0100
++++ b/src/op-s-gm.cc	Sun Jan 20 19:55:05 2019 +0100
+@@ -83,30 +83,30 @@
+ }
+ 
+ void
+-install_s_gm_ops (void)
++install_s_gm_ops (octave::type_info& ti)
+ {
+-  INSTALL_BINOP (op_add, octave_scalar, octave_galois, add);
+-  INSTALL_BINOP (op_sub, octave_scalar, octave_galois, sub);
+-  INSTALL_BINOP (op_mul, octave_scalar, octave_galois, mul);
+-  INSTALL_BINOP (op_div, octave_scalar, octave_galois, div);
+-  INSTALL_BINOP (op_pow, octave_scalar, octave_galois, pow);
+-  INSTALL_BINOP (op_ldiv, octave_scalar, octave_galois, ldiv);
+-  INSTALL_BINOP (op_lt, octave_scalar, octave_galois, lt);
+-  INSTALL_BINOP (op_le, octave_scalar, octave_galois, le);
+-  INSTALL_BINOP (op_eq, octave_scalar, octave_galois, eq);
+-  INSTALL_BINOP (op_ge, octave_scalar, octave_galois, ge);
+-  INSTALL_BINOP (op_gt, octave_scalar, octave_galois, gt);
+-  INSTALL_BINOP (op_ne, octave_scalar, octave_galois, ne);
+-  INSTALL_BINOP (op_el_mul, octave_scalar, octave_galois, el_mul);
+-  INSTALL_BINOP (op_el_div, octave_scalar, octave_galois, el_div);
+-  INSTALL_BINOP (op_el_pow, octave_scalar, octave_galois, el_pow);
+-  INSTALL_BINOP (op_el_ldiv, octave_scalar, octave_galois, el_ldiv);
+-  INSTALL_BINOP (op_el_and, octave_scalar, octave_galois, el_and);
+-  INSTALL_BINOP (op_el_or, octave_scalar, octave_galois, el_or);
++  INSTALL_BINOP_TI (ti, op_add, octave_scalar, octave_galois, add);
++  INSTALL_BINOP_TI (ti, op_sub, octave_scalar, octave_galois, sub);
++  INSTALL_BINOP_TI (ti, op_mul, octave_scalar, octave_galois, mul);
++  INSTALL_BINOP_TI (ti, op_div, octave_scalar, octave_galois, div);
++  INSTALL_BINOP_TI (ti, op_pow, octave_scalar, octave_galois, pow);
++  INSTALL_BINOP_TI (ti, op_ldiv, octave_scalar, octave_galois, ldiv);
++  INSTALL_BINOP_TI (ti, op_lt, octave_scalar, octave_galois, lt);
++  INSTALL_BINOP_TI (ti, op_le, octave_scalar, octave_galois, le);
++  INSTALL_BINOP_TI (ti, op_eq, octave_scalar, octave_galois, eq);
++  INSTALL_BINOP_TI (ti, op_ge, octave_scalar, octave_galois, ge);
++  INSTALL_BINOP_TI (ti, op_gt, octave_scalar, octave_galois, gt);
++  INSTALL_BINOP_TI (ti, op_ne, octave_scalar, octave_galois, ne);
++  INSTALL_BINOP_TI (ti, op_el_mul, octave_scalar, octave_galois, el_mul);
++  INSTALL_BINOP_TI (ti, op_el_div, octave_scalar, octave_galois, el_div);
++  INSTALL_BINOP_TI (ti, op_el_pow, octave_scalar, octave_galois, el_pow);
++  INSTALL_BINOP_TI (ti, op_el_ldiv, octave_scalar, octave_galois, el_ldiv);
++  INSTALL_BINOP_TI (ti, op_el_and, octave_scalar, octave_galois, el_and);
++  INSTALL_BINOP_TI (ti, op_el_or, octave_scalar, octave_galois, el_or);
+ 
+-  INSTALL_G_CATOP (octave_scalar, octave_galois, s_gm);
++  INSTALL_CATOP_TI (ti, octave_scalar, octave_galois, s_gm);
+ 
+-  INSTALL_ASSIGNCONV (octave_scalar, octave_galois, octave_galois);
++  INSTALL_ASSIGNCONV_TI (ti, octave_scalar, octave_galois, octave_galois);
+ }
+ 
+ /*
+diff -r 91279e205a70 src/ov-galois.cc
+--- a/src/ov-galois.cc	Sun Jan 20 19:13:40 2019 +0100
++++ b/src/ov-galois.cc	Sun Jan 20 19:55:05 2019 +0100
+@@ -24,8 +24,8 @@
+ #include <octave/errwarn.h>
+ #include <octave/lo-ieee.h>
+ #include <octave/oct-locbuf.h>
+-#include <octave/oct-obj.h>
+ #include <octave/ov.h>
++#include <octave/ovl.h>
+ #include <octave/pr-output.h>
+ 
+ 
+@@ -535,7 +535,7 @@
+ 
+ bool
+ octave_galois::load_binary (std::istream& is, bool swap,
+-                            oct_mach_info::float_format fmt)
++                            octave::mach_info::float_format fmt)
+ {
+   char mord;
+   int32_t prim, mdims;
+diff -r 91279e205a70 src/ov-galois.h
+--- a/src/ov-galois.h	Sun Jan 20 19:13:40 2019 +0100
++++ b/src/ov-galois.h	Sun Jan 20 19:55:05 2019 +0100
+@@ -156,7 +156,7 @@
+   bool save_binary (std::ostream& os, bool& save_as_floats);
+ 
+   bool load_binary (std::istream& is, bool swap,
+-                    oct_mach_info::float_format fmt);
++                    octave::mach_info::float_format fmt);
+ 
+   bool save_hdf5 (octave_hdf5_id loc_id, const char *name, bool save_as_floats);
+ 
+diff -r 91279e205a70 src/primpoly.cc
+--- a/src/primpoly.cc	Sun Jan 20 19:13:40 2019 +0100
++++ b/src/primpoly.cc	Sun Jan 20 19:55:05 2019 +0100
+@@ -216,8 +216,8 @@
+       for (int i = (1<<m)+1; i < (1<<(1+m)); i+=2)
+         if (do_isprimitive (i, m))
+           {
+-            primpolys.resize (primpolys.length ()+1);
+-            primpolys(primpolys.length ()-1) = (double)i;
++            primpolys.resize (primpolys.numel ()+1);
++            primpolys(primpolys.numel ()-1) = (double)i;
+           }
+       break;
+     case PRIMPOLY_K:
+@@ -231,8 +231,8 @@
+             {
+               if (do_isprimitive (i, m))
+                 {
+-                  primpolys.resize (primpolys.length ()+1);
+-                  primpolys(primpolys.length ()-1) = (double)i;
++                  primpolys.resize (primpolys.numel ()+1);
++                  primpolys(primpolys.numel ()-1) = (double)i;
+                 }
+             }
+         }
+@@ -244,12 +244,12 @@
+ 
+   if (disp)
+     {
+-      if (primpolys.length () == 0)
++      if (primpolys.numel () == 0)
+         warning ("primpoly: No primitive polynomial satisfies the given constraints");
+       else
+         {
+           octave_stdout << std::endl << "Primitive polynomial(s) =" << std::endl << std::endl;
+-          for (int i = 0; i < primpolys.length (); i++)
++          for (int i = 0; i < primpolys.numel (); i++)
+             {
+               bool first = true;
+               for (int j = m; j >= 0; j--)
