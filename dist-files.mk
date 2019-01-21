@@ -511,6 +511,7 @@ SRC_FILES_1 := \
   of-octcdf.mk \
   of-odepkg-1-fixes.patch \
   of-odepkg-2-fixes.patch \
+  of-odepkg-3-deprecated.patch \
   of-odepkg.mk \
   of-optim-1-fixes.patch \
   of-optim.mk \
@@ -526,7 +527,7 @@ SRC_FILES_1 := \
   of-sockets-1-cross-fixes.patch \
   of-sockets.mk \
   of-sparsersb.mk \
-  of-specfun-1-cross-fixes.patch \
+  of-specfun-1-deprecated.patch \
   of-specfun.mk \
   of-splines.mk \
   of-statistics-1-cross.patch \
