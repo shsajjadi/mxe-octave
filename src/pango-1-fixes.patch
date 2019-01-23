@@ -1,0 +1,10 @@
+diff -ur pango-1.40.3.orig/pangowin32.pc.in pango-1.40.3/pangowin32.pc.in
+--- pango-1.40.3.orig/pangowin32.pc.in	2019-01-23 12:21:58.985618666 -0500
++++ pango-1.40.3/pangowin32.pc.in	2019-01-23 12:22:41.182578499 -0500
+@@ -8,5 +8,5 @@
+ Version: @VERSION@
+ Requires: pango
+ Libs: -L${libdir} -lpangowin32-@PANGO_API_VERSION@
+-Libs.private: -lgdi32 -lusp10
++Libs.private: -lusp10 -lgdi32
+ Cflags: -I${includedir}/pango-1.0
