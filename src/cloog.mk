@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 0.18.4
 $(PKG)_CHECKSUM := 8f7568ca1873f8d55bb694c8b9b83f7f4c6c1aa5
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := ftp://gcc.gnu.org/pub/gcc/infrastructure/$($(PKG)_FILE)
+$(PKG)_URL      := https://www.bastoul.net/cloog/pages/download/$($(PKG)_FILE)
 $(PKG)_DEPS     := build-gcc gmp isl
 
 # stick to tested versions from gcc
