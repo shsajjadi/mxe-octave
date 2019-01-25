@@ -1,0 +1,9 @@
+diff -uNr a/include/libmp3lame.sym b/include/libmp3lame.sym
+--- a/include/libmp3lame.sym	2017-09-06 19:33:35.000000000 +0000
++++ b/include/libmp3lame.sym	2019-01-25 18:35:48.099270155 +0000
+@@ -1,5 +1,4 @@
+ lame_init
+-lame_init_old
+ lame_set_num_samples
+ lame_get_num_samples
+ lame_set_in_samplerate
