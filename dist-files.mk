@@ -509,6 +509,7 @@ SRC_FILES_1 := \
   of-nurbs-2-dev-fixes.patch \
   of-nurbs.mk \
   of-ocs-1-cross-fixes.patch \
+  of-ocs-2-dev-fixes.patch \
   of-ocs.mk \
   of-octcdf.mk \
   of-odepkg-1-fixes.patch \
