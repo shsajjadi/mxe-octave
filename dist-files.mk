@@ -524,6 +524,7 @@ SRC_FILES_1 := \
   of-queueing.mk \
   of-signal-1-fixes.patch \
   of-signal-2-fixes.patch \
+  of-signal-3-fixes.patch \
   of-signal.mk \
   of-sockets-1-cross-fixes.patch \
   of-sockets.mk \
