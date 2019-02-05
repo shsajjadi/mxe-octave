@@ -38,5 +38,5 @@ define $(PKG)_BUILD
         --with-gnutls \
         $($(PKG)_CONFIG_OPTS) \
         PKG_CONFIG='$(MXE_PKG_CONFIG)'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install man_MANS=
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_DOCS) TARGET_DOCDIR='$(1)'
 endef

@@ -190,6 +190,7 @@ ifeq ($(ENABLE_DEP_DOCS),no)
     pkghtml_DATA= \
     examples_DATA= \
     dist_examples_SCRIPTS= \
+    dist_apidoc_DATA= \
     INFO_DEPS= 
 else
   MXE_DISABLE_DOCS :=
