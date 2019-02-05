@@ -334,8 +334,8 @@ Section "Shortcuts"
  CreateDirectory "\$SMPROGRAMS\\GNU Octave $VERSION"
  CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
  SetOutPath "%USERPROFILE%"
- CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (CLI).lnk" "\$INSTDIR\\octave.vbs" "--no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
- CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (GUI).lnk" "\$INSTDIR\\octave.vbs" "--force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (CLI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$INSTDIR\\octave.vbs\$\\" --no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (GUI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$INSTDIR\\octave.vbs\$\\" --force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
  SetOutPath "\$INSTDIR"
 
  ; fix the shortcuts for appid
@@ -385,8 +385,8 @@ set_ver_str:
 
 have_ver_str:
     SetOutPath "%USERPROFILE%"
-    CreateShortCut "\$desktop\\GNU Octave (CLI).lnk" "\$R0\\octave.vbs" "--no-gui" "\$R2" 0 SW_SHOWMINIMIZED
-    CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "\$R0\\octave.vbs" "--force-gui" "\$R2" 0 SW_SHOWMINIMIZED
+    CreateShortCut "\$desktop\\GNU Octave (CLI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --no-gui" "\$R2" 0 SW_SHOWMINIMIZED
+    CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --force-gui" "\$R2" 0 SW_SHOWMINIMIZED
 
     nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave (GUI).lnk" "gnu.octave.\$R1"'
     Pop \$0
@@ -486,12 +486,12 @@ not_registered_file:
 
  IfFileExists "\$desktop\\GNU Octave (CLI).lnk" 0 check_gui_shortcut 
  SetOutPath "%USERPROFILE%"
- CreateShortCut "\$desktop\\GNU Octave (CLI).lnk" "\$R0\\octave.vbs" "--no-gui" "\$R2" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$desktop\\GNU Octave (CLI).lnk" "%SYSTEMROOT%\system32\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --no-gui" "\$R2" 0 SW_SHOWMINIMIZED
 
 check_gui_shortcut:
  IfFileExists "\$desktop\\GNU Octave (GUI).lnk" 0 done_remove_desktop_shortcuts
  SetOutPath "%USERPROFILE%"
- CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "\$R0\\octave.vbs" "--force-gui" "\$R2" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "%SYSTEMROOT%\system32\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --force-gui" "\$R2" 0 SW_SHOWMINIMIZED
  nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave (GUI).lnk" "gnu.octave.\$R1"'
  Pop \$0
 
