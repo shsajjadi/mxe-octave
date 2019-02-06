@@ -28,6 +28,7 @@ define $(PKG)_BUILD
     cd '$(1)/../.build' && cmake \
         $($(PKG)_CMAKE_OPTS) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'  \
+        -DDOC_INSTALL_DIR='$(1)' \
         ../$($(PKG)_SUBDIR)
     make -C $(1)/../.build -j $(JOBS) 
     make -C $(1)/../.build -j 1 install DESTDIR=$(3)
