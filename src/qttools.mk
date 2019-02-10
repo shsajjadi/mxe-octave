@@ -4,7 +4,7 @@
 PKG             := qttools
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION   = $(qtbase_VERSION)
-$(PKG)_CHECKSUM := 25b37861ebbf3102baaed3c341aefb01056aa123
+$(PKG)_CHECKSUM := 134a0de2d0393e80fc13a5937f40144adaa9c312
 $(PKG)_SUBDIR    = $(subst qtbase,qttools,$(qtbase_SUBDIR))
 $(PKG)_FILE      = $(subst qtbase,qttools,$(qtbase_FILE))
 $(PKG)_URL       = $(subst qtbase,qttools,$(qtbase_URL))
