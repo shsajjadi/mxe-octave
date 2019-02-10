@@ -1,7 +1,7 @@
 diff -ur gnuplot-5.2.2.orig/config/mingw/Makefile gnuplot-5.2.2/config/mingw/Makefile
 --- gnuplot-5.2.2.orig/config/mingw/Makefile	2018-03-25 07:03:19.453562126 -0400
 +++ gnuplot-5.2.2/config/mingw/Makefile	2018-03-25 07:24:23.502361443 -0400
-@@ -107,18 +107,19 @@
+@@ -107,23 +107,24 @@
  # Uncomment the following lines to compile it.
  #WXT=1
  #CAIROLIBS=1
@@ -24,6 +24,12 @@ diff -ur gnuplot-5.2.2.orig/config/mingw/Makefile gnuplot-5.2.2/config/mingw/Mak
  endif
  endif
  
+ # Uncomment the following line to select the lua/tikz terminal
+-#LUA=lua
++LUA=lua
+ 
+ # Uncomment the following line to select the caca terminal
+ # Requires libcaca version 0.99.beta15 or newer. A post-beta18
 @@ -136,7 +137,7 @@
  
  # Uncomment if you have libcerf
