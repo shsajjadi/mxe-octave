@@ -13,7 +13,7 @@ $(PKG)_DEPS     :=
 $(PKG)_EXTRAFLAGS :=
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
-    $(PKG)_DEPS     += wxwidgets cairo  pango
+    $(PKG)_DEPS     += wxwidgets cairo pango lua
     $(PKG)_EXTRAFLAGS += CAIROTERMS=1 CAIROLIBS=1 
     $(PKG)_EXTRAFLAGS += WXT=1 WX_CONFIG=$(MXE_TOOL_PREFIX)wx-config
 endif
@@ -64,6 +64,17 @@ define $(PKG)_BUILD
     for f in $(1)/term/PostScript/*.txt; do \
       $(INSTALL) -m644 "$$f" '$(3)$(HOST_PREFIX)/share/PostScript/'; \
     done
+    # tikz terminal
+    $(INSTALL) -d '$(3)$(HOST_PREFIX)/share/lua'
+    $(INSTALL) -m644 "$(1)/term/lua/gnuplot-tikz.lua" '$(3)$(HOST_PREFIX)/share/lua/';
+    $(INSTALL) -d '$(3)$(HOST_PREFIX)/share/texmf/tex/latex/gnuplot/'
+    $(INSTALL) -m644 "$(1)/share/LaTeX/gnuplot-lua-tikz.sty" '$(3)$(HOST_PREFIX)/share/texmf/tex/latex/gnuplot/';
+    $(INSTALL) -d '$(3)$(HOST_PREFIX)/share/texmf/tex/plain/gnuplot/'
+    $(INSTALL) -m644 "$(1)/share/LaTeX/gnuplot-lua-tikz.tex" '$(3)$(HOST_PREFIX)/share/texmf/tex/plain/gnuplot/';
+    $(INSTALL) -d '$(3)$(HOST_PREFIX)/share/texmf/tex/context/gnuplot/'
+    $(INSTALL) -m644 "$(1)/share/LaTeX/t-gnuplot-lua-tikz.tex" '$(3)$(HOST_PREFIX)/share/texmf/tex/context/gnuplot/';
+    $(INSTALL) -d '$(3)$(HOST_PREFIX)/share/texmf/tex/generic/gnuplot/'
+    $(INSTALL) -m644 "$(1)/share/LaTeX/gnuplot-lua-tikz-common.tex" '$(3)$(HOST_PREFIX)/share/texmf/tex/generic/gnuplot/';
 
     ## MG: not sure what to do with these and how to integrate with DESTDIR
     $(INSTALL) -d '$(TOP_DIR)/gnuplot/bin'
