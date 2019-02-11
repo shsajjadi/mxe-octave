@@ -941,3 +941,160 @@ diff -r 6f05c32bbbaf -r 3243832f441c src/sl_ag08bd.cc
          F77_XFCN (dggev, DGGEV,
                   (jobvl, jobvr,
                    nfz,
+# HG changeset patch
+# User Mike Miller <mtmiller@octave.org>
+# Date 1549586531 28800
+#      Thu Feb 07 16:42:11 2019 -0800
+# Node ID 549466e74db52bae75e2da528c88f4a1c9339065
+# Parent  37e80b55b0f9339106a56c3b19118c1b1cdf05f4
+use numfields, drop all references to deleted nfields2 (bug #55671)
+
+* @lti/__lti_group__.m: Use numfields as a replacement for nfields2.  Remove
+workaround for ancient bug in orderfields.
+* @lti/__lti_prune__.m: Use numfields as a replacement for nfields2.
+* @lti/display.m: Likewise.
+* __control_helper_functions__.cc: Delete commented inclusion of nfields2.cc.
+* nfields2.cc: Delete.
+
+diff -r 37e80b55b0f9 -r 549466e74db5 inst/@lti/__lti_group__.m
+--- a/inst/@lti/__lti_group__.m	Thu Jan 10 11:52:56 2019 -0500
++++ b/inst/@lti/__lti_group__.m	Thu Feb 07 16:42:11 2019 -0800
+@@ -31,7 +31,7 @@
+   if (any (strcmpi (dim, {"blkdiag", "horzcat"})))  # blkdiag, horzcat
+     retlti.inname = [lti1.inname; lti2.inname];
+ 
+-    if (nfields2 (lti1.ingroup) || nfields2 (lti2.ingroup))
++    if (numfields (lti1.ingroup) || numfields (lti2.ingroup))
+       m1 = numel (lti1.inname);
+       lti2_ingroup = structfun (@(x) x + m1, lti2.ingroup, "uniformoutput", false);
+       retlti.ingroup = __merge_struct__ (lti1.ingroup, lti2_ingroup);
+@@ -44,7 +44,7 @@
+   if (any (strcmpi (dim, {"blkdiag", "vertcat"})))  # blkdiag, vertcat
+     retlti.outname = [lti1.outname; lti2.outname];
+ 
+-    if (nfields2 (lti1.outgroup) || nfields2 (lti2.outgroup))
++    if (numfields (lti1.outgroup) || numfields (lti2.outgroup))
+       p1 = numel (lti1.outname);
+       lti2_outgroup = structfun (@(x) x + p1, lti2.outgroup, "uniformoutput", false);
+       retlti.outgroup = __merge_struct__ (lti1.outgroup, lti2_outgroup);
+@@ -76,14 +76,8 @@
+   ## FIXME: this is too complicated;
+   ##        isn't there a simple function for this task?
+ 
+-  ## bug #40224: orderfields (struct ()) errors out in Octave 3.6.4
+-  ## therefore use nfields2 to check for empty structs
+-  if (nfields2 (a))
+-    a = orderfields (a);
+-  endif
+-  if (nfields2 (b))
+-    b = orderfields (b);
+-  endif
++  a = orderfields (a);
++  b = orderfields (b);
+ 
+   fa = fieldnames (a);
+   fb = fieldnames (b);
+diff -r 37e80b55b0f9 -r 549466e74db5 inst/@lti/__lti_prune__.m
+--- a/inst/@lti/__lti_prune__.m	Thu Jan 10 11:52:56 2019 -0500
++++ b/inst/@lti/__lti_prune__.m	Thu Feb 07 16:42:11 2019 -0800
+@@ -42,14 +42,14 @@
+     in_idx = vertcat (tmp{:});
+   endif
+ 
+-  if (nfields2 (lti.outgroup))
++  if (numfields (lti.outgroup))
+     p = numel (lti.outname);                        # get size before pruning outnames!
+     [lti.outgroup, empty] = structfun (@(x) __group_prune__ (x, out_idx, p), lti.outgroup, "uniformoutput", false);
+     empty = cell2mat (struct2cell (empty));
+     fields = fieldnames (lti.outgroup);
+     lti.outgroup = rmfield (lti.outgroup, fields(empty));
+   endif
+-  if (nfields2 (lti.ingroup))
++  if (numfields (lti.ingroup))
+     m = numel (lti.inname); 
+     [lti.ingroup, empty] = structfun (@(x) __group_prune__ (x, in_idx, m), lti.ingroup, "uniformoutput", false);
+     empty = cell2mat (struct2cell (empty));
+diff -r 37e80b55b0f9 -r 549466e74db5 inst/@lti/display.m
+--- a/inst/@lti/display.m	Thu Jan 10 11:52:56 2019 -0500
++++ b/inst/@lti/display.m	Thu Feb 07 16:42:11 2019 -0800
+@@ -24,11 +24,11 @@
+ 
+ function display (sys)
+ 
+-  if (nfields2 (sys.ingroup) > 0)
++  if (numfields (sys.ingroup) > 0)
+     __disp_group__ (sys.ingroup, "Input");
+   endif
+   
+-  if (nfields2 (sys.outgroup) > 0)
++  if (numfields (sys.outgroup) > 0)
+     __disp_group__ (sys.outgroup, "Output");
+   endif
+ 
+diff -r 37e80b55b0f9 -r 549466e74db5 src/__control_helper_functions__.cc
+--- a/src/__control_helper_functions__.cc	Thu Jan 10 11:52:56 2019 -0500
++++ b/src/__control_helper_functions__.cc	Thu Feb 07 16:42:11 2019 -0800
+@@ -6,9 +6,6 @@
+ #include "is_zp_vector.cc"
+ #include "lti_input_idx.cc"
+ 
+-// #include "nfields2.cc"  // delete this if support for Octave 3.8 gets dropped
+-
+-
+ 
+ // stub function to avoid gen_doc_cache warning upon package installation
+ DEFUN_DLD (__control_helper_functions__, args, nargout,
+diff -r 37e80b55b0f9 -r 549466e74db5 src/nfields2.cc
+--- a/src/nfields2.cc	Thu Jan 10 11:52:56 2019 -0500
++++ /dev/null	Thu Jan 01 00:00:00 1970 +0000
+@@ -1,23 +0,0 @@
+-#include <octave/oct.h>
+-#include <octave/ov-struct.h>
+-
+-// PKG_ADD: autoload ("nfields2", "__control_helper_functions__.oct");    
+-DEFUN_DLD (nfields2, args, ,
+-       "-*- texinfo -*-\n\
+-@deftypefn {Built-in Function} {} nfields (@var{s})\n\
+-Return the number of fields of the structure @var{s}.\n\
+-@end deftypefn")
+-{
+-  octave_value retval;
+-
+-  octave_idx_type nargin = args.length ();
+-
+-  if (nargin == 1 && args(0).is_map ())
+-    {
+-      retval = static_cast<double> (args(0).nfields ());
+-    }
+-  else
+-    print_usage ();
+-
+-  return retval;
+-}
+# HG changeset patch
+# User Mike Miller <mtmiller@octave.org>
+# Date 1549918550 28800
+#      Mon Feb 11 12:55:50 2019 -0800
+# Node ID 6c0a3108c82c8d2731e4615bef0c1c3e67cf0922
+# Parent  3b79c72063765b79f5b4e9dfa5acf36ea67d097d
+fix build failure with Octave 6 while remaining compatible (bug #55361)
+
+* common.h (f77_exception_encountered): Define as a constant to retain
+functionality that depends on this value in older versions of Octave.
+
+diff -r 3b79c7206376 -r 6c0a3108c82c src/common.h
+--- a/src/common.h	Thu Feb 07 17:38:25 2019 -0800
++++ b/src/common.h	Mon Feb 11 12:55:50 2019 -0800
+@@ -47,4 +47,12 @@
+ void warning_msg (const char name[], octave_idx_type index, octave_idx_type max, const char* msg[]);
+ void warning_msg (const char name[], octave_idx_type index, octave_idx_type max, const char* msg[], octave_idx_type offset);
+ 
++// FIXME: Keep until Octave 4.2 and older are no longer supported.
++// This conditional defines f77_exception_encountered as a dummy constant
++// to preserve code that needed to check its value to work correctly in older
++// versions of Octave.
++#if defined (OCTAVE_MAJOR_VERSION) && OCTAVE_MAJOR_VERSION >= 6
++static const int f77_exception_encountered = 0;
+ #endif
++
++#endif
