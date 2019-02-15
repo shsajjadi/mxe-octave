@@ -1,0 +1,13 @@
+diff -ur libxkbcommon-xkbcommon-0.8.3.orig/autogen.sh libxkbcommon-xkbcommon-0.8.3/autogen.sh
+--- libxkbcommon-xkbcommon-0.8.3.orig/autogen.sh	2019-02-15 10:00:40.949112324 -0500
++++ libxkbcommon-xkbcommon-0.8.3/autogen.sh	2019-02-15 10:02:53.100233678 -0500
+@@ -6,7 +6,7 @@
+ ORIGDIR=`pwd`
+ cd "$srcdir"
+ 
+-autoreconf --verbose --install --force --warnings=all
++autoreconf -I m4 --verbose --install --force --warnings=all
+ cd "$ORIGDIR"
+ 
+ if test -z "$NOCONFIGURE"; then
+Only in libxkbcommon-xkbcommon-0.8.3.orig: .autogen.sh.swp
