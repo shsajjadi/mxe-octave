@@ -35,7 +35,7 @@ else
   $(PKG)_DEPS += icu4c
   $(PKG)_CONFIGURE_OPTS += -icu
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
-    $(PKG)_DEPS += xdamage xdmcp xext xfixes xi xrender xt xxf86vm x11 xcb xcb-util xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm
+    $(PKG)_DEPS += xdamage xdmcp xext xfixes xi xrender xt xxf86vm x11 xcb xcb-util xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm xkbcommon
   endif
 endif
 
