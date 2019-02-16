@@ -18,7 +18,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && autoreconf && ./configure \
+    cd '$(1)' && aclocal && automake --add-missing && autoreconf && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(CONFIGURE_CPPFLAGS) \
         $(CONFIGURE_LDFLAGS) \

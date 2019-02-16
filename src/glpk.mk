@@ -17,13 +17,12 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && aclocal && libtoolize && autoreconf
     mkdir '$(1)/.build'
     cd '$(1)/.build' && '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
-	--with-gmp \
+        --with-gmp \
         --prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)'
     $(MAKE) -C '$(1)/.build' -j 1 install DESTDIR='$(3)'
