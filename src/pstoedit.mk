@@ -16,7 +16,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && autoreconf
+    cd '$(1)' && aclocal && automake --add-missing && autoreconf
     mkdir '$(1)/.build'
     cd '$(1)/.build' && '$(1)/configure' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \

@@ -3,8 +3,8 @@
 
 PKG             := build-automake
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.11.6
-$(PKG)_CHECKSUM := 29d7832b148e2157e03ad0d3620fbb7f5a13bc21
+$(PKG)_VERSION  := 1.16.1
+$(PKG)_CHECKSUM := 7a4d8d8b16d2f3cece5ab92c32aba094a4597d97
 $(PKG)_SUBDIR   := automake-$($(PKG)_VERSION)
 $(PKG)_FILE     := automake-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/automake/$($(PKG)_FILE)
