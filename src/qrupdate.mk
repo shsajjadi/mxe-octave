@@ -26,7 +26,7 @@ endef
 define $(PKG)_BUILD
     mkdir '$(1)/.build'
     touch '$(1)/NEWS' '$(1)/AUTHORS'
-    cd '$(1)' && aclocal && automake --add-missing && autoreconf -W none
+    cd '$(1)' && autoreconf -fi -I m4 -W none
     chmod a+rx '$(1)/configure'
     cd '$(1)/.build' && '$(1)/configure' \
         F77=$(MXE_F77) \
