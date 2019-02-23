@@ -3,11 +3,11 @@
 
 PKG             := fribidi
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.19.4
-$(PKG)_CHECKSUM := 23d1adf1e929a3fb159345d509918ad109e925ad
+$(PKG)_VERSION  := 0.19.7
+$(PKG)_CHECKSUM := e470e078eafe6c065708def3e037c129c0d7367d
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://fribidi.org/download/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/fribidi/fribidi/releases/download/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := glib
 
 define $(PKG)_UPDATE

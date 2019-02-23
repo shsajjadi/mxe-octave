@@ -100,7 +100,6 @@ SRC_FILES_1 := \
   freeimage.mk \
   freetds.mk \
   freetype.mk \
-  fribidi-1-fixes.patch \
   fribidi.mk \
   ftgl-1-gl-m4.patch \
   ftgl.mk \
