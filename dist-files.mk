@@ -131,6 +131,7 @@ SRC_FILES_1 := \
   gl2ps.mk \
   glew-test.c \
   glew.mk \
+  glib-1-fixes.patch \
   glib.mk \
   glibmm.mk \
   glpk-1-fixes.patch \
@@ -326,8 +327,6 @@ SRC_FILES_1 := \
   mingw-cairo-1-ssize-t-defined.patch \
   mingw-cfitsio-1-fixes.patch \
   mingw-epstool-1-fixes.patch \
-  mingw-glib-1-fixes.patch \
-  mingw-glib-2-fixes.patch \
   mingw-glpk-1-fixes.patch \
   mingw-hdf5-1.patch \
   mingw-lapack-1-xerbla.patch \
