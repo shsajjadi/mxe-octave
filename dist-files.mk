@@ -648,7 +648,6 @@ SRC_FILES_1 := \
   readline-1-sigwinch.patch \
   readline-2-event-hook.patch \
   readline.mk \
-  release-octave-1-defaults.patch \
   release-octave-1-gnulib.patch \
   release-octave.mk \
   renderproto.mk \

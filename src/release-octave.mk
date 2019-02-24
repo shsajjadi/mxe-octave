@@ -7,7 +7,7 @@
 ## builds for Windows that are distributed on ftp.gnu.org, you must
 ## choose the revision of mxe-octave that matches the release you
 ## wish to reproduce.  Those should be tagged in the mxe-octave archive
-## with tags like "octave-release-4.4.0".  The options used to build are
+## with tags like "octave-release-5.1.0".  The options used to build are
 ##
 ##   --enable-octave=release
 ##   --enable-binary-packages
@@ -31,12 +31,17 @@
 ##   * 32-bit Windows build:
 ##
 ##       --disable-windows-64 --disable-64 --disable-fortran-int64
+##
+## The extra digit in the $(PKG)_WIN_VERSION variable may be used to
+## distinguish builds that use the same base Octave sources but include
+## updated dependencies or other minor patches applied specifically for
+## Windows.
 
 PKG             := release-octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.4.1
-$(PKG)_WIN_VERSION := 4.4.1.0
-$(PKG)_CHECKSUM := 6d432c22c48a200214f4369f3c874dd779b1e70b
+$(PKG)_VERSION  := 5.1.0
+$(PKG)_WIN_VERSION := $($(PKG)_VERSION).0
+$(PKG)_CHECKSUM := 7b551647ff87add071cf0f13e7eb43a7125b5b11
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.lz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/octave/$($(PKG)_FILE)
