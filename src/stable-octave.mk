@@ -13,7 +13,7 @@
 
 PKG             := stable-octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.0.91
+$(PKG)_VERSION  := 5.1.1
 $(PKG)_WIN_VERSION := $($(PKG)_VERSION)
 $(PKG)_CHECKSUM := ## No checksum
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
