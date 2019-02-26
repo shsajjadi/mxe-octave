@@ -535,6 +535,7 @@ endif
 DEVEL_PACKAGES := 
 ifeq ($(ENABLE_DEVEL_TOOLS),yes)
   DEVEL_PACKAGES += gdb
+  DEVEL_PACKAGES += cmake
 endif
 
 
