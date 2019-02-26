@@ -12,10 +12,10 @@ $(PKG)_URL_2    := http://www.mpfr.org/mpfr-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := build-gcc gmp
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.mpfr.org/mpfr-current/#download' | \
-    grep 'mpfr-' | \
-    $(SED) -n 's,.*mpfr-\([0-9][^>]*\)\.tar.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://gforge.inria.fr/scm/viewvc.php/mpfr/tags/' | \
+    $(SED) -n 's,.*tags/\([0-9][^/]*\).*,\1,p' |
+    $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

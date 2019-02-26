@@ -11,8 +11,8 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/libsigc++/$(call SHORT
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'https://github.com/GNOME/libsigcplusplus/tags' | \
-    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    $(WGET) -q -O- 'https://ftp.gnome.org/pub/gnome/sources/libsigc++/2.3/' | \
+    $(SED) -n 's,.*libsigc++-\(2[^>]*\)\.tar.*,\1,ip' | $(SORT) -V | \
     tail -1
 endef
 
