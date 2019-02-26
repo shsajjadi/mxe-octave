@@ -3,11 +3,11 @@
 
 PKG             := qscintilla
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.10.8
-$(PKG)_CHECKSUM := 678f24ef98045eb40c29801b9abf1cbf8ca35e8e
+$(PKG)_VERSION  := 2.11.1
+$(PKG)_CHECKSUM := be05da5b4b548c650d8cc18370680b8f030c9f09
 $(PKG)_SUBDIR   := QScintilla_gpl-$($(PKG)_VERSION)
 $(PKG)_FILE     := QScintilla_gpl-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://sourceforge.net/projects/pyqt/files/QScintilla2/QScintilla-$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := https://www.riverbankcomputing.com/static/Downloads/QScintilla//$($(PKG)_FILE)
 
 
 ifeq ($(ENABLE_QT5),yes)

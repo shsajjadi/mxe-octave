@@ -619,9 +619,6 @@ SRC_FILES_1 := \
   qrupdate-1-fixes.patch \
   qrupdate.mk \
   qscintilla-1-fixes.patch \
-  qscintilla-2-matlab-block-comment.patch \
-  qscintilla-3-matlab-end-op.patch \
-  qscintilla-4-matlab-while-fold.patch \
   qscintilla.mk \
   qt-1-cherrypicks.patch \
   qt-2-shared-tools-fixes.patch \
