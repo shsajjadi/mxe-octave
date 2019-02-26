@@ -11,8 +11,8 @@ $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/gtkglext/gtkglextmm/$($(
 $(PKG)_DEPS     := gtkglext gtkmm2
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- https://github.com/GNOME/gtkglextmm/tags | \
-    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | grep -v '^1\.1\.' | $(SORT) -V | \
+    $(WGET) -q -O- 'https://ftp.gnome.org/pub/gnome/sources/gtkglextmm/1.2/' | \
+    $(SED) -n 's,.*gtkglextmm-\(1[^>]*\)\.tar.*,\1,ip' | $(SORT) -V | \
     tail -1
 endef
 
