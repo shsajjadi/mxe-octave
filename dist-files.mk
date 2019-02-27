@@ -20,7 +20,6 @@ SRC_FILES_1 := \
   boost-test.cpp \
   boost.mk \
   build-autoconf.mk \
-  build-automake-1-perl-5.patch \
   build-automake.mk \
   build-binutils.mk \
   build-bison.mk \
@@ -33,8 +32,8 @@ SRC_FILES_1 := \
   build-gperf.mk \
   build-libtool.mk \
   build-lzip.mk \
+  build-m4-glibc2-28.patch \
   build-m4.mk \
-  build-m4-glib2-28.patch \
   build-mako.mk \
   build-markupsafe.mk \
   build-msvctools.mk \
@@ -124,12 +123,7 @@ SRC_FILES_1 := \
   geos-test.c \
   geos.mk \
   gettext.mk \
-  ghostscript-mingw-i686-arch.h \
-  ghostscript-mingw-i686-gconfig_.h \
-  ghostscript-mingw-i686-makefile \
-  ghostscript-mingw-x86_64-arch.h \
-  ghostscript-mingw-x86_64-gconfig_.h \
-  ghostscript-mingw-x86_64-makefile \
+  ghostscript-1-fixes.patch \
   ghostscript.mk \
   giflib.mk \
   gl2ps-1-configure.patch \
@@ -139,6 +133,7 @@ SRC_FILES_1 := \
   glew.mk \
   glib.mk \
   glibmm.mk \
+  glpk-1-fixes.patch \
   glpk.mk \
   glproto.mk \
   glu.mk \
@@ -699,7 +694,6 @@ SRC_FILES_1 := \
   src-msys-wget.mk \
   src-msys-zip.mk \
   src-msys-zlib.mk \
-  stable-octave-1-defaults.patch \
   stable-octave-1-gnulib.patch \
   stable-octave.mk \
   suitesparse-1.patch \
@@ -720,6 +714,7 @@ SRC_FILES_1 := \
   transfig.mk \
   tre.mk \
   units.mk \
+  util-linux.mk \
   util-macros.mk \
   uuid.mk \
   vala.mk \
@@ -782,6 +777,8 @@ SRC_FILES_1 := \
   xine-lib-4-mkdir.patch \
   xine-lib-5-change_mma_h_to_mma_win32_h.patch \
   xine-lib.mk \
+  xkbcommon-1-fixes.patch \
+  xkbcommon.mk \
   xmlwrapp.mk \
   xproto.mk \
   xrender.mk \
@@ -939,6 +936,7 @@ SRC_MSYS2_FILES_1 := \
   msys2-libopenssl.mk \
   msys2-libp11-kit.mk \
   msys2-libpcre.mk \
+  msys2-libpcre2.mk \
   msys2-libpsl.mk \
   msys2-libreadline.mk \
   msys2-libsqlite.mk \
@@ -1003,6 +1001,7 @@ SRC_MSYS2_SRC_FILES_1 := \
   src-msys2-libopenssl.mk \
   src-msys2-libp11-kit.mk \
   src-msys2-libpcre.mk \
+  src-msys2-libpcre2.mk \
   src-msys2-libpsl.mk \
   src-msys2-libreadline.mk \
   src-msys2-libsqlite.mk \
@@ -1048,7 +1047,7 @@ TOOLS_FILES_1 := \
 TOOLS_FILES := $(addprefix tools/, $(TOOLS_FILES_1))
 
 FILES := \
-  HG-ID \
+  $(TOP_BUILD_DIR)/HG-ID \
   CNAME \
   README \
   binary-dist-rules.mk \
