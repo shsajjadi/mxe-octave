@@ -316,18 +316,7 @@ endif
 
 ENV_PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
-ifeq ($(BUILD_PKG_CONFIG_PATH),)
-  ifeq ($(PKG_CONFIG_PATH),)
-    BUILD_PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
-  else
-    ifneq (,$(wildcard /usr/lib/$(subst -pc,,$(BUILD_SYSTEM))))
-      BUILD_PKG_CONFIG_PATH := /usr/lib/$(subst -pc,,$(BUILD_SYSTEM))/pkgconfig
-    else
-      BUILD_PKG_CONFIG_PATH := /usr/lib/pkgconfig
-    endif
-  endif
-  export BUILD_PKG_CONFIG_PATH
-endif
+BUILD_PKG_CONFIG_PATH ?= @BUILD_PKG_CONFIG_PATH@
 
 CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(HOST_PREFIX)/include'
 ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)

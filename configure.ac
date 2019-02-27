@@ -99,6 +99,28 @@ AC_ARG_WITH([msys2],
    esac], [USE_MSYS2=yes])
 AC_SUBST(USE_MSYS2)
 
+# try find pkg-config build paths
+BUILD_PKG_CONFIG_PATH=auto
+AC_ARG_WITH([build-pkg-config-path],
+  [AS_HELP_STRING([--with-build-pkg-config-path=PATH],
+		  [use PATH as the build pkg-config path (default: auto)])],
+  [BUILD_PKG_CONFIG_PATH=$withval],
+  [BUILD_PKG_CONFIG_PATH=auto])
+
+if test "x$BUILD_PKG_CONFIG_PATH" = "xauto"; then
+  PKG_CHECK_VAR([BUILDPKGCONFIGPATH], [pkg-config], [pc_path])
+  AC_MSG_CHECKING([for build pkg-config paths])
+  if test "x$BUILDPKGCONFIGPATH" = "x"; then
+    AC_MSG_RESULT([couldnt auto detect pkg-config paths"])
+    BUILD_PKG_CONFIG_PATH=""
+  else
+    BUILD_PKG_CONFIG_PATH="$BUILDPKGCONFIGPATH"
+    AC_MSG_RESULT([$BUILD_PKG_CONFIG_PATH])
+  fi
+fi
+AC_SUBST(BUILD_PKG_CONFIG_PATH)
+
+
 AC_ARG_ENABLE([windows-64],
   [AS_HELP_STRING([--disable-windows-64],
     [don't build a Windows 64 cross compiler])],
