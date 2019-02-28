@@ -4,8 +4,8 @@
 PKG             := src-msys2-gzip
 $(PKG)_NAME     := gzip
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.9-1
-$(PKG)_CHECKSUM := f6ac30333018fd8bf28a58cd2db7f9fae1c2bae9
+$(PKG)_VERSION  := 1.10-1
+$(PKG)_CHECKSUM := e1667518b28cdb0ae3999ddb75c5a2f579c43eb2
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download
