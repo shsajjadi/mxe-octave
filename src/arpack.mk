@@ -3,8 +3,8 @@
 
 PKG             := arpack
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.6.3
-$(PKG)_CHECKSUM := f6dac662159529dec2319c08a1a75f8ff6ae2601
+$(PKG)_VERSION  := 3.7.0
+$(PKG)_CHECKSUM := cb5a6e1f3c5ab231440bbe30f4a0808d76215e93
 $(PKG)_SUBDIR   := $(PKG)-ng-$($(PKG)_VERSION)
 $(PKG)_FILE     := arpack-ng_$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://github.com/opencollab/arpack-ng/archive/$($(PKG)_VERSION).tar.gz
