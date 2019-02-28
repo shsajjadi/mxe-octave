@@ -1051,6 +1051,7 @@ FILES := \
   CNAME \
   README \
   binary-dist-rules.mk \
+  bootstrap \
   build_packages.m \
   configure \
   configure.ac \
