@@ -1050,7 +1050,7 @@ FILES := \
   $(TOP_BUILD_DIR)/HG-ID \
   CNAME \
   README \
-  aclocal.m4
+  aclocal.m4 \
   binary-dist-rules.mk \
   bootstrap \
   build_packages.m \
