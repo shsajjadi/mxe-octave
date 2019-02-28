@@ -4,9 +4,9 @@
 PKG             := msys2-diffutils
 $(PKG)_NAME     := diffutils
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.6-1
-$(PKG)_x86_64_CS := fb785a2c68a90424b59168cadc88cb206e98a085
-$(PKG)_i686_CS  := a982f33dfafd3b35d79fd8b1f720a70a15bd1d02
+$(PKG)_VERSION  := 3.7-1
+$(PKG)_x86_64_CS := 582a128dd21bb642e5dd8953cbb3ac64ca0bc354
+$(PKG)_i686_CS  := 5639c10c4afe0b8e0bc39b2bb8fb6efb121e2efe
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
