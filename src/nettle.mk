@@ -3,8 +3,8 @@
 
 PKG             := nettle
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.4
-$(PKG)_CHECKSUM := f3c8495b7c43cba9cdd19503e7567095c680b490
+$(PKG)_VERSION  := 3.4.1
+$(PKG)_CHECKSUM := 56a81ed4a8d35489d8bddd99d5262fe3958a52b4
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.lysator.liu.se/~nisse/archive/$($(PKG)_FILE)
@@ -15,6 +15,7 @@ define $(PKG)_UPDATE
     $(SED) -n 's,.*nettle-\([0-9][^>]*\)\.tar.*,\1,p' | \
     grep -v 'pre' | \
     grep -v 'rc' | \
+    $(SORT) |
     tail -1
 endef
 

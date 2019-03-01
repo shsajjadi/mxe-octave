@@ -3,9 +3,9 @@
 
 PKG             := libidn2
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.1.0
-$(PKG)_CHECKSUM := dffdab4dd69ad39f6a65cebc464c2603a136f074
-$(PKG)_SUBDIR   := libidn2-$($(PKG)_VERSION)
+$(PKG)_VERSION  := 2.1.1a
+$(PKG)_CHECKSUM := 3a668f43efb6c36e32e9841775efff04aef18c0b
+$(PKG)_SUBDIR   := libidn2-2.1.1
 $(PKG)_FILE     := libidn2-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/libidn/$($(PKG)_FILE)
 $(PKG)_DEPS     := gettext libiconv libunistring

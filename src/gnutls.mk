@@ -2,16 +2,16 @@
 # See index.html for further information.
 
 PKG             := gnutls
-$(PKG)_VERSION  := 3.4.17
-$(PKG)_CHECKSUM := 52dab0301022199a34888fa6ed97d92e602ccd60
+$(PKG)_VERSION  := 3.6.6
+$(PKG)_CHECKSUM := d094f3c554b40d76dac2d2d75a8a141c008dc6c4
 $(PKG)_SUBDIR   := gnutls-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnutls-$($(PKG)_VERSION).tar.xz
-$(PKG)_URL      := ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/$($(PKG)_FILE)
-$(PKG)_URL_2    := http://mirrors.dotsrc.org/gnupg/gnutls/v3.4/$($(PKG)_FILE)
-$(PKG)_DEPS     := gettext nettle pcre zlib
+$(PKG)_URL      := ftp://ftp.gnutls.org/gcrypt/gnutls/v3.6/$($(PKG)_FILE)
+$(PKG)_URL_2    := https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v3.5/$($(PKG)_FILE)
+$(PKG)_DEPS     := gettext libidn2 libunistring nettle pcre zlib
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- https://gnupg.org/ftp/gcrypt/gnutls/v3.5/ | \
+    $(WGET) -q -O- https://gnupg.org/ftp/gcrypt/gnutls/v3.6/ | \
     $(SED) -n 's,.*gnutls-\([1-9]\+\.[0-9]\+.[0-9]\+\)\..*,\1,p' | \
     $(SORT) -V | \
     tail -1
@@ -30,7 +30,7 @@ endif
 
 define $(PKG)_BUILD
     $(SED) -i 's, sed , $(SED) ,g' '$(1)/gl/tests/Makefile.am'
-    cd '$(1)' && autoreconf -fi  -I m4 -I gl/m4 -I src/libopts/m4
+    cd '$(1)' && autoreconf -fi  -I m4 -I src/libopts/m4
     if [ "$(MXE_NATIVE_BUILD)" = no ]; then \
       $(SED) -i 's/libopts_cv_with_libregex=no/libopts_cv_with_libregex=yes/g;' '$(1)/configure'; \
     fi
@@ -44,6 +44,7 @@ define $(PKG)_BUILD
         --disable-nls \
         --disable-guile \
         --disable-doc \
+        --disable-tests \
         --with-included-libtasn1 \
         --with-libregex='$(HOST_PREFIX)' \
         --with-regex-header=pcreposix.h \
