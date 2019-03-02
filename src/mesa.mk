@@ -8,6 +8,8 @@ $(PKG)_SUBDIR   := mesa-$($(PKG)_VERSION)
 $(PKG)_FILE     := mesa-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.freedesktop.org/pub/mesa/$($(PKG)_FILE)
 $(PKG)_DEPS     := build-mako expat zlib llvm s2tc
+
+$(PKG)_PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   ifeq ($(USE_SYSTEM_OPENGL),no)
     $(PKG)_SCONS_OPENGL_OPTIONS := libgl-gdi
@@ -21,13 +23,17 @@ else
       --with-platforms=""
   else
     $(PKG)_CONFIGURE_OPENGL_OPTIONS := \
-      --enable-opengl --enable-egl --enable-gles1 --enable-gles2 \
-      --with-gallium-drivers="swrast" --with-dri-drivers="" \
-      --with-platforms="x11"
+      --enable-glx="gallium-xlib" --with-gallium-drivers="swrast" \
+      --disable-dri --disable-gbm --disable-egl
     ifeq ($(USE_SYSTEM_X11_LIBS),no)
       $(PKG)_DEPS += dri2proto glproto libdrm libxshmfence x11 xdamage xext xfixes
+    else
+      $(PKG)_PKG_CONFIG_PATH := $(PKG_CONFIG_PATH):$(BUILD_PKG_CONFIG_PATH)
     endif
   endif
+  $(PKG)_CONFIGURE_ENV += \
+      PKG_CONFIG="$(MXE_PKG_CONFIG)" \
+      PKG_CONFIG_LIBDIR=$($(PKG)_PKG_CONFIG_PATH)
 endif
 
 define $(PKG)_UPDATE
