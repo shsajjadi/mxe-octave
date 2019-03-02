@@ -204,7 +204,7 @@ ifeq ($(MXE_SYSTEM), gnu-linux)
     for f in $(OCTAVE_WRAPPER_SCRIPTS); do \
       mv $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION) \
 	 $(OCTAVE_DIST_DIR)/bin/$$f-$($(OCTAVE_TARGET)_VERSION).real; \
-      $(SED) < octave-wrapper.in \
+      $(SED) < $(TOP_DIR)/octave-wrapper.in \
 	-e "s|@GCC_VERSION@|$(native-gcc_VERSION)|" \
 	-e "s|@GCC_ARCH@|$(TARGET)|" \
 	-e "s|@OCTAVE_VERSION@|$($(OCTAVE_TARGET)_VERSION)|" \
