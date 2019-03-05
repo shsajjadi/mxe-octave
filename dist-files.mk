@@ -65,6 +65,7 @@ SRC_FILES_1 := \
   curl-test.c \
   curl.mk \
   damageproto.mk \
+  dbus-1-fixes.patch \
   dbus.mk \
   dcmtk-1-fixes.patch \
   dcmtk-2-ming64.patch \
