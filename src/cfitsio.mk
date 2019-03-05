@@ -3,8 +3,8 @@
 
 PKG             := cfitsio
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3410
-$(PKG)_CHECKSUM := 09a77d3a6b13f2c788edfad16cdc479dc5f42961
+$(PKG)_VERSION  := 3450
+$(PKG)_CHECKSUM := 85b4adeba79a7691114695e6bafd6d968e68c21f
 $(PKG)_SUBDIR   := $(PKG)
 $(PKG)_FILE     := $(PKG)$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/$($(PKG)_FILE)
@@ -13,6 +13,11 @@ $(PKG)_DEPS     :=
 $(PKG)_MAKE_FLAGS :=
 ifeq ($(BUILD_SHARED),yes)
   $(PKG)_MAKE_FLAGS += shared
+endif
+
+$(PKG)_CONFIGURE_FLAGS :=
+ifeq ($(MXE_SYSTEM),mingw)
+  $(PKG)_CONFIGURE_FLAGS += CURLCONFIG=none
 endif
 
 define $(PKG)_UPDATE
@@ -48,9 +53,10 @@ define $(PKG)_BUILD
 endef
 else
 define $(PKG)_BUILD
-    cd '$(1)' && '$(1)/configure' \
+    cd '$(1)' && autoreconf -fi && '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+	$($(PKG)_CONFIGURE_FLAGS) \
         --prefix='$(HOST_PREFIX)' 
     $(MAKE) -C '$(1)' -j '$(JOBS)' $($(PKG)_MAKE_FLAGS)
     $(MAKE) -C '$(1)' -j 1 install
