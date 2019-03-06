@@ -3,16 +3,15 @@
 
 PKG             := util-linux
 $(PKG)_VERSION  := 2.32.1
-$(PKG)_BASE_VER := 2.32
 $(PKG)_CHECKSUM := de9271fb93fb651d21c027e2efb0cf0ac80f2e9a
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
-$(PKG)_URL      := https://www.kernel.org/pub/linux/utils/util-linux/v$($(PKG)_BASE_VER)/$($(PKG)_FILE)
+$(PKG)_URL      := https://www.kernel.org/pub/linux/utils/util-linux/v$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $(gl2ps_VERSION)
+    echo $($(PKG)_VERSION)
 endef
 
 ## For now, we are only building libuuid.
