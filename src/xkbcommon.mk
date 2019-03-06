@@ -3,8 +3,8 @@
 
 PKG             := xkbcommon
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.8.3
-$(PKG)_CHECKSUM := 76c642b656f6dbd29a3ed195fffcaf8cf44634d4
+$(PKG)_VERSION  := 0.8.4
+$(PKG)_CHECKSUM := 0f533ffdc7fe888eedf10648895b64b01e94d06e
 $(PKG)_SUBDIR   := libxkbcommon-$(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://github.com/$(PKG)/libxkbcommon/archive/$($(PKG)_FILE)
