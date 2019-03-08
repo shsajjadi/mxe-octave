@@ -15,6 +15,13 @@ ifeq ($(BUILD_SHARED),yes)
   $(PKG)_CONFIGURE_ARGS := -Duseshrplib
 endif
 
+define $(PKG)_UPDATE
+    $(WGET) -q -O- 'http://www.cpan.org/src/5.0' | \
+    $(SED) -n 's,.*<a href="perl-\([0-9\.]*\)\.tar.gz.*",\1,p' | \
+    $(SORT) -V | \
+    tail -1
+endef
+
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD
   endef
