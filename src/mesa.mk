@@ -77,7 +77,6 @@ else
         --disable-osmesa \
         --disable-gbm \
         --disable-xvmc \
-        --enable-texture-float \
         && $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
