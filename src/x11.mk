@@ -3,12 +3,19 @@
 
 PKG             := x11
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.6.5
-$(PKG)_CHECKSUM := c32155467508dfe783f9296ef22ee6ed53cae7df
+$(PKG)_VERSION  := 1.6.7
+$(PKG)_CHECKSUM := 5076f7853713d7db958a05f6fd1c18f7e111a0ad
 $(PKG)_SUBDIR   := libX11-$($(PKG)_VERSION)
 $(PKG)_FILE     := libX11-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     := inputproto kbproto xcb xextproto xproto xtrans
+
+define $(PKG)_UPDATE
+    $(WGET) -q -O- 'https://www.x.org/archive/individual/lib/' | \
+    $(SED) -n 's,.*<a href="libX11-\([0-9\.]*\)\.tar.gz".*,\1,p' | \
+    $(SORT) -V |
+    tail -1
+endef
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   define $(PKG)_BUILD
