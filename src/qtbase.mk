@@ -24,6 +24,7 @@ $(PKG)_PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 
 ifeq ($(USE_SYSTEM_OPENGL),no)
   $(PKG)_DEPS += mesa
+  $(PKG)_CONFIGURE_OPTS += -no-egl
 endif
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   ifeq ($(ENABLE_WINDOWS_64),yes)
