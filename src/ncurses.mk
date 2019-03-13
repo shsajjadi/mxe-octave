@@ -30,16 +30,11 @@ else
 endif
 endif
 
-ifeq ($(MXE_WINDOWS_BUILD),no)
-  $(PKG)_CONFIG_OPTS += --with-versioned-syms
-endif
-
 $(PKG)_COMMON_CONFIG_OPTS := \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix=$(HOST_PREFIX) \
         --disable-home-terminfo \
-        --with-termlib \
         --enable-sp-funcs \
         --enable-interop \
         --without-debug \
