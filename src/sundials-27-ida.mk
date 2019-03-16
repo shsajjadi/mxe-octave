@@ -1,10 +1,11 @@
 # This file is part of MXE.
 # See index.html for further information.
+# This file can be removed once Octave 5 is phased out.
 
-PKG             := sundials-ida
+PKG             := sundials-27-ida
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.1.0
-$(PKG)_CHECKSUM := ef2a4175b3974960febd5cba4f65e53628009cc6
+$(PKG)_VERSION  := 2.7.0
+$(PKG)_CHECKSUM := 3559c375ce9f875542e4a39978908f91792e6d57
 $(PKG)_SUBDIR   := sundials-$($(PKG)_VERSION)
 $(PKG)_FILE     := sundials-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://computation.llnl.gov/projects/sundials/download/$($(PKG)_FILE)
