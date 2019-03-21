@@ -1,0 +1,89 @@
+Common subdirectories: readline-8.0.input/doc and readline-8.0/doc
+Common subdirectories: readline-8.0.input/examples and readline-8.0/examples
+diff -u readline-8.0.input/readline.c readline-8.0/readline.c
+--- readline-8.0.input/readline.c	2019-03-20 08:02:03.533512025 -0400
++++ readline-8.0/readline.c	2019-03-20 08:06:59.117185446 -0400
+@@ -1103,8 +1103,12 @@
+       RL_SETSTATE(RL_STATE_INITIALIZED);
+     }
+   else
+-    (void)_rl_init_locale ();	/* check current locale */
+-
++    {
++      (void)_rl_init_locale ();	/* check current locale */
++#if defined (__MINGW32__)
++      rl_reset_screen_size ();
++#endif      
++    }
+   /* Initialize the current line information. */
+   _rl_init_line_state ();
+ 
+Common subdirectories: readline-8.0.input/shlib and readline-8.0/shlib
+diff -u readline-8.0.input/signals.c readline-8.0/signals.c
+--- readline-8.0.input/signals.c	2019-03-20 08:02:03.529511918 -0400
++++ readline-8.0/signals.c	2019-03-20 08:13:44.347195350 -0400
+@@ -46,6 +46,11 @@
+ 
+ #include "rlprivate.h"
+ 
++#if defined (__MINGW32__)
++#  define WIN32_LEAN_AND_MEAN
++#  include <windows.h>
++#endif
++
+ #if defined (HANDLE_SIGNALS)
+ 
+ #if !defined (RETSIGTYPE)
+@@ -92,7 +97,7 @@
+ int rl_catch_signals = 1;
+ 
+ /* If non-zero, readline will install a signal handler for SIGWINCH. */
+-#ifdef SIGWINCH
++#if defined (SIGWINCH) || defined(__MINGW32__)
+ int rl_catch_sigwinch = 1;
+ #else
+ int rl_catch_sigwinch = 0;	/* for the readline state struct in readline.c */
+@@ -495,6 +500,21 @@
+     }
+ #endif /* SIGWINCH */
+ 
++#if defined (__MINGW32__)
++  if (rl_catch_sigwinch && sigwinch_set_flag == 0)
++    {
++      DWORD mode;
++      HANDLE hStdIn = GetStdHandle (STD_INPUT_HANDLE);
++
++      if (GetConsoleMode (hStdIn, &mode))
++        {
++          mode |= ENABLE_WINDOW_INPUT;
++          if (SetConsoleMode (hStdIn, mode))
++            sigwinch_set_flag = 1;
++        }
++    }
++#endif
++
+   return 0;
+ }
+ 
+@@ -545,6 +565,20 @@
+       sigwinch_set_flag = 0;
+     }
+ #endif
++#if defined (__MINGW32__)
++  if (rl_catch_sigwinch && sigwinch_set_flag == 1)
++    {
++      DWORD mode;
++      HANDLE hStdIn = GetStdHandle (STD_INPUT_HANDLE);
++
++      if (GetConsoleMode (hStdIn, &mode))
++        {
++          mode &= ~ENABLE_WINDOW_INPUT;
++          if (SetConsoleMode (hStdIn, mode))
++            sigwinch_set_flag = 0;
++        }
++    }
++#endif
+ 
+   return 0;
+ }
+Common subdirectories: readline-8.0.input/support and readline-8.0/support

@@ -1,0 +1,109 @@
+diff -ur readline-8.0.orig/display.c readline-8.0.disp/display.c
+--- readline-8.0.orig/display.c	2019-03-20 07:41:37.573786782 -0400
++++ readline-8.0.disp/display.c	2019-03-20 17:00:29.866659451 -0400
+@@ -59,6 +59,11 @@
+ #include "rlprivate.h"
+ #include "xmalloc.h"
+ 
++#if defined (_WIN32)
++#include <windows.h>
++#define hStdout GetStdHandle(STD_OUTPUT_HANDLE)
++#endif
++
+ #if !defined (strchr) && !defined (__STDC__)
+ extern char *strchr (), *strrchr ();
+ #endif /* !strchr && !__STDC__ */
+@@ -2367,6 +2372,20 @@
+   int in_invisline;
+   int mb_cur_max = MB_CUR_MAX;
+ 
++#if defined (_WIN32)
++  CONSOLE_SCREEN_BUFFER_INFO csbi;
++  if (_rl_last_c_pos != new
++      && GetConsoleScreenBufferInfo (hStdout, &csbi))
++    {
++      csbi.dwCursorPosition.X += new - _rl_last_c_pos;
++      if (SetConsoleCursorPosition(hStdout, csbi.dwCursorPosition))
++        {
++          _rl_last_c_pos = new;
++          return;
++        }
++    }
++#endif /* !_WIN32 */
++
+   woff = WRAP_OFFSET (_rl_last_v_pos, wrap_offset);
+   cpos = _rl_last_c_pos;
+ 
+@@ -2519,6 +2538,20 @@
+ {
+   register int delta, i;
+ 
++#if defined (_WIN32)
++  CONSOLE_SCREEN_BUFFER_INFO csbi;
++  if (_rl_last_v_pos != to && to <= _rl_screenheight
++      && GetConsoleScreenBufferInfo(hStdout, &csbi))
++    {
++      csbi.dwCursorPosition.Y += to - _rl_last_v_pos;
++      if (SetConsoleCursorPosition(hStdout, csbi.dwCursorPosition))
++        {
++          _rl_last_v_pos = to;
++          return;
++        }
++    }
++#endif /* !_WIN32 */
++
+   if (_rl_last_v_pos == to || to > _rl_screenheight)
+     return;
+ 
+@@ -2848,6 +2881,17 @@
+ void
+ _rl_clear_to_eol (int count)
+ {
++#if defined (_WIN32)
++  CONSOLE_SCREEN_BUFFER_INFO csbi;
++  if (GetConsoleScreenBufferInfo (hStdout, &csbi))
++    {
++      DWORD written;
++      FillConsoleOutputCharacter(hStdout, ' ', count, csbi.dwCursorPosition,
++                                 &written);
++      return;
++    }
++#endif /* !_WIN32 */
++
+ #ifndef __MSDOS__
+   if (_rl_term_clreol)
+     tputs (_rl_term_clreol, 1, _rl_output_character_function);
+@@ -2873,6 +2917,33 @@
+ void
+ _rl_clear_screen (void)
+ {
++#if defined (_WIN32)
++  COORD coordScreen = { 0, 0 };
++  DWORD cCharsWritten;
++  CONSOLE_SCREEN_BUFFER_INFO csbi; 
++  DWORD dwConSize;
++
++  if (GetConsoleScreenBufferInfo (hStdout, &csbi))
++    {
++      dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
++
++      if (FillConsoleOutputCharacter (hStdout, (TCHAR) ' ', dwConSize,
++                                      coordScreen, &cCharsWritten))
++        {
++          if (GetConsoleScreenBufferInfo (hStdout, &csbi))
++            {
++              if (FillConsoleOutputAttribute (hStdout, csbi.wAttributes,
++                                              dwConSize, coordScreen,
++                                              &cCharsWritten))
++                {
++                  SetConsoleCursorPosition (hStdout, coordScreen);
++                  return;
++                }
++            }
++        }
++    }
++#endif
++
+ #if defined (__DJGPP__)
+   ScreenClear ();
+   ScreenSetCursor (0, 0);
