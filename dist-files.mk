@@ -632,7 +632,11 @@ SRC_FILES_1 := \
   qwt.mk \
   qwtplot3d-1-fixes.patch \
   qwtplot3d.mk \
+  readline-1-display.patch \
   readline-1-fixes.patch \
+  readline-1-input.patch \
+  readline-1-sigwinch.patch \
+  readline-2-event-hook.patch \
   readline.mk \
   release-octave-1-gnulib.patch \
   release-octave.mk \
