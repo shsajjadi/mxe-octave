@@ -278,6 +278,7 @@ SRC_FILES_1 := \
   libodbc++.mk \
   liboil.mk \
   libpano13.mk \
+  libpaper-1-noundefined.patch \
   libpaper.mk \
   libpng-test.c \
   libpng.mk \
