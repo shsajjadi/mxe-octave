@@ -3,8 +3,8 @@
 
 PKG             := libpaper
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.1.24+nmu2
-$(PKG)_CHECKSUM := 40f16453d7752bf5e3c9e74515650eb37edbb3fe
+$(PKG)_VERSION  := 1.1.26
+$(PKG)_CHECKSUM := eb8b0b0c5f6c526911f56158a6a8cd98bc6a6089
 $(PKG)_SUBDIR   := libpaper-$($(PKG)_VERSION)
 $(PKG)_FILE     := libpaper_$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.debian.org/debian/pool/main/libp/$(PKG)/$($(PKG)_FILE)
@@ -18,7 +18,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && ./configure \
+    cd '$(1)' && autoreconf -fi && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)'
