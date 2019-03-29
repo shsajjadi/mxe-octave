@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 1.3.0
 $(PKG)_CHECKSUM := b7574e9f0826bedef975d64d3825f75fbaeef55e
 $(PKG)_SUBDIR   := yasm-$($(PKG)_VERSION)
 $(PKG)_FILE     := yasm-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://www.tortall.net/projects/$(PKG)/releases/$($(PKG)_FILE)
+$(PKG)_URL      := http://www.tortall.net/projects/yasm/releases/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
