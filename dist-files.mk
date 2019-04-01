@@ -182,7 +182,6 @@ SRC_FILES_1 := \
   hunspell-test.cpp \
   hunspell.mk \
   ice.mk \
-  icu4c-1-fixes.patch \
   icu4c.mk \
   id3lib-1-win32.patch \
   id3lib.mk \
