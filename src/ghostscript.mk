@@ -3,9 +3,9 @@
 
 PKG             := ghostscript
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 9.26
+$(PKG)_VERSION  := 9.27
 $(PKG)_NODOTVER := $(subst .,,$($(PKG)_VERSION))
-$(PKG)_CHECKSUM := 2727000ebee0d08311705859a31a504e259f0d98
+$(PKG)_CHECKSUM := f926d2cfb418a7c5d92dce0a9843fa01ee62fe2c
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs$($(PKG)_NODOTVER)/$($(PKG)_FILE)
