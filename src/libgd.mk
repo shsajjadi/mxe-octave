@@ -19,7 +19,7 @@ endif
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package libgd.' >&2;
-    echo $(gd_VERSION)
+    echo $(libgd_VERSION)
 endef
 
 define $(PKG)_BUILD
