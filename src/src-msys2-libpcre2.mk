@@ -4,8 +4,8 @@
 PKG             := src-msys2-libpcre2
 $(PKG)_NAME     := pcre2
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 10.32-1
-$(PKG)_CHECKSUM := a6bcbac0dd2eee67d7ce588f0466b2e90a5eec9a
+$(PKG)_VERSION  := 10.33-2
+$(PKG)_CHECKSUM := 22f71394cdf26551baa3f223750044ae11bd813a
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download
