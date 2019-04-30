@@ -4,9 +4,9 @@
 PKG             := msys2-mintty
 $(PKG)_NAME     := mintty
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1~2.9.5-1
-$(PKG)_x86_64_CS := 7a114bf19a8069d33aaeefa664709472d8b56495
-$(PKG)_i686_CS  := 914c7ebcbab1f295bb23ba9927b4e507e63f1343
+$(PKG)_VERSION  := 1~3.0.0-1
+$(PKG)_x86_64_CS := 2148825f6afd1ae3891d1be1ff52fc134367a86d
+$(PKG)_i686_CS  := f79e2f65b051c0092733694b832a4ee836dd2566
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 

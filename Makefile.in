@@ -993,7 +993,7 @@ define MSYS2_UPDATE
     $(if $(2),
         $(if $(filter $(2),$($(1)_IGNORE)),
             $(info IGNORED  $(1)  $(2)),
-            $(if $(filter $(2),$($(1)_VERSION)x),
+            $(if $(filter $(2),$($(1)_VERSION)),
                 $(info .        $(1)  $(2)),
                 $(info NEW      $(1)  $($(1)_VERSION) --> $(2))
                 $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $(2)/' '$(TOP_DIR)/src/$(1).mk'
