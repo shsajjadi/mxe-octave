@@ -50,6 +50,9 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       npp
   endif
 
+  # other packages we want to include
+  WINDOWS_BINARY_DIST_DEPS += \
+    libbiosig
 endif
 
 BINARY_DIST_DEPS := \
