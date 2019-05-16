@@ -2,12 +2,12 @@
 # See index.html for further information.
 
 PKG             := gdb
-$(PKG)_VERSION  := 8.2.1
-$(PKG)_CHECKSUM := 023556a6d6effa1ffaadf0007cc4458cbe8dde3d
+$(PKG)_VERSION  := 8.3
+$(PKG)_CHECKSUM := f45de6af561f0fa0241f0d5085198556fcfd1e5e
 $(PKG)_SUBDIR   := gdb-$($(PKG)_VERSION)
 $(PKG)_FILE     := gdb-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/$(PKG)/$($(PKG)_FILE)
-$(PKG)_URL_2    := ftp://ftp.cs.tu-berlin.de/pub/gnu/$(PKG)/$($(PKG)_FILE)
+$(PKG)_URL_2    := https://ftpmirror.gnu.org/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     := expat libiconv readline zlib
 
 define $(PKG)_UPDATE
