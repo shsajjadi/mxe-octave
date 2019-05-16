@@ -13,8 +13,10 @@ $(PKG)_DEPS     := suitesparse zlib libiberty libiconv lapack
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://biosig.sourceforge.net/download.html' | \
-        $(SED) -n 's_.*>libbiosig, version \([0-9]\.[0-9]\.[0-9]\).*tar.gz_\1_ip' | \
-        head -1
+        $(GREP) biosig4c | \
+        $(SED) -n 's_.*>v\([0-9]\.[0-9]\.[0-9]\)<.*_\1_p' | \
+        $(SORT) -V | \
+        tail -1
 endef
 
 define $(PKG)_BUILD_PRE
