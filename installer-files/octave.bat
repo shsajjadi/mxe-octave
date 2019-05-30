@@ -7,19 +7,33 @@ Rem
 Rem   This trick finds the location where the batch file resides.
 Rem   Note: the result ends with a backslash.
 set OCT_HOME=%~dp0\.\..\
+set ROOT_PATH=%~dp0\.\..\..\
 Rem Convert to 8.3 format so we don't have to worry about spaces.
 for %%I in ("%OCT_HOME%") do set OCT_HOME=%%~sI
+for %%I in ("%ROOT_PATH%") do set ROOT_PATH=%%~sI
 
+set MSYSTEM=MSYS
+set MSYSPATH=%OCT_HOME%
+IF EXIST "%ROOT_PATH%mingw64\bin\octave.bat" (
+  set MSYSTEM=MINGW64
+  set MSYSPATH=%ROOT_PATH%usr
+) ELSE (
+  IF EXIST "%ROOT_PATH%mingw32\bin\octave.bat" (
+    set MSYSTEM=MINGW64
+    set MSYSPATH=%ROOT_PATH%usr
+  )
+)
+ 
 Rem   Set up PATH.  Make sure the octave bin dir comes first.
 
-set PATH=%OCT_HOME%qt5\bin;%OCT_HOME%bin;%PATH%
+set PATH=%OCT_HOME%qt5\bin;%OCT_HOME%bin;%MSYSPATH%bin;%PATH%
 
 Rem   Set up any environment vars we may need.
 
 set TERM=cygwin
 set GNUTERM=wxt
 set GS=gs.exe
- 
+
 Rem QT_PLUGIN_PATH must be set to avoid segfault (bug #53419).
 IF EXIST "%OCT_HOME%\qt5\bin\" (
   set QT_PLUGIN_PATH=%OCT_HOME%\qt5\plugins
