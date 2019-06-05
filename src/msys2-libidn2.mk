@@ -4,9 +4,9 @@
 PKG             := msys2-libidn2
 $(PKG)_NAME     := libidn2
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.1.1a-1
-$(PKG)_x86_64_CS := ae4bf89817dccdcb2904f5e4652e93c20663f02c
-$(PKG)_i686_CS  := 961ae7395e7ab96cf5442055ff70749b9c2d8953
+$(PKG)_VERSION  := 2.2.0-1
+$(PKG)_x86_64_CS := 811b26b1500d07e2a17526c7a0e510a4fca671bb
+$(PKG)_i686_CS  := 32452e5f218b8fbb62d01f1b7142cbb7244acf91
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 

@@ -5,9 +5,9 @@ PKG             := msys2-pacman
 $(PKG)_NAME     := pacman
 $(PKG)_IGNORE   :=
 # NOTE: currently 5.X versions not compatible with our format
-$(PKG)_VERSION  := 5.1.2-2
-$(PKG)_x86_64_CS := 0dd5130563744c79b04f3c9a74080028f53fb61f
-$(PKG)_i686_CS  := 749effecb3e909bad1ca3cefa21a2c7cbd929163
+$(PKG)_VERSION  := 5.1.3-2
+$(PKG)_x86_64_CS := ce9418ca9e13af26c81dbc65cdeb4170eb1e4916
+$(PKG)_i686_CS  := a03932b9a1f94742e25f22e49d8122a36fdfe19c
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
