@@ -425,3 +425,14 @@ diff -r 91279e205a70 src/primpoly.cc
              {
                bool first = true;
                for (int j = m; j >= 0; j--)
+diff -r old src/ov-galois.cc
+--- a/src/ov-galois.cc	2019-06-06 17:27:40.000000000 -0400
++++ b/src/ov-galois.cc	2019-06-07 07:18:23.978697671 -0400
+@@ -21,6 +21,7 @@
+ #include <iostream>
+ 
+ #include <octave/byte-swap.h>
++#include <octave/error.h>
+ #include <octave/errwarn.h>
+ #include <octave/lo-ieee.h>
+ #include <octave/oct-locbuf.h>
