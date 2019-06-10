@@ -4,8 +4,8 @@
 PKG             := src-msys2-libiconv
 $(PKG)_NAME     := libiconv
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.15-1
-$(PKG)_CHECKSUM := ddaa6670451b94b5341c4dc836d293b3dadcac99
+$(PKG)_VERSION  := 1.16-1
+$(PKG)_CHECKSUM := 7cec3650b665c102df9178f656b1f889ff4e7241
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download
