@@ -3,11 +3,11 @@
 
 PKG             := of-ga
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.10.0
-$(PKG)_CHECKSUM := 4445a0869d48bba4284f658dd4459a63d3c521d0
+$(PKG)_VERSION  := 0.10.1
+$(PKG)_CHECKSUM := bfa862743f793747281004123411c2c7800b8a50
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := ga
-$(PKG)_FILE     := ga-$($(PKG)_VERSION).tar.gz
+$(PKG)_SUBDIR   := ga-$($(PKG)_VERSION)
+$(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
 
