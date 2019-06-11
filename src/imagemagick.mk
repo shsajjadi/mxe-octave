@@ -11,9 +11,9 @@ $(PKG)_URL      := http://ftp.nluug.nl/ImageMagick/$($(PKG)_FILE)
 $(PKG)_DEPS     := bzip2 ffmpeg fftw freetype jasper jpeg lcms libpng libtool openexr pthreads tiff
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.imagemagick.org/' | \
-    $(SED) -n 's,.*<p>The current release is ImageMagick <a[^>]*>\([0-9][0-9.-]*\).*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://github.com/ImageMagick/ImageMagick/tags' | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
