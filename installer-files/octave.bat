@@ -16,11 +16,11 @@ set MSYSTEM=MSYS
 set MSYSPATH=%OCT_HOME%
 IF EXIST "%ROOT_PATH%mingw64\bin\octave.bat" (
   set MSYSTEM=MINGW64
-  set MSYSPATH=%ROOT_PATH%usr
+  set MSYSPATH=%ROOT_PATH%usr\
 ) ELSE (
   IF EXIST "%ROOT_PATH%mingw32\bin\octave.bat" (
     set MSYSTEM=MINGW64
-    set MSYSPATH=%ROOT_PATH%usr
+    set MSYSPATH=%ROOT_PATH%usr\
   )
 )
  
