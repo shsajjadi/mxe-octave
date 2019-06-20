@@ -4,8 +4,8 @@
 PKG             := src-msys2-libutil-linux
 $(PKG)_NAME     := util-linux
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.33.1-1
-$(PKG)_CHECKSUM := 975510468331db0d5ec984123a14f0090fe5b234
+$(PKG)_VERSION  := 2.34-1
+$(PKG)_CHECKSUM := 30e8edc4084bd5b28ecd1b09f1be8a5203e8ad52
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download
