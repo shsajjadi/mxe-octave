@@ -298,7 +298,6 @@ SRC_FILES_1 := \
   libshout.mk \
   libsigc++.mk \
   libsndfile.mk \
-  libssh2-1-fixes.patch \
   libssh2-test.c \
   libssh2.mk \
   libtool.mk \
