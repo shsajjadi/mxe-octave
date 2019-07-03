@@ -3,8 +3,8 @@
 
 PKG             := qhull
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2015.2
-$(PKG)_CHECKSUM := 0dd03e0232124c81c696fac60db71ca7327eb16e
+$(PKG)_VERSION  := 2019.1
+$(PKG)_CHECKSUM := f707f42d931eedfaf3e045602d4b15e50eb3b41f
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := qhull-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://github.com/qhull/$(PKG)/archive/$($(PKG)_VERSION).tar.gz
