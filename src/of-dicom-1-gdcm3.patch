@@ -1,0 +1,37 @@
+diff -ur dicom-0.2.2.orig/src/aclocal.m4 dicom-0.2.2/src/aclocal.m4
+--- dicom-0.2.2.orig/src/aclocal.m4	2019-07-02 09:18:41.091614681 -0400
++++ dicom-0.2.2/src/aclocal.m4	2019-07-02 09:19:10.448327204 -0400
+@@ -1,6 +1,6 @@
+-# generated automatically by aclocal 1.15 -*- Autoconf -*-
++# generated automatically by aclocal 1.15.1 -*- Autoconf -*-
+ 
+-# Copyright (C) 1996-2014 Free Software Foundation, Inc.
++# Copyright (C) 1996-2017 Free Software Foundation, Inc.
+ 
+ # This file is free software; the Free Software Foundation
+ # gives unlimited permission to copy and/or distribute it,
+Only in dicom-0.2.2/src: config.h.in~
+diff -ur dicom-0.2.2.orig/src/configure dicom-0.2.2/src/configure
+--- dicom-0.2.2.orig/src/configure	2019-07-02 09:18:41.091614681 -0400
++++ dicom-0.2.2/src/configure	2019-07-02 09:19:10.816336138 -0400
+@@ -3219,7 +3219,7 @@
+ $as_echo_n "checking for gdcm headers path... " >&6; }
+   found_gdcm_header=
+   for p in  /usr/include /usr/local/include /opt/include /mingw32/include /mingw64/include ; do
+-    for v in   gdcm gdcm-2.0 gdcm-2.2 gdcm-2.4 gdcm-2.6 gdcm-2.8; do
++    for v in   gdcm gdcm-2.0 gdcm-2.2 gdcm-2.4 gdcm-2.6 gdcm-2.8 gdcm-3.0; do
+ 
+     CPPFLAGS="-I$p/$v $save_CPPFLAGS"
+     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+diff -ur dicom-0.2.2.orig/src/configure.ac dicom-0.2.2/src/configure.ac
+--- dicom-0.2.2.orig/src/configure.ac	2019-07-02 09:18:41.095614778 -0400
++++ dicom-0.2.2/src/configure.ac	2019-07-02 09:19:00.020074073 -0400
+@@ -112,7 +112,7 @@
+   AC_MSG_CHECKING([for gdcm headers path])
+   found_gdcm_header=
+   for p in [ /usr/include /usr/local/include /opt/include /mingw32/include /mingw64/include ]; do
+-    for v in [  gdcm gdcm-2.0 gdcm-2.2 gdcm-2.4 gdcm-2.6 gdcm-2.8]; do
++    for v in [  gdcm gdcm-2.0 gdcm-2.2 gdcm-2.4 gdcm-2.6 gdcm-2.8 gdcm-3.0]; do
+ 
+     CPPFLAGS="-I$p/$v $save_CPPFLAGS"
+     AC_COMPILE_IFELSE(

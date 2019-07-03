@@ -3,11 +3,11 @@
 
 PKG             := gdcm
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.6.9
-$(PKG)_CHECKSUM := 28aa7da1f286fa0ebcedebe535e4cd7463364847
+$(PKG)_VERSION  := 3.0.0
+$(PKG)_CHECKSUM := ce4507e9ad19589abc45fb5828fcceae80c4a9cd
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG) 2.x/GDCM $($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG) 3.x/GDCM $($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := expat zlib
 
 $(PKG)_CMAKE_OPTS :=
@@ -18,7 +18,7 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://sourceforge.net/projects/gdcm/files/gdcm 2.x/' | \
+    $(WGET) -q -O- 'http://sourceforge.net/projects/gdcm/files/gdcm 3.x/' | \
     $(SED) -n 's,.*title=\"GDCM \([0-9.]*\)\".*,\1,p' | \
     $(SORT) -V | \
     tail -1
