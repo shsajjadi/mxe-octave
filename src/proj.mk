@@ -3,13 +3,13 @@
 
 PKG             := proj
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.1.0
-$(PKG)_CHECKSUM := 13b5fc606bc62d347908fb3f256d93516b0be2a1
+$(PKG)_VERSION  := 6.1.1
+$(PKG)_CHECKSUM := ee93221256b7359700d59479a8097c2f39f9f984
 $(PKG)_SUBDIR   := proj-$($(PKG)_VERSION)
 $(PKG)_FILE     := proj-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.osgeo.org/proj/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.remotesensing.org/proj/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := sqlite
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://proj.org/download.html' | \
