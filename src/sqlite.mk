@@ -17,6 +17,12 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    if [ $(MXE_NATIVE_BUILD) = no ]; then \
+      mkdir '$(1).native' && cd '$(1).native' && '$(1)/configure' \
+        --enable-static --disable-shared \
+        --prefix='$(BUILD_TOOLS_PREFIX)' && \
+      $(MAKE) -C '$(1).native' -j 1 install; \
+    fi
     $(SED) -i 's/^Cflags/#Cflags/;' '$(1)/sqlite3.pc.in'
     cd '$(1)' && autoreconf && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
