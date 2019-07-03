@@ -3,11 +3,11 @@
 
 PKG             := freetype
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.10.0
-$(PKG)_CHECKSUM := f6abf03e0e3189a0de883981c57d3861b5d314f5
+$(PKG)_VERSION  := 2.10.1
+$(PKG)_CHECKSUM := 79874ef4eaa52025126b71d836453b8279bdd331
 $(PKG)_SUBDIR   := freetype-$($(PKG)_VERSION)
-$(PKG)_FILE     := freetype-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/freetype/freetype2/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_FILE     := freetype-$($(PKG)_VERSION).tar.xz
+$(PKG)_URL      := https://$(SOURCEFORGE_MIRROR)/project/freetype/freetype2/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := libpng zlib
 
 define $(PKG)_UPDATE
