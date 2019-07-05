@@ -4,9 +4,9 @@
 PKG             := msys2-libbz2
 $(PKG)_NAME     := libbz2
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.0.6-2
-$(PKG)_x86_64_CS := 554c55e308bbfb4eacf7722a8563c944ab8832d3
-$(PKG)_i686_CS  := 3084d33106e19ad5436bbcfded36874829ffa01f
+$(PKG)_VERSION  := 1.0.7-1
+$(PKG)_x86_64_CS := 71183290fe6b8f0cc3d1899ea26bb789afbccea1
+$(PKG)_i686_CS  := 269c807a7915a39c868ba7ccd4fe3b4270dcd18c
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 

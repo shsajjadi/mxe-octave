@@ -4,9 +4,9 @@
 PKG             := msys2-libgnutls
 $(PKG)_NAME     := libgnutls
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.6.8-1
-$(PKG)_x86_64_CS := 1b80363f220aa1475e9bf289e09c44e5c863acb9
-$(PKG)_i686_CS  := 8e0ad00d35822789de370c0b43293ae3c7cad65d
+$(PKG)_VERSION  := 3.6.8-2
+$(PKG)_x86_64_CS := 712923984607f37d48fa8265269b7921f2731e80
+$(PKG)_i686_CS  := 54b180e7b2538bef223bda10c8fba14b3fe381d8
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 

@@ -4,8 +4,8 @@
 PKG             := src-msys2-libbz2
 $(PKG)_NAME     := bzip2
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.0.6-2
-$(PKG)_CHECKSUM := 0d722032ba70dfe53e3f152bea17b87bd5aa62c7
+$(PKG)_VERSION  := 1.0.7-1
+$(PKG)_CHECKSUM := 10c928ebb2d5435e518e3a198e298ce33d0748de
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download
