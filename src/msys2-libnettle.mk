@@ -4,9 +4,9 @@
 PKG             := msys2-libnettle
 $(PKG)_NAME     := libnettle
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.4.1-1
-$(PKG)_x86_64_CS := b6a54d06d95ac73224ea6be5800d15f4db9f68b9
-$(PKG)_i686_CS  := 58eb46dbdf482c9f22a1a87ea68bda2c85e6f3ae
+$(PKG)_VERSION  := 3.5.1-1
+$(PKG)_x86_64_CS := 18b98825f5a3ff66187549d72dc0db72c11eb861
+$(PKG)_i686_CS  := db9029d1fed37eaa91f5d455e6410f65e53b255e
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
