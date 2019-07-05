@@ -11,8 +11,9 @@ $(PKG)_URL      := http://www.libsdl.org/projects/SDL_net/release/$($(PKG)_FILE)
 $(PKG)_DEPS     := sdl
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.libsdl.org/projects/SDL_net/release/?C=M;O=D' | \
+    $(WGET) -q -O- 'http://hg.libsdl.org/SDL_net/tags' | \
     $(SED) -n 's,.*SDL_net-\([0-9][^>]*\)\.tar.*,\1,p' | \
+    $(GREP) "^1" | \
     head -1
 endef
 

@@ -13,6 +13,7 @@ $(PKG)_DEPS     := libiconv
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://hg.libsdl.org/SDL/tags' | \
     $(SED) -n 's,.*release-\([0-9][^<]*\).*,\1,p' | \
+    $(GREP) "^1" | \
     head -1
 endef
 
