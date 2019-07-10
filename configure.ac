@@ -234,7 +234,7 @@ AC_ARG_ENABLE([system-opengl],
      no) USE_SYSTEM_OPENGL=no ;;
      yes) USE_SYSTEM_OPENGL=yes ;;
      *) AC_MSG_ERROR([bad value "$enableval" for --enable-system-opengl]) ;;
-   esac], [USE_SYSTEM_OPENGL=yes])
+   esac], [USE_SYSTEM_OPENGL=$MXE_NATIVE_BUILD])
 AC_SUBST(USE_SYSTEM_OPENGL)
 
 AC_ARG_ENABLE([system-x11-libs],
