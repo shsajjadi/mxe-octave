@@ -36,7 +36,11 @@ define $(PKG)_BUILD
     fi
 
     $(INSTALL) -d '$(3)$(HOST_BINDIR)'
-    $(INSTALL) '$(1)/bzip2' '$(3)$(HOST_BINDIR)/bzip2.exe' 
+    if [ -e '$(1)/bzip2.exe' ]; then \
+      $(INSTALL) '$(1)/bzip2.exe' '$(3)$(HOST_BINDIR)/bzip2.exe'; \
+    else \
+      $(INSTALL) '$(1)/bzip2' '$(3)$(HOST_BINDIR)/bzip2.exe'; \
+    fi
 
 endef
 else
