@@ -307,7 +307,7 @@ EOF
  DetailPrint "Running post install script (May take a while) ..."
  ;ExecWait "\$1\\post-install.bat"
  ; run in hidden console window
- nsExec::Exec /TIMEOUT=30000 '"\$1\\post-install.bat"'
+ nsExec::Exec /TIMEOUT=60000 '"\$1\\post-install.bat"'
  Pop \$0
 SectionEnd
 
