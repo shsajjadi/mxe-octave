@@ -20,6 +20,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+	$(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --with-bsb \
