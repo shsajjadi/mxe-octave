@@ -16,6 +16,12 @@ OCTAVE_SOURCE=`basename $1`
 cd `dirname $1`
 MXEDIR=`cd ..; pwd`
 
+if [ "@ENABLE_QT5@" == "yes" ]; then
+  QT_SUBDIR=qt5/
+else
+  QT_SUBDIR=
+fi
+
 if [ "@USE_MSYS2@" == "yes" ]; then
   if [ "@ENABLE_WINDOWS_64@" == "yes" ]; then
     OCTAVE_SUBDIR=mingw64
@@ -298,8 +304,8 @@ EOF
  ; add qt.conf
  Push \$0
  \${StrRep} '\$0' '\$INSTDIR' '\\' '/'
- WriteINIStr "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf" "Paths" "Prefix" "\$0"
- WriteINIStr "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf" "Paths" "Translations" "translations"
+ WriteINIStr "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf" "Paths" "Prefix" "\$0/$OCTAVE_SUBDIR"
+ WriteINIStr "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf" "Paths" "Translations" "${QT_SUBDIR}translations"
  Pop \$0
 
  ; run post-install script
