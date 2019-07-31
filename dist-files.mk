@@ -619,6 +619,7 @@ SRC_FILES_1 := \
   qtimageformats-1.patch \
   qtimageformats.mk \
   qtsvg.mk \
+  qttranslations.mk \
   qttools-1.patch \
   qttools.mk \
   qwt-1-fixes.patch \
