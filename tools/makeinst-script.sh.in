@@ -305,6 +305,10 @@ EOF
  Push \$0
  \${StrRep} '\$0' '\$INSTDIR' '\\' '/'
  WriteINIStr "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf" "Paths" "Prefix" "\$0/$OCTAVE_SUBDIR"
+ WriteINIStr "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf" "Paths" "Documentation" "${QT_SUBDIR}doc"
+ WriteINIStr "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf" "Paths" "Headers" "${QT_SUBDIR}include"
+ WriteINIStr "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf" "Paths" "Libraries" "${QT_SUBDIR}lib"
+ WriteINIStr "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf" "Paths" "Plugins" "${QT_SUBDIR}plugins"
  WriteINIStr "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\qt.conf" "Paths" "Translations" "${QT_SUBDIR}translations"
  Pop \$0
 
