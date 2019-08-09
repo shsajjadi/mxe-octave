@@ -11,8 +11,9 @@ $(PKG)_URL      := https://sourceforge.net/projects/pstoedit/files/$(PKG)/$($(PK
 $(PKG)_DEPS     := plotutils
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package pstoedit.' >&2;
-    echo $(pstoedit_VERSION)
+    $(WGET) -q -O- 'http://sourceforge.net/projects/$(PKG)/files/$(PKG)/' | \
+    $(SED) -n 's,.*tr title="\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD
