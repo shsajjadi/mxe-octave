@@ -19,8 +19,9 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
 endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'http://sourceforge.net/projects/mcj/files/' | \
+    $(SED) -n 's,.*tr title="fig2dev-\(.*\)\.tar\.xz".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD
