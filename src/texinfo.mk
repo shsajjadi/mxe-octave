@@ -16,8 +16,9 @@ ifeq ($(MXE_SYSTEM),mingw)
 endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package texinfo.' >&2;
-    echo $(texinfo_VERSION)
+    $(WGET) -q -O- 'http://ftp.gnu.org/gnu/$(PKG)/?C=M;O=D' | \
+    $(SED) -n 's,.*<a href="$(PKG)-\([0-9][^"]*\)\.tar.*,\1,p' | \
+    head -1
 endef
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
