@@ -11,8 +11,10 @@ $(PKG)_URL      := https://bitbucket.org/$(PKG)/$(PKG)/get/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'https://bitbucket.org/$(PKG)/$(PKG)/downloads/?tab=tags' | \
+    $(SED) -n 's|.*href=\"/eigen/eigen/get/\([0-9].*\)\.tar\.gz\".*|\1|p' | \
+    $(GREP) -v "tip" | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
