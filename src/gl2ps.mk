@@ -19,8 +19,9 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
 endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $(gl2ps_VERSION)
+    $(WGET) -q -O- 'https://gitlab.onelab.info/gl2ps/gl2ps/-/tags' | \
+        $(SED) -n 's/.*>gl2ps_\([0-9]\)_\([0-9]\)_\([0-9]\)<.*/\1\.\2\.\3/p' | \
+        $(SORT) -V | tail -1
 endef
 
 ifeq ($(MXE_SYSTEM),msvc)
