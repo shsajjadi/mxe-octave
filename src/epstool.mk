@@ -10,8 +10,9 @@ $(PKG)_URL      := http://pkgs.fedoraproject.org/repo/pkgs/epstool/epstool-3.08.
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'http://www.ghostgum.com.au/software/epstool.htm' | \
+    $(SED) -n 's|.*download/epstool-\([0-9].*\)\.tar\.gz\".*|\1|p' | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
