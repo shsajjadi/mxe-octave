@@ -4,15 +4,15 @@
 PKG             := libbiosig
 $(PKG)_WEBSITE  := http://biosig.sf.net/
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.9.4
-$(PKG)_CHECKSUM := 03471cbc9b1a15bd646e7b0b98499964f6246149
+$(PKG)_VERSION  := 1.9.5
+$(PKG)_CHECKSUM := f7f65e4a18585da21394898896f52d7ef768c159
 $(PKG)_SUBDIR   := biosig4c++-$($(PKG)_VERSION)
 $(PKG)_FILE     := biosig4c++-$($(PKG)_VERSION).src.tar.gz
-$(PKG)_URL      := https://sourceforge.net/projects/biosig/files/BioSig%20for%20C_C%2B%2B/src/$($(PKG)_FILE)/download
-$(PKG)_DEPS     := suitesparse zlib libiberty libiconv lapack
+$(PKG)_URL      := https://sourceforge.net/projects/biosig/files/BioSig%20for%20C_C%2B%2B/src/$($(PKG)_FILE)
+$(PKG)_DEPS     := suitesparse zlib libiberty libiconv lapack tinyxml dcmtk
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://biosig.sourceforge.net/download.html' | \
+    $(WGET) -q -O- 'https://biosig.sourceforge.io/download.html' | \
         $(GREP) biosig4c | \
         $(SED) -n 's_.*>v\([0-9]\.[0-9]\.[0-9]\)<.*_\1_p' | \
         $(SORT) -V | \
@@ -41,7 +41,9 @@ define $(PKG)_BUILD_PRE
 
     TARGET='$(TARGET)' $(MAKE) -C '$(1)' clean
     TARGET='$(TARGET)' $(MAKE) -C '$(1)' -j '$(JOBS)' \
-		libbiosig.a libgdf.a  libphysicalunits.a
+		libbiosig.a libgdf.a libphysicalunits.a \
+		libbiosig.def libgdf.def libphysicalunits.def
+
 endef
 
 define $(PKG)_BUILD_POST
@@ -53,19 +55,19 @@ define $(PKG)_BUILD_POST
 
     $(INSTALL) -m644 '$(1)/libbiosig.a'          '$(HOST_LIBDIR)/'
     #$(INSTALL) -m644 '$(1)/libbiosig.def' 	 '$(HOST_LIBDIR)/'
-    #$(INSTALL) -m644 '$(1)/libbiosig.dll.a' 	 '$(HOST_LIBDIR)/'
+    $(INSTALL) -m644 '$(1)/libbiosig.dll.a' 	 '$(HOST_LIBDIR)/'
     #$(INSTALL) -m644 '$(1)/libbiosig.dll' 	 '$(PREFIX)/$(TARGET)/bin/'
 
     $(INSTALL) -m644 '$(1)/libgdf.a'             '$(HOST_LIBDIR)/'
     #$(INSTALL) -m644 '$(1)/libgdf.def' 	 '$(HOST_LIBDIR)/'
-    #$(INSTALL) -m644 '$(1)/libgdf.dll.a' 	 '$(HOST_LIBDIR)/'
+    $(INSTALL) -m644 '$(1)/libgdf.dll.a' 	 '$(HOST_LIBDIR)/'
     #$(INSTALL) -m644 '$(1)/libgdf.dll'	 	 '$(HOST_BINDIR)/'
 
 
     $(INSTALL) -m644 '$(1)/physicalunits.h'      '$(HOST_INCDIR)/'
     $(INSTALL) -m644 '$(1)/libphysicalunits.a'   '$(HOST_LIBDIR)/'
     #$(INSTALL) -m644 '$(1)/libphysicalunits.def' '$(HOST_LIBDIR)/'
-    #$(INSTALL) -m644 '$(1)/libphysicalunits.dll.a' '$(HOST_LIBDIR)/'
+    $(INSTALL) -m644 '$(1)/libphysicalunits.dll.a' '$(HOST_LIBDIR)/'
     #$(INSTALL) -m644 '$(1)/libphysicalunits.dll' '$(HOST_BINDIR)/'
 
     if [ "$(MXE_WINDOWS_BUILD)" == "yes" ]; then \
