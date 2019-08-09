@@ -3,8 +3,8 @@
 
 PKG             := of-zeromq
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.4.0
-$(PKG)_CHECKSUM := 4f6b11fc6819907cf30f1b1370a6ff1f3c0cf74b
+$(PKG)_VERSION  := 1.5.0
+$(PKG)_CHECKSUM := 1ff3b0c27bfd8f7ee7348206f859afc62c9d7d95
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := zeromq-$($(PKG)_VERSION)
 $(PKG)_FILE     := zeromq-$($(PKG)_VERSION).tar.gz
