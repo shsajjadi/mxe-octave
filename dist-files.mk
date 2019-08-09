@@ -217,7 +217,6 @@ SRC_FILES_1 := \
   libarchive.mk \
   libass-test.c \
   libass.mk \
-  libbiosig-1-fixes.patch \
   libbiosig.mk \
   libcdio.mk \
   libcroco.mk \
