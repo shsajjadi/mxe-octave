@@ -84,7 +84,7 @@ SRC_FILES_1 := \
   exiv2-r2796.patch \
   exiv2.mk \
   expat.mk \
-  faad2-1-uint.patch \
+  faad2-1-fixes.patch \
   faad2.mk \
   ffmpeg.mk \
   fftw.mk \
