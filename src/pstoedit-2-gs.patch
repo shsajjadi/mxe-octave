@@ -1,28 +1,20 @@
-diff -ur pstoedit-3.70.orig/configure.ac pstoedit-3.70/configure.ac
---- pstoedit-3.70.orig/configure.ac	2015-02-27 13:34:44.538158342 -0500
-+++ pstoedit-3.70/configure.ac	2015-02-27 15:12:27.821126740 -0500
-@@ -53,12 +53,12 @@
+diff -ur pstoedit-3.74-1/configure.ac pstoedit-3.74/configure.ac
+--- pstoedit-3.74-1/configure.ac	2019-08-12 17:00:05.383739915 -0400
++++ pstoedit-3.74/configure.ac	2019-08-12 17:01:34.890067312 -0400
+@@ -44,8 +44,8 @@
+ dnl fi
+ 
  dnl Check Ghostscript
- GS=""
- AC_PATH_PROG(GS,gs)
--if test -z "${GS}"; then
--   AC_MSG_ERROR([** Cannot find ghostscript. If it is already installed, Check PATH.])
--else
--dnl Strip off // to / that causes troubles.
--   GS=`echo $GS | sed -e 's/\/\//\//g'`	
--fi
-+dnl if test -z "${GS}"; then
-+dnl    AC_MSG_ERROR([** Cannot find ghostscript. If it is already installed, Check PATH.])
-+dnl else
-+dnl dnl Strip off // to / that causes troubles.
-+dnl    GS=`echo $GS | sed -e 's/\/\//\//g'`	
-+dnl fi
+-AC_CHECK_PROGS([GS],[gs],[false])
+-AS_IF([test x"${GS}" = xfalse],[AC_MSG_ERROR([** Cannot find ghostscript.  If it is already installed, Check PATH.])])
++dnl AC_CHECK_PROGS([GS],[gs],[false])
++dnl AS_IF([test x"${GS}" = xfalse],[AC_MSG_ERROR([** Cannot find ghostscript.  If it is already installed, Check PATH.])])
  
  PKG_PROG_PKG_CONFIG
  
-diff -ur pstoedit-3.70.orig/src/Makefile.am pstoedit-3.70/src/Makefile.am
---- pstoedit-3.70.orig/src/Makefile.am	2015-02-27 13:34:45.004167901 -0500
-+++ pstoedit-3.70/src/Makefile.am	2015-02-27 15:13:10.916976944 -0500
+diff -ur pstoedit-3.74-1/src/Makefile.am pstoedit-3.74/src/Makefile.am
+--- pstoedit-3.74-1/src/Makefile.am	2019-08-12 17:00:05.395740228 -0400
++++ pstoedit-3.74/src/Makefile.am	2019-08-12 17:02:29.107472650 -0400
 @@ -32,7 +32,7 @@
  	${LIBEMF_CFLAGS}			\
  	${LIBPNG_CFLAGS}			\

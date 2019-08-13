@@ -3,8 +3,8 @@
 
 PKG             := pstoedit
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.70
-$(PKG)_CHECKSUM := 657f8f7070fde1432cd65a34b6b1c4b5b42f8b50
+$(PKG)_VERSION  := 3.74
+$(PKG)_CHECKSUM := 88aabbfc602856184419f212e439438c7229b9c0
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://sourceforge.net/projects/pstoedit/files/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)/download
