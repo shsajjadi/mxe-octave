@@ -1,9 +1,9 @@
-diff -uNr e/othersrc/gsdllinc/wgsver.c f/othersrc/gsdllinc/wgsver.c
---- e/othersrc/gsdllinc/wgsver.c	2010-12-27 10:09:35.000000000 -0500
-+++ f/othersrc/gsdllinc/wgsver.c	2013-01-08 22:23:09.775545031 -0500
-@@ -39,6 +39,10 @@
- #include <stdlib.h>
+diff -ur pstoedit-3.74.orig/othersrc/gsdllinc/wgsver.c pstoedit-3.74/othersrc/gsdllinc/wgsver.c
+--- pstoedit-3.74.orig/othersrc/gsdllinc/wgsver.c	2019-08-12 16:51:30.466523053 -0400
++++ pstoedit-3.74/othersrc/gsdllinc/wgsver.c	2019-08-12 16:57:43.384024846 -0400
+@@ -40,6 +40,10 @@
  #include "wgsver.h"
+ #include "cppcomp.h"
  
 +#ifndef KEY_WOW64_64KEY
 +#define KEY_WOW64_64KEY 0x0100
@@ -12,9 +12,10 @@ diff -uNr e/othersrc/gsdllinc/wgsver.c f/othersrc/gsdllinc/wgsver.c
  /* Ghostscript may be known in the Windows Registry by
   * the following names.
   */
-diff -uNr e/src/cbstream.cpp f/src/cbstream.cpp
---- e/src/cbstream.cpp	2012-08-28 09:52:28.000000000 -0400
-+++ f/src/cbstream.cpp	2013-01-08 22:15:04.575971765 -0500
+Only in pstoedit-3.74/othersrc/gsdllinc: wgsver.c.orig
+diff -ur pstoedit-3.74.orig/src/cbstream.cpp pstoedit-3.74/src/cbstream.cpp
+--- pstoedit-3.74.orig/src/cbstream.cpp	2019-08-12 16:51:30.466523053 -0400
++++ pstoedit-3.74/src/cbstream.cpp	2019-08-12 16:57:43.388024951 -0400
 @@ -33,6 +33,8 @@
  // this code is only needed under WIN32
  // ...and under OS/2
@@ -24,12 +25,25 @@ diff -uNr e/src/cbstream.cpp f/src/cbstream.cpp
  #include "cppcomp.h"
  
  #include "cbstream.h"
-diff -uNr e/src/Makefile.am f/src/Makefile.am
---- e/src/Makefile.am	2010-08-22 09:54:28.000000000 -0400
-+++ f/src/Makefile.am	2013-01-08 22:28:40.596345408 -0500
-@@ -133,7 +133,8 @@
- 	genericints.h 				\
- 	version.h
+diff -ur pstoedit-3.74.orig/src/dynload.cpp pstoedit-3.74/src/dynload.cpp
+--- pstoedit-3.74.orig/src/dynload.cpp	2019-08-12 16:51:30.470523154 -0400
++++ pstoedit-3.74/src/dynload.cpp	2019-08-12 16:57:43.388024951 -0400
+@@ -240,7 +240,7 @@
+ #elif defined(OS_WIN32_WCE)
+ 	DynLoader::fptr rfptr = ptr_to_fptr(GetProcAddress((HINSTANCE) handle, LPSTRtoLPWSTR(name).c_str()));	//lint !e611 //: Suspicious cast
+ #elif defined(_WIN32)
+-	DynLoader::fptr rfptr = ptr_to_fptr(GetProcAddress((HINSTANCE) handle, name));	//lint !e611 //: Suspicious cast
++	DynLoader::fptr rfptr = ptr_to_fptr((void*)GetProcAddress((HINSTANCE) handle, name));	//lint !e611 //: Suspicious cast
+ #else
+ #error "system unsupported so far"
+ #endif
+Only in pstoedit-3.74/src: dynload.cpp.orig
+diff -ur pstoedit-3.74.orig/src/Makefile.am pstoedit-3.74/src/Makefile.am
+--- pstoedit-3.74.orig/src/Makefile.am	2019-08-12 16:51:30.470523154 -0400
++++ pstoedit-3.74/src/Makefile.am	2019-08-12 16:57:43.388024951 -0400
+@@ -143,7 +143,8 @@
+ 	psfront.h				\
+ 	genericints.h
  
 -libpstoedit_la_LIBADD = ${CXX_STD_LIB} ${CXX_RUNTIME_LIB} -ldl -lm
 +libpstoedit_la_LIBADD = ${CXX_STD_LIB} ${CXX_RUNTIME_LIB} -lm
@@ -37,31 +51,3 @@ diff -uNr e/src/Makefile.am f/src/Makefile.am
  libpstoedit_la_LDFLAGS = -no-undefined
  
  pstoedit_SOURCES = cmdmain.cpp
-diff -ur pstoedit-3.70.orig/src/dynload.cpp pstoedit-3.70/src/dynload.cpp
---- pstoedit-3.70.orig/src/dynload.cpp	2015-02-27 11:26:42.674665283 -0500
-+++ pstoedit-3.70/src/dynload.cpp	2015-02-27 11:28:12.270406665 -0500
-@@ -229,7 +229,7 @@
- #if defined(__linux) || defined(__linux__) || defined(__CYGWIN__) || defined(__FreeBSD__) || defined(__hpux) || defined(__sparc) || defined(__OS2__) || defined(_AIX) || (defined (HAVE_DLFCN_H) && (HAVE_DLFCN_H==1 ) )
- 	DynLoader::fptr rfptr = ptr_to_fptr(dlsym(handle, name));	//lint !e611 //: Suspicious cast
- #elif defined(_WIN32)
--	DynLoader::fptr rfptr = ptr_to_fptr(GetProcAddress((HINSTANCE) handle, name));	//lint !e611 //: Suspicious cast
-+	DynLoader::fptr rfptr = ptr_to_fptr((void*)GetProcAddress((HINSTANCE) handle, name));	//lint !e611 //: Suspicious cast
- #else
- #error "system unsupported so far"
- #endif
-diff -ur pstoedit-3.70.orig/src/pstoedit.cpp pstoedit-3.70/src/pstoedit.cpp
---- pstoedit-3.70.orig/src/pstoedit.cpp	2015-02-27 13:34:44.955166896 -0500
-+++ pstoedit-3.70/src/pstoedit.cpp	2015-02-27 13:36:47.962690034 -0500
-@@ -269,10 +269,12 @@
- 	char *p = 0;
- 	if (r && (p = strrchr(szExePath, directoryDelimiter)) != 0) {
- 		*p = '\0';
-+/* disabled load in exe dir --
- 		if (!strequal(szExePath, plugindir.c_str())) {
- 			loadPlugInDrivers(szExePath, errstream,verbose);
- 			pluginsloaded = true;
- 		}
-+*/
- 	}
- 	// now try also $exepath/../lib/pstoedit
- 	strcat_s(szExePath,1000,"/../lib/pstoedit");
