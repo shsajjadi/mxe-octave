@@ -23,6 +23,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --prefix='$(HOST_PREFIX)' \
+	--disable-docs \
 	&& $(CONFIGURE_POST_HOOK)
 
     $(MAKE) -C '$(1)/.build' -j 1 install DESTDIR='$(3)'
