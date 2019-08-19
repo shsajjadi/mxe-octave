@@ -635,6 +635,7 @@ SRC_FILES_1 := \
   release-octave-1-gnulib.patch \
   release-octave.mk \
   renderproto.mk \
+  rtmidi.mk \
   s2tc.mk \
   sdl-1-xdata.patch \
   sdl-test.c \
