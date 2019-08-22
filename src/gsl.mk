@@ -3,8 +3,8 @@
 
 PKG             := gsl
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.5
-$(PKG)_CHECKSUM := 9b3a32ba4f4e79fc6164fdc62e56003ae6e991e5
+$(PKG)_VERSION  := 2.6
+$(PKG)_CHECKSUM := 9273164b6bdf60d0577518a1c1310eff6659e3dd
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/$(PKG)/$($(PKG)_FILE)
