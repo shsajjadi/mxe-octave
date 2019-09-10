@@ -23,9 +23,9 @@ if %MSYSTEM%==MSYS (
 
 Rem run bash to to regitser the initial envorinment
 echo "Setting up MSYS system ..."
-%MSYSDIR%\bin\bash.exe --login -c echo
+"%MSYSDIR%\bin\bash.exe" --login -c echo
 echo "Updating fc-cache (may take a while) ..."
-%OCTAVE_HOME%\bin\fc-cache.exe -v
+"%OCTAVE_HOME%\bin\fc-cache.exe" -v
 echo "Updating octave packages ..."
-%OCTAVE_HOME%\bin\octave.bat --no-gui -W -H -f -q --eval "pkg rebuild"
+"%OCTAVE_HOME%\bin\octave.bat" --no-gui -W -H -f -q --eval "pkg rebuild"
 
