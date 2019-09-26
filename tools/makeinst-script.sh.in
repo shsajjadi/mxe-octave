@@ -657,7 +657,7 @@ curr_check_ok:
   pop \$0
 FunctionEnd
 
-; Check whether prev install is here and no spaces in dest name
+; Check whether prev install is here and no spaces or special chars in dest name
 Function CheckPrevInstallAndDest
   IfFileExists "\$INSTDIR\\bin\\octave-cli.exe" inst_exists  0
   IfFileExists "\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\octave-cli.exe" inst_exists  inst_none
@@ -667,7 +667,7 @@ inst_exists:
   GoTo inst_end
 inst_none:
 
-  ; check for spaces in dest filename
+  ; check for spaces or spcial chars in dest filename
   Push \$R0
   Push \$R1
 
@@ -676,10 +676,15 @@ space_loop:
   StrCpy \$R0 \$INSTDIR 1 \$R1  # R0 = character in string to check
   StrCmp \$R0 "" space_end # end of string
   StrCmp \$R0 " " space_found
+  StrCmp \$R0 "(" space_found
+  StrCmp \$R0 ")" space_found
+  StrCmp \$R0 "&" space_found
+  StrCmp \$R0 "%" space_found
+  StrCmp \$R0 "^" space_found
   IntOp  \$R1 \$R1 + 1
   GoTo space_loop
 space_found:
-  MessageBox MB_OK|MB_ICONEXCLAMATION "Octave should not be installed to a destination folder containing spaces. Please select another destination."
+MessageBox MB_OK|MB_ICONEXCLAMATION "Octave should not be installed to a destination folder containing &%()^ or spaces. Please select another destination."
   Abort 
 space_end:
   Pop \$R1
