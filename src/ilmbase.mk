@@ -3,8 +3,8 @@
 
 PKG             := ilmbase
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.1.0
-$(PKG)_CHECKSUM := 306d76e7a2ac619c2f641f54b59dd95576525192
+$(PKG)_VERSION  := 2.2.1
+$(PKG)_CHECKSUM := 87df9e235eff0d10e171f15ad0e63cba05e16bce
 $(PKG)_SUBDIR   := ilmbase-$($(PKG)_VERSION)
 $(PKG)_FILE     := ilmbase-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.savannah.nongnu.org/releases/openexr/$($(PKG)_FILE)
@@ -30,7 +30,8 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --disable-threading \
-        CONFIG_SHELL=$(SHELL)
+        CONFIG_SHELL=$(SHELL) \
+        SHELL=$(SHELL)
     # do the first build step by hand, because programs are built that
     # generate source files
     cd '$(1)/Half' && g++ eLut.cpp -o eLut
