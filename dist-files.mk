@@ -549,6 +549,8 @@ SRC_FILES_1 := \
   opencore-amr.mk \
   opencsg-1-fixes.patch \
   opencsg.mk \
+  opencv-1-fixes.patch \
+  opencv.mk \
   openexr.mk \
   openscenegraph-1-fixes.patch \
   openscenegraph.mk \
