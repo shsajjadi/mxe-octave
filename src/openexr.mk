@@ -3,50 +3,69 @@
 
 PKG             := openexr
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.1.0
-$(PKG)_CHECKSUM := 4a3db5ea527856145844556e0ee349f45ed4cbc7
+$(PKG)_VERSION  := 2.4.0
+$(PKG)_CHECKSUM := 0b9a24b8fa6b3f7f1d8813e91234308d3e43d10f
 $(PKG)_SUBDIR   := openexr-$($(PKG)_VERSION)
 $(PKG)_FILE     := openexr-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://download.savannah.nongnu.org/releases/openexr/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/$(PKG)/$(PKG)/archive/v$($(PKG)_VERSION).tar.gz
 $(PKG)_DEPS     := ilmbase pthreads zlib
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.openexr.com/downloads.html' | \
-    grep 'openexr-' | \
-    $(SED) -n 's,.*openexr-\([0-9][^>]*\)\.tar.*,\1,p' | \
+    $(WGET) -q -O- 'https://github.com/$(PKG)/$(PKG)/tags' | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | \
     head -1
 endef
 
+ifeq ($(MXE_NATIVE_BUILD),yes)
 define $(PKG)_BUILD
-    # unpack and build a native version of ilmbase
-    cd '$(1)' && $(call UNPACK_PKG_ARCHIVE,ilmbase,$(TAR))
-    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/ilmbase-*.patch)),
-        (cd '$(1)/$(ilmbase_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
-    echo 'echo $1' > '$(1)/$(ilmbase_SUBDIR)/config.sub'
-    cd '$(1)/$(ilmbase_SUBDIR)' && $(SHELL) ./configure \
-        --build='$(BUILD_SYSTEM)' \
-        $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(1)/ilmbase' \
-        --enable-threading=no \
-        --disable-posix-sem \
-        CONFIG_SHELL=$(SHELL)
-    $(MAKE) -C '$(1)/$(ilmbase_SUBDIR)' -j '$(JOBS)' install \
-        bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    cd '$(1)' && ./configure \
-        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-        $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(HOST_PREFIX)' \
-        --disable-threading \
-        --disable-posix-sem \
-        --disable-ilmbasetest \
-        PKG_CONFIG='$(MXE_PKG_CONFIG)'
-    # build the code generator manually
-    cd '$(1)/IlmImf' && g++ \
-        -I'$(1)/ilmbase/include/OpenEXR' \
-        -L'$(1)/ilmbase/lib' \
-        b44ExpLogTable.cpp \
-        -lImath -lHalf -lIex -lIlmThread -lpthread \
-        -o b44ExpLogTable
-    '$(1)/IlmImf/b44ExpLogTable' > '$(1)/IlmImf/b44ExpLogTable.h'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+    mkdir '$(1)/build'
+    cd '$(1)/build' && cmake ..  \
+      -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+      -DBUILD_TESTING='OFF' \
+      -DPYILMBASE_ENABLE='OFF' \
+      -DOPENEXR_VIEWERS_ENABLE='OFF'
+
+    $(MAKE) -C '$(1)/build' -j '$(JOBS)' VERBOSE=1
+    $(MAKE) -C '$(1)/build' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=  DESTDIR='$(3)'
 endef
+
+else
+define $(PKG)_BUILD
+    # native build of parts
+    mkdir '$(1)/native'
+    cd '$(1)/native' && cmake ..  \
+      -DCMAKE_BUILD_TYPE='Release' \
+      -DBUILD_SHARED_LIBS='OFF' \
+      -DBUILD_TESTING='OFF' \
+      -DPYILMBASE_ENABLE='OFF' \
+      -DOPENEXR_VIEWERS_ENABLE='OFF' \
+      -DCMAKE_FIND_ROOT_PATH='$(ROOT_PREFIX)' 
+    $(MAKE) -C '$(1)/native/IlmBase/Half/' eLut toFloat VERBOSE=1
+    $(MAKE) -C '$(1)/native/OpenEXR/IlmImf' dwaLookups b44ExpLogTable VERBOSE=1
+
+    # cross compile part
+    mkdir '$(1)/build'
+    cd '$(1)/build' && cmake ..  \
+      -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+      -DBUILD_TESTING='OFF' \
+      -DPYILMBASE_ENABLE='OFF' \
+      -DOPENEXR_VIEWERS_ENABLE='OFF' \
+      -DOPENEXR_INSTALL_PKG_CONFIG='ON' \
+      -DCMAKE_CXX_STANDARD=11 \
+      -DCMAKE_CXX_FLAGS='-D_WIN32_WINNT=0x0500'
+    $(MAKE) -C '$(1)/build/IlmBase/Half/' eLut toFloat VERBOSE=1
+
+    # now use native build generators
+    cd '$(1)/build/IlmBase/Half/' && '$(1)/native/IlmBase/Half/toFloat' > toFloat.h
+    cd '$(1)/build/IlmBase/Half/' && '$(1)/native/IlmBase/Half/eLut' > eLut.h
+
+    $(MAKE) -C '$(1)/build/OpenEXR/IlmImf' dwaLookups b44ExpLogTable VERBOSE=1
+
+    cd '$(1)/build/OpenEXR/IlmImf/' && '$(1)/native/bin/dwaLookups' > dwaLookups.h
+    cd '$(1)/build/OpenEXR/IlmImf/' && '$(1)/native/bin/b44ExpLogTable' > b44ExpLogTable.h
+
+    $(MAKE) -C '$(1)/build' -j '$(JOBS)' VERBOSE=1
+    $(MAKE) -C '$(1)/build' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=  DESTDIR='$(3)'
+
+endef
+endif
