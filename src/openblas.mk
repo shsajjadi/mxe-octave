@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 6a79b36d1bf73584a513139806d226f9189d621e
 $(PKG)_SUBDIR   := OpenBLAS-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz
 $(PKG)_URL      := https://github.com/xianyi/OpenBLAS/archive/v$($(PKG)_VERSION).tar.gz
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := blas
 
 $(PKG)_MAKE_OPTS := PREFIX=$(HOST_PREFIX) DYNAMIC_ARCH=1 NO_LAPACK=1
 
