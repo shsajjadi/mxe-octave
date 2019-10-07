@@ -48,9 +48,12 @@ define $(PKG)_BUILD
     cd '$(1)/build' && cmake ..  \
       -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
       -DBUILD_TESTING='OFF' \
+      -DCMAKE_VERBOSE_MAKEFILE='ON' \
       -DPYILMBASE_ENABLE='OFF' \
       -DOPENEXR_VIEWERS_ENABLE='OFF' \
       -DOPENEXR_INSTALL_PKG_CONFIG='ON' \
+      -DILMBASE_LIB_SUFFIX='' \
+      -DOPENEXR_LIB_SUFFIX='' \
       -DCMAKE_CXX_STANDARD=11 \
       -DCMAKE_CXX_FLAGS='-D_WIN32_WINNT=0x0500'
     $(MAKE) -C '$(1)/build/IlmBase/Half/' eLut toFloat VERBOSE=1
