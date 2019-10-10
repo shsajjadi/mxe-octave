@@ -12,7 +12,8 @@ $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://notepad-plus-plus.org/download/' | \
-    $(SED) -n 's|.*>v\([^\w]*\) - Current.*|\1|p' | \
+    $(GREP) 'Current' | \
+    $(SED) -n 's|.*/v\([^/]*\).*|\1|p' | \
     tail -1
 endef
 
