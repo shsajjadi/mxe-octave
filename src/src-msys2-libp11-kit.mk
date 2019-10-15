@@ -4,8 +4,8 @@
 PKG             := src-msys2-libp11-kit
 $(PKG)_NAME     := p11-kit
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.23.16.1-1
-$(PKG)_CHECKSUM := f845b6960c14d70ef446607b14bd6c6dec08b277
+$(PKG)_VERSION  := 0.23.18.1-1
+$(PKG)_CHECKSUM := 1839a21228118dd65bb1e41166d1a4f7bddff5ee
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download

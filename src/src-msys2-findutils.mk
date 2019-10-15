@@ -4,8 +4,8 @@
 PKG             := src-msys2-findutils
 $(PKG)_NAME     := findutils
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.6.0-1
-$(PKG)_CHECKSUM := 55f99dd17619b3d5c69b6bd7ef1fbd4501390350
+$(PKG)_VERSION  := 4.7.0-1
+$(PKG)_CHECKSUM := fdf6a21d7d4a160eb8824fa76e110f542a7f76c7
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download
