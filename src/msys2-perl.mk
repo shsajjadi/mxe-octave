@@ -4,9 +4,9 @@
 PKG             := msys2-perl
 $(PKG)_NAME     := perl
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.24.4-1
-$(PKG)_x86_64_CS := 1596416bb41c19224d1a221b6295315776cfa4db
-$(PKG)_i686_CS  := df5e61d5ca8a0cfd0497d0a9a363055fce6bc520
+$(PKG)_VERSION  := 5.30.0-1
+$(PKG)_x86_64_CS := 124854c48ab0ff3c72ae230f23b4f077b954671b
+$(PKG)_i686_CS  := e345bac66bfbd6a9d835408459762e06406df56a
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 

@@ -4,9 +4,9 @@
 PKG             := msys2-dos2unix
 $(PKG)_NAME     := dos2unix
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 7.4.0-1
-$(PKG)_x86_64_CS := 3e677ed0a45d01960364eecec140df1d352a0ab4
-$(PKG)_i686_CS  := 878565ea17f9e367d38bde3d467a37aa239f3718
+$(PKG)_VERSION  := 7.4.1-1
+$(PKG)_x86_64_CS := 08aec6e840765af492691b6aab0b6ddf4cd54eff
+$(PKG)_i686_CS  := 541f5b8addcd6950008917c7242e4169e8d2e726
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
