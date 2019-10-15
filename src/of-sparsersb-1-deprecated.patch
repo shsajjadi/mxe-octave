@@ -1,6 +1,6 @@
 diff -r df6951233012 src/sparsersb.cc
 --- a/src/sparsersb.cc	Fri Jun 22 23:28:18 2018 +0200
-+++ b/src/sparsersb.cc	Sun Jan 20 22:15:20 2019 +0100
++++ b/src/sparsersb.cc	Mon Oct 14 21:46:55 2019 +0200
 @@ -68,6 +68,7 @@
  
  #define RSBOI_WANT_PRINT_PCT_OCTAVE_STYLE 1
@@ -18,6 +18,17 @@ diff -r df6951233012 src/sparsersb.cc
  		{
  			error("load_binary() " RSBOI_0_NIYERRMSG);
  			return false;
+@@ -1777,8 +1778,8 @@
+ 	RSBOI_DEBUG_NOTICE(RSBOI_D_EMPTY_MSG);
+ 	RSBOI_DESTROY(v1.mtxAp);
+ 	octave_value retval;
+-	//v1.assign(idx, v2.matrix_value());
+-	v1 = (idx, v2.matrix_value());
++	v1.assign(idx, v2.sparse_matrix_value ());
++	//v1 = (idx, v2.matrix_value());
+ 	//retval = v1;
+ 	retval = v2.matrix_value();
+ 	RSBOI_WARN(RSBOI_O_MISSIMPERRMSG);
 @@ -1985,95 +1986,95 @@
  // deprecated; need a wrapper using octave::typeinfo::register_unary_op
  #define RSBOI_INSTALL_UNOP INSTALL_UNOP 
