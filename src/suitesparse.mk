@@ -2,13 +2,13 @@
 # See index.html for further information.
 
 PKG             := suitesparse
-$(PKG)_VERSION  := 4.2.1
-$(PKG)_CHECKSUM := 2fec3bf93314bd14cbb7470c0a2c294988096ed6
+$(PKG)_VERSION  := 4.5.6
+$(PKG)_CHECKSUM := 06ed5f6f61bfe09f08ce03971a24381a627446b1
 $(PKG)_SUBDIR   := SuiteSparse
 $(PKG)_FILE     := SuiteSparse-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://faculty.cse.tamu.edu/davis/SuiteSparse/$($(PKG)_FILE)
 $(PKG)_URL_2    := https://distfiles.macports.org/SuiteSparse/$($(PKG)_FILE)
-$(PKG)_DEPS     := blas lapack
+$(PKG)_DEPS     := openblas lapack libgomp
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   $(PKG)_DESTDIR :=
@@ -22,22 +22,6 @@ define $(PKG)_UPDATE
     head -1
 endef
 
-$(PKG)_STATICLIBS_1 := \
-  SuiteSparse_config/libsuitesparseconfig.a \
-  SuiteSparse_config/xerbla/libcerbla.a \
-  AMD/Lib/libamd.a \
-  CAMD/Lib/libcamd.a \
-  COLAMD/Lib/libcolamd.a \
-  CCOLAMD/Lib/libccolamd.a \
-  CSparse/Lib/libcsparse.a \
-  CXSparse/Lib/libcxsparse.a \
-  CHOLMOD/Lib/libcholmod.a \
-  SPQR/Lib/libspqr.a \
-  BTF/Lib/libbtf.a \
-  LDL/Lib/libldl.a \
-  KLU/Lib/libklu.a \
-  RBio/Lib/librbio.a \
-  UMFPACK/Lib/libumfpack.a
 
 $(PKG)_CPPFLAGS := -DNTIMER
 
@@ -49,78 +33,58 @@ ifeq ($(ENABLE_FORTRAN_INT64),yes)
   endif
 endif
 
-define $(PKG)_BUILD
-    # exclude demos
-    find '$(1)' -name 'Makefile' \
-        -exec $(SED) -i 's,( cd Demo,#( cd Demo,' {} \;
+$(PKG)_MAKE_OPTS = \
+    UNAME=Windows \
+    CPPFLAGS="$($(PKG)_CPPFLAGS)" \
+    CC='$(MXE_CC)' \
+    CXX='$(MXE_CXX)' \
+    CPLUSPLUS='$(MXE_CXX)' \
+    F77='$(MXE_F77)' \
+    FFLAGS='$(MXE_FFLAGS)' \
+    CFLAGS='$(MXE_CFLAGS)' \
+    CXXFLAGS='$(MXE_CXXFLAGS)' \
+    AR='$(MXE_AR)' \
+    RANLIB='$(MXE_RANLIB)' \
+    BLAS="`'$(TARGET)-pkg-config' --libs openblas`" \
+    LAPACK='-llapack' \
+    CHOLMOD_CONFIG='-DNPARTITION'
 
-    if test $(MXE_SYSTEM) = msvc; then \
-        (cd '$(1)'; \
-	 (cd CXSparse_newfiles && tar cfz ../CXSparse_newfiles.tar.gz .); \
-	 ./CSparse_to_CXSparse CSparse CXSparse CXSparse_newfiles.tar.gz) \
-    fi
+$(PKG)_cputype = $(shell uname -m | sed "s/\\ /_/g")
+$(PKG)_systype = $(shell uname -s)
+$(PKG)_METIS_BUILDDIR = build/$($(PKG)_systype)-$($(PKG)_cputype)
+$(PKG)_METIS_CONFIG_FLAGS = -DCMAKE_VERBOSE_MAKEFILE=1 \
+    -DGKLIB_PATH=$(1)/metis-5.1.0/GKlib \
+    -DCMAKE_INSTALL_PREFIX=$(1) \
+    -DSHARED=1
+
+define $(PKG)_BUILD
+    # build metis
+    mkdir $(1)/metis-5.1.0/$($(PKG)_METIS_BUILDDIR)
+    cd $(1)/metis-5.1.0/$($(PKG)_METIS_BUILDDIR) && \
+        cmake $(1)/metis-5.1.0 \
+            -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+            $($(PKG)_METIS_CONFIG_FLAGS)
+    $(MAKE) -C '$(1)/metis-5.1.0/$($(PKG)_METIS_BUILDDIR)' metis -j '$(JOBS)'
+
+    # install metis
+    mkdir -p $($(PKG)_DESTDIR)$(HOST_LIBDIR)
+    mkdir -p $($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/
+    cp $(1)/metis-5.1.0/$($(PKG)_METIS_BUILDDIR)/libmetis/libmetis.* $($(PKG)_DESTDIR)$(HOST_BINDIR)
+    cp $(1)/metis-5.1.0/include/metis.h $($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/
+    chmod 755 $($(PKG)_DESTDIR)$(HOST_BINDIR)/libmetis.*
+    chmod 644 $($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/metis.h
 
     # build all
     $(MAKE) -C '$(1)' -j '$(JOBS)' \
-        CPPFLAGS="$($(PKG)_CPPFLAGS)" \
-        CC='$(MXE_CC)' \
-        CXX='$(MXE_CXX)' \
-        CPLUSPLUS='$(MXE_CXX)' \
-        F77='$(MXE_F77)' \
-        FFLAGS='$(MXE_FFLAGS)' \
-        CFLAGS='$(MXE_CFLAGS)' \
-        CXXFLAGS='$(MXE_CXXFLAGS)' \
-        AR='$(MXE_AR)' \
-        RANLIB='$(MXE_RANLIB)' \
-        BLAS='-lblas -lgfortran -lgfortranbegin' \
-        CHOLMOD_CONFIG='-DNPARTITION'
+        $($(PKG)_MAKE_OPTS) \
+        MY_METIS_LIB=$($(PKG)_DESTDIR)$(HOST_BINDIR) \
+        library
 
-    # install library files
-    $(INSTALL) -d '$($(PKG)_DESTDIR)$(HOST_LIBDIR)'
-
-    for f in $(addprefix $(1)/, $($(PKG)_STATICLIBS_1)); do \
-      if [ $(BUILD_SHARED) = yes ]; then \
-        lib=`basename $$f .a`; \
-        dir=`dirname $$f`; \
-        echo "building and installing shared libraries for $$lib"; \
-        deplibs=""; \
-        case $$lib in \
-          libcholmod) \
-            deplibs="-lamd -lcamd -lcolamd -lccolamd -lsuitesparseconfig -llapack -lblas"; \
-          ;; \
-          libklu) \
-            deplibs="-lbtf -lamd -lcolamd -lsuitesparseconfig"; \
-          ;; \
-          librbio) \
-            deplibs="-lsuitesparseconfig"; \
-          ;; \
-	  libspqr) \
-            deplibs="-lcholmod -lsuitesparseconfig -llapack -lblas"; \
-          ;; \
-          libumfpack) \
-            deplibs="-lcholmod -lamd -lsuitesparseconfig -lblas"; \
-          ;; \
-        esac; \
-        if [ -n "$deplibs" ]; then \
-          echo "  deplibs = $$deplibs"; \
-        fi; \
-        $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CXX)' $$f --install '$(INSTALL)' --libdir '$($(PKG)_DESTDIR)$(HOST_LIBDIR)' --bindir '$($(PKG)_DESTDIR)$(HOST_BINDIR)' $$deplibs; \
-      fi; \
-    done
-
-    # install include files
-    $(INSTALL) -d                                '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/SuiteSparse_config/'*.h '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/AMD/Include/'*.h      '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/BTF/Include/'*.h      '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/CAMD/Include/'*.h     '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/CCOLAMD/Include/'*.h  '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/CHOLMOD/Include/'*.h  '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/COLAMD/Include/'*.h   '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/CSparse/Include/'*.h  '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/CXSparse/Include/'*.h '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/KLU/Include/'*.h      '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/LDL/Include/'*.h      '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/SPQR/Include/'*       '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
-    $(INSTALL) -m644 '$(1)/UMFPACK/Include/'*.h  '$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/'
+    # install libraries and headers
+    $(MAKE) -C '$(1)' -j 1 install \
+        $($(PKG)_MAKE_OPTS) \
+        INSTALL_INCLUDE='$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/' \
+        INSTALL_LIB='$($(PKG)_DESTDIR)$(HOST_LIBDIR)' \
+        INSTALL_SO='$($(PKG)_DESTDIR)$(HOST_BINDIR)'
 endef
+

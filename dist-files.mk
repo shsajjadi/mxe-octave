@@ -691,7 +691,8 @@ SRC_FILES_1 := \
   src-msys-zlib.mk \
   stable-octave-1-gnulib.patch \
   stable-octave.mk \
-  suitesparse-1.patch \
+  suitesparse-1-fixes.patch \
+  suitesparse-2-metis.patch \
   suitesparse.mk \
   sundials-27-ida-1.patch \
   sundials-27-ida.mk \
