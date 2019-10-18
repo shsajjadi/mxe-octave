@@ -3,8 +3,8 @@
 
 PKG             := of-stk
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.6.0
-$(PKG)_CHECKSUM := cd764b0d7db3697adbcc991ab1189260e3ffdd7e
+$(PKG)_VERSION  := 2.6.1
+$(PKG)_CHECKSUM := d5d130e61d67654b58cfb1c803b80dfafbe6b83a
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := stk
 $(PKG)_FILE     := stk-$($(PKG)_VERSION).tar.gz
