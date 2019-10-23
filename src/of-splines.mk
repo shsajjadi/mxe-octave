@@ -3,8 +3,8 @@
 
 PKG             := of-splines
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.3.2
-$(PKG)_CHECKSUM := 49339e5ba31514d1c37871781bca13ef296bf087
+$(PKG)_VERSION  := 1.3.3
+$(PKG)_CHECKSUM := a817b1ac1fa6d5715b10754ddf7f51bafc6edf44
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := splines-$($(PKG)_VERSION)
 $(PKG)_FILE     := splines-$($(PKG)_VERSION).tar.gz
