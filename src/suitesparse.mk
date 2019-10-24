@@ -17,9 +17,9 @@ else
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://faculty.cse.tamu.edu/davis/suitesparse.html' | \
-    $(SED) -n 's,.*SuiteSparse-\([0-9][^"]*\)\.tar.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://github.com/DrTimothyAldenDavis/SuiteSparse/tags' | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 
