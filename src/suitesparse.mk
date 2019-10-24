@@ -8,7 +8,7 @@ $(PKG)_SUBDIR   := SuiteSparse
 $(PKG)_FILE     := SuiteSparse-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://faculty.cse.tamu.edu/davis/SuiteSparse/$($(PKG)_FILE)
 $(PKG)_URL_2    := https://distfiles.macports.org/SuiteSparse/$($(PKG)_FILE)
-$(PKG)_DEPS     := openblas lapack libgomp
+$(PKG)_DEPS     := blas lapack libgomp
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   $(PKG)_DESTDIR :=
@@ -45,7 +45,7 @@ $(PKG)_MAKE_OPTS = \
     CXXFLAGS='$(MXE_CXXFLAGS)' \
     AR='$(MXE_AR)' \
     RANLIB='$(MXE_RANLIB)' \
-    BLAS="`'$(TARGET)-pkg-config' --libs openblas`" \
+    BLAS="-lblas -lgfortran" \
     LAPACK='-llapack' \
     CHOLMOD_CONFIG='-DNPARTITION'
 
