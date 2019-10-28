@@ -494,9 +494,6 @@ SRC_FILES_1 := \
   of-ltfat-1-cross-fixes.patch \
   of-ltfat.mk \
   of-mapping.mk \
-  of-miscellaneous-1-fixes.patch \
-  of-miscellaneous-2-fixes.patch \
-  of-miscellaneous-3-dev-fixes.patch \
   of-miscellaneous.mk \
   of-nan.mk \
   of-netcdf.mk \
