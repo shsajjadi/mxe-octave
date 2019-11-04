@@ -3,10 +3,10 @@
 
 PKG             := qscintilla
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.11.2
-$(PKG)_CHECKSUM := 1815040576bfb62bedb0dd48a39e36a13bd0f5e9
-$(PKG)_SUBDIR   := QScintilla_gpl-$($(PKG)_VERSION)
-$(PKG)_FILE     := QScintilla_gpl-$($(PKG)_VERSION).tar.gz
+$(PKG)_VERSION  := 2.11.3
+$(PKG)_CHECKSUM := 0683befa0d9dc0920af5e6b5075041edf1e20da5
+$(PKG)_SUBDIR   := QScintilla-$($(PKG)_VERSION)
+$(PKG)_FILE     := QScintilla-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://www.riverbankcomputing.com/static/Downloads/QScintilla/$($(PKG)_VERSION)/$($(PKG)_FILE)
 
 
@@ -24,7 +24,7 @@ endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.riverbankcomputing.com/software/qscintilla/download' | \
-        $(SED) -n 's,.*QScintilla[_-]gpl-\([0-9][^>]*\)\.zip.*,\1,p' | \
+        $(SED) -n 's,.*QScintilla-\([0-9][^>]*\)\.zip.*,\1,p' | \
         head -n 1 
 endef
 
