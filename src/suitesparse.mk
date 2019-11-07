@@ -8,7 +8,10 @@ $(PKG)_SUBDIR   := SuiteSparse
 $(PKG)_FILE     := SuiteSparse-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://faculty.cse.tamu.edu/davis/SuiteSparse/$($(PKG)_FILE)
 $(PKG)_URL_2    := https://distfiles.macports.org/SuiteSparse/$($(PKG)_FILE)
-$(PKG)_DEPS     := blas lapack libgomp
+$(PKG)_DEPS     := blas lapack
+ifeq ($(USE_SYSTEM_GCC),no)
+  $(PKG)_DEPS += libgomp
+endif
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   $(PKG)_DESTDIR :=
