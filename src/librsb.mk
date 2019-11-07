@@ -8,7 +8,10 @@ $(PKG)_CHECKSUM := f2ba35b2996bfa031a24666e87d34629eb7cdbc2
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$($(PKG)_FILE)
-$(PKG)_DEPS     := libgomp
+$(PKG)_DEPS     :=
+ifeq ($(USE_SYSTEM_GCC),no)
+  $(PKG)_DEPS += libgomp
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://sourceforge.net/projects/librsb/files/' | \

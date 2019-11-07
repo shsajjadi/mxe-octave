@@ -9,7 +9,10 @@ $(PKG)_CHECKSUM := 3559c375ce9f875542e4a39978908f91792e6d57
 $(PKG)_SUBDIR   := sundials-$($(PKG)_VERSION)
 $(PKG)_FILE     := sundials-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://computation.llnl.gov/projects/sundials/download/$($(PKG)_FILE)
-$(PKG)_DEPS     := lapack libgomp suitesparse
+$(PKG)_DEPS     := lapack suitesparse
+ifeq ($(USE_SYSTEM_GCC),no)
+  $(PKG)_DEPS += libgomp
+endif
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
