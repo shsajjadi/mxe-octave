@@ -484,11 +484,6 @@ SRC_FILES_1 := \
   of-interval-1-cross-fixes.patch \
   of-interval.mk \
   of-io.mk \
-  of-linear-algebra-1-cross-fixes.patch \
-  of-linear-algebra-2-dev-fixes.patch \
-  of-linear-algebra-3-fixes.patch \
-  of-linear-algebra-4-fixes.patch \
-  of-linear-algebra-5-deprecated.patch \
   of-linear-algebra.mk \
   of-lssa.mk \
   of-ltfat-1-cross-fixes.patch \

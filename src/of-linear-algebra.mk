@@ -3,11 +3,11 @@
 
 PKG             := of-linear-algebra
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.2.2
-$(PKG)_CHECKSUM := 5ebc229807038d5663540b6a6f1e00608dce4e7b
+$(PKG)_VERSION  := 2.2.3
+$(PKG)_CHECKSUM := eb458af318f96e8fa7eea71c2a13acb03e43dac2
 $(PKG)_REMOTE_SUBDIR :=
-$(PKG)_SUBDIR   := linear-algebra
-$(PKG)_FILE     := linear-algebra-$($(PKG)_VERSION).tar.gz
+$(PKG)_SUBDIR   := linear-algebra-$($(PKG)_VERSION)
+$(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     :=
 
