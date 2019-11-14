@@ -464,6 +464,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     MSYS2_SRC_URL := $(MSYS2_BASE_URL)/Sources
     MSYS2_DIR := $(TOP_BUILD_DIR)/msys2
 
+    MSYS2_UPDATE_TMP_FILE := $(TOP_BUILD_DIR)/msys_updates.html
   endif
 else ifeq ($(MXE_SYSTEM),msvc)
   MXE_WINDOWS_BUILD := yes
@@ -940,6 +941,7 @@ clean:
 	rm -rf $(STAMP_DIR) $(MSYS_INFO_DIR) $(LOG_DIR)
 	rm -rf $(MSYS_BASE_DIR) $(MSYS_EXTENSION_DIR) $(NOTEPAD_BASE_DIR)
 	rm -rf $(MSYS2_DIR)
+	rm -f $(MSYS2_UPDATE_TMP_FILE)
 	rm -rf native-tools cross-tools octave gnuplot
 	rm -f Makefile cmake-toolchain-file.stamp cmake-native-toolchain-file.stamp
 	rm -f tools/set-mxe-env.sh
@@ -986,7 +988,7 @@ update-checksum-%:
 	$(call DOWNLOAD_PKG_ARCHIVE,$*)
 	$(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1 '"`$(call PKG_CHECKSUM,$*)`"'/' '$(TOP_DIR)/src/$*.mk'
 
-.PHONY: update-msys2
+.PHONY: update-msys2 update-msys2-filelist
 PKG_MK_CHECKSUM = \
     $(GREP) _CHECKSUM '$(TOP_DIR)/src/$(1).mk' 2>/dev/null | $(SED) -n 's,^.*\([0-9a-f]\{40\}\)$$,\1,p'
 define MSYS2_UPDATE
@@ -1023,10 +1025,19 @@ define MSYS2_UPDATE
 		)),
         $(error Unable to update version number of package $(1)))
 endef
-update-msys2:
-	#$(MSYS2_PACKAGES)
-	$(foreach PKG,$(MSYS2_PACKAGES),$(call MSYS2_UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))))
 
+define MSYS2_PKG_UPDATE_FILE
+  cat $(MSYS2_UPDATE_TMP_FILE) | \
+  $(GREP) $($(PKG)_NAME) |
+  $(SED) -n 's,.*title="$($(PKG)_NAME)-\(r\?[0-9][^-]*-[0-9]*\)-[^\.]*\.pkg\.tar\.xz".*,\1,p' | \
+  head -1
+endef
+
+update-msys2-filelist:
+	$(shell $(WGET) -q -O$(MSYS2_UPDATE_TMP_FILE) '$(MSYS2_URL)/')
+
+update-msys2: update-msys2-filelist
+	$(foreach PKG,$(MSYS2_PACKAGES),$(call MSYS2_UPDATE,$(PKG),$(shell $(MSYS2_PKG_UPDATE_FILE))))
 
 cleanup-style:
 	@$(foreach FILE,$(wildcard $(addprefix $(TOP_DIR)/,Makefile index.html CNAME src/*.mk src/*test.* tools/*)),\
