@@ -830,7 +830,7 @@ define OCTAVE_FORGE_PKG_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         MKOCTFILE=$(MXE_MKOCTFILE) MAKE=$(MAKE) \
         CONFIGURE_OPTIONS="$(HOST_AND_BUILD_CONFIGURE_OPTIONS)" $(4) \
-        $(TOP_DIR)/tools/pkg-install.py -verbose "$($(PKG)_FILE)"; \
+        $(TOP_DIR)/tools/pkg-install.py install -verbose "$($(PKG)_FILE)"; \
      fi
 endef
 endif
