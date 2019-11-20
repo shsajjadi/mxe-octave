@@ -23,7 +23,9 @@ define $(PKG)_BUILD
         --prefix='$(BUILD_TOOLS_PREFIX)' && \
       $(MAKE) -C '$(1).native' -j 1 install; \
     fi
-    $(SED) -i 's/^Cflags/#Cflags/;' '$(1)/sqlite3.pc.in'
+    if [ $(MXE_WINDOWS_BUILD) = yes ]; then \
+      $(SED) -i 's/^Cflags/#Cflags/;' '$(1)/sqlite3.pc.in'; \
+    fi
     cd '$(1)' && autoreconf && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
