@@ -37,7 +37,6 @@ ifeq ($(ENABLE_FORTRAN_INT64),yes)
 endif
 
 $(PKG)_MAKE_OPTS = \
-    UNAME=Windows \
     CPPFLAGS="$($(PKG)_CPPFLAGS)" \
     CC='$(MXE_CC)' \
     CXX='$(MXE_CXX)' \
@@ -51,6 +50,14 @@ $(PKG)_MAKE_OPTS = \
     BLAS="-lblas -lgfortran" \
     LAPACK='-llapack' \
     CHOLMOD_CONFIG='-DNPARTITION'
+
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+$(PKG)_MAKE_OPTS += \
+    UNAME=Windows 
+$(PKG)_SO_DIR := $($(PKG)_DESTDIR)$(HOST_BINDIR)
+else
+$(PKG)_SO_DIR := $($(PKG)_DESTDIR)$(HOST_LIBDIR)
+endif
 
 $(PKG)_cputype = $(shell uname -m | sed "s/\\ /_/g")
 $(PKG)_systype = $(shell uname -s)
@@ -71,8 +78,9 @@ define $(PKG)_BUILD
 
     # install metis
     mkdir -p $($(PKG)_DESTDIR)$(HOST_LIBDIR)
+    mkdir -p $($(PKG)_SO_DIR)
     mkdir -p $($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/
-    cp $(1)/metis-5.1.0/$($(PKG)_METIS_BUILDDIR)/libmetis/libmetis.* $($(PKG)_DESTDIR)$(HOST_BINDIR)
+    cp $(1)/metis-5.1.0/$($(PKG)_METIS_BUILDDIR)/libmetis/libmetis.* $($(PKG)_SO_DIR)
     cp $(1)/metis-5.1.0/include/metis.h $($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/
     chmod 755 $($(PKG)_DESTDIR)$(HOST_BINDIR)/libmetis.*
     chmod 644 $($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/metis.h
@@ -80,7 +88,7 @@ define $(PKG)_BUILD
     # build all
     $(MAKE) -C '$(1)' -j '$(JOBS)' \
         $($(PKG)_MAKE_OPTS) \
-        MY_METIS_LIB=$($(PKG)_DESTDIR)$(HOST_BINDIR) \
+        MY_METIS_LIB=$($(PKG)_SO_DIR) \
         library
 
     # install libraries and headers
@@ -88,6 +96,6 @@ define $(PKG)_BUILD
         $($(PKG)_MAKE_OPTS) \
         INSTALL_INCLUDE='$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/' \
         INSTALL_LIB='$($(PKG)_DESTDIR)$(HOST_LIBDIR)' \
-        INSTALL_SO='$($(PKG)_DESTDIR)$(HOST_BINDIR)'
+        INSTALL_SO='$($(PKG)_SO_DIR)'
 endef
 
