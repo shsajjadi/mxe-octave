@@ -18,6 +18,7 @@ define $(PKG)_UPDATE
     echo $($(PKG)_VERSION)
 endef
 
+ifeq ($(MXE_WINDOWS_BUILD),yes)
 define $(PKG)_BUILD
     mkdir '$(1).build'
     cd '$(1).build' && cmake \
@@ -43,3 +44,23 @@ define $(PKG)_BUILD
         mv '$(3)$(HOST_LIBDIR)/'libsundials*.dll '$(3)$(HOST_BINDIR)/'; \
     fi
 endef
+else
+define $(PKG)_BUILD
+    mkdir '$(1).build'
+    cd '$(1).build' && cmake \
+        -DEXAMPLES_ENABLE=OFF \
+        -DKLU_ENABLE=ON \
+        -DKLU_INCLUDE_DIR=$(HOST_INCDIR)/suitesparse \
+        -DKLU_LIBRARY_DIR=$(HOST_LIBDIR) \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+	-DBUILD_ARKODE=OFF \
+	-DBUILD_CVODE=OFF \
+	-DBUILD_CVODES=OFF \
+	-DBUILD_IDA=ON \
+	-DBUILD_IDAS=OFF \
+	-DBUILD_KINSOL=OFF \
+	-DBUILD_CPODES=OFF \
+        '$(1)'
+    $(MAKE) -C '$(1).build' -j '$(JOBS)' install VERBOSE=1
+endef
+endif
