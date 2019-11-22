@@ -82,7 +82,7 @@ define $(PKG)_BUILD
     mkdir -p $($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/
     cp $(1)/metis-5.1.0/$($(PKG)_METIS_BUILDDIR)/libmetis/libmetis.* $($(PKG)_SO_DIR)
     cp $(1)/metis-5.1.0/include/metis.h $($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/
-    chmod 755 $($(PKG)_DESTDIR)$(HOST_BINDIR)/libmetis.*
+    chmod 755 $($(PKG)_SO_DIR)/libmetis.*
     chmod 644 $($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/metis.h
 
     # build all
