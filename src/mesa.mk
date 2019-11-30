@@ -74,6 +74,7 @@ else
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         $($(PKG)_CONFIGURE_OPENGL_OPTIONS) \
+        --enable-autotools \
         --disable-osmesa \
         --disable-gbm \
         --disable-xvmc \
