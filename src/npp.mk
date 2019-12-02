@@ -3,15 +3,15 @@
 
 PKG             := npp
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 7.7.1
-$(PKG)_CHECKSUM := f19d07c5dca73fd9baa1e5a2b4470a639e0126f6
+$(PKG)_VERSION  := 7.8.1
+$(PKG)_CHECKSUM := 48cb8c9600542fbaef6552b6980aee8b96e3cc40
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $(PKG).$($(PKG)_VERSION).bin.zip
 $(PKG)_URL      := https://notepad-plus-plus.org/repository/7.x/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'https://notepad-plus-plus.org/download/' | \
+    $(WGET) -q -O- 'https://notepad-plus-plus.org/downloads/' | \
     $(GREP) 'Current' | \
     $(SED) -n 's|.*/v\([^/]*\).*|\1|p' | \
     tail -1
