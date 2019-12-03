@@ -7,7 +7,7 @@ $(PKG)_VERSION  := 7.8.1
 $(PKG)_CHECKSUM := 48cb8c9600542fbaef6552b6980aee8b96e3cc40
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $(PKG).$($(PKG)_VERSION).bin.zip
-$(PKG)_URL      := https://notepad-plus-plus.org/repository/7.x/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
