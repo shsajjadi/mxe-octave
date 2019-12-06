@@ -173,7 +173,7 @@ ifeq ($(STRIP_DIST_FILES),yes)
   ifeq ($(MXE_WINDOWS_BUILD),yes)
     define strip-dist-files
       echo "stripping files..."
-      for f in `find $(OCTAVE_DIST_DIR) -name '*.dll' -o -name '*.exe' -o -name '*.oct' | $(GREP) -v "notepad++" `; do \
+      for f in `find $(OCTAVE_DIST_DIR) -name '*.dll' -o -name '*.exe' -o -name '*.oct' | $(GREP) -v "notepad++" | $(GREP) -v "msys-2.0.dll"`; do \
         if [ "$$(head -n1 $$f | cut -c1-2)" != "#!" ]; then \
           $(MXE_STRIP) $$f; \
         fi; \
