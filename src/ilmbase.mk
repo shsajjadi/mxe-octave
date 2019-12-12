@@ -3,17 +3,16 @@
 
 PKG             := ilmbase
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.2.1
-$(PKG)_CHECKSUM := 87df9e235eff0d10e171f15ad0e63cba05e16bce
+$(PKG)_VERSION  := 2.4.0
+$(PKG)_CHECKSUM := 0b9a24b8fa6b3f7f1d8813e91234308d3e43d10f
 $(PKG)_SUBDIR   := ilmbase-$($(PKG)_VERSION)
 $(PKG)_FILE     := ilmbase-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://download.savannah.nongnu.org/releases/openexr/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/openexr/openexr/archive/v$($(PKG)_VERSION).tar.gz
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.openexr.com/downloads.html' | \
-    grep 'ilmbase-' | \
-    $(SED) -n 's,.*ilmbase-\([0-9][^>]*\)\.tar.*,\1,p' | \
+    $(WGET) -q -O- 'https://github.com/openexr/openexr/tags' | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | \
     head -1
 endef
 
