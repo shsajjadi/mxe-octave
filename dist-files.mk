@@ -512,6 +512,7 @@ SRC_FILES_1 := \
   of-queueing.mk \
   of-signal.mk \
   of-sockets-1-cross-fixes.patch \
+  of-sockets-2-deprecated.patch \
   of-sockets.mk \
   of-sparsersb-1-deprecated.patch \
   of-sparsersb.mk \
