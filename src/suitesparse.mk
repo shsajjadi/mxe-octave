@@ -2,12 +2,11 @@
 # See index.html for further information.
 
 PKG             := suitesparse
-$(PKG)_VERSION  := 4.5.6
-$(PKG)_CHECKSUM := 06ed5f6f61bfe09f08ce03971a24381a627446b1
-$(PKG)_SUBDIR   := SuiteSparse
-$(PKG)_FILE     := SuiteSparse-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://faculty.cse.tamu.edu/davis/SuiteSparse/$($(PKG)_FILE)
-$(PKG)_URL_2    := https://distfiles.macports.org/SuiteSparse/$($(PKG)_FILE)
+$(PKG)_VERSION  := 5.6.0
+$(PKG)_CHECKSUM := 3de08b5ab02610ed0446225aad2445696616fae5
+$(PKG)_SUBDIR   := SuiteSparse-$($(PKG)_VERSION)
+$(PKG)_FILE     := v$($(PKG)_VERSION).tar.gz
+$(PKG)_URL      := https://github.com/DrTimothyAldenDavis/SuiteSparse/archive/$($(PKG)_FILE)
 $(PKG)_DEPS     := blas lapack
 ifeq ($(USE_SYSTEM_GCC),no)
   $(PKG)_DEPS += libgomp
@@ -49,11 +48,12 @@ $(PKG)_MAKE_OPTS = \
     RANLIB='$(MXE_RANLIB)' \
     BLAS="-lblas -lgfortran" \
     LAPACK='-llapack' \
-    CHOLMOD_CONFIG='-DNPARTITION'
+    CHOLMOD_CONFIG='-DNPARTITION' \
+    CMAKE_OPTIONS='-DCMAKE_TOOLCHAIN_FILE="$(CMAKE_TOOLCHAIN_FILE)"'
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
 $(PKG)_MAKE_OPTS += \
-    UNAME=Windows 
+    UNAME=Windows
 $(PKG)_SO_DIR := $($(PKG)_DESTDIR)$(HOST_BINDIR)
 else
 $(PKG)_SO_DIR := $($(PKG)_DESTDIR)$(HOST_LIBDIR)

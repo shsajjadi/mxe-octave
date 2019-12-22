@@ -697,23 +697,70 @@ index 1111111..2222222 100644
  	$(RM) $(INSTALL_DOC)/UMFPACK_UserGuide.pdf
  	$(RM) $(INSTALL_DOC)/UMFPACK_QuickStart.pdf
 
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Tony Theodore <tonyt@logyst.com>
-Date: Tue, 21 Nov 2017 01:20:21 +1100
-Subject: [PATCH 3/3] add $(TBB) libs to SPQR
-
-
-diff --git a/SPQR/Lib/Makefile b/SPQR/Lib/Makefile
-index 1111111..2222222 100644
---- a/SPQR/Lib/Makefile
-+++ b/SPQR/Lib/Makefile
-@@ -13,7 +13,7 @@ ccode: all
- include ../../SuiteSparse_config/SuiteSparse_config.mk
- 
- # SPQR depends on CHOLMOD, AMD, COLAMD, LAPACK, the BLAS and SuiteSparse_config
--LDLIBS += -lamd -lcolamd -lcholmod -lsuitesparseconfig $(LAPACK) $(BLAS)
-+LDLIBS += -lamd -lcolamd -lcholmod -lsuitesparseconfig $(LAPACK) $(BLAS) $(TBB)
- 
- # compile and install in SuiteSparse/lib
- library:
+--- a/Makefile	2019-12-22 12:17:36.147324000 +0100
++++ b/Makefile	2019-12-22 12:23:59.027388353 +0100
+@@ -12,7 +12,6 @@
+ # Compile the default rules for each package
+ go: metis
+ 	( cd SuiteSparse_config && $(MAKE) )
+-	( cd Mongoose  && $(MAKE) CMAKE_OPTIONS='$(CMAKE_OPTIONS)' )
+ 	( cd AMD && $(MAKE) )
+ 	( cd BTF && $(MAKE) )
+ 	( cd CAMD && $(MAKE) )
+@@ -38,7 +37,6 @@
+ # (note that CSparse is not installed; CXSparse is installed instead)
+ install: metisinstall
+ 	( cd SuiteSparse_config && $(MAKE) install )
+-	( cd Mongoose  && $(MAKE) CMAKE_OPTIONS='$(CMAKE_OPTIONS)' install )
+ 	( cd AMD && $(MAKE) install )
+ 	( cd BTF && $(MAKE) install )
+ 	( cd CAMD && $(MAKE) install )
+@@ -85,7 +83,6 @@
+ 	( cd SuiteSparse_config && $(MAKE) uninstall )
+ 	- ( cd metis-5.1.0 && $(MAKE) uninstall )
+ 	- ( cd GraphBLAS && $(MAKE) uninstall )
+-	- ( cd Mongoose  && $(MAKE) uninstall )
+ 	( cd AMD && $(MAKE) uninstall )
+ 	( cd CAMD && $(MAKE) uninstall )
+ 	( cd COLAMD && $(MAKE) uninstall )
+@@ -116,7 +113,6 @@
+ # the static library
+ library: metis
+ 	( cd SuiteSparse_config && $(MAKE) )
+-	( cd Mongoose  && $(MAKE) CMAKE_OPTIONS='$(CMAKE_OPTIONS)' library )
+ 	( cd AMD && $(MAKE) library )
+ 	( cd BTF && $(MAKE) library )
+ 	( cd CAMD && $(MAKE) library )
+@@ -143,7 +139,6 @@
+ # both the dynamic and static libraries.
+ static: metis
+ 	( cd SuiteSparse_config && $(MAKE) static )
+-	( cd Mongoose  && $(MAKE) CMAKE_OPTIONS='$(CMAKE_OPTIONS)' static )
+ 	( cd AMD && $(MAKE) static )
+ 	( cd BTF && $(MAKE) static )
+ 	( cd CAMD && $(MAKE) static )
+@@ -171,7 +166,6 @@
+ 	- ( cd metis-5.1.0 && $(MAKE) distclean )
+ 	- ( cd AMD && $(MAKE) purge )
+ 	- ( cd GraphBLAS && $(MAKE) purge )
+-	- ( cd Mongoose  && $(MAKE) purge )
+ 	- ( cd CAMD && $(MAKE) purge )
+ 	- ( cd COLAMD && $(MAKE) purge )
+ 	- ( cd BTF && $(MAKE) purge )
+@@ -198,7 +192,6 @@
+ 	- ( cd SuiteSparse_config && $(MAKE) clean )
+ 	- ( cd metis-5.1.0 && $(MAKE) clean )
+ 	- ( cd GraphBLAS && $(MAKE) clean )
+-	- ( cd Mongoose  && $(MAKE) clean )
+ 	- ( cd AMD && $(MAKE) clean )
+ 	- ( cd CAMD && $(MAKE) clean )
+ 	- ( cd COLAMD && $(MAKE) clean )
+@@ -220,7 +213,6 @@
+ # Create the PDF documentation
+ docs:
+ 	( cd GraphBLAS && $(MAKE) docs )
+-	( cd Mongoose  && $(MAKE) docs )
+ 	( cd AMD && $(MAKE) docs )
+ 	( cd CAMD && $(MAKE) docs )
+ 	( cd KLU && $(MAKE) docs )
 
