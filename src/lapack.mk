@@ -2,12 +2,11 @@
 # See index.html for further information.
 
 PKG             := lapack
-$(PKG)_VERSION  := 3.8.0
-$(PKG)_CHECKSUM := 55ac9d6be510883c5442c8aca967722cdf58fb29
+$(PKG)_VERSION  := 3.9.0
+$(PKG)_CHECKSUM := 0451d180eed2b12b94aaae77e772d7573e87bec4
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://www.netlib.org/$(PKG)/$($(PKG)_FILE)
-$(PKG)_URL_2    := ftp://ftp.eq.uc.pt/pub/software/math/netlib/$(PKG)/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/Reference-LAPACK/$(PKG)/archive/v$($(PKG)_VERSION).tar.gz
 $(PKG)_DEPS     := blas
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
