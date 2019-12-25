@@ -345,7 +345,7 @@ Section "Shortcuts"
  CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
  SetOutPath "%USERPROFILE%"
  CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (CLI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$INSTDIR\\octave.vbs\$\\" --no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
- CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (GUI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$INSTDIR\\octave.vbs\$\\" --force-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (GUI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$INSTDIR\\octave.vbs\$\\" --gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
  SetOutPath "\$INSTDIR"
 
  ; fix the shortcuts for appid
@@ -396,7 +396,7 @@ set_ver_str:
 have_ver_str:
     SetOutPath "%USERPROFILE%"
     CreateShortCut "\$desktop\\GNU Octave (CLI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --no-gui" "\$R2" 0 SW_SHOWMINIMIZED
-    CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --force-gui" "\$R2" 0 SW_SHOWMINIMIZED
+    CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --gui" "\$R2" 0 SW_SHOWMINIMIZED
 
     nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave (GUI).lnk" "gnu.octave.\$R1"'
     Pop \$0
@@ -422,7 +422,7 @@ Section "FileTypeRego"
   WriteRegStr HKCR "Octave.Document.$VERSION" "" "GNU Octave Script"
   WriteRegStr HKCR "Octave.Document.$VERSION\\DefaultIcon" "" "\$INSTDIR\\$ICON"
   ; document actions
-  WriteRegStr HKCR "Octave.Document.$VERSION\\shell\\open\\command" "" "wscript \$\\"\$INSTDIR\\octave.vbs\$\\" --force-gui --persist --eval \$\\"edit '%1'\$\\""
+  WriteRegStr HKCR "Octave.Document.$VERSION\\shell\\open\\command" "" "wscript \$\\"\$INSTDIR\\octave.vbs\$\\" --gui --persist --eval \$\\"edit '%1'\$\\""
 
   \${If} \$RegisterOctaveFileType == \${BST_CHECKED}
     ReadRegStr \$0 HKCR ".m" ""
@@ -501,7 +501,7 @@ not_registered_file:
 check_gui_shortcut:
  IfFileExists "\$desktop\\GNU Octave (GUI).lnk" 0 done_remove_desktop_shortcuts
  SetOutPath "%USERPROFILE%"
- CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "%SYSTEMROOT%\system32\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --force-gui" "\$R2" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "%SYSTEMROOT%\system32\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --gui" "\$R2" 0 SW_SHOWMINIMIZED
  nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave (GUI).lnk" "gnu.octave.\$R1"'
  Pop \$0
 
