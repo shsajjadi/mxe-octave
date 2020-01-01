@@ -26,5 +26,5 @@ define $(PKG)_BUILD
 	--disable-docs \
 	&& $(CONFIGURE_POST_HOOK)
 
-    $(MAKE) -C '$(1)/.build' -j 1 install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)/.build' -j 1 install DESTDIR='$(3)' $(MXE_DISABLE_DOCS)
 endef
