@@ -21,14 +21,6 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    # install config.guess for general use
-    $(INSTALL) -d '$(TOP_DIR)/dist/usr/bin'
-    $(INSTALL) -m755 '$(1)/config.guess' '$(TOP_DIR)/dist/usr/bin/'
-
-    # install target-specific autotools config file
-    $(INSTALL) -d '$(TOP_DIR)/dist/usr/share'
-    echo "ac_cv_build=`$(1)/config.guess`" > '$(TOP_DIR)/dist/usr/share/config.site'
-
     cd '$(1)' && ./configure \
         --target='$(TARGET)' \
         $($(PKG)_SYSDEP_OPTIONS) \
