@@ -41,5 +41,9 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' $(if $(BUILD_STATIC),libgs,so)
     $(MAKE) -C '$(1)/.build' prefix='$(HOST_PREFIX)' install
+
+    if [ "x$(ENABLE_DEP_DOCS)" == "xno" ]; then \
+      rm -f $(HOST_PREFIX)/share/doc/ghostscript/$($(PKG)_VERSION)/*.htm; \
+    fi
 endef
 
