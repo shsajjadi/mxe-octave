@@ -3,16 +3,17 @@
 
 PKG             := bzip2
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.0.6
-$(PKG)_CHECKSUM := 3f89f861209ce81a6bab1fd1998c0ef311712002
+$(PKG)_VERSION  := 1.0.8
+$(PKG)_CHECKSUM := bf7badf7e248e0ecf465d33c2f5aeec774209227
 $(PKG)_SUBDIR   := bzip2-$($(PKG)_VERSION)
 $(PKG)_FILE     := bzip2-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := https://src.fedoraproject.org/repo/pkgs/$(PKG)/$($(PKG)_FILE)/00b516f4704d4a7cb50a1d97e6e8e15b/$($(PKG)_FILE)
+$(PKG)_URL      := https://sourceware.org/pub/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'https://sourceware.org/pub/bzip2/' | \
+    $(SED) -n 's,.*<a href="$(PKG)-\([0-9][^"]*\)\.tar.*,\1,p' | \
+    $(SORT) -V | tail -1
 endef
 
 ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
