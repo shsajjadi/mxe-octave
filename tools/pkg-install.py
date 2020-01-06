@@ -61,6 +61,19 @@ def extract_pkg(filename, nm):
         pkg.append(str(so.group(1)))
   return pkg 
 
+def extract_test_code(filename):
+  body = []
+  if not os.path.isfile(filename):
+    return body
+  with open(filename, 'rt') as f:
+    lines = f.read().splitlines()
+    for l in lines:
+      if l.startswith("%!"):
+        body.append(l)
+  if not body:
+    return body
+  return "\n".join(body)
+
 def write_index_file(env, desc, index_nm):
 
   with open(index_nm, 'w') as f:
@@ -250,24 +263,39 @@ def configure_make(env, packdir):
       if os.system(env.make + " --directory '" + src + "'" ) != 0:
         raise Exception, "make failed during build - stopping install"
 
+    # extract any tests
+    if env.verbose:
+      print "checking for src BIST tests"
+
+    files = os.listdir(src)
+    srcfiles = fnmatch.filter(files, "*.cc") + fnmatch.filter(files,"*.cpp") + fnmatch.filter(files, "*.cxx") + fnmatch.filter(files, "*.c")
+    for sf in srcfiles:
+      tst = extract_test_code(sf)
+      if tst:
+        with open(sf + "-tst", "w") as f:
+          f.write("## DO NOT EDIT! Generated from " + sf + "\n")
+          f.write(tst + "\n")
+
     # copy files to inst and inst arch
     files = src + "/FILES"
     instdir = packdir + "/inst"
     archdir = instdir + "/" + env.arch
 
     if os.path.isfile(files) == True:
+      raise Exception, "make using FILES not supported yet"
       pass # TODO yet
     else:
       # get .m, .oct and .mex files
       files = os.listdir(src)
       m_files = fnmatch.filter(files, "*.m")
+      tst_files = fnmatch.filter(files, "*-tst")
       mex_files = fnmatch.filter(files, "*.mex")
       oct_files = fnmatch.filter(files, "*.oct")
-      files = m_files + mex_files + oct_files
+      files = m_files + mex_files + oct_files + tst_files
       files = list(src + "/" + s for s in files)
 
     # split files into arch and non arch files
-    archdependant = fnmatch.filter(files, "*.mex") + fnmatch.filter(files,"*.oct")
+    archdependant = fnmatch.filter(files, "*.mex") + fnmatch.filter(files,"*.oct") + fnmatch.filter(files, "*-tst")
     archindependant = list( x for x in files if x not in archdependant )
 
     # copy the files
@@ -373,6 +401,7 @@ def fix_depends(deps):
 def rebuild_pkg(env):
   currdir = os.getcwd()
 
+
   try:
     oct_dir = env.prefix + "/share/octave"
     pkg_dir = oct_dir + "/packages"
@@ -381,6 +410,9 @@ def rebuild_pkg(env):
     pkg_list_file = oct_dir + "/octave_packages"
 
     descs=glob.glob(pkg_dir + "/*/packinfo/DESCRIPTION")
+
+    if env.verbose:
+      print "Rebuilding pkg list {}".format(pkg_list_file)
 
     with open(pkg_list_file, "w") as f:
       f.write("# Created by pkg-install.py\n")
@@ -391,8 +423,6 @@ def rebuild_pkg(env):
 
       for d in descs:
         pkg = d[len(pkg_dir):-len("/packinfo/DESCRIPTION")]
-        if env.verbose:
-          print "Rebuilding {}".format(pkg)
         desc = get_description(d)
         desc["Name"] = desc["Name"].lower()
         desc["Depends"] = fix_depends(desc.get("Depends",""))
