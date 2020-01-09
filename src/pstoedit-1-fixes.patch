@@ -36,3 +36,18 @@ diff -ur pstoedit-3.75.orig/src/Makefile.am pstoedit-3.75/src/Makefile.am
  libpstoedit_la_LDFLAGS = -no-undefined
  
  pstoedit_SOURCES = cmdmain.cpp
+diff -ur pstoedit-3.75.orig/src/dynload.cpp pstoedit-3.75/src/dynload.cpp
+--- pstoedit-3.75.orig/src/dynload.cpp	2020-01-09 13:50:03.610222335 -0500
++++ pstoedit-3.75/src/dynload.cpp	2020-01-09 13:51:10.084019302 -0500
+@@ -239,8 +239,10 @@
+ 	DynLoader::fptr rfptr = ptr_to_fptr(dlsym(handle, name));	//lint !e611 //: Suspicious cast
+ #elif defined(OS_WIN32_WCE)
+ 	DynLoader::fptr rfptr = ptr_to_fptr(GetProcAddress((HINSTANCE) handle, LPSTRtoLPWSTR(name).c_str()));	//lint !e611 //: Suspicious cast
+-#elif defined(_WIN32)
++#elif defined(_WIN64)
+ 	DynLoader::fptr rfptr = /* ptr_to_fptr */(GetProcAddress((HINSTANCE) handle, name));	//lint !e611 //: Suspicious cast
++#elif defined(_WIN32)
++	DynLoader::fptr rfptr = ptr_to_fptr((void*)GetProcAddress((HINSTANCE) handle, name));	//lint !e611 //: Suspicious cast
+ #else
+ #error "system unsupported so far"
+ #endif
