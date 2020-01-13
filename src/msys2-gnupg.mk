@@ -4,9 +4,9 @@
 PKG             := msys2-gnupg
 $(PKG)_NAME     := gnupg
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.2.17-1
-$(PKG)_x86_64_CS := 2f8e1024972264cc21b20fd2bb6a0f83455841fa
-$(PKG)_i686_CS  := f5ee6fa6c24cf4bc2ba0eb7d650c314d89319380
+$(PKG)_VERSION  := 2.2.19-1
+$(PKG)_x86_64_CS := 5b36b0eabf6723f43e48b979b8759f864c8a211a
+$(PKG)_i686_CS  := 9269da8b711cb1fa305c19bd80fba2009943483a
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
