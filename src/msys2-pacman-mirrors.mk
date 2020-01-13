@@ -11,7 +11,7 @@ $(PKG)_CS       := $($(PKG)_x86_64_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION)-any.pkg.tar.xz
-$(PKG)_URL      := $(MSYS2_URL)/$($(PKG)_FILE)/download
+$(PKG)_URL      := $(MSYS2_URL)/$($(PKG)_FILE)
 
 $(PKG)_DEPS     := 
 

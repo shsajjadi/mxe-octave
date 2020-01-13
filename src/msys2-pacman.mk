@@ -12,7 +12,7 @@ $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION)-$(MSYS2_ARCH).pkg.tar.xz
-$(PKG)_URL      := $(MSYS2_URL)/$($(PKG)_FILE)/download
+$(PKG)_URL      := $(MSYS2_URL)/$($(PKG)_FILE)
 
 $(PKG)_DEPS     := 
 

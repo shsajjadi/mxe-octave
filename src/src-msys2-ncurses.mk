@@ -8,7 +8,7 @@ $(PKG)_VERSION  := 6.1.20190615-1
 $(PKG)_CHECKSUM := c182923536a5106a70e2eb5de362e4b60809b7ca
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
-$(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download
+$(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)
 
 $(PKG)_DEPS     := 
 

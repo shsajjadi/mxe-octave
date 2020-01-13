@@ -8,7 +8,7 @@ $(PKG)_VERSION  := 6.1.2-1
 $(PKG)_CHECKSUM := 929db64b7821951819cdded78f4f91e4c89a8190
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
-$(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download
+$(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)
 
 $(PKG)_DEPS     := 
 
