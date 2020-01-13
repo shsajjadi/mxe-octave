@@ -8,7 +8,7 @@ $(PKG)_VERSION  := 20180604-2
 $(PKG)_CHECKSUM := 2cc27c7210ebd24477b448b4e2826915187be806
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
-$(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download
+$(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)
 
 $(PKG)_DEPS     := 
 

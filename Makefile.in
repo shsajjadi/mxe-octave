@@ -459,9 +459,9 @@ ifeq ($(MXE_SYSTEM),mingw)
     MSYS2_PACKAGES := $(shell $(SED) -n 's/^.* class="package">\([^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html' | $(GREP) msys2-)
     MSYS2_SOURCES := $(addprefix src-,$(MSYS2_PACKAGES))
     PKGS += $(MSYS2_SOURCES)
-    MSYS2_BASE_URL := https://sourceforge.net/projects/msys2/files/REPOS/MSYS2
+    MSYS2_BASE_URL := http://repo.msys2.org/msys
     MSYS2_URL := $(MSYS2_BASE_URL)/$(MSYS2_ARCH)
-    MSYS2_SRC_URL := $(MSYS2_BASE_URL)/Sources
+    MSYS2_SRC_URL := $(MSYS2_BASE_URL)/sources
     MSYS2_DIR := $(TOP_BUILD_DIR)/msys2
 
     MSYS2_UPDATE_TMP_FILE := $(TOP_BUILD_DIR)/msys_updates.html
@@ -663,8 +663,9 @@ endef
 define MSYS2_PKG_UPDATE
   $(WGET) -q -O- '$(MSYS2_URL)/' | \
   $(GREP) $($(PKG)_NAME) |
-  $(SED) -n 's,.*title="$($(PKG)_NAME)-\(r\?[0-9][^-]*-[0-9]*\)-[^\.]*\.pkg\.tar\.xz".*,\1,p' | \
-  head -1
+  $(SED) -n 's,.*href="$($(PKG)_NAME)-\(r\?[0-9][^-]*-[0-9]*\)-[^\.]*\.pkg\.tar\.xz".*,\1,p' | \
+  $(SORT) -V | \
+  tail -1
 endef
 
 .PHONY: msys2
@@ -1029,8 +1030,9 @@ endef
 define MSYS2_PKG_UPDATE_FILE
   cat $(MSYS2_UPDATE_TMP_FILE) | \
   $(GREP) $($(PKG)_NAME) |
-  $(SED) -n 's,.*title="$($(PKG)_NAME)-\(r\?[0-9][^-]*-[0-9]*\)-[^\.]*\.pkg\.tar\.xz".*,\1,p' | \
-  head -1
+  $(SED) -n 's,.*href="$($(PKG)_NAME)-\(r\?[0-9][^-]*-[0-9]*\)-[^\.]*\.pkg\.tar\.xz".*,\1,p' | \
+  $(SORT) -V | \
+  tail -1
 endef
 
 update-msys2-filelist:

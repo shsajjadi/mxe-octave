@@ -8,7 +8,7 @@ $(PKG)_VERSION  := 1.20.3-1
 $(PKG)_CHECKSUM := d2cf2253936beaf8b0f378c736141ab4561f119d
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
-$(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download
+$(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)
 
 $(PKG)_DEPS     := 
 

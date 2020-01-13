@@ -8,7 +8,7 @@ $(PKG)_VERSION  := 3.5.1-1
 $(PKG)_CHECKSUM := 1c910c231882e4b1d17da5ff27c27ab7b2d86cf0
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
-$(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)/download
+$(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)
 
 $(PKG)_DEPS     := 
 
