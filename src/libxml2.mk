@@ -3,8 +3,8 @@
 
 PKG             := libxml2
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.9.9
-$(PKG)_CHECKSUM := 96686d1dd9fddf3b35a28b1e2e4bbacac889add3
+$(PKG)_VERSION  := 2.9.10
+$(PKG)_CHECKSUM := db6592ec9ca9708c4e71bf6bfd907bbb5cd40644
 $(PKG)_SUBDIR   := libxml2-$($(PKG)_VERSION)
 $(PKG)_FILE     := libxml2-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://xmlsoft.org/libxml2/$($(PKG)_FILE)
@@ -15,8 +15,8 @@ ifneq ($(MXE_SYSTEM),msvc)
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- https://github.com/GNOME/libxml2/tags | \
-    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | grep -v 'rc' | $(SORT) -V | \
+    $(WGET) -q -O- https://gitlab.gnome.org/GNOME/libxml2/tags | \
+    $(SED) -n 's|.*/tags/v\([^"]*\).*|\1|p' | grep -v 'rc' | $(SORT) -V | \
     tail -1
 endef
 
