@@ -90,6 +90,7 @@ Caption "\${APP_NAME}"
 OutFile "\${INSTALLER_NAME}"
 BrandingText "\${APP_NAME}"
 XPStyle on
+ManifestDPIAware true
 InstallDir "C:\\Octave\\Octave-\${OCTAVE_VERSION}"
 Icon "\${INSTALLER_FILES}/octave-logo.ico"
 
