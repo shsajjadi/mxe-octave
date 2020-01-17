@@ -451,6 +451,7 @@ SRC_FILES_1 := \
   ocaml-native-1-fixes.patch \
   ocaml-native.mk \
   of-actuarial.mk \
+  of-audio.mk \
   of-communications.mk \
   of-control.mk \
   of-data-smoothing.mk \
