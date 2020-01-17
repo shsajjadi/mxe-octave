@@ -4,15 +4,16 @@
 PKG             := netcdf
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 4.3.2
-$(PKG)_CHECKSUM := 6e1bacab02e5220954fe0328d710ebb71c071d19
-$(PKG)_SUBDIR   := netcdf-$($(PKG)_VERSION)
+$(PKG)_CHECKSUM := dc26276da6a14f3f3a84cca6e87dc354a503dfdc
+$(PKG)_SUBDIR   := netcdf-c-$($(PKG)_VERSION)
 $(PKG)_FILE     := netcdf-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := ftp://ftp.unidata.ucar.edu/pub/netcdf/old/$($(PKG)_FILE)
+$(PKG)_URL_DISABLED := ftp://ftp.unidata.ucar.edu/pub/netcdf/old/$($(PKG)_FILE)
+$(PKG)_URL      := https://src.fedoraproject.org/repo/pkgs/$(PKG)/$($(PKG)_FILE)/6d0a2a1e2bd854390062f4a808dd94c4/$($(PKG)_FILE)
 $(PKG)_DEPS     := curl hdf5
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'ftp://ftp.unidata.ucar.edu/pub/netcdf/old/' | \
-    $(SED) -n 's,.*netcdf-\([0-9]\.[^>]*\)\.tar.*,\1,p' | \
+    $(WGET) -q -O- 'ftp://ftp.unidata.ucar.edu/pub/netcdf/' | \
+    $(SED) -n 's,.*netcdf-c-\([0-9]\.[^>]*\)\.tar.*,\1,p' | \
     $(SORT) -V | \
     tail -1
 endef
