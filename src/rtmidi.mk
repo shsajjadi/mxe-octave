@@ -29,5 +29,8 @@ define $(PKG)_BUILD
         && $(CONFIGURE_POST_HOOK)
  
     $(MAKE) -C '$(1)' -j '$(JOBS)' noinst_PROGRAMS=  $(MXE_DISABLE_DOCS)
+    if [ "$(MXE_WINDOWS_BUILD)" == "no" ]; then \
+        $(SED) -i 's,^Requires,PrivateRequires,' '$(1)/rtmidi.pc'; \
+    fi
     $(MAKE) -C '$(1)' -j '1' noinst_PROGRAMS= DESTDIR='$(3)'  $(MXE_DISABLE_DOCS) install
 endef
