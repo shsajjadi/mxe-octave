@@ -42,7 +42,7 @@ define $(PKG)_BUILD_PRE
     TARGET='$(TARGET)' $(MAKE) -C '$(1)' clean
     TARGET='$(TARGET)' $(MAKE) -C '$(1)' -j '$(JOBS)' \
 		libbiosig.a libgdf.a libphysicalunits.a \
-		libbiosig.def libgdf.def libphysicalunits.def
+    		libbiosig.def libgdf.def libphysicalunits.def
 
 endef
 
@@ -56,19 +56,19 @@ define $(PKG)_BUILD_POST
     $(INSTALL) -m644 '$(1)/libbiosig.a'          '$(HOST_LIBDIR)/'
     #$(INSTALL) -m644 '$(1)/libbiosig.def' 	 '$(HOST_LIBDIR)/'
     $(INSTALL) -m644 '$(1)/libbiosig.dll.a' 	 '$(HOST_LIBDIR)/'
-    #$(INSTALL) -m644 '$(1)/libbiosig.dll' 	 '$(PREFIX)/$(TARGET)/bin/'
+    $(INSTALL) -m644 '$(1)/libbiosig.dll' 	 '$(HOST_BINDIR)/'
 
     $(INSTALL) -m644 '$(1)/libgdf.a'             '$(HOST_LIBDIR)/'
     #$(INSTALL) -m644 '$(1)/libgdf.def' 	 '$(HOST_LIBDIR)/'
     $(INSTALL) -m644 '$(1)/libgdf.dll.a' 	 '$(HOST_LIBDIR)/'
-    #$(INSTALL) -m644 '$(1)/libgdf.dll'	 	 '$(HOST_BINDIR)/'
+    $(INSTALL) -m644 '$(1)/libgdf.dll'	 	 '$(HOST_BINDIR)/'
 
 
     $(INSTALL) -m644 '$(1)/physicalunits.h'      '$(HOST_INCDIR)/'
     $(INSTALL) -m644 '$(1)/libphysicalunits.a'   '$(HOST_LIBDIR)/'
     #$(INSTALL) -m644 '$(1)/libphysicalunits.def' '$(HOST_LIBDIR)/'
     $(INSTALL) -m644 '$(1)/libphysicalunits.dll.a' '$(HOST_LIBDIR)/'
-    #$(INSTALL) -m644 '$(1)/libphysicalunits.dll' '$(HOST_BINDIR)/'
+    $(INSTALL) -m644 '$(1)/libphysicalunits.dll' '$(HOST_BINDIR)/'
 
     if [ "$(MXE_WINDOWS_BUILD)" == "yes" ]; then \
         $(SED) -i '/^Libs:/ s/$$/ -liconv -lws2_32/' $(1)/libbiosig.pc; \
