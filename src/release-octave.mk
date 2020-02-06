@@ -31,16 +31,10 @@
 ##   * 32-bit Windows build:
 ##
 ##       --disable-windows-64 --disable-64 --disable-fortran-int64
-##
-## The extra digit in the $(PKG)_WIN_VERSION variable may be used to
-## distinguish builds that use the same base Octave sources but include
-## updated dependencies or other minor patches applied specifically for
-## Windows.
 
 PKG             := release-octave
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 5.2.0
-$(PKG)_WIN_VERSION := $($(PKG)_VERSION).0
 $(PKG)_CHECKSUM := 94054f3757e246398249e5041b2be698badceac8
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.lz
@@ -245,5 +239,5 @@ define $(PKG)_BUILD
     fi
 
     # create a file with latest installed octave rev in it
-    echo "$($(PKG)_WIN_VERSION)" > $(TOP_BUILD_DIR)/octave/octave-version
+    echo "$($(PKG)_VERSION)" > $(TOP_BUILD_DIR)/octave/octave-version
 endef
