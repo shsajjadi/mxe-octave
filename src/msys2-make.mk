@@ -4,9 +4,9 @@
 PKG             := msys2-make
 $(PKG)_NAME     := make
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.2.1-1
-$(PKG)_x86_64_CS := 5114643c2fc3abc5782e5810755633a65a070d9a
-$(PKG)_i686_CS  := 78bdbf557d3d925a345257f1857d7be9bb6feeb7
+$(PKG)_VERSION  := 4.3-1
+$(PKG)_x86_64_CS := 0714b7d340b1a13a1e5000b67baa36db467bba3f
+$(PKG)_i686_CS  := face8872af3cc0d0fdcd04f07765d4c874273a21
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
