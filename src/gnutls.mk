@@ -2,8 +2,8 @@
 # See index.html for further information.
 
 PKG             := gnutls
-$(PKG)_VERSION  := 3.6.11.1
-$(PKG)_CHECKSUM := 2205863fefa0e070cbf2a6961bfa90c854286287
+$(PKG)_VERSION  := 3.6.12
+$(PKG)_CHECKSUM := fa498b4d026e3ddfa74aa79adac27bfcd14e8b76
 $(PKG)_SUBDIR   := gnutls-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnutls-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnutls.org/gcrypt/gnutls/v3.6/$($(PKG)_FILE)
