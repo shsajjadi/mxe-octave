@@ -4,9 +4,9 @@
 PKG             := msys2-libtasn1
 $(PKG)_NAME     := libtasn1
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.15.0-1
-$(PKG)_x86_64_CS := 725d15b29814a2ce5caf744291d032e66b2e9127
-$(PKG)_i686_CS  := 9e65e70ca62aed5b4988a14cf06ce2869bf8721a
+$(PKG)_VERSION  := 4.16.0-1
+$(PKG)_x86_64_CS := bda097c0a09e9629ddf67a994f87ef58e4b44ec0
+$(PKG)_i686_CS  := f6c5a551fc9999b5a70b16092aebcd3fca386cae
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
