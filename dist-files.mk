@@ -604,7 +604,6 @@ SRC_FILES_1 := \
   qt5.mk \
   qtbase-1-fixes.patch \
   qtbase.mk \
-  qtimageformats-1.patch \
   qtimageformats.mk \
   qtsvg.mk \
   qttranslations.mk \

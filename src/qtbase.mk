@@ -3,8 +3,8 @@
 
 PKG             := qtbase
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.14.0
-$(PKG)_CHECKSUM := bd1b54cb5cc38bea4a84e18ac1e304b2a8f7fd55
+$(PKG)_VERSION  := 5.14.1
+$(PKG)_CHECKSUM := f5cc2e80eb422130944672b668c3ad8cf764861c
 $(PKG)_SUBDIR   := $(PKG)-everywhere-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-src-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://download.qt.io/official_releases/qt/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
