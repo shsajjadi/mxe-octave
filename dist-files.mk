@@ -499,7 +499,6 @@ SRC_FILES_1 := \
   of-odepkg-3-deprecated.patch \
   of-odepkg.mk \
   of-optim.mk \
-  of-optiminterp-1-dev-fixes.patch \
   of-optiminterp.mk \
   of-quaternion-1-cross-fixes.patch \
   of-quaternion-2-dev-fixes.patch \
