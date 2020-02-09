@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 0b9a24b8fa6b3f7f1d8813e91234308d3e43d10f
 $(PKG)_SUBDIR   := openexr-$($(PKG)_VERSION)
 $(PKG)_FILE     := openexr-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://github.com/$(PKG)/$(PKG)/archive/v$($(PKG)_VERSION).tar.gz
-$(PKG)_DEPS     := ilmbase pthreads zlib
+$(PKG)_DEPS     := pthreads zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://github.com/$(PKG)/$(PKG)/tags' | \
