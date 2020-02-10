@@ -585,6 +585,7 @@ SRC_FILES_1 := \
   pthread-stubs.mk \
   pthreads-test.c \
   pthreads.mk \
+  python-embedded.mk \
   qdbm-test.c \
   qdbm.mk \
   qhull-1-fixes.patch \
