@@ -470,7 +470,6 @@ SRC_FILES_1 := \
   of-general-1-dev-fixes.patch \
   of-general.mk \
   of-generate_html.mk \
-  of-geometry-1-fixes.patch \
   of-geometry.mk \
   of-gsl-1-cross-fixes.patch \
   of-gsl.mk \
