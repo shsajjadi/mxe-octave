@@ -483,6 +483,7 @@ SRC_FILES_1 := \
   of-lssa.mk \
   of-ltfat-1-cross-fixes.patch \
   of-ltfat.mk \
+  of-matgeom.mk \
   of-mapping.mk \
   of-miscellaneous.mk \
   of-nan.mk \
