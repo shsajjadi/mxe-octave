@@ -26,7 +26,7 @@ if EXIST %OCTAVE_HOME%\mingw64\bin\octave-cli.exe set OCTAVE_HOME=%OCTAVE_HOME%\
 
 Rem   Set up PATH. Make sure the octave bin dir
 Rem   comes first.
-set PATH=%OCTAVE_HOME%qt5\bin;%OCTAVE_HOME%bin;%PATH%
+set PATH=%OCTAVE_HOME%qt5\bin;%OCTAVE_HOME%bin;%OCTAVE_HOME%python;%PATH%
 set TERM=cygwin
 set GS=gs.exe
 set GNUTERM=wxt
