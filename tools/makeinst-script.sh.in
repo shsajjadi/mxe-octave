@@ -181,18 +181,18 @@ Function octaveOptionsPage
   Pop \$InstallAllUsersCtrl
   \${NSD_SetState} \$InstallAllUsersCtrl \$InstallAllUsers
 
-  \${NSD_CreateCheckBox} 0 20 100% 12u "Create desktop shortcuts"
+  \${NSD_CreateCheckBox} 0 20u 100% 12u "Create desktop shortcuts"
   Pop \$InstallShortcutsCtrl
   \${NSD_SetState} \$InstallShortcutsCtrl \$InstallShortcuts
 
-  \${NSD_CreateCheckBox} 0 40 100% 12u "Register .m file type with Octave"
+  \${NSD_CreateCheckBox} 0 40u 100% 12u "Register .m file type with Octave"
   Pop \$RegisterOctaveFileTypeCtrl
   \${NSD_SetState} \$RegisterOctaveFileTypeCtrl \$RegisterOctaveFileType
 
-  \${NSD_CreateLabel} 0 70 110u 12u "BLAS library implementation:"
+  \${NSD_CreateLabel} 0 70u 110u 12u "BLAS library implementation:"
   Pop \$0
 
-  \${NSD_CreateDropList} 120u 70 100u 80u ""
+  \${NSD_CreateDropList} 120u 70u 100u 80u ""
   Pop \$InstallBlasLibCtrl
 EOF
    # add option to install libopenblas if we have the dll present
