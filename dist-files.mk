@@ -519,6 +519,7 @@ SRC_FILES_1 := \
   of-strings-1-fixes.patch \
   of-strings.mk \
   of-struct.mk \
+  of-symbolic.mk \
   of-tisean-1-fixes.patch \
   of-tisean.mk \
   of-tsa.mk \
