@@ -3,8 +3,8 @@
 
 PKG             := libgpg_error
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.36
-$(PKG)_CHECKSUM := 5245ce38b198cecd57775fb3c7b7328ec1a2a615
+$(PKG)_VERSION  := 1.37
+$(PKG)_CHECKSUM := 6dff83371e0c03fe9ba468cc23d528a8c247785a
 $(PKG)_SUBDIR   := libgpg-error-$($(PKG)_VERSION)
 $(PKG)_FILE     := libgpg-error-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnupg.org/gcrypt/libgpg-error/$($(PKG)_FILE)

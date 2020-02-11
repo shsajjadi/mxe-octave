@@ -241,6 +241,7 @@ SRC_FILES_1 := \
   libgnurx.mk \
   libgomp-test.c \
   libgomp.mk \
+  libgpg_error-1-fixes.patch \
   libgpg_error.mk \
   libgsasl-1-fixes.patch \
   libgsasl-test.c \
