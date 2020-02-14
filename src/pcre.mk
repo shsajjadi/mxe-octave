@@ -3,8 +3,8 @@
 
 PKG             := pcre
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 8.43
-$(PKG)_CHECKSUM := 0d4585ee6426ab0db9c0c8f1c8c6da968170174d
+$(PKG)_VERSION  := 8.44
+$(PKG)_CHECKSUM := 8179b083053fce9b4a766513fa1f14807aabee42
 $(PKG)_SUBDIR   := pcre-$($(PKG)_VERSION)
 $(PKG)_FILE     := pcre-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/pcre/pcre/$($(PKG)_VERSION)/$($(PKG)_FILE)
