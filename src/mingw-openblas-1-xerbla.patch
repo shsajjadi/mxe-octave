@@ -1,6 +1,6 @@
-diff -ur OpenBLAS-0.3.6.orig/driver/others/Makefile OpenBLAS-0.3.6/driver/others/Makefile
---- OpenBLAS-0.3.6.orig/driver/others/Makefile	2019-06-03 10:19:28.259909420 -0400
-+++ OpenBLAS-0.3.6/driver/others/Makefile	2019-06-03 10:24:18.298986916 -0400
+diff -ur OpenBLAS-0.3.8.orig/driver/others/Makefile OpenBLAS-0.3.8/driver/others/Makefile
+--- OpenBLAS-0.3.8.orig/driver/others/Makefile	2020-02-14 10:39:58.164130459 -0500
++++ OpenBLAS-0.3.8/driver/others/Makefile	2020-02-14 10:46:23.254020333 -0500
 @@ -1,7 +1,7 @@
  TOPDIR	= ../..
  include ../../Makefile.system
@@ -10,7 +10,7 @@ diff -ur OpenBLAS-0.3.6.orig/driver/others/Makefile OpenBLAS-0.3.6/driver/others
  
  #COMMONOBJS	+= slamch.$(SUFFIX) slamc3.$(SUFFIX) dlamch.$(SUFFIX)  dlamc3.$(SUFFIX)
  
-@@ -80,21 +80,18 @@
+@@ -84,25 +84,22 @@
  
  ifeq ($(DYNAMIC_ARCH), 1)
  ifeq ($(ARCH),arm64)
@@ -21,8 +21,13 @@ diff -ur OpenBLAS-0.3.6.orig/driver/others/Makefile OpenBLAS-0.3.6/driver/others
 -HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) dynamic_power.$(SUFFIX)
 +HPLOBJS = memory.$(SUFFIX) dynamic_power.$(SUFFIX)
  else
+ ifeq ($(ARCH),zarch)
+-HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) dynamic_zarch.$(SUFFIX)
++HPLOBJS = memory.$(SUFFIX) dynamic_zarch.$(SUFFIX)
+ else
 -HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) dynamic.$(SUFFIX)
 +HPLOBJS = memory.$(SUFFIX) dynamic.$(SUFFIX)
+ endif
  endif
  endif
  else
@@ -36,7 +41,7 @@ diff -ur OpenBLAS-0.3.6.orig/driver/others/Makefile OpenBLAS-0.3.6/driver/others
  dynamic.$(SUFFIX) : dynamic.c
  	$(CC) $(CFLAGS) -c $< -o $(@F)
  
-@@ -182,9 +179,6 @@
+@@ -190,9 +187,6 @@
  mulx.$(SUFFIX) : $(ARCH)/mulx.c
  	$(CC) $(CFLAGS) -c -DXDOUBLE -UCOMPLEX $< -o $(@F)
  
@@ -46,9 +51,10 @@ diff -ur OpenBLAS-0.3.6.orig/driver/others/Makefile OpenBLAS-0.3.6/driver/others
  parameter.$(PSUFFIX) : parameter.c ../../param.h
  	$(CC) $(PFLAGS) -c $< -o $(@F)
  
-diff -ur OpenBLAS-0.3.6.orig/exports/gensymbol OpenBLAS-0.3.6/exports/gensymbol
---- OpenBLAS-0.3.6.orig/exports/gensymbol	2019-06-03 10:19:28.263909518 -0400
-+++ OpenBLAS-0.3.6/exports/gensymbol	2019-06-03 10:24:49.179741367 -0400
+Only in OpenBLAS-0.3.8/driver/others: .Makefile.swp
+diff -ur OpenBLAS-0.3.8.orig/exports/gensymbol OpenBLAS-0.3.8/exports/gensymbol
+--- OpenBLAS-0.3.8.orig/exports/gensymbol	2020-02-14 10:39:58.168130561 -0500
++++ OpenBLAS-0.3.8/exports/gensymbol	2020-02-14 10:42:38.344240243 -0500
 @@ -38,7 +38,6 @@
      zhbmv,zhemm,zhemv,zher2,zher2k,zher,zherk,zhpmv,zhpr2,
      zhpr,zrotg,zscal,zswap,zsymm,zsyr2k,zsyrk,ztbmv,
