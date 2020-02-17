@@ -13,7 +13,7 @@
 
 PKG             := stable-octave
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.2.1
+$(PKG)_VERSION  := 6.0.1
 $(PKG)_CHECKSUM := ## No checksum
 $(PKG)_SUBDIR   := octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := octave-$($(PKG)_VERSION).tar.lz
@@ -21,7 +21,7 @@ $(PKG)_URL      := http://not.a.valid.url/$($(PKG)_FILE)
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile pcre portaudio pstoedit qhull qrupdate qscintilla readline sundials-27-ida suitesparse texinfo zlib
+$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile pcre portaudio pstoedit qhull qrupdate qscintilla readline sundials-ida suitesparse texinfo zlib
 
 ifeq ($(ENABLE_QT5),yes)
     $(PKG)_DEPS += qt5
