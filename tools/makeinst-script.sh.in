@@ -32,6 +32,11 @@ else
   OCTAVE_SUBDIR=
 fi
 
+if [ "@ENABLE_WINDOWS_64@" == "yes" ]; then
+  OCTAVE_INSTDIR="\$PROGRAMFILES64\\GNU Octave\\Octave-\${OCTAVE_VERSION}"
+else
+  OCTAVE_INSTDIR="\$PROGRAMFILES\\GNU Octave\\Octave-\${OCTAVE_VERSION}"
+fi
 
 if [ -e $OCTAVE_SOURCE/$OCTAVE_SUBDIR/bin/libopenblas.dll ]; then
   DEFAULT_BLAS="OpenBLAS"
@@ -91,7 +96,7 @@ OutFile "\${INSTALLER_NAME}"
 BrandingText "\${APP_NAME}"
 XPStyle on
 ManifestDPIAware true
-InstallDir "C:\\Octave\\Octave-\${OCTAVE_VERSION}"
+InstallDir "$OCTAVE_INSTDIR"
 Icon "\${INSTALLER_FILES}/octave-logo.ico"
 
 ######################################################################
@@ -676,9 +681,6 @@ inst_none:
 space_loop:
   StrCpy \$R0 \$INSTDIR 1 \$R1  # R0 = character in string to check
   StrCmp \$R0 "" space_end # end of string
-  StrCmp \$R0 " " space_found
-  StrCmp \$R0 "(" space_found
-  StrCmp \$R0 ")" space_found
   StrCmp \$R0 "&" space_found
   StrCmp \$R0 "%" space_found
   StrCmp \$R0 "^" space_found
