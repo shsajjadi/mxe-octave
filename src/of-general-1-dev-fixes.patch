@@ -315,3 +315,57 @@ diff -uNr general-2.1.0-a/src/unpackfields.cc general-2.1.0-b/src/unpackfields.c
  #else
                      symbol_table::assign (fld_names(i), val);
  #endif
+
+# HG changeset patch
+# User John Donoghue
+# Date 1538583377 14400
+#      Wed Oct 03 12:16:17 2018 -0400
+# Node ID 3e3912cca5f395593d76089a70344bc308fbd343
+# Parent  47c3e75cff79424f319a89562bc04df3f69abc66
+Update for possible octave::valid_identifier
+
+* src/packfields.cc, src/unpackfields.cc: use OCTAVE__VALID_IDENTIFIER
+
+diff -r 47c3e75cff79 -r 3e3912cca5f3 src/packfields.cc
+--- a/src/packfields.cc	Sun May 13 23:06:30 2018 +0200
++++ b/src/packfields.cc	Wed Oct 03 12:16:17 2018 -0400
+@@ -66,7 +66,7 @@
+       string_vector fld_names(nargin-1);
+       octave_value_list fld_vals(nargin-1);
+ 
+-      if (! error_state && ! valid_identifier (struct_name))
++      if (! error_state && ! OCTAVE__VALID_IDENTIFIER (struct_name))
+         error ("packfields: invalid variable name: %s", struct_name.c_str ());
+ 
+       for (octave_idx_type i = 0; i < nargin-1; i++)
+@@ -79,7 +79,7 @@
+           if (error_state)
+             break;
+ 
+-          if (valid_identifier (fld_name))
++          if (OCTAVE__VALID_IDENTIFIER (fld_name))
+             {
+               fld_names(i) = fld_name;
+ 
+diff -r 47c3e75cff79 -r 3e3912cca5f3 src/unpackfields.cc
+--- a/src/unpackfields.cc	Sun May 13 23:06:30 2018 +0200
++++ b/src/unpackfields.cc	Wed Oct 03 12:16:17 2018 -0400
+@@ -71,7 +71,7 @@
+       std::string struct_name = args (0).string_value ();
+       string_vector fld_names(nargin-1);
+ 
+-      if (! error_state && ! valid_identifier (struct_name))
++      if (! error_state && ! OCTAVE__VALID_IDENTIFIER (struct_name))
+         error ("unpackfields: invalid variable name: %s", struct_name.c_str ());
+ 
+       for (octave_idx_type i = 0; i < nargin-1; i++)
+@@ -84,7 +84,7 @@
+           if (error_state)
+             break;
+ 
+-          if (valid_identifier (fld_name))
++          if (OCTAVE__VALID_IDENTIFIER (fld_name))
+             fld_names(i) = fld_name;
+           else
+             error ("unpackfields: invalid field name: %s", fld_name.c_str ());
+
