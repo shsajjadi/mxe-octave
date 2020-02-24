@@ -20,5 +20,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    echo "# mount tmp to users profile temp dir" >> "$(1)/etc/fstab"
+    echo "none /tmp usertemp binary,posix=0 0 0" >> "$(1)/etc/fstab"
     $(MSYS2_PKG_BUILD)
 endef
