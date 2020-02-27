@@ -10,7 +10,7 @@ $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 
-$(PKG)_DEPS := native-binutils gmp isl mpc mpfr cloog
+$(PKG)_DEPS := native-binutils gmp isl mpc mpfr
 ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_DEPS += mingw-w64
 endif

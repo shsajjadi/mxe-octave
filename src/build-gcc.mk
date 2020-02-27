@@ -10,7 +10,7 @@ $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
 
-$(PKG)_DEPS := gcc-gmp gcc-isl gcc-mpc gcc-mpfr gcc-cloog
+$(PKG)_DEPS := gcc-gmp gcc-isl gcc-mpc gcc-mpfr
 ifneq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_DEPS += build-binutils
 endif
