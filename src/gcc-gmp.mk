@@ -3,8 +3,8 @@
 
 PKG             := gcc-gmp
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 6.1.2
-$(PKG)_CHECKSUM := 366ded6a44cd108ba6b3f5b9a252eab3f3a95cdf
+$(PKG)_VERSION  := 6.2.0
+$(PKG)_CHECKSUM := 5e9341d3807bc7505376f9ed9f5c1c6c57050aa6
 $(PKG)_SUBDIR   := gmp-$($(PKG)_VERSION)
 $(PKG)_FILE     := gmp-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := https://gmplib.org/download/gmp/$($(PKG)_FILE)
