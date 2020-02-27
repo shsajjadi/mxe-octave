@@ -9,7 +9,7 @@ $(PKG)_REMOTE_SUBDIR :=
 $(PKG)_SUBDIR   := signal-$($(PKG)_VERSION)
 $(PKG)_FILE     := signal-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
-$(PKG)_DEPS     := of-specfun of-control
+$(PKG)_DEPS     := of-control
 
 ifeq ($(ENABLE_BINARY_PACKAGES),yes)
     $(PKG)_DEPS += $(OCTAVE_TARGET)
