@@ -3,18 +3,18 @@
 
 PKG             := isl
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.16.1
-$(PKG)_CHECKSUM := c5a2b201bf05229647e73203c0bf2d9679d4d21f
+$(PKG)_VERSION  := 0.22.1
+$(PKG)_CHECKSUM := 125303d52bd6226f80d23bf1f76b78c6f1115568
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := ftp://gcc.gnu.org/pub/gcc/infrastructure/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
+$(PKG)_URL      := http://isl.gforge.inria.fr/$($(PKG)_FILE)
 $(PKG)_DEPS     := build-gcc gmp
 
 $(PKG)_EXTRA_MAKE_FLAGS := LDFLAGS='-no-undefined'
 
 # stick to tested versions from gcc
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'ftp://gcc.gnu.org/pub/gcc/infrastructure/' | \
+    $(WGET) -q -O- 'https://isl.gforge.inria.fr/' | \
     $(SED) -n 's,.*isl-\([0-9][^>]*\)\.tar.*,\1,p' | \
     $(SORT) -V |
     tail -1
