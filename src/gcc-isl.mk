@@ -3,11 +3,11 @@
 
 PKG             := gcc-isl
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.16.1
-$(PKG)_CHECKSUM := c5a2b201bf05229647e73203c0bf2d9679d4d21f
+$(PKG)_VERSION  := 0.22.1
+$(PKG)_CHECKSUM := 125303d52bd6226f80d23bf1f76b78c6f1115568
 $(PKG)_SUBDIR   := isl-$($(PKG)_VERSION)
-$(PKG)_FILE     := isl-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := ftp://gcc.gnu.org/pub/gcc/infrastructure/$($(PKG)_FILE)
+$(PKG)_FILE     := isl-$($(PKG)_VERSION).tar.xz
+$(PKG)_URL      := http://isl.gforge.inria.fr/$($(PKG)_FILE)
 $(PKG)_DEPS     := gcc-gmp
 
 define $(PKG)_UPDATE
