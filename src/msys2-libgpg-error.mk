@@ -4,9 +4,9 @@
 PKG             := msys2-libgpg-error
 $(PKG)_NAME     := libgpg-error
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.36-1
-$(PKG)_x86_64_CS := 8837aeb987bf41a95eedd4b138ba80711035b9d6
-$(PKG)_i686_CS  := e00f646af631698d3def91323851537efc9533e3
+$(PKG)_VERSION  := 1.37-1
+$(PKG)_x86_64_CS := 2c93e18b4411b4bec8efedc952190e3ce4d3fbbd
+$(PKG)_i686_CS  := 748f1463be555ce8f298767d1113ff20dc82eb22
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
