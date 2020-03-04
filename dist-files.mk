@@ -524,6 +524,7 @@ SRC_FILES_1 := \
   of-tisean-1-fixes.patch \
   of-tisean.mk \
   of-tsa.mk \
+  of-video-1-fixes.patch \
   of-video.mk \
   of-windows.mk \
   of-zenity.mk \
