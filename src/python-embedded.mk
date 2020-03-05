@@ -16,4 +16,7 @@ endef
 define $(PKG)_BUILD
     mkdir -p '$(3)$(HOST_PREFIX)/python'
     cd '$(1)' && tar cf - . | ( cd '$(3)$(HOST_PREFIX)/python'; tar xpf - )
+    if test x$(MXE_WINDOWS_BUILD) = xyes; then \
+      cp '$(3)$(HOST_PREFIX)/python/python.exe' '$(3)$(HOST_PREFIX)/python/python3.exe'; \
+    fi
 endef
