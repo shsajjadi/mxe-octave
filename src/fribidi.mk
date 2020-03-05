@@ -3,16 +3,16 @@
 
 PKG             := fribidi
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.19.7
-$(PKG)_CHECKSUM := e470e078eafe6c065708def3e037c129c0d7367d
+$(PKG)_VERSION  := 1.0.9
+$(PKG)_CHECKSUM := 6646193abcbdb8434ff0cc5da28c252a59e7dfb4
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := https://github.com/fribidi/fribidi/releases/download/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
+$(PKG)_URL      := https://github.com/fribidi/fribidi/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := glib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- https://github.com/fribidi/fribidi/tags | \
-    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | \
     head -1
 endef
 
