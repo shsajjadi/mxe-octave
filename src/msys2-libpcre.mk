@@ -4,9 +4,9 @@
 PKG             := msys2-libpcre
 $(PKG)_NAME     := libpcre
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 8.43-2
-$(PKG)_x86_64_CS := c027408862b0d12fa2d91395626c9cca14524889
-$(PKG)_i686_CS  := 214e48b4027d9ae9a72748fb06093f1d5c7823ac
+$(PKG)_VERSION  := 8.44-1
+$(PKG)_x86_64_CS := 90c9d7d604b20151dc07623b1efffe6ed1b9928f
+$(PKG)_i686_CS  := f607f93aee4866f2c2c29a8f58cc8b9fa7f6b233
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
