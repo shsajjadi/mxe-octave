@@ -4,9 +4,9 @@
 PKG             := msys2-gcc-libs
 $(PKG)_NAME     := gcc-libs
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 9.1.0-2
-$(PKG)_x86_64_CS := a3bc5392527e360f82cf46bc67d197b91ec7b1e9
-$(PKG)_i686_CS  := d6a6ade08801243f440273697e88c882ad303ddc
+$(PKG)_VERSION  := 9.3.0-1
+$(PKG)_x86_64_CS := 6c9519fed737408a63015e6e37228bfa0511391a
+$(PKG)_i686_CS  := afeb3a10d56ed9bc1c6fb1235dd392ce2afc243d
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
