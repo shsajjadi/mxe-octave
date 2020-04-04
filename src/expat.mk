@@ -21,6 +21,7 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
+	--without-docbook \
         --prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_PROGS) DESTDIR='$(3)'
 endef
