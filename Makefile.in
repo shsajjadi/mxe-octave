@@ -662,7 +662,7 @@ endef
 
 define MSYS2_PKG_UPDATE
   $(WGET) -q -O- '$(MSYS2_URL)/' | \
-  $(GREP) $($(PKG)_NAME) |
+  $(GREP) $($(PKG)_NAME) | $(GREP) "$($(PKG)_FILTER)" | \
   $(SED) -n 's,.*href="$($(PKG)_NAME)-\(r\?[0-9][^-]*-[0-9]*\)-[^\.]*\.pkg\.tar\.xz".*,\1,p' | \
   $(SORT) -V | \
   tail -1
@@ -1029,7 +1029,7 @@ endef
 
 define MSYS2_PKG_UPDATE_FILE
   cat $(MSYS2_UPDATE_TMP_FILE) | \
-  $(GREP) $($(PKG)_NAME) |
+  $(GREP) $($(PKG)_NAME) | $(GREP) "$($(PKG)_FILTER)" | \
   $(SED) -n 's,.*href="$($(PKG)_NAME)-\(r\?[0-9][^-]*-[0-9]*\)-[^\.]*\.pkg\.tar\.xz".*,\1,p' | \
   $(SORT) -V | \
   tail -1
