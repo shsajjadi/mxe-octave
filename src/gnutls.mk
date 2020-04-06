@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 0d3d0d093d6a7cf589612a7c21dbb46cb31c644b
 $(PKG)_SUBDIR   := gnutls-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnutls-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnutls.org/gcrypt/gnutls/v3.6/$($(PKG)_FILE)
-$(PKG)_URL_2    := https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v3.5/$($(PKG)_FILE)
+$(PKG)_URL_2    := https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v3.6/$($(PKG)_FILE)
 $(PKG)_DEPS     := gettext libidn2 libunistring nettle pcre zlib
 
 define $(PKG)_UPDATE
@@ -18,8 +18,7 @@ define $(PKG)_UPDATE
 endef
 
 $(PKG)_WINDOWS_CONFIGURE_OPTIONS := \
-   CPPFLAGS='-DWINVER=0x0501 -DAI_ADDRCONFIG=0x0400 -DIPV6_V6ONLY=27' \
-   LIBS='-lws2_32'
+   CPPFLAGS='-D_WIN32_WINNT=0x0600'
 
 ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_CONFIGURE_OPTIONS := $($(PKG)_WINDOWS_CONFIGURE_OPTIONS)
