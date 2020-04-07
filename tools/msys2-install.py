@@ -153,7 +153,7 @@ def create_msys_dirs(sysdir):
 
 def uninstall_pkg(pkgname, env):
   pkgpath = env.msysdir + "/var/lib/pacman/local/"
-  files=glob.glob(pkgpath + pkgname + "-" + "*")
+  files=glob.glob(pkgpath + pkgname + "-" + "[r0-9].*")
   for f in files:
     if env.verbose:
       print "uninstalling " + f
