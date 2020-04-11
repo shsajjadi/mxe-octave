@@ -3,8 +3,8 @@
 
 PKG             := build-perl
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.26.1
-$(PKG)_CHECKSUM := 74a0822429508d593513a0dfd6f51a907bad68d0
+$(PKG)_VERSION  := 5.31.10
+$(PKG)_CHECKSUM := 5f1ae9d3cf2429ac6a54fc244bd2513eea92a3f8
 $(PKG)_SUBDIR   := perl-$($(PKG)_VERSION)
 $(PKG)_FILE     := perl-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.cpan.org/src/5.0/$($(PKG)_FILE)
@@ -17,7 +17,7 @@ endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.cpan.org/src/5.0' | \
-    $(SED) -n 's,.*<a href="perl-\([0-9\.]*\)\.tar.gz.*",\1,p' | \
+    $(SED) -n 's,.*<a href="perl-\([0-9\.]*\)\.tar.gz".*,\1,p' | \
     $(SORT) -V | \
     tail -1
 endef
