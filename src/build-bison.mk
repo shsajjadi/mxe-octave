@@ -3,8 +3,8 @@
 
 PKG             := build-bison
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.3.2
-$(PKG)_CHECKSUM := 6a09cd588f7a0f985839fc8cecdc80da948f7de7
+$(PKG)_VERSION  := 3.5.4
+$(PKG)_CHECKSUM := 67279a74698e60093f57e1dec8e6236e0b194bb2
 $(PKG)_SUBDIR   := bison-$($(PKG)_VERSION)
 $(PKG)_FILE     := bison-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/bison/$($(PKG)_FILE)
