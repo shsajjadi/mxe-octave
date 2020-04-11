@@ -3,8 +3,8 @@
 
 PKG             := build-gawk
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.2.1
-$(PKG)_CHECKSUM := 3b0bf6beeaa2171bcd2413c906f32432653bcecf
+$(PKG)_VERSION  := 5.0.1
+$(PKG)_CHECKSUM := 4ad1a3e5d016b5484bcbcbf866d73967c4af1b5e
 $(PKG)_SUBDIR   := gawk-$($(PKG)_VERSION)
 $(PKG)_FILE     := gawk-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gawk/$($(PKG)_FILE)
