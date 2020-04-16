@@ -25,8 +25,8 @@ define $(PKG)_BUILD
     $(INSTALL) -d               '$(HOST_INCDIR)'
     $(INSTALL) -m644 '$(1)'/*.h '$(HOST_INCDIR)'
 
-    '$(MXE_CXX)' \
-        -W -Wall -D TIXML_USE_STL -Werror -ansi -pedantic \
-        '$(2).cpp' -o '$(HOST_BINDIR)/test-tinyxml.exe' \
-        -ltinyxml
+    #'$(MXE_CXX)' \
+    #    -W -Wall -D TIXML_USE_STL -Werror -ansi -pedantic \
+    #    '$(2).cpp' -o '$(HOST_BINDIR)/test-tinyxml.exe' \
+    #    -ltinyxml
 endef
