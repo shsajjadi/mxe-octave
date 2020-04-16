@@ -31,8 +31,8 @@ define $(PKG)_BUILD
         INSTALL='$(INSTALL)' \
         install
 
-    '$(MXE_CC)' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_BINDIR)/test-lua.exe' \
-        -llua
+    #'$(MXE_CC)' \
+    #    -W -Wall -Werror -ansi -pedantic \
+    #    '$(2).c' -o '$(HOST_BINDIR)/test-lua.exe' \
+    #    -llua
 endef
