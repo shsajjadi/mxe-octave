@@ -3,8 +3,8 @@
 
 PKG             := libgeotiff
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.5.0
-$(PKG)_CHECKSUM := 44782c8218aeb4a3dfbb5c1e8eae12690977dd9a
+$(PKG)_VERSION  := 1.6.0
+$(PKG)_CHECKSUM := fa24069938ead4126d77b65a38784e1a9609e65b
 $(PKG)_SUBDIR   := libgeotiff-$($(PKG)_VERSION)
 $(PKG)_FILE     := libgeotiff-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.osgeo.org/geotiff/libgeotiff/$($(PKG)_FILE)
