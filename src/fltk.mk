@@ -25,7 +25,7 @@ endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.fltk.org/' | \
-    $(SED) -n 's,.*>v\([0-9][^<]*\)<.*,\1,p' | \
+    $(SED) -n 's,.*>\([0-9][^<]*\)<.*,\1,p' | \
     grep -v '^1\.1\.' | \
     head -1
 endef
