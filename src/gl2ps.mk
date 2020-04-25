@@ -2,9 +2,9 @@
 # See index.html for further information.
 
 PKG             := gl2ps
-$(PKG)_VERSION  := 1.4.0
-$(PKG)_CHECKSUM := a39a93d75050b9ee98bde4fc47bf6d9162bfc5cd
-$(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)-source
+$(PKG)_VERSION  := 1.4.2
+$(PKG)_CHECKSUM := ee1eb8972e9d07bbe325552e4ec15d6828e8197c
+$(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
 $(PKG)_URL      := http://geuz.org/$(PKG)/src/$($(PKG)_FILE)
 $(PKG)_DEPS     := libpng zlib
