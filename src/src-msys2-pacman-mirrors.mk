@@ -4,8 +4,8 @@
 PKG             := src-msys2-pacman-mirrors
 $(PKG)_NAME     := pacman-mirrors
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 20200307-1
-$(PKG)_CHECKSUM := fbb0aa2e6de7ce4cd14f09b2637b03cb0fa10f76
+$(PKG)_VERSION  := 20200329-1
+$(PKG)_CHECKSUM := a8355dfd152888e8d8efe9dfc886d4ef9ebb6cad
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)

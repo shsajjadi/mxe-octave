@@ -4,8 +4,8 @@
 PKG             := src-msys2-libgpgme
 $(PKG)_NAME     := gpgme
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.13.1-2
-$(PKG)_CHECKSUM := b1e91bae154d73dea64f547c96480d418d737c3d
+$(PKG)_VERSION  := 1.13.1-3
+$(PKG)_CHECKSUM := 31ff6481ffa5c1d23c4dc76529cf1ca4e8027a54
 $(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $($(PKG)_NAME)-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := $(MSYS2_SRC_URL)/$($(PKG)_FILE)

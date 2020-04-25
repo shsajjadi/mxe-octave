@@ -4,10 +4,10 @@
 PKG             := msys2-pacman-mirrors
 $(PKG)_NAME     := pacman-mirrors
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 20200307-1
+$(PKG)_VERSION  := 20200329-1
 # the mirror package is NOT the same for both systems
-$(PKG)_i686_CS  := 98a92b638e7544ac981a0bfaef0ae428be62153a
-$(PKG)_x86_64_CS := 06583c1512e0422a8210d4ed69ed93526874fafd
+$(PKG)_i686_CS  := 21417ae4d160dadf091625b210e459afc6505b95
+$(PKG)_x86_64_CS := 5eb8f63b7036a0553162e10060f0695e593648e7
 $(PKG)_CS       := $($(PKG)_$(MSYS2_ARCH)_CS)
 $(PKG)_CHECKSUM := $($(PKG)_CS)
 $(PKG)_SUBDIR   := 
