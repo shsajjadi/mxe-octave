@@ -1,7 +1,7 @@
 PKG             := icu4c
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 66.1
-$(PKG)_CHECKSUM := 68e87ea2044e92a5d86be6072b0eb3557f252d9f
+$(PKG)_VERSION  := 67.1
+$(PKG)_CHECKSUM := 6822a4a94324d1ba591b3e8ef084e4491af253c1
 $(PKG)_SUBDIR   := icu
 $(PKG)_FILE     := $(PKG)-$(subst .,_,$($(PKG)_VERSION))-src.tgz
 $(PKG)_URL      := https://github.com/unicode-org/icu/releases/download/release-$(subst .,-,$($(PKG)_VERSION))/$($(PKG)_FILE)
@@ -34,7 +34,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1).cross' -j '$(JOBS)' $(MXE_DISABLE_DOCS) $(MXE_DISABLE_PROGS)
     $(MAKE) -C '$(1).cross' -j 1 install $(MXE_DISABLE_DOCS) $(MXE_DISABLE_PROGS) DESTDIR='$(3)'
     $(INSTALL) -d '$(3)$(HOST_BINDIR)'
-    mv -fv $(3)$(HOST_LIBDIR)/icu*.dll '$(3)$(HOST_BINDIR)/'
+    #mv -fv $(3)$(HOST_LIBDIR)/icu*.dll '$(3)$(HOST_BINDIR)/'
     $(INSTALL) -d '$(3)$(BUILD_TOOLS_PREFIX)/bin/'
     $(LN_SF) '$(HOST_BINDIR)/icu-config' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)icu-config'
 endef
