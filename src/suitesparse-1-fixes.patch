@@ -196,7 +196,7 @@ index 1111111..2222222 100644
  	@mkdir -p $(INSTALL_LIB)
  	@mkdir -p $(INSTALL_INCLUDE)
  	@mkdir -p $(INSTALL_DOC)
- 	$(CC) $(SO_OPTS) $^ -o $@ $(LDLIBS)
+ 	$(CXX) $(SO_OPTS) $^ -o $@ $(LDLIBS)
 -	( cd $(INSTALL_LIB) ; ln -sf $(SO_TARGET) $(SO_PLAIN) )
 -	( cd $(INSTALL_LIB) ; ln -sf $(SO_TARGET) $(SO_MAIN) )
  	$(CP) ../Include/cholmod*.h $(INSTALL_INCLUDE)

@@ -2,11 +2,11 @@
 # See index.html for further information.
 
 PKG             := suitesparse
-$(PKG)_VERSION  := 5.6.0
-$(PKG)_CHECKSUM := 3de08b5ab02610ed0446225aad2445696616fae5
+$(PKG)_VERSION  := 5.7.2
+$(PKG)_CHECKSUM := ccc50177425d0d9bfe878786b8f2729c247efa90
 $(PKG)_SUBDIR   := SuiteSparse-$($(PKG)_VERSION)
-$(PKG)_FILE     := v$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := https://github.com/DrTimothyAldenDavis/SuiteSparse/archive/$($(PKG)_FILE)
+$(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz
+$(PKG)_URL      := https://github.com/DrTimothyAldenDavis/SuiteSparse/archive/v$($(PKG)_VERSION).tar.gz
 $(PKG)_DEPS     := blas lapack
 ifeq ($(USE_SYSTEM_GCC),no)
   $(PKG)_DEPS += libgomp
