@@ -130,6 +130,7 @@ SRC_FILES_1 := \
   ghostscript.mk \
   giflib.mk \
   gl2ps-1-configure.patch \
+  gl2ps-2-docpath.patch \
   gl2ps.mk \
   glew-test.c \
   glew.mk \
