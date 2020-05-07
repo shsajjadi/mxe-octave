@@ -63,6 +63,7 @@ define $(PKG)_BUILD
 
     if [ "$(MXE_SYSTEM)" == "mingw" ]; then \
         $(INSTALL) '$(1)/libcfitsio$(LIBRARY_SUFFIX).dll' '$(HOST_BINDIR)'; \
+	rm -f $(HOST_LIBDIR)/libcfitsio$(LIBRARY_SUFFIX).dll; \
     fi
 endef
 endif
