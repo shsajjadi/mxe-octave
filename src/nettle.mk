@@ -3,8 +3,8 @@
 
 PKG             := nettle
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.5.1
-$(PKG)_CHECKSUM := 077a71eef4a62acc4480ff7e2051f806b1724ea2
+$(PKG)_VERSION  := 3.6
+$(PKG)_CHECKSUM := 22e48a4d232ccd26ba8303709f2222b422a8827d
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.lysator.liu.se/~nisse/archive/$($(PKG)_FILE)
@@ -26,6 +26,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
 	CCAS=gcc \
 	--disable-shared \
+	--disable-documentation \
         --prefix='$(HOST_PREFIX)'
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' getopt.o getopt1.o
@@ -49,6 +50,7 @@ define $(PKG)_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
+	--disable-documentation \
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)' SUBDIRS=
     $(MAKE) -C '$(1)' -j 1 SUBDIRS= install DESTDIR='$(3)'
