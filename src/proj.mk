@@ -3,8 +3,8 @@
 
 PKG             := proj
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 7.0.0
-$(PKG)_CHECKSUM := f6bf56a1d9b92de1d20cf0c88d66665b0b324708
+$(PKG)_VERSION  := 7.0.1
+$(PKG)_CHECKSUM := e7e8b166a8788414ed039e8d645362d5bf882114
 $(PKG)_SUBDIR   := proj-$($(PKG)_VERSION)
 $(PKG)_FILE     := proj-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://download.osgeo.org/proj/$($(PKG)_FILE)
