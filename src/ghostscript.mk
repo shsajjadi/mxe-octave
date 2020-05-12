@@ -21,6 +21,10 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
     $(PKG)_DEPS += lcms
 endif
 
+ifeq ($(MXE_NATIVE_BUILD),yes)
+    $(PKG)_CONFIGURE_FLAGS=$(CONFIGURE_LDFLAGS) $(CONFIGURE_CPPFLAGS)
+endif
+
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://api.github.com/repos/ArtifexSoftware/ghostpdl-downloads/releases' | \
     $(SED) -n 's,.*"ghostscript-\([0-9\.]*\)\.tar.xz".*,\1,p' | \
@@ -35,6 +39,7 @@ define $(PKG)_BUILD
     cd '$(1)/.build' && $(1)/configure \
         CPPFLAGS='$(CPPFLAGS) -DHAVE_SYS_TIMES_H=0' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+	$($(PKG)_CONFIGURE_FLAGS) \
         --prefix='$(HOST_PREFIX)' \
         --without-local-zlib \
         --with-system-libtiff
