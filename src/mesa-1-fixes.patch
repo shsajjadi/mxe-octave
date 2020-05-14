@@ -1,7 +1,7 @@
-diff -ur mesa-20.0.6.orig/scons/gallium.py mesa-20.0.6/scons/gallium.py
---- mesa-20.0.6.orig/scons/gallium.py	2020-05-12 07:11:05.849629292 -0400
-+++ mesa-20.0.6/scons/gallium.py	2020-05-12 07:12:17.601633140 -0400
-@@ -617,9 +617,6 @@
+diff -uNr a/scons/gallium.py b/scons/gallium.py
+--- a/scons/gallium.py	2017-09-17 19:03:22.000000000 -0400
++++ b/scons/gallium.py	2017-10-04 19:24:29.499373623 -0400
+@@ -580,9 +580,6 @@
                  '-Wl,--dynamicbase', # ASLR
              ]
              # Avoid depending on gcc runtime DLLs
@@ -11,15 +11,19 @@ diff -ur mesa-20.0.6.orig/scons/gallium.py mesa-20.0.6/scons/gallium.py
              # Handle the @xx symbol munging of DLL exports
              shlinkflags += ['-Wl,--enable-stdcall-fixup']
              #shlinkflags += ['-Wl,--kill-at']
-diff -ur mesa-20.0.6.orig/scons/llvm.py mesa-20.0.6/scons/llvm.py
---- mesa-20.0.6.orig/scons/llvm.py	2020-05-12 07:11:05.849629292 -0400
-+++ mesa-20.0.6/scons/llvm.py	2020-05-12 07:49:13.605280341 -0400
-@@ -243,7 +243,7 @@
-         ])
- 
-         # Mingw-w64 zlib is required when building with LLVM support in MSYS2 environment
--        if host_platform.system().lower().startswith('mingw'):
-+        if host_platform.system().lower().startswith('mingw') or env['crosscompile']:
-             env.Append(LIBS = [
-                  'z',
+diff -uNr a/scons/llvm.py b/scons/llvm.py
+--- a/scons/llvm.py	2018-12-27 17:02:01.000000000 +0100
++++ b/scons/llvm.py	2019-01-21 18:47:28.456846140 +0100
+@@ -122,10 +122,7 @@
+                 'LLVMIRReader', 'LLVMAsmParser',
+                 'LLVMDemangle', 'LLVMGlobalISel', 'LLVMDebugInfoMSF',
+                 'LLVMBinaryFormat',
++                'version', 'uuid', 'ole32', 'oleaut32', 'z',
              ])
+-            if env['platform'] == 'windows' and env['crosscompile']:
+-                # LLVM 5.0 requires MinGW w/ pthreads due to use of std::thread and friends.
+-                assert env['gcc']
+-                env['CXX'] = env['CXX'] + '-posix'
+         elif llvm_version >= distutils.version.LooseVersion('4.0'):
+             env.Prepend(LIBS = [
+
