@@ -507,7 +507,6 @@ SRC_FILES_1 := \
   of-sockets-1-cross-fixes.patch \
   of-sockets-2-deprecated.patch \
   of-sockets.mk \
-  of-sparsersb-1-deprecated.patch \
   of-sparsersb.mk \
   of-specfun-1-deprecated.patch \
   of-specfun.mk \
