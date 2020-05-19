@@ -25,6 +25,5 @@ define $(PKG)_BUILD
         --disable-reference \
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_DOCS)
-
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
 endef
