@@ -104,4 +104,5 @@ define $(PKG)_BUILD
     if [ "$(ENABLE_DEP_DOCS)" == "no" ]; then \
       rm -rf '$(3)$(HOST_PREFIX)/share/hdf5_examples'; \
     fi
+    rm -f '$(3)$(HOST_BINPREFIX)/h5*.exe'
 endef
