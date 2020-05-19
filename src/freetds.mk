@@ -3,8 +3,8 @@
 
 PKG             := freetds
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.1.36
-$(PKG)_CHECKSUM := f4b2d2fea70bd5c7f62e900b123779759cdb1a5e
+$(PKG)_VERSION  := 1.1.39
+$(PKG)_CHECKSUM := 3ea99ff6fe6416fcba46959e1fd1e3f65d1c9d91
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.freetds.org/pub/$(PKG)/stable/$($(PKG)_FILE)
@@ -38,5 +38,5 @@ define $(PKG)_BUILD
         --with-gnutls \
         $($(PKG)_CONFIG_OPTS) \
         PKG_CONFIG='$(MXE_PKG_CONFIG)'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_DOCS) TARGET_DOCDIR='$(1)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_DOCS) TARGET_DOCDIR='$(1)' DESTDIR='$(3)'
 endef
