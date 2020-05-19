@@ -28,8 +28,8 @@ define $(PKG)_BUILD
         --enable-threads \
         --enable-directx \
         --disable-stdio-redirect
-    $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DISABLE_PROGS)
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS)
     if [ "$(MXE_NATIVE_BUILD)" == "no" ]; then \
       $(LN_SF) '$(HOST_BINDIR)/sdl-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)sdl-config'; \
     fi
