@@ -39,7 +39,7 @@ define $(PKG)_BUILD
         $($(PKG)_CONFIGURE_OPTIONS) \
 	&& $($(PKG)_CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
   
     if [ ! "x$(MXE_NATIVE_BUILD)" = "xyes" ]; then \
       $(LN_SF) '$(HOST_BINDIR)/nc-config' '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)nc-config'; \
