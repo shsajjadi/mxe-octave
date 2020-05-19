@@ -35,5 +35,5 @@ define $(PKG)_BUILD
 	$($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
 	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_DOCS) $(MXE_DISABLE_PROGS)  DESTDIR='$(3)'
 endef
