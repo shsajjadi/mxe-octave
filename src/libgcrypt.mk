@@ -33,18 +33,10 @@ define $(PKG)_BUILD
         $($(PKG)_TARGET_CONFIGURE_OPTIONS) && $(CONFIGURE_POST_HOOK)
     $(if $(filter msvc,$(MXE_SYSTEM)), \
         $(SED) -i -e '/^LTCPPASCOMPILE/ {s/$$(LIBTOOL)/& --tag=CC/;}' '$(1)/mpi/Makefile')
-    $(MAKE) -C '$(1)' -j '$(JOBS)' all bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
-    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' 
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
     if [ $(MXE_NATIVE_BUILD) = no ]; then \
       $(INSTALL) -d '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
       $(INSTALL) -m755 '$(3)$(HOST_BINDIR)/libgcrypt-config' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)libgcrypt-config'; \
     fi
-    # create pkg-config file
-    $(INSTALL) -d '$(3)$(HOST_LIBDIR)/pkgconfig'
-    (echo 'Name: $(PKG)'; \
-     echo 'Version: $($(PKG)_VERSION)'; \
-     echo 'Description: $(PKG)'; \
-     echo 'Libs: ' "`$(MXE_TOOL_PREFIX)libgcrypt-config --libs`"; \
-     echo 'Cflags: ' "`$(MXE_TOOL_PREFIX)libgcrypt-config --cflags`";) \
-     > '$(3)$(HOST_LIBDIR)/pkgconfig/$(PKG).pc'
 endef
