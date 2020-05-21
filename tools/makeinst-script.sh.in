@@ -33,9 +33,9 @@ else
 fi
 
 if [ "@ENABLE_WINDOWS_64@" == "yes" ]; then
-  OCTAVE_INSTDIR="\$PROGRAMFILES64\\GNU Octave\\Octave-\${OCTAVE_VERSION}"
+  USE_PROGRAMFILES64=
 else
-  OCTAVE_INSTDIR="\$PROGRAMFILES\\GNU Octave\\Octave-\${OCTAVE_VERSION}"
+  USE_PROGRAMFILES64=';'
 fi
 
 if [ -e $OCTAVE_SOURCE/$OCTAVE_SUBDIR/bin/libopenblas.dll ]; then
@@ -74,9 +74,10 @@ echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
 !define INSTALLER_FILES "$TOPDIR/installer-files"
 !define INSTALLER_NAME "$INSTALLER_NAME"
 !define MAIN_APP_EXE "octave-firsttime.vbs"
-!define INSTALL_TYPE "SetShellVarContext current"
-!define PRODUCT_ROOT_KEY "HKLM"
+!define PRODUCT_ROOT_KEY "SHCTX"
 !define PRODUCT_KEY "Software\\Octave-$VERSION"
+!define PRODUCT_UNINST_KEY "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION"
+!define PRODUCT_UNINST_ROOT_KEY "SHCTX"
 
 ######################################################################
 
@@ -96,13 +97,28 @@ OutFile "\${INSTALLER_NAME}"
 BrandingText "\${APP_NAME}"
 XPStyle on
 ManifestDPIAware true
-InstallDir "$OCTAVE_INSTDIR"
+ManifestSupportedOS all
+Unicode true
+RequestExecutionLevel user
+# multiuser will modify this
+InstallDir "\$PROGRAMFILES\\GNU Octave\\Octave-\${OCTAVE_VERSION}"
 Icon "\${INSTALLER_FILES}/octave-logo.ico"
 
 ######################################################################
 ; StrFunc usage
 !include "StrFunc.nsh"
 \${StrRep}
+######################################################################
+; Multi user
+!define MULTIUSER_EXECUTIONLEVEL Highest
+;!define MULTIUSER_INSTALLMODE_DEFAULT_CURRENTUSER
+!define MULTIUSER_INSTALLMODE_INSTDIR "GNU Octave\\Octave-\${OCTAVE_VERSION}"
+${USE_PROGRAMFILES64}!define MULTIUSER_USE_PROGRAMFILES64
+!define MULTIUSER_MUI
+!define MULTIUSER_INSTALLMODE_COMMANDLINE
+Var MultiUser.UninstallKey
+Var MultiUser.Local
+!include MultiUser.nsh
 ######################################################################
 ; MUI settings
 !include "MUI2.nsh"
@@ -129,12 +145,16 @@ Icon "\${INSTALLER_FILES}/octave-logo.ico"
 !define MUI_UNICON "$TOP_BUILD_DIR/usr/share/nsis/Contrib/Graphics/Icons/orange-uninstall.ico"
 !define MUI_HEADERIMAGE_BITMAP "\${INSTALLER_FILES}/octave-hdr.bmp"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "\${INSTALLER_FILES}/octave.bmp"
- 
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP "\${INSTALLER_FILES}/octave.bmp"
+
+; Pages 
 !insertmacro MUI_PAGE_WELCOME
 
 !define MUI_LICENSEPAGE_TEXT_BOTTOM "The source code for Octave is freely redistributable under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation."
 !define MUI_LICENSEPAGE_BUTTON "Next >"
 !insertmacro MUI_PAGE_LICENSE "\${INSTALLER_FILES}/gpl-3.0.txt"
+
+!insertmacro MULTIUSER_PAGE_INSTALLMODE
 
 Page custom octaveOptionsPage octaveOptionsLeave
 
@@ -148,6 +168,7 @@ Page custom octaveOptionsPage octaveOptionsLeave
 !define MUI_FINISHPAGE_SHOWREADME "\$INSTDIR\\README.html"
 !insertmacro MUI_PAGE_FINISH
 
+; uninstaller
 !insertmacro MUI_UNPAGE_CONFIRM
 
 !insertmacro MUI_UNPAGE_INSTFILES
@@ -158,14 +179,53 @@ Page custom octaveOptionsPage octaveOptionsLeave
 
 ######################################################################
  
-RequestExecutionLevel admin
+!macro DequoteString_ un
+Function \${un}DequoteString_
+  ; just removed any '"' found
+  Exch \$R0 # r0 is now the string
+  Push \$R1
+  Push \$R2
+  Push \$R3
+
+  Strcpy \$R3 "" # dequoted value
+  StrCmp \$R0 "" \${un}dequote_end
+
+  StrCpy \$R1 0 # r1 = counter
+\${un}dequote_loop:
+
+  StrCpy \$R2 \$R0 1 \$R1  # R2 = character in string to check
+  StrCmp \$R2 "" \${un}dequote_end # end of string
+  StrCmp \$R2 '"' \${un}dequote_next
+  # no quote
+  StrCpy \$R3 \$R3\$R2
+\${un}dequote_next:
+  IntOp  \$R1 \$R1 + 1
+  GoTo \${un}dequote_loop
+
+\${un}dequote_end:
+  StrCpy \$R0 \$R3
+
+  Pop \$R3
+  Pop \$R2
+  Pop \$R1
+  Exch \$R0
+FunctionEnd
+!macroend
+
+!insertmacro DequoteString_ "un."
+!insertmacro DequoteString_ ""
+
+!macro DequoteString un InStr OutVar
+ Push '\${InStr}'
+ Call \${un}DequoteString_
+ Pop '\${OutVar}'
+!macroend
+!define DequoteString '!insertmacro DequoteString ""'
+!define un.DequoteString '!insertmacro DequoteString "un."'
 
 ######################################################################
-
 ; custom options page functions
 
-Var InstallAllUsers
-Var InstallAllUsersCtrl
 Var InstallShortcuts
 Var InstallShortcutsCtrl
 Var RegisterOctaveFileType
@@ -174,6 +234,18 @@ Var InstallBlasLibCtrl
 Var InstallBlasLib
 
 Function octaveOptionsPage 
+
+# will append (Local) to reg key
+\${If} \$MultiUser.InstallMode == "CurrentUser"
+  StrCpy \$MultiUser.UninstallKey "\${PRODUCT_UNINST_KEY} (Local)"
+  StrCpy \$MultiUser.Local " (Local)"
+\${Else}
+  StrCpy \$MultiUser.UninstallKey "\${PRODUCT_UNINST_KEY}"
+  StrCpy \$MultiUser.Local ""
+\${EndIf}
+
+  Call CheckCurrVersion
+
   Push \$0
   nsDialogs::Create 1018
   Pop \$0
@@ -182,22 +254,18 @@ Function octaveOptionsPage
     Abort
   \${EndIf} 
 
-  \${NSD_CreateCheckBox} 0 0 100% 12u "Install for all users"
-  Pop \$InstallAllUsersCtrl
-  \${NSD_SetState} \$InstallAllUsersCtrl \$InstallAllUsers
-
-  \${NSD_CreateCheckBox} 0 20u 100% 12u "Create desktop shortcuts"
+  \${NSD_CreateCheckBox} 0 0 100% 12u "Create desktop shortcuts"
   Pop \$InstallShortcutsCtrl
   \${NSD_SetState} \$InstallShortcutsCtrl \$InstallShortcuts
 
-  \${NSD_CreateCheckBox} 0 40u 100% 12u "Register .m file type with Octave"
+  \${NSD_CreateCheckBox} 0 20u 100% 12u "Register .m file type with Octave"
   Pop \$RegisterOctaveFileTypeCtrl
   \${NSD_SetState} \$RegisterOctaveFileTypeCtrl \$RegisterOctaveFileType
 
-  \${NSD_CreateLabel} 0 70u 110u 12u "BLAS library implementation:"
+  \${NSD_CreateLabel} 0 50u 110u 12u "BLAS library implementation:"
   Pop \$0
 
-  \${NSD_CreateDropList} 120u 70u 100u 80u ""
+  \${NSD_CreateDropList} 100u 70u 100u 80u ""
   Pop \$InstallBlasLibCtrl
 EOF
    # add option to install libopenblas if we have the dll present
@@ -219,22 +287,75 @@ EOF
 FunctionEnd
 
 Function octaveOptionsLeave
-  \${NSD_GetState} \$InstallAllUsersCtrl \$InstallAllUsers
   \${NSD_GetState} \$InstallShortcutsCtrl \$InstallShortcuts
   \${NSD_GetState} \$RegisterOctaveFileTypeCtrl \$RegisterOctaveFileType
   \${DropList_GetCurSel} \$InstallBlasLibCtrl \$InstallBlasLib
 FunctionEnd
 
 ######################################################################
+Function un.onInit
+  !insertmacro MULTIUSER_UNINIT
+
+  # find installer info
+  Push \$R0
+uninst_check_installs:
+  Call un.FindThisUninstallReg
+  Pop \$R0
+
+  # if 0 it couldnt find us
+  StrCmp \$R0 0 0 uninst_check_local
+
+\${if} \$MultiUser.Privileges == "Admin"
+  # if admin, maybe was forced to admin from Add Remove Apps
+  MessageBox MB_ICONEXCLAMATION|MB_OK "Could not find uninstallation information in registry.\$\nTry running the unistaller from the start menu or from the installation folder \$\"\$INSTDIR\$\"." /SD IDOK
+\${Else}
+  MessageBox MB_ICONEXCLAMATION|MB_OK "Could not find uninstallation information in registry for \$(^Name) installed in \$\"\$INSTDIR\$\".\$\nCan not uninstall!" /SD IDOK
+\${EndIf}
+  Abort
+
+uninst_check_local:
+  # if 1 was local only
+  StrCmp \$R0 1 0 uninst_set_admin
+
+  Call un.MultiUser.InstallMode.CurrentUser
+
+  GoTo uninst_cont_un
+
+uninst_set_admin:
+  # if 2, was a allusers install
+  Call un.MultiUser.InstallMode.AllUsers
+
+uninst_cont_un:
+
+\${If} \$MultiUser.InstallMode == "CurrentUser"
+  StrCpy \$MultiUser.UninstallKey "\${PRODUCT_UNINST_KEY} (Local)"
+  StrCpy \$MultiUser.Local " (Local)"
+\${Else}
+  StrCpy \$MultiUser.UninstallKey "\${PRODUCT_UNINST_KEY}"
+  StrCpy \$MultiUser.Local ""
+\${EndIf}
+
+  Pop \$R0
+FunctionEnd
 
 Function .onInit
+  !insertmacro MULTIUSER_INIT
+
+# will append (Local) to reg key
+\${If} \$MultiUser.InstallMode == "CurrentUser"
+  StrCpy \$MultiUser.UninstallKey "\${PRODUCT_UNINST_KEY} (Local)"
+  StrCpy \$MultiUser.Local " (Local)"
+\${Else}
+  StrCpy \$MultiUser.UninstallKey "\${PRODUCT_UNINST_KEY}"
+  StrCpy \$MultiUser.Local ""
+\${EndIf}
+
   ; set default options
-  StrCpy \$InstallAllUsers \${BST_CHECKED}
   StrCpy \$InstallShortcuts \${BST_CHECKED}
   StrCpy \$RegisterOctaveFileType  \${BST_CHECKED}
   StrCpy \$InstallBlasLib 0
 
-  ; process cmand line options
+  ; process command line options
   \${GetParameters} \$R0
   ClearErrors
   \${GetOptions} "\$R0" "/REGISTER_FILE_TYPES=" \$0
@@ -251,16 +372,8 @@ no_register_opt:
   \${EndIf}
 no_shortcuts_opt:
   ClearErrors
-  \${GetOptions} "\$R0" "/INSTALL_ALL_USERS=" \$0
-  IfErrors no_all_users_opt
-  \${If} \$0 == 0
-     StrCpy \$InstallAllUsers \${BST_UNCHECKED}
-  \${EndIf}
-no_all_users_opt:
-  ClearErrors
 
   Call CheckWinVer
-  Call CheckCurrVersion
   \${If} @ENABLE_JAVA@ == yes
     Call CheckJRE
   \${EndIf} 
@@ -269,12 +382,6 @@ FunctionEnd
 
 ; file section
 Section "MainFiles"
-  ; set context based on whether installing for user or all
-  \${If} \$InstallAllUsers == \${BST_CHECKED}
-    SetShellVarContext all
-  \${Else}
-    SetShellVarContext current
-  \${Endif}
 
   ; include the README
   SetOutPath "\$INSTDIR" 
@@ -321,56 +428,56 @@ EOF
  ; run post-install script
  GetFullPathName /SHORT \$1 \$INSTDIR
  DetailPrint "Running post install script (May take a while) ..."
- ;ExecWait "\$1\\post-install.bat"
  ; run in hidden console window
- nsExec::Exec /TIMEOUT=60000 '"\$1\\post-install.bat"'
+ nsExec::Exec /TIMEOUT=90000 '"\$1\\post-install.bat"'
  Pop \$0
 SectionEnd
 
 Section make_uninstaller
  ; Write the uninstall keys for Windows
  SetOutPath "\$INSTDIR"
- WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "DisplayName" "Octave $VERSION"
- WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "DisplayVersion" "$VERSION"
- WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "DisplayIcon" "\$INSTDIR\\$ICON"
- WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "UninstallString" "\$INSTDIR\\uninstall.exe"
- WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "NoModify" 1
- WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "NoRepair" 1
- WriteRegStr HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "Publisher" "\${APP_NAME}"
- WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "EstimatedSize" $SIZE
- \${If} \$InstallAllUsers == \${BST_CHECKED}
-   WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "AllUsers" 1
- \${EndIf}
+ WriteRegStr \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "DisplayName" "Octave $VERSION\$MultiUser.Local"
+ WriteRegStr \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "DisplayVersion" "$VERSION"
+ WriteRegStr \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "DisplayIcon" "\$INSTDIR\\$ICON"
+ WriteRegStr \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "UninstallString" "\$\"\$INSTDIR\\uninstall.exe\$\" /\$MultiUser.InstallMode" 
+ WriteRegStr \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "QuietUninstallString" "\$\"\$INSTDIR\\uninstall.exe\$\" /\$MultiUser.InstallMode /S" 
+ WriteRegDWORD \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "NoModify" 1
+ WriteRegDWORD \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "NoRepair" 1
+ WriteRegStr \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "Publisher" "\${APP_NAME}"
+ WriteRegDWORD \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "EstimatedSize" $SIZE
+ WriteRegStr \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "InstallMode" "\$MultiUser.InstallMode"
+ WriteRegStr \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "InstallLocation" "\$INSTDIR"
  WriteUninstaller "uninstall.exe"
 SectionEnd
 
 ; start menu (currently hardcoded)
 Section "Shortcuts"
 
- CreateDirectory "\$SMPROGRAMS\\GNU Octave $VERSION"
- CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
+# will append (Local) to menus in local mode
+ CreateDirectory "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local"
+ CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Uninstall.lnk" "\$INSTDIR\\uninstall.exe" "" "\$INSTDIR\\uninstall.exe" 0
  SetOutPath "%USERPROFILE%"
- CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (CLI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$INSTDIR\\octave.vbs\$\\" --no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
- CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (GUI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$INSTDIR\\octave.vbs\$\\" --gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Octave-$VERSION\$MultiUser.Local (CLI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$INSTDIR\\octave.vbs\$\\" --no-gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Octave-$VERSION\$MultiUser.Local (GUI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$INSTDIR\\octave.vbs\$\\" --gui" "\$INSTDIR\\$ICON" 0 SW_SHOWMINIMIZED
  SetOutPath "\$INSTDIR"
 
  ; fix the shortcuts for appid
  ; run in hidden console window
- nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$SMPROGRAMS\\GNU Octave $VERSION\\Octave-$VERSION (GUI).lnk" "gnu.octave.$VERSION"'
+ nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Octave-$VERSION\$MultiUser.Local (GUI).lnk" "gnu.octave.$VERSION"'
  Pop \$0
 EOF
   # shortcut for cmd win
   if [ -f $OCTAVE_SOURCE/cmdshell.bat ]; then 
-    echo "CreateShortCut '\$SMPROGRAMS\\GNU Octave $VERSION\\Bash Shell.lnk' '\$INSTDIR\\cmdshell.bat' '' '' 0" >> $OUTFILE
+    echo "CreateShortCut '\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Bash Shell.lnk' '\$INSTDIR\\cmdshell.bat' '' '' 0" >> $OUTFILE
   fi
   # if we have documentation files, create shortcuts
   if [ -d $OCTAVE_SOURCE/$OCTAVE_SUBDIR/share/doc/octave ]; then
     cat >> $OUTFILE << EOF
-    CreateDirectory "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation"
-    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave C++ Classes (PDF).lnk" "\$INSTDIR\\$OCTAVE_SUBDIR\\share\\doc\\octave\\liboctave.pdf" "" "" 0
-    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave C++ Classes (HTML).lnk" "\$INSTDIR\\$OCTAVE_SUBDIR\\share\\doc\\octave\\liboctave.html\\index.html" "" "" 0
-    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave (PDF).lnk" "\$INSTDIR\\$OCTAVE_SUBDIR\\share\\doc\\octave\\octave.pdf" "" "" 0
-    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\Octave (HTML).lnk" "\$INSTDIR\\$OCTAVE_SUBDIR\\share\\doc\\octave\\octave.html\\index.html" "" "" 0
+    CreateDirectory "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Documentation"
+    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Documentation\\Octave C++ Classes (PDF).lnk" "\$INSTDIR\\$OCTAVE_SUBDIR\\share\\doc\\octave\\liboctave.pdf" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Documentation\\Octave C++ Classes (HTML).lnk" "\$INSTDIR\\$OCTAVE_SUBDIR\\share\\doc\\octave\\liboctave.html\\index.html" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Documentation\\Octave (PDF).lnk" "\$INSTDIR\\$OCTAVE_SUBDIR\\share\\doc\\octave\\octave.pdf" "" "" 0
+    CreateShortCut "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Documentation\\Octave (HTML).lnk" "\$INSTDIR\\$OCTAVE_SUBDIR\\share\\doc\\octave\\octave.html\\index.html" "" "" 0
 EOF
   fi
  
@@ -389,10 +496,22 @@ EOF
     ; if no version found - need set INST DIR and VER will use
     StrCmp \$R1 "" set_ver_str
 
+    ClearErrors
     ; valid install found - get info from registry
-    ReadRegStr \$R0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "UninstallString"
+    ReadRegStr \$R0 SHCTX "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" InstallLocation"
+    IfErrors sc_no_install_path
+    StrCmp \$R0 "" sc_no_install_path sc_install_path
+sc_no_install_path:
+    # make dir from installer path
+    ReadRegStr \$R0 SHCTX "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "UninstallString"
     \${GetParent} \$R0 \$R0
-    ReadRegStr \$R2 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "DisplayIcon"
+   
+sc_install_path:
+
+    # remove any '"' in our path
+    \${DequoteString} \$R0 \$R0
+
+    ReadRegStr \$R2 SHCTX "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "DisplayIcon"
     GoTo have_ver_str
 set_ver_str:
     StrCpy \$R1 "$VERSION"
@@ -401,10 +520,10 @@ set_ver_str:
 
 have_ver_str:
     SetOutPath "%USERPROFILE%"
-    CreateShortCut "\$desktop\\GNU Octave (CLI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --no-gui" "\$R2" 0 SW_SHOWMINIMIZED
-    CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --gui" "\$R2" 0 SW_SHOWMINIMIZED
+    CreateShortCut "\$desktop\\GNU Octave\$MultiUser.Local (CLI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --no-gui" "\$R2" 0 SW_SHOWMINIMIZED
+    CreateShortCut "\$desktop\\GNU Octave\$MultiUser.Local (GUI).lnk" "%SYSTEMROOT%\\system32\\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --gui" "\$R2" 0 SW_SHOWMINIMIZED
 
-    nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave (GUI).lnk" "gnu.octave.\$R1"'
+    nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave\$MultiUser.Local (GUI).lnk" "gnu.octave.\$R1"'
     Pop \$0
 
     Pop \$R2
@@ -424,63 +543,57 @@ have_ver_str:
 SectionEnd
 
 Section "FileTypeRego"
-  ; Octave document
-  WriteRegStr HKCR "Octave.Document.$VERSION" "" "GNU Octave Script"
-  WriteRegStr HKCR "Octave.Document.$VERSION\\DefaultIcon" "" "\$INSTDIR\\$ICON"
-  ; document actions
-  WriteRegStr HKCR "Octave.Document.$VERSION\\shell\\open\\command" "" "wscript \$\\"\$INSTDIR\\octave.vbs\$\\" --gui --persist --eval \$\\"edit '%1'\$\\""
+
+  WriteRegStr SHCTX "Software\\Classes\\Octave.Document.$VERSION" "FriendlyAppName" "GNU Octave $VERSION"
+  WriteRegStr SHCTX "Software\\Classes\\Octave.Document.$VERSION\\DefaultIcon" "" "\$INSTDIR\\$ICON"
+  WriteRegStr SHCTX "Software\\Classes\\Octave.Document.$VERSION\\shell\\open\\command" "" "wscript \$\\"\$INSTDIR\\octave.vbs\$\\" --gui --persist --eval \$\\"edit '%1'\$\\""
 
   \${If} \$RegisterOctaveFileType == \${BST_CHECKED}
-    ReadRegStr \$0 HKCR ".m" ""
-    StrCmp "\$0" "" no_back_type
-    WriteRegStr HKCR ".m" "backup_val" "\$0"  
-no_back_type:
-    WriteRegStr HKCR ".m" "" "Octave.Document.$VERSION"
-    WriteRegDWORD HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "RegisteredFileType" 1
+
+    ReadRegStr \$0 SHCTX "Software\\Classes\\.m" ""
+    StrCmp "\$0" "" ctx_no_back_type
+    WriteRegStr SHCTX "Software\\Classes\\.m" "backup_val" "\$0"
+ctx_no_back_type:
+    WriteRegStr SHCTX "Software\\Classes\\.m" "" "Octave.Document.$VERSION"
+
+    WriteRegDWORD \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "RegisteredFileType" 1
   \${EndIf}
+
 SectionEnd
 
 Section "Uninstall"
 
-  ReadRegDWORD \$0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "AllUsers"
-  IfErrors not_all_users
-
-  SetShellVarContext all
-
-not_all_users:
-  ReadRegDWORD \$0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "RegisteredFileType"
+  ReadRegDWORD \$0  \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "RegisteredFileType"
   IfErrors not_registered_file
 
   ; only try remove if is set to our version of octave
-  ReadRegStr \$0 HKCR ".m" ""
+  ReadRegStr \$0 SHCTX "Software\\Classes\\.m" ""
   StrCmp \$0 "Octave.Document.$VERSION" 0 not_registered_file
 
-  ReadRegStr \$0 HKCR ".m" "backup_val"
+  ReadRegStr \$0 SHCTX "Software\\Classes\\.m" "backup_val"
   IfErrors not_backup_file
 
   # retore backup
-  WriteRegStr HKCR ".m" "" "\$0"
+  WriteRegStr SHCTX "Software\\Classes\\.m" "" "\$0"
 
-  DeleteRegValue HKCR ".m" "backup_val"
+  DeleteRegValue SHCTX "Software\\Classes\\.m" "backup_val"
 
   ; dont delete .m if just restored backup
   Goto not_registered_file
 not_backup_file:
-  DeleteRegKey HKCR ".m"
+  DeleteRegValue SHCTX "Software\\Classes" ".m"
 
 not_registered_file:
- ; delete file type
- DeleteRegKey HKCR "Octave.Document.$VERSION"
-
- DeleteRegKey HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION"
- DeleteRegKey HKLM "Software\\Octave-$VERSION"
+ 
+ DeleteRegKey SHCTX "Software\\Classes\\Octave.Document.$VERSION"
+ DeleteRegKey  \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey"
 
  ; Remove shortcuts
- Delete "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation\\*.*"
- RMDir "\$SMPROGRAMS\\GNU Octave $VERSION\\Documentation"
+ Delete "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Documentation\\*.*"
+ RMDir "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Documentation"
 
- Delete "\$SMPROGRAMS\\GNU Octave $VERSION\\*.*"
- RMDir "\$SMPROGRAMS\\GNU Octave $VERSION"
+ Delete "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\*.*"
+ RMDir "\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local"
 
  ; TODO: only delete if no other version of octave available
 
@@ -494,28 +607,41 @@ not_registered_file:
  ; no installs detected - remove shortcuts
  StrCmp \$R1 "" remove_desktop_shortcuts
 
+ ClearErrors
  ; if install detected, get the path and icon
- ReadRegStr \$R0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "UninstallString"
+ ReadRegStr \$R0 SHCTX "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "InstallLocation"
+ IfErrors no_install_path
+ StrCmp \$R0 "" no_install_path install_path
+no_install_path:
+ # old installers uninstall string was just the name of the installer, so try make path from that
+ ReadRegStr \$R0 SHCTX "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "UninstallString"
  \${GetParent} \$R0 \$R0
- 
- ReadRegStr \$R2 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "DisplayIcon"
+install_path:
+ ClearErrors
 
- IfFileExists "\$desktop\\GNU Octave (CLI).lnk" 0 check_gui_shortcut 
+ # remove any '"' in our path
+ \${un.DequoteString} \$R0 \$R0
+
+ StrCmp \$R0 "" remove_desktop_shortcuts
+ 
+ ReadRegStr \$R2 SHCTX "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-\$R1" "DisplayIcon"
+
+ IfFileExists "\$desktop\\GNU Octave\$MultiUser.Local (CLI).lnk" 0 check_gui_shortcut 
  SetOutPath "%USERPROFILE%"
- CreateShortCut "\$desktop\\GNU Octave (CLI).lnk" "%SYSTEMROOT%\system32\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --no-gui" "\$R2" 0 SW_SHOWMINIMIZED
+ CreateShortCut "\$desktop\\GNU Octave\$MultiUser.Local (CLI).lnk" "%SYSTEMROOT%\system32\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --no-gui" "\$R2" 0 SW_SHOWMINIMIZED
 
 check_gui_shortcut:
- IfFileExists "\$desktop\\GNU Octave (GUI).lnk" 0 done_remove_desktop_shortcuts
+ IfFileExists "\$desktop\\GNU Octave\$MultiUser.Local (GUI).lnk" 0 done_remove_desktop_shortcuts
  SetOutPath "%USERPROFILE%"
- CreateShortCut "\$desktop\\GNU Octave (GUI).lnk" "%SYSTEMROOT%\system32\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --gui" "\$R2" 0 SW_SHOWMINIMIZED
- nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave (GUI).lnk" "gnu.octave.\$R1"'
+ CreateShortCut "\$desktop\\GNU Octave\$MultiUser.Local (GUI).lnk" "%SYSTEMROOT%\system32\wscript.exe" "\$\\"\$R0\\octave.vbs\$\\" --gui" "\$R2" 0 SW_SHOWMINIMIZED
+ nsExec::Exec /TIMEOUT=30000 '"\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\win7appid.exe" "\$desktop\\GNU Octave\$MultiUser.Local (GUI).lnk" "gnu.octave.\$R1"'
  Pop \$0
 
  GoTo done_remove_desktop_shortcuts
 
 remove_desktop_shortcuts:
- Delete "\$desktop\\GNU Octave (CLI).lnk" 
- Delete "\$desktop\\GNU Octave (GUI).lnk" 
+ Delete "\$desktop\\GNU Octave\$MultiUser.Local (CLI).lnk" 
+ Delete "\$desktop\\GNU Octave\$MultiUser.Local (GUI).lnk" 
 
 done_remove_desktop_shortcuts:
  Pop \$R2
@@ -535,12 +661,16 @@ EOF
 
 # last bit of the uninstaller
   cat >> $OUTFILE << EOF
+
+ Delete "\$INSTDIR\\uninstall.exe"
+
  Delete "\$INSTDIR\\*.*"
  ClearErrors
  RmDir "\$INSTDIR"
 
  ; didnt remove directory ? most likely from not all files removed
  IfErrors 0 uninstall_done
+    ClearErrors
     MessageBox MB_YESNO "One or more folders were not uninstalled because they contain extra files. Try to delete them?" /SD IDYES IDNO uninstall_done
     RMDir /r "\$INSTDIR"
 
@@ -563,26 +693,36 @@ Function \${un}GetLatestOctave
   StrCpy \$R1 0
 
   ; loop through installed programs to find octave installs
-octave_ver_loop:
-  EnumRegKey \$R2 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\" \$R1
-  StrCmp \$R2 "" latest_octave_done
+\${un}octave_ver_loop:
+  EnumRegKey \$R2 \${PRODUCT_UNINST_ROOT_KEY} "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\" \$R1
+  StrCmp \$R2 "" \${un}latest_octave_done
 
   ; len(octave) = 6
   StrCpy \$R3 \$R2 6
-  StrCmp \$R3 "Octave" +1 next_ver_loop
+  StrCmp \$R3 "Octave" 0 \${un}next_ver_loop
 
   ; to verify the install check with the installer exists have uninstaller
-  ReadRegStr \$R3 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\\$R2" "UninstallString"
-  ifFileExists \$R3 0 next_ver_loop
+  # TODO
+  #ReadRegStr \$R3 \${PRODUCT_UNINST_ROOT_KEY} "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\\$R2" "UninstallString"
+  #ifFileExists \$R3 0 \${un}next_ver_loop
 
+# if uninstalling dont count ourselves
+\${If} "\${un}" == "un."
+  StrCmp \$R2 "Octave-$VERSION\$MultiUser.Local" \${un}skip_ver_set
   ; grab version part of octave
   StrCpy \$R0 \$R2 "" 7
+\${un}skip_ver_set:
 
-next_ver_loop:
+\${Else}
+  ; grab version part of octave
+  StrCpy \$R0 \$R2 "" 7
+\${EndIf}
+
+\${un}next_ver_loop:
   IntOp \$R1 \$R1 + 1
-  GoTo octave_ver_loop 
+  GoTo \${un}octave_ver_loop 
 
-latest_octave_done:
+\${un}latest_octave_done:
   Pop \$R3
   Pop \$R2
   Pop \$R1
@@ -655,10 +795,10 @@ FunctionEnd
 Function CheckCurrVersion
   Push \$0
   ClearErrors
-  ReadRegStr \$0 HKLM "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Octave-$VERSION" "DisplayName"
+  ReadRegStr \$0 \${PRODUCT_UNINST_ROOT_KEY} "\$MultiUser.UninstallKey" "DisplayName"
   IfErrors curr_check_ok
   MessageBox MB_OK|MB_ICONSTOP "Another Octave installation (with the same version) has been detected. Please uninstall it first."
-  Abort
+  Quit
 curr_check_ok:
   pop \$0
 FunctionEnd
@@ -687,7 +827,7 @@ space_loop:
   IntOp  \$R1 \$R1 + 1
   GoTo space_loop
 space_found:
-MessageBox MB_OK|MB_ICONEXCLAMATION "Octave should not be installed to a destination folder containing &%()^ or spaces. Please select another destination."
+MessageBox MB_OK|MB_ICONEXCLAMATION "Octave should not be installed to a destination folder containing &%()^. Please select another destination."
   Abort 
 space_end:
   Pop \$R1
@@ -702,8 +842,6 @@ Function CheckJRE
 ;  looks in:
 ;  1 - JAVA_HOME environment variable
 ;  2 - the registry
-EOF
-  cat >> $OUTFILE << EOF
 
   Push \$R0
   Push \$R1
@@ -737,8 +875,58 @@ EOF
  continue:
   Pop \$R1
   Pop \$R0
-EOF
-  cat >> $OUTFILE << EOF
-
 FunctionEnd
+
+Function un.FindThisUninstallReg
+  # look to find where we were installed for this particular version and then return
+  # 0 no install found (shouldnt happen)
+  # 1 local install was found
+  # 2 allusers install was found
+  Push \$R0 
+  Push \$R1
+
+  StrCpy \$R0 0
+
+find_check_reg_hkcu:
+  # check for local installs
+  ReadRegStr \$R1 HKCU "\${PRODUCT_UNINST_KEY} (Local)" "InstallLocation"
+  StrCmp \$R1 "" 0 find_have_reg_hkcu
+
+  ReadRegStr \$R1 HKCU "\${PRODUCT_UNINST_KEY} (Local)" "UninstallString"
+  StrCmp \$R1 "" find_check_reg_hklm 0
+
+  \${GetParent} \$R1 \$R1
+
+find_have_reg_hkcu:
+ \${un.DequoteString} \$R1 \$R1
+
+  # is this the match ?
+  StrCmp \$R1 "\$INSTDIR" 0 find_check_reg_hklm
+
+  StrCpy \$R0 1
+  GoTo find_check_reg_done
+find_check_reg_hklm:
+  # check for all installs
+  ReadRegStr \$R1 HKLM "\${PRODUCT_UNINST_KEY}" "InstallLocation"
+  StrCmp \$R1 "" 0 find_have_reg_hklm
+
+  ReadRegStr \$R1 HKLM "\${PRODUCT_UNINST_KEY}" "UninstallString"
+  StrCmp \$R1 "" find_check_reg_done 0
+
+  \${GetParent} \$R1 \$R1
+
+find_have_reg_hklm:
+  \${un.DequoteString} \$R1 \$R1
+
+  # is this the match ?
+  StrCmp \$R1 "\$INSTDIR" 0 find_check_reg_done
+
+  StrCpy \$R0 2
+
+find_check_reg_done:
+  Pop \$R1
+  # restore r0, but result on stack
+  Exch \$R0
+FunctionEnd
+
 EOF
