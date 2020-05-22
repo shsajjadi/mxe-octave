@@ -70,7 +70,7 @@ echo "; octave setup script $OCTAVE_SOURCE" > $OUTFILE
 !define VERSION "$INSTALLER_VERSION"
 !define OCTAVE_VERSION "$OCTAVE_VERSION"
 !define COPYRIGHT "Copyright © 2013-2020 John W. Eaton and others."
-!define DESCRIPTION "GNU Octave is a high-level programming language, primarily intended for numerical computations."
+!define DESCRIPTION "GNU Octave Installer"
 !define INSTALLER_FILES "$TOPDIR/installer-files"
 !define INSTALLER_NAME "$INSTALLER_NAME"
 !define MAIN_APP_EXE "octave-firsttime.vbs"
@@ -309,7 +309,7 @@ uninst_check_installs:
   # if admin, maybe was forced to admin from Add Remove Apps
   MessageBox MB_ICONEXCLAMATION|MB_OK "Could not find uninstallation information in registry.\$\nTry running the uninstaller from the start menu or from the installation folder \$\"\$INSTDIR\$\"." /SD IDOK
 \${Else}
-  MessageBox MB_ICONEXCLAMATION|MB_OK "Could not find uninstallation information in registry for the program installed in \$\"\$INSTDIR\$\" for user \$\"\$(^Name)\$\".\$\nCan not uninstall!" /SD IDOK
+  MessageBox MB_ICONEXCLAMATION|MB_OK "Could not find uninstallation information in registry for \$(^Name) installed in \$\"\$INSTDIR\$\".\$\nCan not uninstall!" /SD IDOK
 \${EndIf}
   Abort
 
