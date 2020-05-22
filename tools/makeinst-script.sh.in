@@ -307,9 +307,9 @@ uninst_check_installs:
 
 \${if} \$MultiUser.Privileges == "Admin"
   # if admin, maybe was forced to admin from Add Remove Apps
-  MessageBox MB_ICONEXCLAMATION|MB_OK "Could not find uninstallation information in registry.\$\nTry running the unistaller from the start menu or from the installation folder \$\"\$INSTDIR\$\"." /SD IDOK
+  MessageBox MB_ICONEXCLAMATION|MB_OK "Could not find uninstallation information in registry.\$\nTry running the uninstaller from the start menu or from the installation folder \$\"\$INSTDIR\$\"." /SD IDOK
 \${Else}
-  MessageBox MB_ICONEXCLAMATION|MB_OK "Could not find uninstallation information in registry for \$(^Name) installed in \$\"\$INSTDIR\$\".\$\nCan not uninstall!" /SD IDOK
+  MessageBox MB_ICONEXCLAMATION|MB_OK "Could not find uninstallation information in registry for the program installed in \$\"\$INSTDIR\$\" for user \$\"\$(^Name)\$\".\$\nCan not uninstall!" /SD IDOK
 \${EndIf}
   Abort
 
