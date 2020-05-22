@@ -18,7 +18,6 @@ class Env:
   use_pkg_prefix = True;
   arch = "";
   tmp = "/tmp";
-  apiversion = "";
   bin_dir = "";
   m_dir = "";
   arch_dir = "";
@@ -167,16 +166,18 @@ def generate_lookfor_cache (env):
   # TODO create doc-cache
   pass
 
-def copyfile(files, destdir):
+def copyfile(files, destdir, verbose=False):
   if os.path.exists(destdir) == False:
     os.mkdir(destdir)
   for a in files:
     if os.path.isfile(a):
+      if verbose:
+        print "copy " + a + " to " + destdir + "/"
       shutil.copy2(a, destdir)
     if os.path.isdir(a):
       name= os.path.basename(a)
       morefiles=(a + "/" + b for b in os.listdir(a))
-      copyfile(morefiles, destdir + "/" + name)
+      copyfile(morefiles, destdir + "/" + name, verbose)
 
 def copy_files(env, pkgdir):
   if os.path.exists(env.m_dir) == False:
@@ -311,15 +312,19 @@ def add_package_list(env, desc):
   
 def uninstall_pkg(pkg,env):
   # uninstall existing directories
+  if env.verbose:
+     print "Uninstalling " + env.pkg
 
   files=glob.glob(env.prefix + "/share/octave/packages/" + env.pkg + "-" + "*")
   for f in files:
-    print "removing dir " + f
+    if env.verbose:
+      print "removing dir " + f
     shutil.rmtree(f)
 
   files=glob.glob(env.prefix + "/lib/octave/packages/" + env.pkg + "-" + "*")
   for f in files:
-    print "removing dir " + f
+    if env.verbose:
+      print "removing dir " + f
     shutil.rmtree(f)
 
   pass
@@ -327,6 +332,9 @@ def uninstall_pkg(pkg,env):
 def install_pkg(pkg, env):
   pkg = os.path.abspath(pkg)
   currdir = os.getcwd()
+
+  if env.verbose:
+     print "Installing " + pkg
 
   try:
     ## Check that the directory in prefix exist. If it doesn't: create it!
@@ -355,7 +363,7 @@ def install_pkg(pkg, env):
     # make the path names
     env.pkg = desc['Name'].lower()
     env.m_dir = env.prefix + "/share/octave/packages/" + env.pkg + "-" + desc['Version'];
-    env.arch_dir = env.prefix + "/lib/octave/packages/" + env.pkg + "-" + desc['Version'] + "/" + env.arch + "-" + env.apiversion
+    env.arch_dir = env.prefix + "/lib/octave/packages/" + env.pkg + "-" + desc['Version'] + "/" + env.arch
 
     configure_make (env, packdir)
 
@@ -401,6 +409,8 @@ def fix_depends(deps):
 def rebuild_pkg(env):
   currdir = os.getcwd()
 
+  if env.verbose:
+    print "Rebuilding package"
 
   try:
     oct_dir = env.prefix + "/share/octave"
@@ -580,15 +590,16 @@ def pkg (args):
   if env.prefix == "":
     env.prefix = os.popen(env.octave_config + " -p PREFIX").read().rstrip("\r\n")
 
-  env.arch = os.popen(env.octave_config + " -p CANONICAL_HOST_TYPE").read().rstrip("\r\n")
-  env.apiversion = os.popen(env.octave_config + " -p API_VERSION").read().rstrip("\r\n")
+  arch = os.popen(env.octave_config + " -p CANONICAL_HOST_TYPE").read().rstrip("\r\n")
+  apiver = os.popen(env.octave_config + " -p API_VERSION").read().rstrip("\r\n")
+  env.arch = arch + "-" + apiver
+
   env.bindir = os.popen(env.octave_config + " -p BINDIR").read().rstrip("\r\n")
 
   if env.verbose:
     print "operation=", operation
     print "mkoctfile=", env.mkoctfile
     print "arch=", env.arch
-    print "apiversion=", env.apiversion
     print "prefix=", env.prefix
     print "files=", files
     print "verbose=", env.verbose
