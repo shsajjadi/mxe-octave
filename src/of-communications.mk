@@ -22,6 +22,9 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd $(1)/src && autoconf
+    cd $(1)/src && ./configure \
+        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        PKG_CONFIG='$(MXE_PKG_CONFIG)' \
+        PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig'
     $(call OCTAVE_FORGE_PKG_BUILD,$(1),$(2),$(3),$($(PKG)_OPTIONS))
 endef

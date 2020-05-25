@@ -180,7 +180,6 @@ SRC_FILES_1 := \
   guile-test.c \
   guile.mk \
   harfbuzz.mk \
-  hdf5-1-fixes.patch \
   hdf5.mk \
   hunspell-test.cpp \
   hunspell.mk \
