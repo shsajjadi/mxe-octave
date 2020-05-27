@@ -3,8 +3,8 @@
 
 PKG             := pixman
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.34.0
-$(PKG)_CHECKSUM := a1b1683c1a55acce9d928fea1ab6ceb79142ddc7
+$(PKG)_VERSION  := 0.40.0
+$(PKG)_CHECKSUM := d7baa6377b6f48e29db011c669788bb1268d08ad
 $(PKG)_SUBDIR   := pixman-$($(PKG)_VERSION)
 $(PKG)_FILE     := pixman-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://cairographics.org/releases/$($(PKG)_FILE)
@@ -12,7 +12,7 @@ $(PKG)_URL_2    := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://cairographics.org/snapshots/?C=M;O=D' | \
+    $(WGET) -q -O- 'http://cairographics.org/releases/?C=M;O=D' | \
     $(SED) -n 's,.*"pixman-\([0-9][^"]*\)\.tar.*,\1,p' | \
     head -1
 endef
