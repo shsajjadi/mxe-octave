@@ -1,0 +1,14 @@
+diff --git "a/netcdf/ncdump/ncvalidator.c" "b/netcdf/ncdump/ncvalidator.c"
+index a0e4acb..2a7c5af 100644
+--- "a/ncdump/ncvalidator.c"	
++++ "b/ncdump/ncvalidator.c"
+@@ -76,7 +76,9 @@ THIS SOFTWARE.
+ #ifdef _WIN32
+ #include <io.h>
+ #define snprintf _snprintf
++#ifndef HAVE_UNISTD_H
+ #include "XGetopt.h"
++#endif
+ int opterr;
+ int optind;
+ #endif
