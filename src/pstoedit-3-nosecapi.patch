@@ -1,20 +1,3 @@
-diff -ur pstoedit-3.62.orig/src/cppcomp.h pstoedit-3.62/src/cppcomp.h
---- pstoedit-3.62.orig/src/cppcomp.h	2014-07-25 09:09:48 -0400
-+++ pstoedit-3.62/src/cppcomp.h	2014-07-25 09:12:17 -0400
-@@ -33,7 +33,12 @@
- # define DLLEXPORT
- #endif
- 
--
-+#ifdef __MINGW32__
-+  #include <_mingw.h>
-+  #ifdef MINGW_HAS_SECURE_API
-+    #undef MINGW_HAS_SECURE_API
-+  #endif
-+#endif
- 
- 
- #ifdef _AIX
 diff -ur pstoedit-3.62.orig/src/lexyy.cpp pstoedit-3.62/src/lexyy.cpp
 --- pstoedit-3.62.orig/src/lexyy.cpp	2014-07-25 09:19:14 -0400
 +++ pstoedit-3.62/src/lexyy.cpp	2014-07-25 09:20:00 -0400
@@ -49,3 +32,15 @@ diff -ur pstoedit-3.70.orig/src/drvwmf.cpp pstoedit-3.70/src/drvwmf.cpp
  #include "drvwmf.h"
  
  #include I_string_h
+diff -ur pstoedit-3.75.orig/src/cppcomp.h pstoedit-3.75/src/cppcomp.h
+--- pstoedit-3.75.orig/src/cppcomp.h	2020-05-29 11:11:05.064392865 -0400
++++ pstoedit-3.75/src/cppcomp.h	2020-05-29 11:20:09.056541850 -0400
+@@ -230,7 +230,7 @@
+ 
+ 
+ //{
+-#if defined(_MSC_VER) && (_MSC_VER >= 1400)
++#if (defined(_MSC_VER) && (_MSC_VER >= 1400)) || defined(__MINGW32__)
+ // for MS VS 8 (== cl version 14) we can use the new secure *_s string functions
+ // for other systems we have to "emulate" them
+ #define TARGETWITHLEN(str,len) str,len
