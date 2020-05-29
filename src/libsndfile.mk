@@ -17,16 +17,24 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+$(PKG)_EXTRA_CONFIGURE_OPTIONS :=
+ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
+    $(PKG)_EXTRA_CONFIGURE_OPTIONS += --enable-stack-smash-protection
+endif
+
 define $(PKG)_BUILD
     cd '$(1)' && autoreconf -fi -IM4
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
-	$(CONFIGURE_CPPFLAGS) \
+	$(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --enable-sqlite \
         --enable-external-libs \
         --disable-octave \
-        --disable-alsa
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_PROGS)  $(MXE_DISABLE_DOCS)
+        --disable-alsa \
+	--disable-full-suite \
+        $($(PKG)_EXTRA_CONFIGURE_OPTIONS)
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DISABLE_PROGS)  $(MXE_DISABLE_DOCS)
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS)  $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
 endef
