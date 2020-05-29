@@ -3,8 +3,8 @@
 
 PKG             := mingw-w64
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 6.0.0
-$(PKG)_CHECKSUM := 4cffb043060d88d6bf0f382e4d92019263670ca6
+$(PKG)_VERSION  := 7.0.0
+$(PKG)_CHECKSUM := 25940043c4541e3e59608dead9b6f75b5596d606
 $(PKG)_SUBDIR   := $(PKG)-v$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-v$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$(PKG)-release/$($(PKG)_FILE)
@@ -23,6 +23,7 @@ define $(PKG)_BUILD
         --host='$(TARGET)' \
         --prefix='$(HOST_PREFIX)' \
         --enable-sdk=all \
+        --enable-idl \
         --enable-secure-api
 
     $(MAKE) -C '$(1).headers-build' install
