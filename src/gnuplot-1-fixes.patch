@@ -165,3 +165,58 @@ diff -ur gnuplot-5.2.2.orig/src/syscfg.h gnuplot-5.2.2/src/syscfg.h
  #endif
  
  #ifdef HAVE_STRUCT_EXCEPTION_IN_MATH_H
+diff -ur gnuplot-5.2.8.orig/config/mingw/Makefile gnuplot-5.2.8/config/mingw/Makefile
+--- gnuplot-5.2.8.orig/config/mingw/Makefile	2020-05-28 19:30:10.109744146 -0400
++++ gnuplot-5.2.8/config/mingw/Makefile	2020-05-28 19:33:01.256347682 -0400
+@@ -44,6 +44,8 @@
+ #CCPATH = g:/mingw32/bin/
+ #CCPATH = c:/apps/mingw/bin/
+ 
++PKG_CONFIG ?= pkg-config
++
+ # Path to 32bit programms
+ # On 32bit machines:
+ #PROGRAMFILES32="$(PROGRAMFILES)"
+@@ -388,7 +390,7 @@
+ ifdef NEWGD
+   CFLAGS += -DHAVE_LIBGD -DHAVE_GD_H -DHAVE_GD_GIF -DGIF_ANIMATION -DHAVE_GD_PNG
+ ifdef GDPKGCONFIG
+-  CFLAGS += $(shell pkg-config --cflags gdlib)
++  CFLAGS += $(shell $(PKG_CONFIG) --cflags gdlib)
+ endif
+ ifdef JPEG
+   CFLAGS += -DHAVE_GD_JPEG
+@@ -414,7 +416,7 @@
+   TERMLIBS += $(shell gdlib-config --libs)
+ endif
+ ifdef GDPKGCONFIG
+-  TERMLIBS += $(shell pkg-config --libs gdlib)
++  TERMLIBS += $(shell $(PKG_CONFIG) --libs gdlib)
+ endif
+ endif
+ 
+@@ -440,9 +442,9 @@
+ endif
+ 
+ ifdef CAIROLIBS
+-	CAIRO_CFLAGS := $(shell pkg-config --cflags cairo | sed s_-Ic:_-I/c_g)
+-	PANGOCAIRO_CFLAGS := $(shell pkg-config --cflags glib-2.0 gobject-2.0 pangocairo cairo | sed s_-Ic:_-I/c_g)
+-	PANGOCAIRO_LIBS := $(shell pkg-config --libs glib-2.0 gobject-2.0 pangocairo cairo | sed s_-Lc:_-L/c_g)
++	CAIRO_CFLAGS := $(shell $(PKG_CONFIG) --cflags cairo | sed s_-Ic:_-I/c_g)
++	PANGOCAIRO_CFLAGS := $(shell $(PKG_CONFIG) --cflags glib-2.0 gobject-2.0 pangocairo cairo | sed s_-Ic:_-I/c_g)
++	PANGOCAIRO_LIBS := $(shell $(PKG_CONFIG) --libs glib-2.0 gobject-2.0 pangocairo cairo | sed s_-Lc:_-L/c_g)
+ 	CAIRO_OBJS := gp_cairo.$(O) gp_cairo_helpers.$(O)
+ 	TERMFLAGS += $(PANGOCAIRO_CFLAGS)
+ endif
+diff -ur gnuplot-5.2.8.orig/config/mingw/Makefile gnuplot-5.2.8/config/mingw/Makefile
+--- gnuplot-5.2.8.orig/config/mingw/Makefile	2020-05-28 19:43:45.027724850 -0400
++++ gnuplot-5.2.8/config/mingw/Makefile	2020-05-28 19:46:47.102198835 -0400
+@@ -444,7 +444,7 @@
+ ifdef CAIROLIBS
+ 	CAIRO_CFLAGS := $(shell $(PKG_CONFIG) --cflags cairo | sed s_-Ic:_-I/c_g)
+ 	PANGOCAIRO_CFLAGS := $(shell $(PKG_CONFIG) --cflags glib-2.0 gobject-2.0 pangocairo cairo | sed s_-Ic:_-I/c_g)
+-	PANGOCAIRO_LIBS := $(shell $(PKG_CONFIG) --libs glib-2.0 gobject-2.0 pangocairo cairo | sed s_-Lc:_-L/c_g)
++	PANGOCAIRO_LIBS := $(shell $(PKG_CONFIG) --libs glib-2.0 gobject-2.0 pangocairo cairo pangowin32 --static | sed s_-Lc:_-L/c_g)
+ 	CAIRO_OBJS := gp_cairo.$(O) gp_cairo_helpers.$(O)
+ 	TERMFLAGS += $(PANGOCAIRO_CFLAGS)
+ endif
