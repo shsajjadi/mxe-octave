@@ -3,11 +3,11 @@
 
 PKG             := libvpx
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.4.0
-$(PKG)_CHECKSUM := d05f4e9a9878886282ac9c9246f8fac080c94c8f
+$(PKG)_VERSION  := 1.8.2
+$(PKG)_CHECKSUM := 7fbc7de47f59431fa2c5b76660f115963e83193d
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://storage.googleapis.com/downloads.webmproject.org/releases/webm/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
+$(PKG)_URL      := https://github.com/webmproject/$(PKG)/archive/v$($(PKG)_VERSION).tar.gz
 $(PKG)_DEPS     := pthreads
 
 $(PKG)_TARGET_OPTS := 
@@ -24,7 +24,7 @@ endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://github.com/webmproject/libvpx/tags' | \
-    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | \
     $(SORT) -Vr | \
     head -1
 endef
