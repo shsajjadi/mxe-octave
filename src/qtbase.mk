@@ -65,7 +65,7 @@ else
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_CONFIGURE_OPTS += -qpa xcb -xcb
   else
-    $(PKG)_CONFIGURE_OPTS += -qpa xcb -qt-xcb
+    $(PKG)_CONFIGURE_OPTS += -qpa xcb
   endif
 endif
 endif
