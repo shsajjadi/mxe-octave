@@ -7,12 +7,13 @@ $(PKG)_VERSION  := 2.3.1
 $(PKG)_CHECKSUM := 147c5670939727420d0e2ad6a20468e2c2db1e20
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://downloads.us.xiph.org/releases/$(PKG)/$($(PKG)_FILE)
+$(PKG)_URL      := https://downloads.us.xiph.org/releases/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     := vorbis ogg theora speex
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.icecast.org/download.php' | \
+    $(WGET) -q -O- 'https://downloads.us.xiph.org/releases/libshout/' | \
     $(SED) -n 's,.*libshout-\([0-9][^>]*\)\.tar.*,\1,p' | \
+    $(SORT) -Vr | \
     head -1
 endef
 
