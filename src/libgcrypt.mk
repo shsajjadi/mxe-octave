@@ -39,4 +39,12 @@ define $(PKG)_BUILD
       $(INSTALL) -d '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
       $(INSTALL) -m755 '$(3)$(HOST_BINDIR)/libgcrypt-config' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)libgcrypt-config'; \
     fi
+    # create pkg-config file
+    $(INSTALL) -d '$(3)$(HOST_LIBDIR)/pkgconfig'
+    (echo 'Name: $(PKG)'; \
+     echo 'Version: $($(PKG)_VERSION)'; \
+     echo 'Description: $(PKG)'; \
+     echo 'Libs: ' "`$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)libgcrypt-config --libs`"; \
+     echo 'Cflags: ' "`$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)libgcrypt-config --cflags`";) \
+     > '$(3)$(HOST_LIBDIR)/pkgconfig/$(PKG).pc'
 endef
