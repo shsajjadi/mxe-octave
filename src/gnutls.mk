@@ -2,13 +2,13 @@
 # See index.html for further information.
 
 PKG             := gnutls
-$(PKG)_VERSION  := 3.6.13
-$(PKG)_CHECKSUM := 0d3d0d093d6a7cf589612a7c21dbb46cb31c644b
+$(PKG)_VERSION  := 3.6.14
+$(PKG)_CHECKSUM := bea1b5abcb691acf014e592f41d0a9580a41216a
 $(PKG)_SUBDIR   := gnutls-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnutls-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnutls.org/gcrypt/gnutls/v3.6/$($(PKG)_FILE)
 $(PKG)_URL_2    := https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v3.6/$($(PKG)_FILE)
-$(PKG)_DEPS     := gettext libidn2 libunistring nettle pcre zlib
+$(PKG)_DEPS     := gettext gmp libidn2 libtasn1 libunistring nettle zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- https://gnupg.org/ftp/gcrypt/gnutls/v3.6/ | \
@@ -18,7 +18,7 @@ define $(PKG)_UPDATE
 endef
 
 $(PKG)_WINDOWS_CONFIGURE_OPTIONS := \
-   CPPFLAGS='-D_WIN32_WINNT=0x0600'
+   CPPFLAGS='-D_WIN32_WINNT=0x0600' --disable-rpath 
 
 ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_CONFIGURE_OPTIONS := $($(PKG)_WINDOWS_CONFIGURE_OPTIONS)
@@ -28,14 +28,9 @@ ifeq ($(MXE_SYSTEM),msvc)
 endif
 
 define $(PKG)_BUILD
-    $(SED) -i 's, sed , $(SED) ,g' '$(1)/gl/tests/Makefile.am'
-    cd '$(1)' && autoreconf -fi  -I m4 -I src/libopts/m4
-    if [ "$(MXE_NATIVE_BUILD)" = no ]; then \
-      $(SED) -i 's/libopts_cv_with_libregex=no/libopts_cv_with_libregex=yes/g;' '$(1)/configure'; \
-    fi
-    # AI_ADDRCONFIG referenced by src/serv.c but not provided by mingw.
-    # Value taken from http://msdn.microsoft.com/en-us/library/windows/desktop/ms737530%28v=vs.85%29.aspx
-    cd '$(1)' && ./configure \
+    mkdir '$(1)/.build'
+    cd '$(1)' && autoreconf -fi 
+    cd '$(1)/.build' && ../configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -44,18 +39,12 @@ define $(PKG)_BUILD
         --disable-guile \
         --disable-doc \
         --disable-tests \
-        --with-included-libtasn1 \
-        --with-libregex='$(HOST_PREFIX)' \
-        --with-regex-header=pcreposix.h \
-        --with-libregex-cflags="`$(MXE_PKG_CONFIG) libpcreposix --cflags`" \
-        --with-libregex-libs="`$(MXE_PKG_CONFIG) libpcreposix --libs`" \
-        --with-included-libcfg \
         --enable-local-libopts \
         --without-p11-kit \
         --disable-silent-rules \
         $($(PKG)_CONFIGURE_OPTIONS) \
-        ac_cv_prog_AR='$(MXE_AR)' && $(CONFIGURE_POST_HOOK)
+        && $(CONFIGURE_POST_HOOK)
 
-    $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)'
+    $(MAKE) -C '$(1)/.build' -j 1 install DESTDIR='$(3)'
 endef
