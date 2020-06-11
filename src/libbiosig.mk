@@ -30,11 +30,6 @@ define $(PKG)_BUILD_PRE
     # make sure NDEBUG is defined
     $(SED) -i '/NDEBUG/ s|#||g' '$(1)'/Makefile
 
-    ### disables declaration of sopen from io.h (imported through unistd.h)
-    if [ "$(MXE_SYSTEM)" == "mingw" ]; then \
-        $(SED) -i '/ sopen/ s#^/*#//#g' $(HOST_INCDIR)/io.h; \
-    fi
-
     #$(SED) -i 's| -fstack-protector | |g' '$(1)'/Makefile
     #$(SED) -i 's| -D_FORTIFY_SOURCE=2 | |g' '$(1)'/Makefile
     #$(SED) -i 's| -lssp | |g' '$(1)'/Makefile
