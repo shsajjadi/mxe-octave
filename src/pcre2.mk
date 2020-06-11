@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 2e5ee2dd397fa8c3ce9aed1a986e51d66a88bdb0
 $(PKG)_SUBDIR   := pcre2-$($(PKG)_VERSION)
 $(PKG)_FILE     := pcre2-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/pcre/pcre2/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/pcre/files/pcre2/' | \

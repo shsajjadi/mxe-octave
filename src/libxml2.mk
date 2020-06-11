@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := db6592ec9ca9708c4e71bf6bfd907bbb5cd40644
 $(PKG)_SUBDIR   := libxml2-$($(PKG)_VERSION)
 $(PKG)_FILE     := libxml2-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://xmlsoft.org/libxml2/$($(PKG)_FILE)
-$(PKG)_DEPS     := zlib
+$(PKG)_DEPS     := zlib libiconv
 
 ifneq ($(MXE_SYSTEM),msvc)
     $(PKG)_DEPS := xz

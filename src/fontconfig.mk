@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 75612356ef4f801735b49baf987f8942b4a7a5e1
 $(PKG)_SUBDIR   := fontconfig-$($(PKG)_VERSION)
 $(PKG)_FILE     := fontconfig-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://fontconfig.org/release/$($(PKG)_FILE)
-$(PKG)_DEPS     := freetype expat gettext
+$(PKG)_DEPS     := freetype expat gettext libiconv
 ifeq ($(MXE_WINDOWS_BUILD),no)
   $(PKG)_DEPS += util-linux
 endif

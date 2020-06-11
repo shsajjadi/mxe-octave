@@ -11,7 +11,7 @@ $(PKG)_URL      := http://download.qt.io/official_releases/qt/$(call SHORT_PKG_V
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := dbus double-conversion freetds freetype $($(PKG)_FONTCONFIG) jpeg libjbig libpng libproxy pcre2 postgresql sqlite zlib
+$(PKG)_DEPS     := dbus double-conversion freetds freetype $($(PKG)_FONTCONFIG) icu4c jpeg libjbig libpng libproxy pcre2 postgresql sqlite uuid zlib
 
 $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION :=
 $(PKG)_CONFIGURE_DATABASE_OPTION :=

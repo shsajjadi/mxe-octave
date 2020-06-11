@@ -9,7 +9,7 @@ $(PKG)_SUBDIR   := pixman-$($(PKG)_VERSION)
 $(PKG)_FILE     := pixman-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://cairographics.org/releases/$($(PKG)_FILE)
 $(PKG)_URL_2    := http://www.x.org/archive/individual/lib/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := libpng
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://cairographics.org/releases/?C=M;O=D' | \

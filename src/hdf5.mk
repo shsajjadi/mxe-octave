@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 6020131b6e18e6866816b1fe68980512c696c2bf
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := https://support.hdfgroup.org/ftp/HDF5/releases/$(PKG)-$(call SHORT_PKG_VERSION,$(PKG))/$(PKG)-$($(PKG)_VERSION)/src/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := zlib
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package hdf5.' >&2;
