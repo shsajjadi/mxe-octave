@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 85b4adeba79a7691114695e6bafd6d968e68c21f
 $(PKG)_SUBDIR   := $(PKG)
 $(PKG)_FILE     := $(PKG)$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := curl
 
 $(PKG)_MAKE_FLAGS :=
 ifeq ($(BUILD_SHARED),yes)

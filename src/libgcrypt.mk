@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 2d8781e92f88706707a1e76fb628b499ad538a30
 $(PKG)_SUBDIR   := libgcrypt-$($(PKG)_VERSION)
 $(PKG)_FILE     := libgcrypt-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnupg.org/gcrypt/libgcrypt/$($(PKG)_FILE)
-$(PKG)_DEPS     := libgpg_error
+$(PKG)_DEPS     := libgpg_error zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'ftp://ftp.gnupg.org/gcrypt/libgcrypt/' | \

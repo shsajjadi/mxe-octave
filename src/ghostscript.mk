@@ -9,7 +9,7 @@ $(PKG)_CHECKSUM := 3be5f36300e3031e68a28cd898b3eebc9151660b
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs$($(PKG)_NODOTVER)/$($(PKG)_FILE)
-$(PKG)_DEPS     := dbus fontconfig freetype libiconv libidn libpaper libpng tiff zlib
+$(PKG)_DEPS     := dbus fontconfig freetype jpeg libiconv libidn libpaper libpng tiff zlib
 
 ifeq ($(MXE_WINDOWS_BUILD),no)
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
