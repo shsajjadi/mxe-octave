@@ -10,7 +10,11 @@ $(PKG)_CHECKSUM := 64c53b1a4d493237cef5e74944912cd9f98e618d
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := libiconv gettext termcap
+$(PKG)_DEPS     := libiconv gettext
+
+ifeq ($(MXE_SYSTEM),mingw)
+$(PKG)_DEPS     += termcap
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/lame/files/lame/3.100' | \
