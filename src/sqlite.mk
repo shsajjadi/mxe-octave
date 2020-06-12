@@ -8,7 +8,11 @@ $(PKG)_CHECKSUM := 429e3f2d0b16a95ad1025a97b2a328d0b4037575
 $(PKG)_SUBDIR   := $(PKG)-autoconf-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-autoconf-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.sqlite.org/2020/$($(PKG)_FILE)
-$(PKG)_DEPS     := termcap readline zlib
+$(PKG)_DEPS     := readline zlib
+
+ifeq ($(MXE_SYSTEM),mingw)
+$(PKG)_DEPS     += termcap
+endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.sqlite.org/download.html' | \
