@@ -11,7 +11,7 @@ $(PKG)_URL      := http://download.qt.io/official_releases/qt/$(call SHORT_PKG_V
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := dbus double-conversion freetds freetype $($(PKG)_FONTCONFIG) icu4c jpeg libjbig libpng libproxy pcre2 postgresql sqlite uuid zlib
+$(PKG)_DEPS     := dbus double-conversion freetds freetype $($(PKG)_FONTCONFIG) icu4c jpeg libjbig libpng libproxy pcre2 postgresql sqlite zlib
 
 $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION :=
 $(PKG)_CONFIGURE_DATABASE_OPTION :=
@@ -27,6 +27,7 @@ ifeq ($(USE_SYSTEM_OPENGL),no)
   $(PKG)_CONFIGURE_OPTS += -no-egl
 endif
 ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_DEPS += uuid
   ifeq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_DEPS += icu4c
     $(PKG)_CONFIGURE_OPTS += -icu
