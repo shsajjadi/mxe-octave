@@ -3,8 +3,8 @@
 
 PKG             := sundials-ida
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.1.0
-$(PKG)_CHECKSUM := ef2a4175b3974960febd5cba4f65e53628009cc6
+$(PKG)_VERSION  := 5.3.0
+$(PKG)_CHECKSUM := a33d5a9f19fad4e4a257a8c9ae1c321550885996
 $(PKG)_SUBDIR   := sundials-$($(PKG)_VERSION)
 $(PKG)_FILE     := sundials-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://computation.llnl.gov/projects/sundials/download/$($(PKG)_FILE)
@@ -28,13 +28,13 @@ define $(PKG)_BUILD
         -DKLU_LIBRARY_DIR=$(HOST_LIBDIR) \
         -DSUITESPARSECONFIG_LIBRARY=$(HOST_LIBDIR)/libsuitesparseconfig.dll.a \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
-	-DBUILD_ARKODE=OFF \
-	-DBUILD_CVODE=OFF \
-	-DBUILD_CVODES=OFF \
-	-DBUILD_IDA=ON \
-	-DBUILD_IDAS=OFF \
-	-DBUILD_KINSOL=OFF \
-	-DBUILD_CPODES=OFF \
+        -DBUILD_ARKODE=OFF \
+        -DBUILD_CVODE=OFF \
+        -DBUILD_CVODES=OFF \
+        -DBUILD_IDA=ON \
+        -DBUILD_IDAS=OFF \
+        -DBUILD_KINSOL=OFF \
+        -DBUILD_CPODES=OFF \
         '$(1)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)' install DESTDIR='$(3)' VERBOSE=1
 
@@ -53,13 +53,13 @@ define $(PKG)_BUILD
         -DKLU_INCLUDE_DIR=$(HOST_INCDIR)/suitesparse \
         -DKLU_LIBRARY_DIR=$(HOST_LIBDIR) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
-	-DBUILD_ARKODE=OFF \
-	-DBUILD_CVODE=OFF \
-	-DBUILD_CVODES=OFF \
-	-DBUILD_IDA=ON \
-	-DBUILD_IDAS=OFF \
-	-DBUILD_KINSOL=OFF \
-	-DBUILD_CPODES=OFF \
+        -DBUILD_ARKODE=OFF \
+        -DBUILD_CVODE=OFF \
+        -DBUILD_CVODES=OFF \
+        -DBUILD_IDA=ON \
+        -DBUILD_IDAS=OFF \
+        -DBUILD_KINSOL=OFF \
+        -DBUILD_CPODES=OFF \
         '$(1)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)' install VERBOSE=1
 endef
