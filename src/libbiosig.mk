@@ -4,8 +4,8 @@
 PKG             := libbiosig
 $(PKG)_WEBSITE  := http://biosig.sf.net/
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.0.3
-$(PKG)_CHECKSUM := 5e2639689a35190560cc8338f561febd54956344
+$(PKG)_VERSION  := 2.0.4
+$(PKG)_CHECKSUM := d3126f92b371c98bc75672ebc8c3242468338a57
 $(PKG)_SUBDIR   := biosig-$($(PKG)_VERSION)
 $(PKG)_FILE     := biosig-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := https://sourceforge.net/projects/biosig/files/BioSig%20for%20C_C%2B%2B/src/$($(PKG)_FILE)
@@ -19,7 +19,7 @@ endef
 
 
 define $(PKG)_BUILD
-    cd '$(1)/biosig4c++' && ../configure \
+    cd '$(1)' && ./configure \
         ac_cv_func_malloc_0_nonnull=yes \
         ac_cv_func_realloc_0_nonnull=yes \
         --prefix=$(HOST_PREFIX) \
@@ -28,13 +28,10 @@ define $(PKG)_BUILD
     # make sure NDEBUG is defined
     $(SED) -i '/NDEBUG/ s|#||g' '$(1)'/biosig4c++/Makefile
 
-    #$(SED) -i 's| -fstack-protector | |g' '$(1)'/biosig4c++/Makefile
-    #$(SED) -i 's| -D_FORTIFY_SOURCE=2 | |g' '$(1)'/biosig4c++/Makefile
-    #$(SED) -i 's| -lssp | |g' '$(1)'/biosig4c++/Makefile
+    TARGET=$(TARGET) CROSS=$(TARGET) $(MAKE) -C '$(1)' lib
 
-  
-    TARGET=$(TARGET) CROSS=$(TARGET) $(MAKE) -C '$(1)/biosig4c++' libbiosig
-
+    # build mexbiosig package (does not install package)
+    # TARGET='$(TARGET)' $(MAKE) -C '$(1)'/biosig4c++ mexbiosig
 
     # install files
     $(INSTALL) -m644 '$(1)/biosig4c++/biosig.h'             '$(HOST_INCDIR)/'
@@ -64,5 +61,8 @@ define $(PKG)_BUILD
     fi
     $(INSTALL) -m644 '$(1)/biosig4c++/libbiosig.pc'         '$(HOST_LIBDIR)/pkgconfig/'
 
+    # install biosig4matlab
+    # $(INSTALL) -d $(HOST_PREFIX)/share/biosig/matlab
+    # cp -r '$(1)'/biosig4matlab/* $(HOST_PREFIX)/share/biosig/matlab/
 endef
 
