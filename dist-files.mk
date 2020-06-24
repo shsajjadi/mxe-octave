@@ -15,6 +15,7 @@ SRC_FILES_1 := \
   aubio.mk \
   bfd.mk \
   blas.mk \
+  blas_switch.mk \
   boost-1-intrinsics-fix.patch \
   boost-2-winerror.patch \
   boost-test.cpp \

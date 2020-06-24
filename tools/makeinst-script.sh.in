@@ -470,6 +470,9 @@ EOF
   if [ -f $OCTAVE_SOURCE/cmdshell.bat ]; then 
     echo "CreateShortCut '\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Bash Shell.lnk' '\$INSTDIR\\cmdshell.bat' '' '' 0" >> $OUTFILE
   fi
+  if [ -e $OCTAVE_SOURCE/$OCTAVE_SUBDIR/bin/blas_switch.exe ]; then 
+    echo "CreateShortCut '\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Blas Switcher.lnk' '\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\blas_switch.exe' '' '' 0" >> $OUTFILE
+  fi
   # if we have documentation files, create shortcuts
   if [ -d $OCTAVE_SOURCE/$OCTAVE_SUBDIR/share/doc/octave ]; then
     cat >> $OUTFILE << EOF

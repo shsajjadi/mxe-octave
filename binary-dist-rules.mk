@@ -25,7 +25,7 @@ OCTAVE_ADD_PATH := /
 ifeq ($(MXE_WINDOWS_BUILD),yes)
   TAR_H_OPTION := -h
   WINDOWS_BINARY_DIST_DEPS := \
-    win7appid
+    win7appid blas_switch
 
   ifeq ($(USE_MSYS2),yes)
     WINDOWS_BINARY_DIST_DEPS += \
