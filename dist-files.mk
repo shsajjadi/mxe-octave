@@ -38,6 +38,7 @@ SRC_FILES_1 := \
   build-mako.mk \
   build-markupsafe.mk \
   build-msvctools.mk \
+  build-ninja.mk \
   build-perl.mk \
   build-pkg-config-1-fixes.patch \
   build-pkg-config.mk \
