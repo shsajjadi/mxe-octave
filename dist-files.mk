@@ -37,6 +37,7 @@ SRC_FILES_1 := \
   build-m4.mk \
   build-mako.mk \
   build-markupsafe.mk \
+  build-meson.mk \
   build-msvctools.mk \
   build-ninja.mk \
   build-perl.mk \
