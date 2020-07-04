@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 
 import sys
 import os
@@ -156,7 +156,7 @@ def uninstall_pkg(pkgname, env):
   files=glob.glob(pkgpath + pkgname + "-" + "[r0-9].*")
   for f in files:
     if env.verbose:
-      print "uninstalling " + f
+      print ("uninstalling " + f)
     shutil.rmtree(f)
 
 def install_pkg(pkg, env):
@@ -168,7 +168,7 @@ def install_pkg(pkg, env):
     ## Check that the directory in prefix exist. If it doesn't: create it!
     tmpdir = tempfile.mkdtemp("-pkg","tmp", env.tmp)
     if env.verbose:
-      print "using tempdir ", tmpdir
+      print ("using tempdir ", tmpdir)
     os.chdir(tmpdir)
 
     # unpack dir
@@ -202,7 +202,7 @@ def install_pkg(pkg, env):
           fullpath = fullpath[tmplen:]
           filelist.append(fullpath)
           if env.verbose:
-            print "installing " + fullpath
+            print ("installing " + fullpath)
 
           # dele old file fo can copy new with perms (if ld file would allow write)
           if os.path.isfile(env.msysdir + "/" + fullpath):
@@ -211,7 +211,7 @@ def install_pkg(pkg, env):
           shutil.copy2(os.path.join(root, file), env.msysdir + "/" + fullpath)
 
     if env.verbose:
-      print "creating package files"
+      print ("creating package files")
 
     # create pkg files needed
     pkg_name_ver = pkginfo.get('pkgname', [''])[0] + "-" + pkginfo.get('pkgver',[''])[0]
@@ -225,7 +225,7 @@ def install_pkg(pkg, env):
 
   finally:
     if env.verbose:
-      print "cleaning up"
+      print ("cleaning up")
     os.chdir(currdir)
 
     if env.cleanup:
@@ -239,7 +239,7 @@ def install (args):
   files = []
  
   for a in args:
-    print a
+    print ("{}".format(a))
     c=a.split("=")
     key=c[0]
     if len(c) > 1:
@@ -275,7 +275,7 @@ def install (args):
   return status
 
 def show_usage():
-  print sys.argv[0], "[options] pkg1 [pkg2]"
+  print (sys.argv[0], "[options] pkg1 [pkg2]")
 
 if __name__ == "__main__":
   if len(sys.argv) > 1:

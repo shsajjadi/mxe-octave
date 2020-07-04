@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 import sys
 import os
 import re
@@ -24,15 +24,15 @@ class Env:
   cleanup = False;
 
 def show_usage():
-  print sys.argv(0), "[options] pkg1 [pkg2]"
+  print (sys.argv[0], "[options] pkg1 [pkg2]")
 
 def verify_directory(dirname):
   for f in [ "COPYING", "DESCRIPTION" ]:
     if os.path.isfile(dirname + "/" + f) == False:
-      raise Exception, "package is missing file " + f
+      raise Exception("package is missing file " + f)
 
 def get_description(descfile):
-  with open(descfile, 'r') as f:
+  with open(descfile, 'rt', encoding='latin-1') as f:
     lines = f.read().splitlines()
     pat_match = re.compile("(?P<name>[-\w]+):\s*(?P<value>\w.*)")
     lineval = ""
@@ -52,7 +52,7 @@ def get_description(descfile):
 
 def extract_pkg(filename, nm):
   pkg = []
-  with open(filename, 'r') as f:
+  with open(filename, 'rt', encoding='latin-1') as f:
     lines = f.read().splitlines()
     for l in lines:
       so = re.search(nm, l, re.M|re.S)
@@ -64,7 +64,7 @@ def extract_test_code(filename):
   body = []
   if not os.path.isfile(filename):
     return body
-  with open(filename, 'rt') as f:
+  with open(filename, 'rt', encoding='latin-1') as f:
     lines = f.read().splitlines()
     for l in lines:
       if l.startswith("%!"):
@@ -75,7 +75,7 @@ def extract_test_code(filename):
 
 def write_index_file(env, desc, index_nm):
 
-  with open(index_nm, 'w') as f:
+  with open(index_nm, 'wt', encoding='latin-1') as f:
     files = os.listdir(env.m_dir)
     classes = fnmatch.filter(files, "@*")
 
@@ -109,7 +109,7 @@ def finish_installation(env, packdir):
   # somewhere and then on initial startup, run the post_install
   if os.path.isfile(packdir + "/post_install.m") == True:
     if env.verbose:
-      print "Copying .. post_install.m"
+      print ("Copying .. post_install.m")
     destdir = env.prefix + "/share/octave/site/m/once_only"
     if os.path.exists(destdir) == False:
       os.makedirs(destdir)
@@ -117,7 +117,7 @@ def finish_installation(env, packdir):
 
 def create_pkgadddel (env, packdir, nm):
   if env.verbose:
-    print "Creating...", nm
+    print ("Creating...", nm)
 
   instfid = open(env.m_dir + "/" + nm, "a")
   if os.path.exists(env.arch_dir) == True:
@@ -148,7 +148,7 @@ def create_pkgadddel (env, packdir, nm):
 
   # add PKG_XXX from packdir if exists
   if os.path.isfile(packdir + "/" + nm) == True:
-    with open(packdir + "/" + nm, 'r') as f:
+    with open(packdir + "/" + nm, 'rt', encoding='latin-1') as f:
       lines = f.read().splitlines()
       for a in lines:
         archfid.write("%s\n" % a)
@@ -172,7 +172,7 @@ def copyfile(files, destdir, verbose=False):
   for a in files:
     if os.path.isfile(a):
       if verbose:
-        print "copy " + a + " to " + destdir + "/"
+        print ("copy " + a + " to " + destdir + "/")
       shutil.copy2(a, destdir)
     if os.path.isdir(a):
       name= os.path.basename(a)
@@ -185,7 +185,7 @@ def copy_files(env, pkgdir):
   instdir = pkgdir + "/inst"
 
   if env.verbose:
-    print "Copying m files ..."
+    print ("Copying m files ...")
 
   files = list(instdir + "/" + a for a in os.listdir(instdir))
   # filter for arch folder
@@ -196,7 +196,7 @@ def copy_files(env, pkgdir):
 
   if os.path.exists(instdir + "/" + env.arch) == True:
     if env.verbose:
-      print "Copying arch files ..."
+      print ("Copying arch files ...")
     files = list(instdir + "/" + env.arch + "/" + a for a in os.listdir(instdir + "/" + env.arch))
     if len(files) > 0:
       if os.path.exists(env.arch_dir) == False:
@@ -206,7 +206,7 @@ def copy_files(env, pkgdir):
 
   # packinfo
   if env.verbose:
-    print "Copying packinfo files ..."
+    print ("Copying packinfo files ...")
   if os.path.exists(env.m_dir + "/packinfo") == False:
     os.makedirs(env.m_dir + "/packinfo")
   copyfile([pkgdir + "/DESCRIPTION"], env.m_dir + "/packinfo")
@@ -218,7 +218,7 @@ def copy_files(env, pkgdir):
 
   # index file
   if env.verbose:
-    print "Copying/creating INDEX ..."
+    print ("Copying/creating INDEX ...")
   if os.path.isfile(pkgdir + "/INDEX") == True:
     copyfile([pkgdir + "/INDEX"], env.m_dir + "/packinfo")
   else:
@@ -231,7 +231,7 @@ def copy_files(env, pkgdir):
   docdir = pkgdir + "/doc"
   if os.path.exists(docdir) == True:
     if env.verbose:
-      print "Copying doc files ..."
+      print ("Copying doc files ...")
     files = (docdir + "/" + a for a in os.listdir(docdir))
     copyfile(files, env.m_dir + "/doc")
 
@@ -239,7 +239,7 @@ def copy_files(env, pkgdir):
   bindir = pkgdir + "/bin"
   if os.path.exists(bindir) == True:
     if env.verbose:
-      print "Copying bin files ..."
+      print ("Copying bin files ...")
     files = (bindir + "/" + a for a in os.listdir(bindir))
     copyfile(files, env.m_dir + "/bin")
 
@@ -253,27 +253,27 @@ def configure_make(env, packdir):
 
     if os.path.isfile(src + "/configure") == True:
       if env.verbose:
-        print "running ./configure " + env.config_opts
+        print ("running ./configure " + env.config_opts)
 
       if os.system("./configure " + env.config_opts + "") != 0:
-        raise Exception, "configure failed - stopping install"
+        raise Exception("configure failed - stopping install")
 
     if os.path.isfile(src + "/Makefile") == True:
       if env.verbose:
-        print "running make ..."
+        print ("running make ...")
       if os.system(env.make + " --directory '" + src + "'" ) != 0:
-        raise Exception, "make failed during build - stopping install"
+        raise Exception("make failed during build - stopping install")
 
     # extract any tests
     if env.verbose:
-      print "checking for src BIST tests"
+      print ("checking for src BIST tests")
 
     files = os.listdir(src)
     srcfiles = fnmatch.filter(files, "*.cc") + fnmatch.filter(files,"*.cpp") + fnmatch.filter(files, "*.cxx") + fnmatch.filter(files, "*.c")
     for sf in srcfiles:
       tst = extract_test_code(sf)
       if tst:
-        with open(sf + "-tst", "w") as f:
+        with open(sf + "-tst", "wt", encoding='latin-1') as f:
           f.write("## DO NOT EDIT! Generated from " + sf + "\n")
           f.write(tst + "\n")
 
@@ -283,7 +283,7 @@ def configure_make(env, packdir):
     archdir = instdir + "/" + env.arch
 
     if os.path.isfile(files) == True:
-      raise Exception, "make using FILES not supported yet"
+      raise Exception("make using FILES not supported yet")
       pass # TODO yet
     else:
       # get .m, .oct and .mex files
@@ -305,7 +305,7 @@ def configure_make(env, packdir):
 
 def add_package_list(env, desc):
   #pkglist = env.prefix + "/share/octave/octave_packages"
-  #with open(pkglist, 'r') as f:
+  #with open(pkglist, 'rt', encoding='latin-1') as f:
   #  lines = f.read().splitlines()
   # currently doing nothing for adding, will let installer do
   pass
@@ -313,18 +313,18 @@ def add_package_list(env, desc):
 def uninstall_pkg(pkg,env):
   # uninstall existing directories
   if env.verbose:
-     print "Uninstalling " + env.pkg
+     print ("Uninstalling " + env.pkg)
 
   files=glob.glob(env.prefix + "/share/octave/packages/" + env.pkg + "-" + "*")
   for f in files:
     if env.verbose:
-      print "removing dir " + f
+      print ("removing dir " + f)
     shutil.rmtree(f)
 
   files=glob.glob(env.prefix + "/lib/octave/packages/" + env.pkg + "-" + "*")
   for f in files:
     if env.verbose:
-      print "removing dir " + f
+      print ("removing dir " + f)
     shutil.rmtree(f)
 
   pass
@@ -334,7 +334,7 @@ def install_pkg(pkg, env):
   currdir = os.getcwd()
 
   if env.verbose:
-     print "Installing " + pkg
+     print ("Installing " + pkg)
 
   try:
     ## Check that the directory in prefix exist. If it doesn't: create it!
@@ -350,7 +350,7 @@ def install_pkg(pkg, env):
     # get list for files creates
     files=os.listdir(tmpdir)
     if len(files) != 1:
-      print "Expected to unpack to only one directory"
+      print ("Expected to unpack to only one directory")
 
     packdir = os.path.abspath(files[0])
 
@@ -381,7 +381,7 @@ def install_pkg(pkg, env):
     add_package_list(env, desc)
   finally:
     if env.verbose:
-      print "cleaning up"
+      print ("cleaning up")
     os.chdir(currdir)
 
     if env.cleanup:
@@ -410,7 +410,7 @@ def rebuild_pkg(env):
   currdir = os.getcwd()
 
   if env.verbose:
-    print "Rebuilding package"
+    print ("Rebuilding package")
 
   try:
     oct_dir = env.prefix + "/share/octave"
@@ -422,9 +422,9 @@ def rebuild_pkg(env):
     descs=glob.glob(pkg_dir + "/*/packinfo/DESCRIPTION")
 
     if env.verbose:
-      print "Rebuilding pkg list {}".format(pkg_list_file)
+      print ("Rebuilding pkg list {}".format(pkg_list_file))
 
-    with open(pkg_list_file, "w") as f:
+    with open(pkg_list_file, "wt", encoding='latin-1') as f:
       f.write("# Created by pkg-install.py\n")
       f.write("# name: global_packages\n")
       f.write("# type: cell\n");
@@ -528,7 +528,7 @@ def pkg (args):
 
   operation = args[0]
   if operation != "install" and operation != "rebuild":
-    raise Exception, "Expected pkg operation 'install' or 'rebuild'"
+    raise Exception("Expected pkg operation 'install' or 'rebuild'")
 
 
   args = args[1:]
@@ -597,12 +597,12 @@ def pkg (args):
   env.bindir = os.popen(env.octave_config + " -p BINDIR").read().rstrip("\r\n")
 
   if env.verbose:
-    print "operation=", operation
-    print "mkoctfile=", env.mkoctfile
-    print "arch=", env.arch
-    print "prefix=", env.prefix
-    print "files=", files
-    print "verbose=", env.verbose
+    print ("operation=", operation)
+    print ("mkoctfile=", env.mkoctfile)
+    print ("arch=", env.arch)
+    print ("prefix=", env.prefix)
+    print ("files=", files)
+    print ("verbose=", env.verbose)
 
   if operation == "install":
     for a in files:

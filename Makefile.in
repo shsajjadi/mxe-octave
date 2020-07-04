@@ -280,9 +280,10 @@ ifeq ($(MXE_SYSTEM),msvc)
 endif
 # use the a native python in native mingw
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
-  REQUIREMENTS += python
+  REQUIREMENTS += python3
   BUILD_TOOLS := $(filter-out build-python, $(BUILD_TOOLS))
 endif
+PYTHON3 ?= python3
 
 # use the a native awk in native mingw
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
@@ -657,7 +658,7 @@ define MSYS2_PKG_BUILD
   mkdir -p '$(3)' && \
   (tar cf $(3)/$($(PKG)_FILE) '.') && \
   (TMP="$(3)" \
-  $(TOP_DIR)/tools/msys2-install.py --verbose --msys-dir="$(MSYS2_DIR)" "$(3)/$($(PKG)_FILE)")
+  $(PYTHON3) $(TOP_DIR)/tools/msys2-install.py --verbose --msys-dir="$(MSYS2_DIR)" "$(3)/$($(PKG)_FILE)")
 endef
 
 define MSYS2_PKG_UPDATE
@@ -831,7 +832,7 @@ define OCTAVE_FORGE_PKG_BUILD
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         MKOCTFILE=$(MXE_MKOCTFILE) MAKE=$(MAKE) \
         CONFIGURE_OPTIONS="$(HOST_AND_BUILD_CONFIGURE_OPTIONS)" $(4) \
-        $(TOP_DIR)/tools/pkg-install.py install -verbose "$($(PKG)_FILE)"; \
+        $(PYTHON3) $(TOP_DIR)/tools/pkg-install.py install -verbose "$($(PKG)_FILE)"; \
      fi
 endef
 endif
