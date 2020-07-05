@@ -16,5 +16,5 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && python setup.py install
+    cd '$(1)' && python2 setup.py install --prefix='$(BUILD_TOOLS_PREFIX)'
 endef

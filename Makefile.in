@@ -281,7 +281,7 @@ endif
 # use the a native python in native mingw
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   REQUIREMENTS += python3
-  BUILD_TOOLS := $(filter-out build-python, $(BUILD_TOOLS))
+  BUILD_TOOLS := $(filter-out build-python3, $(BUILD_TOOLS))
 endif
 PYTHON3 ?= python3
 
