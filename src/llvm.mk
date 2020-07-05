@@ -3,11 +3,11 @@
 
 PKG             := llvm
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 6.0.1
-$(PKG)_CHECKSUM := 09a6316c5225cab255ba12391e7abe5ff4d28935
+$(PKG)_VERSION  := 7.0.0
+$(PKG)_CHECKSUM := 27503a22614626e935a05b609ab4211be72cd78b
 $(PKG)_SUBDIR   := llvm-$($(PKG)_VERSION).src
 $(PKG)_FILE     := llvm-$($(PKG)_VERSION).src.tar.xz
-$(PKG)_URL      := http://releases.llvm.org/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := https://releases.llvm.org/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
@@ -60,7 +60,7 @@ else
     $(PKG)_CCACHE_OPTIONS += \
       -DLLVM_CCACHE_BUILD=On
   endif
-  # build cross-compiler
+
   define $(PKG)_BUILD
     mkdir '$(1)/.build'
     cd '$(1)/.build' && 'cmake' .. \
@@ -88,7 +88,18 @@ else
       -DLLVM_BUILD_RUNTIMES=OFF \
       -DLLVM_INCLUDE_RUNTIMES=OFF \
       $($(PKG)_CCACHE_OPTIONS)
-    $(MAKE) -C '$(1)/.build' -j $(JOBS) llvm-tblgen
+
+    $(MAKE) -C '$(1)/.build' -j $(JOBS) LLVMSupport
+    $(MAKE) -C '$(1)/.build' -j $(JOBS) llvm-config
     $(MAKE) -C '$(1)/.build' -j $(JOBS) install DESTDIR='$(3)'
+
+    # create symlink for shared library so that llvm-config can find it
+    cd '$(3)/$(HOST_BINDIR)' && ln -s LLVM.dll LLVM-$(word 1,$(subst ., ,$($(PKG)_VERSION))).dll
+
+    # install native llvm-config in HOST_BINDIR because it won't find the libs otherwise
+    # FIXME: Some of the configuration flags are hard coded into llvm-config with a patch.
+    # If the configuration flags are changed, the patch might have to be adapted.
+    $(INSTALL) -d '$(HOST_BINDIR)'
+    $(INSTALL) -m755 '$(1)/.build/NATIVE/bin/llvm-config' '$(HOST_BINDIR)/$(MXE_TOOL_PREFIX)llvm-config'
   endef
 endif
