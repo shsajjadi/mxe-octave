@@ -11,6 +11,7 @@ $(PKG)_DEPS     := build-mako expat zlib llvm s2tc
 
 $(PKG)_PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
 ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_DEPS += build-scons
   ifeq ($(USE_SYSTEM_OPENGL),no)
     $(PKG)_SCONS_OPENGL_OPTIONS := libgl-gdi
   endif
@@ -48,7 +49,7 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
     $(PKG)_MACHINE := x86
   endif
   define $(PKG)_BUILD
-    cd '$(1)' && LLVM=$(HOST_PREFIX) scons platform=windows toolchain=crossmingw machine=$($(PKG)_MACHINE) verbose=1 build=release $($(PKG)_SCONS_OPENGL_OPTIONS)
+    cd '$(1)' && LLVM=$(HOST_PREFIX) python2 $(shell which scons) platform=windows toolchain=crossmingw machine=$($(PKG)_MACHINE) verbose=1 build=release $($(PKG)_SCONS_OPENGL_OPTIONS)
 
     ## Do the scons config files have useful install targets?
     $(INSTALL) -d '$(3)$(HOST_INCDIR)/GL';
