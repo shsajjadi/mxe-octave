@@ -36,7 +36,8 @@ ifeq ($(MXE_SYSTEM),mingw)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
     --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
     --with-native-system-header-dir='/include' \
-    --disable-sjlj-exceptions
+    --disable-sjlj-exceptions \
+    --with-specs='%{!mfpmath:-mfpmath=sse} %{!msse:%{!mno-sse:-msse}} %{!msse2:%{!mno-sse2:-msse2}}'
   else
     define $(PKG)_PRE_BUILD
       echo "Shortcuts"

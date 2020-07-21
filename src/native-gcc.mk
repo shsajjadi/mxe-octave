@@ -30,7 +30,8 @@ ifeq ($(MXE_SYSTEM),mingw)
 
   ifneq ($(ENABLE_WINDOWS_64),yes)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
-      --disable-sjlj-exceptions
+      --disable-sjlj-exceptions \
+      --with-specs='%{!mfpmath:-mfpmath=sse} %{!msse:%{!mno-sse:-msse}} %{!msse2:%{!mno-sse2:-msse2}}'
   else
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
       --enable-64bit
