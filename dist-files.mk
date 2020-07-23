@@ -938,12 +938,14 @@ SRC_MSYS2_FILES_1 := \
   msys2-libxml2.mk \
   msys2-make.mk \
   msys2-mintty.mk \
+  msys2-mpdecimal.mk \
   msys2-mpfr.mk \
   msys2-ncurses.mk \
   msys2-pacman-mirrors.mk \
   msys2-pacman.mk \
   msys2-patch.mk \
   msys2-perl.mk \
+  msys2-python.mk \
   msys2-runtime.mk \
   msys2-sed.mk \
   msys2-tar.mk \
@@ -1003,12 +1005,14 @@ SRC_MSYS2_SRC_FILES_1 := \
   src-msys2-libxml2.mk \
   src-msys2-make.mk \
   src-msys2-mintty.mk \
+  src-msys2-mpdecimal.mk \
   src-msys2-mpfr.mk \
   src-msys2-ncurses.mk \
   src-msys2-pacman-mirrors.mk \
   src-msys2-pacman.mk \
   src-msys2-patch.mk \
   src-msys2-perl.mk \
+  src-msys2-python.mk \
   src-msys2-runtime.mk \
   src-msys2-sed.mk \
   src-msys2-tar.mk \

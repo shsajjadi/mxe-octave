@@ -28,7 +28,6 @@ Set fo = Nothing
 
 ' set up path to ensure octave bin comes first
 Set wshSystemEnv = wshShell.Environment( "PROCESS" )
-wshSystemEnv("PATH") = OctavePath & "\python;" & wshSystemEnv("PATH")
 if OctavePath <> MSysPath Then
   wshSystemEnv("PATH") = MSysPath  & "\bin;" & wshSystemEnv("PATH")
 End If

@@ -26,7 +26,7 @@ IF EXIST "%ROOT_PATH%mingw64\bin\octave.bat" (
  
 Rem   Set up PATH.  Make sure the octave bin dir comes first.
 
-set PATH=%OCT_HOME%qt5\bin;%OCT_HOME%bin;%MSYSPATH%bin;%OCT_HOME%python;%PATH%
+set PATH=%OCT_HOME%qt5\bin;%OCT_HOME%bin;%MSYSPATH%bin;%PATH%
 
 Rem   Set up any environment vars we may need.
 
