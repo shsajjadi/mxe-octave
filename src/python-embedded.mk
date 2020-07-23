@@ -1,5 +1,7 @@
 # This file is part of MXE.
 # See index.html for further information.
+#
+# NOTE: this is currently depreciated from the mxe build in favor of msys2-python
 
 PKG             := python-embedded
 $(PKG)_VERSION  := 3.8.1
