@@ -18,49 +18,54 @@ define $(PKG)_UPDATE
     echo $($(PKG)_VERSION)
 endef
 
-ifeq ($(MXE_WINDOWS_BUILD),yes)
-define $(PKG)_BUILD
-    mkdir '$(1).build'
-    cd '$(1).build' && cmake \
-        -DEXAMPLES_ENABLE=OFF \
-        -DKLU_ENABLE=ON \
-        -DKLU_INCLUDE_DIR=$(HOST_INCDIR)/suitesparse \
-        -DKLU_LIBRARY_DIR=$(HOST_LIBDIR) \
-        -DSUITESPARSECONFIG_LIBRARY=$(HOST_LIBDIR)/libsuitesparseconfig.dll.a \
-        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
-        -DBUILD_ARKODE=OFF \
-        -DBUILD_CVODE=OFF \
-        -DBUILD_CVODES=OFF \
-        -DBUILD_IDA=ON \
-        -DBUILD_IDAS=OFF \
-        -DBUILD_KINSOL=OFF \
-        -DBUILD_CPODES=OFF \
-        '$(1)'
-    $(MAKE) -C '$(1).build' -j '$(JOBS)' install DESTDIR='$(3)' VERBOSE=1
+$(PKG)_CMAKE_FLAGS := \
+    -DEXAMPLES_ENABLE_C=OFF \
+    -DKLU_ENABLE=ON \
+    -DKLU_INCLUDE_DIR=$(HOST_INCDIR)/suitesparse \
+    -DKLU_LIBRARY_DIR=$(HOST_LIBDIR) \
+    -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+    -DBUILD_ARKODE=OFF \
+    -DBUILD_CVODE=OFF \
+    -DBUILD_CVODES=OFF \
+    -DBUILD_IDA=ON \
+    -DBUILD_IDAS=OFF \
+    -DBUILD_KINSOL=OFF \
+    -DBUILD_CPODES=OFF
 
-    if [ $(MXE_SYSTEM) = mingw ]; then \
-        echo "Install dlls"; \
-        $(INSTALL) -d '$(3)$(HOST_BINDIR)'; \
-        mv '$(3)$(HOST_LIBDIR)/'libsundials*.dll '$(3)$(HOST_BINDIR)/'; \
-    fi
-endef
+# Keep "sunindextype" in sync with LAPACK (bug #58795)
+ifeq ($(ENABLE_FORTRAN_INT64),yes)
+    $(PKG)_CMAKE_FLAGS += -DSUNDIALS_INDEX_SIZE=64
 else
-define $(PKG)_BUILD
-    mkdir '$(1).build'
-    cd '$(1).build' && cmake \
-        -DEXAMPLES_ENABLE=OFF \
-        -DKLU_ENABLE=ON \
-        -DKLU_INCLUDE_DIR=$(HOST_INCDIR)/suitesparse \
-        -DKLU_LIBRARY_DIR=$(HOST_LIBDIR) \
-        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
-        -DBUILD_ARKODE=OFF \
-        -DBUILD_CVODE=OFF \
-        -DBUILD_CVODES=OFF \
-        -DBUILD_IDA=ON \
-        -DBUILD_IDAS=OFF \
-        -DBUILD_KINSOL=OFF \
-        -DBUILD_CPODES=OFF \
-        '$(1)'
-    $(MAKE) -C '$(1).build' -j '$(JOBS)' install VERBOSE=1
-endef
+    $(PKG)_CMAKE_FLAGS += -DSUNDIALS_INDEX_SIZE=32
+endif
+
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+
+    $(PKG)_CMAKE_FLAGS += \
+        -DSUITESPARSECONFIG_LIBRARY=$(HOST_LIBDIR)/libsuitesparseconfig.dll.a
+
+    define $(PKG)_BUILD
+        mkdir '$(1).build'
+        cd '$(1).build' && cmake \
+            $($(PKG)_CMAKE_FLAGS) \
+            '$(1)'
+        $(MAKE) -C '$(1).build' -j '$(JOBS)' install DESTDIR='$(3)' VERBOSE=1
+
+        if [ $(MXE_SYSTEM) = mingw ]; then \
+            echo "Install dlls"; \
+            $(INSTALL) -d '$(3)$(HOST_BINDIR)'; \
+            mv '$(3)$(HOST_LIBDIR)/'libsundials*.dll '$(3)$(HOST_BINDIR)/'; \
+        fi
+    endef
+
+else
+
+    define $(PKG)_BUILD
+        mkdir '$(1).build'
+        cd '$(1).build' && cmake \
+            $($(PKG)_CMAKE_FLAGS) \
+            '$(1)'
+        $(MAKE) -C '$(1).build' -j '$(JOBS)' install VERBOSE=1
+    endef
+
 endif
