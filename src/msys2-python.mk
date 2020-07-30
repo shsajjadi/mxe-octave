@@ -15,10 +15,15 @@ $(PKG)_URL      := $(MSYS2_URL)/$($(PKG)_FILE)
 
 $(PKG)_DEPS     := 
 
+$(PKG)_PYTHON_PKG_DIR := $(MSYS2_DIR)/usr/lib/python$(call SHORT_PKG_VERSION,msys2-python)
+
 define $(PKG)_UPDATE
     $(MSYS2_PKG_UPDATE)
 endef
 
 define $(PKG)_BUILD
     $(MSYS2_PKG_BUILD)
+    if [ "$(ENABLE_WINDOWS_64)" == "no" ]; then \
+      rm -f "$($(PKG)_PYTHON_PKG_DIR)/distutils/command/"wininst*-amd64.exe; \
+    fi
 endef
