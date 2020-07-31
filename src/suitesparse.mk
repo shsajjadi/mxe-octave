@@ -97,5 +97,14 @@ define $(PKG)_BUILD
         INSTALL_INCLUDE='$($(PKG)_DESTDIR)$(HOST_INCDIR)/suitesparse/' \
         INSTALL_LIB='$($(PKG)_DESTDIR)$(HOST_LIBDIR)' \
         INSTALL_SO='$($(PKG)_SO_DIR)'
+
+    # some dependers (e.g. SUNDIALS IDA) won't find libraries with version suffix
+    if [ $(MXE_WINDOWS_BUILD) = no ]; then \
+      cd '$($(PKG)_DESTDIR)$(HOST_LIBDIR)' && ln -sf libsuitesparseconfig.so.$($(PKG)_VERSION) libsuitesparseconfig.so; \
+      cd '$($(PKG)_DESTDIR)$(HOST_LIBDIR)' && ln -sf libamd.so.2 libamd.so; \
+      cd '$($(PKG)_DESTDIR)$(HOST_LIBDIR)' && ln -sf libbtf.so.1 libbtf.so; \
+      cd '$($(PKG)_DESTDIR)$(HOST_LIBDIR)' && ln -sf libcolamd.so.2 libcolamd.so; \
+      cd '$($(PKG)_DESTDIR)$(HOST_LIBDIR)' && ln -sf libklu.so.1 libklu.so; \
+    fi
 endef
 
