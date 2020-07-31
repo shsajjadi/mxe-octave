@@ -3,8 +3,8 @@
 
 PKG             := build-gettext
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.20.2
-$(PKG)_CHECKSUM := 3cb11e9648bacee4c56660d34de3ae3e8b143078
+$(PKG)_VERSION  := 0.21
+$(PKG)_CHECKSUM := e6c0a0cba5b00a604c9118403a8199c77a538526
 $(PKG)_SUBDIR   := gettext-$($(PKG)_VERSION)
 $(PKG)_FILE     := gettext-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gettext/$($(PKG)_FILE)
