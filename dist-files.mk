@@ -693,8 +693,6 @@ SRC_FILES_1 := \
   suitesparse-1-fixes.patch \
   suitesparse-2-metis.patch \
   suitesparse.mk \
-  sundials-27-ida-1.patch \
-  sundials-27-ida.mk \
   sundials-ida.mk \
   t4k_common.mk \
   taglib-1-static.patch \
