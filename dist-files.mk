@@ -446,7 +446,6 @@ SRC_FILES_1 := \
   nettle-1-fixes.patch \
   nettle.mk \
   npp.mk \
-  nsis-1-fixes.patch \
   nsis-2-fixes.patch \
   nsis.mk \
   ocaml-core-1-fixes.patch \
