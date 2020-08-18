@@ -121,6 +121,16 @@ diff -ur gnuplot-5.2.2.orig/config/mingw/Makefile gnuplot-5.2.2/config/mingw/Mak
  ifdef MINGW64
  LDFLAGS2 += -L.
  endif
+@@ -609,7 +612,7 @@ $(TARGET): $(VERSIONING) $(OBJS) $(WINOBJS) wgplt_res.$(O) Makefile htmlhelp.lib
+ else
+ $(TARGET): $(VERSIONING) $(OBJS) $(WINOBJS) wgplt_res.$(O) Makefile
+ endif
+-	$(LDX) $(LDFLAGS) $(LDFLAGS2) -o $@ $(OBJS) $(WINOBJS) wgplt_res.$(O) $(LDLIBS)\
++	$(LDX) $(LDFLAGS) $(LDFLAGS2) -o $@ $(OBJS) $(WINOBJS) wgplt_res.$(O) $(LDLIBS) \
+ 	$(TERMLIBS) $(WX_LIBS) $(PANGOCAIRO_LIBS)
+ 
+ pgnuplot.exe: $(W)/pgnuplot.c version.$(O)
+
 diff -ur gnuplot-5.2.2.orig/src/command.c gnuplot-5.2.2/src/command.c
 --- gnuplot-5.2.2.orig/src/command.c	2018-03-25 07:03:19.367562832 -0400
 +++ gnuplot-5.2.2/src/command.c	2018-03-25 07:11:31.376521306 -0400
