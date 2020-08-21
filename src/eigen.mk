@@ -4,17 +4,17 @@
 PKG             := eigen
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 3.3.7
-$(PKG)_CHECKSUM := 743c1dc00c6680229d8cc87d44debe5a71d15c01
+$(PKG)_CHECKSUM := f13a31c7ec3b87cf6e58b6fb05aa8b887091b71c
 $(PKG)_SUBDIR   := $(PKG)-$(PKG)-323c052e1731
 $(PKG)_FILE     := $($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := https://bitbucket.org/$(PKG)/$(PKG)/get/$($(PKG)_FILE)
+$(PKG)_URL      := https://gitlab.com/libeigen/$(PKG)/-/archive/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'https://bitbucket.org/$(PKG)/$(PKG)/downloads/?tab=tags' | \
-    $(SED) -n 's|.*href=\"/eigen/eigen/get/\([0-9].*\)\.tar\.gz\".*|\1|p' | \
-    $(GREP) -v "tip" | $(SORT) -V | \
-    tail -1
+    $(WGET) -q -O- 'https://eigen.tuxfamily.org/index.php?title=Main_Page#Download' | \
+    $(GREP) 'eigen/get/' | \
+    $(SED) -n 's,.*eigen/get/\(3[^>]*\)\.tar.*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD
