@@ -11,9 +11,9 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/GNOME/sources/libcroco/$(call SHORT_
 $(PKG)_DEPS     := glib libxml2
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- https://github.com/GNOME/libcroco/tags | \
-    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | grep -v '^2\.9[0-9]\.' | $(SORT) -V | \
-    tail -1
+    $(WGET) -q -O- 'https://gitlab.gnome.org/GNOME/libcroco/tags' | \
+    $(SED) -n "s,.*<a [^>]\+>v\?\([0-9]\+\.[0-9.]\+\)<.*,\1,p" | \
+    head -1
 endef
 
 define $(PKG)_BUILD
