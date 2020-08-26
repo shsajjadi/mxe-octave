@@ -3,8 +3,8 @@
 
 PKG             := llvm
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 7.0.0
-$(PKG)_CHECKSUM := 27503a22614626e935a05b609ab4211be72cd78b
+$(PKG)_VERSION  := 7.1.0
+$(PKG)_CHECKSUM := d43bfea58a35e058b93a6af36a728cfc64add33d
 $(PKG)_SUBDIR   := llvm-$($(PKG)_VERSION).src
 $(PKG)_FILE     := llvm-$($(PKG)_VERSION).src.tar.xz
 $(PKG)_URL      := https://releases.llvm.org/$($(PKG)_VERSION)/$($(PKG)_FILE)
@@ -94,7 +94,7 @@ else
     $(MAKE) -C '$(1)/.build' -j $(JOBS) install DESTDIR='$(3)'
 
     # create symlink for shared library so that llvm-config can find it
-    cd '$(3)/$(HOST_BINDIR)' && ln -s LLVM.dll LLVM-$(word 1,$(subst ., ,$($(PKG)_VERSION))).dll
+    cd '$(3)/$(HOST_BINDIR)' && ln -s LLVM.dll LLVM-$(word 1,$(subst ., ,$($(PKG)_VERSION))).$(word 2,$(subst ., ,$($(PKG)_VERSION))).dll
 
     # install native llvm-config in HOST_BINDIR because it won't find the libs otherwise
     # FIXME: Some of the configuration flags are hard coded into llvm-config with a patch.
