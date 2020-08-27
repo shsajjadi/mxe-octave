@@ -22,6 +22,12 @@ else
   MESON_TOOLCHAIN_FILE := $(HOST_PREFIX)/share/meson/native/mxe-conf.ini
 endif
 
+ifeq ($(USE_CCACHE),yes)
+    $(PKG)_MXE_CC_BASENAME := $(shell basename $(MXE_CC))
+    $(PKG)_MXE_CXX_BASENAME := $(shell basename $(MXE_CXX))
+    $(PKG)_MXE_F77_BASENAME := $(shell basename $(MXE_F77))
+endif
+
 define $(PKG)_BUILD
     cd '$(1)' && $(PYTHON3) setup.py install --prefix='$(BUILD_TOOLS_PREFIX)'
     
@@ -29,9 +35,15 @@ define $(PKG)_BUILD
     rm -f $(MESON_TOOLCHAIN_FILE) && mkdir -p '$(dir $(MESON_TOOLCHAIN_FILE))'
     (echo "[binaries]"; \
     if [ x$(USE_SYSTEM_GCC) == xno ]; then \
-      echo "c = '$(shell echo $(MXE_CC) | $(SED) "s/'//g")'"; \
-      echo "cpp = '$(shell echo $(MXE_CXX) | $(SED) "s/'//g")'"; \
-      echo "fortran = '$(shell echo $(MXE_F77) | $(SED) "s/'//g")'"; \
+      if [ x$(USE_CCACHE) == xyes ]; then \
+        echo "c = '$($(PKG)_MXE_CC_BASENAME)'"; \
+        echo "cpp = '$($(PKG)_MXE_CXX_BASENAME)'"; \
+        echo "fortran = '$($(PKG)_MXE_F77_BASENAME)'"; \
+      else \
+        echo "c = '$(shell echo $(MXE_CC) | $(SED) "s/'//g")'"; \
+        echo "cpp = '$(shell echo $(MXE_CXX) | $(SED) "s/'//g")'"; \
+        echo "fortran = '$(shell echo $(MXE_F77) | $(SED) "s/'//g")'"; \
+      fi; \
       echo "ar = '$(shell echo $(MXE_AR) | $(SED) "s/'//g")'"; \
       echo "strip = '$(shell echo $(MXE_STRIP) | $(SED) "s/'//g")'"; \
     fi; \
