@@ -1,58 +1,58 @@
 <html>
 <head>
 <title>GNU Octave</title>
-<style TYPE="text/css">
-<!--
-body {
-}
-li {
-  margin-bottom: 1.5em
-}
--->
-</style>
 </head>
 <body>
-<h2>Welcome</h2>
+<h1>Welcome</h1>
 <p>
 Thank you for installing GNU Octave!
 </p>
 <p>
-Octave 5.2 is a minor release mainly focused on fixing bugs found in Octave 5.1.
+Octave 6.1 is a major release with many new features and improvements. Among
+other things, it brings updates for Matlab compatibility, better graphics, and
+many general improvements since version 5.2.
 </p>
 <p>
 A full list of changes can be found in the Release Notes from the News menu.
 </p>
+
+<h2>Changed default installation location</h2>
+<p>By default, Octave now installs to the system wide default program installation
+location (likely inside <code>C:\Program Files\GNU Octave</code>).</p>
+<p>It is now also possible to install Octave without administrative privileges.
+<br>In that case (or if an admin choses to install for the "local user" only),
+the default installation location is inside
+<code>%LOCALAPPDATA%\Programs\GNU Octave</code>.</p>
+
 <h2>BLAS Library Selection</h2>
-<p>
-During the installation a default BLAS library was selected. The installer
+<p>During the installation, a default BLAS library was selected. The installer
 contains two BLAS implementations,
 the <a href="http://www.netlib.org/blas/">NetLib reference BLAS</a>
-and <a href="http://www.openblas.net/">OpenBLAS</a>.
-</p>
-<p>
-The choice of library may be changed after installation by copying
-either librefblas.dll or libopenblas.dll to the file libblas.dll in the bin
-folder of the Octave installation, or running blas_switch from the same folder.
-</p>
+and <a href="http://www.openblas.net/">OpenBLAS</a>.</p>
+<p>The used implementation can be changed after installation with the "BLAS
+Switcher" in the Start menu.</p>
+
 <h2>Included Octave Forge Packages</h2>
-<p>
-A number of Octave-Forge packages have been included with Octave, however they
-must be loaded in order to use them.
-</p>
+<p>A <a href="https://wiki.octave.org/Octave_for_Microsoft_Windows#Packages">
+number of Octave-Forge packages</a> has been included with Octave for Windows.
+However, the packages must be loaded in order to use them.</p>
 <p>
 <ul>
 <li>To list the available installed packages, use the
-<tt>pkg list</tt> command.</li>
+<code>pkg list</code> command.</li>
 <li>To load a package in order to use its functions, use the
-<tt>pkg load PACKAGENAME</tt> command.</li>
+<code>pkg load PACKAGENAME</code> command.</li>
 </ul>
 </p>
-<p>
-Other packages are available from
-<a href="https://octave.sourceforge.io/">Octave-Forge</a>.
-</p>
-<h2>Issues</h2>
-Please report any problems with Octave on the
-<a href="https://octave.org/bugs.html">Octave website</a>.
+<p>Other packages are available from
+<a href="https://octave.sourceforge.io/">Octave-Forge</a>.</p>
+
+<h2>Contributing to Octave</h2>
+<p>Octave has a community that lives from its users. You are welcome to share
+with that community.</p>
+<p>For help and support, visit the
+<a href="https://octave.discourse.group/">Octave Discourse forum</a>.</p>
+<p>Please, report any problems with Octave on the
+<a href="https://octave.org/bugs.html">Octave website</a>.</p>
 </body>
 </html>
