@@ -12,11 +12,19 @@ $(PKG)_DEPS     := blas
 
 $(PKG)_MAKE_OPTS := PREFIX=$(HOST_PREFIX) DYNAMIC_ARCH=1 NO_LAPACK=1
 
+ifeq ($(USE_CCACHE),yes)
+  $(PKG)_MXE_CC := $(shell basename $(MXE_CC))
+  $(PKG)_MXE_F77 := $(shell basename $(MXE_F77))
+else
+  $(PKG)_MXE_CC := $(MXE_CC)
+  $(PKG)_MXE_F77 := $(MXE_F77)
+endif
+
 ifeq ($(MXE_NATIVE_BUILD),yes)
   ## This may also be needed on some systems: NO_AVX2=1
-  $(PKG)_MAKE_OPTS += NO_CBLAS=1 USE_THREAD=1 CC=$(MXE_CC) FC=$(MXE_F77)
+  $(PKG)_MAKE_OPTS += NO_CBLAS=1 USE_THREAD=1 CC=$($(PKG)_MXE_CC) FC=$($(PKG)_MXE_F77)
 else
-  $(PKG)_MAKE_OPTS += NO_CBLAS=1 USE_THREAD=1 CC=$(MXE_CC) FC=$(MXE_F77) HOSTCC=gcc HOSTFC=gfortran CROSS=1 CROSS_SUFFIX=$(MXE_TOOL_PREFIX)
+  $(PKG)_MAKE_OPTS += NO_CBLAS=1 USE_THREAD=1 CC=$($(PKG)_MXE_CC) FC=$($(PKG)_MXE_F77) HOSTCC=gcc HOSTFC=gfortran CROSS=1 CROSS_SUFFIX=$(MXE_TOOL_PREFIX)
 endif
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
