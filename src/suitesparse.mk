@@ -35,12 +35,24 @@ ifeq ($(ENABLE_FORTRAN_INT64),yes)
   endif
 endif
 
+ifeq ($(USE_CCACHE),yes)
+    $(PKG)_COMPILER_OPTS := CC='$(CCACHE) $(MXE_CC)' \
+        CXX='$(CCACHE) $(MXE_CXX)' \
+        CPLUSPLUS='$(CCACHE) $(MXE_CXX)' \
+        F77='$(CCACHE) $(MXE_F77)'
+    $(PKG)_CMAKE_CCACHE_OPTS := -DCMAKE_CXX_COMPILER_LAUNCHER='$(CCACHE)' \
+        -DCMAKE_C_COMPILER_LAUNCHER='$(CCACHE)' \
+        -DCMAKE_Fortran_COMPILER_LAUNCHER='$(CCACHE)'
+else
+    $(PKG)_COMPILER_OPTS := CC='$(MXE_CC)' \
+        CXX='$(MXE_CXX)' \
+        CPLUSPLUS='$(MXE_CXX)' \
+        F77='$(MXE_F77)'
+endif
+
 $(PKG)_MAKE_OPTS = \
     CPPFLAGS="$($(PKG)_CPPFLAGS)" \
-    CC='$(MXE_CC)' \
-    CXX='$(MXE_CXX)' \
-    CPLUSPLUS='$(MXE_CXX)' \
-    F77='$(MXE_F77)' \
+    $($(PKG)_COMPILER_OPTS) \
     FFLAGS='$(MXE_FFLAGS)' \
     CFLAGS='$(MXE_CFLAGS)' \
     CXXFLAGS='$(MXE_CXXFLAGS)' \
@@ -49,14 +61,14 @@ $(PKG)_MAKE_OPTS = \
     BLAS="-lblas -lgfortran" \
     LAPACK='-llapack' \
     CHOLMOD_CONFIG='-DNPARTITION' \
-    CMAKE_OPTIONS='-DCMAKE_TOOLCHAIN_FILE="$(CMAKE_TOOLCHAIN_FILE)"'
+    CMAKE_OPTIONS='-DCMAKE_TOOLCHAIN_FILE="$(CMAKE_TOOLCHAIN_FILE)" $($(PKG)_CMAKE_CCACHE_OPTS)'
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
-$(PKG)_MAKE_OPTS += \
-    UNAME=Windows
-$(PKG)_SO_DIR := $($(PKG)_DESTDIR)$(HOST_BINDIR)
+    $(PKG)_MAKE_OPTS += \
+        UNAME=Windows
+    $(PKG)_SO_DIR := $($(PKG)_DESTDIR)$(HOST_BINDIR)
 else
-$(PKG)_SO_DIR := $($(PKG)_DESTDIR)$(HOST_LIBDIR)
+    $(PKG)_SO_DIR := $($(PKG)_DESTDIR)$(HOST_LIBDIR)
 endif
 
 $(PKG)_cputype = $(shell uname -m | sed "s/\\ /_/g")
@@ -65,7 +77,8 @@ $(PKG)_METIS_BUILDDIR = build/$($(PKG)_systype)-$($(PKG)_cputype)
 $(PKG)_METIS_CONFIG_FLAGS = -DCMAKE_VERBOSE_MAKEFILE=1 \
     -DGKLIB_PATH=$(1)/metis-5.1.0/GKlib \
     -DCMAKE_INSTALL_PREFIX=$(1) \
-    -DSHARED=1
+    -DSHARED=1 \
+    $($(PKG)_CMAKE_CCACHE_OPTS)
 
 define $(PKG)_BUILD
     # build metis
