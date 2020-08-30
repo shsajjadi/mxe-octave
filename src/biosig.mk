@@ -1,15 +1,15 @@
 # This file is part of MXE.
 # See index.html for further information.
 
-PKG             := libbiosig
+PKG             := biosig
 $(PKG)_WEBSITE  := http://biosig.sf.net/
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.0.4
-$(PKG)_CHECKSUM := d3126f92b371c98bc75672ebc8c3242468338a57
+$(PKG)_VERSION  := 2.0.6
+$(PKG)_CHECKSUM := 3c42b8e96347483f58ddff92f04c4d72ea1d27aa
 $(PKG)_SUBDIR   := biosig-$($(PKG)_VERSION)
 $(PKG)_FILE     := biosig-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := https://sourceforge.net/projects/biosig/files/BioSig%20for%20C_C%2B%2B/src/$($(PKG)_FILE)
-$(PKG)_DEPS     := suitesparse zlib libiberty libiconv lapack tinyxml dcmtk
+$(PKG)_DEPS     := suitesparse zlib libb64 libiberty libiconv lapack tinyxml dcmtk
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://biosig.sourceforge.io/download.html' | \
@@ -28,7 +28,7 @@ define $(PKG)_BUILD
     # make sure NDEBUG is defined
     $(SED) -i '/NDEBUG/ s|#||g' '$(1)'/biosig4c++/Makefile
 
-    TARGET=$(TARGET) CROSS=$(TARGET) $(MAKE) -C '$(1)' lib
+    TARGET=$(TARGET) CROSS=$(TARGET) $(MAKE) -C '$(1)' lib tools
 
     # build mexbiosig package (does not install package)
     # TARGET='$(TARGET)' $(MAKE) -C '$(1)'/biosig4c++ mexbiosig
