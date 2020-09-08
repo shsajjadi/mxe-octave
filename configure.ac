@@ -123,7 +123,7 @@ AC_SUBST(BUILD_PKG_CONFIG_PATH)
 
 AC_ARG_ENABLE([windows-64],
   [AS_HELP_STRING([--disable-windows-64],
-    [don't build a Windows 64 cross compiler])],
+    [build Windows 32bit binaries (default: enable, i.e. 64bit binaries)])],
   [case $enableval in
      no) ENABLE_WINDOWS_64=no ;;
      yes) ENABLE_WINDOWS_64=yes ;;
@@ -145,7 +145,7 @@ fi
 
 AC_ARG_ENABLE([fortran-int64],
   [AS_HELP_STRING([--enable-fortran-int64],
-    [use 64-bit integers for fortran (and other) numerical library code])],
+    [use 64-bit integers for fortran (and other) numerical library code (default: disable)])],
   [case $enableval in
      no) ENABLE_FORTRAN_INT64=no ;;
      yes) ENABLE_FORTRAN_INT64=yes ;;
@@ -163,7 +163,7 @@ AC_SUBST(ENABLE_FORTRAN_INT64)
 AC_SUBST(ENABLE_WINDOWS_64)
 
 AC_ARG_ENABLE([shared],
-  [AS_HELP_STRING([--disable-shared], [Disable shared libraries])],
+  [AS_HELP_STRING([--disable-shared], [Disable shared libraries (default: enable)])],
   [case "$enableval" in
      no) BUILD_SHARED=no ;;
      yes) BUILD_SHARED=yes ;;
@@ -172,7 +172,7 @@ AC_ARG_ENABLE([shared],
 AC_SUBST(BUILD_SHARED)
 
 AC_ARG_ENABLE([static],
-  [AS_HELP_STRING([--enable-static], [Enable static libraries])],
+  [AS_HELP_STRING([--enable-static], [Enable static libraries (default: disable)])],
   [case "$enableval" in
      no) BUILD_STATIC=no ;;
      yes) BUILD_STATIC=yes ;;
@@ -181,7 +181,7 @@ AC_ARG_ENABLE([static],
 AC_SUBST(BUILD_STATIC)
 
 AC_ARG_ENABLE([jit],
-  [AS_HELP_STRING([--enable-jit], [Enable Octave JIT compiler])],
+  [AS_HELP_STRING([--enable-jit], [Enable Octave JIT compiler (default: disable)])],
   [case "$enableval" in
      no) ENABLE_JIT=no ;;
      yes) ENABLE_JIT=yes ;;
@@ -190,7 +190,7 @@ AC_ARG_ENABLE([jit],
 AC_SUBST(ENABLE_JIT)
 
 AC_ARG_ENABLE([java],
-  [AS_HELP_STRING([--disable-java], [Disable Java/Octave interface])],
+  [AS_HELP_STRING([--disable-java], [Disable Java/Octave interface (default: enable)])],
   [case "$enableval" in
      no) ENABLE_JAVA=no ;;
      yes) ENABLE_JAVA=yes ;;
@@ -199,7 +199,7 @@ AC_ARG_ENABLE([java],
 AC_SUBST(ENABLE_JAVA)
 
 AC_ARG_ENABLE([[docs]],
-  [AS_HELP_STRING([--disable-docs], [Disable building Octave documentation])],
+  [AS_HELP_STRING([--disable-docs], [Disable building Octave documentation (default: enable)])],
   [case "$enableval" in
      no) ENABLE_DOCS=no ;;
      yes) ENABLE_DOCS=yes ;;
@@ -209,7 +209,7 @@ AC_SUBST(ENABLE_DOCS)
 
 AC_ARG_ENABLE([[native-build]],
   [AS_HELP_STRING([--enable-native-build],
-    [Enable native build (default is cross compile)])],
+    [Enable native build (default is cross compile for mingw)])],
   [case "$enableval" in
      no) MXE_NATIVE_BUILD=no ;;
      yes) MXE_NATIVE_BUILD=yes ;;
@@ -219,7 +219,7 @@ AC_SUBST(MXE_NATIVE_BUILD)
 
 AC_ARG_ENABLE([system-fontconfig],
   [AS_HELP_STRING([--enable-system-fontconfig],
-    [Use fontconfig already installed on system])],
+    [Use fontconfig already installed on system (default: disable, i.e. build package)])],
   [case "$enableval" in
      no) USE_SYSTEM_FONTCONFIG=no ;;
      yes) USE_SYSTEM_FONTCONFIG=yes ;;
@@ -229,7 +229,7 @@ AC_SUBST(USE_SYSTEM_FONTCONFIG)
 
 AC_ARG_ENABLE([system-opengl],
   [AS_HELP_STRING([--disable-system-opengl],
-    [Use OpenGL libraries already installed on system])],
+    [Use OpenGL libraries already installed on system (default: disable, i.e. build package)])],
   [case "$enableval" in
      no) USE_SYSTEM_OPENGL=no ;;
      yes) USE_SYSTEM_OPENGL=yes ;;
@@ -239,7 +239,7 @@ AC_SUBST(USE_SYSTEM_OPENGL)
 
 AC_ARG_ENABLE([system-x11-libs],
   [AS_HELP_STRING([--enable-system-x11-libs],
-    [Use X11 libraries already installed on system])],
+    [Use X11 libraries already installed on system (default: disable, i.e. build package)])],
   [case "$enableval" in
      no) USE_SYSTEM_X11_LIBS=no ;;
      yes) USE_SYSTEM_X11_LIBS=yes ;;
@@ -249,7 +249,7 @@ AC_SUBST(USE_SYSTEM_X11_LIBS)
 
 AC_ARG_ENABLE([system-gcc],
   [AS_HELP_STRING([--enable-system-gcc],
-    [Use GCC already installed on system])],
+    [Use GCC already installed on system (default: disable, i.e. build package)])],
   [case "$enableval" in
      no) USE_SYSTEM_GCC=no ;;
      yes) USE_SYSTEM_GCC=yes ;;
@@ -259,7 +259,7 @@ AC_SUBST(USE_SYSTEM_GCC)
 
 AC_ARG_ENABLE([lib64-directory],
   [AS_HELP_STRING([--enable-lib64-directory],
-    [Search lib64 directory for libraries])],
+    [Search lib64 directory for libraries (default: disable)])],
   [case "$enableval" in
      no) ENABLE_LIB64_DIRECTORY=no ;;
      yes) ENABLE_LIB64_DIRECTORY=yes ;;
@@ -268,7 +268,7 @@ AC_ARG_ENABLE([lib64-directory],
 AC_SUBST(ENABLE_LIB64_DIRECTORY)
 
 AC_ARG_ENABLE([pic-flag],
-  [AS_HELP_STRING([--enable-pic-flag], [Compile with PIC flag])],
+  [AS_HELP_STRING([--enable-pic-flag], [Compile with PIC flag (default: disable)])],
   [case "$enableval" in
      no) USE_PIC_FLAG=no ;;
      yes) USE_PIC_FLAG=yes ;;
@@ -277,7 +277,7 @@ AC_ARG_ENABLE([pic-flag],
 AC_SUBST(USE_PIC_FLAG)
 
 AC_ARG_ENABLE([strip-dist-files],
-  [AS_HELP_STRING([--disable-strip-dist-files], [Don't strip distributed files])],
+  [AS_HELP_STRING([--disable-strip-dist-files], [Don't strip distributed files (default: enable)])],
   [case "$enableval" in
      no) STRIP_DIST_FILES=no ;;
      yes) STRIP_DIST_FILES=yes ;;
@@ -287,7 +287,7 @@ AC_SUBST(STRIP_DIST_FILES)
 
 AC_ARG_ENABLE([openblas],
   [AS_HELP_STRING([--disable-openblas],
-    [Disable use of OpenBLAS in Octave])],
+    [Disable use of OpenBLAS in Octave (default: enable, i.e. build and use package)])],
   [case "$enableval" in
      no) ENABLE_OPENBLAS=no ;;
      yes) ENABLE_OPENBLAS=yes ;;
@@ -297,7 +297,7 @@ AC_SUBST(ENABLE_OPENBLAS)
 
 AC_ARG_ENABLE([qhull-no-strict-aliasing-flag],
   [AS_HELP_STRING([--enable-qhull-no-strict-aliasing-flag],
-    [Compile Qhull with -fno-strict-aliasing flag])],
+    [Compile Qhull with -fno-strict-aliasing flag (default: disable)])],
   [case "$enableval" in
      no) ENABLE_QHULL_NO_STRICT_ALIASING_FLAG=no ;;
      yes) ENABLE_QHULL_NO_STRICT_ALIASING_FLAG=yes ;;
@@ -307,7 +307,7 @@ AC_SUBST(ENABLE_QHULL_NO_STRICT_ALIASING_FLAG)
 
 AC_ARG_ENABLE([octave],
   [AS_HELP_STRING([--enable-octave=stable],
-    [Enable a specific build of Octave (release, stable, default)])],
+    [Enable a specific build of Octave (release, stable, default) (default: "release")])],
   [case $enableval in
      release) ENABLE_OCTAVE="release-" ;;
      stable) ENABLE_OCTAVE="stable-" ;;
@@ -318,7 +318,7 @@ AC_SUBST(ENABLE_OCTAVE)
 
 AC_ARG_ENABLE([binary-packages],
   [AS_HELP_STRING([--enable-binary-packages],
-    [Enable creating binary Octave Forge packages])],
+    [Enable building binary Octave Forge packages (default: disable)])],
   [case "$enableval" in
      no) ENABLE_BINARY_PACKAGES=no ;;
      yes) ENABLE_BINARY_PACKAGES=yes ;;
@@ -328,7 +328,7 @@ AC_SUBST(ENABLE_BINARY_PACKAGES)
 
 AC_ARG_ENABLE([devel-tools],
   [AS_HELP_STRING([--enable-devel-tools],
-    [Enable creating developer tools such as gdb])],
+    [Enable building developer tools such as gdb (default: disable)])],
   [case "$enableval" in
      no) ENABLE_DEVEL_TOOLS=no ;;
      yes) ENABLE_DEVEL_TOOLS=yes ;;
@@ -338,7 +338,7 @@ AC_SUBST(ENABLE_DEVEL_TOOLS)
 
 AC_ARG_ENABLE([qt5],
   [AS_HELP_STRING([--disable-qt5],
-    [Build GNU Octave using Qt 4 instead of the default Qt 5])],
+    [Build GNU Octave using Qt 4 instead of the default Qt 5 (default: enable, i.e. use Qt5)])],
   [case "$enableval" in
      no) ENABLE_QT5=no ;;
      yes) ENABLE_QT5=yes ;;
@@ -346,10 +346,10 @@ AC_ARG_ENABLE([qt5],
    esac], [ENABLE_QT5=yes])
 AC_SUBST(ENABLE_QT5)
 
-# install dependancy package docs (or not to save space)
+# install documentation of build dependency packages (or not to save space)
 AC_ARG_ENABLE([dep-docs],
-	      [AS_HELP_STRING([--enable-dep-docs],
-			      [Enable install of dependancy package dos])],
+  [AS_HELP_STRING([--enable-dep-docs],
+    [Enable installation of documentation for dependency packages (default: disable)])],
   [case "$enableval" in
      no) ENABLE_DEP_DOCS=no ;;
      yes) ENABLE_DEP_DOCS=yes ;;
