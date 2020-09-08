@@ -5,14 +5,20 @@ PKG             := of-windows
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 1.5.0
 $(PKG)_CHECKSUM := c2323df04664626a30d837154f2a7ea3255b9182
-$(PKG)_REMOTE_SUBDIR := 
+$(PKG)_REMOTE_SUBDIR :=
 $(PKG)_SUBDIR   := windows-$($(PKG)_VERSION)
 $(PKG)_FILE     := windows-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
-$(PKG)_DEPS     := 
+$(PKG)_DEPS     :=
 
 ifeq ($(ENABLE_BINARY_PACKAGES),yes)
     $(PKG)_DEPS += $(OCTAVE_TARGET)
+    ifeq ($(MXE_NATIVE_BUILD),no)
+        ifeq ($(USE_SYSTEM_OCTAVE),no)
+            # Remove this when package builds without calling Octave
+            $(PKG)_DEPS += build-octave
+        endif
+    endif
 endif
 
 define $(PKG)_UPDATE

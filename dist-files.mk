@@ -41,6 +41,7 @@ SRC_FILES_1 := \
   build-meson.mk \
   build-msvctools.mk \
   build-ninja.mk \
+  build-octave.mk \
   build-perl.mk \
   build-pkg-config-1-fixes.patch \
   build-pkg-config.mk \

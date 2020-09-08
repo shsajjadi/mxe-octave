@@ -65,6 +65,12 @@ ENABLE_FORTRAN_INT64 := @ENABLE_FORTRAN_INT64@
 # if cross, compiling, this also means we will attempt to create cross mkoctfile
 ENABLE_BINARY_PACKAGES := @ENABLE_BINARY_PACKAGES@
 
+# Set to "no" to build a minimal Octave that runs on the build system.
+# That version can be used for cross-building binary packages that depend
+# on Octave as a build tool. If "yes", it is tried to use an Octave that
+# is already installed on the build system (default is "yes").
+USE_SYSTEM_OCTAVE := @USE_SYSTEM_OCTAVE@
+
 # create and install devel tools (default no)
 ENABLE_DEVEL_TOOLS := @ENABLE_DEVEL_TOOLS@
 
@@ -257,6 +263,8 @@ ALL_BUILD_TOOLS := $(shell $(SED) -n 's/^.* class="package">\(build-[^<]*\)<.*$$
 
 BUILD_COMPILER_TOOLS := build-gcc build-binutils
 BUILD_TOOLS := $(ALL_BUILD_TOOLS)
+# build-octave is added as an explicit dependency in the of- packages that need it
+BUILD_TOOLS := $(filter-out build-octave, $(BUILD_TOOLS))
 # Building flex for native mingw fails, so disable it.
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   REQUIREMENTS += flex
@@ -307,6 +315,7 @@ PKG_DIR    := @PKG_DIR@
 TMP_DIR     = $(TOP_BUILD_DIR)/tmp-$(1)
 MAKEFILE   := $(TOP_BUILD_DIR)/Makefile
 PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* class="package">\([^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html'))
+PKGS += build-octave
 
 ENV_PATH := $(PATH)
 PATH := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)
@@ -723,9 +732,13 @@ $(STAMP_DIR)/check-requirements: $(MAKEFILE)
 	@echo '[check requirements]'
 	$(foreach REQUIREMENT,$(REQUIREMENTS),$(call CHECK_REQUIREMENT,$(REQUIREMENT)))
 ifneq ($(MXE_NATIVE_BUILD),yes)
+  ifeq ($(USE_SYSTEM_OCTAVE),yes)
+    ifeq ($(ENABLE_BINARY_PACKAGES),yes)
 	@if ! octave -W --version | head -1 | grep ' \($($(OCTAVE_TARGET)_VERSION)\)$$' >/dev/null; then \
-	  echo "Warning - could not find native build version $($(OCTAVE_TARGET)_VERSION) of octave - some packages may fail, but continuing"; \
+	  echo "Warning - could not find native build version $($(OCTAVE_TARGET)_VERSION) of Octave - some packages may fail, but continuing"; \
 	fi
+    endif
+  endif
 endif
 	@[ -d '$(STAMP_DIR)' ] || mkdir -p '$(STAMP_DIR)'
 	@if test "$(USE_SYSTEM_GCC)" = yes; then \
