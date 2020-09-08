@@ -326,6 +326,16 @@ AC_ARG_ENABLE([binary-packages],
    esac], [ENABLE_BINARY_PACKAGES=no])
 AC_SUBST(ENABLE_BINARY_PACKAGES)
 
+AC_ARG_ENABLE([system-octave],
+  [AS_HELP_STRING([--disable-system-octave],
+    [Build a minimal Octave that runs on the build system. This only applies if binary packages are cross-built (default: enable, i.e. use an already installed Octave)])],
+  [case "$enableval" in
+     no) USE_SYSTEM_OCTAVE=no ;;
+     yes) USE_SYSTEM_OCTAVE=yes ;;
+     *) AC_MSG_ERROR([bad value "$enableval" for --disable-system-octave]) ;;
+   esac], [USE_SYSTEM_OCTAVE=yes])
+AC_SUBST(USE_SYSTEM_OCTAVE)
+
 AC_ARG_ENABLE([devel-tools],
   [AS_HELP_STRING([--enable-devel-tools],
     [Enable building developer tools such as gdb (default: disable)])],
