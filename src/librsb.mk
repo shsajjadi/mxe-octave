@@ -3,8 +3,8 @@
 
 PKG             := librsb
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.2.0.8
-$(PKG)_CHECKSUM := f2ba35b2996bfa031a24666e87d34629eb7cdbc2
+$(PKG)_VERSION  := 1.2.0.9
+$(PKG)_CHECKSUM := b35201470e6691d55c32e941969cd890c1076520
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$($(PKG)_FILE)
