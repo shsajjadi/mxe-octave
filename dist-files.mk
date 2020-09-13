@@ -500,6 +500,8 @@ SRC_FILES_1 := \
   of-nurbs.mk \
   of-ocs-1-cross-fixes.patch \
   of-ocs-2-dev-fixes.patch \
+  of-ocs-3-break-fixes.patch \
+  of-ocs-4-pkgadd-fixes.patch \
   of-ocs.mk \
   of-octcdf.mk \
   of-odepkg-1-fixes.patch \
