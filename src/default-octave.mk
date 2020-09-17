@@ -21,7 +21,7 @@ $(PKG)_URL      := http://not.a.valid.url/$($(PKG)_FILE)
 ifeq ($(USE_SYSTEM_FONTCONFIG),no)
   $(PKG)_FONTCONFIG := fontconfig
 endif
-$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile pcre portaudio pstoedit qhull qrupdate qscintilla readline sundials-ida suitesparse texinfo zlib
+$(PKG)_DEPS     := blas arpack curl epstool fftw fltk $($(PKG)_FONTCONFIG) ghostscript gl2ps glpk gnuplot graphicsmagick hdf5 lapack libsndfile pcre portaudio pstoedit qhull qrupdate qscintilla rapidjson readline sundials-ida suitesparse texinfo zlib
 
 ifeq ($(ENABLE_QT5),yes)
     $(PKG)_DEPS += qt5
