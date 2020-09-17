@@ -626,6 +626,8 @@ SRC_FILES_1 := \
   qwt.mk \
   qwtplot3d-1-fixes.patch \
   qwtplot3d.mk \
+  rapidjson-1-prettywriter.patch \
+  rapidjson.mk \
   readline-0-001.patch \
   readline-0-002.patch \
   readline-0-003.patch \
