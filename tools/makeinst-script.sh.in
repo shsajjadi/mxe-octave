@@ -521,9 +521,9 @@ EOF
   fi
   if [ -e $OCTAVE_SOURCE/$OCTAVE_SUBDIR/bin/blas_switch.exe ]; then 
    cat >> $OUTFILE << EOF
-    CreateShortCut '\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Blas Switcher.lnk' '\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\blas_switch.exe' '' '' 0
+    CreateShortCut '\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\BLAS Switcher.lnk' '\$INSTDIR\\$OCTAVE_SUBDIR\\bin\\blas_switch.exe' '' '' 0
     \${If} \$MultiUser.InstallMode != "CurrentUser"
-      Push '\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\Blas Switcher.lnk'
+      Push '\$SMPROGRAMS\\GNU Octave $VERSION\$MultiUser.Local\\BLAS Switcher.lnk'
       Call ShellLinkSetRunAs
       Pop \$0
     \${EndIf}
