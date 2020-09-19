@@ -263,8 +263,12 @@ ALL_BUILD_TOOLS := $(shell $(SED) -n 's/^.* class="package">\(build-[^<]*\)<.*$$
 
 BUILD_COMPILER_TOOLS := build-gcc build-binutils
 BUILD_TOOLS := $(ALL_BUILD_TOOLS)
-# build-octave is added as an explicit dependency in the of- packages that need it
-BUILD_TOOLS := $(filter-out build-octave, $(BUILD_TOOLS))
+# some build tools are optional and added as explicit dependencies
+# to packages that need them
+BUILD_TOOLS_OPT := \
+  build-mako build-markupsafe build-meson build-ninja build-python3 \
+  build-python build-octave build-setuptools build-scons
+BUILD_TOOLS := $(filter-out $(BUILD_TOOLS_OPT), $(BUILD_TOOLS))
 # Building flex for native mingw fails, so disable it.
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   REQUIREMENTS += flex
@@ -315,7 +319,7 @@ PKG_DIR    := @PKG_DIR@
 TMP_DIR     = $(TOP_BUILD_DIR)/tmp-$(1)
 MAKEFILE   := $(TOP_BUILD_DIR)/Makefile
 PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* class="package">\([^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html'))
-PKGS += build-octave
+PKGS += $(BUILD_TOOLS_OPT)
 
 ENV_PATH := $(PATH)
 PATH := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)

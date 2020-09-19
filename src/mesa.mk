@@ -7,7 +7,7 @@ $(PKG)_CHECKSUM := 839dc64706b61c61f9ec49908ea25aeb99c1d70c
 $(PKG)_SUBDIR   := mesa-$($(PKG)_VERSION)
 $(PKG)_FILE     := mesa-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.freedesktop.org/pub/mesa/$($(PKG)_FILE)
-$(PKG)_DEPS     := build-mako build-meson expat zlib llvm s2tc
+$(PKG)_DEPS     := build-mako build-meson build-ninja expat zlib llvm s2tc
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
