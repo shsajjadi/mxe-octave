@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 525d763d08a8c69d5541d5b025adc56907b4c5de
 $(PKG)_SUBDIR   := nsis-$($(PKG)_VERSION)-src
 $(PKG)_FILE     := nsis-$($(PKG)_VERSION)-src.tar.bz2
 $(PKG)_URL      := https://$(SOURCEFORGE_MIRROR)/project/nsis/NSIS 3/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := build-scons
+$(PKG)_DEPS     := build-python build-scons build-setuptools
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://nsis.sourceforge.io/Download' | \
