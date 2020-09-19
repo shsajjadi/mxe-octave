@@ -2,8 +2,8 @@
 # See index.html for further information.
 
 PKG             := mesa
-$(PKG)_VERSION  := 20.0.8
-$(PKG)_CHECKSUM := 54be52b058b931212b5994e8974c417b4b6c3157
+$(PKG)_VERSION  := 20.1.8
+$(PKG)_CHECKSUM := 839dc64706b61c61f9ec49908ea25aeb99c1d70c
 $(PKG)_SUBDIR   := mesa-$($(PKG)_VERSION)
 $(PKG)_FILE     := mesa-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.freedesktop.org/pub/mesa/$($(PKG)_FILE)
@@ -48,7 +48,7 @@ define $(PKG)_BUILD
       -Dgallium-drivers=swrast \
       -Dvulkan-drivers='' \
       -Degl=false \
-      -Dgbm=false  \
+      -Dgbm=false \
       -Dshared-llvm=true
 
   cd '$(1)/.build' && DESTDIR=$(3) ninja -j $(JOBS) install
