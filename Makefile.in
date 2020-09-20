@@ -546,6 +546,13 @@ endif
 MAKE_SHARED_FROM_STATIC := \
   $(TOP_DIR)/tools/make-shared-from-static $(MAKE_SHARED_FROM_STATIC_OPTIONS)
 
+ifeq ($(USE_CCACHE),yes)
+  CMAKE_CCACHE_FLAGS := \
+    -DCMAKE_CXX_COMPILER_LAUNCHER='$(CCACHE)' \
+    -DCMAKE_C_COMPILER_LAUNCHER='$(CCACHE)' \
+    -DCMAKE_Fortran_COMPILER_LAUNCHER='$(CCACHE)'
+endif
+
 CMAKE_TOOLCHAIN_FILE := $(HOST_PREFIX)/share/cmake/mxe-conf.cmake
 CMAKE_NATIVE_TOOLCHAIN_FILE := $(TOP_BUILD_DIR)/usr/share/cmake/native-conf.cmake
 

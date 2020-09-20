@@ -40,9 +40,6 @@ ifeq ($(USE_CCACHE),yes)
         CXX='$(CCACHE) $(MXE_CXX)' \
         CPLUSPLUS='$(CCACHE) $(MXE_CXX)' \
         F77='$(CCACHE) $(MXE_F77)'
-    $(PKG)_CMAKE_CCACHE_OPTS := -DCMAKE_CXX_COMPILER_LAUNCHER='$(CCACHE)' \
-        -DCMAKE_C_COMPILER_LAUNCHER='$(CCACHE)' \
-        -DCMAKE_Fortran_COMPILER_LAUNCHER='$(CCACHE)'
 else
     $(PKG)_COMPILER_OPTS := CC='$(MXE_CC)' \
         CXX='$(MXE_CXX)' \
@@ -61,7 +58,7 @@ $(PKG)_MAKE_OPTS = \
     BLAS="-lblas -lgfortran" \
     LAPACK='-llapack' \
     CHOLMOD_CONFIG='-DNPARTITION' \
-    CMAKE_OPTIONS='-DCMAKE_TOOLCHAIN_FILE="$(CMAKE_TOOLCHAIN_FILE)" $($(PKG)_CMAKE_CCACHE_OPTS)'
+    CMAKE_OPTIONS='-DCMAKE_TOOLCHAIN_FILE="$(CMAKE_TOOLCHAIN_FILE)" $(CMAKE_CCACHE_FLAGS)'
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
     $(PKG)_MAKE_OPTS += \
@@ -77,14 +74,14 @@ $(PKG)_METIS_BUILDDIR = build/$($(PKG)_systype)-$($(PKG)_cputype)
 $(PKG)_METIS_CONFIG_FLAGS = -DCMAKE_VERBOSE_MAKEFILE=1 \
     -DGKLIB_PATH=$(1)/metis-5.1.0/GKlib \
     -DCMAKE_INSTALL_PREFIX=$(1) \
-    -DSHARED=1 \
-    $($(PKG)_CMAKE_CCACHE_OPTS)
+    -DSHARED=1
 
 define $(PKG)_BUILD
     # build metis
     mkdir $(1)/metis-5.1.0/$($(PKG)_METIS_BUILDDIR)
     cd $(1)/metis-5.1.0/$($(PKG)_METIS_BUILDDIR) && \
         cmake $(1)/metis-5.1.0 \
+            $(CMAKE_CCACHE_FLAGS) \
             -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
             $($(PKG)_METIS_CONFIG_FLAGS)
     $(MAKE) -C '$(1)/metis-5.1.0/$($(PKG)_METIS_BUILDDIR)' metis -j '$(JOBS)'

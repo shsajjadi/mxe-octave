@@ -19,11 +19,13 @@ endef
 define $(PKG)_BUILD
     mkdir '$(1).build'
     cd '$(1).build' && \
-    cmake -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
-          -DRAPIDJSON_BUILD_DOC=No \
-          -DRAPIDJSON_BUILD_EXAMPLES=No \
-          -DRAPIDJSON_BUILD_TESTS=No \
-          '$(1)'
+    cmake \
+        $(CMAKE_CCACHE_FLAGS) \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+        -DRAPIDJSON_BUILD_DOC=Off \
+        -DRAPIDJSON_BUILD_EXAMPLES=Off \
+        -DRAPIDJSON_BUILD_TESTS=Off \
+        '$(1)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)' DESTDIR='$(3)' install
 endef
 

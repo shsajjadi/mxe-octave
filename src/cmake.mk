@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 23092c6a5ae9ecde368abbfda7bae0d01edb7387
 $(PKG)_SUBDIR   := cmake-$($(PKG)_VERSION)
 $(PKG)_FILE     := cmake-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.cmake.org/files/v$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
-$(PKG)_DEPS     := 
+$(PKG)_DEPS     :=
 
 $(PKG)_CMAKE_OPTS :=
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
@@ -32,7 +32,8 @@ define $(PKG)_BUILD
     mkdir '$(1).build'
     cd '$(1).build' && cmake \
         $($(PKG)_CMAKE_OPTS) \
-        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'  \
+        $(CMAKE_CCACHE_FLAGS) \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         ../$($(PKG)_SUBDIR)
     $(MAKE) -C '$(1).build' -j '$(JOBS)'
     $(MAKE) -C '$(1).build' -j 1 install DESTDIR='$(3)'

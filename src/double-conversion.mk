@@ -22,6 +22,7 @@ define $(PKG)_BUILD
     cd '$(1)' && cmake \
         $($(PKG)_CMAKE_FLAGS) \
         -DBUILD_TESTING=no \
+        $(CMAKE_CCACHE_FLAGS) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         .
 
