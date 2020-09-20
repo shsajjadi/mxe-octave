@@ -25,6 +25,7 @@ define $(PKG)_BUILD
         -DCGAL_INSTALL_BIN_DIR:STRING="bin" \
         -DBOOST_LIB_DIAGNOSTIC_DEFINITIONS:STRING="-DBOOST_LIB_DIAGNOSTIC" \
         -DWITH_CGAL_Qt3:BOOL="0" \
+        $(CMAKE_CCACHE_FLAGS) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DBOOST_COMPILER=_win32 \
         -DBOOST_THREAD_USE_LIB=1 \
@@ -32,9 +33,11 @@ define $(PKG)_BUILD
         -DBUILD_SHARED_LIBS=0 \
         -C TryRunResults.cgal.cmake .
     $(MAKE) -C '$(1)' -j $(JOBS)
+
     cd '$(1)/examples/AABB_tree' && cmake \
         -DBOOST_LIB_DIAGNOSTIC_DEFINITIONS:STRING="-DBOOST_LIB_DIAGNOSTIC" \
         -DWITH_CGAL_Qt3:BOOL="0" \
+        $(CMAKE_CCACHE_FLAGS) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DBOOST_COMPILER=_win32 \
         -DBOOST_THREAD_USE_LIB=1 \

@@ -20,6 +20,9 @@ endef
 define $(PKG)_BUILD
     mkdir '$(1).build'
     cd '$(1).build' && \
-    cmake -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' '$(1)'
+    cmake \
+        $(CMAKE_CCACHE_FLAGS) \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+        '$(1)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)' DESTDIR='$(3)' install
 endef

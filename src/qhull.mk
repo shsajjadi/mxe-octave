@@ -12,9 +12,9 @@ $(PKG)_DEPS     :=
 
 $(PKG)_CMAKE_OPTS :=
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
-  ifeq ($(MXE_SYSTEM),mingw)
-    $(PKG)_CMAKE_OPTS := -G "MSYS Makefiles" 
-  endif
+    ifeq ($(MXE_SYSTEM),mingw)
+        $(PKG)_CMAKE_OPTS := -G "MSYS Makefiles" 
+    endif
 endif
 
 define $(PKG)_UPDATE
@@ -27,7 +27,8 @@ define $(PKG)_BUILD
     mkdir '$(1)/../.build'
     cd '$(1)/../.build' && cmake \
         $($(PKG)_CMAKE_OPTS) \
-        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'  \
+        $(CMAKE_CCACHE_FLAGS) \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DDOC_INSTALL_DIR='$(1)' \
         ../$($(PKG)_SUBDIR)
     make -C $(1)/../.build -j $(JOBS) 

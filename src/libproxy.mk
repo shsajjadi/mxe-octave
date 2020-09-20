@@ -23,6 +23,7 @@ define $(PKG)_BUILD
         $($(PKG)_CMAKE_FLAGS) \
         -DWITH_KDE=no \
         -DBUILD_TESTING=no \
+        $(CMAKE_CCACHE_FLAGS) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         .
 

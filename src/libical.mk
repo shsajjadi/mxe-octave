@@ -18,6 +18,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && mkdir build
     cd '$(1)/build' && cmake .. \
+        $(CMAKE_CCACHE_FLAGS) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DSTATIC_LIBRARY=true \
         -DHAVE_PTHREAD_H=false \

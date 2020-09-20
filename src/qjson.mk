@@ -20,6 +20,7 @@ define $(PKG)_BUILD
     echo '$(MXE_QMAKE)'
     mkdir '$(1)/build'
     cd '$(1)/build' && cmake .. \
+        $(CMAKE_CCACHE_FLAGS) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DLIBTYPE=STATIC
 
