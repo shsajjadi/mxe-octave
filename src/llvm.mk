@@ -92,6 +92,8 @@ else
             $($(PKG)_CCACHE_OPTIONS)
 
         $(MAKE) -C '$(1)/.build' -j $(JOBS) LLVMSupport
+        $(MAKE) -C '$(1)/.build' -j $(JOBS) CONFIGURE_LLVM_NATIVE
+        $(MAKE) -C '$(1)/.build/NATIVE' -j $(JOBS) LLVMSupport
         $(MAKE) -C '$(1)/.build' -j $(JOBS) llvm-config
         $(MAKE) -C '$(1)/.build' -j $(JOBS) install DESTDIR='$(3)'
 
