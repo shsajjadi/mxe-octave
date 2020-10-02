@@ -219,7 +219,7 @@ AC_SUBST(MXE_NATIVE_BUILD)
 
 AC_ARG_ENABLE([system-fontconfig],
   [AS_HELP_STRING([--enable-system-fontconfig],
-    [Use fontconfig already installed on system (default: disable, i.e. build package)])],
+    [Use fontconfig already installed on system (default: same as native-build)])],
   [case "$enableval" in
      no) USE_SYSTEM_FONTCONFIG=no ;;
      yes) USE_SYSTEM_FONTCONFIG=yes ;;
@@ -229,7 +229,7 @@ AC_SUBST(USE_SYSTEM_FONTCONFIG)
 
 AC_ARG_ENABLE([system-opengl],
   [AS_HELP_STRING([--disable-system-opengl],
-    [Use OpenGL libraries already installed on system (default: disable, i.e. build package)])],
+    [Use OpenGL libraries already installed on system (default: same as native-build)])],
   [case "$enableval" in
      no) USE_SYSTEM_OPENGL=no ;;
      yes) USE_SYSTEM_OPENGL=yes ;;
@@ -239,7 +239,7 @@ AC_SUBST(USE_SYSTEM_OPENGL)
 
 AC_ARG_ENABLE([system-x11-libs],
   [AS_HELP_STRING([--enable-system-x11-libs],
-    [Use X11 libraries already installed on system (default: disable, i.e. build package)])],
+    [Use X11 libraries already installed on system (default: same as native-build)])],
   [case "$enableval" in
      no) USE_SYSTEM_X11_LIBS=no ;;
      yes) USE_SYSTEM_X11_LIBS=yes ;;
@@ -249,7 +249,7 @@ AC_SUBST(USE_SYSTEM_X11_LIBS)
 
 AC_ARG_ENABLE([system-gcc],
   [AS_HELP_STRING([--enable-system-gcc],
-    [Use GCC already installed on system (default: disable, i.e. build package)])],
+    [Use GCC already installed on system (default: same as native-build)])],
   [case "$enableval" in
      no) USE_SYSTEM_GCC=no ;;
      yes) USE_SYSTEM_GCC=yes ;;
@@ -328,12 +328,12 @@ AC_SUBST(ENABLE_BINARY_PACKAGES)
 
 AC_ARG_ENABLE([system-octave],
   [AS_HELP_STRING([--disable-system-octave],
-    [Build a minimal Octave that runs on the build system. This only applies if binary packages are cross-built (default: enable, i.e. use an already installed Octave)])],
+    [Build a minimal Octave that runs on the build system. This only applies if binary packages are cross-built (default: same as native-build)])],
   [case "$enableval" in
      no) USE_SYSTEM_OCTAVE=no ;;
      yes) USE_SYSTEM_OCTAVE=yes ;;
      *) AC_MSG_ERROR([bad value "$enableval" for --disable-system-octave]) ;;
-   esac], [USE_SYSTEM_OCTAVE=yes])
+   esac], [USE_SYSTEM_OCTAVE=$MXE_NATIVE_BUILD])
 AC_SUBST(USE_SYSTEM_OCTAVE)
 
 AC_ARG_ENABLE([devel-tools],
