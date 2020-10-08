@@ -423,9 +423,10 @@ no_shortcuts_opt:
   ClearErrors
 
   Call CheckWinVer
-  \${If} @ENABLE_JAVA@ == yes
-    Call CheckJRE
-  \${EndIf} 
+  ; Bug #59215 for now have disabled jdk detection
+  ; \${If} @ENABLE_JAVA@ == yes
+  ;   Call CheckJRE
+  ; \${EndIf} 
   InitPluginsDir
 FunctionEnd
 
