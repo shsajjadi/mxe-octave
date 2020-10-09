@@ -52,7 +52,7 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
 
   # other packages we want to include
   WINDOWS_BINARY_DIST_DEPS += \
-    libbiosig
+    biosig
 endif
 
 BINARY_DIST_DEPS := \
