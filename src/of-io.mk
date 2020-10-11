@@ -3,8 +3,8 @@
 
 PKG             := of-io
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.6.1
-$(PKG)_CHECKSUM := d0fc05bcd1acc82fcad35c8fc755a997dfc04d8e
+$(PKG)_VERSION  := 2.6.2
+$(PKG)_CHECKSUM := 259f31af7ab25f9e689607c9cb4ac4f4d1c1ba1c
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := io-$($(PKG)_VERSION)
 $(PKG)_FILE     := io-$($(PKG)_VERSION).tar.gz
