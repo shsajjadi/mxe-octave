@@ -3,8 +3,8 @@
 
 PKG             := of-lssa
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.1.3
-$(PKG)_CHECKSUM := 3ad6f43d0dcdd4c38c33653f1f384056b942d1fe
+$(PKG)_VERSION  := 0.1.4
+$(PKG)_CHECKSUM := 99d10c9801375f55f69b918a9b78cefb06a7c4a6
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := lssa-$($(PKG)_VERSION)
 $(PKG)_FILE     := lssa-$($(PKG)_VERSION).tar.gz
