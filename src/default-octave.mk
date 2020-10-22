@@ -194,9 +194,6 @@ define $(PKG)_BUILD
 
     $(MAKE) -C '$(1)/.build/libgnu'
 
-    ## We want both of these install steps so that we install in the
-    ## location set by the configure --prefix option, and the other
-    ## in a directory tree that will have just Octave files.
     $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
 
     if [ "x$(MXE_SYSTEM)" == "xmingw" ]; then \
@@ -213,10 +210,7 @@ define $(PKG)_BUILD
         $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(3) install-pdf install-html; \
     fi
 
-    if [ $(MXE_SYSTEM) != msvc ]; then \
-        $(MAKE) -C '$(1)/.build' -j '$(JOBS)' DESTDIR=$(TOP_BUILD_DIR)/octave install; \
-    fi
-
     # create a file with latest installed octave rev in it
+    mkdir -p '$(TOP_BUILD_DIR)/octave'
     echo "$($(PKG)_VERSION)" > $(TOP_BUILD_DIR)/octave/octave-version
 endef
