@@ -51,15 +51,3 @@ diff -ur OpenBLAS-0.3.8.orig/driver/others/Makefile OpenBLAS-0.3.8/driver/others
  parameter.$(PSUFFIX) : parameter.c ../../param.h
  	$(CC) $(PFLAGS) -c $< -o $(@F)
  
-Only in OpenBLAS-0.3.8/driver/others: .Makefile.swp
-diff -ur OpenBLAS-0.3.8.orig/exports/gensymbol OpenBLAS-0.3.8/exports/gensymbol
---- OpenBLAS-0.3.8.orig/exports/gensymbol	2020-02-14 10:39:58.168130561 -0500
-+++ OpenBLAS-0.3.8/exports/gensymbol	2020-02-14 10:42:38.344240243 -0500
-@@ -38,7 +38,6 @@
-     zhbmv,zhemm,zhemv,zher2,zher2k,zher,zherk,zhpmv,zhpr2,
-     zhpr,zrotg,zscal,zswap,zsymm,zsyr2k,zsyrk,ztbmv,
-     ztbsv,ztpmv,ztpsv,ztrmm,ztrmv,ztrsm,ztrsv,
--    xerbla,
-     saxpby,daxpby,caxpby,zaxpby,
-     sgeadd,dgeadd,cgeadd,zgeadd,
-     somatcopy,
