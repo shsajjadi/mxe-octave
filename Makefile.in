@@ -527,7 +527,7 @@ endif
 OCTAVE_FORGE_BASE_URL := 'https://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
 ## Packages removed from list because build is broken:
 ## None.
-OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim general signal communications image io statistics control geometry windows linear-algebra sockets data-smoothing fuzzy-logic-toolkit quaternion fits tsa netcdf ltfat database instrument-control generate_html nurbs strings financial stk splines dataframe lssa queueing ga odepkg interval nan ocs mapping tisean video zeromq gsl optiminterp dicom sparsersb audio symbolic matgeom)
+OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim general signal communications image io statistics control geometry windows linear-algebra sockets data-smoothing fuzzy-logic-toolkit quaternion fits tsa netcdf ltfat database instrument-control generate_html nurbs strings financial stk splines dataframe lssa queueing ga interval nan ocs mapping tisean video zeromq gsl optiminterp dicom sparsersb audio symbolic matgeom)
 # get ALL deps for all of- packages, regardless of whether building the actual forge package in the installer
 OCTAVE_FORGE_DEPS:= $(sort $(foreach p,$(addprefix $(TOP_DIR)/src/,$(addsuffix .mk,$(OCTAVE_FORGE_PACKAGES))),$(shell $(SED) -n 's/.*_DEPS.*:=\(.*\)/\1/p' $p)))
 
