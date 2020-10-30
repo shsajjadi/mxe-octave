@@ -22,6 +22,7 @@ define $(PKG)_BUILD
     cd '$(1).build' && \
     cmake \
         $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         '$(1)'
     $(MAKE) -C '$(1).build' -j '$(JOBS)' DESTDIR='$(3)' install

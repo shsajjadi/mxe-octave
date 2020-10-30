@@ -21,6 +21,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
         mkdir '$(1)/build'
         cd '$(1)/build' && cmake ..  \
             $(CMAKE_CCACHE_FLAGS) \
+            $(CMAKE_BUILD_SHARED_OR_STATIC) \
             -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
             -DBUILD_TESTING='OFF' \
             -DINSTALL_OPENEXR_DOCS='OFF' \
@@ -37,6 +38,7 @@ else
         mkdir '$(1)/build'
         cd '$(1)/build' && cmake ..  \
             $(CMAKE_CCACHE_FLAGS) \
+            $(CMAKE_BUILD_SHARED_OR_STATIC) \
             -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
             -DBUILD_TESTING='OFF' \
             -DCMAKE_VERBOSE_MAKEFILE='ON' \

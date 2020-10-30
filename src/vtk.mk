@@ -23,6 +23,7 @@ define $(PKG)_BUILD
     mkdir '$(1)/native_build'
     cd '$(1)/native_build' && cmake \
         $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_NATIVE_TOOLCHAIN_FILE)' \
         -DBUILD_TESTING=FALSE \
         -DOPENGL_INCLUDE_DIR='$(1)/Utilities/ParseOGLExt/headers' \
@@ -40,6 +41,7 @@ define $(PKG)_BUILD
     cd '$(1)/cross_build' && cmake \
         -C '$(1)/TryRunResults.cmake'\
         $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'\
         -DBUILD_TESTING=FALSE\
         -DVTKCompileTools_DIR='$(1)/native_build'\

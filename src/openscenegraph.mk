@@ -27,6 +27,7 @@ define $(PKG)_BUILD
     mkdir -p '$(1)/.build'
     cd '$(1)/.build' && cmake .. \
         $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DCMAKE_CXX_FLAGS=-D__STDC_CONSTANT_MACROS \
         -DCMAKE_HAVE_PTHREAD_H=ON \

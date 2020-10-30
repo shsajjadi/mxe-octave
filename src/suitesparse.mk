@@ -58,7 +58,7 @@ $(PKG)_MAKE_OPTS = \
     BLAS="-lblas -lgfortran" \
     LAPACK='-llapack' \
     CHOLMOD_CONFIG='-DNPARTITION' \
-    CMAKE_OPTIONS='-DCMAKE_TOOLCHAIN_FILE="$(CMAKE_TOOLCHAIN_FILE)" $(CMAKE_CCACHE_FLAGS)'
+    CMAKE_OPTIONS='-DCMAKE_TOOLCHAIN_FILE="$(CMAKE_TOOLCHAIN_FILE)" $(CMAKE_CCACHE_FLAGS) $(CMAKE_BUILD_SHARED_OR_STATIC)'
 
 ifeq ($(MXE_WINDOWS_BUILD),yes)
     $(PKG)_MAKE_OPTS += \
@@ -82,6 +82,7 @@ define $(PKG)_BUILD
     cd $(1)/metis-5.1.0/$($(PKG)_METIS_BUILDDIR) && \
         cmake $(1)/metis-5.1.0 \
             $(CMAKE_CCACHE_FLAGS) \
+            $(CMAKE_BUILD_SHARED_OR_STATIC) \
             -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
             $($(PKG)_METIS_CONFIG_FLAGS)
     $(MAKE) -C '$(1)/metis-5.1.0/$($(PKG)_METIS_BUILDDIR)' metis -j '$(JOBS)'

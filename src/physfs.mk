@@ -19,6 +19,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && cmake . \
         $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DPHYSFS_BUILD_SHARED=FALSE \
         -DPHYSFS_INTERNAL_ZLIB=FALSE \
