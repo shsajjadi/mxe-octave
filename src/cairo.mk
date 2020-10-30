@@ -26,8 +26,10 @@ $(PKG)_EXTRA_CONFIGURE_OPTIONS :=
 ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
     ifeq ($(BUILD_STATIC),yes)
         $(PKG)_EXTRA_CONFIGURE_OPTIONS += CFLAGS="$(CFLAGS) -DCAIRO_WIN32_STATIC_BUILD"
+    else
+        $(PKG)_EXTRA_CONFIGURE_OPTIONS += CFLAGS="$(CFLAGS) -fstack-protector"
     endif
-    $(PKG)_EXTRA_CONFIGURE_OPTIONS += LIBS="-lssp -lmsimg32 -lgdi32"
+    $(PKG)_EXTRA_CONFIGURE_OPTIONS += LIBS="-lmsimg32 -lgdi32"
 endif
 
 # Configure script to detect float word endianness fails on MSVC.
