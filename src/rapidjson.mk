@@ -21,6 +21,7 @@ define $(PKG)_BUILD
     cd '$(1).build' && \
     cmake \
         $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DRAPIDJSON_BUILD_DOC=Off \
         -DRAPIDJSON_BUILD_EXAMPLES=Off \

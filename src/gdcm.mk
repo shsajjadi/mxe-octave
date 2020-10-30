@@ -30,6 +30,7 @@ ifeq ($(MXE_SYSTEM),msvc)
         cd '$(1)/../.build' && cmake \
             -G "NMake Makefiles" \
             $(CMAKE_CCACHE_FLAGS) \
+            $(CMAKE_BUILD_SHARED_OR_STATIC) \
             -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'  \
             -DGDCM_BUILD_SHARED_LIBS:BOOL=TRUE \
             -DGDCM_USE_SYSTEM_ZLIB:BOOL=TRUE \
@@ -49,6 +50,7 @@ else
         cd '$(1)/../.build' && cmake \
             $($(PKG)_CMAKE_OPTS) \
             $(CMAKE_CCACHE_FLAGS) \
+            $(CMAKE_BUILD_SHARED_OR_STATIC) \
             -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'  \
             -DGDCM_BUILD_SHARED_LIBS:BOOL=TRUE \
             -DGDCM_BUILD_TESTING:BOOL=FALSE \

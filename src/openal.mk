@@ -19,6 +19,7 @@ endef
 define $(PKG)_BUILD
     cd '$(1)/build' && cmake .. \
         $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DEXAMPLES=FALSE
     $(MAKE) -C '$(1)/build' -j '$(JOBS)' install

@@ -23,6 +23,7 @@ define $(PKG)_BUILD
         $($(PKG)_CMAKE_FLAGS) \
         -DBUILD_TESTING=no \
         $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         .
 

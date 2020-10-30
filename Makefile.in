@@ -163,18 +163,23 @@ $(shell mkdir -p $(HOST_PREFIX))
 ## update the HG-ID file in the build tree.
 $(shell $(TOP_DIR)/tools/mk-hg-id.sh "$(TOP_DIR)")
 
-# At least one package uses --with instead of --enable.  
+## At least one package uses --with instead of --enable.
+## Some cmake packages use BUILD_STATIC_LIBS and at least
+## one uses ONLY_SHARED_LIBS
 ifeq ($(BUILD_SHARED),yes)
   ifeq ($(BUILD_STATIC),yes)
     ENABLE_SHARED_OR_STATIC := --enable-shared --enable-static
     WITH_SHARED_OR_STATIC := --with-shared --with-static
+    CMAKE_BUILD_SHARED_OR_STATIC := -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=ON -DONLY_SHARED_LIBS=OFF
   else
     ENABLE_SHARED_OR_STATIC := --enable-shared --disable-static
     WITH_SHARED_OR_STATIC := --with-shared --without-static
+    CMAKE_BUILD_SHARED_OR_STATIC := -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DONLY_SHARED_LIBS=ON
   endif
 else
   ENABLE_SHARED_OR_STATIC := --disable-shared --enable-static
   WITH_SHARED_OR_STATIC := --without-shared --with-static
+  CMAKE_BUILD_SHARED_OR_STATIC := -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DONLY_SHARED_LIBS=OFF
 endif
 
 ifeq ($(ENABLE_DEP_DOCS),no)
@@ -1091,16 +1096,6 @@ define build-cmake-toolchain-file
      fi; \
      if [ $(MXE_SYSTEM) = msvc ]; then \
        echo 'set(MSVC 1)'; \
-     fi; \
-     if [ $(BUILD_SHARED) = yes ]; then \
-       echo 'set(BUILD_SHARED_LIBS ON)'; \
-     else \
-       echo 'set(BUILD_SHARED_LIBS OFF)'; \
-     fi; \
-     if [ $(BUILD_STATIC) = yes ]; then \
-       echo 'set(BUILD_STATIC_LIBS ON)'; \
-     else \
-       echo 'set(BUILD_STATIC_LIBS OFF)'; \
      fi; \
      echo 'set(CMAKE_BUILD_TYPE Release)'; \
      if [ $(MXE_SYSTEM) = msvc ]; then \

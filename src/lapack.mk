@@ -62,6 +62,7 @@ else
         mkdir '$(1)/build'
         cd '$(1)/build' && cmake \
             $(CMAKE_CCACHE_FLAGS) \
+            $(CMAKE_BUILD_SHARED_OR_STATIC) \
             -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
             -DCMAKE_AR='$(MXE_AR)' \
             -DCMAKE_RANLIB='$(MXE_RANLIB)' \

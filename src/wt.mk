@@ -35,6 +35,7 @@ define $(PKG)_BUILD
         -DPANGO_FT2_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l pangoft2`" \
         -DWT_CMAKE_FINDER_INSTALL_DIR='/lib/wt' \
         $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         '$(1)'
 

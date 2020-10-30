@@ -62,8 +62,8 @@ define $(PKG)_BUILD
     cd '$(1)/.build' && cmake .. -G "Unix Makefiles" \
         -DCMAKE_INSTALL_PREFIX=${prefix} \
         $($(PKG)_CMAKE_FLAGS) \
-        -DBUILD_SHARED_LIBS=$(if $(findstring yes,$(BUILD_SHARED)),ON,OFF) \
         $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DHDF5_INSTALL_BIN_DIR='$(HOST_BINDIR)' \
         -DHDF5_INSTALL_LIB_DIR='$(HOST_LIBDIR)' \

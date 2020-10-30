@@ -29,6 +29,7 @@ ifeq ($(MXE_SYSTEM),msvc)
         cd '$(1)' && cmake \
             $($(PKG)_CMAKE_FLAGS) \
             $(CMAKE_CCACHE_FLAGS) \
+            $(CMAKE_BUILD_SHARED_OR_STATIC) \
             -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
             -DPNG_NAMES=png16 \
             .
@@ -55,6 +56,7 @@ else
             cd '$(1)' && cmake \
                 $($(PKG)_CMAKE_FLAGS) \
                 $(CMAKE_CCACHE_FLAGS) \
+                $(CMAKE_BUILD_SHARED_OR_STATIC) \
                 -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
                 .
             $(MAKE) -C '$(1)' -j '$(JOBS)' VERBOSE=1 

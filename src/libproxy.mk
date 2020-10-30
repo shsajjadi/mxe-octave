@@ -24,6 +24,7 @@ define $(PKG)_BUILD
         -DWITH_KDE=no \
         -DBUILD_TESTING=no \
         $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         .
 
