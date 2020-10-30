@@ -62,12 +62,6 @@ else
             -DLLVM_CCACHE_BUILD=On
     endif
 
-## Unsupported for Windows targets?  Without these options, the Windows
-## build still creates an LLVM.dll file, but also creates .a files for
-## the components.
-##   -DLLVM_BUILD_LLVM_DYLIB=On
-##   -DLLVM_LINK_LLVM_DYLIB=On
-
     define $(PKG)_BUILD
         mkdir '$(1)/.build'
         cd '$(1)/.build' && 'cmake' .. \
@@ -75,6 +69,8 @@ else
             $(CMAKE_CCACHE_FLAGS) \
             -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
             -DLLVM_BUILD_TOOLS=OFF \
+            -DLLVM_BUILD_LLVM_DYLIB=On \
+            -DLLVM_LINK_LLVM_DYLIB=On \
             -DLLVM_VERSION_SUFFIX= \
             $($(PKG)_SYSDEP_CMAKE_OPTIONS) \
             -DCROSS_TOOLCHAIN_FLAGS_NATIVE="-DCMAKE_TOOLCHAIN_FILE='$(CMAKE_NATIVE_TOOLCHAIN_FILE)'" \
@@ -104,11 +100,9 @@ else
         # create symlink for shared library so that llvm-config can find it
         cd '$(3)/$(HOST_BINDIR)' && ln -s LLVM.dll LLVM-$(word 1,$(subst ., ,$($(PKG)_VERSION))).$(word 2,$(subst ., ,$($(PKG)_VERSION))).dll
 
-        # install native llvm-config in HOST_BINDIR because it won't
-        # find the libs otherwise
-        # FIXME: Some of the configuration flags are hard coded into
-        # llvm-config with a patch. If the configuration flags are changed,
-        # the patch might have to be adapted.
+        # install native llvm-config in HOST_BINDIR because it won't find the libs otherwise
+        # FIXME: Some of the configuration flags are hard coded into llvm-config with a patch.
+        # If the configuration flags are changed, the patch might have to be adapted.
         $(INSTALL) -d '$(HOST_BINDIR)'
         $(INSTALL) -m755 '$(1)/.build/NATIVE/bin/llvm-config' '$(HOST_BINDIR)/$(MXE_TOOL_PREFIX)llvm-config'
     endef
