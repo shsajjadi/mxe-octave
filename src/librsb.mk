@@ -20,6 +20,10 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+    # This is a work-around for a bug in version 1.2.0.9.
+    # Remove the following command once this is fixed upstream.
+    $(SED) -i 's/.A.=.rsb__real.*\([,;]\)/1\1/g' $(1)/rsb_eps.c
+
     cd '$(1)' && autoreconf -fi && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
