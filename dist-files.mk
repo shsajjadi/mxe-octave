@@ -517,8 +517,6 @@ SRC_FILES_1 := \
   of-quaternion.mk \
   of-queueing.mk \
   of-signal.mk \
-  of-sockets-1-cross-fixes.patch \
-  of-sockets-2-deprecated.patch \
   of-sockets.mk \
   of-sparsersb.mk \
   of-specfun-1-deprecated.patch \
