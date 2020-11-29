@@ -63,18 +63,6 @@ index 5ebcdb99b5..2553cb5cf6 100644
 -- 
 2.25.1
 
-diff -ur qtbase-everywhere-src-5.11.0.orig/mkspecs/common/gcc-base.conf qtbase-everywhere-src-5.11.0/mkspecs/common/gcc-base.conf
---- qtbase-everywhere-src-5.11.0.orig/mkspecs/common/gcc-base.conf     2018-06-12 07:47:54.488874295 -0400
-+++ qtbase-everywhere-src-5.11.0/mkspecs/common/gcc-base.conf  2018-06-12 07:48:46.550096817 -0400
-@@ -46,7 +46,7 @@
- QMAKE_CFLAGS_SHLIB         += $$QMAKE_CFLAGS_PIC
- QMAKE_CFLAGS_STATIC_LIB    += $$QMAKE_CFLAGS_PIC
- QMAKE_CFLAGS_APP           += $$QMAKE_CFLAGS_PIC
--QMAKE_CFLAGS_ISYSTEM        = -isystem
-+QMAKE_CFLAGS_ISYSTEM        = -I
- QMAKE_CFLAGS_YACC          += -Wno-unused -Wno-parentheses
- QMAKE_CFLAGS_HIDESYMS      += -fvisibility=hidden
- QMAKE_CFLAGS_EXCEPTIONS_OFF += -fno-exceptions
 diff -ur qtbase-everywhere-src-5.13.0.orig/src/plugins/platforms/minimal/qminimalintegration.cpp qtbase-everywhere-src-5.13.0/src/plugins/platforms/minimal/qminimalintegration.cpp
 --- qtbase-everywhere-src-5.13.0.orig/src/plugins/platforms/minimal/qminimalintegration.cpp    2019-06-21 13:24:11.167038403 -0400
 +++ qtbase-everywhere-src-5.13.0/src/plugins/platforms/minimal/qminimalintegration.cpp 2019-06-21 13:31:33.734199370 -0400
