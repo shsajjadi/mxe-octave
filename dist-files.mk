@@ -142,6 +142,7 @@ SRC_FILES_1 := \
   glew-test.c \
   glew.mk \
   glib-1-fixes.patch \
+  glib-2-fixes.patch \
   glib.mk \
   glibmm.mk \
   glpk-1-fixes.patch \
