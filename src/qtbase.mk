@@ -56,8 +56,9 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
   ## there are a number of other places that will need to be adjusted.
   ## --jwe
   $(PKG)_CONFIGURE_PREFIX_OPTION := -prefix '$(HOST_PREFIX)/qt5'
-  $(PKG)_CONFIGURE_OPTS += -no-xcb
+  $(PKG)_CONFIGURE_OPTS += -no-xcb -opengl dynamic
 else
+  $(PKG)_CONFIGURE_OPTS += -opengl desktop
   $(PKG)_CONFIGURE_PREFIX_OPTION := -prefix '$(HOST_PREFIX)'
   $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)/freetype2'
 ifeq ($(USE_SYSTEM_OPENGL),no)
@@ -124,7 +125,6 @@ define $(PKG)_BUILD
             -shared \
             $($(PKG)_CONFIGURE_PREFIX_OPTION) \
             -hostprefix '$(BUILD_TOOLS_PREFIX)' \
-            -opengl desktop \
             -no-glib \
             -accessibility \
             -nomake examples \
