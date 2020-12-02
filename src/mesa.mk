@@ -52,6 +52,12 @@ define $(PKG)_BUILD
       -Dshared-llvm=true
 
   cd '$(1)/.build' && DESTDIR=$(3) ninja -j $(JOBS) install
+
+  #  install headers
+  for i in EGL GLES GLES2 GLES3 KHR; do \
+      $(INSTALL) -d "$(HOST_INCDIR)/$$i"; \
+      $(INSTALL) -m 644 "$(1)/include/$$i/"* "$(HOST_INCDIR)/$$i/"; \
+  done
   
   # opengl32.dll.a shadows libopengl32.a from mingw. They export slightly
   # different symbols which causes problems for some packages. So don't install
