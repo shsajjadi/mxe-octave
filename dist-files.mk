@@ -319,6 +319,7 @@ SRC_FILES_1 := \
   libxml2.mk \
   libxshmfence.mk \
   libxslt.mk \
+  llvm-1-llvm-config.patch \
   llvm.mk \
   log4cxx-1-gcc.4.4.patch \
   log4cxx-2-pkgconfig.patch \
@@ -344,7 +345,6 @@ SRC_FILES_1 := \
   mingw-lapack-1-xerbla.patch \
   mingw-libgcrypt-1-fixes.patch \
   mingw-libmng-1-noundefines.patch \
-  mingw-llvm-1-config.patch \
   mingw-openblas-1-xerbla.patch \
   mingw-portaudio-1-pkgconfig.patch \
   mingw-s2tc-1-fixes.patch \
