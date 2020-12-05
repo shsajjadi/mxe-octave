@@ -1,0 +1,175 @@
+diff -ur ITSOL_2-orig/SRC/PQ.c ITSOL_2/SRC/PQ.c
+--- ITSOL_2-orig/SRC/PQ.c	2012-05-15 22:20:43 -0400
++++ ITSOL_2/SRC/PQ.c	2013-06-27 11:13:49 -0400
+@@ -126,6 +126,10 @@
+ |-----end-of-indsetPQ--------------------------------------------------
+ |--------------------------------------------------------------------*/
+ 
++#ifndef _MSC_VER
++/* These functions are already defined in indsetC.c. Avoid duplicate
++   symbols at link time. */
++
+ int add2is(int *last, int nod, int *iord, int *riord)
+ {
+ /*----------------------------------------------------------------------
+@@ -336,6 +340,8 @@
+ |---- end of weightsC -------------------------------------------------
+ |--------------------------------------------------------------------*/
+ 
++#endif /* _MSC_VER */
++
+ int preSel(csptr mat, int *icor, int *jcor, int job, double tol, int *count) 
+ {
+ /*---------------------------------------------------------------------
+diff -ur ITSOL_2-orig/SRC/iluk.c ITSOL_2/SRC/iluk.c
+--- ITSOL_2-orig/SRC/iluk.c	2012-05-15 22:20:43 -0400
++++ ITSOL_2/SRC/iluk.c	2013-06-27 11:16:21 -0400
+@@ -13,7 +13,7 @@
+ #endif
+ 
+ /*--------------------protos */
+-int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp ); 
++static int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp ); 
+ /*--------------------end protos */
+ 
+ int ilukC( int lofM, csptr csmat, iluptr lu, FILE *fp )
+@@ -149,7 +149,7 @@
+     return 0;
+ }
+ 
+-int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp )
++static int lofC( int lofM, csptr csmat, iluptr lu, FILE *fp )
+ {
+ /*--------------------------------------------------------------------
+  * symbolic ilu factorization to calculate structure of ilu matrix
+diff -ur ITSOL_2-orig/SRC/misc.c ITSOL_2/SRC/misc.c
+--- ITSOL_2-orig/SRC/misc.c	2012-05-15 22:20:43 -0400
++++ ITSOL_2/SRC/misc.c	2013-06-27 10:54:30 -0400
+@@ -540,8 +540,8 @@
+     -------------------- matlab style */
+   int n, i, k, nzi;
+   int *row;
+-  n = A->n;
+   double *rowm;
++  n = A->n;
+   for (i=0; i<n; i++) {
+     nzi = A->nzcount[i];
+     row = A->ja[i];
+diff -ur ITSOL_2-orig/SRC/sets.c ITSOL_2/SRC/sets.c
+--- ITSOL_2-orig/SRC/sets.c	2012-05-15 23:38:44 -0400
++++ ITSOL_2/SRC/sets.c	2013-06-27 10:45:33 -0400
+@@ -1001,12 +1001,12 @@
+    job == 1, input coo in 1-indexing
+ */
+ {
++  int i, *ir, *jc;
++
+   *a = (double *)Malloc(nnz*sizeof(double), "coocsc");
+   *ja = (int *)Malloc(nnz*sizeof(int), "coocsc");
+   *ia = (int *)Malloc((n+1)*sizeof(int), "coocsc");
+ 
+-  int i, *ir, *jc;
+-
+   if (job == 0) {
+     ir = (int *)Malloc(nnz*sizeof(int), "coocsc");
+     jc = (int *)Malloc(nnz*sizeof(int), "coocsc");
+diff -ur ITSOL_2-orig/SRC/systimer.c ITSOL_2/SRC/systimer.c
+--- ITSOL_2-orig/SRC/systimer.c	2012-05-15 22:20:43 -0400
++++ ITSOL_2/SRC/systimer.c	2013-06-27 10:53:40 -0400
+@@ -25,9 +25,11 @@
+ #else
+ 
+ #include <sys/types.h>
++#ifndef _MSC_VER
+ #include <sys/times.h>
+-#include <time.h>
+ #include <sys/time.h>
++#endif
++#include <time.h>
+ 
+ #ifndef CLK_TCK
+ #define CLK_TCK 100
+@@ -37,6 +39,59 @@
+ #define CLOCKS_PER_SEC 1000000
+ #endif 
+ 
++#ifdef _MSC_VER
++
++/* This implementation is copied from gnulib, licensed under GPLv2+. */
++
++#include <windows.h>
++#include <math.h>
++
++struct tms {
++    clock_t tms_utime;  /* user time */
++    clock_t tms_stime;  /* system time */
++    clock_t tms_cutime; /* user time of children */
++    clock_t tms_cstime; /* system time of children */
++};
++
++static clock_t
++filetime2clock (FILETIME time)
++{
++  float f;
++
++  /* We have a 64-bit value, in the form of two DWORDS aka unsigned
++     int, counting the number of 100-nanosecond intervals.  We need to
++     convert these to clock ticks.  Older POSIX uses CLK_TCK to
++     indicate the number of clock ticks per second while modern POSIX
++     uses sysconf(_SC_CLK_TCK).  Mingw32 does not appear to have
++     sysconf(_SC_CLK_TCK), but appears to have CLK_TCK = 1000 so we
++     use it.  Note that CLOCKS_PER_SEC constant does not apply here,
++     it is for use with the clock function.  */
++
++  f = (unsigned long long) time.dwHighDateTime << 32;
++  f += time.dwLowDateTime;
++  f = f * CLK_TCK / 10000000;
++  return (clock_t) round (f);
++}
++
++static clock_t
++times (struct tms * buffer)
++{
++  FILETIME creation_time, exit_time, kernel_time, user_time;
++
++  if (GetProcessTimes (GetCurrentProcess (), &creation_time, &exit_time,
++                       &kernel_time, &user_time) == 0)
++    return (clock_t) -1;
++
++  buffer->tms_utime = filetime2clock (user_time);
++  buffer->tms_stime = filetime2clock (kernel_time);
++  buffer->tms_cutime = 0;
++  buffer->tms_cstime = 0;
++
++  return filetime2clock (creation_time);
++}
++
++#endif
++
+ double sys_timer_CLOCK() {
+   clock_t tmp;
+   tmp = clock();
+diff -ur ITSOL_2-orig/SRC/vbiluk.c ITSOL_2/SRC/vbiluk.c
+--- ITSOL_2-orig/SRC/vbiluk.c	2012-05-15 22:20:43 -0400
++++ ITSOL_2/SRC/vbiluk.c	2013-06-27 11:15:56 -0400
+@@ -24,10 +24,9 @@
+ int setupVBMat(vbsptr vbmat, int n, int *nB);
+ int mallocVBRow(vbiluptr lu, int nrow); 
+ void zrmC(int m, int n, BData data); 
+-int lofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp ); 
++static int lofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp ); 
+ int setupVBILU(vbiluptr lu, int n, int *bsz);
+ void copyBData(int m, int n, BData dst, BData src, int isig);
+-int lofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp ); 
+ /*-------------------- END of protos */
+ 
+ 
+@@ -188,7 +187,7 @@
+     return 0;
+ }
+ 
+-int lofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
++static int lofC( int lofM, vbsptr vbmat, vbiluptr lu, FILE *fp )
+ {
+ /*--------------------------------------------------------------------
+  * symbolic ilu factorization to calculate structure of ilu matrix

@@ -1,0 +1,20 @@
+--- a/src/Mshichmanhodgesmosfet.cc	2015-08-17 19:02:20.000000000 +0200
++++ a/src/Mshichmanhodgesmosfet.cc	2018-12-24 15:28:45.472849403 +0100
+@@ -319,7 +319,7 @@
+   if (args(1).length() == args(2).length())
+     {
+       parameters     = args(1).column_vector_value();
+-      parameternames = args(2).all_strings();
++      parameternames = args(2).string_vector_value();
+     }
+   else
+     error("Mshichmanhodgesmosfet: parameters and parameternames are expected to have the same length.\n");
+@@ -329,7 +329,7 @@
+   else
+     error("Mshichmanhodgesmosfet: five external values expected.\n");
+   // Internal variables
+-  if (args(4).is_empty())
++  if (args(4).isempty())
+     {}
+   else if (args(4).length() == 5)
+     intvar = args(4).column_vector_value();

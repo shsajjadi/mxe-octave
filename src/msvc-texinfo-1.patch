@@ -1,0 +1,288 @@
+diff -urN texinfo-4.13-orig/configure texinfo-4.13-new/configure
+--- texinfo-4.13-orig/configure	2008-09-18 19:46:26 +0100
++++ texinfo-4.13-new/configure	2010-11-14 14:14:47 +0000
+@@ -6385,8 +6385,8 @@
+ 
+ _ACEOF
+ 	    	    	    	    gl_cv_next_sys_time_h='"'`(eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+-	       sed -n '\#/sys/time.h#{
+-		 s#.*"\(.*/sys/time.h\)".*#\1#
++	       sed -n '\#[/\\]sys[/\\]time.h#{
++		 s#.*"\(.*[/\\]sys[/\\]time.h\)".*#\1#
+ 		 s#^/[^/]#//&#
+ 		 p
+ 		 q
+@@ -8780,8 +8780,8 @@
+ 
+ _ACEOF
+ 	    	    	    	    gl_cv_next_string_h='"'`(eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+-	       sed -n '\#/string.h#{
+-		 s#.*"\(.*/string.h\)".*#\1#
++	       sed -n '\#[/\\]string.h#{
++		 s#.*"\(.*[/\\]string.h\)".*#\1#
+ 		 s#^/[^/]#//&#
+ 		 p
+ 		 q
+@@ -12498,8 +12498,8 @@
+ 
+ _ACEOF
+ 	    	    	    	    gl_cv_next_stdint_h='"'`(eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+-	       sed -n '\#/stdint.h#{
+-		 s#.*"\(.*/stdint.h\)".*#\1#
++	       sed -n '\#[/\\]stdint.h#{
++		 s#.*"\(.*[/\\]stdint.h\)".*#\1#
+ 		 s#^/[^/]#//&#
+ 		 p
+ 		 q
+@@ -13552,8 +13552,8 @@
+ 
+ _ACEOF
+ 	    	    	    	    gl_cv_next_stdlib_h='"'`(eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+-	       sed -n '\#/stdlib.h#{
+-		 s#.*"\(.*/stdlib.h\)".*#\1#
++	       sed -n '\#[/\\]stdlib.h#{
++		 s#.*"\(.*[/\\]stdlib.h\)".*#\1#
+ 		 s#^/[^/]#//&#
+ 		 p
+ 		 q
+@@ -14255,8 +14255,8 @@
+ 
+ _ACEOF
+ 	    	    	    	    gl_cv_next_sys_stat_h='"'`(eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+-	       sed -n '\#/sys/stat.h#{
+-		 s#.*"\(.*/sys/stat.h\)".*#\1#
++	       sed -n '\#[/\\]sys[/\\]stat.h#{
++		 s#.*"\(.*[/\\]sys[/\\]stat.h\)".*#\1#
+ 		 s#^/[^/]#//&#
+ 		 p
+ 		 q
+@@ -14524,8 +14524,8 @@
+ 
+ _ACEOF
+ 	    	    	    	    gl_cv_next_unistd_h='"'`(eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+-	       sed -n '\#/unistd.h#{
+-		 s#.*"\(.*/unistd.h\)".*#\1#
++	       sed -n '\#[/\\]unistd.h#{
++		 s#.*"\(.*[/\\]unistd.h\)".*#\1#
+ 		 s#^/[^/]#//&#
+ 		 p
+ 		 q
+@@ -14841,8 +14841,8 @@
+ 
+ _ACEOF
+ 	    	    	    	    gl_cv_next_wchar_h='"'`(eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+-	       sed -n '\#/wchar.h#{
+-		 s#.*"\(.*/wchar.h\)".*#\1#
++	       sed -n '\#[/\\]wchar.h#{
++		 s#.*"\(.*[/\\]wchar.h\)".*#\1#
+ 		 s#^/[^/]#//&#
+ 		 p
+ 		 q
+@@ -15037,8 +15037,8 @@
+ 
+ _ACEOF
+ 	    	    	    	    gl_cv_next_wctype_h='"'`(eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+-	       sed -n '\#/wctype.h#{
+-		 s#.*"\(.*/wctype.h\)".*#\1#
++	       sed -n '\#[/\\]wctype.h#{
++		 s#.*"\(.*[/\\]wctype.h\)".*#\1#
+ 		 s#^/[^/]#//&#
+ 		 p
+ 		 q
+@@ -19026,8 +19026,8 @@
+ /* end confdefs.h.  */
+ #include <libintl.h>
+ $gt_revision_test_code
+-extern int _nl_msg_cat_cntr;
+-extern int *_nl_domain_bindings;
++extern  __declspec(dllimport) int _nl_msg_cat_cntr;
++extern  __declspec(dllimport) int *_nl_domain_bindings;
+ int
+ main ()
+ {
+@@ -19834,7 +19834,7 @@
+ /* end confdefs.h.  */
+ #include <libintl.h>
+ $gt_revision_test_code
+-extern int _nl_msg_cat_cntr;
++extern  __declspec(dllimport) int _nl_msg_cat_cntr;
+ extern
+ #ifdef __cplusplus
+ "C"
+@@ -19891,7 +19891,7 @@
+ /* end confdefs.h.  */
+ #include <libintl.h>
+ $gt_revision_test_code
+-extern int _nl_msg_cat_cntr;
++extern  __declspec(dllimport) int _nl_msg_cat_cntr;
+ extern
+ #ifdef __cplusplus
+ "C"
+diff -urN texinfo-4.13-orig/gnulib/lib/gettimeofday.c texinfo-4.13-new/gnulib/lib/gettimeofday.c
+--- texinfo-4.13-orig/gnulib/lib/gettimeofday.c	2007-12-25 23:57:18 +0000
++++ texinfo-4.13-new/gnulib/lib/gettimeofday.c	2010-11-14 14:39:06 +0000
+@@ -21,6 +21,11 @@
+ 
+ #include <config.h>
+ 
++#ifdef _MSC_VER
++#undef localtime
++#undef gmtime
++#endif
++
+ /* Specification.  */
+ #include <sys/time.h>
+ 
+diff -urN texinfo-4.13-orig/gnulib/lib/memcpy.c texinfo-4.13-new/gnulib/lib/memcpy.c
+--- texinfo-4.13-orig/gnulib/lib/memcpy.c	2007-12-25 23:57:18 +0000
++++ texinfo-4.13-new/gnulib/lib/memcpy.c	2010-11-14 14:39:42 +0000
+@@ -17,6 +17,8 @@
+ 
+ #include <config.h>
+ 
++#ifndef _MSC_VER
++
+ #include <stddef.h>
+ 
+ /* Copy LEN bytes starting at SRCADDR to DESTADDR.  Result undefined
+@@ -33,3 +35,5 @@
+     *dest++ = *src++;
+   return destaddr;
+ }
++
++#endif
+diff -urN texinfo-4.13-orig/gnulib/lib/sys_stat.in.h texinfo-4.13-new/gnulib/lib/sys_stat.in.h
+--- texinfo-4.13-orig/gnulib/lib/sys_stat.in.h	2008-05-22 13:11:32 +0100
++++ texinfo-4.13-new/gnulib/lib/sys_stat.in.h	2010-11-14 14:43:13 +0000
+@@ -277,6 +277,10 @@
+    alias mkdir), only in the nonstandard <io.h>, which is included above.  */
+ # if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
+ 
++#ifdef _MSC_VER
++typedef int mode_t;
++#endif
++
+ static inline int
+ rpl_mkdir (char const *name, mode_t mode)
+ {
+diff -urN texinfo-4.13-orig/gnulib/lib/unistd.in.h texinfo-4.13-new/gnulib/lib/unistd.in.h
+--- texinfo-4.13-orig/gnulib/lib/unistd.in.h	2008-02-27 18:32:21 +0000
++++ texinfo-4.13-new/gnulib/lib/unistd.in.h	2010-11-14 14:58:39 +0000
+@@ -94,7 +94,11 @@
+ #   include <crt_externs.h>
+ #   define environ (*_NSGetEnviron ())
+ #  else
++#ifdef _MSC_VER
++extern __declspec(dllimport) char **environ;
++#else
+ extern char **environ;
++#endif
+ #  endif
+ # endif
+ #elif defined GNULIB_POSIXCHECK
+diff -urN texinfo-4.13-orig/makeinfo/Makefile.in texinfo-4.13-new/makeinfo/Makefile.in
+--- texinfo-4.13-orig/makeinfo/Makefile.in	2008-09-18 19:46:24 +0100
++++ texinfo-4.13-new/makeinfo/Makefile.in	2010-11-14 11:47:16 +0000
+@@ -127,7 +127,7 @@
+ 	index.$(OBJEXT) insertion.$(OBJEXT) lang.$(OBJEXT) \
+ 	macro.$(OBJEXT) makeinfo.$(OBJEXT) multi.$(OBJEXT) \
+ 	node.$(OBJEXT) sectioning.$(OBJEXT) toc.$(OBJEXT) \
+-	xml.$(OBJEXT) xref.$(OBJEXT)
++	xml.$(OBJEXT) xref.$(OBJEXT) makeinfo.res
+ makeinfo_OBJECTS = $(am_makeinfo_OBJECTS)
+ makeinfo_LDADD = $(LDADD)
+ am__DEPENDENCIES_1 =
+@@ -514,6 +514,9 @@
+ 	@rm -f makeinfo$(EXEEXT)
+ 	$(LINK) $(makeinfo_OBJECTS) $(makeinfo_LDADD) $(LIBS)
+ 
++makeinfo.res: makeinfo.rc
++	rc -fo $@ $<
++
+ mostlyclean-compile:
+ 	-rm -f *.$(OBJEXT)
+ 
+diff -urN texinfo-4.13-orig/makeinfo/makeinfo.c texinfo-4.13-new/makeinfo/makeinfo.c
+--- texinfo-4.13-orig/makeinfo/makeinfo.c	2008-09-18 19:32:00 +0100
++++ texinfo-4.13-new/makeinfo/makeinfo.c	2010-11-14 11:53:57 +0000
+@@ -563,7 +563,9 @@
+      of the argument to @multicolumn.  */
+   setlocale (LC_TIME, "");
+ #ifdef LC_MESSAGES /* ultrix, djgpp 2.04 */
++# ifndef _MSC_VER
+   setlocale (LC_MESSAGES, "");
++# endif
+ #endif
+   setlocale (LC_CTYPE, "");
+   setlocale (LC_COLLATE, "");
+diff -urN texinfo-4.13-orig/makeinfo/makeinfo.rc texinfo-4.13-new/makeinfo/makeinfo.rc
+--- texinfo-4.13-orig/makeinfo/makeinfo.rc	1970-01-01 00:00:00 +0000
++++ texinfo-4.13-new/makeinfo/makeinfo.rc	2010-11-14 11:50:37 +0000
+@@ -0,0 +1,30 @@
++#include <windows.h>
++
++VS_VERSION_INFO VERSIONINFO
++FILEVERSION	4, 13, 1, 0
++PRODUCTVERSION	4, 13, 1, 0
++FILEFLAGSMASK	0x3fL
++FILEFLAGS 0
++FILEOS VOS_NT_WINDOWS32
++FILETYPE VFT_APP
++FILESUBTYPE VFT2_UNKNOWN
++BEGIN
++	BLOCK	"VarFileInfo"
++	BEGIN
++		VALUE	"Translation",	0x409,	1200
++	END
++	BLOCK	"StringFileInfo"
++	BEGIN
++		BLOCK "040904b0"
++		BEGIN
++			VALUE	"CompanyName",	"GNU <www.gnu.org>\0"
++			VALUE	"FileDescription",	"TeXInfo - Documentation system\0"
++			VALUE	"FileVersion",	"4.13a\0"
++			VALUE	"InternalName",	"Makeinfo\0"
++			VALUE	"LegalCopyright",	"Copyright 2006 Free Software Foundation\0"
++			VALUE	"OriginalFilename",	"makeinfo.exe\0"
++			VALUE	"ProductName",	"TeXInfo\0"
++			VALUE	"ProductVersion",	"4.13a\0"
++		END
++	END
++END
+diff -urN texinfo-4.13-orig/system.h texinfo-4.13-new/system.h
+--- texinfo-4.13-orig/system.h	2008-07-26 23:54:54 +0100
++++ texinfo-4.13-new/system.h	2010-11-14 14:47:31 +0000
+@@ -132,6 +132,10 @@
+ # endif
+ #endif /* O_BINARY */
+ 
++#ifdef _MSC_VER
++# define __STDC__ 1
++#endif
++
+ /* We'd like to take advantage of _doprnt if it's around, a la error.c,
+    but then we'd have no VA_SPRINTF.  */
+ #if HAVE_VPRINTF
+@@ -238,8 +242,13 @@
+ 
+ /* For convenience.  */
+ #define STREQ(s1,s2) (strcmp (s1, s2) == 0)
++#ifdef _MSC_VER
++#define STRCASEEQ(s1,s2) (stricmp (s1, s2) == 0)
++#define STRNCASEEQ(s1,s2,n) (strnicmp (s1, s2, n) == 0)
++#else
+ #define STRCASEEQ(s1,s2) (strcasecmp (s1, s2) == 0)
+ #define STRNCASEEQ(s1,s2,n) (strncasecmp (s1, s2, n) == 0)
++#endif
+ 
+ /* We don't need anything fancy.  If we did need something fancy, gnulib
+    has it.  */
+@@ -257,4 +266,8 @@
+ #include "dmalloc.h"
+ #endif
+ 
++#ifndef R_OK
++#define R_OK 4
++#endif
++
+ #endif /* TEXINFO_SYSTEM_H */

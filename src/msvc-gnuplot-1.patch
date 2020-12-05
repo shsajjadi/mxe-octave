@@ -1,0 +1,180 @@
+diff -ur gnuplot-4.6.1-orig/config/config.nt gnuplot-4.6.1/config/config.nt
+--- gnuplot-4.6.1-orig/config/config.nt	2011-12-28 17:00:37 -0500
++++ gnuplot-4.6.1/config/config.nt	2013-07-02 10:46:26 -0400
+@@ -76,7 +76,7 @@
+ /* #undef HAVE_DECL_SIGNGAM */
+ 
+ /* Define to 1 if you have the <dirent.h> header file. */
+-/* #undef HAVE_DIRENT_H */
++#define HAVE_DIRENT_H 1
+ 
+ /* Define to 1 if you have the `doprnt' function. */
+ /* #undef HAVE_DOPRNT */
+@@ -138,14 +138,14 @@
+ /* #undef HAVE_GTK28 */
+ 
+ /* define if you have libiconv and iconv.h */
+-/* #undef HAVE_ICONV */
++#define HAVE_ICONV 1
+ /* Don't change it here -- this define is set in config/msvc/Makefile. */
+ 
+ /* Define to 1 if you have the `index' function. */
+ /* #undef HAVE_INDEX */
+ 
+ /* Define to 1 if you have the <inttypes.h> header file. */
+-/* #undef HAVE_INTTYPES_H */
++#define HAVE_INTTYPES_H 1
+ 
+ /* Define if you use have kpsexpand (TeX). */
+ /* #undef HAVE_KPSEXPAND */
+@@ -183,7 +183,7 @@
+ /* #undef HAVE_LIBREADLINE */
+ 
+ /* Define if you have zlib. */
+-/* #undef HAVE_LIBZ */
++#define HAVE_LIBZ 1
+ /* Don't change it here -- this define is set in config/msvc/Makefile. */
+ 
+ /* Define to 1 if you have the <limits.h> header file. */
+@@ -278,7 +278,7 @@
+ /* #undef HAVE_STDBOOL_H */
+ 
+ /* Define to 1 if you have the <stdint.h> header file. */
+-/* #undef HAVE_STDINT_H */
++#define HAVE_STDINT_H 1
+ 
+ /* Define to 1 if you have the <stdlib.h> header file. */
+ #define HAVE_STDLIB_H 1
+@@ -592,7 +592,7 @@
+ #define GP_MATHERR _matherr
+ #define snprintf _snprintf
+ /*#define vsnprintf _vsnprintf*/
+-#define isnan _isnan
++/*#define isnan _isnan*/
+ #define ftruncate _chsize
+ 
+ #ifdef PIPES
+diff -ur gnuplot-4.6.1-orig/config/msvc/Makefile gnuplot-4.6.1/config/msvc/Makefile
+--- gnuplot-4.6.1-orig/config/msvc/Makefile	2012-09-17 02:07:32 -0400
++++ gnuplot-4.6.1/config/msvc/Makefile	2013-07-02 10:46:35 -0400
+@@ -41,7 +41,7 @@
+ 
+ # Compilation options, disable by setting to zero
+ # Is libgd available? (required by terminal png/jpeg/gif)?
+-GDLIB = 1
++GDLIB = 0
+ # Is pdflib available? (required by terminal pdf)
+ PDFLIB = 0
+ # Build wxt terminal? (required GTK, wxWidgets, cairo and pango libraries)
+@@ -49,7 +49,7 @@
+ #     http://wiki.wxwidgets.org/Visual_Studio_2008_%289.0%29
+ WXT = 0
+ # Build the lua/tikz terminal?
+-LUA = 1
++LUA = 0
+ # Choose help format:
+ # for HTML help (.chm) this should be 1, for (.hlp) it should be 0
+ HTML_HELP = 1
+@@ -65,16 +65,16 @@
+ TOP = ..\\..
+ 
+ # directory for PostScript prolog and associated files
+-GNUPLOT_PS_DIR = share\\PostScript
++GNUPLOT_PS_DIR = share\\gnuplot\\PostScript
+ 
+ # Similarly for javascript files for the canvas terminal:
+-GNUPLOT_JS_DIR = share\\js
++GNUPLOT_JS_DIR = share\\gnuplot\\js
+ 
+ # Similarly for scripts used by the lua terminal
+-GNUPLOT_LUA_DIR = share\\lua
++GNUPLOT_LUA_DIR = share\\gnuplot\\lua
+ 
+ # gnuplot will look for gnuplotrc here:
+-GNUPLOT_SHARE_DIR = share
++GNUPLOT_SHARE_DIR = share\\gnuplot
+ 
+ #CC = cl
+ LD = link
+@@ -86,7 +86,7 @@
+ # /O2 mans optimize for speed
+ # /Zi means prepare for codeview
+ # /MD means include multi-thread support (DLL)
+-CBASEFLAGS = /EHsc /GR /MD /O2 /nologo
++CBASEFLAGS = /EHsc /GR /MD /O2 /nologo /I$(DESTDIR:\=\\)\\include
+ CFLAGS = $(CBASEFLAGS) /I. /I$(TOP) /I$(S) /D_Windows /DWIN32 /DHAVE_CONFIG_H /D__MSC__ /DHELPFILE=\"$(HELPFILE)\" $(OPTIONS)
+ CFLAGS = $(CFLAGS) /DGNUPLOT_SHARE_DIR=\"$(GNUPLOT_SHARE_DIR)\"
+ CONSOLE_CFLAGS = /DWGP_CONSOLE /DCONSOLE_SWITCH_CP /DPIPES
+@@ -198,6 +198,7 @@
+ 
+ wgnuplot.exe: $(OBJS) $(WINOBJS) wgnuplot.res linkopt-w.msw texticon.ico grpicon.ico
+ 	$(LD) /subsystem:windows $(LDFLAGS) /map:wgnuplot.map /out:$@ @linkopt-w.msw
++	mt -outputresource:$@;1 -manifest $@.manifest
+ !IF "$(GDLIB)" == "1"
+ 	copy $(GDDIR)\bin\*.dll .
+ !ENDIF
+@@ -207,6 +208,7 @@
+ 
+ gnuplot.exe: $(ALL_CONSOLE_OBJS) wgnuplot.res linkopt-c.msw texticon.ico grpicon.ico
+ 	$(LD) /subsystem:console $(LDFLAGS) /map:wgnuplot.map /out:$@ @linkopt-c.msw
++	mt -outputresource:$@;1 -manifest $@.manifest
+ !IF "$(GDLIB)" == "1"
+ 	copy $(GDDIR)\bin\*.dll .
+ !ENDIF
+@@ -237,6 +239,10 @@
+ !IF "$(LUA)" == "1"
+ 	echo $(LUALIBS) >> linkopt-w.msw
+ !ENDIF
++	echo /LIBPATH:$(DESTDIR:\=\\)\\lib >> linkopt-w.msw
++	echo dirent.lib >> linkopt-w.msw
++	echo msvcmath.lib >> linkopt-w.msw
++	echo iconv.lib >> linkopt-w.msw
+ 
+ linkopt-c.msw: Makefile
+ 	echo $(ALL_CONSOLE_OBJS) > linkopt-c.msw
+@@ -258,6 +264,10 @@
+ !IF "$(LUA)" == "1"
+ 	echo $(LUALIBS) >> linkopt-c.msw
+ !ENDIF
++	echo /LIBPATH:$(DESTDIR:\=\\)\\lib >> linkopt-c.msw
++	echo dirent.lib >> linkopt-c.msw
++	echo msvcmath.lib >> linkopt-c.msw
++	echo iconv.lib >> linkopt-c.msw
+ 
+ # rules
+ 
+@@ -361,13 +371,11 @@
+ 	copy /Y wgnuplot.exe $(DESTDIR)\bin
+ 	copy /Y pgnuplot.exe $(DESTDIR)\bin
+ 	copy /Y gnuplot.exe $(DESTDIR)\bin
+-	copy /Y *gnuplot.exe.manifest $(DESTDIR)\bin
+ 	copy /Y $(W)wgnuplot.mnu $(DESTDIR)\bin
+ 	copy /Y $(W)wgnuplot-ja.mnu $(DESTDIR)\bin
+ 	if exist wgnuplot.chm copy /Y wgnuplot.chm $(DESTDIR)\bin
+ 	if exist wgnuplot-ja.chm copy /Y wgnuplot-ja.chm $(DESTDIR)\bin
+ 	if exist wgnuplot.hlp copy /Y wgnuplot.hlp $(DESTDIR)\bin
+-	copy /Y *.dll $(DESTDIR)\bin
+ 	if not exist $(DESTDIR)\$(GNUPLOT_PS_DIR) mkdir $(DESTDIR)\$(GNUPLOT_PS_DIR)
+ 	xcopy /Y $(T)PostScript\*.ps $(DESTDIR)\$(GNUPLOT_PS_DIR)
+ 	if not exist $(DESTDIR)\$(GNUPLOT_JS_DIR) mkdir $(DESTDIR)\$(GNUPLOT_JS_DIR)
+@@ -380,13 +388,13 @@
+ 	if not exist $(DESTDIR)\share\LaTeX mkdir $(DESTDIR)\share\LaTeX
+ 	copy /Y $(TOP)\share\LaTeX\README $(DESTDIR)\share\LaTeX
+ 	copy /Y $(TOP)\share\LaTeX\gnuplot.cfg $(DESTDIR)\share\LaTeX
+-	for %f in (BUGS README Copyright NEWS ChangeLog) do copy $(TOP)\%f $(DESTDIR)\%f
+-	if exist $(TOP)\win\README.Windows copy /Y $(TOP)\win\README.Windows $(DESTDIR)
+-	copy /Y $(TOP)\src\win\README.win-ja $(DESTDIR)
+-	if not exist $(DESTDIR)\demo mkdir $(DESTDIR)\demo
+-	xcopy /Y $(TOP)\demo $(DESTDIR)\demo
+-	if not exist $(DESTDIR)\contrib\pm3d mkdir $(DESTDIR)\contrib\pm3d
+-	xcopy /Y $(TOP)\pm3d\contrib\*.* $(DESTDIR)\contrib\pm3d
++	for %f in (BUGS README Copyright NEWS ChangeLog) do copy $(TOP)\%f $(DESTDIR)\$(GNUPLOT_SHARE_DIR)\%f
++	if exist $(TOP)\win\README.Windows copy /Y $(TOP)\win\README.Windows $(DESTDIR)\$(GNUPLOT_SHARE_DIR)
++	copy /Y $(TOP)\src\win\README.win-ja $(DESTDIR)\$(GNUPLOT_SHARE_DIR)
++	if not exist $(DESTDIR)\$(GNUPLOT_SHARE_DIR)\demo mkdir $(DESTDIR)\$(GNUPLOT_SHARE_DIR)\demo
++	xcopy /Y $(TOP)\demo $(DESTDIR)\$(GNUPLOT_SHARE_DIR)\demo
++	if not exist $(DESTDIR)\$(GNUPLOT_SHARE_DIR)\contrib\pm3d mkdir $(DESTDIR)\$(GNUPLOT_SHARE_DIR)\contrib\pm3d
++	xcopy /Y $(TOP)\pm3d\contrib\*.* $(DESTDIR)\$(GNUPLOT_SHARE_DIR)\contrib\pm3d
+ 
+ zip:
+ 	$(MAKE) DESTDIR=.\gnuplot install

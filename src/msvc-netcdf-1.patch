@@ -1,0 +1,178 @@
+diff -ur netcdf-4.3.0-orig/Makefile.am netcdf-4.3.0-new/Makefile.am
+--- netcdf-4.3.0-orig/Makefile.am	2013-05-09 12:15:22 -0400
++++ netcdf-4.3.0-new/Makefile.am	2013-07-20 15:18:07 -0400
+@@ -139,7 +139,9 @@
+ 
+ install-data-hook:
+ if BUILD_DLL
+-	cp liblib/netcdfdll.def ${prefix}/lib
++	if test -f liblib/netcdfdll.def; then \
++	    cp liblib/netcdfdll.def ${prefix}/lib; \
++	fi
+ endif # BUILD_DLL
+ 	@echo ''
+ 	@echo '+-------------------------------------------------------------+'
+diff -ur netcdf-4.3.0-orig/configure.ac netcdf-4.3.0-new/configure.ac
+--- netcdf-4.3.0-orig/configure.ac	2013-05-09 12:15:14 -0400
++++ netcdf-4.3.0-new/configure.ac	2013-07-20 13:38:00 -0400
+@@ -652,9 +652,9 @@
+      opendap with --disable-netcdf-4 --disable-dap, or see config.log for errors.])])
+ fi
+ 
+-# We need the math library
+-AC_CHECK_LIB([m], [floor], [], 
+-[AC_MSG_ERROR([Can't find or link to the math library.])])
++## We need the math library
++#AC_CHECK_LIB([m], [floor], [], 
++#[AC_MSG_ERROR([Can't find or link to the math library.])])
+ 
+ if test "x$enable_netcdf_4" = xyes; then
+ 
+diff -ur netcdf-4.3.0-orig/lib_flags.am netcdf-4.3.0-new/lib_flags.am
+--- netcdf-4.3.0-orig/lib_flags.am	2013-05-09 12:15:24 -0400
++++ netcdf-4.3.0-new/lib_flags.am	2013-07-20 13:38:47 -0400
+@@ -15,7 +15,7 @@
+ 
+ # This turns on declspec magic in netcdf.h for windows DLLs.
+ if BUILD_DLL
+-AM_CPPFLAGS += -DDLL_NETCDF
++AM_CPPFLAGS += -DDLL_NETCDF -D_HDF5USEDLL_
+ endif
+ 
+ 
+diff -ur netcdf-4.3.0-orig/libdap2/dcelex.c netcdf-4.3.0-new/libdap2/dcelex.c
+--- netcdf-4.3.0-orig/libdap2/dcelex.c	2013-05-09 12:15:24 -0400
++++ netcdf-4.3.0-new/libdap2/dcelex.c	2013-07-20 14:25:14 -0400
+@@ -14,6 +14,10 @@
+ #include "dceconstraints.h"
+ #include "dceparselex.h"
+ 
++#ifdef _MSC_VER
++#define strtoll _strtoi64
++#endif
++
+ /* Forward */
+ static void dumptoken(DCElexstate* lexstate);
+ static int tohex(int c);
+diff -ur netcdf-4.3.0-orig/libdap2/dceparse.c netcdf-4.3.0-new/libdap2/dceparse.c
+--- netcdf-4.3.0-orig/libdap2/dceparse.c	2013-05-09 12:15:24 -0400
++++ netcdf-4.3.0-new/libdap2/dceparse.c	2013-07-20 14:25:35 -0400
+@@ -20,6 +20,10 @@
+ #include "dceconstraints.h"
+ #include "dceparselex.h"
+ 
++#ifdef _MSC_VER
++#define strtoll _strtoi64
++#endif
++
+ static Object collectlist(Object list0, Object decl);
+ 
+ void
+diff -ur netcdf-4.3.0-orig/ncdump/Makefile.am netcdf-4.3.0-new/ncdump/Makefile.am
+--- netcdf-4.3.0-orig/ncdump/Makefile.am	2013-05-09 12:15:21 -0400
++++ netcdf-4.3.0-new/ncdump/Makefile.am	2013-07-20 15:04:56 -0400
+@@ -6,7 +6,7 @@
+ 
+ # Put together AM_CPPFLAGS and AM_LDFLAGS.
+ include $(top_srcdir)/lib_flags.am
+-LDADD = ${top_builddir}/liblib/libnetcdf.la 
++LDADD = ${top_builddir}/liblib/libnetcdf.la -lgetopt
+ 
+ TESTS_ENVIRONMENT=CC=${CC}
+ 
+diff -ur netcdf-4.3.0-orig/ncdump/nccopy.c netcdf-4.3.0-new/ncdump/nccopy.c
+--- netcdf-4.3.0-orig/ncdump/nccopy.c	2013-05-09 12:15:21 -0400
++++ netcdf-4.3.0-new/ncdump/nccopy.c	2013-07-20 15:06:36 -0400
+@@ -23,11 +23,13 @@
+ #include "nccomps.h"
+ 
+ #ifdef _MSC_VER
++#ifndef HAVE_GETOPT_H
+ #include "XGetopt.h"
+-#define snprintf _snprintf
+ int opterr;
+ int optind;
+ #endif
++#define snprintf _snprintf
++#endif
+ 
+ /* default bytes of memory we are willing to allocate for variable
+  * values during copy */
+diff -ur netcdf-4.3.0-orig/ncdump/ncdump.c netcdf-4.3.0-new/ncdump/ncdump.c
+--- netcdf-4.3.0-orig/ncdump/ncdump.c	2013-05-09 12:15:21 -0400
++++ netcdf-4.3.0-new/ncdump/ncdump.c	2013-07-20 15:04:28 -0400
+@@ -13,11 +13,13 @@
+ #endif
+ 
+ #ifdef _MSC_VER
+-#define snprintf _snprintf
++#ifndef HAVE_GETOPT_H
+ #include "XGetopt.h"
+ int opterr;
+ int optind;
+ #endif
++#define snprintf _snprintf
++#endif
+ 
+ #include <stdlib.h>
+ #include <string.h>
+diff -ur netcdf-4.3.0-orig/ncgen/Makefile.am netcdf-4.3.0-new/ncgen/Makefile.am
+--- netcdf-4.3.0-orig/ncgen/Makefile.am	2013-05-09 12:15:07 -0400
++++ netcdf-4.3.0-new/ncgen/Makefile.am	2013-07-20 15:01:43 -0400
+@@ -4,7 +4,7 @@
+ 
+ # Put together AM_CPPFLAGS and AM_LDFLAGS.
+ include $(top_srcdir)/lib_flags.am
+-LDADD = ${top_builddir}/liblib/libnetcdf.la
++LDADD = ${top_builddir}/liblib/libnetcdf.la -lgetopt
+ 
+ # Build ncgen from the listed sources.
+ bin_PROGRAMS = ncgen
+diff -ur netcdf-4.3.0-orig/ncgen/main.c netcdf-4.3.0-new/ncgen/main.c
+--- netcdf-4.3.0-orig/ncgen/main.c	2013-05-09 12:15:07 -0400
++++ netcdf-4.3.0-new/ncgen/main.c	2013-07-20 15:02:12 -0400
+@@ -12,11 +12,13 @@
+ #endif
+ 
+ #ifdef _MSC_VER
++#ifndef HAVE_GETOPT_H
+ #include "XGetopt.h"
+-#define snprintf _snprintf
+ int opterr;
+ int optind;
+ #endif
++#define snprintf _snprintf
++#endif
+ 
+ /* Default is netcdf-3 mode 1 */
+ #define DFALTCMODE 0
+diff -ur netcdf-4.3.0-orig/ncgen3/Makefile.am netcdf-4.3.0-new/ncgen3/Makefile.am
+--- netcdf-4.3.0-orig/ncgen3/Makefile.am	2013-05-09 12:15:15 -0400
++++ netcdf-4.3.0-new/ncgen3/Makefile.am	2013-07-20 15:00:09 -0400
+@@ -6,7 +6,7 @@
+ include $(top_srcdir)/lib_flags.am
+ 
+ # Link to the netCDF library.
+-ncgen3_LDADD = ${top_builddir}/liblib/libnetcdf.la 
++ncgen3_LDADD = ${top_builddir}/liblib/libnetcdf.la -lgetopt
+ 
+ # Build ncgen from the listed sources.
+ bin_PROGRAMS = ncgen3
+diff -ur netcdf-4.3.0-orig/ncgen3/main.c netcdf-4.3.0-new/ncgen3/main.c
+--- netcdf-4.3.0-orig/ncgen3/main.c	2013-05-09 12:15:15 -0400
++++ netcdf-4.3.0-new/ncgen3/main.c	2013-07-20 14:59:25 -0400
+@@ -15,11 +15,13 @@
+ #endif
+ 
+ #ifdef _MSC_VER
++#ifndef HAVE_GETOPT_H
+ #include "XGetopt.h"
+-#define snprintf _snprintf
+ int opterr;
+ int optind;
+ #endif
++#define snprintf _snprintf
++#endif
+ 
+ #ifdef __hpux
+ #include <locale.h>

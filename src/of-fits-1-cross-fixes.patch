@@ -1,0 +1,18 @@
+diff -ur fits-1.0.7.orig/src/Makefile fits-1.0.7/src/Makefile
+--- fits-1.0.7.orig/src/Makefile	2016-02-25 13:08:47.394452025 -0500
++++ fits-1.0.7/src/Makefile	2016-02-25 13:10:40.437730825 -0500
+@@ -1,4 +1,6 @@
+-MKOCT_FLAGS = $(shell pkg-config --libs cfitsio --cflags cfitsio)
++MKOCTFILE ?= mkoctfile
++PKG_CONFIG ?= pkg-config
++MKOCT_FLAGS = $(shell $(PKG_CONFIG) --libs cfitsio --cflags cfitsio)
+ 
+ all: read_fits_image.oct save_fits_image.oct save_fits_image_multi_ext.oct
+ 
+@@ -6,5 +8,5 @@
+ 	rm -f *.oct *.o
+ 
+ %.oct: %.cc
+-	mkoctfile --verbose -Wall $(MKOCT_FLAGS) $<
++	$(MKOCTFILE) --verbose -Wall $(MKOCT_FLAGS) $<
+ 

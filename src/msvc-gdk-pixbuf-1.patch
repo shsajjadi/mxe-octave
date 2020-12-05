@@ -1,0 +1,53 @@
+diff -ur gdk-pixbuf-2.28.2-orig/configure.ac gdk-pixbuf-2.28.2/configure.ac
+--- gdk-pixbuf-2.28.2-orig/configure.ac	2013-07-22 11:33:34 -0400
++++ gdk-pixbuf-2.28.2/configure.ac	2013-07-22 11:33:50 -0400
+@@ -633,7 +633,7 @@
+ 
+ dnl Test for libjasper
+   if test x$with_libjasper = xyes && test -z "$LIBJASPER"; then
+-    AC_CHECK_LIB(jasper, jas_init, LIBJASPER=-ljasper, [], -ljpeg -lm)
++    AC_CHECK_LIB(jasper, jas_init, LIBJASPER=-ljasper, [], -ljpeg)
+   fi
+ 
+   if test x$with_libjasper = xyes && test -z "$LIBJASPER"; then
+diff -ur gdk-pixbuf-2.28.2-orig/gdk-pixbuf/Makefile.am gdk-pixbuf-2.28.2/gdk-pixbuf/Makefile.am
+--- gdk-pixbuf-2.28.2-orig/gdk-pixbuf/Makefile.am	2013-01-19 13:54:09 -0500
++++ gdk-pixbuf-2.28.2/gdk-pixbuf/Makefile.am	2013-07-22 11:35:26 -0400
+@@ -11,7 +11,7 @@
+ 
+ if OS_WIN32
+ gdk_pixbuf_def = gdk_pixbuf.def
+-gdk_pixbuf_symbols = -export-symbols $(srcdir)/gdk_pixbuf.def
++gdk_pixbuf_symbols = -export-symbols-regex "xXx" -Wl,$(srcdir)/gdk_pixbuf.def
+ 
+ gdk_pixbuf_win32_res = gdk_pixbuf-win32-res.o
+ gdk_pixbuf_win32_res_ldflag = -Wl,gdk_pixbuf-win32-res.o
+@@ -207,8 +207,8 @@
+ # MinGW doesn't come with any import library for gdiplus.dll, so
+ # create a partial one that's enough for our use.
+ 
+-libgdiplus = libgdiplus.dll.a
+-gdiplus_ldflag = -Wl,$(libgdiplus)
++#libgdiplus = libgdiplus.dll.a
++gdiplus_ldflag = -lgdiplus
+ 
+ libgdiplus.dll.a: gdiplus.def
+ 	$(AM_V_GEN)$(DLLTOOL) --kill-at --dllname gdiplus.dll --input-def $(srcdir)/gdiplus.def --output-lib $@
+@@ -756,7 +756,7 @@
+ # that makes the install target for the loader libraries a dependency on
+ # install-data-am, and not install-exec-am. We need to ensure this gets run
+ # after the libraries are installed in their final locations.
+-install-data-hook: install-ms-lib install-def-file
++install-data-hook: install-def-file
+ 	@if $(RUN_QUERY_LOADER_TEST) ; then \
+ 	  $(mkinstalldirs) $(DESTDIR)$(libdir)/gdk-pixbuf-2.0/$(GDK_PIXBUF_BINARY_VERSION) ; \
+ 	  $(top_builddir)/gdk-pixbuf/gdk-pixbuf-query-loaders$(EXEEXT) > $(DESTDIR)$(libdir)/gdk-pixbuf-2.0/$(GDK_PIXBUF_BINARY_VERSION)/loaders.cache ; \
+@@ -769,7 +769,7 @@
+ 	  echo "***" ; \
+ 	fi
+ 
+-uninstall-local: uninstall-ms-lib uninstall-def-file
++uninstall-local: uninstall-def-file
+ 	rm -f $(DESTDIR)$(libdir)/gdk-pixbuf-2.0/$(GDK_PIXBUF_BINARY_VERSION)/loaders.cache
+ 
+ if CROSS_COMPILING

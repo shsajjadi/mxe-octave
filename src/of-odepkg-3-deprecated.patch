@@ -1,0 +1,2225 @@
+diff -r 1646adc7793b src/odepkg_auxiliary_functions.cc
+--- a/src/odepkg_auxiliary_functions.cc	Sun Jan 20 20:52:16 2019 +0100
++++ b/src/odepkg_auxiliary_functions.cc	Sun Jan 20 21:30:32 2019 +0100
+@@ -46,7 +46,7 @@
+  * @end deftypefn
+  */
+ octave_idx_type odepkg_auxiliary_isvector (octave_value vval) {
+-  if (vval.is_numeric_type () && 
++  if (vval.isnumeric () && 
+       vval.ndims () == 2 && // ported from the is_vector.m file
+       (vval.rows () == 1 || vval.columns () == 1))
+     return (true);
+@@ -85,17 +85,17 @@
+   switch (vdeci) {
+     case 0:
+       varin(3) = "init";
+-      feval ("odepkg_event_handle", varin, 0);
++      octave::feval ("odepkg_event_handle", varin, 0);
+       break;
+ 
+     case 1:
+       varin(3) = "";
+-      varout = feval ("odepkg_event_handle", varin, 1);
++      varout = octave::feval ("odepkg_event_handle", varin, 1);
+       break;
+ 
+     case 2:
+       varin(3) = "done";
+-      feval ("odepkg_event_handle", varin, 0);
++      octave::feval ("odepkg_event_handle", varin, 0);
+       break;
+ 
+     default:
+@@ -132,8 +132,8 @@
+ 
+   // Check if the user has set the option "OutputSel" then create a
+   // reduced vector that stores the desired values.
+-  if (vsel.is_empty ()) {
+-    for (octave_idx_type vcnt = 0; vcnt < vresult.length (); vcnt++)
++  if (vsel.isempty ()) {
++    for (octave_idx_type vcnt = 0; vcnt < vresult.numel (); vcnt++)
+       vreduced(vcnt) = vresult(vcnt);
+   }
+   else {
+@@ -159,18 +159,18 @@
+   // function to the caller function
+   if ((vdeci == 0) || (vdeci == 2)) {
+     if (vplt.is_function_handle () || vplt.is_inline_function ())
+-      feval (vplt.function_value (), varin, 0);
++      octave::feval (vplt.function_value (), varin, 0);
+     else if (vplt.is_string ()) // String may be used from the caller
+-      feval (vplt.string_value (), varin, 0);
++      octave::feval (vplt.string_value (), varin, 0);
+     return (true);
+   }
+ 
+   else if (vdeci == 1) {
+     octave_value_list vout;
+     if (vplt.is_function_handle () || vplt.is_inline_function ())
+-      vout = feval (vplt.function_value (), varin, 1);
++      vout = octave::feval (vplt.function_value (), varin, 1);
+     else if (vplt.is_string ()) // String may be used if set automatically
+-      vout = feval (vplt.string_value (), varin, 1);
++      vout = octave::feval (vplt.string_value (), varin, 1);
+     return (vout(0).bool_value ());
+   }
+ 
+@@ -200,7 +200,7 @@
+ 
+   // If vjac is a cell array then we expect that two matrices are
+   // returned to the caller function, we can't check for this before
+-  if (vjac.is_cell () && (vjac.length () == 2)) {
++  if (vjac.iscell () && (vjac.numel () == 2)) {
+     varout(0) = vjac.cell_value ()(0);
+     varout(1) = vjac.cell_value ()(1);
+     if (!varout(0).is_matrix_type () || !varout(1).is_matrix_type ()) {
+@@ -220,7 +220,7 @@
+     for (octave_idx_type vcnt = 0; vcnt < vextarg.length (); vcnt++)
+       varin(vcnt+3) = vextarg(vcnt);
+     // Evaluate the Jacobian function and return results
+-    varout = feval (vjac.function_value (), varin, 1);
++    varout = octave::feval (vjac.function_value (), varin, 1);
+   }
+ 
+   // In principle this is not possible because odepkg_structure_check
+@@ -268,7 +268,7 @@
+     for (octave_idx_type vcnt = 0; vcnt < vextarg.length (); vcnt++)
+       varin(vcnt+2) = vextarg(vcnt);
+     // Evaluate the Jacobian function and return results
+-    varout = feval (vjac.function_value (), varin, 1);
++    varout = octave::feval (vjac.function_value (), varin, 1);
+     vret = varout(0);
+   }
+ 
+@@ -312,7 +312,7 @@
+   else if (vmass.is_function_handle () || vmass.is_inline_function ()) {
+     octave_value_list varin;
+     octave_value_list varout;
+-    if (vstate.is_empty () || !vstate.is_string ())
++    if (vstate.isempty () || !vstate.is_string ())
+       error_with_id ("OdePkg:InvalidOption",
+         "If \"Mass\" value is a handle then \"MStateDependence\" must be given");
+  
+@@ -330,7 +330,7 @@
+     }
+ 
+     // Evaluate the Mass function and return results
+-    varout = feval (vmass.function_value (), varin, 1);
++    varout = octave::feval (vmass.function_value (), varin, 1);
+     vret = varout(0);
+   }
+ 
+@@ -440,7 +440,7 @@
+       break;
+ 
+     case 3:
+-      vtstore = vtstore.extract (0, vtstore.length () - 2);
++      vtstore = vtstore.extract (0, vtstore.numel () - 2);
+       vystore = vystore.extract (0, 0, vtstore.rows () - 2, vtstore.cols () - 1);
+ 
+     default: 
+diff -r 1646adc7793b src/odepkg_octsolver_ddaskr.cc
+--- a/src/odepkg_octsolver_ddaskr.cc	Sun Jan 20 20:52:16 2019 +0100
++++ b/src/odepkg_octsolver_ddaskr.cc	Sun Jan 20 21:30:32 2019 +0100
+@@ -116,7 +116,7 @@
+   varin(0) = T; varin(1) = A; varin(2) = APRIME;
+   for (octave_idx_type vcnt = 0; vcnt < vddaskrextarg.length (); vcnt++)
+     varin(vcnt+3) = vddaskrextarg(vcnt);
+-  octave_value_list vout = feval (vddaskrodefun.function_value (), varin, 1);
++  octave_value_list vout = octave::feval (vddaskrodefun.function_value (), varin, 1);
+ 
+   // Return the results from the function evaluation to the Fortran
+   // solver, again copy them and don't just create a Fortran vector
+@@ -287,8 +287,8 @@
+   if (nargin >= 5) {
+ 
+     // Fifth input argument != OdePkg option, need a default structure
+-    if (!args(4).is_map ()) {
+-      octave_value_list tmp = feval ("odeset", tmp, 1);
++    if (!args(4).isstruct ()) {
++      octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+       vodeopt = tmp(0).scalar_map_value ();        // Create a default structure
+       for (octave_idx_type vcnt = 4; vcnt < nargin; vcnt++)
+         vddaskrextarg(vcnt-4) = args(vcnt); // Save arguments in vddaskrextarg
+@@ -298,7 +298,7 @@
+     else if (nargin > 5) { 
+       octave_value_list varin;
+       varin(0) = args(4); varin(1) = "odekdi";
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value ();        // Create structure of args(4)
+       for (octave_idx_type vcnt = 5; vcnt < nargin; vcnt++)
+@@ -309,7 +309,7 @@
+     else {
+       octave_value_list varin;
+       varin(0) = args(4); varin(1) = "odekdi"; // Check structure
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+     }
+@@ -317,7 +317,7 @@
+   } // if (nargin >= 5)
+ 
+   else { // if nargin == 4, everything else has been checked before
+-    octave_value_list tmp = feval ("odeset", tmp, 1);
++    octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+     vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+   }
+ 
+@@ -329,7 +329,7 @@
+   // Implementation of the option RelTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vreltol = vodeopt.contents ("RelTol");
+-  if (vreltol.is_empty ()) {
++  if (vreltol.isempty ()) {
+     vreltol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"RelTol\" not set, new value 1e-6 is used");
+@@ -345,7 +345,7 @@
+   // Implementation of the option AbsTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vabstol = vodeopt.contents ("AbsTol");
+-  if (vabstol.is_empty ()) {
++  if (vabstol.isempty ()) {
+     vabstol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"AbsTol\" not set, new value 1e-6 is used");
+@@ -372,7 +372,7 @@
+   // The option NormControl will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnorm = vodeopt.contents ("NormControl");
+-  if (!vnorm.is_empty ())
++  if (!vnorm.isempty ())
+     if (vnorm.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption", 
+         "Option \"NormControl\" will be ignored by this solver");
+@@ -380,14 +380,14 @@
+   // The option NonNegative will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnneg = vodeopt.contents ("NonNegative");
+-  if (!vnneg.is_empty ())
++  if (!vnneg.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"NonNegative\" will be ignored by this solver");
+ 
+   // Implementation of the option OutputFcn has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vplot = vodeopt.contents ("OutputFcn");
+-  if (vplot.is_empty () && nargout == 0) vplot = "odeplot";
++  if (vplot.isempty () && nargout == 0) vplot = "odeplot";
+ 
+   // Implementation of the option OutputSel has been finished, this
+   // option can be set by the user to another value than default value
+@@ -408,12 +408,12 @@
+   // option can be set by the user to another value than default value
+   octave_value vinitstep = vodeopt.contents ("InitialStep");
+   if (args(1).length () > 2) {
+-    if (!vinitstep.is_empty ())
++    if (!vinitstep.isempty ())
+       warning_with_id ("OdePkg:InvalidOption",
+        "Option \"InitialStep\" will be ignored if fixed time stamps are given");
+     vinitstep = args(1).vector_value ()(1);
+   }
+-  else if (vinitstep.is_empty ()) {
++  else if (vinitstep.isempty ()) {
+     vinitstep = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"InitialStep\" not set, new value 1e-6 is used");
+@@ -422,7 +422,7 @@
+   // Implementation of the option MaxStep has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vmaxstep = vodeopt.contents ("MaxStep");
+-  if (vmaxstep.is_empty () && args(1).length () == 2) {
++  if (vmaxstep.isempty () && args(1).length () == 2) {
+     vmaxstep = (args(1).vector_value ()(1) - args(1).vector_value ()(0)) / 12.5;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxStep\" not set, new value %3.1e is used", 
+@@ -437,19 +437,19 @@
+ 
+   // The options 'Jacobian', 'JPattern' and 'Vectorized'
+   octave_value vjac = vodeopt.contents ("Jacobian");
+-  if (!vjac.is_empty ()) vddaskrjacfun = vjac;
++  if (!vjac.isempty ()) vddaskrjacfun = vjac;
+ 
+   // The option Mass will be ignored by this solver. We can't handle
+   // Mass-matrix options with IDE problems
+   octave_value vmass = vodeopt.contents ("Mass");
+-  if (!vmass.is_empty ())
++  if (!vmass.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"Mass\" will be ignored by this solver");
+ 
+   // The option MStateDependence will be ignored by this solver. We
+   // can't handle Mass-matrix options with IDE problems
+   octave_value vmst = vodeopt.contents ("MStateDependence");
+-  if (!vmst.is_empty ())
++  if (!vmst.isempty ())
+     if (vmst.string_value ().compare ("weak") != 0)
+       warning_with_id ("OdePkg:InvalidOption", 
+         "Option \"MStateDependence\" will be ignored by this solver");
+@@ -457,14 +457,14 @@
+   // The option MvPattern will be ignored by this solver. We
+   // can't handle Mass-matrix options with IDE problems
+   octave_value vmvpat = vodeopt.contents ("MvPattern");
+-  if (!vmvpat.is_empty ())
++  if (!vmvpat.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MvPattern\" will be ignored by this solver");
+ 
+   // The option MvPattern will be ignored by this solver. We
+   // can't handle Mass-matrix options with IDE problems
+   octave_value vmsing = vodeopt.contents ("MassSingular");
+-  if (!vmsing.is_empty ())
++  if (!vmsing.isempty ())
+     if (vmsing.string_value ().compare ("maybe") != 0)
+       warning_with_id ("OdePkg:InvalidOption", 
+         "Option \"MassSingular\" will be ignored by this solver");
+@@ -472,14 +472,14 @@
+   // The option InitialSlope will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vinitslope = vodeopt.contents ("InitialSlope");
+-  if (!vinitslope.is_empty ())
++  if (!vinitslope.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"InitialSlope\" will be ignored by this solver");
+ 
+   // Implementation of the option MaxOrder has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vmaxder = vodeopt.contents ("MaxOrder");
+-  if (vmaxder.is_empty ()) {
++  if (vmaxder.isempty ()) {
+     vmaxder = 3;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxOrder\" not set, new value 3 is used");
+@@ -492,7 +492,7 @@
+ 
+   // The option BDF will be ignored because this is a BDF solver
+   octave_value vbdf = vodeopt.contents ("BDF");
+-  if (!vbdf.is_empty ())
++  if (!vbdf.isempty ())
+     if (vbdf.string_value () != "on") {
+       vbdf = "on"; warning_with_id ("OdePkg:InvalidOption", 
+         "Option \"BDF\" set \"off\", new value \"on\" is used");
+@@ -502,12 +502,12 @@
+   // this solver, IT NEEDS TO BE CHECKED IF THE FORTRAN CORE SOLVER
+   // CAN HANDLE THESE OPTIONS
+   octave_value vntol = vodeopt.contents ("NewtonTol");
+-  if (!vntol.is_empty ())
++  if (!vntol.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"NewtonTol\" will be ignored by this solver");
+   octave_value vmaxnewton = 
+     vodeopt.contents ("MaxNewtonIterations");
+-  if (!vmaxnewton.is_empty ())
++  if (!vmaxnewton.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxNewtonIterations\" will be ignored by this solver");
+ 
+@@ -523,7 +523,7 @@
+ 
+   vddaskrneqn = args(2).length ();
+   double T       = vTIME(0);
+-  double TEND    = vTIME(vTIME.length () - 1);
++  double TEND    = vTIME(vTIME.numel () - 1);
+   double *Y      = vY.fortran_vec ();
+   double *YPRIME = vYPRIME.fortran_vec ();
+ 
+@@ -553,7 +553,7 @@
+   INFO[1]   = vitol;  // RelTol/AbsTol are scalars or vectors
+   INFO[2]   = 1;      // An intermediate output is wanted
+   INFO[3]   = 0;      // Integrate behind TEND
+-  if (!vjac.is_empty ()) INFO[4]   = 1;
++  if (!vjac.isempty ()) INFO[4]   = 1;
+   else INFO[4] = 0;   // Internally calculate a Jacobian? 0..yes
+   INFO[5]   = 0;      // Have a full Jacobian matrix? 0..yes
+   INFO[6]   = 1;      // Use the value for maximum step size
+@@ -569,14 +569,14 @@
+   // initialize these IO-functions for further use
+   octave_value vtim (T); octave_value vsol (vY); octave_value vyds (vYPRIME);
+   odepkg_auxiliary_solstore (vtim, vsol, 0);
+-  if (!vplot.is_empty ()) 
++  if (!vplot.isempty ()) 
+     odepkg_auxiliary_evalplotfun (vplot, voutsel, args(1), args(2), vddaskrextarg, 0);
+ 
+   octave_value_list veveideargs;
+   veveideargs(0) = vsol; 
+   veveideargs(1) = vyds;
+   Cell veveidearg (veveideargs);
+-  if (!vevents.is_empty ())
++  if (!vevents.isempty ())
+     odepkg_auxiliary_evaleventfun (vevents, vtim, veveidearg, vddaskrextarg, 0);
+ 
+   // We are calling the core solver here to intialize all variables
+@@ -597,7 +597,7 @@
+   ColumnVector vcres(vddaskrneqn);
+   ColumnVector vydrs(vddaskrneqn);
+ 
+-  if (vTIME.length () == 2) {
++  if (vTIME.numel () == 2) {
+ 
+     INFO[0] = 1; // Set this info variable ie. continue solving
+ 
+@@ -621,22 +621,22 @@
+       }
+       vsol = vcres; vyds = vydrs; vtim = T;
+ 
+-      if (!vevents.is_empty ()) {
++      if (!vevents.isempty ()) {
+         veveideargs(0) = vsol;
+         veveideargs(1) = vyds;
+         veveidearg = veveideargs;
+         veveres = odepkg_auxiliary_evaleventfun (vevents, vtim, veveidearg, vddaskrextarg, 1);
+-        if (!veveres(0).cell_value ()(0).is_empty ())
++        if (!veveres(0).cell_value ()(0).isempty ())
+           if (veveres(0).cell_value ()(0).int_value () == 1) {
+             ColumnVector vttmp = veveres(0).cell_value ()(2).column_vector_value ();
+             Matrix vrtmp = veveres(0).cell_value ()(3).matrix_value ();
+-            vtim = vttmp.extract (vttmp.length () - 1, vttmp.length () - 1);
++            vtim = vttmp.extract (vttmp.numel () - 1, vttmp.numel () - 1);
+             vsol = vrtmp.extract (vrtmp.rows () - 1, 0, vrtmp.rows () - 1, vrtmp.cols () - 1);
+             T = TEND; // let's get out here, the Events function told us to finish
+           }
+       }
+ 
+-      if (!vplot.is_empty ()) {
++      if (!vplot.isempty ()) {
+         if (odepkg_auxiliary_evalplotfun (vplot, voutsel, vtim, vsol, vddaskrextarg, 1)) {
+           error ("Missing error message implementation");
+           return (vretval);
+@@ -660,9 +660,9 @@
+   veveideargs(0) = vsol;
+   veveideargs(1) = vyds;
+   veveidearg = veveideargs;
+-  if (!vevents.is_empty ())
++  if (!vevents.isempty ())
+     odepkg_auxiliary_evaleventfun (vevents, vtim, vsol, vddaskrextarg, 2);
+-  if (!vplot.is_empty ())
++  if (!vplot.isempty ())
+     odepkg_auxiliary_evalplotfun (vplot, voutsel, vtim, vsol, vddaskrextarg, 2);
+ 
+   // Return the results that have been stored in the
+@@ -695,7 +695,7 @@
+     vretmap.assign ("solver", "odekdi");
+     if (vstats.string_value ().compare ("on") == 0)
+       vretmap.assign ("stats", vstatinfo);
+-    if (!vevents.is_empty ()) {
++    if (!vevents.isempty ()) {
+       vretmap.assign ("ie", veveres(0).cell_value ()(1));
+       vretmap.assign ("xe", veveres(0).cell_value ()(2));
+       vretmap.assign ("ye", veveres(0).cell_value ()(3));
+@@ -713,7 +713,7 @@
+     vretval(2) = vempty;
+     vretval(3) = vempty;
+     vretval(4) = vempty;
+-    if (!vevents.is_empty ()) {
++    if (!vevents.isempty ()) {
+       vretval(2) = veveres(0).cell_value ()(2);
+       vretval(3) = veveres(0).cell_value ()(3);
+       vretval(4) = veveres(0).cell_value ()(1);
+diff -r 1646adc7793b src/odepkg_octsolver_mebdfdae.cc
+--- a/src/odepkg_octsolver_mebdfdae.cc	Sun Jan 20 20:52:16 2019 +0100
++++ b/src/odepkg_octsolver_mebdfdae.cc	Sun Jan 20 21:30:32 2019 +0100
+@@ -100,7 +100,7 @@
+   varin(0) = T; varin(1) = A;
+   for (octave_idx_type vcnt = 0; vcnt < vmebdfdaeextarg.length (); vcnt++)
+     varin(vcnt+2) = vmebdfdaeextarg(vcnt);
+-  octave_value_list vout = feval (vmebdfdaeodefun.function_value (), varin, 1);
++  octave_value_list vout = octave::feval (vmebdfdaeodefun.function_value (), varin, 1);
+ 
+   // Return the results from the function evaluation to the Fortran
+   // solver, again copy them and don't just create a Fortran vector
+@@ -317,8 +317,8 @@
+   if (nargin >= 4) {
+ 
+     // Fourth input argument != OdePkg option, need a default structure
+-    if (!args(3).is_map ()) {
+-      octave_value_list tmp = feval ("odeset", tmp, 1);
++    if (!args(3).isstruct ()) {
++      octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+       vodeopt = tmp(0).scalar_map_value ();       // Create a default structure
+       for (octave_idx_type vcnt = 3; vcnt < nargin; vcnt++)
+         vmebdfdaeextarg(vcnt-3) = args(vcnt); // Save arguments in vmebdfdaeextarg
+@@ -328,7 +328,7 @@
+     else if (nargin > 4) {
+       octave_value_list varin;
+       varin(0) = args(3); varin(1) = "odebda";
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value ();       // Create structure from args(4)
+       for (octave_idx_type vcnt = 4; vcnt < nargin; vcnt++)
+@@ -339,7 +339,7 @@
+     else {
+       octave_value_list varin;
+       varin(0) = args(3); varin(1) = "odebda"; // Check structure
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+     }
+@@ -347,7 +347,7 @@
+   } // if (nargin >= 4)
+ 
+   else { // if nargin == 3, everything else has been checked before
+-    octave_value_list tmp = feval ("odeset", tmp, 1);
++    octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+     vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+   }
+ 
+@@ -359,7 +359,7 @@
+   // Implementation of the option RelTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vreltol = vodeopt.contents ("RelTol");
+-  if (vreltol.is_empty ()) {
++  if (vreltol.isempty ()) {
+     vreltol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"RelTol\" not set, new value %3.1e is used", 
+@@ -376,7 +376,7 @@
+   // Implementation of the option AbsTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vabstol = vodeopt.contents ("AbsTol");
+-  if (vabstol.is_empty ()) {
++  if (vabstol.isempty ()) {
+     vabstol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"AbsTol\" not set, new value %3.1e is used", 
+@@ -401,7 +401,7 @@
+   // The option NormControl will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnorm = vodeopt.contents ("NormControl");
+-  if (!vnorm.is_empty ())
++  if (!vnorm.isempty ())
+     if (vnorm.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption", 
+         "Option \"NormControl\" will be ignored by this solver");
+@@ -409,14 +409,14 @@
+   // The option NonNegative will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnneg = vodeopt.contents ("NonNegative");
+-  if (!vnneg.is_empty ())
++  if (!vnneg.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"NonNegative\" will be ignored by this solver");
+ 
+   // Implementation of the option OutputFcn has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vplot = vodeopt.contents ("OutputFcn");
+-  if (vplot.is_empty () && nargout == 0) vplot = "odeplot";
++  if (vplot.isempty () && nargout == 0) vplot = "odeplot";
+ 
+   // Implementation of the option OutputSel has been finished, this
+   // option can be set by the user to another value than default value
+@@ -437,12 +437,12 @@
+   // option can be set by the user to another value than default value
+   octave_value vinitstep = vodeopt.contents ("InitialStep");
+   if (args(1).length () > 2) {
+-    if (!vinitstep.is_empty ())
++    if (!vinitstep.isempty ())
+       warning_with_id ("OdePkg:InvalidOption",
+        "Option \"InitialStep\" will be ignored if fixed time stamps are given");
+     vinitstep = args(1).vector_value ()(1);
+   }
+-  if (vinitstep.is_empty ()) {
++  if (vinitstep.isempty ()) {
+     vinitstep = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"InitialStep\" not set, new value %3.1e is used",
+@@ -452,7 +452,7 @@
+   // Implementation of the option MaxStep has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vmaxstep = vodeopt.contents ("MaxStep");
+-  if (vmaxstep.is_empty () && args(1).length () == 2) {
++  if (vmaxstep.isempty () && args(1).length () == 2) {
+     vmaxstep = (args(1).vector_value ()(1) - args(1).vector_value ()(0)) / 12.5;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxStep\" not set, new value %3.1e is used", 
+@@ -468,7 +468,7 @@
+   // The options 'Jacobian', 'JPattern' and 'Vectorized'
+   octave_value vjac = vodeopt.contents ("Jacobian");
+   octave_idx_type vmebdfdaejac = 22; // We need to set this if no Jac available
+-  if (!vjac.is_empty ()) {
++  if (!vjac.isempty ()) {
+     vmebdfdaejacfun = vjac; vmebdfdaejac = 21;
+   }
+ 
+@@ -476,7 +476,7 @@
+   // options can be set by the user to another value than default
+   vmebdfdaemass = vodeopt.contents ("Mass");
+   octave_idx_type vmebdfdaemas = 0;
+-  if (!vmebdfdaemass.is_empty ()) {
++  if (!vmebdfdaemass.isempty ()) {
+     vmebdfdaemas = 1;
+     if (vmebdfdaemass.is_function_handle () || vmebdfdaemass.is_inline_function ())
+       warning_with_id ("OdePkg:InvalidOption",
+@@ -486,7 +486,7 @@
+   // The option MStateDependence will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   vmebdfdaemassstate = vodeopt.contents ("MStateDependence");
+-  if (!vmebdfdaemassstate.is_empty ())
++  if (!vmebdfdaemassstate.isempty ())
+     if (vmebdfdaemassstate.string_value ().compare ("weak") != 0) // 'weak' is default
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"MStateDependence\" will be ignored by this solver");
+@@ -494,14 +494,14 @@
+   // The option MStateDependence will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   octave_value vmvpat = vodeopt.contents ("MvPattern");
+-  if (!vmvpat.is_empty ())
++  if (!vmvpat.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MvPattern\" will be ignored by this solver");
+ 
+   // The option MassSingular will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   octave_value vmsing = vodeopt.contents ("MassSingular");
+-  if (!vmsing.is_empty ())
++  if (!vmsing.isempty ())
+     if (vmsing.string_value ().compare ("maybe") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"MassSingular\" will be ignored by this solver");
+@@ -509,14 +509,14 @@
+   // The option InitialSlope will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vinitslope = vodeopt.contents ("InitialSlope");
+-  if (!vinitslope.is_empty ())
++  if (!vinitslope.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"InitialSlope\" will be ignored by this solver");
+ 
+   // Implementation of the option MaxOrder has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vmaxder = vodeopt.contents ("MaxOrder");
+-  if (vmaxder.is_empty ()) {
++  if (vmaxder.isempty ()) {
+     vmaxder = 3;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxOrder\" not set, new value %1d is used", 
+@@ -540,12 +540,12 @@
+   // this solver, IT NEEDS TO BE CHECKED IF THE FORTRAN CORE SOLVER
+   // CAN HANDLE THESE OPTIONS
+   octave_value vntol = vodeopt.contents ("NewtonTol");
+-  if (!vntol.is_empty ())
++  if (!vntol.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"NewtonTol\" will be ignored by this solver");
+   octave_value vmaxnewton = 
+     vodeopt.contents ("MaxNewtonIterations");
+-  if (!vmaxnewton.is_empty ())
++  if (!vmaxnewton.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxNewtonIterations\" will be ignored by this solver");
+ 
+@@ -563,7 +563,7 @@
+   double HO = vinitstep.double_value ();
+   double *Y0 = vY0.fortran_vec ();
+   double TOUT = T0 + vinitstep.double_value ();
+-  double TEND = vTIME(vTIME.length ()-1);
++  double TEND = vTIME(vTIME.numel ()-1);
+ 
+   octave_idx_type MF = vmebdfdaejac;
+   octave_idx_type IDID = 1;
+@@ -578,7 +578,7 @@
+     IWORK[vcnt] = 0;
+   octave_idx_type MBND[4] = {N, N, N, N};
+   octave_idx_type MASBND[4] = {0, N, 0, N};
+-  if (!vmebdfdaemass.is_empty ()) MASBND[0] = 1;
++  if (!vmebdfdaemass.isempty ()) MASBND[0] = 1;
+   octave_idx_type MAXDER = vmaxder.int_value ();
+   octave_idx_type ITOL = vitol;
+   double *RTOL = vRTOL.fortran_vec ();
+@@ -596,9 +596,9 @@
+   // etc. and initialize the plot, events and the solstore functions
+   octave_value vtim (T0); octave_value vsol (vY0);
+   odepkg_auxiliary_solstore (vtim, vsol, 0);
+-  if (!vplot.is_empty ()) odepkg_auxiliary_evalplotfun 
++  if (!vplot.isempty ()) odepkg_auxiliary_evalplotfun 
+     (vplot, voutsel, args(1), args(2), vmebdfdaeextarg, 0);
+-  if (!vevents.is_empty ()) odepkg_auxiliary_evaleventfun 
++  if (!vevents.isempty ()) odepkg_auxiliary_evaleventfun 
+     (vevents, vtim, args(2), vmebdfdaeextarg, 0);
+ 
+   // We are calling the core solver here to intialize all variables
+@@ -618,7 +618,7 @@
+   // core solver function and before calling the plot function
+   ColumnVector vcres(N);
+ 
+-  if (vTIME.length () == 2) {
++  if (vTIME.numel () == 2) {
+     // Before we are entering the solver loop replace the first time
+     // stamp value with FirstStep = (InitTime - InitStep)
+     TOUT = TOUT - vinitstep.double_value ();
+@@ -649,18 +649,18 @@
+       for (octave_idx_type vcnt = 0; vcnt < N; vcnt++)
+         vcres(vcnt) = Y0[vcnt];
+       vsol = vcres; vtim = TOUT;
+-      if (!vevents.is_empty ()) {
++      if (!vevents.isempty ()) {
+         veveres = odepkg_auxiliary_evaleventfun (vevents, vtim, vsol, vmebdfdaeextarg, 1);
+-        if (!veveres(0).cell_value ()(0).is_empty ())
++        if (!veveres(0).cell_value ()(0).isempty ())
+           if (veveres(0).cell_value ()(0).int_value () == 1) {
+             ColumnVector vttmp = veveres(0).cell_value ()(2).column_vector_value ();
+             Matrix vrtmp = veveres(0).cell_value ()(3).matrix_value ();
+-            vtim = vttmp.extract (vttmp.length () - 1, vttmp.length () - 1);
++            vtim = vttmp.extract (vttmp.numel () - 1, vttmp.numel () - 1);
+             vsol = vrtmp.extract (vrtmp.rows () - 1, 0, vrtmp.rows () - 1, vrtmp.cols () - 1);
+             TOUT = TEND; // let's get out here, the Events function told us to finish
+           }
+       }
+-      if (!vplot.is_empty ()) {
++      if (!vplot.isempty ()) {
+         if (odepkg_auxiliary_evalplotfun (vplot, voutsel, vtim, vsol, vmebdfdaeextarg, 1)) {
+           error ("Missing error message implementation");
+           return (vretval);
+@@ -671,7 +671,7 @@
+   }
+   else { // if (vTIME.length () > 2) we have all the time values needed
+     volatile octave_idx_type vtimecnt = 1;
+-    octave_idx_type vtimelen = vTIME.length ();
++    octave_idx_type vtimelen = vTIME.numel ();
+     while (vtimecnt < vtimelen) {
+       vtimecnt++; TOUT = vTIME(vtimecnt-1);
+ 
+@@ -696,18 +696,18 @@
+       for (octave_idx_type vcnt = 0; vcnt < N; vcnt++)
+         vcres(vcnt) = Y0[vcnt];
+       vsol = vcres; vtim = TOUT;
+-      if (!vevents.is_empty ()) {
++      if (!vevents.isempty ()) {
+         veveres = odepkg_auxiliary_evaleventfun (vevents, vtim, vsol, vmebdfdaeextarg, 1);
+-        if (!veveres(0).cell_value ()(0).is_empty ())
++        if (!veveres(0).cell_value ()(0).isempty ())
+           if (veveres(0).cell_value ()(0).int_value () == 1) {
+             ColumnVector vttmp = veveres(0).cell_value ()(2).column_vector_value ();
+             Matrix vrtmp = veveres(0).cell_value ()(3).matrix_value ();
+-            vtim = vttmp.extract (vttmp.length () - 1, vttmp.length () - 1);
++            vtim = vttmp.extract (vttmp.numel () - 1, vttmp.numel () - 1);
+             vsol = vrtmp.extract (vrtmp.rows () - 1, 0, vrtmp.rows () - 1, vrtmp.cols () - 1);
+             vtimecnt = vtimelen; // let's get out here, the Events function told us to finish
+           }
+       }
+-      if (!vplot.is_empty ()) {
++      if (!vplot.isempty ()) {
+         if (odepkg_auxiliary_evalplotfun (vplot, voutsel, vtim, vsol, vmebdfdaeextarg, 1)) {
+           error ("Missing error message implementation");
+           return (vretval);
+@@ -725,9 +725,9 @@
+   // needed to call the OdePkg output function one last time again
+   for (octave_idx_type vcnt = 0; vcnt < N; vcnt++) vcres(vcnt) = Y0[vcnt];
+   vsol = vcres; vtim = TOUT;
+-  if (!vevents.is_empty ())
++  if (!vevents.isempty ())
+     odepkg_auxiliary_evaleventfun (vevents, vtim, vsol, vmebdfdaeextarg, 2);
+-  if (!vplot.is_empty ())
++  if (!vplot.isempty ())
+     odepkg_auxiliary_evalplotfun (vplot, voutsel, vtim, vsol, vmebdfdaeextarg, 2);
+ 
+   // Return the results that have been stored in the
+@@ -761,7 +761,7 @@
+     vretmap.assign ("solver", "odebda");
+     if (vstats.string_value () == "on") 
+       vretmap.assign ("stats", vstatinfo);
+-    if (!vevents.is_empty ()) {
++    if (!vevents.isempty ()) {
+       vretmap.assign ("ie", veveres(0).cell_value ()(1));
+       vretmap.assign ("xe", veveres(0).cell_value ()(2));
+       vretmap.assign ("ye", veveres(0).cell_value ()(3));
+@@ -779,7 +779,7 @@
+     vretval(2) = vempty;
+     vretval(3) = vempty;
+     vretval(4) = vempty;
+-    if (!vevents.is_empty ()) {
++    if (!vevents.isempty ()) {
+       vretval(2) = veveres(0).cell_value ()(2);
+       vretval(3) = veveres(0).cell_value ()(3);
+       vretval(4) = veveres(0).cell_value ()(1);
+diff -r 1646adc7793b src/odepkg_octsolver_mebdfi.cc
+--- a/src/odepkg_octsolver_mebdfi.cc	Sun Jan 20 20:52:16 2019 +0100
++++ b/src/odepkg_octsolver_mebdfi.cc	Sun Jan 20 21:30:32 2019 +0100
+@@ -162,7 +162,7 @@
+   varin(0) = T; varin(1) = A; varin(2) = APRIME;
+   for (octave_idx_type vcnt = 0; vcnt < vmebdfiextarg.length (); vcnt++)
+     varin(vcnt+3) = vmebdfiextarg(vcnt);
+-  octave_value_list vout = feval (vmebdfiodefun.function_value (), varin, 1);
++  octave_value_list vout = octave::feval (vmebdfiodefun.function_value (), varin, 1);
+ 
+   // Return the results from the function evaluation to the Fortran
+   // solver, again copy them and don't just create a Fortran vector
+@@ -397,7 +397,7 @@
+ 
+   // Check if the third and the fourth input argument (check for
+   // vector already was successful before) have the same length
+-  if (args(2).length () != args(3).length ()) {
++  if (args(2).numel () != args(3).numel ()) {
+     error_with_id ("OdePkg:InvalidArgument",
+       "Third and fourth input argument must have the same length");
+     return (vretval);
+@@ -409,8 +409,8 @@
+   if (nargin >= 5) {
+ 
+     // Fifth input argument != OdePkg option, need a default structure
+-    if (!args(4).is_map ()) {
+-      octave_value_list tmp = feval ("odeset", tmp, 1);
++    if (!args(4).isstruct ()) {
++      octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+       vodeopt = tmp(0).scalar_map_value ();        // Create a default structure
+       for (octave_idx_type vcnt = 4; vcnt < nargin; vcnt++)
+         vmebdfiextarg(vcnt-4) = args(vcnt); // Save arguments in vmebdfiextarg
+@@ -420,7 +420,7 @@
+     else if (nargin > 5) { 
+       octave_value_list varin;
+       varin(0) = args(4); varin(1) = "odebdi";
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value ();        // Create structure of args(4)
+       for (octave_idx_type vcnt = 5; vcnt < nargin; vcnt++)
+@@ -431,7 +431,7 @@
+     else {
+       octave_value_list varin;
+       varin(0) = args(4); varin(1) = "odebdi"; // Check structure
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+     }
+@@ -439,7 +439,7 @@
+   } // if (nargin >= 5)
+ 
+   else { // if nargin == 4, everything else has been checked before
+-    octave_value_list tmp = feval ("odeset", tmp, 1);
++    octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+     vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+   }
+ 
+@@ -451,14 +451,14 @@
+   // Implementation of the option RelTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vreltol = vodeopt.contents ("RelTol");
+-  if (vreltol.is_empty ()) {
++  if (vreltol.isempty ()) {
+     vreltol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"RelTol\" not set, new value %3.1e is used", 
+       vreltol.double_value ());
+   } // vreltol.print (octave_stdout, true); return (vretval);
+   if (!vreltol.is_scalar_type ()) {
+-    if (vreltol.length () != args(2).length ()) {
++    if (vreltol.numel () != args(2).numel ()) {
+       error_with_id ("OdePkg:InvalidOption", 
+         "Length of option \"RelTol\" must be the same as the number of equations");
+       return (vretval);
+@@ -468,14 +468,14 @@
+   // Implementation of the option AbsTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vabstol = vodeopt.contents ("AbsTol");
+-  if (vabstol.is_empty ()) {
++  if (vabstol.isempty ()) {
+     vabstol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"AbsTol\" not set, new value %3.1e is used", 
+         vabstol.double_value ());
+   } // vabstol.print (octave_stdout, true); return (vretval);
+   if (!vabstol.is_scalar_type ()) {
+-    if (vabstol.length () != args(2).length ()) {
++    if (vabstol.numel () != args(2).numel ()) {
+       error_with_id ("OdePkg:InvalidOption", 
+         "Length of option \"AbsTol\" must be the same as the number of equations");
+       return (vretval);
+@@ -493,7 +493,7 @@
+   // The option NormControl will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnorm = vodeopt.contents ("NormControl");
+-  if (!vnorm.is_empty ())
++  if (!vnorm.isempty ())
+     if (vnorm.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption", 
+         "Option \"NormControl\" will be ignored by this solver");
+@@ -501,14 +501,14 @@
+   // The option NonNegative will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnneg = vodeopt.contents ("NonNegative");
+-  if (!vnneg.is_empty ())
++  if (!vnneg.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"NonNegative\" will be ignored by this solver");
+ 
+   // Implementation of the option OutputFcn has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vplot = vodeopt.contents ("OutputFcn");
+-  if (vplot.is_empty () && nargout == 0) vplot = "odeplot";
++  if (vplot.isempty () && nargout == 0) vplot = "odeplot";
+ 
+   // Implementation of the option OutputSel has been finished, this
+   // option can be set by the user to another value than default value
+@@ -528,13 +528,13 @@
+   // Implementation of the option InitialStep has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vinitstep = vodeopt.contents ("InitialStep");
+-  if (args(1).length () > 2) {
+-    if (!vinitstep.is_empty ())
++  if (args(1).numel () > 2) {
++    if (!vinitstep.isempty ())
+       warning_with_id ("OdePkg:InvalidOption",
+        "Option \"InitialStep\" will be ignored if fixed time stamps are given");
+     vinitstep = args(1).vector_value ()(1);
+   }
+-  if (vinitstep.is_empty ()) {
++  if (vinitstep.isempty ()) {
+     vinitstep = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"InitialStep\" not set, new value %3.1e is used",
+@@ -544,7 +544,7 @@
+   // Implementation of the option MaxStep has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vmaxstep = vodeopt.contents ("MaxStep");
+-  if (vmaxstep.is_empty () && args(1).length () == 2) {
++  if (vmaxstep.isempty () && args(1).numel () == 2) {
+     vmaxstep = (args(1).vector_value ()(1) - args(1).vector_value ()(0)) / 12.5;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxStep\" not set, new value %3.1e is used", 
+@@ -560,21 +560,21 @@
+   // The options 'Jacobian', 'JPattern' and 'Vectorized'
+   octave_value vjac = vodeopt.contents ("Jacobian");
+   octave_idx_type vmebdfijac = 22; // We need to set this if no Jac available
+-  if (!vjac.is_empty ()) {
++  if (!vjac.isempty ()) {
+     vmebdfijacfun = vjac; vmebdfijac = 21;
+   }
+ 
+   // The option Mass will be ignored by this solver. We can't handle
+   // Mass-matrix options with IDE problems
+   octave_value vmass = vodeopt.contents ("Mass");
+-  if (!vmass.is_empty ())
++  if (!vmass.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"Mass\" will be ignored by this solver");
+ 
+   // The option MStateDependence will be ignored by this solver. We
+   // can't handle Mass-matrix options with IDE problems
+   octave_value vmst = vodeopt.contents ("MStateDependence");
+-  if (!vmst.is_empty ())
++  if (!vmst.isempty ())
+     if (vmst.string_value ().compare ("weak") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"MStateDependence\" will be ignored by this solver");
+@@ -582,14 +582,14 @@
+   // The option MvPattern will be ignored by this solver. We
+   // can't handle Mass-matrix options with IDE problems
+   octave_value vmvpat = vodeopt.contents ("MvPattern");
+-  if (!vmvpat.is_empty ())
++  if (!vmvpat.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MvPattern\" will be ignored by this solver");
+ 
+   // The option MvPattern will be ignored by this solver. We
+   // can't handle Mass-matrix options with IDE problems
+   octave_value vmsing = vodeopt.contents ("MassSingular");
+-  if (!vmsing.is_empty ())
++  if (!vmsing.isempty ())
+     if (vmsing.string_value ().compare ("maybe") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"MassSingular\" will be ignored by this solver");
+@@ -597,14 +597,14 @@
+   // The option InitialSlope will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vinitslope = vodeopt.contents ("InitialSlope");
+-  if (!vinitslope.is_empty ())
++  if (!vinitslope.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"InitialSlope\" will be ignored by this solver");
+ 
+   // Implementation of the option MaxOrder has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vmaxder = vodeopt.contents ("MaxOrder");
+-  if (vmaxder.is_empty ()) {
++  if (vmaxder.isempty ()) {
+     vmaxder = 3;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxOrder\" not set, new value %1d is used", 
+@@ -628,12 +628,12 @@
+   // this solver, IT NEEDS TO BE CHECKED IF THE FORTRAN CORE SOLVER
+   // CAN HANDLE THESE OPTIONS
+   octave_value vntol = vodeopt.contents ("NewtonTol");
+-  if (!vntol.is_empty ())
++  if (!vntol.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"NewtonTol\" will be ignored by this solver");
+   octave_value vmaxnewton = 
+     vodeopt.contents ("MaxNewtonIterations");
+-  if (!vmaxnewton.is_empty ())
++  if (!vmaxnewton.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxNewtonIterations\" will be ignored by this solver");
+ 
+@@ -647,13 +647,13 @@
+   NDArray vY0     = args(2).array_value ();
+   NDArray vYPRIME = args(3).array_value ();
+ 
+-  octave_idx_type N = args(2).length ();
++  octave_idx_type N = args(2).numel ();
+   double T0 = vTIME(0);
+   double HO = vinitstep.double_value ();
+   double *Y0 = vY0.fortran_vec ();
+   double *YPRIME = vYPRIME.fortran_vec ();
+   double TOUT = T0 + vinitstep.double_value ();
+-  double TEND = vTIME(vTIME.length ()-1);
++  double TEND = vTIME(vTIME.numel ()-1);
+ 
+   octave_idx_type MF = vmebdfijac;
+   octave_idx_type IDID = 1;
+@@ -682,14 +682,14 @@
+   // etc. and initialize the plot, events and the solstore functions
+   octave_value vtim (T0); octave_value vsol (vY0); octave_value vyds (vYPRIME);
+   odepkg_auxiliary_solstore (vtim, vsol, 0);
+-  if (!vplot.is_empty ()) odepkg_auxiliary_evalplotfun 
++  if (!vplot.isempty ()) odepkg_auxiliary_evalplotfun 
+     (vplot, voutsel, args(1), args(2), vmebdfiextarg, 0);
+ 
+   octave_value_list veveideargs;
+   veveideargs(0) = vsol; 
+   veveideargs(1) = vyds;
+   Cell veveidearg (veveideargs);
+-  if (!vevents.is_empty ()) odepkg_auxiliary_evaleventfun 
++  if (!vevents.isempty ()) odepkg_auxiliary_evaleventfun 
+     (vevents, vtim, veveidearg, vmebdfiextarg, 0);
+ 
+   // We are calling the core solver here to intialize all variables
+@@ -710,7 +710,7 @@
+   ColumnVector vcres(N);
+   ColumnVector vydrs(N);
+ 
+-  if (vTIME.length () == 2) {
++  if (vTIME.numel () == 2) {
+     // Before we are entering the solver loop replace the first time
+     // stamp value with FirstStep = (InitTime - InitStep)
+     TOUT = TOUT - vinitstep.double_value ();
+@@ -742,21 +742,21 @@
+         vcres(vcnt) = Y0[vcnt]; vydrs(vcnt) = YPRIME[vcnt]; 
+       }
+       vsol = vcres; vyds = vydrs; vtim = TOUT;
+-      if (!vevents.is_empty ()) {
++      if (!vevents.isempty ()) {
+         veveideargs(0) = vsol;
+         veveideargs(1) = vyds;
+ 	veveidearg = veveideargs;
+         veveres = odepkg_auxiliary_evaleventfun (vevents, vtim, veveidearg, vmebdfiextarg, 1);
+-        if (!veveres(0).cell_value ()(0).is_empty ())
++        if (!veveres(0).cell_value ()(0).isempty ())
+           if (veveres(0).cell_value ()(0).int_value () == 1) {
+             ColumnVector vttmp = veveres(0).cell_value ()(2).column_vector_value ();
+             Matrix vrtmp = veveres(0).cell_value ()(3).matrix_value ();
+-            vtim = vttmp.extract (vttmp.length () - 1, vttmp.length () - 1);
++            vtim = vttmp.extract (vttmp.numel () - 1, vttmp.numel () - 1);
+             vsol = vrtmp.extract (vrtmp.rows () - 1, 0, vrtmp.rows () - 1, vrtmp.cols () - 1);
+             TOUT = TEND; // let's get out here, the Events function told us to finish
+           }
+       }
+-      if (!vplot.is_empty ()) {
++      if (!vplot.isempty ()) {
+         if (odepkg_auxiliary_evalplotfun (vplot, voutsel, vtim, vsol, vmebdfiextarg, 1)) {
+           error ("Missing error message implementation");
+           return (vretval);
+@@ -765,9 +765,9 @@
+       odepkg_auxiliary_solstore (vtim, vsol, 1);
+     }
+   }
+-  else { // if (vTIME.length () > 2) we have all the time values needed
++  else { // if (vTIME.numel () > 2) we have all the time values needed
+     volatile octave_idx_type vtimecnt = 1;
+-    octave_idx_type vtimelen = vTIME.length () - 1;
++    octave_idx_type vtimelen = vTIME.numel () - 1;
+     while (vtimecnt < vtimelen) {
+       vtimecnt++; TOUT = vTIME(vtimecnt);
+ 
+@@ -793,21 +793,21 @@
+         vcres(vcnt) = Y0[vcnt]; vydrs(vcnt) = YPRIME[vcnt];
+       }
+       vsol = vcres; vyds = vydrs; vtim = TOUT;
+-      if (!vevents.is_empty ()) {
++      if (!vevents.isempty ()) {
+         veveideargs(0) = vsol;
+         veveideargs(1) = vyds;
+ 	veveidearg = veveideargs;
+         veveres = odepkg_auxiliary_evaleventfun (vevents, vtim, veveidearg, vmebdfiextarg, 1);
+-        if (!veveres(0).cell_value ()(0).is_empty ())
++        if (!veveres(0).cell_value ()(0).isempty ())
+           if (veveres(0).cell_value ()(0).int_value () == 1) {
+             ColumnVector vttmp = veveres(0).cell_value ()(2).column_vector_value ();
+             Matrix vrtmp = veveres(0).cell_value ()(3).matrix_value ();
+-            vtim = vttmp.extract (vttmp.length () - 1, vttmp.length () - 1);
++            vtim = vttmp.extract (vttmp.numel () - 1, vttmp.numel () - 1);
+             vsol = vrtmp.extract (vrtmp.rows () - 1, 0, vrtmp.rows () - 1, vrtmp.cols () - 1);
+             vtimecnt = vtimelen; // let's get out here, the Events function told us to finish
+           }
+       }
+-      if (!vplot.is_empty ()) {
++      if (!vplot.isempty ()) {
+         if (odepkg_auxiliary_evalplotfun (vplot, voutsel, vtim, vsol, vmebdfiextarg, 1)) {
+           error ("Missing error message implementation");
+           return (vretval);
+@@ -830,9 +830,9 @@
+   veveideargs(0) = vsol;
+   veveideargs(1) = vyds;
+   veveidearg = veveideargs;
+-  if (!vevents.is_empty ())
++  if (!vevents.isempty ())
+     odepkg_auxiliary_evaleventfun (vevents, vtim, veveidearg, vmebdfiextarg, 2);
+-  if (!vplot.is_empty ())
++  if (!vplot.isempty ())
+     odepkg_auxiliary_evalplotfun (vplot, voutsel, vtim, vsol, vmebdfiextarg, 2);
+ 
+   // Return the results that have been stored in the
+@@ -866,7 +866,7 @@
+     vretmap.assign ("solver", "odebdi");
+     if (vstats.string_value () == "on") 
+       vretmap.assign ("stats", vstatinfo);
+-    if (!vevents.is_empty ()) {
++    if (!vevents.isempty ()) {
+       vretmap.assign ("ie", veveres(0).cell_value ()(1));
+       vretmap.assign ("xe", veveres(0).cell_value ()(2));
+       vretmap.assign ("ye", veveres(0).cell_value ()(3));
+@@ -884,7 +884,7 @@
+     vretval(2) = vempty;
+     vretval(3) = vempty;
+     vretval(4) = vempty;
+-    if (!vevents.is_empty ()) {
++    if (!vevents.isempty ()) {
+       vretval(2) = veveres(0).cell_value ()(2);
+       vretval(3) = veveres(0).cell_value ()(3);
+       vretval(4) = veveres(0).cell_value ()(1);
+diff -r 1646adc7793b src/odepkg_octsolver_radau.cc
+--- a/src/odepkg_octsolver_radau.cc	Sun Jan 20 20:52:16 2019 +0100
++++ b/src/odepkg_octsolver_radau.cc	Sun Jan 20 21:30:32 2019 +0100
+@@ -114,7 +114,7 @@
+   varin(0) = X; varin(1) = A;
+   for (octave_idx_type vcnt = 0; vcnt < vradauextarg.length (); vcnt++)
+     varin(vcnt+2) = vradauextarg(vcnt);
+-  octave_value_list vout = feval (vradauodefun.function_value (), varin, 1);
++  octave_value_list vout = octave::feval (vradauodefun.function_value (), varin, 1);
+ 
+   // Return the results from the function evaluation to the Fortran
+   // solver, again copy them and don't just create a Fortran vector
+@@ -200,14 +200,14 @@
+   octave_value vy = octave_value (A);
+ 
+   // Check if an 'Events' function has been set by the user
+-  if (!vradauevefun.is_empty ()) {
++  if (!vradauevefun.isempty ()) {
+     vradauevesol = odepkg_auxiliary_evaleventfun 
+       (vradauevefun, vt, vy, vradauextarg, 1);
+-    if (!vradauevesol(0).cell_value ()(0).is_empty ())
++    if (!vradauevesol(0).cell_value ()(0).isempty ())
+       if (vradauevesol(0).cell_value ()(0).int_value () == 1) {
+         ColumnVector vttmp = vradauevesol(0).cell_value ()(2).column_vector_value ();
+         Matrix vrtmp = vradauevesol(0).cell_value ()(3).matrix_value ();
+-        vt = vttmp.extract (vttmp.length () - 1, vttmp.length () - 1);
++        vt = vttmp.extract (vttmp.numel () - 1, vttmp.numel () - 1);
+         vy = vrtmp.extract (vrtmp.rows () - 1, 0, vrtmp.rows () - 1, vrtmp.cols () - 1);
+         IRTRN = (vradauevesol(0).cell_value ()(0).int_value () ? -1 : 0);
+       }
+@@ -219,7 +219,7 @@
+ 
+   // Check if an 'OutputFcn' has been set by the user (including the
+   // values of the options for 'OutputSel' and 'Refine')
+-  if (!vradaupltfun.is_empty ()) {
++  if (!vradaupltfun.isempty ()) {
+     if (vradaurefine.int_value () > 0) {
+       ColumnVector B(N); double vtb = 0.0;
+       for (octave_idx_type vcnt = 1; vcnt < vradaurefine.int_value (); vcnt++) {
+@@ -320,8 +320,8 @@
+   if (nargin >= 4) {
+ 
+     // Fourth input argument != OdePkg option, need a default structure
+-    if (!args(3).is_map ()) {
+-      octave_value_list tmp = feval ("odeset", tmp, 1);
++    if (!args(3).isstruct ()) {
++      octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+       vodeopt = tmp(0).scalar_map_value ();       // Create a default structure
+       for (octave_idx_type vcnt = 3; vcnt < nargin; vcnt++)
+         vradauextarg(vcnt-3) = args(vcnt); // Save arguments in vradauextarg
+@@ -331,7 +331,7 @@
+     else if (nargin > 4) {
+       octave_value_list varin;
+       varin(0) = args(3); varin(1) = "ode2r";
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value ();       // Create structure from args(4)
+       for (octave_idx_type vcnt = 4; vcnt < nargin; vcnt++)
+@@ -342,7 +342,7 @@
+     else {
+       octave_value_list varin;
+       varin(0) = args(3); varin(1) = "ode2r"; // Check structure
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+     }
+@@ -350,7 +350,7 @@
+   } // if (nargin >= 4)
+ 
+   else { // if nargin == 3, everything else has been checked before
+-    octave_value_list tmp = feval ("odeset", tmp, 1);
++    octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+     vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+   }
+ 
+@@ -362,7 +362,7 @@
+   // Implementation of the option RelTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vreltol = vodeopt.contents ("RelTol");
+-  if (vreltol.is_empty ()) {
++  if (vreltol.isempty ()) {
+     vreltol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"RelTol\" not set, new value %3.1e is used",
+@@ -379,7 +379,7 @@
+   // Implementation of the option AbsTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vabstol = vodeopt.contents ("AbsTol");
+-  if (vabstol.is_empty ()) {
++  if (vabstol.isempty ()) {
+     vabstol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"AbsTol\" not set, new value %3.1e is used",
+@@ -409,7 +409,7 @@
+   // The option NormControl will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnorm = vodeopt.contents ("NormControl");
+-  if (!vnorm.is_empty ())
++  if (!vnorm.isempty ())
+     if (vnorm.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"NormControl\" will be ignored by this solver");
+@@ -417,14 +417,14 @@
+   // The option NonNegative will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnneg = vodeopt.contents ("NonNegative");
+-  if (!vnneg.is_empty ())
++  if (!vnneg.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"NonNegative\" will be ignored by this solver");
+ 
+   // Implementation of the option OutputFcn has been finished, this
+   // option can be set by the user to another value than default value
+   vradaupltfun = vodeopt.contents ("OutputFcn");
+-  if (vradaupltfun.is_empty () && nargout == 0) vradaupltfun = "odeplot";
++  if (vradaupltfun.isempty () && nargout == 0) vradaupltfun = "odeplot";
+ 
+   // Implementation of the option OutputSel has been finished, this
+   // option can be set by the user to another value than default value
+@@ -445,7 +445,7 @@
+     error_with_id ("OdePkg:InvalidOption",
+       "Fixed time stamps are not supported by this solver");
+   }
+-  if (vinitstep.is_empty ()) {
++  if (vinitstep.isempty ()) {
+     vinitstep = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"InitialStep\" not set, new value %3.1e is used",
+@@ -455,7 +455,7 @@
+   // Implementation of the option MaxStep has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vmaxstep = vodeopt.contents ("MaxStep");
+-  if (vmaxstep.is_empty () && args(1).length () == 2) {
++  if (vmaxstep.isempty () && args(1).length () == 2) {
+     vmaxstep = (args(1).vector_value ()(1) - args(1).vector_value ()(0)) / 12.5;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MaxStep\" not set, new value %3.1e is used", 
+@@ -471,19 +471,19 @@
+   // options can be set by the user to another value than default
+   vradaujacfun = vodeopt.contents ("Jacobian");
+   octave_idx_type vradaujac = 0; // We need to set this if no Jac available
+-  if (!vradaujacfun.is_empty ()) vradaujac = 1;
++  if (!vradaujacfun.isempty ()) vradaujac = 1;
+ 
+   // The option JPattern will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vradaujacpat = vodeopt.contents ("JPattern");
+-  if (!vradaujacpat.is_empty ())
++  if (!vradaujacpat.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"JPattern\" will be ignored by this solver");
+ 
+   // The option Vectorized will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vradauvectorize = vodeopt.contents ("Vectorized");
+-  if (!vradauvectorize.is_empty ())
++  if (!vradauvectorize.isempty ())
+     if (vradauvectorize.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"Vectorized\" will be ignored by this solver");
+@@ -492,7 +492,7 @@
+   // options can be set by the user to another value than default
+   vradaumass = vodeopt.contents ("Mass");
+   octave_idx_type vradaumas = 0;
+-  if (!vradaumass.is_empty ()) {
++  if (!vradaumass.isempty ()) {
+     vradaumas = 1;
+     if (vradaumass.is_function_handle () || vradaumass.is_inline_function ())
+       warning_with_id ("OdePkg:InvalidOption",
+@@ -502,7 +502,7 @@
+   // The option MStateDependence will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   vradaumassstate = vodeopt.contents ("MStateDependence");
+-  if (!vradaumassstate.is_empty ())
++  if (!vradaumassstate.isempty ())
+     if (vradaumassstate.string_value ().compare ("weak") != 0) // 'weak' is default
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"MStateDependence\" will be ignored by this solver");
+@@ -510,14 +510,14 @@
+   // The option MStateDependence will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   octave_value vmvpat = vodeopt.contents ("MvPattern");
+-  if (!vmvpat.is_empty ())
++  if (!vmvpat.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MvPattern\" will be ignored by this solver");
+ 
+   // The option MassSingular will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   octave_value vmsing = vodeopt.contents ("MassSingular");
+-  if (!vmsing.is_empty ())
++  if (!vmsing.isempty ())
+     if (vmsing.string_value ().compare ("maybe") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"MassSingular\" will be ignored by this solver");
+@@ -525,21 +525,21 @@
+   // The option InitialSlope will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vinitslope = vodeopt.contents ("InitialSlope");
+-  if (!vinitslope.is_empty ())
++  if (!vinitslope.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"InitialSlope\" will be ignored by this solver");
+ 
+   // The option MaxOrder will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vmaxder = vodeopt.contents ("MaxOrder");
+-  if (!vmaxder.is_empty ())
++  if (!vmaxder.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MaxOrder\" will be ignored by this solver");
+ 
+   // The option BDF will be ignored by this solver, the core Fortran
+   // solver doesn't support this option
+   octave_value vbdf = vodeopt.contents ("BDF");
+-  if (!vbdf.is_empty ())
++  if (!vbdf.isempty ())
+     if (vbdf.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption", 
+         "Option \"BDF\" will be ignored by this solver");
+@@ -548,12 +548,12 @@
+   // this solver, IT NEEDS TO BE CHECKED IF THE FORTRAN CORE SOLVER
+   // CAN HANDLE THESE OPTIONS
+   octave_value vntol = vodeopt.contents ("NewtonTol");
+-  if (!vntol.is_empty ())
++  if (!vntol.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"NewtonTol\" will be ignored by this solver");
+   octave_value vmaxnewton = 
+     vodeopt.contents ("MaxNewtonIterations");
+-  if (!vmaxnewton.is_empty ())
++  if (!vmaxnewton.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxNewtonIterations\" will be ignored by this solver");
+ 
+@@ -600,9 +600,9 @@
+   octave_value vtim = args(1).vector_value ()(0);
+   octave_value vsol = args(2);
+   odepkg_auxiliary_solstore (vtim, vsol, 0);
+-  if (!vradaupltfun.is_empty ()) odepkg_auxiliary_evalplotfun 
++  if (!vradaupltfun.isempty ()) odepkg_auxiliary_evalplotfun 
+     (vradaupltfun, vradauoutsel, args(1), args(2), vradauextarg, 0);
+-  if (!vradauevefun.is_empty ())
++  if (!vradauevefun.isempty ())
+     odepkg_auxiliary_evaleventfun (vradauevefun, vtim, args(2), vradauextarg, 0);
+ 
+   // We are calling the core solver and solve the set of ODEs or DAEs
+@@ -639,9 +639,9 @@
+   octave_value vted = octave_value (XEND);
+   octave_value vfin = octave_value (vlastline);
+ 
+-  if (!vradaupltfun.is_empty ()) odepkg_auxiliary_evalplotfun
++  if (!vradaupltfun.isempty ()) odepkg_auxiliary_evalplotfun
+     (vradaupltfun, vradauoutsel, vted, vfin, vradauextarg, 2);
+-  if (!vradauevefun.is_empty ()) odepkg_auxiliary_evaleventfun
++  if (!vradauevefun.isempty ()) odepkg_auxiliary_evaleventfun
+     (vradauevefun, vted, vfin, vradauextarg, 2);
+   
+   // Get the stats information as an octave_scalar_map if the option 'Stats'
+@@ -667,9 +667,9 @@
+     vretmap.assign ("x", vtres);
+     vretmap.assign ("y", vyres);
+     vretmap.assign ("solver", "ode2r");
+-    if (!vstatinfo.is_empty ()) // Event implementation
++    if (!vstatinfo.isempty ()) // Event implementation
+       vretmap.assign ("stats", vstatinfo);
+-    if (!vradauevefun.is_empty ()) {
++    if (!vradauevefun.isempty ()) {
+       vretmap.assign ("ie", vradauevesol(0).cell_value ()(1));
+       vretmap.assign ("xe", vradauevesol(0).cell_value ()(2));
+       vretmap.assign ("ye", vradauevesol(0).cell_value ()(3));
+@@ -687,7 +687,7 @@
+     vretval(2) = vempty;
+     vretval(3) = vempty;
+     vretval(4) = vempty;
+-    if (!vradauevefun.is_empty ()) {
++    if (!vradauevefun.isempty ()) {
+       vretval(2) = vradauevesol(0).cell_value ()(2);
+       vretval(3) = vradauevesol(0).cell_value ()(3);
+       vretval(4) = vradauevesol(0).cell_value ()(1);
+diff -r 1646adc7793b src/odepkg_octsolver_radau5.cc
+--- a/src/odepkg_octsolver_radau5.cc	Sun Jan 20 20:52:16 2019 +0100
++++ b/src/odepkg_octsolver_radau5.cc	Sun Jan 20 21:30:32 2019 +0100
+@@ -114,7 +114,7 @@
+   varin(0) = X; varin(1) = A;
+   for (octave_idx_type vcnt = 0; vcnt < vradau5extarg.length (); vcnt++)
+     varin(vcnt+2) = vradau5extarg(vcnt);
+-  octave_value_list vout = feval (vradau5odefun.function_value (), varin, 1);
++  octave_value_list vout = octave::feval (vradau5odefun.function_value (), varin, 1);
+ 
+   // Return the results from the function evaluation to the Fortran
+   // solver, again copy them and don't just create a Fortran vector
+@@ -200,14 +200,14 @@
+   octave_value vy = octave_value (A);
+ 
+   // Check if an 'Events' function has been set by the user
+-  if (!vradau5evefun.is_empty ()) {
++  if (!vradau5evefun.isempty ()) {
+     vradau5evesol = odepkg_auxiliary_evaleventfun 
+       (vradau5evefun, vt, vy, vradau5extarg, 1);
+-    if (!vradau5evesol(0).cell_value ()(0).is_empty ())
++    if (!vradau5evesol(0).cell_value ()(0).isempty ())
+       if (vradau5evesol(0).cell_value ()(0).int_value () == 1) {
+         ColumnVector vttmp = vradau5evesol(0).cell_value ()(2).column_vector_value ();
+         Matrix vrtmp = vradau5evesol(0).cell_value ()(3).matrix_value ();
+-        vt = vttmp.extract (vttmp.length () - 1, vttmp.length () - 1);
++        vt = vttmp.extract (vttmp.numel () - 1, vttmp.numel () - 1);
+         vy = vrtmp.extract (vrtmp.rows () - 1, 0, vrtmp.rows () - 1, vrtmp.cols () - 1);
+         IRTRN = (vradau5evesol(0).cell_value ()(0).int_value () ? -1 : 0);
+       }
+@@ -219,7 +219,7 @@
+ 
+   // Check if an 'OutputFcn' has been set by the user (including the
+   // values of the options for 'OutputSel' and 'Refine')
+-  if (!vradau5pltfun.is_empty ()) {
++  if (!vradau5pltfun.isempty ()) {
+     if (vradau5refine.int_value () > 0) {
+       ColumnVector B(N); double vtb = 0.0;
+       for (octave_idx_type vcnt = 1; vcnt < vradau5refine.int_value (); vcnt++) {
+@@ -320,8 +320,8 @@
+   if (nargin >= 4) {
+ 
+     // Fourth input argument != OdePkg option, need a default structure
+-    if (!args(3).is_map ()) {
+-      octave_value_list tmp = feval ("odeset", tmp, 1);
++    if (!args(3).isstruct ()) {
++      octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+       vodeopt = tmp(0).scalar_map_value ();       // Create a default structure
+       for (octave_idx_type vcnt = 3; vcnt < nargin; vcnt++)
+         vradau5extarg(vcnt-3) = args(vcnt); // Save arguments in vradau5extarg
+@@ -331,7 +331,7 @@
+     else if (nargin > 4) {
+       octave_value_list varin;
+       varin(0) = args(3); varin(1) = "ode5r";
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value ();       // Create structure from args(4)
+       for (octave_idx_type vcnt = 4; vcnt < nargin; vcnt++)
+@@ -342,7 +342,7 @@
+     else {
+       octave_value_list varin;
+       varin(0) = args(3); varin(1) = "ode5r"; // Check structure
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+     }
+@@ -350,7 +350,7 @@
+   } // if (nargin >= 4)
+ 
+   else { // if nargin == 3, everything else has been checked before
+-    octave_value_list tmp = feval ("odeset", tmp, 1);
++    octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+     vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+   }
+ 
+@@ -362,7 +362,7 @@
+   // Implementation of the option RelTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vreltol = vodeopt.contents ("RelTol");
+-  if (vreltol.is_empty ()) {
++  if (vreltol.isempty ()) {
+     vreltol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"RelTol\" not set, new value %3.1e is used",
+@@ -379,7 +379,7 @@
+   // Implementation of the option AbsTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vabstol = vodeopt.contents ("AbsTol");
+-  if (vabstol.is_empty ()) {
++  if (vabstol.isempty ()) {
+     vabstol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"AbsTol\" not set, new value %3.1e is used",
+@@ -409,7 +409,7 @@
+   // The option NormControl will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnorm = vodeopt.contents ("NormControl");
+-  if (!vnorm.is_empty ())
++  if (!vnorm.isempty ())
+     if (vnorm.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"NormControl\" will be ignored by this solver");
+@@ -417,14 +417,14 @@
+   // The option NonNegative will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnneg = vodeopt.contents ("NonNegative");
+-  if (!vnneg.is_empty ())
++  if (!vnneg.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"NonNegative\" will be ignored by this solver");
+ 
+   // Implementation of the option OutputFcn has been finished, this
+   // option can be set by the user to another value than default value
+   vradau5pltfun = vodeopt.contents ("OutputFcn");
+-  if (vradau5pltfun.is_empty () && nargout == 0) vradau5pltfun = "odeplot";
++  if (vradau5pltfun.isempty () && nargout == 0) vradau5pltfun = "odeplot";
+ 
+   // Implementation of the option OutputSel has been finished, this
+   // option can be set by the user to another value than default value
+@@ -445,7 +445,7 @@
+     error_with_id ("OdePkg:InvalidOption",
+       "Fixed time stamps are not supported by this solver");
+   }
+-  if (vinitstep.is_empty ()) {
++  if (vinitstep.isempty ()) {
+     vinitstep = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"InitialStep\" not set, new value %3.1e is used",
+@@ -455,7 +455,7 @@
+   // Implementation of the option MaxStep has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vmaxstep = vodeopt.contents ("MaxStep");
+-  if (vmaxstep.is_empty () && args(1).length () == 2) {
++  if (vmaxstep.isempty () && args(1).length () == 2) {
+     vmaxstep = (args(1).vector_value ()(1) - args(1).vector_value ()(0)) / 12.5;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MaxStep\" not set, new value %3.1e is used", 
+@@ -471,19 +471,19 @@
+   // options can be set by the user to another value than default
+   vradau5jacfun = vodeopt.contents ("Jacobian");
+   octave_idx_type vradau5jac = 0; // We need to set this if no Jac available
+-  if (!vradau5jacfun.is_empty ()) vradau5jac = 1;
++  if (!vradau5jacfun.isempty ()) vradau5jac = 1;
+ 
+   // The option JPattern will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vradau5jacpat = vodeopt.contents ("JPattern");
+-  if (!vradau5jacpat.is_empty ())
++  if (!vradau5jacpat.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"JPattern\" will be ignored by this solver");
+ 
+   // The option Vectorized will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vradau5vectorize = vodeopt.contents ("Vectorized");
+-  if (!vradau5vectorize.is_empty ())
++  if (!vradau5vectorize.isempty ())
+     if (vradau5vectorize.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"Vectorized\" will be ignored by this solver");
+@@ -492,7 +492,7 @@
+   // options can be set by the user to another value than default
+   vradau5mass = vodeopt.contents ("Mass");
+   octave_idx_type vradau5mas = 0;
+-  if (!vradau5mass.is_empty ()) {
++  if (!vradau5mass.isempty ()) {
+     vradau5mas = 1;
+     if (vradau5mass.is_function_handle () || vradau5mass.is_inline_function ())
+       warning_with_id ("OdePkg:InvalidOption",
+@@ -502,7 +502,7 @@
+   // The option MStateDependence will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   vradau5massstate = vodeopt.contents ("MStateDependence");
+-  if (!vradau5massstate.is_empty ())
++  if (!vradau5massstate.isempty ())
+     if (vradau5massstate.string_value ().compare ("weak") != 0) // 'weak' is default
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"MStateDependence\" will be ignored by this solver");
+@@ -510,14 +510,14 @@
+   // The option MStateDependence will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   octave_value vmvpat = vodeopt.contents ("MvPattern");
+-  if (!vmvpat.is_empty ())
++  if (!vmvpat.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MvPattern\" will be ignored by this solver");
+ 
+   // The option MassSingular will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   octave_value vmsing = vodeopt.contents ("MassSingular");
+-  if (!vmsing.is_empty ())
++  if (!vmsing.isempty ())
+     if (vmsing.string_value ().compare ("maybe") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"MassSingular\" will be ignored by this solver");
+@@ -525,21 +525,21 @@
+   // The option InitialSlope will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vinitslope = vodeopt.contents ("InitialSlope");
+-  if (!vinitslope.is_empty ())
++  if (!vinitslope.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"InitialSlope\" will be ignored by this solver");
+ 
+   // The option MaxOrder will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vmaxder = vodeopt.contents ("MaxOrder");
+-  if (!vmaxder.is_empty ())
++  if (!vmaxder.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MaxOrder\" will be ignored by this solver");
+ 
+   // The option BDF will be ignored by this solver, the core Fortran
+   // solver doesn't support this option
+   octave_value vbdf = vodeopt.contents ("BDF");
+-  if (!vbdf.is_empty ())
++  if (!vbdf.isempty ())
+     if (vbdf.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption", 
+         "Option \"BDF\" will be ignored by this solver");
+@@ -547,7 +547,7 @@
+   // Implementation of the option NewtonTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vNTOL = vodeopt.contents ("NewtonTol");
+-  if (vNTOL.is_empty ()) {
++  if (vNTOL.isempty ()) {
+     vNTOL = 0;
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"NewtonTol\" not set, default value is used");
+@@ -557,7 +557,7 @@
+   // option can be set by the user to another value than default value
+   octave_value vmaxnit = 
+     vodeopt.contents ("MaxNewtonIterations");
+-  if (vmaxnit.is_empty ()) {
++  if (vmaxnit.isempty ()) {
+     vmaxnit = 7; warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxNewtonIterations\" not set, default value 7 is used");
+   }
+@@ -611,9 +611,9 @@
+   octave_value vtim = args(1).vector_value ()(0);
+   octave_value vsol = args(2);
+   odepkg_auxiliary_solstore (vtim, vsol, 0);
+-  if (!vradau5pltfun.is_empty ()) odepkg_auxiliary_evalplotfun 
++  if (!vradau5pltfun.isempty ()) odepkg_auxiliary_evalplotfun 
+     (vradau5pltfun, vradau5outsel, args(1), args(2), vradau5extarg, 0);
+-  if (!vradau5evefun.is_empty ())
++  if (!vradau5evefun.isempty ())
+     odepkg_auxiliary_evaleventfun (vradau5evefun, vtim, args(2), vradau5extarg, 0);
+ 
+   // octave_stdout <<  "X VALUE=" << X << XEND << std::endl;
+@@ -651,9 +651,9 @@
+   octave_value vted = octave_value (XEND);
+   octave_value vfin = octave_value (vlastline);
+ 
+-  if (!vradau5pltfun.is_empty ()) odepkg_auxiliary_evalplotfun
++  if (!vradau5pltfun.isempty ()) odepkg_auxiliary_evalplotfun
+     (vradau5pltfun, vradau5outsel, vted, vfin, vradau5extarg, 2);
+-  if (!vradau5evefun.is_empty ()) odepkg_auxiliary_evaleventfun
++  if (!vradau5evefun.isempty ()) odepkg_auxiliary_evaleventfun
+     (vradau5evefun, vted, vfin, vradau5extarg, 2);
+   
+   // Get the stats information as an octave_scalar_map if the option 'Stats'
+@@ -679,9 +679,9 @@
+     vretmap.assign ("x", vtres);
+     vretmap.assign ("y", vyres);
+     vretmap.assign ("solver", "ode5r");
+-    if (!vstatinfo.is_empty ()) // Event implementation
++    if (!vstatinfo.isempty ()) // Event implementation
+       vretmap.assign ("stats", vstatinfo);
+-    if (!vradau5evefun.is_empty ()) {
++    if (!vradau5evefun.isempty ()) {
+       vretmap.assign ("ie", vradau5evesol(0).cell_value ()(1));
+       vretmap.assign ("xe", vradau5evesol(0).cell_value ()(2));
+       vretmap.assign ("ye", vradau5evesol(0).cell_value ()(3));
+@@ -699,7 +699,7 @@
+     vretval(2) = vempty;
+     vretval(3) = vempty;
+     vretval(4) = vempty;
+-    if (!vradau5evefun.is_empty ()) {
++    if (!vradau5evefun.isempty ()) {
+       vretval(2) = vradau5evesol(0).cell_value ()(2);
+       vretval(3) = vradau5evesol(0).cell_value ()(3);
+       vretval(4) = vradau5evesol(0).cell_value ()(1);
+diff -r 1646adc7793b src/odepkg_octsolver_rodas.cc
+--- a/src/odepkg_octsolver_rodas.cc	Sun Jan 20 20:52:16 2019 +0100
++++ b/src/odepkg_octsolver_rodas.cc	Sun Jan 20 21:30:32 2019 +0100
+@@ -293,7 +293,7 @@
+   varin(0) = X; varin(1) = A;
+   for (octave_idx_type vcnt = 0; vcnt < vrodasextarg.length (); vcnt++)
+     varin(vcnt+2) = vrodasextarg(vcnt);
+-  octave_value_list vout = feval (vrodasodefun.function_value (), varin, 1);
++  octave_value_list vout = octave::feval (vrodasodefun.function_value (), varin, 1);
+ 
+   // Return the results from the function evaluation to the Fortran
+   // solver, again copy them and don't just create a Fortran vector
+@@ -401,14 +401,14 @@
+   octave_value vy = octave_value (A);
+ 
+   // Check if an 'Events' function has been set by the user
+-  if (!vrodasevefun.is_empty ()) {
++  if (!vrodasevefun.isempty ()) {
+     vrodasevesol = odepkg_auxiliary_evaleventfun 
+       (vrodasevefun, vt, vy, vrodasextarg, 1);
+-    if (!vrodasevesol(0).cell_value ()(0).is_empty ())
++    if (!vrodasevesol(0).cell_value ()(0).isempty ())
+       if (vrodasevesol(0).cell_value ()(0).int_value () == 1) {
+         ColumnVector vttmp = vrodasevesol(0).cell_value ()(2).column_vector_value ();
+         Matrix vrtmp = vrodasevesol(0).cell_value ()(3).matrix_value ();
+-        vt = vttmp.extract (vttmp.length () - 1, vttmp.length () - 1);
++        vt = vttmp.extract (vttmp.numel () - 1, vttmp.numel () - 1);
+         vy = vrtmp.extract (vrtmp.rows () - 1, 0, vrtmp.rows () - 1, vrtmp.cols () - 1);
+         IRTRN = (vrodasevesol(0).cell_value ()(0).int_value () ? -1 : 0);
+       }
+@@ -420,7 +420,7 @@
+ 
+   // Check if an 'OutputFcn' has been set by the user (including the
+   // values of the options for 'OutputSel' and 'Refine')
+-  if (!vrodaspltfun.is_empty ()) {
++  if (!vrodaspltfun.isempty ()) {
+     if (vrodasrefine.int_value () > 0) {
+       ColumnVector B(N); double vtb = 0.0;
+       for (octave_idx_type vcnt = 1; vcnt < vrodasrefine.int_value (); vcnt++) {
+@@ -534,8 +534,8 @@
+   if (nargin >= 4) {
+ 
+     // Fourth input argument != OdePkg option, need a default structure
+-    if (!args(3).is_map ()) {
+-      octave_value_list tmp = feval ("odeset", tmp, 1);
++    if (!args(3).isstruct ()) {
++      octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+       vodeopt = tmp(0).scalar_map_value ();       // Create a default structure
+       for (octave_idx_type vcnt = 3; vcnt < nargin; vcnt++)
+         vrodasextarg(vcnt-3) = args(vcnt); // Save arguments in vrodasextarg
+@@ -545,7 +545,7 @@
+     else if (nargin > 4) {
+       octave_value_list varin;
+       varin(0) = args(3); varin(1) = "oders";
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value ();       // Create structure from args(4)
+       for (octave_idx_type vcnt = 4; vcnt < nargin; vcnt++)
+@@ -556,7 +556,7 @@
+     else {
+       octave_value_list varin;
+       varin(0) = args(3); varin(1) = "oders"; // Check structure
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+     }
+@@ -564,7 +564,7 @@
+   } // if (nargin >= 4)
+ 
+   else { // if nargin == 3, everything else has been checked before
+-    octave_value_list tmp = feval ("odeset", tmp, 1);
++    octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+     vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+   }
+ 
+@@ -576,7 +576,7 @@
+   // Implementation of the option RelTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vreltol = vodeopt.contents ("RelTol");
+-  if (vreltol.is_empty ()) {
++  if (vreltol.isempty ()) {
+     vreltol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"RelTol\" not set, new value %3.1e is used",
+@@ -593,7 +593,7 @@
+   // Implementation of the option AbsTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vabstol = vodeopt.contents ("AbsTol");
+-  if (vabstol.is_empty ()) {
++  if (vabstol.isempty ()) {
+     vabstol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"AbsTol\" not set, new value %3.1e is used",
+@@ -623,7 +623,7 @@
+   // The option NormControl will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnorm = vodeopt.contents ("NormControl");
+-  if (!vnorm.is_empty ())
++  if (!vnorm.isempty ())
+     if (vnorm.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"NormControl\" will be ignored by this solver");
+@@ -631,14 +631,14 @@
+   // The option NonNegative will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnneg = vodeopt.contents ("NonNegative");
+-  if (!vnneg.is_empty ())
++  if (!vnneg.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"NonNegative\" will be ignored by this solver");
+ 
+   // Implementation of the option OutputFcn has been finished, this
+   // option can be set by the user to another value than default value
+   vrodaspltfun = vodeopt.contents ("OutputFcn");
+-  if (vrodaspltfun.is_empty () && nargout == 0) vrodaspltfun = "odeplot";
++  if (vrodaspltfun.isempty () && nargout == 0) vrodaspltfun = "odeplot";
+ 
+   // Implementation of the option OutputSel has been finished, this
+   // option can be set by the user to another value than default value
+@@ -659,7 +659,7 @@
+     error_with_id ("OdePkg:InvalidOption",
+       "Fixed time stamps are not supported by this solver");
+   }
+-  if (vinitstep.is_empty ()) {
++  if (vinitstep.isempty ()) {
+     vinitstep = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"InitialStep\" not set, new value %3.1e is used",
+@@ -669,7 +669,7 @@
+   // Implementation of the option MaxStep has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vmaxstep = vodeopt.contents ("MaxStep");
+-  if (vmaxstep.is_empty () && args(1).length () == 2) {
++  if (vmaxstep.isempty () && args(1).length () == 2) {
+     vmaxstep = (args(1).vector_value ()(1) - args(1).vector_value ()(0)) / 12.5;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MaxStep\" not set, new value %3.1e is used", 
+@@ -685,19 +685,19 @@
+   // options can be set by the user to another value than default
+   vrodasjacfun = vodeopt.contents ("Jacobian");
+   octave_idx_type vrodasjac = 0; // We need to set this if no Jac available
+-  if (!vrodasjacfun.is_empty ()) vrodasjac = 1;
++  if (!vrodasjacfun.isempty ()) vrodasjac = 1;
+ 
+   // The option JPattern will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vrodasjacpat = vodeopt.contents ("JPattern");
+-  if (!vrodasjacpat.is_empty ())
++  if (!vrodasjacpat.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"JPattern\" will be ignored by this solver");
+ 
+   // The option Vectorized will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vrodasvectorize = vodeopt.contents ("Vectorized");
+-  if (!vrodasvectorize.is_empty ())
++  if (!vrodasvectorize.isempty ())
+     if (vrodasvectorize.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"Vectorized\" will be ignored by this solver");
+@@ -706,7 +706,7 @@
+   // options can be set by the user to another value than default
+   vrodasmass = vodeopt.contents ("Mass");
+   octave_idx_type vrodasmas = 0;
+-  if (!vrodasmass.is_empty ()) {
++  if (!vrodasmass.isempty ()) {
+     vrodasmas = 1;
+     if (vrodasmass.is_function_handle () || vrodasmass.is_inline_function ())
+       warning_with_id ("OdePkg:InvalidOption",
+@@ -716,7 +716,7 @@
+   // The option MStateDependence will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   vrodasmassstate = vodeopt.contents ("MStateDependence");
+-  if (!vrodasmassstate.is_empty ())
++  if (!vrodasmassstate.isempty ())
+     if (vrodasmassstate.string_value ().compare ("weak") != 0) // 'weak' is default
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"MStateDependence\" will be ignored by this solver");
+@@ -724,14 +724,14 @@
+   // The option MStateDependence will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   octave_value vmvpat = vodeopt.contents ("MvPattern");
+-  if (!vmvpat.is_empty ())
++  if (!vmvpat.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MvPattern\" will be ignored by this solver");
+ 
+   // The option MassSingular will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   octave_value vmsing = vodeopt.contents ("MassSingular");
+-  if (!vmsing.is_empty ())
++  if (!vmsing.isempty ())
+     if (vmsing.string_value ().compare ("maybe") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"MassSingular\" will be ignored by this solver");
+@@ -739,21 +739,21 @@
+   // The option InitialSlope will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vinitslope = vodeopt.contents ("InitialSlope");
+-  if (!vinitslope.is_empty ())
++  if (!vinitslope.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"InitialSlope\" will be ignored by this solver");
+ 
+   // The option MaxOrder will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vmaxder = vodeopt.contents ("MaxOrder");
+-  if (!vmaxder.is_empty ())
++  if (!vmaxder.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MaxOrder\" will be ignored by this solver");
+ 
+   // The option BDF will be ignored by this solver, the core Fortran
+   // solver doesn't support this option
+   octave_value vbdf = vodeopt.contents ("BDF");
+-  if (!vbdf.is_empty ())
++  if (!vbdf.isempty ())
+     if (vbdf.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption", 
+         "Option \"BDF\" will be ignored by this solver");
+@@ -761,12 +761,12 @@
+   // this solver, IT NEEDS TO BE CHECKED IF THE FORTRAN CORE SOLVER
+   // CAN HANDLE THESE OPTIONS
+   octave_value vntol = vodeopt.contents ("NewtonTol");
+-  if (!vntol.is_empty ())
++  if (!vntol.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"NewtonTol\" will be ignored by this solver");
+   octave_value vmaxnewton = 
+     vodeopt.contents ("MaxNewtonIterations");
+-  if (!vmaxnewton.is_empty ())
++  if (!vmaxnewton.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxNewtonIterations\" will be ignored by this solver");
+ 
+@@ -813,9 +813,9 @@
+   octave_value vtim = args(1).vector_value ()(0);
+   octave_value vsol = args(2);
+   odepkg_auxiliary_solstore (vtim, vsol, 0);
+-  if (!vrodaspltfun.is_empty ()) odepkg_auxiliary_evalplotfun 
++  if (!vrodaspltfun.isempty ()) odepkg_auxiliary_evalplotfun 
+     (vrodaspltfun, vrodasoutsel, args(1), args(2), vrodasextarg, 0);
+-  if (!vrodasevefun.is_empty ())
++  if (!vrodasevefun.isempty ())
+     odepkg_auxiliary_evaleventfun (vrodasevefun, vtim, args(2), vrodasextarg, 0);
+ 
+   // We are calling the core solver and solve the set of ODEs or DAEs
+@@ -852,9 +852,9 @@
+   octave_value vted = octave_value (XEND);
+   octave_value vfin = octave_value (vlastline);
+ 
+-  if (!vrodaspltfun.is_empty ()) odepkg_auxiliary_evalplotfun
++  if (!vrodaspltfun.isempty ()) odepkg_auxiliary_evalplotfun
+     (vrodaspltfun, vrodasoutsel, vted, vfin, vrodasextarg, 2);
+-  if (!vrodasevefun.is_empty ()) odepkg_auxiliary_evaleventfun
++  if (!vrodasevefun.isempty ()) odepkg_auxiliary_evaleventfun
+     (vrodasevefun, vted, vfin, vrodasextarg, 2);
+   
+   // Get the stats information as an octave_scalar_map if the option 'Stats'
+@@ -879,9 +879,9 @@
+     vretmap.assign ("x", vtres);
+     vretmap.assign ("y", vyres);
+     vretmap.assign ("solver", "oders");
+-    if (!vstatinfo.is_empty ()) // Event implementation
++    if (!vstatinfo.isempty ()) // Event implementation
+       vretmap.assign ("stats", vstatinfo);
+-    if (!vrodasevefun.is_empty ()) {
++    if (!vrodasevefun.isempty ()) {
+       vretmap.assign ("ie", vrodasevesol(0).cell_value ()(1));
+       vretmap.assign ("xe", vrodasevesol(0).cell_value ()(2));
+       vretmap.assign ("ye", vrodasevesol(0).cell_value ()(3));
+@@ -899,7 +899,7 @@
+     vretval(2) = vempty;
+     vretval(3) = vempty;
+     vretval(4) = vempty;
+-    if (!vrodasevefun.is_empty ()) {
++    if (!vrodasevefun.isempty ()) {
+       vretval(2) = vrodasevesol(0).cell_value ()(2);
+       vretval(3) = vrodasevesol(0).cell_value ()(3);
+       vretval(4) = vrodasevesol(0).cell_value ()(1);
+diff -r 1646adc7793b src/odepkg_octsolver_seulex.cc
+--- a/src/odepkg_octsolver_seulex.cc	Sun Jan 20 20:52:16 2019 +0100
++++ b/src/odepkg_octsolver_seulex.cc	Sun Jan 20 21:30:32 2019 +0100
+@@ -117,7 +117,7 @@
+   varin(0) = X; varin(1) = A;
+   for (octave_idx_type vcnt = 0; vcnt < vseulexextarg.length (); vcnt++)
+     varin(vcnt+2) = vseulexextarg(vcnt);
+-  octave_value_list vout = feval (vseulexodefun.function_value (), varin, 1);
++  octave_value_list vout = octave::feval (vseulexodefun.function_value (), varin, 1);
+ 
+   // Return the results from the function evaluation to the Fortran
+   // solver, again copy them and don't just create a Fortran vector
+@@ -205,14 +205,14 @@
+ 
+   vseulexevebrk = false;
+   // Check if an 'Events' function has been set by the user
+-  if (!vseulexevefun.is_empty ()) {
++  if (!vseulexevefun.isempty ()) {
+     vseulexevesol = odepkg_auxiliary_evaleventfun 
+       (vseulexevefun, vt, vy, vseulexextarg, 1);
+-    if (!vseulexevesol(0).cell_value ()(0).is_empty ())
++    if (!vseulexevesol(0).cell_value ()(0).isempty ())
+       if (vseulexevesol(0).cell_value ()(0).int_value () == 1) {
+         ColumnVector vttmp = vseulexevesol(0).cell_value ()(2).column_vector_value ();
+         Matrix vrtmp = vseulexevesol(0).cell_value ()(3).matrix_value ();
+-        vt = vttmp.extract (vttmp.length () - 1, vttmp.length () - 1);
++        vt = vttmp.extract (vttmp.numel () - 1, vttmp.numel () - 1);
+         vy = vrtmp.extract (vrtmp.rows () - 1, 0, vrtmp.rows () - 1, vrtmp.cols () - 1);
+         IRTRN = (vseulexevesol(0).cell_value ()(0).int_value () ? -1 : 0);
+         vseulexevebrk = true;
+@@ -226,7 +226,7 @@
+   // Check if an 'OutputFcn' has been set by the user (including the
+   // values of the options for 'OutputSel' and 'Refine')
+   vseulexpltbrk = false;
+-  if (!vseulexpltfun.is_empty ()) {
++  if (!vseulexpltfun.isempty ()) {
+     if (vseulexrefine.int_value () > 0) {
+       ColumnVector B(N); double vtb = 0.0;
+       for (octave_idx_type vcnt = 1; vcnt < vseulexrefine.int_value (); vcnt++) {
+@@ -328,8 +328,8 @@
+   if (nargin >= 4) {
+ 
+     // Fourth input argument != OdePkg option, need a default structure
+-    if (!args(3).is_map ()) {
+-      octave_value_list tmp = feval ("odeset", tmp, 1);
++    if (!args(3).isstruct ()) {
++      octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+       vodeopt = tmp(0).scalar_map_value ();       // Create a default structure
+       for (octave_idx_type vcnt = 3; vcnt < nargin; vcnt++)
+         vseulexextarg(vcnt-3) = args(vcnt); // Save arguments in vseulexextarg
+@@ -339,7 +339,7 @@
+     else if (nargin > 4) {
+       octave_value_list varin;
+       varin(0) = args(3); varin(1) = "odesx";
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value ();       // Create structure from args(4)
+       for (octave_idx_type vcnt = 4; vcnt < nargin; vcnt++)
+@@ -350,7 +350,7 @@
+     else {
+       octave_value_list varin;
+       varin(0) = args(3); varin(1) = "odesx"; // Check structure
+-      octave_value_list tmp = feval ("odepkg_structure_check", varin, 1);
++      octave_value_list tmp = octave::feval ("odepkg_structure_check", varin, 1);
+       if (error_state) return (vretval);
+       vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+     }
+@@ -358,7 +358,7 @@
+   } // if (nargin >= 4)
+ 
+   else { // if nargin == 3, everything else has been checked before
+-    octave_value_list tmp = feval ("odeset", tmp, 1);
++    octave_value_list tmp = octave::feval ("odeset", tmp, 1);
+     vodeopt = tmp(0).scalar_map_value (); // Create a default structure
+   }
+ 
+@@ -370,7 +370,7 @@
+   // Implementation of the option RelTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vreltol = vodeopt.contents ("RelTol");
+-  if (vreltol.is_empty ()) {
++  if (vreltol.isempty ()) {
+     vreltol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"RelTol\" not set, new value %3.1e is used",
+@@ -387,7 +387,7 @@
+   // Implementation of the option AbsTol has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vabstol = vodeopt.contents ("AbsTol");
+-  if (vabstol.is_empty ()) {
++  if (vabstol.isempty ()) {
+     vabstol = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"AbsTol\" not set, new value %3.1e is used",
+@@ -417,7 +417,7 @@
+   // The option NormControl will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnorm = vodeopt.contents ("NormControl");
+-  if (!vnorm.is_empty ())
++  if (!vnorm.isempty ())
+     if (vnorm.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"NormControl\" will be ignored by this solver");
+@@ -425,14 +425,14 @@
+   // The option NonNegative will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vnneg = vodeopt.contents ("NonNegative");
+-  if (!vnneg.is_empty ())
++  if (!vnneg.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"NonNegative\" will be ignored by this solver");
+ 
+   // Implementation of the option OutputFcn has been finished, this
+   // option can be set by the user to another value than default value
+   vseulexpltfun = vodeopt.contents ("OutputFcn");
+-  if (vseulexpltfun.is_empty () && nargout == 0) vseulexpltfun = "odeplot";
++  if (vseulexpltfun.isempty () && nargout == 0) vseulexpltfun = "odeplot";
+ 
+   // Implementation of the option OutputSel has been finished, this
+   // option can be set by the user to another value than default value
+@@ -453,7 +453,7 @@
+     error_with_id ("OdePkg:InvalidOption",
+       "Fixed time stamps are not supported by this solver");
+   }
+-  if (vinitstep.is_empty ()) {
++  if (vinitstep.isempty ()) {
+     vinitstep = 1.0e-6;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"InitialStep\" not set, new value %3.1e is used",
+@@ -463,7 +463,7 @@
+   // Implementation of the option MaxStep has been finished, this
+   // option can be set by the user to another value than default value
+   octave_value vmaxstep = vodeopt.contents ("MaxStep");
+-  if (vmaxstep.is_empty () && args(1).length () == 2) {
++  if (vmaxstep.isempty () && args(1).length () == 2) {
+     vmaxstep = (args(1).vector_value ()(1) - args(1).vector_value ()(0)) / 12.5;
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MaxStep\" not set, new value %3.1e is used", 
+@@ -479,19 +479,19 @@
+   // options can be set by the user to another value than default
+   vseulexjacfun = vodeopt.contents ("Jacobian");
+   octave_idx_type vseulexjac = 0; // We need to set this if no Jac available
+-  if (!vseulexjacfun.is_empty ()) vseulexjac = 1;
++  if (!vseulexjacfun.isempty ()) vseulexjac = 1;
+ 
+   // The option JPattern will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vseulexjacpat = vodeopt.contents ("JPattern");
+-  if (!vseulexjacpat.is_empty ())
++  if (!vseulexjacpat.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"JPattern\" will be ignored by this solver");
+ 
+   // The option Vectorized will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vseulexvectorize = vodeopt.contents ("Vectorized");
+-  if (!vseulexvectorize.is_empty ())
++  if (!vseulexvectorize.isempty ())
+     if (vseulexvectorize.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"Vectorized\" will be ignored by this solver");
+@@ -500,7 +500,7 @@
+   // options can be set by the user to another value than default
+   vseulexmass = vodeopt.contents ("Mass");
+   octave_idx_type vseulexmas = 0;
+-  if (!vseulexmass.is_empty ()) {
++  if (!vseulexmass.isempty ()) {
+     vseulexmas = 1;
+     if (vseulexmass.is_function_handle () || vseulexmass.is_inline_function ())
+       warning_with_id ("OdePkg:InvalidOption",
+@@ -510,7 +510,7 @@
+   // The option MStateDependence will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   vseulexmassstate = vodeopt.contents ("MStateDependence");
+-  if (!vseulexmassstate.is_empty ())
++  if (!vseulexmassstate.isempty ())
+     if (vseulexmassstate.string_value ().compare ("weak") != 0) // 'weak' is default
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"MStateDependence\" will be ignored by this solver");
+@@ -518,14 +518,14 @@
+   // The option MStateDependence will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   octave_value vmvpat = vodeopt.contents ("MvPattern");
+-  if (!vmvpat.is_empty ())
++  if (!vmvpat.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MvPattern\" will be ignored by this solver");
+ 
+   // The option MassSingular will be ignored by this solver, the
+   // core Fortran solver doesn't support this option
+   octave_value vmsing = vodeopt.contents ("MassSingular");
+-  if (!vmsing.is_empty ())
++  if (!vmsing.isempty ())
+     if (vmsing.string_value ().compare ("maybe") != 0)
+       warning_with_id ("OdePkg:InvalidOption",
+         "Option \"MassSingular\" will be ignored by this solver");
+@@ -533,21 +533,21 @@
+   // The option InitialSlope will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vinitslope = vodeopt.contents ("InitialSlope");
+-  if (!vinitslope.is_empty ())
++  if (!vinitslope.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"InitialSlope\" will be ignored by this solver");
+ 
+   // The option MaxOrder will be ignored by this solver, the core
+   // Fortran solver doesn't support this option
+   octave_value vmaxder = vodeopt.contents ("MaxOrder");
+-  if (!vmaxder.is_empty ())
++  if (!vmaxder.isempty ())
+     warning_with_id ("OdePkg:InvalidOption",
+       "Option \"MaxOrder\" will be ignored by this solver");
+ 
+   // The option BDF will be ignored by this solver, the core Fortran
+   // solver doesn't support this option
+   octave_value vbdf = vodeopt.contents ("BDF");
+-  if (!vbdf.is_empty ())
++  if (!vbdf.isempty ())
+     if (vbdf.string_value ().compare ("off") != 0)
+       warning_with_id ("OdePkg:InvalidOption", 
+         "Option \"BDF\" will be ignored by this solver");
+@@ -555,12 +555,12 @@
+   // this solver, IT NEEDS TO BE CHECKED IF THE FORTRAN CORE SOLVER
+   // CAN HANDLE THESE OPTIONS
+   octave_value vntol = vodeopt.contents ("NewtonTol");
+-  if (!vntol.is_empty ())
++  if (!vntol.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"NewtonTol\" will be ignored by this solver");
+   octave_value vmaxnewton = 
+     vodeopt.contents ("MaxNewtonIterations");
+-  if (!vmaxnewton.is_empty ())
++  if (!vmaxnewton.isempty ())
+     warning_with_id ("OdePkg:InvalidOption", 
+       "Option \"MaxNewtonIterations\" will be ignored by this solver");
+ 
+@@ -608,9 +608,9 @@
+   octave_value vtim = args(1).vector_value ()(0);
+   octave_value vsol = args(2);
+   odepkg_auxiliary_solstore (vtim, vsol, 0);
+-  if (!vseulexpltfun.is_empty ()) odepkg_auxiliary_evalplotfun 
++  if (!vseulexpltfun.isempty ()) odepkg_auxiliary_evalplotfun 
+     (vseulexpltfun, vseulexoutsel, args(1), args(2), vseulexextarg, 0);
+-  if (!vseulexevefun.is_empty ())
++  if (!vseulexevefun.isempty ())
+     odepkg_auxiliary_evaleventfun (vseulexevefun, vtim, args(2), vseulexextarg, 0);
+ 
+   // We are calling the core solver and solve the set of ODEs or DAEs
+@@ -651,9 +651,9 @@
+   octave_value vted = octave_value (XEND);
+   octave_value vfin = octave_value (vlastline);
+ 
+-  if (!vseulexpltfun.is_empty ()) odepkg_auxiliary_evalplotfun
++  if (!vseulexpltfun.isempty ()) odepkg_auxiliary_evalplotfun
+     (vseulexpltfun, vseulexoutsel, vted, vfin, vseulexextarg, 2);
+-  if (!vseulexevefun.is_empty ()) odepkg_auxiliary_evaleventfun
++  if (!vseulexevefun.isempty ()) odepkg_auxiliary_evaleventfun
+     (vseulexevefun, vted, vfin, vseulexextarg, 2);
+   
+   // Get the stats information as an octave_scalar_map if the option 'Stats'
+@@ -678,9 +678,9 @@
+     vretmap.assign ("x", vtres);
+     vretmap.assign ("y", vyres);
+     vretmap.assign ("solver", "odesx");
+-    if (!vstatinfo.is_empty ()) // Event implementation
++    if (!vstatinfo.isempty ()) // Event implementation
+       vretmap.assign ("stats", vstatinfo);
+-    if (!vseulexevefun.is_empty ()) {
++    if (!vseulexevefun.isempty ()) {
+       vretmap.assign ("ie", vseulexevesol(0).cell_value ()(1));
+       vretmap.assign ("xe", vseulexevesol(0).cell_value ()(2));
+       vretmap.assign ("ye", vseulexevesol(0).cell_value ()(3));
+@@ -698,7 +698,7 @@
+     vretval(2) = vempty;
+     vretval(3) = vempty;
+     vretval(4) = vempty;
+-    if (!vseulexevefun.is_empty ()) {
++    if (!vseulexevefun.isempty ()) {
+       vretval(2) = vseulexevesol(0).cell_value ()(2);
+       vretval(3) = vseulexevesol(0).cell_value ()(3);
+       vretval(4) = vseulexevesol(0).cell_value ()(1);

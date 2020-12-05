@@ -1,0 +1,31 @@
+diff -ur tisean-0.2.3.orig/src/Makefile.in tisean-0.2.3/src/Makefile.in
+--- tisean-0.2.3.orig/src/Makefile.in	2015-08-24 13:01:27.265995455 -0400
++++ tisean-0.2.3/src/Makefile.in	2015-09-03 12:59:29.934122317 -0400
+@@ -1,9 +1,18 @@
+ MKOCTFILE ?= mkoctfile -Wall
++OCTAVE_CONFIG ?= octave-config
+ SED       ?= sed
+ LIBS_F=source_f/libsla.a
+ CXXFLAGS=@CXXFLAGS@
+ FFLAGS=@AM_FFLAGS@ @FFLAGS@
+ 
++CANONICAL_HOST_TYPE=$(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE)
++ifneq (,$(findstring mingw,$(CANONICAL_HOST_TYPE)))
++  F77LIBS := $(shell $(MKOCTFILE) -p FLIBS)
++endif
++ifneq (,$(findstring cygwin,$(CANONICAL_HOST_TYPE)))
++  F77LIBS := $(shell $(MKOCTFILE) -p FLIBS)
++endif
++
+ ## The next two are important to actually rebuild them when a change
+ ## is made to the the functions they link to.
+ OCT_LINK_F=__surrogates__.oct __c1__.oct __upo__.oct lazy.oct
+@@ -73,7 +82,7 @@
+ 	$(MKOCTFILE) $(CXXFLAGS) $< $(LIBS) -o $@
+ 
+ $(OCT_LINK_F): %.oct : %.cc $(OBJECTS_F) $(LIBS_F)
+-	$(MKOCTFILE) $(CXXFLAGS) $< $(OBJECTS_F) $(LIBS_F) -o $@
++	$(MKOCTFILE) $(CXXFLAGS) $< $(OBJECTS_F) $(LIBS_F) $(F77LIBS) -o $@
+ 
+ $(OCT_LINK_CC): %.oct : %.cc $(OBJECTS_CC)
+ 	$(MKOCTFILE) $(CXXFLAGS) $< $(OBJECTS_CC) -o $@

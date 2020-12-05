@@ -1,0 +1,53 @@
+diff -ur pstoedit-3.75.orig/othersrc/gsdllinc/wgsver.c pstoedit-3.75/othersrc/gsdllinc/wgsver.c
+--- pstoedit-3.75.orig/othersrc/gsdllinc/wgsver.c	2020-01-06 12:45:59.927286515 -0500
++++ pstoedit-3.75/othersrc/gsdllinc/wgsver.c	2020-01-06 12:46:54.580699984 -0500
+@@ -40,6 +40,9 @@
+ #include "wgsver.h"
+ #include "cppcomp.h"
+ 
++#ifndef KEY_WOW64_64KEY
++#define KEY_WOW64_64KEY 0x0100
++#endif
+ /* Ghostscript may be known in the Windows Registry by
+  * the following names.
+  */
+diff -ur pstoedit-3.75.orig/src/cbstream.cpp pstoedit-3.75/src/cbstream.cpp
+--- pstoedit-3.75.orig/src/cbstream.cpp	2020-01-06 12:45:59.927286515 -0500
++++ pstoedit-3.75/src/cbstream.cpp	2020-01-06 12:49:33.424788938 -0500
+@@ -33,6 +33,8 @@
+ // this code is only needed under WIN32
+ // ...and under OS/2
+ 
++#include <cstdio>
++
+ #include "cppcomp.h"
+ 
+ #include "cbstream.h"
+diff -ur pstoedit-3.75.orig/src/Makefile.am pstoedit-3.75/src/Makefile.am
+--- pstoedit-3.75.orig/src/Makefile.am	2020-01-06 12:45:59.931286619 -0500
++++ pstoedit-3.75/src/Makefile.am	2020-01-06 12:52:56.149975594 -0500
+@@ -143,7 +143,8 @@
+ 	psfront.h				\
+ 	genericints.h
+ 
+-libpstoedit_la_LIBADD = ${CXX_STD_LIB} ${CXX_RUNTIME_LIB} -ldl -lm
++libpstoedit_la_LIBADD = ${CXX_STD_LIB} ${CXX_RUNTIME_LIB} -lm
++libpstoedit_la_CPPFLAGS = -I$(top_srcdir)/othersrc/gsdllinc
+ libpstoedit_la_LDFLAGS = -no-undefined
+ 
+ pstoedit_SOURCES = cmdmain.cpp
+diff -ur pstoedit-3.75.orig/src/dynload.cpp pstoedit-3.75/src/dynload.cpp
+--- pstoedit-3.75.orig/src/dynload.cpp	2020-01-09 13:50:03.610222335 -0500
++++ pstoedit-3.75/src/dynload.cpp	2020-01-09 13:51:10.084019302 -0500
+@@ -239,8 +239,10 @@
+ 	DynLoader::fptr rfptr = ptr_to_fptr(dlsym(handle, name));	//lint !e611 //: Suspicious cast
+ #elif defined(OS_WIN32_WCE)
+ 	DynLoader::fptr rfptr = ptr_to_fptr(GetProcAddress((HINSTANCE) handle, LPSTRtoLPWSTR(name).c_str()));	//lint !e611 //: Suspicious cast
+-#elif defined(_WIN32)
++#elif defined(_WIN64)
+ 	DynLoader::fptr rfptr = /* ptr_to_fptr */(GetProcAddress((HINSTANCE) handle, name));	//lint !e611 //: Suspicious cast
++#elif defined(_WIN32)
++	DynLoader::fptr rfptr = ptr_to_fptr((void*)GetProcAddress((HINSTANCE) handle, name));	//lint !e611 //: Suspicious cast
+ #else
+ #error "system unsupported so far"
+ #endif

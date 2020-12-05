@@ -1,0 +1,59 @@
+diff -ur OpenSceneGraph-3.2.0.orig/src/osgPlugins/osc/CMakeLists.txt OpenSceneGraph-3.2.0/src/osgPlugins/osc/CMakeLists.txt
+--- OpenSceneGraph-3.2.0.orig/src/osgPlugins/osc/CMakeLists.txt	2014-07-02 11:35:37.621624169 -0400
++++ OpenSceneGraph-3.2.0/src/osgPlugins/osc/CMakeLists.txt	2014-07-02 14:35:50.862890363 -0400
+@@ -35,7 +35,7 @@
+         ip/win32/NetworkingUtils.cpp
+         ip/win32/UdpSocket.cpp
+     )
+-    SET(TARGET_EXTERNAL_LIBRARIES "${TARGET_EXTERNAL_LIBRARIES};Ws2_32.lib;winmm")
++    SET(TARGET_EXTERNAL_LIBRARIES "${TARGET_EXTERNAL_LIBRARIES};ws2_32.lib;winmm")
+ ELSE()
+     SET(TARGET_SRC
+         ${TARGET_SRC}
+diff -ur OpenSceneGraph-3.2.0.orig/src/osgPlugins/vrml/CMakeLists.txt OpenSceneGraph-3.2.0/src/osgPlugins/vrml/CMakeLists.txt
+--- OpenSceneGraph-3.2.0.orig/src/osgPlugins/vrml/CMakeLists.txt	2014-07-02 11:35:37.621624169 -0400
++++ OpenSceneGraph-3.2.0/src/osgPlugins/vrml/CMakeLists.txt	2014-07-02 14:37:13.893542090 -0400
+@@ -27,7 +27,7 @@
+         PNG_LIBRARY
+         ZLIB_LIBRARY)
+     SET(TARGET_EXTERNAL_LIBRARIES
+-        Ws2_32.lib)
++        ws2_32.lib)
+ ELSE()
+     SET(TARGET_LIBRARIES_VARS
+         OPENVRML_LIBRARY)
+diff -ur OpenSceneGraph-3.2.0.orig/src/osgPlugins/xine/video_out_rgb.c OpenSceneGraph-3.2.0/src/osgPlugins/xine/video_out_rgb.c
+--- OpenSceneGraph-3.2.0.orig/src/osgPlugins/xine/video_out_rgb.c	2014-07-02 11:35:37.603623810 -0400
++++ OpenSceneGraph-3.2.0/src/osgPlugins/xine/video_out_rgb.c	2014-07-02 11:45:53.301901931 -0400
+@@ -81,6 +81,19 @@
+ 	ptr = NULL;\
+ }
+ 
++// xine removed the xine_xmalloc_aligned function in later versions
++#if ((XINE_MAJOR_VERSION<<8)|XINE_MINOR_VERSION) >= 0x102
++  static void * xine_xmalloc_aligned(size_t alignment, size_t size, void **base)
++  {
++    char * ptr;
++
++    *base = ptr = xine_xmalloc(size+alignment);
++    while((size_t)ptr % alignment)
++      ptr ++;
++    return *ptr;
++  } 
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+diff -ur OpenSceneGraph-3.2.0.orig/src/osgPlugins/ZeroConfDevice/CMakeLists.txt OpenSceneGraph-3.2.0/src/osgPlugins/ZeroConfDevice/CMakeLists.txt
+--- OpenSceneGraph-3.2.0.orig/src/osgPlugins/ZeroConfDevice/CMakeLists.txt	2014-07-02 11:35:37.596623671 -0400
++++ OpenSceneGraph-3.2.0/src/osgPlugins/ZeroConfDevice/CMakeLists.txt	2014-07-02 14:37:48.777236043 -0400
+@@ -19,7 +19,7 @@
+         mdns_win/dns_sd.h
+         mdns_win/dns-sd.c
+     )
+-    SET(TARGET_EXTERNAL_LIBRARIES "${TARGET_EXTERNAL_LIBRARIES};Ws2_32.lib;winmm")
++    SET(TARGET_EXTERNAL_LIBRARIES "${TARGET_EXTERNAL_LIBRARIES};ws2_32.lib;winmm")
+     SET(TARGET_LIBRARIES_VARS ZEROCONF_LIBRARY)
+     ADD_DEFINITIONS(-DNOT_HAVE_GETOPT)
+     ADD_DEFINITIONS(-DNOT_HAVE_SETLINEBUF)

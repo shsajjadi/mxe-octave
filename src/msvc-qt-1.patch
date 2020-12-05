@@ -1,0 +1,492 @@
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/mkspecs/win32-msvc2010/qmake.conf qt-everywhere-opensource-src-4.8.3/mkspecs/win32-msvc2010/qmake.conf
+--- qt-everywhere-opensource-src-4.8.3-orig/mkspecs/win32-msvc2010/qmake.conf	2012-09-10 21:36:35 -0400
++++ qt-everywhere-opensource-src-4.8.3/mkspecs/win32-msvc2010/qmake.conf	2013-07-10 11:31:41 -0400
+@@ -73,6 +73,9 @@
+ 
+ QMAKE_LIBS_QT_ENTRY     = -lqtmain
+ 
++QMAKE_DLL_PREFIX        = @@LIBRARY_PREFIX@@
++QMAKE_DLL_SUFFIX        = @@LIBRARY_SUFFIX@@
++
+ QMAKE_MOC               = $$[QT_INSTALL_BINS]\\moc.exe
+ QMAKE_UIC               = $$[QT_INSTALL_BINS]\\uic.exe
+ QMAKE_IDC               = $$[QT_INSTALL_BINS]\\idc.exe
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/qmake/generators/makefile.cpp qt-everywhere-opensource-src-4.8.3/qmake/generators/makefile.cpp
+--- qt-everywhere-opensource-src-4.8.3-orig/qmake/generators/makefile.cpp	2012-09-10 21:36:36 -0400
++++ qt-everywhere-opensource-src-4.8.3/qmake/generators/makefile.cpp	2013-07-10 11:05:47 -0400
+@@ -3148,16 +3148,20 @@
+ MakefileGenerator::pkgConfigPrefix() const
+ {
+     if(!project->isEmpty("QMAKE_PKGCONFIG_PREFIX"))
+-        return project->first("QMAKE_PKGCONFIG_PREFIX");
+-    return QLibraryInfo::location(QLibraryInfo::PrefixPath);
++        return project->first("QMAKE_PKGCONFIG_PREFIX").replace('\\', '/');
++    return QLibraryInfo::location(QLibraryInfo::PrefixPath).replace('\\', '/');
+ }
+ 
+ QString
+-MakefileGenerator::pkgConfigFixPath(QString path) const
++MakefileGenerator::pkgConfigFixPath(QString path)
+ {
+     QString prefix = pkgConfigPrefix();
++    path.replace('\\', '/');
+     if(path.startsWith(prefix))
+         path = path.replace(prefix, "${prefix}");
++    QString buildTree = var("QT_BUILD_TREE").replace('\\', '/');
++    if (!buildTree.isEmpty() && path.startsWith(buildTree))
++        path = path.replace(buildTree, "${prefix}");
+     return path;
+ }
+ 
+@@ -3273,7 +3277,7 @@
+     libs << "QMAKE_LFLAGS_THREAD"; //not sure about this one, but what about things like -pthread?
+     t << "Libs.private: ";
+     for(QStringList::ConstIterator it = libs.begin(); it != libs.end(); ++it) {
+-        t << project->values((*it)).join(" ") << " ";
++        t << project->values((*it)).join(" ").replace('\\', '/').replace(prefix, "${prefix}") << " ";
+     }
+     t << endl;
+ 
+@@ -3281,9 +3285,9 @@
+     // ### too many
+     t << "Cflags: "
+         // << var("QMAKE_CXXFLAGS") << " "
+-      << varGlue("PRL_EXPORT_DEFINES","-D"," -D"," ")
+-      << project->values("PRL_EXPORT_CXXFLAGS").join(" ")
+-      << project->values("QMAKE_PKGCONFIG_CFLAGS").join(" ")
++      << varGlue("PRL_EXPORT_DEFINES","-D"," -D"," ").replace('\\', '/').replace(prefix, "${prefix}")
++      << project->values("PRL_EXPORT_CXXFLAGS").join(" ").replace('\\', '/').replace(prefix, "${prefix}")
++      << project->values("QMAKE_PKGCONFIG_CFLAGS").join(" ").replace('\\', '/').replace(prefix, "${prefix}")
+         //      << varGlue("DEFINES","-D"," -D"," ")
+       << " -I${includedir}" << endl;
+ 
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/qmake/generators/makefile.h qt-everywhere-opensource-src-4.8.3/qmake/generators/makefile.h
+--- qt-everywhere-opensource-src-4.8.3-orig/qmake/generators/makefile.h	2012-09-10 21:36:36 -0400
++++ qt-everywhere-opensource-src-4.8.3/qmake/generators/makefile.h	2013-07-10 10:47:08 -0400
+@@ -107,7 +107,7 @@
+ 
+     QString pkgConfigPrefix() const;
+     QString pkgConfigFileName(bool fixify=true);
+-    QString pkgConfigFixPath(QString) const;
++    QString pkgConfigFixPath(QString);
+     void writePkgConfigFile();   // for pkg-config
+ 
+     //generating subtarget makefiles
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/qmake/generators/win32/msvc_nmake.cpp qt-everywhere-opensource-src-4.8.3/qmake/generators/win32/msvc_nmake.cpp
+--- qt-everywhere-opensource-src-4.8.3-orig/qmake/generators/win32/msvc_nmake.cpp	2012-09-10 21:36:36 -0400
++++ qt-everywhere-opensource-src-4.8.3/qmake/generators/win32/msvc_nmake.cpp	2013-07-09 22:41:22 -0400
+@@ -72,6 +72,8 @@
+     if(project->first("TEMPLATE") == "app" ||
+        project->first("TEMPLATE") == "lib" ||
+        project->first("TEMPLATE") == "aux") {
++        if(project->isActiveConfig("create_pc") && project->first("TEMPLATE") == "lib")
++            writePkgConfigFile();
+ #if 0
+         if(Option::mkfile::do_stub_makefile)
+             return MakefileGenerator::writeStubMakefile(t);
+@@ -158,7 +160,7 @@
+     // precompiled header
+     if(usePCH) {
+         QString precompRule = QString("-c -Yc -Fp%1 -Fo%2").arg(precompPch).arg(precompObj);
+-        t << precompObj << ": " << precompH << " " << findDependencies(precompH).join(" \\\n\t\t")
++        t << precompObj << ": " << precompH << " " << escapeDependencyPaths(findDependencies(precompH)).join(" \\\n\t\t")
+           << "\n\t" << "$(CXX) " + precompRule +" $(CXXFLAGS) $(INCPATH) -TP " << precompH << endl << endl;
+     }
+ }
+@@ -356,6 +358,9 @@
+     if(project->isActiveConfig("staticlib")) {
+         t << "\n\t" << "$(LIBAPP) $(LIBFLAGS) /OUT:$(DESTDIR_TARGET) @<<" << "\n\t  "
+           << "$(OBJECTS)";
++    } else if (project->isActiveConfig("shared") && project->first("TEMPLATE") == "lib") {
++        t << "\n\t" << "$(LINK) $(LFLAGS) /OUT:$(DESTDIR_TARGET) /IMPLIB:$(DESTDIR)" << getLibTarget() << " @<< " << "\n\t  "
++          << "$(OBJECTS) $(LIBS)";
+     } else {
+         t << "\n\t" << "$(LINK) $(LFLAGS) /OUT:$(DESTDIR_TARGET) @<< " << "\n\t  "
+           << "$(OBJECTS) $(LIBS)";
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/qmake/generators/win32/winmakefile.cpp qt-everywhere-opensource-src-4.8.3/qmake/generators/win32/winmakefile.cpp
+--- qt-everywhere-opensource-src-4.8.3-orig/qmake/generators/win32/winmakefile.cpp	2012-09-10 21:36:36 -0400
++++ qt-everywhere-opensource-src-4.8.3/qmake/generators/win32/winmakefile.cpp	2013-07-10 09:54:14 -0400
+@@ -373,7 +373,8 @@
+     if (!project->values("QMAKE_APP_FLAG").isEmpty()) {
+         project->values("TARGET_EXT").append(".exe");
+     } else if (project->isActiveConfig("shared")) {
+-        project->values("TARGET_EXT").append(project->first("TARGET_VERSION_EXT") + "."
++        project->values("TARGET_EXT").append(project->first("TARGET_VERSION_EXT")
++                + (project->first("TEMPLATE") == "lib" ? var("QMAKE_DLL_SUFFIX") : QString()) + "."
+                 + project->first("QMAKE_EXTENSION_SHLIB"));
+         project->values("TARGET").first() = project->first("QMAKE_PREFIX_SHLIB") + project->first("TARGET");
+     } else {
+@@ -421,6 +422,8 @@
+             productName = project->values("TARGET").first();
+ 
+         QString originalName = project->values("TARGET").first() + project->values("TARGET_EXT").first();
++        if (project->isActiveConfig("shared") && project->first("TEMPLATE") == "lib")
++            originalName.prepend(var("QMAKE_DLL_PREFIX"));
+         int rcLang = project->intValue("RC_LANG", 1033);            // default: English(USA)
+         int rcCodePage = project->intValue("RC_CODEPAGE", 1200);    // default: Unicode
+ 
+@@ -690,6 +693,8 @@
+     if (!destDir.isEmpty() && (orgDestDir.endsWith('/') || orgDestDir.endsWith(Option::dir_sep)))
+         destDir += Option::dir_sep;
+     QString target = QString(project->first("TARGET")+project->first("TARGET_EXT"));
++    if (project->isActiveConfig("shared") && project->first("TEMPLATE") == "lib")
++        target.prepend(var("QMAKE_DLL_PREFIX"));
+     target.remove("\"");
+     project->values("DEST_TARGET").prepend(destDir + target);
+ 
+@@ -860,7 +865,7 @@
+                 if (!dst_pc_dir.isEmpty()) {
+                     if (!ret.isEmpty())
+                         ret += "\n\t";
+-                    ret += mkdir_p_asstring(dst_pc_dir, true);
++                    ret += mkdir_p_asstring(Option::fixPathToTargetOS(dst_pc_dir, false), true);
+                 }
+                 if(!ret.isEmpty())
+                     ret += "\n\t";
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/3rdparty/webkit/Source/WebCore/WebCore.pri qt-everywhere-opensource-src-4.8.3/src/3rdparty/webkit/Source/WebCore/WebCore.pri
+--- qt-everywhere-opensource-src-4.8.3-orig/src/3rdparty/webkit/Source/WebCore/WebCore.pri	2013-07-06 20:05:40 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/3rdparty/webkit/Source/WebCore/WebCore.pri	2013-07-08 20:37:56 -0400
+@@ -329,7 +329,7 @@
+ unix:!mac:*-g++*:QMAKE_LFLAGS += -Wl,--gc-sections
+ linux*-g++*:QMAKE_LFLAGS += $$QMAKE_LFLAGS_NOUNDEF
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui QtNetwork
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui QtNetwork
+ unix:!mac:!symbian:CONFIG += link_pkgconfig
+ 
+ # Disable C++0x mode in WebCore for those who enabled it in their Qt's mkspec
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/3rdparty/zlib_dependency.pri qt-everywhere-opensource-src-4.8.3/src/3rdparty/zlib_dependency.pri
+--- qt-everywhere-opensource-src-4.8.3-orig/src/3rdparty/zlib_dependency.pri	2012-09-10 21:36:50 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/3rdparty/zlib_dependency.pri	2013-07-06 19:02:53 -0400
+@@ -1,7 +1,7 @@
+ # zlib dependency satisfied by bundled 3rd party zlib or system zlib
+ contains(QT_CONFIG, system-zlib) {
+     symbian:                 LIBS_PRIVATE += -llibz
+-    else:if(unix|win32-g++*):LIBS_PRIVATE += -lz
++    else:if(unix|win32-g++*|win32-msvc*):LIBS_PRIVATE += -lz
+     else:                    LIBS += zdll.lib
+ } else {
+     INCLUDEPATH +=  $$PWD/zlib
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/dbus/dbus.pro qt-everywhere-opensource-src-4.8.3/src/dbus/dbus.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/dbus/dbus.pro	2012-09-10 21:36:52 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/dbus/dbus.pro	2013-07-08 20:27:21 -0400
+@@ -12,7 +12,7 @@
+ }
+ 
+ # INCLUDEPATH += .
+-unix|win32-g++* {
++unix|win32-g++*|win32-msvc* {
+     QMAKE_PKGCONFIG_DESCRIPTION = Qt \
+         DBus \
+         module
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/declarative/declarative.pro qt-everywhere-opensource-src-4.8.3/src/declarative/declarative.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/declarative/declarative.pro	2012-09-10 21:36:52 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/declarative/declarative.pro	2013-07-08 20:28:02 -0400
+@@ -6,7 +6,7 @@
+ win32-msvc*|win32-icc:QMAKE_LFLAGS += /BASE:0x66000000
+ solaris-cc*:QMAKE_CXXFLAGS_RELEASE -= -O2
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui
+ 
+ exists("qdeclarative_enable_gcov") {
+     QMAKE_CXXFLAGS = -fprofile-arcs -ftest-coverage -fno-elide-constructors
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/gui/gui.pro qt-everywhere-opensource-src-4.8.3/src/gui/gui.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/gui/gui.pro	2012-09-10 21:36:51 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/gui/gui.pro	2013-07-08 20:29:11 -0400
+@@ -7,7 +7,7 @@
+ 
+ !win32:!embedded:!qpa:!mac:!symbian:CONFIG      += x11
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore
+ 
+ include(../qbase.pri)
+ 
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/gui/image/qjpeghandler.pri qt-everywhere-opensource-src-4.8.3/src/gui/image/qjpeghandler.pri
+--- qt-everywhere-opensource-src-4.8.3-orig/src/gui/image/qjpeghandler.pri	2012-09-10 21:36:51 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/gui/image/qjpeghandler.pri	2013-07-07 12:02:46 -0400
+@@ -3,7 +3,7 @@
+ HEADERS += $$PWD/qjpeghandler_p.h
+ SOURCES += $$PWD/qjpeghandler.cpp
+ contains(QT_CONFIG, system-jpeg) {
+-    if(unix|win32-g++*): LIBS += -ljpeg
++    if(unix|win32-g++*|win32-msvc*): LIBS += -ljpeg
+     else:win32:          LIBS += libjpeg.lib
+ } else {
+     include($$PWD/../../3rdparty/libjpeg.pri)
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/gui/image/qmnghandler.pri qt-everywhere-opensource-src-4.8.3/src/gui/image/qmnghandler.pri
+--- qt-everywhere-opensource-src-4.8.3-orig/src/gui/image/qmnghandler.pri	2013-07-06 20:05:40 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/gui/image/qmnghandler.pri	2013-07-07 12:04:15 -0400
+@@ -5,7 +5,7 @@
+ contains(QT_CONFIG, system-mng) {
+         CONFIG += link_pkgconfig
+         PKGCONFIG += libmng
+-        if(unix|win32-g++*):LIBS *= -lmng
++        if(unix|win32-g++*|win32-msvc*):LIBS *= -lmng
+         else:win32:         LIBS += libmng.lib
+ } else {
+     include($$PWD/../../3rdparty/libmng.pri)
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/gui/image/qpnghandler.pri qt-everywhere-opensource-src-4.8.3/src/gui/image/qpnghandler.pri
+--- qt-everywhere-opensource-src-4.8.3-orig/src/gui/image/qpnghandler.pri	2012-09-10 21:36:51 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/gui/image/qpnghandler.pri	2013-07-06 23:22:58 -0400
+@@ -2,7 +2,7 @@
+ HEADERS += $$PWD/qpnghandler_p.h
+ SOURCES += $$PWD/qpnghandler.cpp
+ contains(QT_CONFIG, system-png) {
+-    if(unix|win32-g++*): LIBS_PRIVATE  += -lpng
++    if(unix|win32-g++*|win32-msvc*): LIBS_PRIVATE  += -lpng16
+     else:win32:          LIBS += libpng.lib
+ 
+ } else {
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/gui/image/qtiffhandler.pri qt-everywhere-opensource-src-4.8.3/src/gui/image/qtiffhandler.pri
+--- qt-everywhere-opensource-src-4.8.3-orig/src/gui/image/qtiffhandler.pri	2013-07-06 20:05:40 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/gui/image/qtiffhandler.pri	2013-07-07 12:04:54 -0400
+@@ -5,7 +5,7 @@
+ contains(QT_CONFIG, system-tiff) {
+         CONFIG += link_pkgconfig
+         PKGCONFIG += libtiff-4
+-        if(unix|win32-g++*):LIBS *= -ltiff
++        if(unix|win32-g++*|win32-msvc*):LIBS *= -ltiff
+         else:win32:         LIBS += libtiff.lib
+ } else {
+     include($$PWD/../../3rdparty/libtiff.pri)
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/multimedia/multimedia.pro qt-everywhere-opensource-src-4.8.3/src/multimedia/multimedia.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/multimedia/multimedia.pro	2012-09-10 21:36:50 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/multimedia/multimedia.pro	2013-07-08 20:29:46 -0400
+@@ -4,7 +4,7 @@
+ 
+ DEFINES += QT_BUILD_MULTIMEDIA_LIB QT_NO_USING_NAMESPACE
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui
+ 
+ include(../qbase.pri)
+ 
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/network/network.pro qt-everywhere-opensource-src-4.8.3/src/network/network.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/network/network.pro	2012-09-10 21:36:51 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/network/network.pro	2013-07-08 20:30:10 -0400
+@@ -13,7 +13,7 @@
+ QT = core
+ win32-msvc*|win32-icc:QMAKE_LFLAGS += /BASE:0x64000000
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore
+ 
+ include(../qbase.pri)
+ include(access/access.pri)
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/network/ssl/qsslsocket_p.h qt-everywhere-opensource-src-4.8.3/src/network/ssl/qsslsocket_p.h
+--- qt-everywhere-opensource-src-4.8.3-orig/src/network/ssl/qsslsocket_p.h	2012-09-10 21:36:51 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/network/ssl/qsslsocket_p.h	2013-07-06 19:04:03 -0400
+@@ -75,6 +75,7 @@
+     typedef OSStatus (*PtrSecTrustCopyAnchorCertificates)(CFArrayRef*);
+ #endif
+ #elif defined(Q_OS_WIN)
++#define WIN32_LEAN_AND_MEAN
+ #include <windows.h>
+ #include <wincrypt.h>
+ #ifndef HCRYPTPROV_LEGACY
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/opengl/opengl.pro qt-everywhere-opensource-src-4.8.3/src/opengl/opengl.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/opengl/opengl.pro	2012-09-10 21:36:52 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/opengl/opengl.pro	2013-07-08 20:30:47 -0400
+@@ -7,7 +7,7 @@
+ solaris-cc*:QMAKE_CXXFLAGS_RELEASE -= -O2
+ irix-cc*:QMAKE_CXXFLAGS += -no_prelink -ptused
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui
+ 
+ include(../qbase.pri)
+ 
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/openvg/openvg.pro qt-everywhere-opensource-src-4.8.3/src/openvg/openvg.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/openvg/openvg.pro	2012-09-10 21:36:50 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/openvg/openvg.pro	2013-07-08 20:31:31 -0400
+@@ -49,7 +49,7 @@
+ 
+ include(../qbase.pri)
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui
+ symbian:TARGET.UID3 = 0x2001E62F
+ 
+ !isEmpty(QMAKE_INCDIR_OPENVG): INCLUDEPATH += $$QMAKE_INCDIR_OPENVG
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/phonon/phonon.pro qt-everywhere-opensource-src-4.8.3/src/phonon/phonon.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/phonon/phonon.pro	2012-09-10 21:36:50 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/phonon/phonon.pro	2013-07-08 20:31:37 -0400
+@@ -11,7 +11,7 @@
+ 
+ PHONON_DIR = $$QT_SOURCE_TREE/src/3rdparty/phonon/phonon
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui QtNetwork
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui QtNetwork
+ 
+ # Input
+ HEADERS += $$PHONON_DIR/abstractaudiooutput.h \
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/qbase.pri qt-everywhere-opensource-src-4.8.3/src/qbase.pri
+--- qt-everywhere-opensource-src-4.8.3-orig/src/qbase.pri	2012-09-10 21:36:44 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/qbase.pri	2013-07-08 18:58:07 -0400
+@@ -135,7 +135,7 @@
+ #install directives
+ include(qt_install.pri)
+ 
+-unix|win32-g++*:!symbian {
++unix|win32-g++*|win32-msvc*:!symbian {
+    CONFIG += create_pc
+    QMAKE_PKGCONFIG_LIBDIR = $$[QT_INSTALL_LIBS]
+    QMAKE_PKGCONFIG_INCDIR = $$[QT_INSTALL_HEADERS]/$$TARGET
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/qt3support/qt3support.pro qt-everywhere-opensource-src-4.8.3/src/qt3support/qt3support.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/qt3support/qt3support.pro	2012-09-10 21:36:52 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/qt3support/qt3support.pro	2013-07-08 20:32:28 -0400
+@@ -21,7 +21,7 @@
+ include(network/network.pri)
+ include(painting/painting.pri)
+ 
+-unix|win32-g++* {
++unix|win32-g++*|win32-msvc* {
+    QMAKE_PKGCONFIG_CFLAGS += -DQT3_SUPPORT
+    QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui QtNetwork QtSql
+ }
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/script/script.pro qt-everywhere-opensource-src-4.8.3/src/script/script.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/script/script.pro	2012-09-10 21:36:52 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/script/script.pro	2013-07-08 20:33:15 -0400
+@@ -7,7 +7,7 @@
+ DEFINES   += QLALR_NO_QSCRIPTGRAMMAR_DEBUG_INFO
+ #win32-msvc*|win32-icc:QMAKE_LFLAGS += /BASE:0x66000000       ### FIXME
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore
+ 
+ include(../qbase.pri)
+ 
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/scripttools/scripttools.pro qt-everywhere-opensource-src-4.8.3/src/scripttools/scripttools.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/scripttools/scripttools.pro	2012-09-10 21:36:50 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/scripttools/scripttools.pro	2013-07-08 20:33:23 -0400
+@@ -5,7 +5,7 @@
+ DEFINES   += QT_NO_USING_NAMESPACE
+ #win32-msvc*|win32-icc:QMAKE_LFLAGS += /BASE:0x66000000
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui QtScript
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui QtScript
+ 
+ include(../qbase.pri)
+ 
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/sql/sql.pro qt-everywhere-opensource-src-4.8.3/src/sql/sql.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/sql/sql.pro	2012-09-10 21:36:44 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/sql/sql.pro	2013-07-08 20:34:34 -0400
+@@ -5,7 +5,7 @@
+ DEFINES += QT_NO_USING_NAMESPACE
+ win32-msvc*|win32-icc:QMAKE_LFLAGS += /BASE:0x62000000
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore
+ 
+ include(../qbase.pri)
+ 
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/svg/svg.pro qt-everywhere-opensource-src-4.8.3/src/svg/svg.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/svg/svg.pro	2012-09-10 21:36:50 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/svg/svg.pro	2013-07-08 20:34:58 -0400
+@@ -6,7 +6,7 @@
+ win32-msvc*|win32-icc:QMAKE_LFLAGS += /BASE:0x66000000
+ solaris-cc*:QMAKE_CXXFLAGS_RELEASE -= -O2
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui
+ 
+ include(../qbase.pri)
+ 
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/tools/bootstrap/bootstrap.pri qt-everywhere-opensource-src-4.8.3/src/tools/bootstrap/bootstrap.pri
+--- qt-everywhere-opensource-src-4.8.3-orig/src/tools/bootstrap/bootstrap.pri	2012-09-10 21:36:52 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/tools/bootstrap/bootstrap.pri	2013-07-06 19:03:11 -0400
+@@ -55,7 +55,7 @@
+ }
+ !contains(QT_CONFIG, zlib):!contains(QT_CONFIG, no-zlib):!cross_compile {
+     symbian:LIBS_PRIVATE += -llibz
+-    else:if(unix|win32-g++*):LIBS_PRIVATE += -lz
++    else:if(unix|win32-g++*|win32-msvc*):LIBS_PRIVATE += -lz
+     else:LIBS += zdll.lib
+ }
+ win32:LIBS += -luser32
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/xml/xml.pro qt-everywhere-opensource-src-4.8.3/src/xml/xml.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/xml/xml.pro	2012-09-10 21:36:50 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/xml/xml.pro	2013-07-08 20:36:31 -0400
+@@ -4,7 +4,7 @@
+ DEFINES   += QT_BUILD_XML_LIB QT_NO_USING_NAMESPACE
+ win32-msvc*|win32-icc:QMAKE_LFLAGS += /BASE:0x61000000
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore
+ 
+ include(../qbase.pri)
+ 
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/src/xmlpatterns/xmlpatterns.pro qt-everywhere-opensource-src-4.8.3/src/xmlpatterns/xmlpatterns.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/src/xmlpatterns/xmlpatterns.pro	2012-09-10 21:36:50 -0400
++++ qt-everywhere-opensource-src-4.8.3/src/xmlpatterns/xmlpatterns.pro	2013-07-08 20:36:38 -0400
+@@ -5,7 +5,7 @@
+ DEFINES += QT_BUILD_XMLPATTERNS_LIB \
+     QT_NO_USING_NAMESPACE
+ win32-msvc*|win32-icc:QMAKE_LFLAGS += /BASE:0x61000000
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore \
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore \
+     QtNetwork
+ include(../qbase.pri)
+ PRECOMPILED_HEADER = ../corelib/global/qt_pch.h
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/tools/assistant/lib/fulltextsearch/fulltextsearch.pro qt-everywhere-opensource-src-4.8.3/tools/assistant/lib/fulltextsearch/fulltextsearch.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/tools/assistant/lib/fulltextsearch/fulltextsearch.pro	2012-09-10 21:36:54 -0400
++++ qt-everywhere-opensource-src-4.8.3/tools/assistant/lib/fulltextsearch/fulltextsearch.pro	2013-07-08 20:47:43 -0400
+@@ -23,7 +23,7 @@
+     linux*-g++*:DEFINES += _GLIBCXX_EXTERN_TEMPLATE=0
+ }
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES = QtCore
+ 
+ # impossible to disable exceptions in clucene atm
+ CONFIG(exceptions_off) {
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/tools/assistant/lib/lib.pro qt-everywhere-opensource-src-4.8.3/tools/assistant/lib/lib.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/tools/assistant/lib/lib.pro	2012-09-10 21:36:54 -0400
++++ qt-everywhere-opensource-src-4.8.3/tools/assistant/lib/lib.pro	2013-07-08 20:44:40 -0400
+@@ -18,7 +18,7 @@
+     win32:qclucene = $${qclucene}d
+ }
+ linux-lsb-g++:LIBS_PRIVATE += --lsb-shared-libs=$$qclucene
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtNetwork \
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES += QtNetwork \
+     QtSql \
+     QtXml
+ LIBS_PRIVATE += -l$$qclucene
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/tools/designer/src/components/lib/lib.pro qt-everywhere-opensource-src-4.8.3/tools/designer/src/components/lib/lib.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/tools/designer/src/components/lib/lib.pro	2012-09-10 21:36:54 -0400
++++ qt-everywhere-opensource-src-4.8.3/tools/designer/src/components/lib/lib.pro	2013-07-08 20:42:01 -0400
+@@ -64,7 +64,7 @@
+ include(../../sharedcomponents.pri)
+ include(../component.pri)
+ 
+-unix|win32-g++* {
++unix|win32-g++*|win32-msvc* {
+     QMAKE_PKGCONFIG_REQUIRES = QtCore QtDesigner QtGui QtXml
+     contains(QT_CONFIG, script): QMAKE_PKGCONFIG_REQUIRES += QtScript
+ }
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/tools/designer/src/lib/lib.pro qt-everywhere-opensource-src-4.8.3/tools/designer/src/lib/lib.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/tools/designer/src/lib/lib.pro	2012-09-10 21:36:54 -0400
++++ qt-everywhere-opensource-src-4.8.3/tools/designer/src/lib/lib.pro	2013-07-08 20:41:16 -0400
+@@ -13,7 +13,7 @@
+    VERSION=$${QT_MAJOR_VERSION}.$${QT_MINOR_VERSION}.$${QT_PATCH_VERSION}
+ }
+ 
+-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES += QtXml
++unix|win32-g++*|win32-msvc*:QMAKE_PKGCONFIG_REQUIRES += QtXml
+ 
+ include(../../../../src/qt_targets.pri)
+ QMAKE_TARGET_PRODUCT = Designer
+diff -ur qt-everywhere-opensource-src-4.8.3-orig/tools/designer/src/uitools/uitools.pro qt-everywhere-opensource-src-4.8.3/tools/designer/src/uitools/uitools.pro
+--- qt-everywhere-opensource-src-4.8.3-orig/tools/designer/src/uitools/uitools.pro	2012-09-10 21:36:54 -0400
++++ qt-everywhere-opensource-src-4.8.3/tools/designer/src/uitools/uitools.pro	2013-07-08 20:51:10 -0400
+@@ -35,7 +35,7 @@
+ target.path=$$[QT_INSTALL_LIBS]
+ INSTALLS        += target
+ 
+-unix|win32-g++* {
++unix|win32-g++*|win32-msvc* {
+    CONFIG     += create_pc
+    QMAKE_PKGCONFIG_LIBDIR = $$[QT_INSTALL_LIBS]
+    QMAKE_PKGCONFIG_INCDIR = $$[QT_INSTALL_HEADERS]/$$TARGET

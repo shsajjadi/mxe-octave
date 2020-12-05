@@ -1,0 +1,12 @@
+diff -ur qhull-2019.1.orig/src/libqhull/user.h qhull-2019.1/src/libqhull/user.h
+--- qhull-2019.1.orig/src/libqhull/user.h	2019-07-03 14:21:37.727824999 -0400
++++ qhull-2019.1/src/libqhull/user.h	2019-07-03 14:22:00.304417762 -0400
+@@ -658,7 +658,7 @@
+ #error QH6207 Qhull error: Define qh_QHpointer_dllimport instead of qh_dllimport with qh_QHpointer
+ #endif
+ #else
+-#define qh_QHpointer 0
++#define qh_QHpointer 1
+ #ifdef qh_QHpointer_dllimport
+ #error QH6234 Qhull error: Define qh_dllimport instead of qh_QHpointer_dllimport when qh_QHpointer is not defined
+ #endif

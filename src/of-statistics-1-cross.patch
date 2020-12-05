@@ -1,0 +1,12 @@
+diff -ur statistics-1.4.0.orig/utils/conditional_installation.m statistics-1.4.0/utils/conditional_installation.m
+--- statistics-1.4.0.orig/utils/conditional_installation.m	2018-05-21 07:55:58.881279480 -0400
++++ statistics-1.4.0/utils/conditional_installation.m	2018-05-21 07:58:13.197213866 -0400
+@@ -24,7 +24,7 @@
+   ## build system, and this file here has to be configured as follows:
+   ##
+   ## Set this to true if you have considered the next step.
+-  configured = false;
++  configured = true;
+   ##
+   ## If core Octave called at the build system has the same statistics
+   ## functions as the core Octave you build for, leave the following

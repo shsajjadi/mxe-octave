@@ -1,0 +1,131 @@
+diff -ur fontconfig-2.10.93-orig/conf.d/Makefile.in fontconfig-2.10.93/conf.d/Makefile.in
+--- fontconfig-2.10.93-orig/conf.d/Makefile.in	2013-05-20 04:44:34 -0400
++++ fontconfig-2.10.93/conf.d/Makefile.in	2013-11-08 13:54:25 -0500
+@@ -604,9 +604,9 @@
+ 	@(echo cd $(DESTDIR)$(configdir);			\
+ 	  cd $(DESTDIR)$(configdir);				\
+ 	  for i in $(CONF_LINKS); do				\
+-	    echo $(RM) $$i";" ln -s $(templatedir)/$$i .;	\
++	    echo $(RM) $$i";" ln -s $(DESTDIR)$(templatedir)/$$i .;	\
+ 	    $(RM) $$i;						\
+-	    ln -s $(templatedir)/$$i .;				\
++	    ln -s $(DESTDIR)$(templatedir)/$$i .;				\
+ 	  done)
+ uninstall-local:
+ 	@(echo cd $(DESTDIR)$(configdir);			\
+diff -ur fontconfig-2.10.93-orig/fc-cache/fc-cache.c fontconfig-2.10.93/fc-cache/fc-cache.c
+--- fontconfig-2.10.93-orig/fc-cache/fc-cache.c	2013-04-03 23:09:46 -0400
++++ fontconfig-2.10.93/fc-cache/fc-cache.c	2013-11-08 13:53:48 -0500
+@@ -81,6 +81,17 @@
+ #endif
+ #endif
+ 
++#ifndef F_OK
++#define F_OK 0
++#define W_OK 2
++#define R_OK 4
++#define X_OK 0
++#endif
++
++#ifndef S_ISDIR
++#define S_ISDIR(x) ((x)&S_IFDIR)
++#endif
++
+ static void
+ usage (char *program, int error)
+ {
+diff -ur fontconfig-2.10.93-orig/src/Makefile.in fontconfig-2.10.93/src/Makefile.in
+--- fontconfig-2.10.93-orig/src/Makefile.in	2013-05-20 04:44:35 -0400
++++ fontconfig-2.10.93/src/Makefile.in	2013-11-08 13:53:48 -0500
+@@ -353,7 +353,7 @@
+ @OS_WIN32_TRUE@fontconfig_def_dependency = fontconfig.def
+ 
+ # Microsoft import library install/uninstall
+-@MS_LIB_AVAILABLE_TRUE@noinst_DATA = fontconfig.lib
++@MS_LIB_AVAILABLE_TRUE@#noinst_DATA = fontconfig.lib
+ AM_CPPFLAGS = \
+ 	-I$(top_srcdir)					\
+ 	-I$(top_srcdir)/src				\
+@@ -847,9 +847,9 @@
+ 	$(AM_V_GEN) $(GPERF) -m 100 $< > $@.tmp && \
+ 	mv -f $@.tmp $@ || ( $(RM) $@.tmp && false )
+ 
+-@ENABLE_SHARED_TRUE@install-data-local: install-ms-import-lib install-libtool-import-lib
++@ENABLE_SHARED_TRUE@#install-data-local: install-ms-import-lib install-libtool-import-lib
+ 
+-@ENABLE_SHARED_TRUE@uninstall-local: uninstall-ms-import-lib uninstall-libtool-import-lib
++@ENABLE_SHARED_TRUE@#uninstall-local: uninstall-ms-import-lib uninstall-libtool-import-lib
+ 
+ fcaliastail.h: fcalias.h
+ 
+@@ -870,10 +870,8 @@
+ 	echo Generating $@
+ 	(echo EXPORTS; \
+ 	(cat $(PUBLIC_FILES) $(PUBLIC_FT_FILES) || echo 'FcERROR ()' ) | \
+-	$(GREP) '^Fc[^ ]* *(' | $(SED) -e 's/ *(.*$$//' -e 's/^/	/' | \
+-	sort; \
+-	echo LIBRARY libfontconfig-@LIBT_CURRENT_MINUS_AGE@.dll; \
+-	echo VERSION @LIBT_CURRENT@.@LIBT_REVISION@) >$@
++	$(GREP) '^Fc[^ ]* *(' | $(SED) -e 's/ *(.*$$//' | \
++	sort) >$@
+ 	@ ! $(GREP) -q FcERROR $@ || ($(RM) $@; false)
+ 
+ -include $(top_srcdir)/git.mk
+diff -ur fontconfig-2.10.93-orig/src/fccache.c fontconfig-2.10.93/src/fccache.c
+--- fontconfig-2.10.93-orig/src/fccache.c	2013-04-03 23:09:46 -0400
++++ fontconfig-2.10.93/src/fccache.c	2013-11-08 13:53:48 -0500
+@@ -834,6 +834,12 @@
+ #ifdef _WIN32
+ #include <direct.h>
+ #define mkdir(path,mode) _mkdir(path)
++#ifndef F_OK
++#define F_OK 0
++#define W_OK 2
++#define R_OK 4
++#define X_OK 0
++#endif
+ #endif
+ 
+ static FcBool
+diff -ur fontconfig-2.10.93-orig/src/fccompat.c fontconfig-2.10.93/src/fccompat.c
+--- fontconfig-2.10.93-orig/src/fccompat.c	2013-04-03 23:09:46 -0400
++++ fontconfig-2.10.93/src/fccompat.c	2013-11-08 13:53:48 -0500
+@@ -72,6 +72,10 @@
+ #define FC_O_NOINHERIT 0
+ #endif
+ 
++#ifdef _MSC_VER
++typedef int mode_t;
++#endif
++
+ #if !defined (HAVE_MKOSTEMP) && !defined(HAVE_MKSTEMP) && !defined(HAVE__MKTEMP_S)
+ static int
+ mkstemp (char *template)
+diff -ur fontconfig-2.10.93-orig/src/fcdir.c fontconfig-2.10.93/src/fcdir.c
+--- fontconfig-2.10.93-orig/src/fcdir.c	2013-01-03 20:47:59 -0500
++++ fontconfig-2.10.93/src/fcdir.c	2013-11-08 13:53:48 -0500
+@@ -25,6 +25,10 @@
+ #include "fcint.h"
+ #include <dirent.h>
+ 
++#ifndef S_ISDIR
++#define S_ISDIR(x) ((x)&S_IFDIR)
++#endif
++
+ FcBool
+ FcFileIsDir (const FcChar8 *file)
+ {
+diff -ur fontconfig-2.10.93-orig/src/fcformat.c fontconfig-2.10.93/src/fcformat.c
+--- fontconfig-2.10.93-orig/src/fcformat.c	2013-01-03 20:47:59 -0500
++++ fontconfig-2.10.93/src/fcformat.c	2013-11-08 13:53:48 -0500
+@@ -27,6 +27,10 @@
+ #include <string.h>
+ #include <stdarg.h>
+ 
++#ifdef _MSC_VER
++#define snprintf _snprintf
++#endif
++
+ 
+ /* The language is documented in doc/fcformat.fncs
+  * These are the features implemented:

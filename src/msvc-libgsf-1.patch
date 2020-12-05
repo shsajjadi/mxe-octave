@@ -1,0 +1,179 @@
+diff -ur libgsf-1.14.27-orig/configure libgsf-1.14.27/configure
+--- libgsf-1.14.27-orig/configure	2013-06-23 12:50:43 -0400
++++ libgsf-1.14.27/configure	2013-07-12 23:44:33 -0400
+@@ -14191,7 +14191,11 @@
+ for try in 1 2; do
+ 	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
++#ifdef _MSC_VER
++#include <winsock2.h>
++#else
+ #include <sys/time.h>
++#endif
+ int
+ main ()
+ {
+diff -ur libgsf-1.14.27-orig/dumpdef.pl libgsf-1.14.27/dumpdef.pl
+--- libgsf-1.14.27-orig/dumpdef.pl	2009-05-18 21:55:48 -0400
++++ libgsf-1.14.27/dumpdef.pl	2013-07-13 00:13:39 -0400
+@@ -43,7 +43,7 @@
+     while ($lines =~ /^\s*extern\s+ #function type
+ 		      [A-Za-z_]\w*(?:[\s\*]+[A-Za-z_]\w*)*[\s\*]+([A-Za-z_]\w*) #[first arg
+ 		      \s*(?:\[\s*\]\s*)?;/gxm) {
+-	push @symbols, "$1 DATA";
++	push @symbols, $1;
+     }
+     @symbols;
+ }
+diff -ur libgsf-1.14.27-orig/gsf/Makefile.in libgsf-1.14.27/gsf/Makefile.in
+--- libgsf-1.14.27-orig/gsf/Makefile.in	2013-06-23 12:50:44 -0400
++++ libgsf-1.14.27/gsf/Makefile.in	2013-07-13 00:12:49 -0400
+@@ -350,7 +350,8 @@
+ top_srcdir = @top_srcdir@
+ AM_CPPFLAGS = -I$(top_srcdir) $(LIBGSF_CFLAGS) \
+ 	$(Z_CPPFLAGS) \
+-	-DGSFLOCALEDIR=\"$(datadir)/locale\"
++	-DGSFLOCALEDIR=\"$(datadir)/locale\" \
++	-DBUILDING_LIBGSF
+ 
+ lib_LTLIBRARIES = libgsf-1.la
+ CLEANFILES = $(am__append_1) $(am__append_3) $(am__append_5)
+@@ -482,8 +483,8 @@
+ 
+ CPP_CFLAGS = -DGLIB_CHECK_VERSION\(x,y,z\)
+ LIB_PUBLIC_HDRS = $(libgsf_1_include_HEADERS)
+-@HAVE_LIBEXE_TRUE@gsf_mslibdir = $(DESTDIR)$(libdir)
+-@HAVE_LIBEXE_TRUE@gsf_mslib_DATA = gsf-1.lib
++@HAVE_LIBEXE_TRUE@#gsf_mslibdir = $(DESTDIR)$(libdir)
++@HAVE_LIBEXE_TRUE@#gsf_mslib_DATA = gsf-1.lib
+ @HAVE_INTROSPECTION_TRUE@Gsf_1_gir_INCLUDES = GObject-2.0 Gio-2.0 libxml2-2.0
+ @HAVE_INTROSPECTION_TRUE@Gsf_1_gir_CFLAGS = $(AM_CPPFLAGS)
+ @HAVE_INTROSPECTION_TRUE@Gsf_1_gir_LIBS = libgsf-1.la
+diff -ur libgsf-1.14.27-orig/gsf/gsf-fwd.h libgsf-1.14.27/gsf/gsf-fwd.h
+--- libgsf-1.14.27-orig/gsf/gsf-fwd.h	2013-02-23 14:06:49 -0500
++++ libgsf-1.14.27/gsf/gsf-fwd.h	2013-07-13 00:09:36 -0400
+@@ -25,6 +25,12 @@
+ #include <glib.h>
+ #include <glib-object.h>
+ 
++#if defined(_MSC_VER) && !defined(BUILDING_LIBGSF)
++#  define LIBGSF_EXTERN extern __declspec(dllimport)
++#else
++#  define LIBGSF_EXTERN extern
++#endif
++
+ G_BEGIN_DECLS
+ 
+ /**
+diff -ur libgsf-1.14.27-orig/gsf/gsf-input-memory.c libgsf-1.14.27/gsf/gsf-input-memory.c
+--- libgsf-1.14.27-orig/gsf/gsf-input-memory.c	2013-03-08 21:46:57 -0500
++++ libgsf-1.14.27/gsf/gsf-input-memory.c	2013-07-13 00:18:03 -0400
+@@ -36,6 +36,10 @@
+ #include <io.h>
+ #include <fcntl.h>
+ 
++#ifndef S_ISREG
++#  define S_ISREG(m) (((m) & _S_IFMT) == _S_IFREG)
++#endif
++
+ #define MAP_FAILED NULL
+ #endif
+ 
+diff -ur libgsf-1.14.27-orig/gsf/gsf-input-stdio.c libgsf-1.14.27/gsf/gsf-input-stdio.c
+--- libgsf-1.14.27-orig/gsf/gsf-input-stdio.c	2013-03-08 21:46:57 -0500
++++ libgsf-1.14.27/gsf/gsf-input-stdio.c	2013-07-13 00:17:57 -0400
+@@ -32,6 +32,10 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ 
++#ifndef S_ISREG
++#  define S_ISREG(m) (((m) & _S_IFMT) == _S_IFREG)
++#endif
++
+ static GObjectClass *parent_class;
+ 
+ struct _GsfInputStdio {
+diff -ur libgsf-1.14.27-orig/gsf/gsf-opendoc-utils.h libgsf-1.14.27/gsf/gsf-opendoc-utils.h
+--- libgsf-1.14.27-orig/gsf/gsf-opendoc-utils.h	2013-02-23 16:27:40 -0500
++++ libgsf-1.14.27/gsf/gsf-opendoc-utils.h	2013-07-13 00:03:47 -0400
+@@ -138,7 +138,7 @@
+ 
+ /* For 1.15.x s/opendoc/odf/ and s/ooo/odf/ */
+ #ifndef GSF_DISABLE_DEPRECATED
+-extern GsfXMLInNS gsf_ooo_ns[]; /* use get_gsf_ooo_ns instead */
++LIBGSF_EXTERN GsfXMLInNS gsf_ooo_ns[]; /* use get_gsf_ooo_ns instead */
+ GSF_DEPRECATED_FOR (gsf_odf_get_ns)
+ GsfXMLInNS *get_gsf_ooo_ns (void);
+ GSF_DEPRECATED_FOR (gsf_odf_get_version_string)
+diff -ur libgsf-1.14.27-orig/gsf/gsf-output-stdio.c libgsf-1.14.27/gsf/gsf-output-stdio.c
+--- libgsf-1.14.27-orig/gsf/gsf-output-stdio.c	2013-03-08 21:46:57 -0500
++++ libgsf-1.14.27/gsf/gsf-output-stdio.c	2013-07-13 00:17:52 -0400
+@@ -52,6 +52,9 @@
+ #ifdef HAVE_IO_H
+ #include <io.h>
+ #endif
++#ifndef S_ISREG
++#  define S_ISREG(m) (((m) & _S_IFMT) == _S_IFREG)
++#endif
+ #endif /* G_OS_WIN32 */
+ 
+ #ifndef W_OK
+diff -ur libgsf-1.14.27-orig/gsf/gsf-utils.h libgsf-1.14.27/gsf/gsf-utils.h
+--- libgsf-1.14.27-orig/gsf/gsf-utils.h	2013-03-07 17:56:29 -0500
++++ libgsf-1.14.27/gsf/gsf-utils.h	2013-07-13 00:03:06 -0400
+@@ -280,21 +280,21 @@
+  *
+  * Major version number of libgsf, indicating the ABI version.
+  */
+-extern int libgsf_major_version;
++LIBGSF_EXTERN int libgsf_major_version;
+ 
+ /**
+  * libgsf_minor_version:
+  *
+  * Minor (secondary) version number of libgsf, indicating the API version.
+  */
+-extern int libgsf_minor_version;
++LIBGSF_EXTERN int libgsf_minor_version;
+ 
+ /**
+  * libgsf_micro_version:
+  *
+  * Micro (tertiary) version number of libgsf, indicating bug fixes.
+  */
+-extern int libgsf_micro_version;
++LIBGSF_EXTERN int libgsf_micro_version;
+ 
+ char const *gsf_extension_pointer (char const * path);
+ void	    gsf_iconv_close (GIConv handle);
+diff -ur libgsf-1.14.27-orig/gsf-win32/Makefile.in libgsf-1.14.27/gsf-win32/Makefile.in
+--- libgsf-1.14.27-orig/gsf-win32/Makefile.in	2013-06-23 12:50:44 -0400
++++ libgsf-1.14.27/gsf-win32/Makefile.in	2013-07-13 00:20:12 -0400
+@@ -355,8 +355,8 @@
+ CLEANFILES = $(am__append_1) $(am__append_2)
+ @WITH_WIN32_TRUE@noinst_DATA = lib.def
+ LIB_PUBLIC_HDRS = $(libgsf_win32_1_include_HEADERS)
+-@HAVE_LIBEXE_TRUE@gsf_win32_mslibdir = $(DESTDIR)$(libdir)
+-@HAVE_LIBEXE_TRUE@gsf_win32_mslib_DATA = gsf-win32-1.lib
++@HAVE_LIBEXE_TRUE@#gsf_win32_mslibdir = $(DESTDIR)$(libdir)
++@HAVE_LIBEXE_TRUE@#gsf_win32_mslib_DATA = gsf-win32-1.lib
+ all: all-am
+ 
+ .SUFFIXES:
+diff -ur libgsf-1.14.27-orig/tools/gsf.c libgsf-1.14.27/tools/gsf.c
+--- libgsf-1.14.27-orig/tools/gsf.c	2013-03-07 17:56:29 -0500
++++ libgsf-1.14.27/tools/gsf.c	2013-07-13 00:21:19 -0400
+@@ -8,6 +8,13 @@
+ #include <string.h>
+ #include <errno.h>
+ 
++#ifndef S_ISREG
++#  define S_ISREG(m) (((m) & _S_IFMT) == _S_IFREG)
++#endif
++#ifndef S_ISDIR
++#  define S_ISDIR(m) (((m) & _S_IFMT) == _S_IFDIR)
++#endif
++
+ static gboolean show_version;
+ 
+ static GOptionEntry const gsf_options [] = {

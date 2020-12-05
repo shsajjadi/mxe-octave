@@ -1,0 +1,24 @@
+diff -ur lapack-3.8.0.orig/SRC/CMakeLists.txt lapack-3.8.0/SRC/CMakeLists.txt
+--- lapack-3.8.0.orig/SRC/CMakeLists.txt	2018-11-07 11:53:43.333467954 -0500
++++ lapack-3.8.0/SRC/CMakeLists.txt	2018-11-07 11:55:33.212104761 -0500
+@@ -37,7 +37,7 @@
+ 
+ set(ALLAUX ilaenv.f ilaenv2stage.f ieeeck.f lsamen.f iparmq.f iparam2stage.F
+    ilaprec.f ilatrans.f ilauplo.f iladiag.f chla_transtype.f
+-   ../INSTALL/ilaver.f ../INSTALL/lsame.f xerbla.f xerbla_array.f
++   ../INSTALL/ilaver.f ../INSTALL/lsame.f xerbla_array.f
+    ../INSTALL/slamch.f)
+ 
+ set(SCLAUX
+diff -ur lapack-3.8.0.orig/SRC/Makefile lapack-3.8.0/SRC/Makefile
+--- lapack-3.8.0.orig/SRC/Makefile	2018-11-07 11:53:43.337468050 -0500
++++ lapack-3.8.0/SRC/Makefile	2018-11-07 11:56:19.701220847 -0500
+@@ -56,7 +56,7 @@
+ #
+ #######################################################################
+ 
+-ALLAUX = ilaenv.o ilaenv2stage.o ieeeck.o lsamen.o xerbla.o xerbla_array.o \
++ALLAUX = ilaenv.o ilaenv2stage.o ieeeck.o lsamen.o xerbla_array.o \
+    iparmq.o iparam2stage.o \
+    ilaprec.o ilatrans.o ilauplo.o iladiag.o chla_transtype.o \
+    ../INSTALL/ilaver.o ../INSTALL/lsame.o ../INSTALL/slamch.o

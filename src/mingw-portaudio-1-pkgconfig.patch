@@ -1,0 +1,11 @@
+diff -ur portaudio.orig/portaudio-2.0.pc.in portaudio/portaudio-2.0.pc.in
+--- portaudio.orig/portaudio-2.0.pc.in	2015-01-26 13:21:54.575071537 -0500
++++ portaudio/portaudio-2.0.pc.in	2015-01-26 14:27:24.442724865 -0500
+@@ -8,5 +8,6 @@
+ Requires:
+ Version: 19
+ 
+-Libs: -L${libdir} -lportaudio @LIBS@
++Libs: -L${libdir} -lportaudio 
++Libs.private: @LIBS@
+ Cflags: -I${includedir} @THREAD_CFLAGS@

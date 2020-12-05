@@ -1,0 +1,48 @@
+diff -ur qhull-2009.1-orig/src/Makefile.am qhull-2009.1/src/Makefile.am
+--- qhull-2009.1-orig/src/Makefile.am	2013-06-25 20:40:09 -0400
++++ qhull-2009.1/src/Makefile.am	2013-06-25 20:44:01 -0400
+@@ -23,6 +23,7 @@
+   mem.c
+ 
+ # how:
++libqhull_la_CPPFLAGS = -DBUILDING_QHULL
+ libqhull_la_LDFLAGS = -no-undefined -version-info 5:0:0 -lm
+ 
+ ### Utility programs
+diff -ur qhull-2009.1-orig/src/qhull.h qhull-2009.1/src/qhull.h
+--- qhull-2009.1-orig/src/qhull.h	2004-01-30 17:38:32 -0500
++++ qhull-2009.1/src/qhull.h	2013-06-25 20:42:03 -0400
+@@ -51,9 +51,19 @@
+ 
+ #include "user.h"      /* user defineable constants */
+ 
++#ifdef _MSC_VER
++# ifdef BUILDING_QHULL
++#  define QHULL_EXTERN extern __declspec(dllexport)
++# else
++#  define QHULL_EXTERN extern __declspec(dllimport)
++# endif
++#else
++# define QHULL_EXTERN extern
++#endif
++
+ /*============ constants and basic types ====================*/
+ 
+-extern char *qh_version; /* defined in global.c */
++QHULL_EXTERN char *qh_version; /* defined in global.c */
+ 
+ /*-<a                             href="qh-geom.htm#TOC"
+   >--------------------------------</a><a name="coordT">-</a>
+@@ -376,10 +386,10 @@
+ typedef struct qhT qhT;
+ #if qh_QHpointer
+ #define qh qh_qh->
+-extern qhT *qh_qh;     /* allocated in global.c */
++QHULL_EXTERN qhT *qh_qh;     /* allocated in global.c */
+ #else
+ #define qh qh_qh.
+-extern qhT qh_qh;
++QHULL_EXTERN qhT qh_qh;
+ #endif
+ 
+ struct qhT {

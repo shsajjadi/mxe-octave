@@ -1,0 +1,36 @@
+diff -ur strings-1.2.0.orig/src/Makefile strings-1.2.0/src/Makefile
+--- strings-1.2.0.orig/src/Makefile	2015-06-08 13:43:45.551556353 -0400
++++ strings-1.2.0/src/Makefile	2015-06-08 13:45:22.693478306 -0400
+@@ -1,11 +1,7 @@
+ OCTAVE ?= octave
+ MKOCTFILE ?= mkoctfile -Wall
+ 
+-PCRE_SWITCHES := $(shell $(OCTAVE) \
+-	--no-gui --no-init-file --no-site-file --silent --no-history \
+-	--eval 'disp (octave_config_info ("PCRE_LIBS"));' \
+-	--eval 'disp (octave_config_info ("PCRE_CPPFLAGS"));' \
+-	)
++PCRE_SWITCHES := $(shell pcre-config --libs)
+ 
+ pcregexp.oct: %.oct: %.cc
+ 	$(MKOCTFILE) $(PCRE_SWITCHES) -o $@ $<
+diff -uNr a/src/pcregexp.cc b/src/pcregexp.cc
+--- a/src/pcregexp.cc	2015-06-06 17:40:45.000000000 -0400
++++ b/src/pcregexp.cc	2018-04-09 15:01:27.359869527 -0400
+@@ -22,6 +22,7 @@
+ // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ #include <octave/oct.h>
++#include <octave/errwarn.h>
+ #include <pcre.h>
+ #include <iostream>
+ #include <vector>
+@@ -49,7 +50,7 @@
+     std::string pattern = args(0).string_value();
+     std::string input = args(1).string_value();
+     if (error_state) {
+-        gripe_wrong_type_arg("pcregexp", args(0));
++        err_wrong_type_arg("pcregexp", args(0));
+         return retval;
+     }
+ 

@@ -1,0 +1,12 @@
+diff -ru gl2ps-1.4.2.orig/CMakeLists.txt gl2ps-1.4.2/CMakeLists.txt
+--- gl2ps-1.4.2.orig/CMakeLists.txt	2020-04-25 16:44:55.536814745 -0400
++++ gl2ps-1.4.2/CMakeLists.txt	2020-05-07 19:08:35.538729120 -0400
+@@ -156,7 +156,7 @@
+                              ARCHIVE DESTINATION lib${LIB_SUFFIX})
+ endif()
+ 
+-if(WIN32)
++if(WIN32 AND NOT DEFINED ENV{MSYSTEM})
+   set(GL2PS_DOC .)
+ else()
+   set(GL2PS_DOC share/doc/gl2ps)

@@ -1,0 +1,15 @@
+diff -ur ocs.old/src/Makefile ocs/src/Makefile
+--- ocs.old/src/Makefile	2015-07-07 20:23:51.000000000 -0400
++++ ocs/src/Makefile	2015-07-07 20:24:25.000000000 -0400
+@@ -1,9 +1,10 @@
+ OCTFILES:=Mshichmanhodgesmosfet.oct
++MKOCTFILE ?= mkoctfile
+ 
+ all: $(OCTFILES)
+ 
+ %.oct:  %.cc
+-	mkoctfile $<
++	$(MKOCTFILE) $<
+ 
+ clean:
+ 	-rm -f *.o core octave-core *.oct *~

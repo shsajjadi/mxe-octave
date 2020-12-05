@@ -1,0 +1,55 @@
+diff -ur libgpg-error-1.11-orig/src/Makefile.in libgpg-error-1.11/src/Makefile.in
+--- libgpg-error-1.11-orig/src/Makefile.in	2013-02-25 04:27:23 -0500
++++ libgpg-error-1.11/src/Makefile.in	2013-06-23 17:11:24 -0400
+@@ -999,7 +999,7 @@
+ gpg-error.def: Makefile gpg-error.def.in
+ 	cat $(srcdir)/gpg-error.def.in >_$@.h
+ 	$(CPP) $(DEFAULT_INCLUDES) $(INCLUDES) $(extra_cppflags) _$@.h | \
+-	  grep -v '^#' >$@
++	  grep -v '^#' | sed -e '/^$$/d' -e 's/^ *\([^ ]*\).*/\1/' >$@
+ 	-rm _$@.h
+ 
+ # It is correct to use $(CC_FOR_BUILD) here.  We want to run the
+diff -ur libgpg-error-1.11-orig/src/gpg-error.c libgpg-error-1.11/src/gpg-error.c
+--- libgpg-error-1.11-orig/src/gpg-error.c	2010-12-23 11:56:07 -0500
++++ libgpg-error-1.11/src/gpg-error.c	2013-06-23 17:11:56 -0400
+@@ -51,6 +51,11 @@
+ 
+ #include <gpg-error.h>
+ 
++#ifdef _MSC_VER
++# define strcasecmp stricmp
++# define strncasecmp strnicmp
++#endif
++
+ 
+ #if HAVE_W32_SYSTEM
+ /* The implementation follows below.  */
+diff -ur libgpg-error-1.11-orig/src/init.c libgpg-error-1.11/src/init.c
+--- libgpg-error-1.11-orig/src/init.c	2010-12-23 11:56:07 -0500
++++ libgpg-error-1.11/src/init.c	2013-06-23 17:11:32 -0400
+@@ -42,6 +42,10 @@
+ # endif
+ #endif
+ 
++#ifdef _MSC_VER
++# define snprintf _snprintf
++#endif
++
+ 
+ /* Locale directory support.  */
+ 
+diff -ur libgpg-error-1.11-orig/src/strerror.c libgpg-error-1.11/src/strerror.c
+--- libgpg-error-1.11-orig/src/strerror.c	2010-12-23 11:56:07 -0500
++++ libgpg-error-1.11/src/strerror.c	2013-06-23 17:11:42 -0400
+@@ -32,6 +32,10 @@
+ #include "gettext.h"
+ #include "err-codes.h"
+ 
++#ifdef _MSC_VER
++# define snprintf _snprintf
++#endif
++
+ /* Return a pointer to a string containing a description of the error
+    code in the error value ERR.  This function is not thread-safe.  */
+ const char *
