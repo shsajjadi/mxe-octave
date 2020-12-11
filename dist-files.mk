@@ -320,6 +320,7 @@ SRC_FILES_1 := \
   libxshmfence.mk \
   libxslt.mk \
   llvm-1-llvm-config.patch \
+  llvm-2-demangle.patch \
   llvm.mk \
   log4cxx-1-gcc.4.4.patch \
   log4cxx-2-pkgconfig.patch \
