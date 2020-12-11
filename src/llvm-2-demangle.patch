@@ -1,0 +1,15 @@
+MicrosoftDemangleNodes.h uses `uint8_t` without including `<cstdint>` and
+std::string` without including `<string>`.
+
+
+diff --git a/include/llvm/Demangle/MicrosoftDemangleNodes.h b/include/llvm/Demangle/MicrosoftDemangleNodes.h
+--- a/include/llvm/Demangle/MicrosoftDemangleNodes.h
++++ b/include/llvm/Demangle/MicrosoftDemangleNodes.h
+@@ -4,6 +4,8 @@
+ #include "llvm/Demangle/Compiler.h"
+ #include "llvm/Demangle/StringView.h"
+ #include <array>
++#include <cstdint>
++#include <string>
+
+ class OutputStream;
