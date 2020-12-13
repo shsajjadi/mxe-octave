@@ -1,5 +1,5 @@
 MicrosoftDemangleNodes.h uses `uint8_t` without including `<cstdint>` and
-std::string` without including `<string>`.
+`std::string` without including `<string>`.
 
 
 diff --git a/include/llvm/Demangle/MicrosoftDemangleNodes.h b/include/llvm/Demangle/MicrosoftDemangleNodes.h
