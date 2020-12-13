@@ -3,12 +3,12 @@
 
 PKG             := llvm
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 8.0.1
-$(PKG)_CHECKSUM := 09964f9eabc364f221a3caefbdaea28557273b4a
-$(PKG)_FILE     := llvm-$($(PKG)_VERSION).src.tar.xz
+$(PKG)_VERSION  := 9.0.1
+$(PKG)_CHECKSUM := f7fcf3bd92d130784513c06efe6910f135372ce3
 $(PKG)_SUBDIR   := llvm-$($(PKG)_VERSION).src
+$(PKG)_FILE     := llvm-$($(PKG)_VERSION).src.tar.xz
 $(PKG)_URL      := https://github.com/llvm/llvm-project/releases/download/llvmorg-$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := build-python
+$(PKG)_DEPS     := build-python3
 
 define $(PKG)_UPDATE
     wget -q -O- 'http://releases.llvm.org/download.html?' | \
@@ -17,12 +17,16 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+$(PKG)_CMAKE_PYTHON_FLAGS := \
+    -DPYTHON_EXECUTABLE:FILEPATH='$(ROOT_PREFIX)/bin/python3'
+
 ifeq ($(MXE_NATIVE_BUILD),yes)
     ifeq ($(MXE_SYSTEM),gnu-linux)
         define $(PKG)_BUILD
             mkdir '$(1)/.build' && cd '$(1)/.build' && cmake .. \
                 $($(PKG)_CMAKE_FLAGS) \
                 $(CMAKE_CCACHE_FLAGS) \
+                $($(PKG)_CMAKE_PYTHON_FLAGS) \
                 -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
                 -DLLVM_BUILD_LLVM_DYLIB=ON \
                 -DLLVM_LINK_LLVM_DYLIB=ON \
@@ -66,6 +70,7 @@ else
         cd '$(1)/.build' && 'cmake' .. \
             $($(PKG)_CMAKE_FLAGS) \
             $(CMAKE_CCACHE_FLAGS) \
+            $($(PKG)_CMAKE_PYTHON_FLAGS) \
             -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
             -DLLVM_BUILD_TOOLS=OFF \
             -DLLVM_BUILD_LLVM_DYLIB=ON \
