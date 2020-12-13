@@ -6,6 +6,7 @@ $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 8.0.1
 $(PKG)_CHECKSUM := 09964f9eabc364f221a3caefbdaea28557273b4a
 $(PKG)_FILE     := llvm-$($(PKG)_VERSION).src.tar.xz
+$(PKG)_SUBDIR   := llvm-$($(PKG)_VERSION).src
 $(PKG)_URL      := https://github.com/llvm/llvm-project/releases/download/llvmorg-$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := build-python
 
