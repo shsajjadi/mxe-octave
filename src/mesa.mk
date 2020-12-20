@@ -26,6 +26,7 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
 else
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += dri2proto glproto libdrm libxshmfence x11 xdamage xext xfixes
+    $(PKG)_BUILD_X11_LIBS_FLAGS = -Dxlib-lease=disabled
   else
     $(PKG)_PKG_CONFIG_PATH := $(PKG_CONFIG_PATH):$(BUILD_PKG_CONFIG_PATH)
   endif
@@ -36,7 +37,8 @@ else
 
   $(PKG)_X11_FLAGS := -Dplatforms='x11' \
       -Dglx=gallium-xlib \
-      -Ddri-drivers=''
+      -Ddri-drivers='' \
+      $($(PKG)_BUILD_X11_LIBS_FLAGS)
 endif
 
 define $(PKG)_BUILD
