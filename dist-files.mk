@@ -630,16 +630,11 @@ SRC_FILES_1 := \
   qwtplot3d.mk \
   rapidjson-1-prettywriter.patch \
   rapidjson.mk \
-  readline-0-001.patch \
-  readline-0-002.patch \
-  readline-0-003.patch \
-  readline-0-004.patch \
   readline-1-display.patch \
   readline-1-fixes.patch \
   readline-1-input.patch \
   readline-1-sigwinch.patch \
   readline-2-event-hook.patch \
-  readline-2-history.patch \
   readline.mk \
   release-octave-1-gnulib.patch \
   release-octave.mk \
