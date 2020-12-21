@@ -1,7 +1,7 @@
-diff -ur readline-8.0.sigwinch/input.c readline-8.0/input.c
---- readline-8.0.sigwinch/input.c	2019-03-20 08:15:55.450361377 -0400
-+++ readline-8.0/input.c	2019-03-20 08:30:58.059756179 -0400
-@@ -140,6 +140,11 @@
+diff -ur readline-8.1.3/input.c readline-8.1.4/input.c
+--- readline-8.1.3/input.c	2020-12-19 07:56:01.572775578 -0500
++++ readline-8.1.4/input.c	2020-12-19 07:57:24.608319024 -0500
+@@ -142,6 +142,11 @@
  static unsigned char ibuffer[512];
  static int ibuffer_len = sizeof (ibuffer) - 1;
  
@@ -13,7 +13,7 @@ diff -ur readline-8.0.sigwinch/input.c readline-8.0/input.c
  #define any_typein (push_index != pop_index)
  
  int
-@@ -266,7 +271,7 @@
+@@ -268,7 +273,7 @@
  #if defined (__MINGW32__)
    /* Use getch/_kbhit to check for available console input, in the same way
       that we read it normally. */
@@ -22,7 +22,7 @@ diff -ur readline-8.0.sigwinch/input.c readline-8.0/input.c
     result = 0;
  #endif
  
-@@ -501,6 +506,120 @@
+@@ -520,6 +525,120 @@
    return (c);
  }
  
@@ -143,7 +143,7 @@ diff -ur readline-8.0.sigwinch/input.c readline-8.0/input.c
  int
  rl_getc (FILE *stream)
  {
-@@ -520,9 +639,9 @@
+@@ -539,9 +658,9 @@
  #if defined (__MINGW32__)
        if (isatty (fileno (stream)))
          {
