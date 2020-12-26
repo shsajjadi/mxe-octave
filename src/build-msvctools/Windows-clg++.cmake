@@ -1,0 +1,1 @@
+INCLUDE(Platform/Windows-clgcc)

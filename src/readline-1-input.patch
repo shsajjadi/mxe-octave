@@ -1,0 +1,17 @@
+diff -ur readline-8.0.disp/input.c readline-8.0/input.c
+--- readline-8.0.disp/input.c	2019-03-20 07:56:04.897036396 -0400
++++ readline-8.0/input.c	2019-03-20 08:00:45.403401856 -0400
+@@ -519,7 +519,12 @@
+ 
+ #if defined (__MINGW32__)
+       if (isatty (fileno (stream)))
+-	return (_getch ());	/* "There is no error return." */
++        {
++          int c = _getch ();
++          if (c == 0xe0)
++            rl_execute_next (_getch ());
++          return (c);
++        }
+ #endif
+       result = 0;
+ #if defined (HAVE_PSELECT)

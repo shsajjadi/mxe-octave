@@ -1,0 +1,73 @@
+diff -ur libxml2-2.9.0-orig/include/libxml/nanoftp.h libxml2-2.9.0/include/libxml/nanoftp.h
+--- libxml2-2.9.0-orig/include/libxml/nanoftp.h	2012-09-10 23:52:46 -0400
++++ libxml2-2.9.0/include/libxml/nanoftp.h	2013-06-26 18:41:33 -0400
+@@ -16,7 +16,7 @@
+ #ifdef LIBXML_FTP_ENABLED
+ 
+ /* Needed for portability to Windows 64 bits */
+-#if defined(__MINGW32__) || defined(_WIN32_WCE)
++#if defined(__MINGW32__) || defined(_WIN32_WCE) || defined(_MSC_VER)
+ #include <winsock2.h>
+ #else
+ /**
+diff -ur libxml2-2.9.0-orig/libxml-2.0.pc.in libxml2-2.9.0/libxml-2.0.pc.in
+--- libxml2-2.9.0-orig/libxml-2.0.pc.in	2013-06-26 18:40:35 -0400
++++ libxml2-2.9.0/libxml-2.0.pc.in	2013-06-26 18:51:43 -0400
+@@ -8,7 +8,6 @@
+ Version: @VERSION@
+ Description: libXML library version2.
+ Requires:
+-Requires.private: liblzma
+ Libs: -L${libdir} -lxml2
+ Libs.private: @ICU_LIBS@ @THREAD_LIBS@ @Z_LIBS@ @ICONV_LIBS@ @M_LIBS@ @WIN32_EXTRA_LIBADD@ @LIBS@
+ Cflags: @XML_INCLUDEDIR@ @XML_CFLAGS@
+diff -ur libxml2-2.9.0-orig/libxml.h libxml2-2.9.0/libxml.h
+--- libxml2-2.9.0-orig/libxml.h	2012-09-10 23:52:46 -0400
++++ libxml2-2.9.0/libxml.h	2013-06-26 18:43:16 -0400
+@@ -38,6 +38,10 @@
+ #include <libxml/xmlversion.h>
+ #endif
+ 
++#ifdef _MSC_VER
++#define snprintf _snprintf
++#endif
++
+ #if defined(__Lynx__)
+ #include <stdio.h> /* pull definition of size_t */
+ #include <varargs.h>
+diff -ur libxml2-2.9.0-orig/nanoftp.c libxml2-2.9.0/nanoftp.c
+--- libxml2-2.9.0-orig/nanoftp.c	2012-09-11 00:24:08 -0400
++++ libxml2-2.9.0/nanoftp.c	2013-06-26 18:41:15 -0400
+@@ -77,7 +77,7 @@
+ #endif
+ 
+ 
+-#if defined(__MINGW32__) || defined(_WIN32_WCE)
++#if defined(__MINGW32__) || defined(_WIN32_WCE) || defined(_MSC_VER)
+ #ifndef _WINSOCKAPI_
+ #define _WINSOCKAPI_
+ #endif
+diff -ur libxml2-2.9.0-orig/nanohttp.c libxml2-2.9.0/nanohttp.c
+--- libxml2-2.9.0-orig/nanohttp.c	2012-09-11 00:23:25 -0400
++++ libxml2-2.9.0/nanohttp.c	2013-06-26 18:41:03 -0400
+@@ -74,7 +74,7 @@
+ #define XML_SOCKLEN_T unsigned int
+ #endif
+ 
+-#if defined(__MINGW32__) || defined(_WIN32_WCE)
++#if defined(__MINGW32__) || defined(_WIN32_WCE) || defined(_MSC_VER)
+ #ifndef _WINSOCKAPI_
+ #define _WINSOCKAPI_
+ #endif
+diff -ur libxml2-2.9.0-orig/testC14N.c libxml2-2.9.0/testC14N.c
+--- libxml2-2.9.0-orig/testC14N.c	2012-09-11 00:24:08 -0400
++++ libxml2-2.9.0/testC14N.c	2013-06-26 18:46:07 -0400
+@@ -12,7 +12,7 @@
+ #include <stdio.h>
+ #include <string.h>
+ #ifndef STDOUT_FILENO
+-#ifdef HAVE_UNISTD_H
++#if defined(HAVE_UNISTD_H) && !defined(_MSC_VER)
+ #include <unistd.h>
+ #else
+ #define STDOUT_FILENO fileno(stdout)

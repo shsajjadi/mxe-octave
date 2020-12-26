@@ -1,0 +1,12 @@
+diff -ur cfitsio.orig/configure.in cfitsio/configure.in
+--- cfitsio.orig/configure.in	2019-03-05 10:42:18.453397421 -0500
++++ cfitsio/configure.in	2019-03-05 10:44:29.464686105 -0500
+@@ -452,7 +452,7 @@
+ else
+   AC_CHECK_PROG([CURLCONFIG], [curl-config], [curl-config], [], [], [/opt/local/bin/curl-config])
+ fi
+-if test "x$CURLCONFIG" != x; then
++if test "x$CURLCONFIG" != x && test "x$CURLCONFIG" != "xnone" ; then
+   CURL_LIB=`$CURLCONFIG --libs`
+   CURL_INC=`$CURLCONFIG --cflags`
+   # Also reject anaconda curl on Macs until further notice:

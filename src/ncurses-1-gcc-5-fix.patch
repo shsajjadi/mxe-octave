@@ -1,0 +1,26 @@
+diff -ur ncurses-5.9.orig/ncurses/base/MKlib_gen.sh ncurses-5.9/ncurses/base/MKlib_gen.sh
+--- ncurses-5.9.orig/ncurses/base/MKlib_gen.sh	2015-09-11 08:07:30.154205355 -0400
++++ ncurses-5.9/ncurses/base/MKlib_gen.sh	2015-09-11 08:10:59.265578376 -0400
+@@ -436,12 +436,18 @@
+ 	-e 's/^\([a-zA-Z_][a-zA-Z_]*[ *]*\)/\1 gen_/' \
+ 	-e 's/gen_$//' \
+ 	-e 's/  / /g' >>$TMP
++cat >$ED1 <<EOF
++s/  / /g
++s/^ //
++s/ $//
++s/P_NCURSES_BOOL/NCURSES_BOOL/g
++EOF
++
++sed -e 's/bool/P_NCURSES_BOOL/g' $TMP > $ED2
++cat $ED2 >$TMP
+ 
+ $preprocessor $TMP 2>/dev/null \
+-| sed \
+-	-e 's/  / /g' \
+-	-e 's/^ //' \
+-	-e 's/_Bool/NCURSES_BOOL/g' \
++| sed -f $ED1 \
+ | $AWK -f $AW2 \
+ | sed -f $ED3 \
+ | sed \

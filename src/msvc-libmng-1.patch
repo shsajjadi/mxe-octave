@@ -1,0 +1,11 @@
+diff -ur libmng-2.0.2-orig/Makefile.am libmng-2.0.2/Makefile.am
+--- libmng-2.0.2-orig/Makefile.am	2013-03-05 06:59:27 -0500
++++ libmng-2.0.2/Makefile.am	2013-11-09 12:13:37 -0500
+@@ -9,6 +9,7 @@
+ 
+ # libmng release @VERSION@
+ libmng_la_LDFLAGS = \
++	-no-undefined \
+ 	-version-number @MNG_MAJOR_NR@:@MNG_MINOR_NR@:@MNG_RELEASE_NR@
+ 
+ lib_LTLIBRARIES = libmng.la

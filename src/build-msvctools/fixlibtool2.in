@@ -1,0 +1,53 @@
+#!/bin/sh
+
+libtool_file="$1"
+if test -z "$libtool_file"; then
+  echo "usage: $0 <libtool>"
+  exit -1
+fi
+
+library_prefix="$2"
+library_suffix="$3"
+
+if test -z "$library_prefix"; then
+	library_prefix="@LIBRARY_PREFIX@"
+fi
+if test -z "$library_suffix"; then
+	library_suffix="@LIBRARY_SUFFIX@"
+fi
+
+libtool_dir=`dirname $libtool_file`
+
+sed -e 's/^wl=.*$/wl="-Wl,"/' \
+    -e 's/^fast_install=.*$/fast_install=no/' \
+    -e 's/^file_list_spec=.*$/file_list_spec="@"/' \
+    -e 's/^fix_srcfile_path=.*$/fix_srcfile_path=""/' \
+    -e 's/^old_archive_from_new_cmds=.*$/old_archive_from_new_cmds=""/' \
+    -e 's/^deplibs_check_method=.*$/deplibs_check_method="pass_all"/' \
+    -e 's/^shlibpath_overrides_runpath=.*$/shlibpath_overrides_runpath=yes/' \
+    -e 's/^library_names_spec=.*$/library_names_spec="\\`echo \\${libname} | \\$SED -e '\''s\/^lib\/\/'\''\\`.lib"/' \
+    -e 's/^soname_spec=.*$/soname_spec="'${library_prefix}'\\${libname}\\`echo \\${release} | \\$SED -e '\''s\/[.]\/-\/g'\''\\`\\${versuffix}'${library_suffix}'\\${shared_ext}"/' \
+    -e '/^postinstall_cmds=\(""\)\?$/ { i\
+postinstall_cmds="base_file=\\\\\\`basename \\\\\\${file}\\\\\\`~\
+      dlpath=\\\\\\`\\$SHELL 2>&1 -c '\''. \\$dir/'\''\\\\\\${base_file}'\''i; echo \\\\\\$dlname'\''\\\\\\`~\
+      dldir=\\$destdir/\\\\\\`dirname \\\\\\$dlpath\\\\\\`~\
+      test -d \\\\\\$dldir || mkdir -p \\\\\\$dldir~\
+      \\$install_prog \\$dir/\\$dlname \\\\\\$dldir/\\$dlname~\
+      chmod a+x \\\\\\$dldir/\\$dlname~\
+      if test -n '\''\\$stripme'\'' && test -n '\''\\$striplib'\''; then\
+        eval '\''\\$striplib \\\\\\$dldir/\\$dlname'\'' || exit \\\\\\$?;\
+      fi"
+    ;d; }' \
+    -e '/^postuninstall_cmds=\(""\)\?$/ { i\
+postuninstall_cmds="dldll=\\\\\\`\\$SHELL 2>&1 -c '\''. \\$file; echo \\\\\\$dlname'\''\\\\\\`~\
+      dlpath=\\$dir/\\\\\\$dldll~\
+      \\$RM \\\\\\$dlpath"
+    ;d; }' \
+    -e 's,-link -dll,-shared,g' \
+    -e 's,^archive_cmds=.*$,archive_cmds="\\$CC -shared -o \\$output_objdir/\\$soname_spec \\$libobjs \\$compiler_flags \\\\\\`\\$ECHO \\\\\\"X\\$deplibs\\\\\\" | \\$Xsed -e '\''s/ -lc\\$//'\''\\\\\\` -Xlinker --out-implib -Xlinker \\$lib ~linknames=",' \
+    -e 's,^ECHO=.*,ECHO="echo",' \
+    -e '/#.*BEGIN LIBTOOL TAG CONFIG: CXX/,/#.*END LIBTOOL TAG CONFIG: CXX/! {s,^archive_expsym_cmds=.*$,archive_expsym_cmds="if ! \\$EGREP -q \\\\\\"^\\\\s*\\\\<EXPORTS\\\\>\\\\s*\\$\\\\\\" \\$export_symbols; then echo EXPORTS > \\$\{export_symbols\}T; cat \\$export_symbols >> \\$\{export_symbols\}T; \\$MV \\$\{export_symbols\}T \\$export_symbols; fi~\\$CC -shared -o \\$output_objdir/\\$soname_spec \\$libobjs \\$compiler_flags \\\\\\`\\$ECHO \\\\\\"X\\$deplibs\\\\\\" | \\$Xsed -e '\''s/ -lc\\$//'\''\\\\\\` \\$\{wl\}-def:\\$export_symbols -Xlinker --out-implib -Xlinker \\$lib ~linknames=",;}' \
+    -e 's/^sys_lib_search_path_spec=.*$/fix_srcfile_path=""/' \
+    -e 's/^sys_lib_dlsearch_path_spec=.*$/fix_srcfile_path=""/' \
+    "$libtool_file" > "$libtool_dir/ttt" &&
+  mv "$libtool_dir/ttt" "$libtool_file"

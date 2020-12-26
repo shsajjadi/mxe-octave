@@ -1,0 +1,11 @@
+diff -ur lcms2-2.9.orig/lcms2.pc.in lcms2-2.9/lcms2.pc.in
+--- lcms2-2.9.orig/lcms2.pc.in	2017-12-04 16:39:09.491042791 -0500
++++ lcms2-2.9/lcms2.pc.in	2017-12-04 16:40:58.941757920 -0500
+@@ -7,5 +7,6 @@
+ Description: LCMS Color Management Library
+ Version: @VERSION@
+ Libs: -L${libdir} -llcms2
+-Libs.private: @LIB_MATH@ @LIB_THREAD@
++Libs.private: -ljpeg @LIB_MATH@ @LIB_THREAD@
+ Cflags: -I${includedir}
++Requires: libtiff-4

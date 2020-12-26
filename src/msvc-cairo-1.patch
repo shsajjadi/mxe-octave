@@ -1,0 +1,142 @@
+diff -ur cairo-1.12.14-orig/perf/cairo-analyse-trace.c cairo-1.12.14/perf/cairo-analyse-trace.c
+--- cairo-1.12.14-orig/perf/cairo-analyse-trace.c	2012-02-01 19:48:14 -0500
++++ cairo-1.12.14/perf/cairo-analyse-trace.c	2013-07-22 13:51:18 -0400
+@@ -53,7 +53,19 @@
+ #include <sys/stat.h>
+ 
+ #ifdef _MSC_VER
++#ifdef __CLGCC__
++#include <dirent.h>
++#else
+ #include "dirent-win32.h"
++#endif
++
++#ifndef R_OK
++#define R_OK 4
++#endif
++
++#ifndef S_ISDIR
++#define S_ISDIR(m) (((m) & _S_IFMT) == _S_IFDIR)
++#endif
+ 
+ static char *
+ basename_no_ext (char *path)
+@@ -212,8 +224,8 @@
+ {
+     char *trace_cpy, *name;
+     const cairo_script_interpreter_hooks_t hooks = {
+-	.closure = args,
+-	.surface_create = surface_create,
++	/*.closure =*/ args,
++	/*.surface_create =*/ surface_create,
+     };
+ 
+     trace_cpy = xstrdup (trace);
+diff -ur cairo-1.12.14-orig/perf/cairo-perf-trace.c cairo-1.12.14/perf/cairo-perf-trace.c
+--- cairo-1.12.14-orig/perf/cairo-perf-trace.c	2013-01-29 08:54:51 -0500
++++ cairo-1.12.14/perf/cairo-perf-trace.c	2013-07-22 13:51:41 -0400
+@@ -54,7 +54,19 @@
+ #include <sys/stat.h>
+ 
+ #ifdef _MSC_VER
++#ifdef __CLGCC__
++#include <dirent.h>
++#else
+ #include "dirent-win32.h"
++#endif
++
++#ifndef R_OK
++#define R_OK 4
++#endif
++
++#ifndef S_ISDIR
++#define S_ISDIR(m) (((m) & _S_IFMT) == _S_IFDIR)
++#endif
+ 
+ static char *
+ basename_no_ext (char *path)
+diff -ur cairo-1.12.14-orig/src/Makefile.in cairo-1.12.14/src/Makefile.in
+--- cairo-1.12.14-orig/src/Makefile.in	2013-02-10 08:39:15 -0500
++++ cairo-1.12.14/src/Makefile.in	2013-07-22 13:16:42 -0400
+@@ -1639,7 +1639,7 @@
+ #MAINTAINERCLEANFILES += $(srcdir)/Makefile.win32.features
+ AM_CPPFLAGS = -I$(srcdir) $(CAIRO_CFLAGS)
+ AM_LDFLAGS = $(CAIRO_LDFLAGS)
+-@OS_WIN32_TRUE@export_symbols = -export-symbols cairo.def
++@OS_WIN32_TRUE@export_symbols = -export-symbols-regex "xXx" -Wl,cairo.def
+ @OS_WIN32_TRUE@cairo_def_dependency = cairo.def
+ cairoincludedir = $(includedir)/cairo
+ 
+@@ -2720,7 +2720,6 @@
+ 	$(EGREP) '^cairo_.* \(' | \
+ 	sed -e 's/[ 	].*//' | \
+ 	sort; \
+-	echo LIBRARY libcairo-$(CAIRO_VERSION_SONUM).dll; \
+ 	) >$@
+ 	@ ! grep -q cairo_ERROR $@ || ($(RM) $@; false)
+ 
+diff -ur cairo-1.12.14-orig/src/cairo-ft-font.c cairo-1.12.14/src/cairo-ft-font.c
+--- cairo-1.12.14-orig/src/cairo-ft-font.c	2013-01-03 15:06:16 -0500
++++ cairo-1.12.14/src/cairo-ft-font.c	2013-07-22 13:13:21 -0400
+@@ -66,6 +66,9 @@
+ 
+ #if HAVE_UNISTD_H
+ #include <unistd.h>
++#if defined (_MSC_VER) && ! defined (R_OK)
++#define R_OK 4
++#endif
+ #else
+ #define access(p, m) 0
+ #endif
+diff -ur cairo-1.12.14-orig/test/bitmap-font.c cairo-1.12.14/test/bitmap-font.c
+--- cairo-1.12.14-orig/test/bitmap-font.c	2010-06-13 15:58:21 -0400
++++ cairo-1.12.14/test/bitmap-font.c	2013-07-22 13:39:06 -0400
+@@ -36,6 +36,10 @@
+ #define FONT "6x13.pcf"
+ #define TEXT_SIZE 13
+ 
++#if defined (_MSC_VER) && ! defined (S_ISREG)
++#  define S_ISREG(m) (((m) & _S_IFMT) == _S_IFREG)
++#endif
++
+ static cairo_bool_t
+ font_extents_equal (const cairo_font_extents_t *A,
+ 	            const cairo_font_extents_t *B)
+diff -ur cairo-1.12.14-orig/test/ft-show-glyphs-table.c cairo-1.12.14/test/ft-show-glyphs-table.c
+--- cairo-1.12.14-orig/test/ft-show-glyphs-table.c	2010-06-13 15:58:21 -0400
++++ cairo-1.12.14/test/ft-show-glyphs-table.c	2013-07-22 13:36:00 -0400
+@@ -88,7 +88,9 @@
+     {
+ 	charcode = FT_Get_First_Char(face, &idx);
+ 	while (idx && (i < NUM_GLYPHS)) {
+-	    glyphs[i] = (cairo_glyph_t) {idx, PAD + GRID_SIZE * (i/GRID_ROWS), PAD + TEXT_SIZE + GRID_SIZE * (i%GRID_ROWS)};
++	    glyphs[i].index = idx;
++	    glyphs[i].x = PAD + GRID_SIZE * (i/GRID_ROWS);
++	    glyphs[i].y = PAD + TEXT_SIZE + GRID_SIZE * (i%GRID_ROWS);
+ 	    i++;
+ 	    charcode = FT_Get_Next_Char(face, charcode, &idx);
+ 	}
+diff -ur cairo-1.12.14-orig/util/cairo-gobject/Makefile.in cairo-1.12.14/util/cairo-gobject/Makefile.in
+--- cairo-1.12.14-orig/util/cairo-gobject/Makefile.in	2013-02-10 08:39:17 -0500
++++ cairo-1.12.14/util/cairo-gobject/Makefile.in	2013-07-22 13:28:22 -0400
+@@ -388,7 +388,7 @@
+ 	$(NULL)
+ 
+ libcairo_gobject_la_CFLAGS = $(CAIRO_CFLAGS) $(GOBJECT_CFLAGS)
+-libcairo_gobject_la_LDFLAGS = -version-info $(CAIRO_LIBTOOL_VERSION_INFO) -no-undefined $(export_symbols)
++libcairo_gobject_la_LDFLAGS = -version-info $(CAIRO_LIBTOOL_VERSION_INFO) -no-undefined $(export_symbols) -export-symbols-regex "^cairo_gobject_.*"
+ libcairo_gobject_la_LIBADD = $(top_builddir)/src/libcairo.la $(CAIRO_LIBS) $(GOBJECT_LIBS)
+ all: all-am
+ 
+diff -ur cairo-1.12.14-orig/util/cairo-script/Makefile.in cairo-1.12.14/util/cairo-script/Makefile.in
+--- cairo-1.12.14-orig/util/cairo-script/Makefile.in	2013-02-10 08:39:17 -0500
++++ cairo-1.12.14/util/cairo-script/Makefile.in	2013-07-22 13:28:01 -0400
+@@ -480,7 +480,7 @@
+ 	$(NULL)
+ 
+ libcairo_script_interpreter_la_CFLAGS = $(CAIRO_CFLAGS)
+-libcairo_script_interpreter_la_LDFLAGS = -version-info $(CAIRO_LIBTOOL_VERSION_INFO) -no-undefined $(export_symbols)
++libcairo_script_interpreter_la_LDFLAGS = -version-info $(CAIRO_LIBTOOL_VERSION_INFO) -no-undefined $(export_symbols) -export-symbols-regex "^cairo_script_.*"
+ libcairo_script_interpreter_la_LIBADD = $(top_builddir)/src/libcairo.la $(CAIRO_LIBS) $(lzo_LIBS) -lz
+ csi_replay_SOURCES = csi-replay.c
+ csi_replay_CFLAGS = $(CAIRO_CFLAGS)

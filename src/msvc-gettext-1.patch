@@ -1,0 +1,271 @@
+diff -ur gettext-0.18.3.1-orig/gettext-runtime/gnulib-lib/unistd.in.h gettext-0.18.3.1/gettext-runtime/gnulib-lib/unistd.in.h
+--- gettext-0.18.3.1-orig/gettext-runtime/gnulib-lib/unistd.in.h	2013-08-15 12:24:01 -0400
++++ gettext-0.18.3.1/gettext-runtime/gnulib-lib/unistd.in.h	2013-11-04 17:59:39 -0500
+@@ -115,7 +115,7 @@
+    the getopt module only in gettext-tools/gnulib-lib/, not in
+    gettext-tools/libgettextpo/, but there is only a single
+    GNULIB_UNISTD_H_GETOPT variable for both.  */
+-#if @GNULIB_UNISTD_H_GETOPT@ && !defined GTPO_CONFIG_H && !defined __GLIBC__ && !defined _GL_SYSTEM_GETOPT
++#if @GNULIB_UNISTD_H_GETOPT@ && !defined GTPO_CONFIG_H && !defined __GLIBC__ && !defined _GL_SYSTEM_GETOPT && !defined _MSC_VER
+ # define __need_getopt
+ # include <getopt.h>
+ #endif
+diff -ur gettext-0.18.3.1-orig/gettext-runtime/intl/export.h gettext-0.18.3.1/gettext-runtime/intl/export.h
+--- gettext-0.18.3.1-orig/gettext-runtime/intl/export.h	2012-12-09 20:59:06 -0500
++++ gettext-0.18.3.1/gettext-runtime/intl/export.h	2013-11-04 17:58:54 -0500
+@@ -2,5 +2,13 @@
+ #if @HAVE_VISIBILITY@ && BUILDING_LIBINTL
+ #define LIBINTL_DLL_EXPORTED __attribute__((__visibility__("default")))
+ #else
++#ifdef _MSC_VER
++#ifdef BUILDING_LIBINTL
++#define LIBINTL_DLL_EXPORTED __declspec(dllexport)
++#else
++#define LIBINTL_DLL_EXPORTED __declspec(dllimport)
++#endif
++#else
+ #define LIBINTL_DLL_EXPORTED
+ #endif
++#endif
+diff -ur gettext-0.18.3.1-orig/gettext-tools/gnulib-lib/ostream.h gettext-0.18.3.1/gettext-tools/gnulib-lib/ostream.h
+--- gettext-0.18.3.1-orig/gettext-tools/gnulib-lib/ostream.h	2013-08-15 12:32:44 -0400
++++ gettext-0.18.3.1/gettext-tools/gnulib-lib/ostream.h	2013-11-04 19:05:15 -0500
+@@ -108,6 +108,13 @@
+ 
+ #endif
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
++extern const typeinfo_t ostream_typeinfo;
++#ifdef __cplusplus
++};
++#endif
+ extern const typeinfo_t ostream_typeinfo;
+ #define ostream_SUPERCLASSES &ostream_typeinfo, NULL
+ #define ostream_SUPERCLASSES_LENGTH (1 + 1)
+diff -ur gettext-0.18.3.1-orig/gettext-tools/gnulib-lib/stdbool.in.h gettext-0.18.3.1/gettext-tools/gnulib-lib/stdbool.in.h
+--- gettext-0.18.3.1-orig/gettext-tools/gnulib-lib/stdbool.in.h	2013-08-15 12:25:00 -0400
++++ gettext-0.18.3.1/gettext-tools/gnulib-lib/stdbool.in.h	2013-11-04 19:30:41 -0500
+@@ -67,7 +67,9 @@
+ #endif
+ 
+ #ifdef __cplusplus
+-# define _Bool bool
++# ifndef _MSC_VER
++#  define _Bool bool
++# endif
+ # define bool bool
+ #else
+ # if defined __BEOS__ && !defined __HAIKU__
+diff -ur gettext-0.18.3.1-orig/gettext-tools/gnulib-lib/styled-ostream.h gettext-0.18.3.1/gettext-tools/gnulib-lib/styled-ostream.h
+--- gettext-0.18.3.1-orig/gettext-tools/gnulib-lib/styled-ostream.h	2013-08-15 12:32:45 -0400
++++ gettext-0.18.3.1/gettext-tools/gnulib-lib/styled-ostream.h	2013-11-04 19:15:11 -0500
+@@ -132,6 +132,13 @@
+ 
+ #endif
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
++extern DLL_VARIABLE const typeinfo_t styled_ostream_typeinfo;
++#ifdef __cplusplus
++};
++#endif
+ extern DLL_VARIABLE const typeinfo_t styled_ostream_typeinfo;
+ #define styled_ostream_SUPERCLASSES &styled_ostream_typeinfo, ostream_SUPERCLASSES
+ #define styled_ostream_SUPERCLASSES_LENGTH (1 + ostream_SUPERCLASSES_LENGTH)
+diff -ur gettext-0.18.3.1-orig/gettext-tools/gnulib-lib/unistd.in.h gettext-0.18.3.1/gettext-tools/gnulib-lib/unistd.in.h
+--- gettext-0.18.3.1-orig/gettext-tools/gnulib-lib/unistd.in.h	2013-08-15 12:25:01 -0400
++++ gettext-0.18.3.1/gettext-tools/gnulib-lib/unistd.in.h	2013-11-04 18:00:01 -0500
+@@ -115,7 +115,7 @@
+    the getopt module only in gettext-tools/gnulib-lib/, not in
+    gettext-tools/libgettextpo/, but there is only a single
+    GNULIB_UNISTD_H_GETOPT variable for both.  */
+-#if @GNULIB_UNISTD_H_GETOPT@ && !defined GTPO_CONFIG_H && !defined __GLIBC__ && !defined _GL_SYSTEM_GETOPT
++#if @GNULIB_UNISTD_H_GETOPT@ && !defined GTPO_CONFIG_H && !defined __GLIBC__ && !defined _GL_SYSTEM_GETOPT && !defined _MSC_VER
+ # define __need_getopt
+ # include <getopt.h>
+ #endif
+diff -ur gettext-0.18.3.1-orig/gettext-tools/libgettextpo/Makefile.in gettext-0.18.3.1/gettext-tools/libgettextpo/Makefile.in
+--- gettext-0.18.3.1-orig/gettext-tools/libgettextpo/Makefile.in	2013-08-15 12:31:14 -0400
++++ gettext-0.18.3.1/gettext-tools/libgettextpo/Makefile.in	2013-11-04 20:09:54 -0500
+@@ -2446,7 +2446,7 @@
+ 	          sf=`echo "$$f" | sed -e 's,\\.[^.]*$$,,'`.c; \
+ 	          test -f $$sf || sf=$(srcdir)/$$sf; \
+ 	          of=`echo "$$f" | sed -e 's,^.*/,,' -e 's,\\.[^.]*$$,,'`.$(OBJEXT); \
+-	          $(COMPILE) -c $$sf || { rm -f config.h; exit 1; }; \
++	          $(COMPILE) -c $$sf 2>&1 1>/dev/null || { rm -f config.h; exit 1; }; \
+ 	          sh ./exported.sh $$of 1>&5; \
+ 	          rm -f $$of `echo "$$of" | sed -e 's,\\.$(OBJEXT)$$,.lo,'`; \
+ 	          ;; \
+diff -ur gettext-0.18.3.1-orig/gettext-tools/src/hostname.c gettext-0.18.3.1/gettext-tools/src/hostname.c
+--- gettext-0.18.3.1-orig/gettext-tools/src/hostname.c	2012-12-09 20:59:06 -0500
++++ gettext-0.18.3.1/gettext-tools/src/hostname.c	2013-11-04 19:57:29 -0500
+@@ -46,7 +46,9 @@
+ #endif
+ 
+ /* Get MAXHOSTNAMELEN.  */
++#ifdef HAVE_SYS_PARAM_H
+ #include <sys/param.h>
++#endif
+ #ifndef MAXHOSTNAMELEN
+ # define MAXHOSTNAMELEN 64
+ #endif
+diff -ur gettext-0.18.3.1-orig/gettext-tools/src/lang-table.h gettext-0.18.3.1/gettext-tools/src/lang-table.h
+--- gettext-0.18.3.1-orig/gettext-tools/src/lang-table.h	2012-12-09 20:59:06 -0500
++++ gettext-0.18.3.1/gettext-tools/src/lang-table.h	2013-11-04 19:51:49 -0500
+@@ -26,10 +26,16 @@
+   const char *english;
+ };
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
+ extern struct language_table_entry language_table[];
+ extern const size_t language_table_size;
+ 
+ extern struct language_table_entry language_variant_table[];
+ extern const size_t language_variant_table_size;
++#ifdef __cplusplus
++};
++#endif
+ 
+ #endif /* _LANG_TABLE_H */
+diff -ur gettext-0.18.3.1-orig/gettext-tools/src/read-po.h gettext-0.18.3.1/gettext-tools/src/read-po.h
+--- gettext-0.18.3.1-orig/gettext-tools/src/read-po.h	2012-12-09 20:59:06 -0500
++++ gettext-0.18.3.1/gettext-tools/src/read-po.h	2013-11-04 19:36:01 -0500
+@@ -21,6 +21,12 @@
+ #include "read-catalog-abstract.h"
+ 
+ /* Describes a .po / .pot file parser.  */
++#ifdef __cplusplus
++extern "C" {
++#endif
+ extern DLL_VARIABLE const struct catalog_input_format input_format_po;
++#ifdef __cplusplus
++};
++#endif
+ 
+ #endif /* _READ_PO_H */
+diff -ur gettext-0.18.3.1-orig/gettext-tools/src/read-properties.h gettext-0.18.3.1/gettext-tools/src/read-properties.h
+--- gettext-0.18.3.1-orig/gettext-tools/src/read-properties.h	2012-12-09 20:59:06 -0500
++++ gettext-0.18.3.1/gettext-tools/src/read-properties.h	2013-11-04 19:36:33 -0500
+@@ -21,6 +21,12 @@
+ #include "read-catalog-abstract.h"
+ 
+ /* Describes a .properties file parser.  */
++#ifdef __cplusplus
++extern "C" {
++#endif
+ extern DLL_VARIABLE const struct catalog_input_format input_format_properties;
++#ifdef __cplusplus
++};
++#endif
+ 
+ #endif /* _READ_PROPERTIES_H */
+diff -ur gettext-0.18.3.1-orig/gettext-tools/src/read-stringtable.h gettext-0.18.3.1/gettext-tools/src/read-stringtable.h
+--- gettext-0.18.3.1-orig/gettext-tools/src/read-stringtable.h	2012-12-09 20:59:06 -0500
++++ gettext-0.18.3.1/gettext-tools/src/read-stringtable.h	2013-11-04 19:41:03 -0500
+@@ -21,6 +21,12 @@
+ #include "read-catalog-abstract.h"
+ 
+ /* Describes a .strings file parser.  */
++#ifdef __cplusplus
++extern "C" {
++#endif
+ extern DLL_VARIABLE const struct catalog_input_format input_format_stringtable;
++#ifdef __cplusplus
++};
++#endif
+ 
+ #endif /* _READ_STRINGTABLE_H */
+diff -ur gettext-0.18.3.1-orig/gettext-tools/src/write-po.h gettext-0.18.3.1/gettext-tools/src/write-po.h
+--- gettext-0.18.3.1-orig/gettext-tools/src/write-po.h	2012-12-09 20:59:06 -0500
++++ gettext-0.18.3.1/gettext-tools/src/write-po.h	2013-11-04 19:45:28 -0500
+@@ -63,7 +63,13 @@
+        message_print_style_escape (bool flag);
+ 
+ /* Describes a PO file in .po syntax.  */
++#ifdef __cplusplus
++extern "C" {
++#endif
+ extern DLL_VARIABLE const struct catalog_output_format output_format_po;
++#ifdef __cplusplus
++};
++#endif
+ 
+ 
+ #ifdef __cplusplus
+diff -ur gettext-0.18.3.1-orig/gettext-tools/src/write-properties.h gettext-0.18.3.1/gettext-tools/src/write-properties.h
+--- gettext-0.18.3.1-orig/gettext-tools/src/write-properties.h	2012-12-09 20:59:06 -0500
++++ gettext-0.18.3.1/gettext-tools/src/write-properties.h	2013-11-04 19:45:58 -0500
+@@ -21,6 +21,12 @@
+ #include "write-catalog.h"
+ 
+ /* Describes a PO file in Java .properties syntax.  */
++#ifdef __cplusplus
++extern "C" {
++#endif
+ extern DLL_VARIABLE const struct catalog_output_format output_format_properties;
++#ifdef __cplusplus
++};
++#endif
+ 
+ #endif /* _WRITE_PROPERTIES_H */
+diff -ur gettext-0.18.3.1-orig/gettext-tools/src/write-stringtable.h gettext-0.18.3.1/gettext-tools/src/write-stringtable.h
+--- gettext-0.18.3.1-orig/gettext-tools/src/write-stringtable.h	2012-12-09 20:59:06 -0500
++++ gettext-0.18.3.1/gettext-tools/src/write-stringtable.h	2013-11-04 19:47:57 -0500
+@@ -21,6 +21,12 @@
+ #include "write-catalog.h"
+ 
+ /* Describes a PO file in .strings syntax.  */
++#ifdef __cplusplus
++extern "C" {
++#endif
+ extern DLL_VARIABLE const struct catalog_output_format output_format_stringtable;
++#ifdef __cplusplus
++};
++#endif
+ 
+ #endif /* _WRITE_STRINGTABLE_H */
+diff -ur gettext-0.18.3.1-orig/gettext-tools/src/x-lua.c gettext-0.18.3.1/gettext-tools/src/x-lua.c
+--- gettext-0.18.3.1-orig/gettext-tools/src/x-lua.c	2013-08-12 08:07:22 -0400
++++ gettext-0.18.3.1/gettext-tools/src/x-lua.c	2013-11-04 19:43:20 -0500
+@@ -281,9 +281,10 @@
+ 
+           if (c == '[')
+             {
++              int esigns = 0;
++
+               c = phase1_getc ();
+ 
+-              int esigns = 0;
+               while (c == '=')
+                 {
+                   esigns++;
+@@ -477,6 +478,8 @@
+   int c;
+   int c2;
+   int c_start;
++  int esigns = 0;
++  int esigns2 = 0;
+ 
+   if (phase3_pushback_length)
+     {
+@@ -707,7 +710,6 @@
+           c = phase1_getc ();
+ 
+           /* Count the number of equal signs.  */
+-          int esigns = 0;
+           while (c == '=')
+             {
+               esigns++;
+@@ -742,7 +744,6 @@
+                   c = phase1_getc ();
+ 
+                   /* Count the number of equal signs.  */
+-                  int esigns2 = 0;
+                   while (c == '=')
+                     {
+                       esigns2++;

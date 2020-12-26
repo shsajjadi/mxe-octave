@@ -1,0 +1,56 @@
+--- a/Makefile.in	1995-08-16 20:54:29.000000000 -0400
++++ b/Makefile.in	2012-12-05 11:45:11.124478718 -0500
+@@ -75,8 +75,6 @@
+ 	$(INSTALL_DATA) libtermcap.a $(libdir)/libtermcap.a
+ 	-$(RANLIB) $(libdir)/libtermcap.a
+ 	cd $(srcdir); $(INSTALL_DATA) termcap.h $(includedir)/termcap.h
+-	-cd $(srcdir); test -z "$(oldincludedir)" || \
+-	  $(INSTALL_DATA) termcap.h $(oldincludedir)/termcap.h
+ 	cd $(srcdir); for f in termcap.info*; \
+ 	do $(INSTALL_DATA) $$f $(infodir)/$$f; done
+ 
+
+Note that CE is missing from this entry because it causes
+trouble for Octave.  Instead of performing the action, it
+is echoed to the terminal window when Readline tputs it to
+the terminal.
+
+diff -uNr a/termcap.c b/termcap.c
+--- a/termcap.c	2002-02-25 12:59:21.000000000 -0500
++++ b/termcap.c	2018-03-01 13:16:17.960763846 -0500
+@@ -120,6 +120,26 @@
+ }
+ #endif /* not emacs */
+ 
++
++#define INTERNAL_TERMINAL \
++  "cygwin:\
++	:am:bs:mi:ms:xo:\
++	:Co#8:NC#3:co#80:li#25:pa#64:\
++	:@7=\\E[4~:AB=\\E[4%dm:AF=\\E[3%dm:F1=\\E[23~:F2=\\E[24~:\
++	:F3=\\E[25~:F4=\\E[26~:F5=\\E[28~:F6=\\E[29~:F7=\\E[31~:\
++	:F8=\\E[32~:F9=\\E[33~:FA=\\E[34~:S2=\\E[11m:S3=\\E[10m:\
++	:ac=`\004a\261f\370g\361h\260j\331k\277l\332m\300n\305o~q\304r\362s_t\303u\264v\301w\302x\263y\371z\372{\373|\374}\375~\376.\031-\030,\021+^P0\333p\304r\304y\363z\362{\343|\330}\234:\
++	:ae=\\E[10m:as=\\E[11m:cl=\\E[2J:cm=\\E[%i%d;%dH:\
++	:do=\\E[B:ho=\\E[H:is=\\E[m\\E[?7h:k1=\\E[[A:k2=\\E[[B:k3=\\E[[C:\
++	:k4=\\E[[D:k5=\\E[[E:k6=\\E[17~:k7=\\E[18~:k8=\\E[19~:\
++	:k9=\\E[20~:k;=\\E[21~:kD=\\E[3~:kI=\\E[2~:kN=\\E[6~:kP=\\E[5~:\
++	:kd=\\E[B:kh=\\E[1~:kl=\\E[D:kr=\\E[C:ku=\\E[A:le=^H:mb=\\E[5m:\
++	:md=\\E[1m:me=\\E[0;10m:mk=\\E[8m:mr=\\E[7m:nd=\\E[C:\
++	:op=\\E[37;40m:pk=\\E[0;%+\:;\"%s\":rc=\\E[u:\
++	:..sa=\\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;11%;m:\
++	:sc=\\E[s:se=\\E[m:so=\\E[7m:u6=\\E[%i%d;%dR:u7=\\E[6n:ue=\\E[m:\
++	:up=\\E[A:us=\\E[4m:"
++
+ /* Looking up capabilities in the entry already found.  */
+ 
+ /* The pointer to the data made by tgetent is left here
+@@ -464,7 +484,7 @@
+ #ifdef INTERNAL_TERMINAL
+   /* For the internal terminal we don't want to read any termcap file,
+      so fake it.  */
+-  if (!strcmp (name, "internal"))
++  if (!strcmp (name, "cygwin"))
+     {
+       term = INTERNAL_TERMINAL;
+       if (!bp)

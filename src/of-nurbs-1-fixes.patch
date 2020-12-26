@@ -1,0 +1,90 @@
+# HG changeset patch
+# User John Donoghue
+# Date 1443634028 14400
+#      Wed Sep 30 13:27:08 2015 -0400
+# Node ID 41f9bc725e8fdc8d07efeedd09da84a013bb14c0
+# Parent  fcd14dc97757ba4f3da5dbd4571b38a407235d2a
+typecast constants to octave_idx_type (Bug #46081)
+
+* src/low_level_functions.cc: use octave_idx_type(0) for constant to idx_vector
+
+* src/nrb_srf_basisfun__.cc: use typecase octave_idx_type for constants
+
+* src/nrb_srf_basisfun_der__.cc: use typecase octave_idx_type for constants
+
+* src/nrbsurfderiveval.c: use use octave_idx_type(3) for constant to idx_vector
+
+diff -r fcd14dc97757 -r 41f9bc725e8f src/low_level_functions.cc
+--- a/src/low_level_functions.cc	Mon Sep 14 16:59:10 2015 +0100
++++ b/src/low_level_functions.cc	Wed Sep 30 13:27:08 2015 -0400
+@@ -306,7 +306,7 @@
+ 	  octave_idx_type dd = (d-k) <= dv ? (d-k) : dv;
+ 	  Matrix temp (dd <= m ? (dd+1) : (m+1), m+1, 0.0);
+ 	  
+-	  idxva (0) = idx_vector(k); idxva (1) = idx_vector(0);
++	  idxva (0) = idx_vector(k); idxva (1) = idx_vector(octave_idx_type(0));
+ 	  idxva (2) = idx_vector(i); idxva (3) = idx_vector(':');
+ 	  NDArray temp2 (pkl.index (idxva));
+ 	  curvederivcpts (m, q, V.extract (s1, V.numel () - 1),
+diff -r fcd14dc97757 -r 41f9bc725e8f src/nrb_srf_basisfun__.cc
+--- a/src/nrb_srf_basisfun__.cc	Mon Sep 14 16:59:10 2015 +0100
++++ b/src/nrb_srf_basisfun__.cc	Wed Sep 30 13:27:08 2015 -0400
+@@ -40,10 +40,10 @@
+       octave_idx_type q   = static_cast<octave_idx_type> ((nrb.contents("order").vector_value())(1)) - 1;  // q    = nrb.order(2) -1;
+ 
+       Array<idx_vector> idx(dim_vector (2, 1), idx_vector(':')); 
+-      idx(0) = 0;
++      idx(0) = octave_idx_type(0);
+       const NDArray u(points.index (idx).squeeze ()); // u = points(1,:);
+ 
+-      idx(0) = 1;
++      idx(0) = octave_idx_type(1);
+       const NDArray v(points.index (idx).squeeze ()); // v = points(2,:);      
+ 
+       octave_idx_type npt = u.numel (); // npt = length(u);
+@@ -56,7 +56,7 @@
+ 
+       const RowVector V(knots(1).row_vector_value ()); // V = nrb.knots{2};
+       
+-      Array<idx_vector> idx2(dim_vector (3, 1), idx_vector(':')); idx2(0) = 3;
++      Array<idx_vector> idx2(dim_vector (3, 1), idx_vector(':')); idx2(0) = octave_idx_type(3);
+       NDArray w (coefs.index (idx2).squeeze ()); // w = squeeze(nrb.coefs(4,:,:));
+       
+       RowVector spu(u);
+diff -r fcd14dc97757 -r 41f9bc725e8f src/nrb_srf_basisfun_der__.cc
+--- a/src/nrb_srf_basisfun_der__.cc	Mon Sep 14 16:59:10 2015 +0100
++++ b/src/nrb_srf_basisfun_der__.cc	Wed Sep 30 13:27:08 2015 -0400
+@@ -40,10 +40,10 @@
+       octave_idx_type q   = static_cast<octave_idx_type> ((nrb.contents("order").vector_value())(1)) - 1;  // q    = nrb.order(2) -1;
+ 
+       Array<idx_vector> idx(dim_vector (2, 1), idx_vector(':')); 
+-      idx(0) = 0;
++      idx(0) = octave_idx_type(0);
+       const NDArray u(points.index (idx).squeeze ()); // u = points(1,:);
+       
+-      idx(0) = 1;
++      idx(0) = octave_idx_type(1);
+       const NDArray v(points.index (idx).squeeze ()); // v = points(2,:);      
+       
+       octave_idx_type npt = u.numel (); // npt = length(u);
+@@ -63,7 +63,7 @@
+ 
+       const RowVector V(knots(1).row_vector_value ()); // V = nrb.knots{2};
+       
+-      Array<idx_vector> idx2(dim_vector (3, 1), idx_vector(':')); idx2(0) = 3;
++      Array<idx_vector> idx2(dim_vector (3, 1), idx_vector(':')); idx2(0) = octave_idx_type(3);
+       NDArray w (coefs.index (idx2).squeeze ()); // w = squeeze(nrb.coefs(4,:,:));
+       
+       RowVector spu(u);
+diff -r fcd14dc97757 -r 41f9bc725e8f src/nrbsurfderiveval.cc
+--- a/src/nrbsurfderiveval.cc	Mon Sep 14 16:59:10 2015 +0100
++++ b/src/nrbsurfderiveval.cc	Wed Sep 30 13:27:08 2015 -0400
+@@ -119,7 +119,7 @@
+       NDArray coefs  = srf.contents("coefs").array_value();
+       
+       Array<idx_vector> idx(dim_vector (3, 1), idx_vector(':'));	 
+-      idx (0) = idx_vector (3);
++      idx (0) = idx_vector (octave_idx_type(3));
+       Matrix weights (NDArray (coefs.index (idx).squeeze ()));
+ 
+       for (octave_idx_type iu(0); iu<uv.cols (); iu++)

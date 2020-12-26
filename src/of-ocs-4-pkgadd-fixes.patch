@@ -1,0 +1,86 @@
+diff -urN ocs.orig/inst/PKG_ADD ocs/inst/PKG_ADD
+--- ocs.orig/inst/PKG_ADD	1969-12-31 19:00:00.000000000 -0500
++++ ocs/inst/PKG_ADD	2020-09-13 08:06:36.699521609 -0400
+@@ -0,0 +1,18 @@
++dirlist = {"utl", "asm", "tst", "nls", "prs", "sbn"};
++dirname = fileparts (canonicalize_file_name (mfilename ("fullpath")));
++
++if (! exist (fullfile (dirname, "inst"), "dir"))
++  ## Run this if the package is installed
++  for ii=1:length (dirlist)
++    addpath (fullfile (dirname, dirlist{ii}), "-end")
++  endfor
++else
++  ## Run this if we are testing the package without installation
++  for ii=1:length(dirlist)
++    addpath (fullfile (dirname, "inst", dirlist{ii}))
++    addpath (fullfile (dirname, "src"))
++  endfor
++endif
++
++warning ("off", "Octave:fopen-file-in-path");
++clear dirlist dirname
+diff -urN ocs.orig/inst/PKG_DEL ocs/inst/PKG_DEL
+--- ocs.orig/inst/PKG_DEL	1969-12-31 19:00:00.000000000 -0500
++++ ocs/inst/PKG_DEL	2020-09-13 08:06:53.439465439 -0400
+@@ -0,0 +1,17 @@
++dirlist = {"utl", "asm", "tst", "nls", "prs", "sbn"};
++dirname = fileparts (canonicalize_file_name (mfilename ("fullpath")));
++
++if (! exist (fullfile (dirname, "inst"), "dir"))
++  ## Run this if the package is installed
++  for ii=1:length (dirlist)
++    rmpath (fullfile (dirname, dirlist{ii}))
++  endfor
++else
++  ## Run this if we are testing the package without installation
++  for ii=1:length (dirlist)
++    rmpath (fullfile (dirname, "inst", dirlist{ii}))
++  endfor
++  rmpath (fullfile (dirname, "src"))
++endif
++
++clear dirlist dirname
+diff -urN ocs.orig/PKG_ADD ocs/PKG_ADD
+--- ocs.orig/PKG_ADD	2020-09-13 07:58:33.528279580 -0400
++++ ocs/PKG_ADD	1969-12-31 19:00:00.000000000 -0500
+@@ -1,18 +0,0 @@
+-dirlist = {"utl", "asm", "tst", "nls", "prs", "sbn"};
+-dirname = fileparts (canonicalize_file_name (mfilename ("fullpath")));
+-
+-if (! exist (fullfile (dirname, "inst"), "dir"))
+-  ## Run this if the package is installed
+-  for ii=1:length (dirlist)
+-    addpath (fullfile (dirname, "..", dirlist{ii}), "-end")
+-  endfor
+-else
+-  ## Run this if we are testing the package without installation
+-  for ii=1:length(dirlist)
+-    addpath (fullfile (dirname, "inst", dirlist{ii}))
+-    addpath (fullfile (dirname, "src"))
+-  endfor
+-endif
+-
+-warning ("off", "Octave:fopen-file-in-path");
+-clear dirlist dirname
+diff -urN ocs.orig/PKG_DEL ocs/PKG_DEL
+--- ocs.orig/PKG_DEL	2020-09-13 07:58:33.528279580 -0400
++++ ocs/PKG_DEL	1969-12-31 19:00:00.000000000 -0500
+@@ -1,17 +0,0 @@
+-dirlist = {"utl", "asm", "tst", "nls", "prs", "sbn"};
+-dirname = fileparts (canonicalize_file_name (mfilename ("fullpath")));
+-
+-if (! exist (fullfile (dirname, "inst"), "dir"))
+-  ## Run this if the package is installed
+-  for ii=1:length (dirlist)
+-    rmpath (fullfile (dirname, "..", dirlist{ii}))
+-  endfor
+-else
+-  ## Run this if we are testing the package without installation
+-  for ii=1:length (dirlist)
+-    rmpath (fullfile (dirname, "inst", dirlist{ii}))
+-  endfor
+-  rmpath (fullfile (dirname, "src"))
+-endif
+-
+-clear dirlist dirname

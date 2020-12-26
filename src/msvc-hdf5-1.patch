@@ -1,0 +1,337 @@
+diff -ur hdf5-1.8.10-orig/c++/src/Makefile.am hdf5-1.8.10/c++/src/Makefile.am
+--- hdf5-1.8.10-orig/c++/src/Makefile.am	2012-10-11 13:31:51 -0400
++++ hdf5-1.8.10/c++/src/Makefile.am	2013-06-25 14:30:43 -0400
+@@ -30,6 +30,8 @@
+ # Add libtool numbers to the HDF5 C++ library (from config/lt_vers.am)
+ libhdf5_cpp_la_LDFLAGS= -version-info $(LT_VERS_INTERFACE):$(LT_VERS_REVISION):$(LT_VERS_AGE) $(AM_LDFLAGS)
+ 
++AM_CPPFLAGS += -DHDF5_CPPDLL_EXPORTS -D_HDF5USEDLL_
++
+ # Shared C++ libraries aren't universally supported.
+ if CXX_SHARED_CONDITIONAL
+ else
+diff -ur hdf5-1.8.10-orig/c++/test/Makefile.am hdf5-1.8.10/c++/test/Makefile.am
+--- hdf5-1.8.10-orig/c++/test/Makefile.am	2012-10-11 13:31:49 -0400
++++ hdf5-1.8.10/c++/test/Makefile.am	2013-06-25 14:30:43 -0400
+@@ -23,6 +23,8 @@
+ # Include src, test, and c++/src directories
+ INCLUDES=-I$(top_srcdir)/src -I$(top_srcdir)/test -I$(top_srcdir)/c++/src
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_ -DHDF5CPP_USEDLL
++
+ # Shared C++ libraries aren't universally supported.
+ if CXX_SHARED_CONDITIONAL
+ else
+diff -ur hdf5-1.8.10-orig/config/conclude.am hdf5-1.8.10/config/conclude.am
+--- hdf5-1.8.10-orig/config/conclude.am	2012-10-11 13:31:46 -0400
++++ hdf5-1.8.10/config/conclude.am	2013-06-25 14:31:37 -0400
+@@ -23,7 +23,7 @@
+ # lib_LIBRARIES are built for lib target), but EXTRA_LIB, EXTRA_PROG, and
+ # EXTRA_TEST variables are supplied to allow the user to force targets to
+ # be built at certain times. 
+-LIB = $(lib_LIBRARIES) $(lib_LTLIBRARIES) $(noinst_LIBRARIES)                 \
++_LIB = $(lib_LIBRARIES) $(lib_LTLIBRARIES) $(noinst_LIBRARIES)                 \
+       $(noinst_LTLIBRARIES) $(check_LIBRARIES) $(check_LTLIBRARIES) $(EXTRA_LIB)
+ PROGS = $(bin_PROGRAMS) $(bin_SCRIPTS) $(noinst_PROGRAMS) $(noinst_SCRIPTS)   \
+         $(EXTRA_PROG)
+@@ -36,9 +36,9 @@
+ 
+ # lib/progs/tests targets recurse into subdirectories. build-* targets
+ # build files in this directory.
+-build-lib: $(LIB)
+-build-progs: $(LIB) $(PROGS)
+-build-tests: $(LIB) $(PROGS) $(chk_TESTS)
++build-lib: $(_LIB)
++build-progs: $(_LIB) $(PROGS)
++build-tests: $(_LIB) $(PROGS) $(chk_TESTS)
+ 
+ # General rule for recursive building targets.
+ # BUILT_SOURCES contain targets that need to be built before anything else
+@@ -98,7 +98,7 @@
+ 	@$(MAKE) build-check-p
+ 
+ # Actual execution of check-s.
+-build-check-s: $(LIB) $(PROGS) $(chk_TESTS)
++build-check-s: $(_LIB) $(PROGS) $(chk_TESTS)
+ 	@if test -n "$(TEST_PROG)$(TEST_SCRIPT)"; then      \
+ 	   echo "===Serial tests in `echo ${PWD} | sed -e s:.*/::` begin `date`==="; \
+ 	fi
+@@ -193,7 +193,7 @@
+ 	fi
+ 
+ # Actual execution of check-p.
+-build-check-p: $(LIB) $(PROGS) $(chk_TESTS)
++build-check-p: $(_LIB) $(PROGS) $(chk_TESTS)
+ 	@if test -n "$(TEST_PROG_PARA)$(TEST_SCRIPT_PARA)"; then      \
+ 	   echo "===Parallel tests in `echo ${PWD} | sed -e s:.*/::` begin `date`==="; \
+ 	fi
+@@ -223,7 +223,7 @@
+ 	fi
+ 
+ # Run test with different Virtual File Driver
+-check-vfd: $(LIB) $(PROGS) $(chk_TESTS)
++check-vfd: $(_LIB) $(PROGS) $(chk_TESTS)
+ 	@for vfd in $(VFD_LIST) dummy; do                                     \
+ 	    if test $$vfd != dummy; then                                      \
+ 	        echo "============================";                          \
+diff -ur hdf5-1.8.10-orig/hl/c++/src/Makefile.am hdf5-1.8.10/hl/c++/src/Makefile.am
+--- hdf5-1.8.10-orig/hl/c++/src/Makefile.am	2012-10-11 13:31:44 -0400
++++ hdf5-1.8.10/hl/c++/src/Makefile.am	2013-06-25 14:30:43 -0400
+@@ -30,6 +30,8 @@
+ # Add libtool numbers to the HDF5 HL C++ library (from config/lt_vers.am)
+ libhdf5_hl_cpp_la_LDFLAGS= -version-info $(LT_VERS_INTERFACE):$(LT_VERS_REVISION):$(LT_VERS_AGE) $(AM_LDFLAGS)
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_ -DHDF5_HL_CPPDLL_EXPORTS
++
+ # Shared C++ libraries aren't universally supported.
+ if CXX_SHARED_CONDITIONAL
+ else
+diff -ur hdf5-1.8.10-orig/hl/c++/test/Makefile.am hdf5-1.8.10/hl/c++/test/Makefile.am
+--- hdf5-1.8.10-orig/hl/c++/test/Makefile.am	2012-10-11 13:31:44 -0400
++++ hdf5-1.8.10/hl/c++/test/Makefile.am	2013-06-25 14:30:43 -0400
+@@ -23,6 +23,8 @@
+ # Include directories
+ INCLUDES=-I$(top_srcdir)/src -I$(top_srcdir)/c++/src -I$(top_srcdir)/hl/src -I$(top_srcdir)/hl/c++/src -I$(top_srcdir)/test -I$(top_builddir)/hl/test -I$(top_srcdir)/hl/test
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_ -DHDF5USE_HLCPPDLL
++
+ # Shared C++ libraries aren't universally supported.
+ if CXX_SHARED_CONDITIONAL
+ else
+diff -ur hdf5-1.8.10-orig/hl/src/Makefile.am hdf5-1.8.10/hl/src/Makefile.am
+--- hdf5-1.8.10-orig/hl/src/Makefile.am	2012-10-11 13:31:43 -0400
++++ hdf5-1.8.10/hl/src/Makefile.am	2013-06-25 14:30:43 -0400
+@@ -22,7 +22,7 @@
+ include $(top_srcdir)/config/lt_vers.am
+ 
+ # Add include directories to the C preprocessor flags
+-AM_CPPFLAGS+=-I$(top_srcdir)/src
++AM_CPPFLAGS+=-I$(top_srcdir)/src -D_HDF5USEDLL_ -D_HDF5_HLDLL_EXPORTS_
+ 
+ # This library is our main target.
+ lib_LTLIBRARIES=libhdf5_hl.la
+diff -ur hdf5-1.8.10-orig/hl/test/Makefile.am hdf5-1.8.10/hl/test/Makefile.am
+--- hdf5-1.8.10-orig/hl/test/Makefile.am	2012-10-11 13:31:43 -0400
++++ hdf5-1.8.10/hl/test/Makefile.am	2013-06-25 14:30:43 -0400
+@@ -22,7 +22,7 @@
+ include $(top_srcdir)/config/commence.am
+ 
+ # Add include directories to C preprocessor flags
+-AM_CPPFLAGS+=-I. -I$(srcdir) -I$(top_builddir)/src -I$(top_srcdir)/src -I$(top_builddir)/test -I$(top_srcdir)/test -I$(top_srcdir)/hl/src
++AM_CPPFLAGS+=-I. -I$(srcdir) -I$(top_builddir)/src -I$(top_srcdir)/src -I$(top_builddir)/test -I$(top_srcdir)/test -I$(top_srcdir)/hl/src -D_HDF5USEDLL_ -D_HDF5USEHLDLL_
+ 
+ # The tests depend on the hdf5, hdf5 test,  and hdf5_hl libraries
+ LDADD=$(LIBH5_HL) $(LIBH5TEST) $(LIBHDF5)
+diff -ur hdf5-1.8.10-orig/perform/Makefile.am hdf5-1.8.10/perform/Makefile.am
+--- hdf5-1.8.10-orig/perform/Makefile.am	2012-10-11 13:31:52 -0400
++++ hdf5-1.8.10/perform/Makefile.am	2013-06-25 14:30:43 -0400
+@@ -23,6 +23,8 @@
+ 
+ INCLUDES=-I$(top_srcdir)/src -I$(top_srcdir)/test -I$(top_srcdir)/tools/lib
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_
++
+ # bin_PROGRAMS will be installed.
+ if BUILD_PARALLEL_CONDITIONAL
+     bin_PROGRAMS=h5perf_serial h5perf
+diff -ur hdf5-1.8.10-orig/src/H5public.h hdf5-1.8.10/src/H5public.h
+--- hdf5-1.8.10-orig/src/H5public.h	2012-10-26 20:12:05 -0400
++++ hdf5-1.8.10/src/H5public.h	2013-06-25 14:30:43 -0400
+@@ -126,7 +126,7 @@
+ typedef int htri_t;
+ 
+ /* Define the ssize_t type if it not is defined */
+-#if H5_SIZEOF_SSIZE_T==0
++#if H5_SIZEOF_SSIZE_T==0 && ! defined (ssize_t)
+ /* Undefine this size, we will re-define it in one of the sections below */
+ #undef H5_SIZEOF_SSIZE_T
+ #if H5_SIZEOF_SIZE_T==H5_SIZEOF_INT
+diff -ur hdf5-1.8.10-orig/src/Makefile.am hdf5-1.8.10/src/Makefile.am
+--- hdf5-1.8.10-orig/src/Makefile.am	2012-10-11 13:30:56 -0400
++++ hdf5-1.8.10/src/Makefile.am	2013-06-25 14:30:43 -0400
+@@ -41,7 +41,8 @@
+ DISTCLEANFILES=H5pubconf.h
+ 
+ # library sources
+-libhdf5_la_SOURCES= H5.c H5checksum.c H5dbg.c H5system.c H5timer.c H5trace.c \
++AM_CPPFLAGS += -D_HDF5DLL_
++libhdf5_la_SOURCES= H5FDwindows.c H5.c H5checksum.c H5dbg.c H5system.c H5timer.c H5trace.c \
+         H5A.c H5Abtree2.c H5Adense.c H5Adeprec.c H5Aint.c H5Atest.c \
+         H5AC.c H5B.c H5Bcache.c H5Bdbg.c \
+         H5B2.c H5B2cache.c H5B2dbg.c H5B2hdr.c H5B2int.c H5B2stat.c H5B2test.c \
+@@ -113,7 +114,7 @@
+         H5FDmulti.h H5FDsec2.h  H5FDstdio.h \
+         H5Gpublic.h  H5Ipublic.h H5Lpublic.h \
+         H5MMpublic.h H5Opublic.h H5Ppublic.h H5Rpublic.h H5Spublic.h \
+-        H5Tpublic.h H5Zpublic.h
++        H5Tpublic.h H5Zpublic.h H5FDwindows.h
+ 
+ # install libhdf5.settings in lib directory
+ settingsdir=$(libdir)
+diff -ur hdf5-1.8.10-orig/test/Makefile.am hdf5-1.8.10/test/Makefile.am
+--- hdf5-1.8.10-orig/test/Makefile.am	2012-10-11 13:30:44 -0400
++++ hdf5-1.8.10/test/Makefile.am	2013-06-25 14:30:43 -0400
+@@ -23,6 +23,8 @@
+ 
+ INCLUDES=-I$(top_srcdir)/src -I$(top_builddir)/src
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_
++
+ # Test script for error_test and err_compat
+ TEST_SCRIPT = testerror.sh testlibinfo.sh testcheck_version.sh testlinks_env.sh
+ check_SCRIPTS = $(TEST_SCRIPT)
+diff -ur hdf5-1.8.10-orig/test/testcheck_version.sh.in hdf5-1.8.10/test/testcheck_version.sh.in
+--- hdf5-1.8.10-orig/test/testcheck_version.sh.in	2012-10-11 13:30:44 -0400
++++ hdf5-1.8.10/test/testcheck_version.sh.in	2013-06-25 14:30:43 -0400
+@@ -178,6 +178,7 @@
+     ret_code=$?
+     cat $actual_err >> $actual
+     
++    dos2unix $actual > /dev/null 2>&1
+     if [ $h5haveexitcode = 'yes' -a \( $expect_code -ne $ret_code \) ]; then
+ 	echo "*FAILED*"
+ 	echo "    Expected exit code ($expect_code) differs from actual code ($ret_code)"
+diff -ur hdf5-1.8.10-orig/test/testerror.sh.in hdf5-1.8.10/test/testerror.sh.in
+--- hdf5-1.8.10-orig/test/testerror.sh.in	2012-10-11 13:30:43 -0400
++++ hdf5-1.8.10/test/testerror.sh.in	2013-06-25 14:30:44 -0400
+@@ -72,7 +72,8 @@
+         -e 's/H5Eset_auto[1-2]*/H5Eset_auto(1 or 2)/' \
+ 	$actual_err > $actual_ext
+    cat $actual_ext >> $actual
+-    
++
++   dos2unix $actual > /dev/null 2>&1
+    if $CMP $expect1 $actual; then
+       echo " PASSED"
+    elif $CMP $expect2 $actual; then
+diff -ur hdf5-1.8.10-orig/tools/h5copy/Makefile.am hdf5-1.8.10/tools/h5copy/Makefile.am
+--- hdf5-1.8.10-orig/tools/h5copy/Makefile.am	2012-10-11 13:31:39 -0400
++++ hdf5-1.8.10/tools/h5copy/Makefile.am	2013-06-25 14:30:44 -0400
+@@ -23,6 +23,8 @@
+ # Include src and tools/lib directories
+ INCLUDES=-I$(top_srcdir)/src -I$(top_srcdir)/tools/lib
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_
++
+ # Test programs and scripts
+ TEST_PROG=h5copygentest
+ TEST_SCRIPT=testh5copy.sh
+diff -ur hdf5-1.8.10-orig/tools/h5diff/Makefile.am hdf5-1.8.10/tools/h5diff/Makefile.am
+--- hdf5-1.8.10-orig/tools/h5diff/Makefile.am	2012-10-11 13:31:39 -0400
++++ hdf5-1.8.10/tools/h5diff/Makefile.am	2013-06-25 14:30:44 -0400
+@@ -23,6 +23,8 @@
+ # Include src and tools/lib directories
+ INCLUDES=-I$(top_srcdir)/src -I$(top_srcdir)/tools/lib
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_
++
+ # Always build and test h5diff but build and test ph5diff only if parallel
+ # is enabled.
+ if BUILD_PARALLEL_CONDITIONAL
+diff -ur hdf5-1.8.10-orig/tools/h5dump/Makefile.am hdf5-1.8.10/tools/h5dump/Makefile.am
+--- hdf5-1.8.10-orig/tools/h5dump/Makefile.am	2012-10-11 13:31:22 -0400
++++ hdf5-1.8.10/tools/h5dump/Makefile.am	2013-06-25 14:30:44 -0400
+@@ -23,6 +23,8 @@
+ # Include files in /src directory and /tools/lib directory
+ INCLUDES=-I$(top_srcdir)/src -I$(top_srcdir)/tools/lib
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_
++
+ # Test programs and scripts
+ TEST_PROG=h5dumpgentest
+ TEST_SCRIPT=testh5dump.sh testh5dumppbits.sh testh5dumpxml.sh
+diff -ur hdf5-1.8.10-orig/tools/h5import/Makefile.am hdf5-1.8.10/tools/h5import/Makefile.am
+--- hdf5-1.8.10-orig/tools/h5import/Makefile.am	2012-10-11 13:31:40 -0400
++++ hdf5-1.8.10/tools/h5import/Makefile.am	2013-06-25 14:30:44 -0400
+@@ -23,6 +23,8 @@
+ # Include src and tools/lib directories
+ INCLUDES=-I$(top_srcdir)/src -I$(top_srcdir)/tools/lib
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_
++
+ # Test programs and scripts
+ TEST_PROG=h5importtest
+ TEST_SCRIPT=h5importtestutil.sh
+diff -ur hdf5-1.8.10-orig/tools/h5jam/Makefile.am hdf5-1.8.10/tools/h5jam/Makefile.am
+--- hdf5-1.8.10-orig/tools/h5jam/Makefile.am	2012-10-11 13:31:36 -0400
++++ hdf5-1.8.10/tools/h5jam/Makefile.am	2013-06-25 14:30:44 -0400
+@@ -23,6 +23,8 @@
+ # Include src and tools/lib directories
+ INCLUDES=-I$(top_srcdir)/src -I$(top_srcdir)/tools/lib
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_
++
+ bin_PROGRAMS=h5jam h5unjam
+ check_PROGRAMS=tellub h5jamgentest getub
+ TEST_SCRIPT=testh5jam.sh
+diff -ur hdf5-1.8.10-orig/tools/h5ls/Makefile.am hdf5-1.8.10/tools/h5ls/Makefile.am
+--- hdf5-1.8.10-orig/tools/h5ls/Makefile.am	2012-10-11 13:31:41 -0400
++++ hdf5-1.8.10/tools/h5ls/Makefile.am	2013-06-25 14:30:44 -0400
+@@ -23,6 +23,8 @@
+ # Include src and tools/lib directories
+ INCLUDES=-I$(top_srcdir)/src -I$(top_srcdir)/tools/lib
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_
++
+ # Test programs and scripts
+ TEST_SCRIPT=testh5ls.sh
+ check_SCRIPTS=$(TEST_SCRIPT)
+diff -ur hdf5-1.8.10-orig/tools/h5repack/Makefile.am hdf5-1.8.10/tools/h5repack/Makefile.am
+--- hdf5-1.8.10-orig/tools/h5repack/Makefile.am	2012-10-11 13:31:23 -0400
++++ hdf5-1.8.10/tools/h5repack/Makefile.am	2013-06-25 14:30:44 -0400
+@@ -23,6 +23,8 @@
+ # Include src, test, and tools/lib directories
+ INCLUDES=-I$(top_srcdir)/src -I$(top_srcdir)/test -I$(top_srcdir)/tools/lib
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_
++
+ # Test programs and scripts
+ TEST_SCRIPT=h5repack.sh
+ TEST_PROG=h5repacktst
+diff -ur hdf5-1.8.10-orig/tools/h5stat/Makefile.am hdf5-1.8.10/tools/h5stat/Makefile.am
+--- hdf5-1.8.10-orig/tools/h5stat/Makefile.am	2012-10-11 13:31:41 -0400
++++ hdf5-1.8.10/tools/h5stat/Makefile.am	2013-06-25 14:30:44 -0400
+@@ -23,6 +23,8 @@
+ # Include src directory
+ INCLUDES=-I$(top_srcdir)/src -I$(top_srcdir)/tools/lib
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_
++
+ #test script and program
+ TEST_PROG=h5stat_gentest
+ TEST_SCRIPT=testh5stat.sh
+diff -ur hdf5-1.8.10-orig/tools/h5stat/testh5stat.sh.in hdf5-1.8.10/tools/h5stat/testh5stat.sh.in
+--- hdf5-1.8.10-orig/tools/h5stat/testh5stat.sh.in	2012-10-11 13:31:41 -0400
++++ hdf5-1.8.10/tools/h5stat/testh5stat.sh.in	2013-06-25 14:30:44 -0400
+@@ -158,6 +158,7 @@
+    ) >$actual 2>$actual_err
+    cat $actual_err >> $actual
+ 
++   dos2unix $actual > /dev/null 2>&1
+ 
+    if [ ! -f $expect ]; then
+     # Create the expect file if it doesn't yet exist.
+diff -ur hdf5-1.8.10-orig/tools/lib/Makefile.am hdf5-1.8.10/tools/lib/Makefile.am
+--- hdf5-1.8.10-orig/tools/lib/Makefile.am	2012-10-11 13:31:39 -0400
++++ hdf5-1.8.10/tools/lib/Makefile.am	2013-06-25 14:30:44 -0400
+@@ -23,6 +23,8 @@
+ # Include files in /src directory
+ INCLUDES=-I$(top_srcdir)/src
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_
++
+ # This is our main target, the h5tools library.
+ noinst_LTLIBRARIES=libh5tools.la
+ 
+diff -ur hdf5-1.8.10-orig/tools/misc/Makefile.am hdf5-1.8.10/tools/misc/Makefile.am
+--- hdf5-1.8.10-orig/tools/misc/Makefile.am	2012-10-11 13:31:41 -0400
++++ hdf5-1.8.10/tools/misc/Makefile.am	2013-06-25 14:30:44 -0400
+@@ -23,6 +23,8 @@
+ # Include src directory
+ INCLUDES=-I$(top_srcdir)/src -I$(top_srcdir)/tools/lib
+ 
++AM_CPPFLAGS += -D_HDF5USEDLL_
++
+ #test script and program
+ TEST_PROG=h5repart_gentest talign
+ TEST_SCRIPT=testh5repart.sh testh5mkgrp.sh

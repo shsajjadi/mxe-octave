@@ -1,0 +1,157 @@
+diff -ur gtk+-3.8.2-orig/gdk/Makefile.in gtk+-3.8.2/gdk/Makefile.in
+--- gtk+-3.8.2-orig/gdk/Makefile.in	2013-05-13 06:26:30 -0400
++++ gtk+-3.8.2/gdk/Makefile.in	2013-07-25 13:13:07 -0400
+@@ -67,7 +67,7 @@
+ @USE_WIN32_FALSE@	$(am__append_1) $(am__append_2) \
+ @USE_WIN32_FALSE@	$(am__append_4) $(am__append_6) \
+ @USE_WIN32_FALSE@	$(am__append_7)
+-@USE_WIN32_TRUE@am__append_5 = -Wl,win32/rc/gdk-win32-res.o -export-symbols $(srcdir)/gdk.def
++@USE_WIN32_TRUE@am__append_5 = -Wl,win32/rc/gdk-win32-res.o -export-symbols-regex "xXx" -Wl,$(srcdir)/gdk.def
+ @USE_BROADWAY_TRUE@am__append_6 = broadway/libgdk-broadway.la
+ @USE_WAYLAND_TRUE@am__append_7 = wayland/libgdk-wayland.la
+ @HAVE_INTROSPECTION_TRUE@am__append_8 = Gdk-3.0.gir
+@@ -942,7 +942,7 @@
+ @HAVE_INTROSPECTION_TRUE@gir_DATA = $(INTROSPECTION_GIRS)
+ @HAVE_INTROSPECTION_TRUE@typelibsdir = $(libdir)/girepository-1.0
+ @HAVE_INTROSPECTION_TRUE@typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+-@MS_LIB_AVAILABLE_TRUE@noinst_DATA = gdk-win32-$(GTK_API_VERSION).lib
++@MS_LIB_AVAILABLE_FALSE@noinst_DATA = gdk-win32-$(GTK_API_VERSION).lib
+ TESTS_ENVIRONMENT = srcdir="$(srcdir)"
+ @OS_LINUX_TRUE@TESTS = abicheck.sh
+ lib_LTLIBRARIES = libgdk-3.la
+@@ -1717,17 +1717,17 @@
+ @OS_WIN32_FALSE@install-def-file:
+ @OS_WIN32_FALSE@uninstall-def-file:
+ 
+-@MS_LIB_AVAILABLE_TRUE@gdk-win32-$(GTK_API_VERSION).lib: libgdk-win32-$(GTK_API_VERSION).la gdk.def
+-@MS_LIB_AVAILABLE_TRUE@	lib -machine:@LIB_EXE_MACHINE_FLAG@ -name:libgdk-win32-$(GTK_API_VERSION)-@LT_CURRENT_MINUS_AGE@.dll -def:gdk.def -out:$@
++@MS_LIB_AVAILABLE_FALSE@gdk-win32-$(GTK_API_VERSION).lib: libgdk-win32-$(GTK_API_VERSION).la gdk.def
++@MS_LIB_AVAILABLE_FALSE@	lib -machine:@LIB_EXE_MACHINE_FLAG@ -name:libgdk-win32-$(GTK_API_VERSION)-@LT_CURRENT_MINUS_AGE@.dll -def:gdk.def -out:$@
+ 
+-@MS_LIB_AVAILABLE_TRUE@install-ms-lib:
+-@MS_LIB_AVAILABLE_TRUE@	mkdir -p $(DESTDIR)$(libdir)
+-@MS_LIB_AVAILABLE_TRUE@	$(INSTALL) gdk-win32-$(GTK_API_VERSION).lib $(DESTDIR)$(libdir)
+-
+-@MS_LIB_AVAILABLE_TRUE@uninstall-ms-lib:
+-@MS_LIB_AVAILABLE_TRUE@	-rm $(DESTDIR)$(libdir)/gdk-win32-$(GTK_API_VERSION).lib
+ @MS_LIB_AVAILABLE_FALSE@install-ms-lib:
++@MS_LIB_AVAILABLE_FALSE@	mkdir -p $(DESTDIR)$(libdir)
++@MS_LIB_AVAILABLE_FALSE@	$(INSTALL) gdk-win32-$(GTK_API_VERSION).lib $(DESTDIR)$(libdir)
++
+ @MS_LIB_AVAILABLE_FALSE@uninstall-ms-lib:
++@MS_LIB_AVAILABLE_FALSE@	-rm $(DESTDIR)$(libdir)/gdk-win32-$(GTK_API_VERSION).lib
++@MS_LIB_AVAILABLE_TRUE@install-ms-lib:
++@MS_LIB_AVAILABLE_TRUE@uninstall-ms-lib:
+ 
+ # This places the generated .def file in srcdir, since it is expected to be there.
+ # (The one from a tarball is)
+diff -ur gtk+-3.8.2-orig/gtk/Makefile.in gtk+-3.8.2/gtk/Makefile.in
+--- gtk+-3.8.2-orig/gtk/Makefile.in	2013-05-13 06:26:32 -0400
++++ gtk+-3.8.2/gtk/Makefile.in	2013-07-25 13:14:52 -0400
+@@ -1146,7 +1146,7 @@
+     --includedir=. \
+     --includedir=../gdk
+ 
+-@USE_QUARTZ_FALSE@GTK_PRINT_PREVIEW_COMMAND = "evince --unlink-tempfile --preview --print-settings %s %f"
++@USE_QUARTZ_FALSE@GTK_PRINT_PREVIEW_COMMAND = "evince --unlink-tempfile --preview --print-settings %%s %%f"
+ @USE_QUARTZ_TRUE@GTK_PRINT_PREVIEW_COMMAND = "open -a /Applications/Preview.app %f"
+ SUBDIRS = a11y native . tests
+ @HAVE_CUPS_FALSE@@HAVE_PAPI_CUPS_FALSE@@HAVE_PAPI_FALSE@GTK_PRINT_BACKENDS = file,lpr
+@@ -1178,10 +1178,10 @@
+ 
+ @PLATFORM_WIN32_TRUE@no_undefined = -no-undefined
+ @OS_WIN32_TRUE@gtk_def = gtk.def
+-@OS_WIN32_TRUE@gtk_win32_symbols = -export-symbols $(srcdir)/gtk.def
++@OS_WIN32_TRUE@gtk_win32_symbols = -export-symbols-regex "xXx" -Wl,$(srcdir)/gtk.def
+ @OS_WIN32_TRUE@gtk_win32_res = gtk-win32-res.o
+ @OS_WIN32_TRUE@gtk_win32_res_ldflag = -Wl,gtk-win32-res.o
+-@MS_LIB_AVAILABLE_TRUE@noinst_DATA = gtk-win32-$(GTK_API_VERSION).lib
++@MS_LIB_AVAILABLE_FALSE@noinst_DATA = gtk-win32-$(GTK_API_VERSION).lib
+ TESTS_ENVIRONMENT = srcdir="$(srcdir)" gtk_all_c_sources="$(gtk_all_c_sources)"
+ @OS_LINUX_TRUE@TESTS = abicheck.sh
+ libgtkincludedir = $(includedir)/gtk-3.0/gtk
+@@ -6037,16 +6037,16 @@
+ @OS_WIN32_FALSE@install-def-file:
+ @OS_WIN32_FALSE@uninstall-def-file:
+ 
+-@MS_LIB_AVAILABLE_TRUE@gtk-win32-$(GTK_API_VERSION).lib: libgtk-win32-$(GTK_API_VERSION).la gtk.def
+-@MS_LIB_AVAILABLE_TRUE@	lib -machine:@LIB_EXE_MACHINE_FLAG@ -name:libgtk-win32-$(GTK_API_VERSION)-@LT_CURRENT_MINUS_AGE@.dll -def:gtk.def -out:$@
++@MS_LIB_AVAILABLE_FALSE@gtk-win32-$(GTK_API_VERSION).lib: libgtk-win32-$(GTK_API_VERSION).la gtk.def
++@MS_LIB_AVAILABLE_FALSE@	lib -machine:@LIB_EXE_MACHINE_FLAG@ -name:libgtk-win32-$(GTK_API_VERSION)-@LT_CURRENT_MINUS_AGE@.dll -def:gtk.def -out:$@
+ 
+-@MS_LIB_AVAILABLE_TRUE@install-ms-lib:
+-@MS_LIB_AVAILABLE_TRUE@	$(INSTALL) gtk-win32-$(GTK_API_VERSION).lib $(DESTDIR)$(libdir)
+-
+-@MS_LIB_AVAILABLE_TRUE@uninstall-ms-lib:
+-@MS_LIB_AVAILABLE_TRUE@	-rm $(DESTDIR)$(libdir)/gtk-win32-$(GTK_API_VERSION).lib
+ @MS_LIB_AVAILABLE_FALSE@install-ms-lib:
++@MS_LIB_AVAILABLE_FALSE@	$(INSTALL) gtk-win32-$(GTK_API_VERSION).lib $(DESTDIR)$(libdir)
++
+ @MS_LIB_AVAILABLE_FALSE@uninstall-ms-lib:
++@MS_LIB_AVAILABLE_FALSE@	-rm $(DESTDIR)$(libdir)/gtk-win32-$(GTK_API_VERSION).lib
++@MS_LIB_AVAILABLE_TRUE@install-ms-lib:
++@MS_LIB_AVAILABLE_TRUE@uninstall-ms-lib:
+ 
+ # This places the generated .def file in srcdir, since it is expected to be there.
+ # (The one from a tarball is)
+diff -ur gtk+-3.8.2-orig/gtk/gtk-launch.c gtk+-3.8.2/gtk/gtk-launch.c
+--- gtk+-3.8.2-orig/gtk/gtk-launch.c	2013-03-09 15:03:18 -0500
++++ gtk+-3.8.2/gtk/gtk-launch.c	2013-07-25 13:14:26 -0400
+@@ -117,7 +117,9 @@
+   info = G_APP_INFO (g_desktop_app_info_new (desktop_file_name));
+   g_free (desktop_file_name);
+ #else
++#ifndef _MSC_VER
+ #warning Please add support for creating AppInfo from id for your OS
++#endif
+   g_printerr (_("Creating AppInfo from id not supported on non unix operating systems"));
+ #endif
+   args++;
+diff -ur gtk+-3.8.2-orig/gtk/tests/testing.c gtk+-3.8.2/gtk/tests/testing.c
+--- gtk+-3.8.2-orig/gtk/tests/testing.c	2013-03-09 15:03:21 -0500
++++ gtk+-3.8.2/gtk/tests/testing.c	2013-07-25 13:38:15 -0400
+@@ -138,7 +138,11 @@
+ static void
+ test_text_access (void)
+ {
++#ifdef _MSC_VER
++# define N_WIDGETS 3
++#else
+   const int N_WIDGETS = 3;
++#endif
+   GtkWidget *widgets[N_WIDGETS];
+   int i = 0;
+   widgets[i++] = gtk_test_create_widget (GTK_TYPE_LABEL, NULL);
+diff -ur gtk+-3.8.2-orig/libgail-util/Makefile.in gtk+-3.8.2/libgail-util/Makefile.in
+--- gtk+-3.8.2-orig/libgail-util/Makefile.in	2013-05-13 06:26:32 -0400
++++ gtk+-3.8.2/libgail-util/Makefile.in	2013-07-25 13:19:45 -0400
+@@ -473,8 +473,8 @@
+ 	&& DISPLAY=:$$XID && export DISPLAY
+ 
+ @PLATFORM_WIN32_TRUE@no_undefined = -no-undefined
+-@OS_WIN32_TRUE@export_symbols = -export-symbols $(srcdir)/gailutil.def
+-@MS_LIB_AVAILABLE_TRUE@noinst_DATA = gailutil.lib
++@OS_WIN32_TRUE@export_symbols = -export-symbols-regex "xXx" -Wl,$(srcdir)/gailutil.def
++@MS_LIB_AVAILABLE_FALSE@noinst_DATA = gailutil.lib
+ lib_LTLIBRARIES = libgailutil-3.la
+ util_c_sources = \
+ 	gailmisc.c		\
+@@ -936,13 +936,13 @@
+ @OS_WIN32_FALSE@install-def-file:
+ @OS_WIN32_FALSE@uninstall-def-file:
+ 
+-@MS_LIB_AVAILABLE_TRUE@install-ms-lib:
+-@MS_LIB_AVAILABLE_TRUE@	$(INSTALL) gailutil.lib $(DESTDIR)$(libdir)
+-
+-@MS_LIB_AVAILABLE_TRUE@uninstall-ms-lib:
+-@MS_LIB_AVAILABLE_TRUE@	-rm $(DESTDIR)$(libdir)/gailutil.lib
+ @MS_LIB_AVAILABLE_FALSE@install-ms-lib:
++@MS_LIB_AVAILABLE_FALSE@	$(INSTALL) gailutil.lib $(DESTDIR)$(libdir)
++
+ @MS_LIB_AVAILABLE_FALSE@uninstall-ms-lib:
++@MS_LIB_AVAILABLE_FALSE@	-rm $(DESTDIR)$(libdir)/gailutil.lib
++@MS_LIB_AVAILABLE_TRUE@install-ms-lib:
++@MS_LIB_AVAILABLE_TRUE@uninstall-ms-lib:
+ 
+ gailutil.lib: libgailutil-3.la gailutil.def
+ 	lib -machine:@LIB_EXE_MACHINE_FLAG@ -name:libgailutil-3.0-$(GAIL_LT_CURRENT_MINUS_AGE).dll -def:gailutil.def -out:$@

@@ -1,0 +1,79 @@
+If `llvm-config` is build as native version on the build system with a
+cross-compile target system (i.e. as a build-tool for other project that want
+to cross-compile), expose the settings for the target of the cross-compiler.
+Also use the file naming conventions for the target of the cross-compiler.
+
+diff --git "a/include/llvm/Config/llvm-config.h.cmake" "b/include/llvm/Config/llvm-config.h.cmake"
+index 872a315..9ad3055 100644
+--- "a/include/llvm/Config/llvm-config.h.cmake"	
++++ "b/include/llvm/Config/llvm-config.h.cmake"
+@@ -65,6 +65,9 @@
+ /* Define if we have the perf JIT-support library */
+ #cmakedefine01 LLVM_USE_PERF
+ 
++/* Define if this is a native build for a cross-compiler */
++#cmakedefine LLVM_TARGET_IS_CROSSCOMPILE_HOST ${LLVM_TARGET_IS_CROSSCOMPILE_HOST}
++
+ /* Major version of the LLVM API */
+ #define LLVM_VERSION_MAJOR ${LLVM_VERSION_MAJOR}
+ 
+diff --git "a/tools/llvm-config/llvm-config.cpp" "b/tools/llvm-config/llvm-config.cpp"
+index bec89fe..a1be375 100644
+--- "a/tools/llvm-config/llvm-config.cpp"	
++++ "b/tools/llvm-config/llvm-config.cpp"
+@@ -37,7 +37,12 @@ using namespace llvm;
+ 
+ // Include the build time variables we can report to the user. This is generated
+ // at build time from the BuildVariables.inc.in file by the build system.
+-#include "BuildVariables.inc"
++#if defined(LLVM_TARGET_IS_CROSSCOMPILE_HOST)
++// include the .inc file with the settings for the cross-compiler
++#  include "../../../tools/llvm-config/BuildVariables.inc"
++#else
++#  include "BuildVariables.inc"
++#endif
+ 
+ // Include the component table. This creates an array of struct
+ // AvailableComponent entries, which record the component name, library name,
+@@ -352,14 +352,16 @@ int main(int argc, char **argv) {
+   StringRef SharedExt, SharedVersionedExt, SharedDir, SharedPrefix, StaticExt,
+       StaticPrefix, StaticDir = "lib", DirSep = "/";
+   const Triple HostTriple(Triple::normalize(LLVM_HOST_TRIPLE));
+-  if (HostTriple.isOSWindows()) {
++  const Triple TargetTriple(Triple::normalize(LLVM_DEFAULT_TARGET_TRIPLE));
++  if (TargetTriple.isOSWindows()) {
+     SharedExt = "dll";
+     SharedVersionedExt = LLVM_DYLIB_VERSION ".dll";
+-    if (HostTriple.isOSCygMing()) {
++    if (TargetTriple.isOSCygMing()) {
+       StaticExt = "a";
+       StaticPrefix = "lib";
+     } else {
+       StaticExt = "lib";
++      if (HostTriple.isOSWindows()) {
+       DirSep = "\\";
+       std::replace(ActiveObjRoot.begin(), ActiveObjRoot.end(), '/', '\\');
+       std::replace(ActivePrefix.begin(), ActivePrefix.end(), '/', '\\');
+@@ -368,10 +370,11 @@ int main(int argc, char **argv) {
+       std::replace(ActiveCMakeDir.begin(), ActiveCMakeDir.end(), '/', '\\');
+       std::replace(ActiveIncludeOption.begin(), ActiveIncludeOption.end(), '/',
+                    '\\');
++      }
+     }
+     SharedDir = ActiveBinDir;
+     StaticDir = ActiveLibDir;
+-  } else if (HostTriple.isOSDarwin()) {
++  } else if (TargetTriple.isOSDarwin()) {
+     SharedExt = "dylib";
+     SharedVersionedExt = LLVM_DYLIB_VERSION ".dylib";
+     StaticExt = "a";
+@@ -670,7 +673,7 @@ int main(int argc, char **argv) {
+         } else if (PrintLibs) {
+           // On Windows, output full path to library without parameters.
+           // Elsewhere, if this is a typical library name, include it using -l.
+-          if (HostTriple.isWindowsMSVCEnvironment()) {
++          if (TargetTriple.isWindowsMSVCEnvironment()) {
+             OS << GetComponentLibraryPath(Lib, Shared);
+           } else {
+             StringRef LibName;
+

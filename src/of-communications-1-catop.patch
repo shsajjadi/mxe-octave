@@ -1,0 +1,202 @@
+diff -uNr a/src/config.h.in b/src/config.h.in
+--- a/src/config.h.in	2020-01-04 12:50:13.541197341 -0500
++++ b/src/config.h.in	2020-08-25 14:50:29.000000000 -0400
+@@ -26,6 +26,9 @@
+ /* Define to 1 if you have the <octave/errwarn.h> header file. */
+ #undef HAVE_OCTAVE_ERRWARN_H
+ 
++/* Define if first catop function argument is const-qualified */
++#undef HAVE_OCTAVE_FIRST_CATOP_ARG_CONST
++
+ /* Define to 1 if you have the <octave/gripes.h> header file. */
+ #undef HAVE_OCTAVE_GRIPES_H
+ 
+diff -uNr a/src/configure b/src/configure
+--- a/src/configure	2020-01-04 12:50:13.249198461 -0500
++++ b/src/configure	2020-08-25 13:48:13.000000000 -0400
+@@ -4083,6 +4083,63 @@
+ 
+ fi
+ 
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether first catop function argument is const-qualified" >&5
++$as_echo_n "checking whether first catop function argument is const-qualified... " >&6; }
++if ${comm_cv_octave_first_catop_fcn_arg_const_qualified+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++  comm_save_CPPFLAGS=$CPPFLAGS
++   comm_save_CXXFLAGS=$CXXFLAGS
++   CPPFLAGS="$CPPFLAGS $HDF5_CFLAGS"
++   CXXFLAGS="$CXXFLAGS $comm_CXXFLAGS"
++   ac_ext=cpp
++ac_cpp='$CXXCPP $CPPFLAGS'
++ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
++ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
++ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
++
++   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++
++       #include <octave/oct.h>
++       #include <octave/ov-typeinfo.h>
++
++int
++main ()
++{
++
++       octave_value foobar_fcn (const octave_base_value&,
++                                const octave_base_value&,
++                                const Array<octave_idx_type>& ra_idx);
++       octave::type_info::cat_op_fcn fcn = foobar_fcn;
++
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_cxx_try_compile "$LINENO"; then :
++  comm_cv_octave_first_catop_fcn_arg_const_qualified=yes
++else
++  comm_cv_octave_first_catop_fcn_arg_const_qualified=no
++fi
++rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
++   ac_ext=cpp
++ac_cpp='$CXXCPP $CPPFLAGS'
++ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
++ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
++ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
++
++   CPPFLAGS=$comm_save_CPPFLAGS
++   CXXFLAGS=$comm_save_CXXFLAGS
++fi
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $comm_cv_octave_first_catop_fcn_arg_const_qualified" >&5
++$as_echo "$comm_cv_octave_first_catop_fcn_arg_const_qualified" >&6; }
++if test $comm_cv_octave_first_catop_fcn_arg_const_qualified = yes; then
++
++$as_echo "#define HAVE_OCTAVE_FIRST_CATOP_ARG_CONST 1" >>confdefs.h
++
++fi
++
+ ac_config_files="$ac_config_files Makefile"
+ 
+ cat >confcache <<\_ACEOF
+diff -uNr a/src/configure.ac b/src/configure.ac
+--- a/src/configure.ac	2020-01-04 12:49:06.000000000 -0500
++++ b/src/configure.ac	2020-08-25 13:47:59.000000000 -0400
+@@ -252,5 +252,30 @@
+   AC_DEFINE([HAVE_OCTAVE_BASE_VALUE_PRINT_CONST],[1],[Define if octave_base_value::print is const-qualified])
+ fi
+ 
++AC_CACHE_CHECK([whether first catop function argument is const-qualified],
++  [comm_cv_octave_first_catop_fcn_arg_const_qualified],
++  [comm_save_CPPFLAGS=$CPPFLAGS
++   comm_save_CXXFLAGS=$CXXFLAGS
++   CPPFLAGS="$CPPFLAGS $HDF5_CFLAGS"
++   CXXFLAGS="$CXXFLAGS $comm_CXXFLAGS"
++   AC_LANG_PUSH(C++)
++   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
++       #include <octave/oct.h>
++       #include <octave/ov-typeinfo.h>
++       ]], [[
++       octave_value foobar_fcn (const octave_base_value&,
++                                const octave_base_value&,
++                                const Array<octave_idx_type>& ra_idx);
++       octave::type_info::cat_op_fcn fcn = foobar_fcn;
++       ]])],
++     [comm_cv_octave_first_catop_fcn_arg_const_qualified=yes],
++     [comm_cv_octave_first_catop_fcn_arg_const_qualified=no])
++   AC_LANG_POP(C++)
++   CPPFLAGS=$comm_save_CPPFLAGS
++   CXXFLAGS=$comm_save_CXXFLAGS])
++if test $comm_cv_octave_first_catop_fcn_arg_const_qualified = yes; then
++  AC_DEFINE([HAVE_OCTAVE_FIRST_CATOP_ARG_CONST],[1],[Define if first catop function argument is const-qualified])
++fi
++
+ AC_CONFIG_FILES([Makefile])
+ AC_OUTPUT
+diff -uNr a/src/galois-ops.h b/src/galois-ops.h
+--- a/src/galois-ops.h	2020-01-04 12:49:06.000000000 -0500
++++ b/src/galois-ops.h	2020-08-25 14:00:18.000000000 -0400
+@@ -40,11 +40,19 @@
+ #endif
+ 
+ #if ! defined (CATOPDECL)
+-#  define CATOPDECL(name, a1, a2)                                       \
++#  if defined (HAVE_OCTAVE_FIRST_CATOP_ARG_CONST)
++#    define CATOPDECL(name, a1, a2)                                     \
++  static octave_value                                                   \
++  CONCAT2(oct_catop_, name) (const octave_base_value& a1,               \
++                             const octave_base_value& a2,               \
++                             const Array<octave_idx_type>& ra_idx)
++#  else
++#    define CATOPDECL(name, a1, a2)                                     \
+   static octave_value                                                   \
+   CONCAT2(oct_catop_, name) (octave_base_value& a1,                     \
+                              const octave_base_value& a2,               \
+                              const Array<octave_idx_type>& ra_idx)
++#  endif
+ #endif
+ 
+ // Override the operator and function definition defines from Octave
+@@ -124,7 +132,24 @@
+     return new octave_galois (f (v1.t1 ## _value (), v2.matrix_value ())); \
+   }
+ 
+-#define DEFCATOP_G_FN(name, t1, t2, f) \
++#if defined (HAVE_OCTAVE_FIRST_CATOP_ARG_CONST)
++#  define DEFCATOP_G_FN(name, t1, t2, f) \
++  CATOPDECL (name, a1, a2) \
++  { \
++    CAST_BINOP_ARGS (const octave_ ## t1&, const octave_ ## t2&); \
++    return new octave_galois (f (v1.t1 ## _value (), v2.t2 ## _value (), \
++                                 ra_idx)); \
++  }
++
++#define DEFCATOP_G_METHOD(name, t1, t2, f) \
++  CATOPDECL (name, a1, a2) \
++  { \
++    CAST_BINOP_ARGS (const octave_ ## t1&, const octave_ ## t2&); \
++    return new octave_galois (v1.t1 ## _value (). f (v2.t2 ## _value (), \
++                                                     ra_idx)); \
++  }
++#else
++#  define DEFCATOP_G_FN(name, t1, t2, f) \
+   CATOPDECL (name, a1, a2) \
+   { \
+     CAST_BINOP_ARGS (octave_ ## t1&, const octave_ ## t2&); \
+@@ -139,6 +164,7 @@
+     return new octave_galois (v1.t1 ## _value (). f (v2.t2 ## _value (), \
+                                                      ra_idx)); \
+   }
++#endif
+ 
+ #define INSTALL_G_CATOP(t1, t2, f) INSTALL_CATOP (t1, t2, f)
+ 
+diff -uNr a/src/op-gm-s.cc b/src/op-gm-s.cc
+--- a/src/op-gm-s.cc	2020-01-04 12:49:06.000000000 -0500
++++ b/src/op-gm-s.cc	2020-08-25 13:50:19.000000000 -0400
+@@ -68,7 +68,11 @@
+ 
+ DEFCATOP (gm_s, galois, scalar)
+ {
++#if defined (HAVE_OCTAVE_FIRST_CATOP_ARG_CONST)
++  CAST_BINOP_ARGS (const octave_galois&, const octave_scalar&);
++#else
+   CAST_BINOP_ARGS (octave_galois&, const octave_scalar&);
++#endif
+   return new octave_galois (v1.galois_value (). concat (v2.matrix_value (),
+                                                         ra_idx));
+ }
+diff -uNr a/src/op-s-gm.cc b/src/op-s-gm.cc
+--- a/src/op-s-gm.cc	2020-01-04 12:49:06.000000000 -0500
++++ b/src/op-s-gm.cc	2020-08-25 14:51:01.000000000 -0400
+@@ -81,7 +81,11 @@
+ 
+ DEFCATOP (s_gm, scalar, galois)
+ {
++#if defined (HAVE_OCTAVE_FIRST_CATOP_ARG_CONST)
++  CAST_BINOP_ARGS (const octave_scalar&, const octave_galois&);
++#else
+   CAST_BINOP_ARGS (octave_scalar&, const octave_galois&);
++#endif
+   return new octave_galois (concat (v1.matrix_value (), v2.galois_value (),
+                                     ra_idx));
+ }

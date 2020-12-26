@@ -1,0 +1,12 @@
+diff -ur pixman-0.30.0-orig/pixman/Makefile.in pixman-0.30.0/pixman/Makefile.in
+--- pixman-0.30.0-orig/pixman/Makefile.in	2013-05-08 19:25:31 -0400
++++ pixman-0.30.0/pixman/Makefile.in	2013-07-22 12:07:31 -0400
+@@ -475,7 +475,7 @@
+ lib_LTLIBRARIES = libpixman-1.la
+ libpixman_1_la_LDFLAGS = -version-info $(LT_VERSION_INFO) \
+ 	-no-undefined @PTHREAD_LDFLAGS@ $(am__append_2) \
+-	$(am__append_7) $(am__append_18)
++	$(am__append_7) $(am__append_18) -export-symbols-regex "^pixman_.*"
+ libpixman_1_la_LIBADD = @PTHREAD_LIBS@ -lm $(am__append_3) \
+ 	$(am__append_5) $(am__append_8) $(am__append_10) \
+ 	$(am__append_12) $(am__append_14) $(am__append_16) \

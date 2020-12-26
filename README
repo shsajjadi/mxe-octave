@@ -1,0 +1,47 @@
+HISTORY
+=======
+
+mxe-octave was forked from the MXE project(http://mxe.cc) in November
+2012 when I was looking for a reliable way to cross-compile Octave
+for Windows.  At the time, the MXE developers did not seem interested
+in modifying MXE to build shared libraries (.  Since then, MXE has been modified
+
+As stated here:
+http://lists.defectivebydesign.org/archive/html/mingw-cross-env-list/2013-10/msg00006.html
+I never intended to permanently fork MXE, I was only looking for a way
+to build Octave and all its dependencies, primarily for Windows
+systems.
+
+Later, I needed to build Octave for old RHEL and SuSE systems that did
+not have sufficiently recent versions of the build tools or other
+dependencies.  Adapting MXE to handle native builds seemed like a
+reasonable solution at the time, but there always seem to be issues
+with replacing many (but not all) system libraries that are needed to
+support Octave.  At what point do you stop?  You probably don't want
+to build your own OpenGL, X11, or C libraries, and mxe-octave does not
+attempt to build these.
+
+FUTURE
+======
+
+Now that MXE supports static and shared library builds for 32- and
+64-bit Windows systems, it might be good to consider using MXE
+directly and abandon the mxe-octave fork, at least for Windows
+builds.  Instead of mxe-octave duplicating all that MXE does, we could
+use MXE to build the cross tools and cross compile the libraries.
+Everything else could be built using those tools.  We might still end
+up with some duplication, but we would
+
+For native builds, I'm not sure what the best option is.  Many things
+could be simplified in mxe-octave if cross compiling and supporting
+Windows were not required, but there would still be a lot of overlap
+with MXE.  Another option is to use docker, but older kernel versions
+may not support it properly.  For example, for RHEL 6, docker is
+apparently only supported using the EPEL packages, and if people were
+able to use EPEL, then they could probably get dependencies that are
+new enough to build Octave.  I my experience, people using these old
+systems are not willing to use packages from EPEL or similar projects.
+
+John W. Eaton
+jwe@octave.org
+2017-04-11

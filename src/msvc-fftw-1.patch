@@ -1,0 +1,110 @@
+diff -ur fftw-3.3.3.orig/api/fftw3.h fftw-3.3.3/api/fftw3.h
+--- fftw-3.3.3.orig/api/fftw3.h	2013-08-30 20:48:15 -0400
++++ fftw-3.3.3/api/fftw3.h	2013-08-30 20:48:31 -0400
+@@ -82,8 +82,14 @@
+ #  else /* user is calling FFTW; import symbol */
+ #    define FFTW_EXTERN extern __declspec(dllimport) 
+ #  endif
++#  if defined(COMPILING_FFTW_THREADS)
++#    define FFTW_THREADS_EXTERN extern __declspec(dllexport)
++#  else
++#    define FFTW_THREADS_EXTERN extern __declspec(dllimport)
++#  endif
+ #else
+ #  define FFTW_EXTERN extern
++#  define FFTW_THREADS_EXTERN extern
+ #endif
+ 
+ enum fftw_r2r_kind_do_not_use_me {
+@@ -315,9 +321,9 @@
+ 									   \
+ FFTW_EXTERN void X(set_timelimit)(double t);				   \
+ 									   \
+-FFTW_EXTERN void X(plan_with_nthreads)(int nthreads);			   \
+-FFTW_EXTERN int X(init_threads)(void);					   \
+-FFTW_EXTERN void X(cleanup_threads)(void);				   \
++FFTW_THREADS_EXTERN void X(plan_with_nthreads)(int nthreads);		   \
++FFTW_THREADS_EXTERN int X(init_threads)(void);				   \
++FFTW_THREADS_EXTERN void X(cleanup_threads)(void);			   \
+ 									   \
+ FFTW_EXTERN int X(export_wisdom_to_filename)(const char *filename);	   \
+ FFTW_EXTERN void X(export_wisdom_to_file)(FILE *output_file);		   \
+diff -ur fftw-3.3.3.orig/dft/ct.h fftw-3.3.3/dft/ct.h
+--- fftw-3.3.3.orig/dft/ct.h	2013-08-30 20:48:15 -0400
++++ fftw-3.3.3/dft/ct.h	2013-08-30 20:48:31 -0400
+@@ -56,7 +56,7 @@
+ ct_solver *X(mksolver_ct)(size_t size, INT r, int dec, 
+ 			  ct_mkinferior mkcldw, 
+ 			  ct_force_vrecursion force_vrecursionp);
+-extern ct_solver *(*X(mksolver_ct_hook))(size_t, INT, int, 
++IFFTW_EXTERN ct_solver *(*X(mksolver_ct_hook))(size_t, INT, int, 
+ 					 ct_mkinferior, ct_force_vrecursion);
+ 
+ void X(regsolver_ct_directw)(planner *plnr,
+diff -ur fftw-3.3.3.orig/rdft/hc2hc.h fftw-3.3.3/rdft/hc2hc.h
+--- fftw-3.3.3.orig/rdft/hc2hc.h	2013-08-30 20:48:17 -0400
++++ fftw-3.3.3/rdft/hc2hc.h	2013-08-30 20:48:31 -0400
+@@ -46,7 +46,7 @@
+ };
+ 
+ hc2hc_solver *X(mksolver_hc2hc)(size_t size, INT r, hc2hc_mkinferior mkcldw);
+-extern hc2hc_solver *(*X(mksolver_hc2hc_hook))(size_t, INT, hc2hc_mkinferior);
++IFFTW_EXTERN hc2hc_solver *(*X(mksolver_hc2hc_hook))(size_t, INT, hc2hc_mkinferior);
+ 
+ void X(regsolver_hc2hc_direct)(planner *plnr, khc2hc codelet, 
+ 			       const hc2hc_desc *desc);
+diff -ur fftw-3.3.3.orig/tests/Makefile.in fftw-3.3.3/tests/Makefile.in
+--- fftw-3.3.3.orig/tests/Makefile.in	2013-08-30 20:48:17 -0400
++++ fftw-3.3.3/tests/Makefile.in	2013-08-30 20:48:31 -0400
+@@ -82,7 +82,7 @@
+ 	$(top_builddir)/libbench2/libbench2.a $(am__DEPENDENCIES_1)
+ bench_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+ 	--mode=link $(CCLD) $(bench_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+-	$(LDFLAGS) -o $@
++	$(LDFLAGS) -Wl,-subsystem:console -o $@
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ am__depfiles_maybe = depfiles
+@@ -251,7 +251,7 @@
+ top_srcdir = @top_srcdir@
+ AM_CPPFLAGS = -I$(top_srcdir)/kernel -I$(top_srcdir)/libbench2	\
+ -I$(top_srcdir)/dft -I$(top_srcdir)/rdft -I$(top_srcdir)/reodft	\
+--I$(top_srcdir)/threads -I$(top_srcdir)/api 
++-I$(top_srcdir)/threads -I$(top_srcdir)/api -DFFTW_DLL
+ 
+ EXTRA_DIST = check.pl README
+ @OPENMP_TRUE@@THREADS_FALSE@bench_CFLAGS = $(OPENMP_CFLAGS)
+diff -ur fftw-3.3.3.orig/threads/Makefile.in fftw-3.3.3/threads/Makefile.in
+--- fftw-3.3.3.orig/threads/Makefile.in	2013-08-30 20:48:17 -0400
++++ fftw-3.3.3/threads/Makefile.in	2013-08-30 20:48:31 -0400
+@@ -313,7 +313,8 @@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ AM_CPPFLAGS = -I$(top_srcdir)/kernel -I$(top_srcdir)/dft	\
+--I$(top_srcdir)/rdft -I$(top_srcdir)/api
++-I$(top_srcdir)/rdft -I$(top_srcdir)/api			\
++-DCALLING_FFTW -DCOMPILING_FFTW_THREADS
+ 
+ AM_CFLAGS = $(STACK_ALIGN_CFLAGS)
+ @OPENMP_FALSE@FFTWOMPLIB = 
+@@ -329,7 +330,7 @@
+ vrank-geq1-rdft2.c f77api.c f77funcs.h
+ 
+ libfftw3@PREC_SUFFIX@_threads_la_CFLAGS = $(AM_CFLAGS) $(PTHREAD_CFLAGS)
+-libfftw3@PREC_SUFFIX@_threads_la_LDFLAGS = -version-info @SHARED_VERSION_INFO@
++libfftw3@PREC_SUFFIX@_threads_la_LDFLAGS = -no-undefined -version-info @SHARED_VERSION_INFO@
+ @COMBINED_THREADS_FALSE@libfftw3@PREC_SUFFIX@_threads_la_LIBADD = ../libfftw3@PREC_SUFFIX@.la
+ libfftw3@PREC_SUFFIX@_omp_la_SOURCES = api.c conf.c openmp.c	\
+ threads.h dft-vrank-geq1.c ct.c rdft-vrank-geq1.c hc2hc.c	\
+diff -ur fftw-3.3.3.orig/tools/Makefile.in fftw-3.3.3/tools/Makefile.in
+--- fftw-3.3.3.orig/tools/Makefile.in	2013-08-30 20:48:17 -0400
++++ fftw-3.3.3/tools/Makefile.in	2013-08-30 20:48:31 -0400
+@@ -91,7 +91,7 @@
+ fftw@PREC_SUFFIX@_wisdom_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
+ 	$(fftw@PREC_SUFFIX@_wisdom_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+-	$(LDFLAGS) -o $@
++	$(LDFLAGS) -Wl,-subsystem:console -o $@
+ am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
+ am__vpath_adj = case $$p in \
+     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \

@@ -1,0 +1,184 @@
+diff -ur libiconv-1.14-orig/configure libiconv-1.14-new/configure
+--- libiconv-1.14-orig/configure	2011-08-07 13:49:02 -0400
++++ libiconv-1.14-new/configure	2013-06-14 15:31:17 -0400
+@@ -17212,8 +17212,8 @@
+                  *)    gl_absname_cpp="$ac_cpp" ;;
+                esac
+                                                             gl_cv_next_errno_h='"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&5 |
+-                  sed -n '\#/errno.h#{
+-                    s#.*"\(.*/errno.h\)".*#\1#
++                  sed -n '\#[\\/]errno.h#{
++                    s#.*"\(.*[\\/]errno.h\)".*#\1#
+                     s#^/[^/]#//&#
+                     p
+                     q
+@@ -18378,8 +18378,8 @@
+                  *)    gl_absname_cpp="$ac_cpp" ;;
+                esac
+                                                             gl_cv_next_stdint_h='"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&5 |
+-                  sed -n '\#/stdint.h#{
+-                    s#.*"\(.*/stdint.h\)".*#\1#
++                  sed -n '\#[\\/]stdint.h#{
++                    s#.*"\(.*[\\/]stdint.h\)".*#\1#
+                     s#^/[^/]#//&#
+                     p
+                     q
+@@ -19223,8 +19223,8 @@
+                  *)    gl_absname_cpp="$ac_cpp" ;;
+                esac
+                                                             gl_cv_next_string_h='"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&5 |
+-                  sed -n '\#/string.h#{
+-                    s#.*"\(.*/string.h\)".*#\1#
++                  sed -n '\#[\\/]string.h#{
++                    s#.*"\(.*[\\/]string.h\)".*#\1#
+                     s#^/[^/]#//&#
+                     p
+                     q
+@@ -19481,8 +19481,8 @@
+                  *)    gl_absname_cpp="$ac_cpp" ;;
+                esac
+                                                             gl_cv_next_time_h='"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&5 |
+-                  sed -n '\#/time.h#{
+-                    s#.*"\(.*/time.h\)".*#\1#
++                  sed -n '\#[\\/]time.h#{
++                    s#.*"\(.*[\\/]time.h\)".*#\1#
+                     s#^/[^/]#//&#
+                     p
+                     q
+@@ -19948,8 +19948,8 @@
+                  *)    gl_absname_cpp="$ac_cpp" ;;
+                esac
+                                                             gl_cv_next_fcntl_h='"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&5 |
+-                  sed -n '\#/fcntl.h#{
+-                    s#.*"\(.*/fcntl.h\)".*#\1#
++                  sed -n '\#[\\/]fcntl.h#{
++                    s#.*"\(.*[\\/]fcntl.h\)".*#\1#
+                     s#^/[^/]#//&#
+                     p
+                     q
+@@ -20418,8 +20418,8 @@
+                  *)    gl_absname_cpp="$ac_cpp" ;;
+                esac
+                                                             gl_cv_next_signal_h='"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&5 |
+-                  sed -n '\#/signal.h#{
+-                    s#.*"\(.*/signal.h\)".*#\1#
++                  sed -n '\#[\\/]signal.h#{
++                    s#.*"\(.*[\\/]signal.h\)".*#\1#
+                     s#^/[^/]#//&#
+                     p
+                     q
+@@ -20837,8 +20837,8 @@
+                  *)    gl_absname_cpp="$ac_cpp" ;;
+                esac
+                                                             gl_cv_next_stddef_h='"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&5 |
+-                  sed -n '\#/stddef.h#{
+-                    s#.*"\(.*/stddef.h\)".*#\1#
++                  sed -n '\#[\\/]stddef.h#{
++                    s#.*"\(.*[\\/]stddef.h\)".*#\1#
+                     s#^/[^/]#//&#
+                     p
+                     q
+@@ -20896,8 +20896,8 @@
+                  *)    gl_absname_cpp="$ac_cpp" ;;
+                esac
+                                                             gl_cv_next_stdio_h='"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&5 |
+-                  sed -n '\#/stdio.h#{
+-                    s#.*"\(.*/stdio.h\)".*#\1#
++                  sed -n '\#[\\/]stdio.h#{
++                    s#.*"\(.*[\\/]stdio.h\)".*#\1#
+                     s#^/[^/]#//&#
+                     p
+                     q
+@@ -21033,8 +21033,8 @@
+                  *)    gl_absname_cpp="$ac_cpp" ;;
+                esac
+                                                             gl_cv_next_stdlib_h='"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&5 |
+-                  sed -n '\#/stdlib.h#{
+-                    s#.*"\(.*/stdlib.h\)".*#\1#
++                  sed -n '\#[\\/]stdlib.h#{
++                    s#.*"\(.*[\\/]stdlib.h\)".*#\1#
+                     s#^/[^/]#//&#
+                     p
+                     q
+@@ -21270,8 +21270,8 @@
+                  *)    gl_absname_cpp="$ac_cpp" ;;
+                esac
+                                                             gl_cv_next_sys_stat_h='"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&5 |
+-                  sed -n '\#/sys/stat.h#{
+-                    s#.*"\(.*/sys/stat.h\)".*#\1#
++                  sed -n '\#[\\/]sys[\\/]stat.h#{
++                    s#.*"\(.*[\\/]sys[\\/]stat.h\)".*#\1#
+                     s#^/[^/]#//&#
+                     p
+                     q
+@@ -21392,8 +21392,8 @@
+                  *)    gl_absname_cpp="$ac_cpp" ;;
+                esac
+                                                             gl_cv_next_unistd_h='"'`(eval "$gl_absname_cpp conftest.$ac_ext") 2>&5 |
+-                  sed -n '\#/unistd.h#{
+-                    s#.*"\(.*/unistd.h\)".*#\1#
++                  sed -n '\#[\\/]unistd.h#{
++                    s#.*"\(.*[\\/]unistd.h\)".*#\1#
+                     s#^/[^/]#//&#
+                     p
+                     q
+diff -ur libiconv-1.14-orig/include/iconv.h.build.in libiconv-1.14-new/include/iconv.h.build.in
+--- libiconv-1.14-orig/include/iconv.h.build.in	2011-08-07 13:49:04 -0400
++++ libiconv-1.14-new/include/iconv.h.build.in	2013-06-14 15:36:17 -0400
+@@ -26,9 +26,17 @@
+ #if @HAVE_VISIBILITY@ && BUILDING_LIBICONV
+ #define LIBICONV_DLL_EXPORTED __attribute__((__visibility__("default")))
+ #else
++#ifdef _MSC_VER
++#ifdef BUILDING_LIBICONV
++#define LIBICONV_DLL_EXPORTED __declspec (dllexport)
++#else
++#define LIBICONV_DLL_EXPORTED __declspec (dllimport)
++#endif
++#else
+ #define LIBICONV_DLL_EXPORTED
+ #endif
+-extern LIBICONV_DLL_EXPORTED @DLL_VARIABLE@ int _libiconv_version; /* Likewise */
++#endif
++extern LIBICONV_DLL_EXPORTED int _libiconv_version; /* Likewise */
+ 
+ /* We would like to #include any system header file which could define
+    iconv_t, 1. in order to eliminate the risk that the user gets compilation
+diff -ur libiconv-1.14-orig/lib/Makefile.in libiconv-1.14-new/lib/Makefile.in
+--- libiconv-1.14-orig/lib/Makefile.in	2011-08-07 13:48:03 -0400
++++ libiconv-1.14-new/lib/Makefile.in	2013-06-14 15:39:20 -0400
+@@ -60,8 +60,8 @@
+ SOURCES = $(srcdir)/iconv.c $(srcdir)/../libcharset/lib/localcharset.c $(srcdir)/relocatable.c
+ 
+ OBJECTS = iconv.lo localcharset.lo relocatable.lo $(OBJECTS_EXP_@WOE32DLL@) $(OBJECTS_RES_@WOE32@)
+-OBJECTS_EXP_yes = iconv-exports.lo
+-OBJECTS_EXP_no =
++#OBJECTS_EXP_yes = iconv-exports.lo
++#OBJECTS_EXP_no =
+ OBJECTS_RES_yes = libiconv.res.lo
+ OBJECTS_RES_no =
+ 
+diff -ur libiconv-1.14-orig/srclib/stat.c libiconv-1.14-new/srclib/stat.c
+--- libiconv-1.14-orig/srclib/stat.c	2011-08-07 09:42:06 -0400
++++ libiconv-1.14-new/srclib/stat.c	2013-06-14 17:35:49 -0400
+@@ -35,6 +35,7 @@
+ 
+ #include <errno.h>
+ #include <limits.h>
++#include <unistd.h>
+ #include <stdbool.h>
+ #include <string.h>
+ #include "dosname.h"
+diff -ur libiconv-1.14-orig/srclib/sys_stat.in.h libiconv-1.14-new/srclib/sys_stat.in.h
+--- libiconv-1.14-orig/srclib/sys_stat.in.h	2011-08-07 09:42:06 -0400
++++ libiconv-1.14-new/srclib/sys_stat.in.h	2013-06-14 17:33:10 -0400
+@@ -38,6 +38,9 @@
+ 
+ /* Get nlink_t.  */
+ #include <sys/types.h>
++#ifdef _MSC_VER
++typedef unsigned short mode_t;
++#endif
+ 
+ /* Get struct timespec.  */
+ #include <time.h>

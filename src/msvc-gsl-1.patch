@@ -1,0 +1,586 @@
+diff -ur gsl-1.15-orig/Makefile.am gsl-1.15/Makefile.am
+--- gsl-1.15-orig/Makefile.am	2011-04-14 11:13:48 -0400
++++ gsl-1.15/Makefile.am	2013-07-19 12:41:26 -0400
+@@ -26,7 +26,7 @@
+ MINGW32_HOST = @MINGW32_HOST@
+ if MINGW32_HOST
+ libgsl_la_LIBADD += cblas/libgslcblas.la
+-libgsl_la_LDFLAGS += -no-undefined
++libgsl_la_LDFLAGS += -no-undefined -export-symbols-regex "gsl_.*"
+ endif
+ 
+ m4datadir = $(datadir)/aclocal
+@@ -51,9 +51,9 @@
+ 
+ edit = $(SED) \
+ 	-e 's|@prefix[@]|$(prefix)|g' \
+-	-e 's|@exec_prefix[@]|$(exec_prefix)|g' \
+-	-e 's|@libdir[@]|$(libdir)|g' \
+-	-e 's|@includedir[@]|$(includedir)|g' \
++	-e 's|@exec_prefix[@]|$${prefix}|g' \
++	-e 's|@libdir[@]|$${exec_prefix}/lib|g' \
++	-e 's|@includedir[@]|$${prefix}/include|g' \
+ 	-e 's|@GSL_CFLAGS[@]|$(GSL_CFLAGS)|g' \
+ 	-e 's|@GSL_LIBM[@]|$(GSL_LIBM)|g' \
+ 	-e 's|@GSL_LIBS[@]|$(GSL_LIBS)|g' \
+diff -ur gsl-1.15-orig/blas/Makefile.am gsl-1.15/blas/Makefile.am
+--- gsl-1.15-orig/blas/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/blas/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslblas_la_SOURCES = blas.c 
++libgslblas_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ #check_PROGRAMS = test
+ #TESTS = test
+diff -ur gsl-1.15-orig/block/Makefile.am gsl-1.15/block/Makefile.am
+--- gsl-1.15-orig/block/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/block/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -17,3 +17,4 @@
+ noinst_HEADERS = block_source.c init_source.c fprintf_source.c fwrite_source.c test_complex_source.c test_source.c test_io.c test_complex_io.c
+ 
+ libgslblock_la_SOURCES = init.c file.c block.c
++libgslblock_la_CPPFLAGS = -DBUILDING_GSL
+diff -ur gsl-1.15-orig/bspline/Makefile.am gsl-1.15/bspline/Makefile.am
+--- gsl-1.15-orig/bspline/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/bspline/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslbspline_la_SOURCES = bspline.c
++libgslbspline_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS =  bspline.h
+ 
+diff -ur gsl-1.15-orig/cblas/Makefile.am gsl-1.15/cblas/Makefile.am
+--- gsl-1.15-orig/cblas/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/cblas/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -3,7 +3,7 @@
+ 
+ MINGW32_HOST = @MINGW32_HOST@
+ if MINGW32_HOST
+-libgslcblas_la_LDFLAGS += -no-undefined
++libgslcblas_la_LDFLAGS += -no-undefined -export-symbols-regex "cblas_.*"
+ endif
+ 
+ pkginclude_HEADERS = gsl_cblas.h
+@@ -11,6 +11,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslcblas_la_SOURCES = sasum.c saxpy.c scasum.c scnrm2.c scopy.c sdot.c sdsdot.c sgbmv.c sgemm.c sgemv.c sger.c snrm2.c srot.c srotg.c srotm.c srotmg.c ssbmv.c sscal.c sspmv.c sspr.c sspr2.c sswap.c ssymm.c ssymv.c ssyr.c ssyr2.c ssyr2k.c ssyrk.c stbmv.c stbsv.c stpmv.c stpsv.c strmm.c strmv.c strsm.c strsv.c dasum.c daxpy.c dcopy.c ddot.c dgbmv.c dgemm.c dgemv.c dger.c dnrm2.c drot.c drotg.c drotm.c drotmg.c dsbmv.c dscal.c dsdot.c dspmv.c dspr.c dspr2.c dswap.c dsymm.c dsymv.c dsyr.c dsyr2.c dsyr2k.c dsyrk.c dtbmv.c dtbsv.c dtpmv.c dtpsv.c dtrmm.c dtrmv.c dtrsm.c dtrsv.c dzasum.c dznrm2.c caxpy.c ccopy.c cdotc_sub.c cdotu_sub.c cgbmv.c cgemm.c cgemv.c cgerc.c cgeru.c chbmv.c chemm.c chemv.c cher.c cher2.c cher2k.c cherk.c chpmv.c chpr.c chpr2.c cscal.c csscal.c cswap.c csymm.c csyr2k.c csyrk.c ctbmv.c ctbsv.c ctpmv.c ctpsv.c ctrmm.c ctrmv.c ctrsm.c ctrsv.c zaxpy.c zcopy.c zdotc_sub.c zdotu_sub.c zdscal.c zgbmv.c zgemm.c zgemv.c zgerc.c zgeru.c zhbmv.c zhemm.c zhemv.c zher.c zher2.c zher2k.c zherk.c zhpmv.c zhpr.c zhpr2.c zscal.c zswap.c zsymm.c zsyr2k.c zsyrk.c ztbmv.c ztbsv.c ztpmv.c ztpsv.c ztrmm.c ztrmv.c ztrsm.c ztrsv.c icamax.c idamax.c isamax.c izamax.c xerbla.c
++libgslcblas_la_CPPFLAGS = -DBUILDING_GSLCBLAS
+ 
+ noinst_HEADERS = tests.c tests.h error_cblas.h error_cblas_l2.h error_cblas_l3.h cblas.h source_asum_c.h source_asum_r.h source_axpy_c.h source_axpy_r.h source_copy_c.h source_copy_r.h source_dot_c.h source_dot_r.h source_gbmv_c.h source_gbmv_r.h source_gemm_c.h source_gemm_r.h source_gemv_c.h source_gemv_r.h source_ger.h source_gerc.h source_geru.h source_hbmv.h source_hemm.h source_hemv.h source_her.h source_her2.h source_her2k.h source_herk.h source_hpmv.h source_hpr.h source_hpr2.h source_iamax_c.h source_iamax_r.h source_nrm2_c.h source_nrm2_r.h source_rot.h source_rotg.h source_rotm.h source_rotmg.h source_sbmv.h source_scal_c.h source_scal_c_s.h source_scal_r.h source_spmv.h source_spr.h source_spr2.h source_swap_c.h source_swap_r.h source_symm_c.h source_symm_r.h source_symv.h source_syr.h source_syr2.h source_syr2k_c.h source_syr2k_r.h source_syrk_c.h source_syrk_r.h source_tbmv_c.h source_tbmv_r.h source_tbsv_c.h source_tbsv_r.h source_tpmv_c.h source_tpmv_r.h source_tpsv_c.h source_tpsv_r.h source_trmm_c.h source_trmm_r.h source_trmv_c.h source_trmv_r.h source_trsm_c.h source_trsm_r.h source_trsv_c.h source_trsv_r.h hypot.c
+ 
+diff -ur gsl-1.15-orig/cdf/Makefile.am gsl-1.15/cdf/Makefile.am
+--- gsl-1.15-orig/cdf/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/cdf/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -6,6 +6,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslcdf_la_SOURCES = beta.c betainv.c cauchy.c cauchyinv.c chisq.c chisqinv.c exponential.c exponentialinv.c exppow.c fdist.c fdistinv.c flat.c flatinv.c gamma.c gammainv.c gauss.c gaussinv.c gumbel1.c gumbel1inv.c gumbel2.c gumbel2inv.c laplace.c laplaceinv.c logistic.c logisticinv.c lognormal.c lognormalinv.c pareto.c paretoinv.c rayleigh.c rayleighinv.c tdist.c tdistinv.c weibull.c weibullinv.c binomial.c poisson.c geometric.c nbinomial.c pascal.c hypergeometric.c
++libgslcdf_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS = beta_inc.c rat_eval.h test_auto.c error.h
+ 
+diff -ur gsl-1.15-orig/cheb/Makefile.am gsl-1.15/cheb/Makefile.am
+--- gsl-1.15-orig/cheb/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/cheb/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslcheb_la_SOURCES =  deriv.c eval.c init.c integ.c
++libgslcheb_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ TESTS = $(check_PROGRAMS)
+ 
+diff -ur gsl-1.15-orig/combination/Makefile.am gsl-1.15/combination/Makefile.am
+--- gsl-1.15-orig/combination/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/combination/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslcombination_la_SOURCES = init.c file.c combination.c inline.c
++libgslcombination_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS = 
+ 
+diff -ur gsl-1.15-orig/complex/Makefile.am gsl-1.15/complex/Makefile.am
+--- gsl-1.15-orig/complex/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/complex/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslcomplex_la_SOURCES = math.c inline.c
++libgslcomplex_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ TESTS = $(check_PROGRAMS)
+ check_PROGRAMS = test
+diff -ur gsl-1.15-orig/configure.ac gsl-1.15/configure.ac
+--- gsl-1.15-orig/configure.ac	2011-05-04 17:09:27 -0400
++++ gsl-1.15/configure.ac	2013-07-19 12:32:33 -0400
+@@ -100,8 +100,8 @@
+ AC_C_INLINE
+ AC_C_CHAR_UNSIGNED
+ 
+-GSL_CFLAGS="-I$includedir"
+-GSL_LIBS="-L$libdir -lgsl"
++GSL_CFLAGS="-I\$\${includedir}"
++GSL_LIBS="-L\$\${libdir} -lgsl"
+ dnl macro from libtool - can be replaced with LT_LIB_M when we require libtool 2
+ AC_CHECK_LIBM
+ GSL_LIBM=$LIBM
+@@ -558,6 +558,10 @@
+ AH_BOTTOM([#define RETURN_IF_NULL(x) if (!x) { return ; }
+ ])
+ 
++AH_BOTTOM([#if defined (_MSC_VER) && ! defined (__STDC__)
++#define __STDC__ 1
++#endif])
++
+ AH_VERBATIM([GSL_DISABLE_DEPRECATED],
+ [/* Disable deprecated functions and enums while building */
+ #define GSL_DISABLE_DEPRECATED 1])
+diff -ur gsl-1.15-orig/deriv/Makefile.am gsl-1.15/deriv/Makefile.am
+--- gsl-1.15-orig/deriv/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/deriv/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -3,6 +3,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslderiv_la_SOURCES = deriv.c
++libgslderiv_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ pkginclude_HEADERS = gsl_deriv.h
+ 
+diff -ur gsl-1.15-orig/dht/Makefile.am gsl-1.15/dht/Makefile.am
+--- gsl-1.15-orig/dht/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/dht/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -13,3 +13,4 @@
+ test_SOURCES = test.c
+ 
+ libgsldht_la_SOURCES = dht.c
++libgsldht_la_CPPFLAGS = -DBUILDING_GSL
+diff -ur gsl-1.15-orig/diff/Makefile.am gsl-1.15/diff/Makefile.am
+--- gsl-1.15-orig/diff/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/diff/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -3,6 +3,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgsldiff_la_SOURCES = diff.c
++libgsldiff_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ pkginclude_HEADERS = gsl_diff.h
+ 
+diff -ur gsl-1.15-orig/eigen/Makefile.am gsl-1.15/eigen/Makefile.am
+--- gsl-1.15-orig/eigen/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/eigen/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -4,6 +4,7 @@
+ 
+ pkginclude_HEADERS = gsl_eigen.h
+ libgsleigen_la_SOURCES =  jacobi.c symm.c symmv.c nonsymm.c nonsymmv.c herm.c hermv.c gensymm.c gensymmv.c genherm.c genhermv.c gen.c genv.c sort.c francis.c schur.c
++libgsleigen_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ INCLUDES = -I$(top_srcdir)
+ 
+diff -ur gsl-1.15-orig/err/Makefile.am gsl-1.15/err/Makefile.am
+--- gsl-1.15-orig/err/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/err/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -3,6 +3,7 @@
+ pkginclude_HEADERS = gsl_errno.h gsl_message.h
+ 
+ libgslerr_la_SOURCES = error.c stream.c message.c strerror.c
++libgslerr_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ check_PROGRAMS = test
+ 
+diff -ur gsl-1.15-orig/fft/Makefile.am gsl-1.15/fft/Makefile.am
+--- gsl-1.15-orig/fft/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/fft/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslfft_la_SOURCES =  dft.c fft.c
++libgslfft_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS = c_pass.h hc_pass.h real_pass.h signals.h signals_source.c c_main.c c_init.c c_pass_2.c c_pass_3.c c_pass_4.c c_pass_5.c c_pass_6.c c_pass_7.c c_pass_n.c c_radix2.c bitreverse.c bitreverse.h factorize.c factorize.h hc_init.c hc_pass_2.c hc_pass_3.c hc_pass_4.c hc_pass_5.c hc_pass_n.c hc_radix2.c hc_unpack.c real_init.c real_pass_2.c real_pass_3.c real_pass_4.c real_pass_5.c real_pass_n.c real_radix2.c real_unpack.c compare.h compare_source.c dft_source.c hc_main.c real_main.c test_complex_source.c test_real_source.c test_trap_source.c urand.c complex_internal.h
+ 
+diff -ur gsl-1.15-orig/fit/Makefile.am gsl-1.15/fit/Makefile.am
+--- gsl-1.15-orig/fit/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/fit/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslfit_la_SOURCES = linear.c
++libgslfit_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ check_PROGRAMS = test #demo
+ 
+diff -ur gsl-1.15-orig/gsl-config.in gsl-1.15/gsl-config.in
+--- gsl-1.15-orig/gsl-config.in	2010-12-26 12:57:08 -0500
++++ gsl-1.15/gsl-config.in	2013-07-19 12:44:27 -0400
+@@ -1,8 +1,10 @@
+ #! /bin/sh
+ 
+-prefix=@prefix@
++#prefix=@prefix@
++prefix=`cd \`dirname $0\` && pwd -W`
+ exec_prefix=@exec_prefix@
+ includedir=@includedir@
++libdir=@libdir@
+ 
+ usage()
+ {
+diff -ur gsl-1.15-orig/gsl_types.h gsl-1.15/gsl_types.h
+--- gsl-1.15-orig/gsl_types.h	2010-12-26 12:57:08 -0500
++++ gsl-1.15/gsl_types.h	2013-07-19 12:08:49 -0400
+@@ -23,8 +23,11 @@
+ #ifndef GSL_VAR
+ 
+ #ifdef WIN32
++#  if defined (_MSC_VER) && ! defined (GSL_STATIC)
++#    define GSL_DLL
++#  endif
+ #  ifdef GSL_DLL
+-#    ifdef DLL_EXPORT
++#    ifdef BUILDING_GSL
+ #      define GSL_VAR extern __declspec(dllexport)
+ #    else
+ #      define GSL_VAR extern __declspec(dllimport)
+diff -ur gsl-1.15-orig/histogram/Makefile.am gsl-1.15/histogram/Makefile.am
+--- gsl-1.15-orig/histogram/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/histogram/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslhistogram_la_SOURCES = add.c  get.c init.c params.c reset.c file.c pdf.c gsl_histogram.h add2d.c get2d.c init2d.c params2d.c reset2d.c file2d.c pdf2d.c gsl_histogram2d.h calloc_range.c calloc_range2d.c copy.c copy2d.c maxval.c maxval2d.c oper.c oper2d.c stat.c stat2d.c
++libgslhistogram_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS = urand.c find.c find2d.c
+ 
+diff -ur gsl-1.15-orig/ieee-utils/Makefile.am gsl-1.15/ieee-utils/Makefile.am
+--- gsl-1.15-orig/ieee-utils/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/ieee-utils/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -3,6 +3,7 @@
+ pkginclude_HEADERS = gsl_ieee_utils.h
+ 
+ libgslieeeutils_la_SOURCES =  print.c make_rep.c gsl_ieee_utils.h env.c fp.c read.c
++libgslieeeutils_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS = fp-aix.c fp-darwin.c fp-darwin86.c fp-hpux.c fp-hpux11.c fp-irix.c fp-gnum68k.c fp-gnuppc.c fp-solaris.c fp-gnusparc.c fp-sunos4.c fp-tru64.c fp-unknown.c fp-gnux86.c fp-freebsd.c fp-os2emx.c fp-netbsd.c fp-openbsd.c fp-gnuc99.c endian.c standardize.c
+ 
+diff -ur gsl-1.15-orig/integration/Makefile.am gsl-1.15/integration/Makefile.am
+--- gsl-1.15-orig/integration/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/integration/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -3,6 +3,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslintegration_la_SOURCES = qk15.c qk21.c qk31.c qk41.c qk51.c qk61.c qk.c qng.c qng.h qag.c	qags.c qagp.c workspace.c qcheb.c qawc.c qmomo.c qaws.c	qmomof.c qawo.c	qawf.c glfixed.c cquad.c
++libgslintegration_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ pkginclude_HEADERS = gsl_integration.h
+ noinst_HEADERS = qpsrt.c qpsrt2.c qelg.c qc25c.c qc25s.c qc25f.c ptsort.c util.c err.c positivity.c append.c initialise.c set_initial.c reset.c cquad_const.c
+diff -ur gsl-1.15-orig/interpolation/Makefile.am gsl-1.15/interpolation/Makefile.am
+--- gsl-1.15-orig/interpolation/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/interpolation/Makefile.am	2013-07-19 12:08:49 -0400
+@@ -5,6 +5,7 @@
+ pkginclude_HEADERS = gsl_interp.h gsl_spline.h
+ 
+ libgslinterpolation_la_SOURCES = accel.c akima.c cspline.c interp.c linear.c integ_eval.h spline.c poly.c inline.c
++libgslinterpolation_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ INCLUDES = -I$(top_srcdir)
+ 
+diff -ur gsl-1.15-orig/linalg/Makefile.am gsl-1.15/linalg/Makefile.am
+--- gsl-1.15-orig/linalg/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/linalg/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgsllinalg_la_SOURCES = multiply.c exponential.c tridiag.c tridiag.h lu.c luc.c hh.c qr.c qrpt.c lq.c ptlq.c svd.c householder.c householdercomplex.c hessenberg.c hesstri.c cholesky.c choleskyc.c symmtd.c hermtd.c bidiag.c balance.c balancemat.c
++libgsllinalg_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS =  givens.c apply_givens.c svdstep.c tridiag.h 
+ 
+diff -ur gsl-1.15-orig/matrix/Makefile.am gsl-1.15/matrix/Makefile.am
+--- gsl-1.15-orig/matrix/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/matrix/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -20,5 +20,6 @@
+ noinst_HEADERS = init_source.c file_source.c rowcol_source.c swap_source.c copy_source.c test_complex_source.c test_source.c minmax_source.c prop_source.c oper_source.c getset_source.c view_source.c submatrix_source.c oper_complex_source.c
+ 
+ libgslmatrix_la_SOURCES = init.c matrix.c file.c rowcol.c swap.c copy.c minmax.c prop.c oper.c getset.c view.c submatrix.c view.h
++libgslmatrix_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ 
+diff -ur gsl-1.15-orig/min/Makefile.am gsl-1.15/min/Makefile.am
+--- gsl-1.15-orig/min/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/min/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -7,6 +7,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslmin_la_SOURCES = fsolver.c golden.c brent.c convergence.c bracketing.c quad_golden.c
++libgslmin_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ check_PROGRAMS = test
+ 
+diff -ur gsl-1.15-orig/monte/Makefile.am gsl-1.15/monte/Makefile.am
+--- gsl-1.15-orig/monte/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/monte/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -1,6 +1,7 @@
+ noinst_LTLIBRARIES = libgslmonte.la 
+ 
+ libgslmonte_la_SOURCES =  miser.c plain.c gsl_monte_vegas.h gsl_monte_miser.h gsl_monte_plain.h gsl_monte.h vegas.c
++libgslmonte_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ pkginclude_HEADERS = gsl_monte.h gsl_monte_vegas.h gsl_monte_miser.h gsl_monte_plain.h
+ 
+diff -ur gsl-1.15-orig/multifit/Makefile.am gsl-1.15/multifit/Makefile.am
+--- gsl-1.15-orig/multifit/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/multifit/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslmultifit_la_SOURCES = multilinear.c work.c lmder.c fsolver.c fdfsolver.c convergence.c gradient.c covar.c
++libgslmultifit_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS = lmutil.c lmpar.c lmset.c lmiterate.c qrsolv.c test_brown.c test_enso.c test_filip.c test_fn.c test_hahn1.c test_kirby2.c test_longley.c test_nelson.c test_pontius.c test_estimator.c
+ 
+diff -ur gsl-1.15-orig/multimin/Makefile.am gsl-1.15/multimin/Makefile.am
+--- gsl-1.15-orig/multimin/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/multimin/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslmultimin_la_SOURCES = fdfminimizer.c steepest_descent.c conjugate_fr.c conjugate_pr.c convergence.c diff.c vector_bfgs.c vector_bfgs2.c fminimizer.c simplex.c simplex2.c
++libgslmultimin_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS = directional_minimize.c linear_minimize.c linear_wrapper.c
+ 
+diff -ur gsl-1.15-orig/multiroots/Makefile.am gsl-1.15/multiroots/Makefile.am
+--- gsl-1.15-orig/multiroots/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/multiroots/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -9,6 +9,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslmultiroots_la_SOURCES = fdjac.c fsolver.c fdfsolver.c convergence.c  newton.c gnewton.c dnewton.c broyden.c hybrid.c hybridj.c
++libgslmultiroots_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ check_PROGRAMS = test
+ 
+diff -ur gsl-1.15-orig/multiset/Makefile.am gsl-1.15/multiset/Makefile.am
+--- gsl-1.15-orig/multiset/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/multiset/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslmultiset_la_SOURCES = init.c file.c multiset.c inline.c
++libgslmultiset_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS =
+ 
+diff -ur gsl-1.15-orig/ntuple/Makefile.am gsl-1.15/ntuple/Makefile.am
+--- gsl-1.15-orig/ntuple/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/ntuple/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslntuple_la_SOURCES = ntuple.c
++libgslntuple_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ TESTS = $(check_PROGRAMS)
+ 
+diff -ur gsl-1.15-orig/ode-initval/Makefile.am gsl-1.15/ode-initval/Makefile.am
+--- gsl-1.15-orig/ode-initval/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/ode-initval/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslodeiv_la_SOURCES = control.c cstd.c cscal.c evolve.c step.c rk2.c rk2imp.c rk2simp.c rk4.c rk4imp.c rkf45.c rk8pd.c rkck.c bsimp.c gear1.c gear2.c
++libgslodeiv_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS = odeiv_util.h
+ 
+diff -ur gsl-1.15-orig/ode-initval2/Makefile.am gsl-1.15/ode-initval2/Makefile.am
+--- gsl-1.15-orig/ode-initval2/Makefile.am	2011-04-25 03:30:17 -0400
++++ gsl-1.15/ode-initval2/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslodeiv2_la_SOURCES = control.c cstd.c cscal.c evolve.c step.c rk2.c rk2imp.c rk4.c rk4imp.c rkf45.c rk8pd.c rkck.c bsimp.c rk1imp.c msadams.c msbdf.c driver.c
++libgslodeiv2_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS = odeiv_util.h step_utils.c rksubs.c modnewton1.c control_utils.c
+ 
+diff -ur gsl-1.15-orig/permutation/Makefile.am gsl-1.15/permutation/Makefile.am
+--- gsl-1.15-orig/permutation/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/permutation/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslpermutation_la_SOURCES = init.c file.c permutation.c permute.c canonical.c inline.c
++libgslpermutation_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS = permute_source.c
+ 
+diff -ur gsl-1.15-orig/poly/Makefile.am gsl-1.15/poly/Makefile.am
+--- gsl-1.15-orig/poly/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/poly/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslpoly_la_SOURCES = dd.c eval.c solve_quadratic.c solve_cubic.c zsolve_quadratic.c zsolve_cubic.c zsolve.c zsolve_init.c deriv.c
++libgslpoly_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS = balance.c companion.c qr.c
+ 
+diff -ur gsl-1.15-orig/qrng/Makefile.am gsl-1.15/qrng/Makefile.am
+--- gsl-1.15-orig/qrng/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/qrng/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslqrng_la_SOURCES =	gsl_qrng.h qrng.c niederreiter-2.c sobol.c halton.c reversehalton.c inline.c
++libgslqrng_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ TESTS = $(check_PROGRAMS)
+ check_PROGRAMS = test
+diff -ur gsl-1.15-orig/randist/Makefile.am gsl-1.15/randist/Makefile.am
+--- gsl-1.15-orig/randist/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/randist/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslrandist_la_SOURCES = bernoulli.c beta.c bigauss.c binomial.c cauchy.c chisq.c dirichlet.c discrete.c erlang.c exponential.c exppow.c fdist.c flat.c gamma.c gauss.c gausszig.c gausstail.c geometric.c gumbel.c hyperg.c laplace.c levy.c logarithmic.c logistic.c lognormal.c multinomial.c nbinomial.c pareto.c pascal.c poisson.c rayleigh.c shuffle.c sphere.c tdist.c weibull.c landau.c binomial_tpe.c
++libgslrandist_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ TESTS = $(check_PROGRAMS)
+ 
+diff -ur gsl-1.15-orig/rng/Makefile.am gsl-1.15/rng/Makefile.am
+--- gsl-1.15-orig/rng/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/rng/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslrng_la_SOURCES = borosh13.c cmrg.c coveyou.c default.c file.c fishman18.c fishman20.c fishman2x.c gfsr4.c knuthran2.c knuthran.c knuthran2002.c lecuyer21.c minstd.c mrg.c mt.c r250.c ran0.c ran1.c ran2.c ran3.c rand48.c rand.c random.c randu.c ranf.c ranlux.c ranlxd.c ranlxs.c ranmar.c rng.c slatec.c taus.c taus113.c transputer.c tt.c types.c uni32.c uni.c vax.c waterman14.c zuf.c inline.c
++libgslrng_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ CLEANFILES = test.dat
+ 
+diff -ur gsl-1.15-orig/roots/Makefile.am gsl-1.15/roots/Makefile.am
+--- gsl-1.15-orig/roots/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/roots/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -9,6 +9,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslroots_la_SOURCES = bisection.c brent.c falsepos.c	newton.c  secant.c steffenson.c	convergence.c fsolver.c fdfsolver.c 
++libgslroots_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ check_PROGRAMS = test
+ 
+diff -ur gsl-1.15-orig/siman/Makefile.am gsl-1.15/siman/Makefile.am
+--- gsl-1.15-orig/siman/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/siman/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -16,6 +16,7 @@
+ CLEANFILES = siman_test.out
+ 
+ libgslsiman_la_SOURCES = siman.c
++libgslsiman_la_CPPFLAGS = -DBUILDING_GSL
+ pkginclude_HEADERS = gsl_siman.h
+ 
+ INCLUDES = -I$(top_srcdir)
+diff -ur gsl-1.15-orig/sort/Makefile.am gsl-1.15/sort/Makefile.am
+--- gsl-1.15-orig/sort/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/sort/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslsort_la_SOURCES = sort.c sortind.c sortvec.c sortvecind.c subset.c subsetind.c
++libgslsort_la_CPPFLAGS = -DBUILDING_GSL
+ noinst_HEADERS = sortvec_source.c sortvecind_source.c subset_source.c subsetind_source.c test_source.c test_heapsort.c 
+ 
+ TESTS = $(check_PROGRAMS)
+diff -ur gsl-1.15-orig/specfunc/Makefile.am gsl-1.15/specfunc/Makefile.am
+--- gsl-1.15-orig/specfunc/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/specfunc/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -7,6 +7,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslspecfunc_la_SOURCES = airy.c airy_der.c airy_zero.c atanint.c bessel.c bessel.h bessel_I0.c bessel_I1.c bessel_In.c bessel_Inu.c bessel_J0.c bessel_J1.c bessel_Jn.c bessel_Jnu.c bessel_K0.c bessel_K1.c bessel_Kn.c bessel_Knu.c bessel_Y0.c bessel_Y1.c bessel_Yn.c bessel_Ynu.c bessel_amp_phase.c bessel_amp_phase.h bessel_i.c bessel_j.c bessel_k.c bessel_olver.c bessel_temme.c bessel_y.c bessel_zero.c bessel_sequence.c beta.c beta_inc.c clausen.c coulomb.c coupling.c coulomb_bound.c dawson.c debye.c dilog.c elementary.c ellint.c elljac.c erfc.c exp.c expint.c expint3.c fermi_dirac.c gegenbauer.c gamma.c gamma_inc.c hyperg_0F1.c hyperg_2F0.c hyperg_1F1.c hyperg_2F1.c hyperg_U.c hyperg.c laguerre.c lambert.c legendre_H3d.c legendre_Qn.c legendre_con.c legendre_poly.c log.c mathieu_angfunc.c mathieu_charv.c mathieu_coeff.c mathieu_radfunc.c mathieu_workspace.c poch.c pow_int.c psi.c recurse.h result.c shint.c sinint.c synchrotron.c transport.c trig.c zeta.c
++libgslspecfunc_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ TESTS = $(check_PROGRAMS)
+ 
+diff -ur gsl-1.15-orig/statistics/Makefile.am gsl-1.15/statistics/Makefile.am
+--- gsl-1.15-orig/statistics/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/statistics/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -7,6 +7,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslstatistics_la_SOURCES =  mean.c variance.c absdev.c skew.c kurtosis.c lag1.c p_variance.c minmax.c ttest.c median.c covariance.c quantiles.c wmean.c wvariance.c wabsdev.c wskew.c wkurtosis.c
++libgslstatistics_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ noinst_HEADERS = mean_source.c variance_source.c covariance_source.c absdev_source.c skew_source.c kurtosis_source.c lag1_source.c p_variance_source.c minmax_source.c ttest_source.c median_source.c quantiles_source.c wmean_source.c wvariance_source.c wabsdev_source.c wskew_source.c wkurtosis_source.c test_float_source.c test_int_source.c
+ 
+diff -ur gsl-1.15-orig/sum/Makefile.am gsl-1.15/sum/Makefile.am
+--- gsl-1.15-orig/sum/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/sum/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslsum_la_SOURCES = levin_u.c levin_utrunc.c work_u.c work_utrunc.c
++libgslsum_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ TESTS = $(check_PROGRAMS)
+ 
+diff -ur gsl-1.15-orig/sys/Makefile.am gsl-1.15/sys/Makefile.am
+--- gsl-1.15-orig/sys/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/sys/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -3,6 +3,7 @@
+ pkginclude_HEADERS = gsl_sys.h
+ 
+ libgslsys_la_SOURCES = minmax.c prec.c hypot.c log1p.c expm1.c coerce.c invhyp.c pow_int.c infnan.c fdiv.c fcmp.c ldfrexp.c
++libgslsys_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ INCLUDES = -I$(top_srcdir)
+ 
+diff -ur gsl-1.15-orig/test/Makefile.am gsl-1.15/test/Makefile.am
+--- gsl-1.15-orig/test/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/test/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -3,6 +3,7 @@
+ pkginclude_HEADERS = gsl_test.h
+ 
+ libgsltest_la_SOURCES = results.c
++libgsltest_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ #check_PROGRAMS = test
+ #TESTS = test
+diff -ur gsl-1.15-orig/utils/Makefile.am gsl-1.15/utils/Makefile.am
+--- gsl-1.15-orig/utils/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/utils/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -2,6 +2,7 @@
+ 
+ # Don't need to list alloca.c, etc., Automake includes them.
+ libutils_la_SOURCES = system.h placeholder.c
++libutils_la_CPPFLAGS = -DBUILDING_GSL
+ libutils_la_LIBADD = @LIBOBJS@ 
+ 
+ EXTRA_DIST = README
+diff -ur gsl-1.15-orig/vector/Makefile.am gsl-1.15/vector/Makefile.am
+--- gsl-1.15-orig/vector/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/vector/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -19,3 +19,4 @@
+ noinst_HEADERS = init_source.c file_source.c copy_source.c swap_source.c prop_source.c test_complex_source.c test_source.c minmax_source.c oper_source.c oper_complex_source.c reim_source.c subvector_source.c view_source.c
+ 
+ libgslvector_la_SOURCES = init.c file.c vector.c copy.c swap.c prop.c minmax.c oper.c reim.c subvector.c view.c view.h
++libgslvector_la_CPPFLAGS = -DBUILDING_GSL
+diff -ur gsl-1.15-orig/wavelet/Makefile.am gsl-1.15/wavelet/Makefile.am
+--- gsl-1.15-orig/wavelet/Makefile.am	2010-12-26 12:57:08 -0500
++++ gsl-1.15/wavelet/Makefile.am	2013-07-19 12:08:50 -0400
+@@ -5,6 +5,7 @@
+ INCLUDES = -I$(top_srcdir)
+ 
+ libgslwavelet_la_SOURCES = dwt.c wavelet.c bspline.c daubechies.c haar.c
++libgslwavelet_la_CPPFLAGS = -DBUILDING_GSL
+ 
+ check_PROGRAMS = test
+ 

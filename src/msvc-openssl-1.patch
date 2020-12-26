@@ -1,0 +1,484 @@
+diff -ur openssl-1.0.1e-orig/Configure openssl-1.0.1e/Configure
+--- openssl-1.0.1e-orig/Configure	2013-02-11 10:26:04 -0500
++++ openssl-1.0.1e/Configure	2013-11-09 12:34:55 -0500
+@@ -534,6 +534,7 @@
+ 
+ # MinGW
+ "mingw", "gcc:-mno-cygwin -DL_ENDIAN -DWIN32_LEAN_AND_MEAN -fomit-frame-pointer -O3 -march=i486 -Wall::-D_MT:MINGW32:-lws2_32 -lgdi32 -lcrypt32:BN_LLONG ${x86_gcc_des} ${x86_gcc_opts} EXPORT_VAR_AS_FN:${x86_asm}:coff:win32:cygwin-shared:-D_WINDLL -DOPENSSL_USE_APPLINK:-mno-cygwin:.dll.a",
++"msvc", "clgcc:-DL_ENDIAN -DWIN32_LEAN_AND_MEAN -DOPENSSL_SYSNAME_WIN32 -O2 -Wall::-D_MT:MINGW32:-lws2_32 -lgdi32 -lcrypt32:BN_LLONG ${x86_gcc_des} ${x86_gcc_opts} EXPORT_VAR_AS_FN:${x86_asm}:coff:win32:cygwin-shared:-D_WINDLL -DOPENSSL_USE_APPLINK::.lib",
+ # As for OPENSSL_USE_APPLINK. Applink makes it possible to use .dll
+ # compiled with one compiler with application compiled with another
+ # compiler. It's possible to engage Applink support in mingw64 build,
+@@ -1122,7 +1123,7 @@
+ 
+ my $IsMK1MF=scalar grep /^$target$/,@MK1MF_Builds;
+ 
+-$exe_ext=".exe" if ($target eq "Cygwin" || $target eq "DJGPP" || $target =~ /^mingw/);
++$exe_ext=".exe" if ($target eq "Cygwin" || $target eq "DJGPP" || $target =~ /^mingw/ || $target =~ /^msvc/);
+ $exe_ext=".nlm" if ($target =~ /netware/);
+ $exe_ext=".pm"  if ($target =~ /vos/);
+ $openssldir="/usr/local/ssl" if ($openssldir eq "" and $prefix eq "");
+@@ -1177,6 +1178,7 @@
+ my $shared_cflag = $fields[$idx_shared_cflag];
+ my $shared_ldflag = $fields[$idx_shared_ldflag];
+ my $shared_extension = $fields[$idx_shared_extension];
++my $shared_prefix = "lib";
+ my $ranlib = $ENV{'RANLIB'} || $fields[$idx_ranlib];
+ my $ar = $ENV{'AR'} || "ar";
+ my $arflags = $fields[$idx_arflags];
+@@ -1203,6 +1205,11 @@
+ 	$shared_ldflag =~ s/\-mno\-cygwin\s*//;
+ 	}
+ 
++if ($target =~ /^msvc/)
++	{
++	$shared_prefix = "";
++	}
++
+ my $no_shared_warn=0;
+ my $no_user_cflags=0;
+ 
+@@ -1603,6 +1610,7 @@
+ 	s/^SHLIB_MAJOR=.*/SHLIB_MAJOR=$shlib_major/;
+ 	s/^SHLIB_MINOR=.*/SHLIB_MINOR=$shlib_minor/;
+ 	s/^SHLIB_EXT=.*/SHLIB_EXT=$shared_extension/;
++	s/^SHLIB_PRE=.*/SHLIB_PRE=$shared_prefix/;
+ 	s/^INSTALLTOP=.*$/INSTALLTOP=$prefix/;
+ 	s/^MULTILIB=.*$/MULTILIB=$multilib/;
+ 	s/^OPENSSLDIR=.*$/OPENSSLDIR=$openssldir/;
+@@ -1808,6 +1816,12 @@
+ 		$foo =~ s/\\/\\\\/g;
+ 		print OUT "#define ENGINESDIR \"$foo\"\n";
+ 		}
++	elsif	(/^#define\s+OPENSSLROOT/)
++		{
++		my $foo = "$prefix";
++		$foo =~ s/\\/\\\\/g;
++		print OUT "#define OPENSSLROOT \"$foo\"\n";
++		}
+ 	elsif	(/^#((define)|(undef))\s+OPENSSL_EXPORT_VAR_AS_FUNCTION/)
+ 		{ printf OUT "#undef OPENSSL_EXPORT_VAR_AS_FUNCTION\n"
+ 			if $export_var_as_fn;
+diff -ur openssl-1.0.1e-orig/Makefile.org openssl-1.0.1e/Makefile.org
+--- openssl-1.0.1e-orig/Makefile.org	2013-02-11 10:26:04 -0500
++++ openssl-1.0.1e/Makefile.org	2013-11-09 12:34:55 -0500
+@@ -10,6 +10,7 @@
+ SHLIB_MAJOR=
+ SHLIB_MINOR=
+ SHLIB_EXT=
++SHLIB_PRE=lib
+ PLATFORM=dist
+ OPTIONS=
+ CONFIGURE_ARGS=
+@@ -170,8 +171,8 @@
+ EDIRS=  times doc bugs util include certs ms shlib mt demos perl sf dep VMS
+ WDIRS=  windows
+ LIBS=   libcrypto.a libssl.a
+-SHARED_CRYPTO=libcrypto$(SHLIB_EXT)
+-SHARED_SSL=libssl$(SHLIB_EXT)
++SHARED_CRYPTO=$(SHLIB_PRE)crypto$(SHLIB_EXT)
++SHARED_SSL=$(SHLIB_PRE)ssl$(SHLIB_EXT)
+ SHARED_LIBS=
+ SHARED_LIBS_LINK_EXTS=
+ SHARED_LDFLAGS=
+@@ -204,7 +205,7 @@
+ 
+ BUILDENV=	PLATFORM='$(PLATFORM)' PROCESSOR='$(PROCESSOR)' \
+ 		CC='$(CC)' CFLAG='$(CFLAG)' 			\
+-		AS='$(CC)' ASFLAG='$(CFLAG) -c'			\
++		AS='$(AS)' ASFLAG='$(CFLAG) -c'			\
+ 		AR='$(AR)' NM='$(NM)' RANLIB='$(RANLIB)'	\
+ 		CROSS_COMPILE='$(CROSS_COMPILE)'	\
+ 		PERL='$(PERL)' ENGDIRS='$(ENGDIRS)'		\
+@@ -219,7 +220,7 @@
+ 		KRB5_INCLUDES='$(KRB5_INCLUDES)' LIBKRB5='$(LIBKRB5)'	\
+ 		ZLIB_INCLUDE='$(ZLIB_INCLUDE)' LIBZLIB='$(LIBZLIB)'	\
+ 		EXE_EXT='$(EXE_EXT)' SHARED_LIBS='$(SHARED_LIBS)'	\
+-		SHLIB_EXT='$(SHLIB_EXT)' SHLIB_TARGET='$(SHLIB_TARGET)'	\
++		SHLIB_PRE='$(SHLIB_PRE)' SHLIB_EXT='$(SHLIB_EXT)' SHLIB_TARGET='$(SHLIB_TARGET)'	\
+ 		PEX_LIBS='$(PEX_LIBS)' EX_LIBS='$(EX_LIBS)'	\
+ 		CPUID_OBJ='$(CPUID_OBJ)'			\
+ 		BN_ASM='$(BN_ASM)' DES_ENC='$(DES_ENC)' 	\
+@@ -295,7 +296,7 @@
+ 		$(FIPSLIBDIR)fips_premain.c $(FIPSLIBDIR)fipscanister.o \
+ 		libcrypto.a $(EX_LIBS)
+ 
+-libcrypto$(SHLIB_EXT): libcrypto.a fips_premain_dso$(EXE_EXT)
++$(SHLIB_PRE)crypto$(SHLIB_EXT): libcrypto.a fips_premain_dso$(EXE_EXT)
+ 	@if [ "$(SHLIB_TARGET)" != "" ]; then \
+ 		if [ "$(FIPSCANLIB)" = "libcrypto" ]; then \
+ 			FIPSLD_LIBCRYPTO=libcrypto.a ; \
+@@ -308,7 +309,7 @@
+ 		exit 1; \
+ 	fi
+ 
+-libssl$(SHLIB_EXT): libcrypto$(SHLIB_EXT) libssl.a
++$(SHLIB_PRE)ssl$(SHLIB_EXT): $(SHLIB_PRE)crypto$(SHLIB_EXT) libssl.a
+ 	@if [ "$(SHLIB_TARGET)" != "" ]; then \
+ 		$(MAKE) SHLIBDIRS=ssl SHLIBDEPS='-lcrypto' build-shared; \
+ 	else \
+@@ -324,7 +325,7 @@
+ 				( set -x; rm -f lib$$i$$j ); \
+ 			done; \
+ 		fi; \
+-		( set -x; rm -f lib$$i$(SHLIB_EXT) ); \
++		( set -x; rm -f $(SHLIB_PRE)$$i$(SHLIB_EXT) ); \
+ 		if [ "$(PLATFORM)" = "Cygwin" ]; then \
+ 			( set -x; rm -f cyg$$i$(SHLIB_EXT) lib$$i$(SHLIB_EXT).a ); \
+ 		fi; \
+@@ -583,16 +584,21 @@
+ 					chmod 644 $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/$$i.new; \
+ 					mv -f $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/$$i.new $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/$$i; \
+ 				fi ); \
+-				if expr $(PLATFORM) : 'mingw' > /dev/null; then \
+-				(	case $$i in \
+-						*crypto*) i=libeay32.dll;; \
+-						*ssl*)    i=ssleay32.dll;; \
++				case $(PLATFORM) in \
++				    mingw | msvc) \
++					( \
++					case $$i in \
++						*crypto*) i=@LIBRARY_PREFIX@crypto32@LIBRARY_SUFFIX@.dll;; \
++						*ssl*)    i=@LIBRARY_PREFIX@ssl32@LIBRARY_SUFFIX@.dll;; \
+ 					esac; \
+ 					echo installing $$i; \
+ 	 				cp $$i $(INSTALL_PREFIX)$(INSTALLTOP)/bin/$$i.new; \
+ 	 				chmod 755 $(INSTALL_PREFIX)$(INSTALLTOP)/bin/$$i.new; \
+-	 				mv -f $(INSTALL_PREFIX)$(INSTALLTOP)/bin/$$i.new $(INSTALL_PREFIX)$(INSTALLTOP)/bin/$$i ); \
+-				fi; \
++	 				mv -f $(INSTALL_PREFIX)$(INSTALLTOP)/bin/$$i.new \
++						$(INSTALL_PREFIX)$(INSTALLTOP)/bin/$$i \
++					); \
++					;; \
++				esac; \
+ 			fi; \
+ 		done; \
+ 		(	here="`pwd`"; \
+diff -ur openssl-1.0.1e-orig/Makefile.shared openssl-1.0.1e/Makefile.shared
+--- openssl-1.0.1e-orig/Makefile.shared	2013-02-11 10:26:04 -0500
++++ openssl-1.0.1e/Makefile.shared	2013-11-09 12:34:55 -0500
+@@ -261,13 +261,15 @@
+ 	SHLIB=cyg$(LIBNAME); \
+ 	base=-Wl,--enable-auto-image-base; \
+ 	deffile=; \
+-	if expr $(PLATFORM) : 'mingw' > /dev/null; then \
+-		SHLIB=$(LIBNAME)eay32; base=; \
++	case $(PLATFORM) in \
++	    mingw | msvc) \
++		SHLIB=@LIBRARY_PREFIX@$(LIBNAME)32; base=; \
+ 		if test -f $(LIBNAME)eay32.def; then \
+ 			deffile=$(LIBNAME)eay32.def; \
+ 		fi; \
+-	fi; \
+-	SHLIB_SUFFIX=.dll; \
++		;; \
++	esac; \
++	SHLIB_SUFFIX=@LIBRARY_SUFFIX@.dll; \
+ 	LIBVERSION="$(LIBVERSION)"; \
+ 	SHLIB_SOVER=${LIBVERSION:+"-$(LIBVERSION)"}; \
+ 	ALLSYMSFLAGS='-Wl,--whole-archive'; \
+@@ -278,26 +280,28 @@
+ link_a.cygwin:
+ 	@ $(CALC_VERSIONS); \
+ 	INHIBIT_SYMLINKS=yes; \
+-	SHLIB=cyg$(LIBNAME); SHLIB_SOVER=-$(LIBVERSION); SHLIB_SUFFIX=.dll; \
++	SHLIB=cyg$(LIBNAME); SHLIB_SOVER=-$(LIBVERSION); SHLIB_SUFFIX=@LIBRARY_SUFFIX@.dll; \
+ 	dll_name=$$SHLIB$$SHLIB_SOVER$$SHLIB_SUFFIX; extras=; \
+ 	base=-Wl,--enable-auto-image-base; \
+-	if expr $(PLATFORM) : 'mingw' > /dev/null; then \
++	case $(PLATFORM) in \
++	    mingw | msvc) \
+ 		case $(LIBNAME) in \
+-			crypto) SHLIB=libeay;; \
+-			ssl) SHLIB=ssleay;; \
++			crypto) SHLIB=@LIBRARY_PREFIX@crypto;; \
++			ssl) SHLIB=@LIBRARY_PREFIX@ssl;; \
+ 		esac; \
+ 		SHLIB_SOVER=32; \
+ 		extras="$(LIBNAME).def"; \
+-		$(PERL) util/mkdef.pl 32 $$SHLIB > $$extras; \
++		$(PERL) util/mkdef.pl 32 $(LIBNAME) > $$extras; \
+ 		base=; [ $(LIBNAME) = "crypto" ] && base=-Wl,--image-base,0x63000000; \
+-	fi; \
++		;; \
++	esac; \
+ 	dll_name=$$SHLIB$$SHLIB_SOVER$$SHLIB_SUFFIX; \
+ 	$(PERL) util/mkrc.pl $$dll_name | \
+ 		$(CROSS_COMPILE)windres -o rc.o; \
+ 	extras="$$extras rc.o"; \
+ 	ALLSYMSFLAGS='-Wl,--whole-archive'; \
+ 	NOALLSYMSFLAGS='-Wl,--no-whole-archive'; \
+-	SHAREDFLAGS="$(CFLAGS) $(SHARED_LDFLAGS) -shared $$base -Wl,-s,-Bsymbolic -Wl,--out-implib,lib$(LIBNAME).dll.a $$extras"; \
++	SHAREDFLAGS="$(CFLAGS) $(SHARED_LDFLAGS) -shared $$base -Wl,-s,-Bsymbolic -Wl,--out-implib,$(SHLIB_PRE)$(LIBNAME)$(SHLIB_EXT) $$extras"; \
+ 	[ -f apps/$$dll_name ] && rm apps/$$dll_name; \
+ 	[ -f test/$$dll_name ] && rm test/$$dll_name; \
+ 	$(LINK_SO_A) || exit 1; \
+diff -ur openssl-1.0.1e-orig/crypto/Makefile openssl-1.0.1e/crypto/Makefile
+--- openssl-1.0.1e-orig/crypto/Makefile	2013-02-11 10:26:04 -0500
++++ openssl-1.0.1e/crypto/Makefile	2013-11-09 12:34:55 -0500
+@@ -33,7 +33,7 @@
+ GENERAL=Makefile README crypto-lib.com install.com
+ 
+ LIB= $(TOP)/libcrypto.a
+-SHARED_LIB= libcrypto$(SHLIB_EXT)
++SHARED_LIB= $(SHLIB_PRE)crypto$(SHLIB_EXT)
+ LIBSRC=	cryptlib.c mem.c mem_clr.c mem_dbg.c cversion.c ex_data.c cpt_err.c \
+ 	ebcdic.c uid.c o_time.c o_str.c o_dir.c o_fips.c o_init.c fips_ers.c
+ LIBOBJ= cryptlib.o mem.o mem_dbg.o cversion.o ex_data.o cpt_err.o ebcdic.o \
+diff -ur openssl-1.0.1e-orig/crypto/cryptlib.c openssl-1.0.1e/crypto/cryptlib.c
+--- openssl-1.0.1e-orig/crypto/cryptlib.c	2013-02-11 10:26:04 -0500
++++ openssl-1.0.1e/crypto/cryptlib.c	2013-11-09 13:25:02 -0500
+@@ -926,6 +926,84 @@
+ 
+ void *OPENSSL_stderr(void)	{ return stderr; }
+ 
++#ifdef _MSC_VER
++char* OPENSSL_relocate(const char* path)
++{
++  static char* openssl_root = NULL;
++  static size_t openssl_root_len = 0;
++
++  if (path == NULL)
++    return path;
++
++  if (openssl_root == NULL)
++    {
++      HMODULE hMod;
++
++      if (GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
++                            (LPCTSTR)OPENSSL_relocate,
++                            &hMod))
++        {
++          DWORD len = 256, rlen;
++
++          while (1)
++            {
++              openssl_root = (char*)OPENSSL_realloc(openssl_root, len);
++              if (openssl_root == NULL)
++                {
++                  OPENSSL_showfatal("Unable to allocate internal buffer");
++                  break;
++                }
++              rlen = GetModuleFileName(hMod, openssl_root, len);
++              if (rlen == 0)
++                OPENSSL_showfatal("Unable to retrieve OpenSSL module file name");
++              else if (rlen < len)
++                {
++                  char* p;
++
++                  p = strrchr(openssl_root, '\\');
++                  if (p != NULL)
++                    {
++                      *p = '\0';
++                      rlen = strlen(openssl_root);
++                    }
++
++                  if (rlen >= 4 && strcmp(openssl_root+rlen-4, "\\bin") == 0)
++                    {
++                      openssl_root[rlen-4] = '\0';
++                      rlen -= 4;
++                    }
++                  openssl_root_len = rlen;
++
++                  /* Convert to forward slashes */
++                  for (p = openssl_root; *p; ++p)
++                    if (*p == '\\')
++                      *p = '/';
++
++                  break;
++                }
++              else
++                len *= 2;
++            }
++        }
++      else
++        OPENSSL_showfatal("Unable to get OpenSSL module handle");
++    }
++
++  if (strncmp(path, OPENSSLROOT, sizeof(OPENSSLROOT)-1) == 0)
++    {
++      size_t plen = openssl_root_len + strlen(path) - sizeof(OPENSSLROOT) + 2;
++      char* new_path = (char*)OPENSSL_malloc(plen);
++
++      BUF_strlcpy(new_path, openssl_root, plen);
++      BUF_strlcat(new_path, path + sizeof(OPENSSLROOT) - 1, plen);
++
++      return new_path;
++    }
++  else
++    return OPENSSL_strdup(path);
++}
++#endif
++
+ int CRYPTO_memcmp(const void *in_a, const void *in_b, size_t len)
+ 	{
+ 	size_t i;
+diff -ur openssl-1.0.1e-orig/crypto/cryptlib.h openssl-1.0.1e/crypto/cryptlib.h
+--- openssl-1.0.1e-orig/crypto/cryptlib.h	2013-02-11 10:26:04 -0500
++++ openssl-1.0.1e/crypto/cryptlib.h	2013-11-09 12:34:55 -0500
+@@ -103,6 +103,9 @@
+ void OPENSSL_showfatal(const char *fmta,...);
+ void *OPENSSL_stderr(void);
+ extern int OPENSSL_NONPIC_relocated;
++#ifdef _MSC_VER
++extern char* OPENSSL_relocate(const char* path);
++#endif
+ 
+ #ifdef  __cplusplus
+ }
+diff -ur openssl-1.0.1e-orig/crypto/dso/dso_win32.c openssl-1.0.1e/crypto/dso/dso_win32.c
+--- openssl-1.0.1e-orig/crypto/dso/dso_win32.c	2013-02-11 10:26:04 -0500
++++ openssl-1.0.1e/crypto/dso/dso_win32.c	2013-11-09 12:34:55 -0500
+@@ -638,7 +638,9 @@
+ 			(strstr(filename, ":") == NULL));
+ 	if(transform)
+ 		/* We will convert this to "%s.dll" */
+-		translated = OPENSSL_malloc(len + 5);
++		translated = OPENSSL_malloc(len + 5 +
++                                            strlen("@LIBRARY_PREFIX@") +
++                                            strlen("32@LIBRARY_SUFFIX@"));
+ 	else
+ 		/* We will simply duplicate filename */
+ 		translated = OPENSSL_malloc(len + 1);
+@@ -649,7 +651,7 @@
+ 		return(NULL);   
+ 		}
+ 	if(transform)
+-		sprintf(translated, "%s.dll", filename);
++		sprintf(translated, "%s%s%s.dll", "@LIBRARY_PREFIX@", filename, "32@LIBRARY_SUFFIX@");
+ 	else
+ 		sprintf(translated, "%s", filename);
+ 	return(translated);
+diff -ur openssl-1.0.1e-orig/crypto/engine/eng_list.c openssl-1.0.1e/crypto/engine/eng_list.c
+--- openssl-1.0.1e-orig/crypto/engine/eng_list.c	2013-02-11 10:26:04 -0500
++++ openssl-1.0.1e/crypto/engine/eng_list.c	2013-11-09 12:34:55 -0500
+@@ -401,8 +401,12 @@
+ #ifdef OPENSSL_SYS_VMS
+ 		if((load_dir = getenv("OPENSSL_ENGINES")) == 0) load_dir = "SSLROOT:[ENGINES]";
+ #else
++#ifdef _MSC_VER
++		if((load_dir = getenv("OPENSSL_ENGINES")) == 0) load_dir = OPENSSL_relocate(ENGINESDIR);
++#else
+ 		if((load_dir = getenv("OPENSSL_ENGINES")) == 0) load_dir = ENGINESDIR;
+ #endif
++#endif
+ 		iterator = ENGINE_by_id("dynamic");
+ 		if(!iterator || !ENGINE_ctrl_cmd_string(iterator, "ID", id, 0) ||
+ 				!ENGINE_ctrl_cmd_string(iterator, "DIR_LOAD", "2", 0) ||
+@@ -410,9 +414,15 @@
+ 					load_dir, 0) ||
+ 				!ENGINE_ctrl_cmd_string(iterator, "LOAD", NULL, 0))
+ 				goto notfound;
++#ifdef _MSC_VER
++                if (load_dir != NULL) OPENSSL_free(load_dir);
++#endif
+ 		return iterator;
+ 		}
+ notfound:
++#ifdef _MSC_VER
++        if (load_dir != NULL) OPENSSL_free(load_dir);
++#endif
+ 	ENGINE_free(iterator);
+ 	ENGINEerr(ENGINE_F_ENGINE_BY_ID,ENGINE_R_NO_SUCH_ENGINE);
+ 	ERR_add_error_data(2, "id=", id);
+diff -ur openssl-1.0.1e-orig/crypto/opensslconf.h.in openssl-1.0.1e/crypto/opensslconf.h.in
+--- openssl-1.0.1e-orig/crypto/opensslconf.h.in	2013-02-11 10:26:04 -0500
++++ openssl-1.0.1e/crypto/opensslconf.h.in	2013-11-09 12:34:55 -0500
+@@ -5,6 +5,7 @@
+ 
+ #if !(defined(VMS) || defined(__VMS)) /* VMS uses logical names instead */
+ #if defined(HEADER_CRYPTLIB_H) && !defined(OPENSSLDIR)
++#define OPENSSLROOT "/usr/local"
+ #define ENGINESDIR "/usr/local/lib/engines"
+ #define OPENSSLDIR "/usr/local/ssl"
+ #endif
+diff -ur openssl-1.0.1e-orig/crypto/x509/x509_def.c openssl-1.0.1e/crypto/x509/x509_def.c
+--- openssl-1.0.1e-orig/crypto/x509/x509_def.c	2013-02-11 10:02:48 -0500
++++ openssl-1.0.1e/crypto/x509/x509_def.c	2013-11-09 12:34:55 -0500
+@@ -61,21 +61,31 @@
+ #include <openssl/crypto.h>
+ #include <openssl/x509.h>
+ 
++#ifdef _MSC_VER
++#define X509_GET_DEFAULT_PATH(p) \
++static char* __internal__ = NULL; \
++if (__internal__ == NULL) \
++  __internal__ = OPENSSL_relocate(p); \
++return __internal__
++#else
++#define X509_GET_DEFAULT_PATH(p) return(p)
++#endif
++
+ const char *X509_get_default_private_dir(void)
+-	{ return(X509_PRIVATE_DIR); }
+-	
++	{ X509_GET_DEFAULT_PATH(X509_PRIVATE_DIR); }
++
+ const char *X509_get_default_cert_area(void)
+-	{ return(X509_CERT_AREA); }
++	{ X509_GET_DEFAULT_PATH(X509_CERT_AREA); }
+ 
+ const char *X509_get_default_cert_dir(void)
+-	{ return(X509_CERT_DIR); }
++	{ X509_GET_DEFAULT_PATH(X509_CERT_DIR); }
+ 
+ const char *X509_get_default_cert_file(void)
+-	{ return(X509_CERT_FILE); }
++	{ X509_GET_DEFAULT_PATH(X509_CERT_FILE); }
+ 
+ const char *X509_get_default_cert_dir_env(void)
+-	{ return(X509_CERT_DIR_EVP); }
++	{ X509_GET_DEFAULT_PATH(X509_CERT_DIR_EVP); }
+ 
+ const char *X509_get_default_cert_file_env(void)
+-	{ return(X509_CERT_FILE_EVP); }
++	{ X509_GET_DEFAULT_PATH(X509_CERT_FILE_EVP); }
+ 
+diff -ur openssl-1.0.1e-orig/engines/Makefile openssl-1.0.1e/engines/Makefile
+--- openssl-1.0.1e-orig/engines/Makefile	2013-02-11 10:26:04 -0500
++++ openssl-1.0.1e/engines/Makefile	2013-11-09 12:34:56 -0500
+@@ -116,7 +116,7 @@
+ 				*DSO_BEOS*)	sfx=".so";;	\
+ 				*DSO_DLFCN*)	sfx=`expr "$(SHLIB_EXT)" : '.*\(\.[a-z][a-z]*\)' \| ".so"`;;	\
+ 				*DSO_DL*)	sfx=".sl";;	\
+-				*DSO_WIN32*)	sfx="eay32.dll"; pfx=;;	\
++				*DSO_WIN32*)	sfx="32@LIBRARY_SUFFIX@.dll"; pfx="@LIBRARY_PREFIX@";;	\
+ 				*)		sfx=".bad";;	\
+ 				esac; \
+ 				cp $$pfx$$l$$sfx $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$$pfx$$l$$sfx.new; \
+diff -ur openssl-1.0.1e-orig/engines/ccgost/Makefile openssl-1.0.1e/engines/ccgost/Makefile
+--- openssl-1.0.1e-orig/engines/ccgost/Makefile	2013-11-09 12:34:06 -0500
++++ openssl-1.0.1e/engines/ccgost/Makefile	2013-11-09 12:34:56 -0500
+@@ -50,7 +50,7 @@
+ 			*DSO_BEOS*) sfx=".so";; \
+ 			*DSO_DLFCN*) sfx=`expr "$(SHLIB_EXT)" : '.*\(\.[a-z][a-z]*\)' \| ".so"`;; \
+ 			*DSO_DL*) sfx=".sl";; \
+-			*DSO_WIN32*) sfx="eay32.dll"; pfx=;; \
++			*DSO_WIN32*) sfx="32@LIBRARY_SUFFIX@.dll"; pfx="@LIBRARY_PREFIX@";; \
+ 			*) sfx=".bad";; \
+ 			esac; \
+ 			cp $${pfx}$(LIBNAME)$$sfx $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$${pfx}$(LIBNAME)$$sfx.new; \
+diff -ur openssl-1.0.1e-orig/ssl/Makefile openssl-1.0.1e/ssl/Makefile
+--- openssl-1.0.1e-orig/ssl/Makefile	2013-02-11 10:26:04 -0500
++++ openssl-1.0.1e/ssl/Makefile	2013-11-09 12:34:56 -0500
+@@ -19,7 +19,7 @@
+ APPS=
+ 
+ LIB=$(TOP)/libssl.a
+-SHARED_LIB= libssl$(SHLIB_EXT)
++SHARED_LIB= $(SHLIB_PRE)ssl$(SHLIB_EXT)
+ LIBSRC=	\
+ 	s2_meth.c   s2_srvr.c s2_clnt.c  s2_lib.c  s2_enc.c s2_pkt.c \
+ 	s3_meth.c   s3_srvr.c s3_clnt.c  s3_lib.c  s3_enc.c s3_pkt.c s3_both.c s3_cbc.c \
+diff -ur openssl-1.0.1e-orig/util/mkdef.pl openssl-1.0.1e/util/mkdef.pl
+--- openssl-1.0.1e-orig/util/mkdef.pl	2013-02-11 10:26:04 -0500
++++ openssl-1.0.1e/util/mkdef.pl	2013-11-09 12:34:56 -0500
+@@ -1306,7 +1306,7 @@
+ ; Definition file for the DLL version of the $name library from OpenSSL
+ ;
+ 
+-LIBRARY         $libname	$liboptions
++LIBRARY         @LIBRARY_PREFIX@$libname@LIBRARY_SUFFIX@	$liboptions
+ 
+ EOF
+ 

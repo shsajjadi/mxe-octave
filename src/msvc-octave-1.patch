@@ -1,0 +1,465 @@
+diff -ur octave-3.7.7-orig/configure.ac octave-3.7.7/configure.ac
+--- octave-3.7.7-orig/configure.ac	2013-09-23 13:50:11 -0400
++++ octave-3.7.7/configure.ac	2013-11-30 11:00:38 -0500
+@@ -757,7 +757,7 @@
+     dnl Use -isystem so we don't get warnings from llvm headers
+     LLVM_CPPFLAGS="$LLVM_INCLUDE_FLAG `$LLVM_CONFIG --includedir`"
+     LLVM_CXXFLAGS=
+-    LLVM_LDFLAGS="-L`$LLVM_CONFIG --libdir`"
++    LLVM_LDFLAGS="`$LLVM_CONFIG --ldflags`"
+ 
+ 
+     LDFLAGS="$LDFLAGS $LLVM_LDFLAGS"
+@@ -1228,7 +1228,7 @@
+ XTRA_CRUFT_SH_LDFLAGS=
+ if test $have_msvc = yes; then
+   FLIBS="$FLIBS -lkernel32"
+-  XTRA_CRUFT_SH_LDFLAGS="-Wl,-def:cruft/cruft.def"
++  XTRA_CRUFT_SH_LDFLAGS="-Wl,cruft/cruft.def"
+ fi
+ AC_SUBST(XTRA_CRUFT_SH_LDFLAGS)
+ 
+diff -ur octave-3.7.7-orig/libgui/qterminal-module.mk octave-3.7.7/libgui/qterminal-module.mk
+--- octave-3.7.7-orig/libgui/qterminal-module.mk	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/libgui/qterminal-module.mk	2013-11-30 11:00:38 -0500
+@@ -50,7 +50,7 @@
+ qterminal_libqterminal_la_MOC += \
+   qterminal/libqterminal/win32/moc-QWinTerminalImpl.cc
+ 
+-qterminal_libqterminal_la_CPPFLAGS += -DUNICODE
++qterminal_libqterminal_la_CPPFLAGS += -DUNICODE -Zc:wchar_t-
+ 
+ # This flag is required to let MOC know about Q_OS_WIN32.
+ MOC_CPPFLAGS += -DQ_OS_WIN32
+diff -ur octave-3.7.7-orig/libgui/src/module.mk octave-3.7.7/libgui/src/module.mk
+--- octave-3.7.7-orig/libgui/src/module.mk	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/libgui/src/module.mk	2013-11-30 11:00:38 -0500
+@@ -161,7 +161,7 @@
+ 
+ nodist_src_libgui_src_la_SOURCES = $(octave_gui_MOC) $(octave_gui_RC)
+ 
+-src_libgui_src_la_CPPFLAGS = \
++src_libgui_src_la_CPPFLAGS = -DQSCINTILLA_DLL \
+   $(AM_CPPFLAGS) \
+   @OCTGUI_DLL_DEFS@ \
+   @QT_CPPFLAGS@ \
+diff -ur octave-3.7.7-orig/libinterp/corefcn/gcd.cc octave-3.7.7/libinterp/corefcn/gcd.cc
+--- octave-3.7.7-orig/libinterp/corefcn/gcd.cc	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/libinterp/corefcn/gcd.cc	2013-11-30 11:00:38 -0500
+@@ -74,7 +74,7 @@
+ 
+ template <typename FP>
+ static std::complex<FP>
+-simple_gcd (const std::complex<FP>& a, const std::complex<FP>& b)
++simple_gcd_cplx (const std::complex<FP>& a, const std::complex<FP>& b)
+ {
+   if (! xisinteger (a.real ()) || ! xisinteger (a.imag ())
+       || ! xisinteger (b.real ()) || ! xisinteger (b.imag ()))
+@@ -100,7 +100,7 @@
+ 
+ template <class T>
+ static octave_int<T>
+-simple_gcd (const octave_int<T>& a, const octave_int<T>& b)
++simple_gcd_int (const octave_int<T>& a, const octave_int<T>& b)
+ {
+   T aa = a.abs ().value ();
+   T bb = b.abs ().value ();
+@@ -153,8 +153,8 @@
+ 
+ template <typename FP>
+ static std::complex<FP>
+-extended_gcd (const std::complex<FP>& a, const std::complex<FP>& b,
+-              std::complex<FP>& x, std::complex<FP>& y)
++extended_gcd_cplx (const std::complex<FP>& a, const std::complex<FP>& b,
++                   std::complex<FP>& x, std::complex<FP>& y)
+ {
+   if (! xisinteger (a.real ()) || ! xisinteger (a.imag ())
+       || ! xisinteger (b.real ()) || ! xisinteger (b.imag ()))
+@@ -199,8 +199,8 @@
+ 
+ template <class T>
+ static octave_int<T>
+-extended_gcd (const octave_int<T>& a, const octave_int<T>& b,
+-              octave_int<T>& x, octave_int<T>& y)
++extended_gcd_int (const octave_int<T>& a, const octave_int<T>& b,
++                  octave_int<T>& x, octave_int<T>& y)
+ {
+   T aa = a.abs ().value ();
+   T bb = b.abs ().value ();
+@@ -229,9 +229,9 @@
+   return aa;
+ }
+ 
+-template<class NDA>
++template<class NDA, class F>
+ static octave_value
+-do_simple_gcd (const octave_value& a, const octave_value& b)
++do_simple_gcd (const octave_value& a, const octave_value& b, F fcn)
+ {
+   typedef typename NDA::element_type T;
+   octave_value retval;
+@@ -241,13 +241,13 @@
+       // Optimize scalar case.
+       T aa = octave_value_extract<T> (a);
+       T bb = octave_value_extract<T> (b);
+-      retval = simple_gcd (aa, bb);
++      retval = fcn (aa, bb);
+     }
+   else
+     {
+       NDA aa = octave_value_extract<NDA> (a);
+       NDA bb = octave_value_extract<NDA> (b);
+-      retval = binmap<T> (aa, bb, simple_gcd, "gcd");
++      retval = binmap<T> (aa, bb, fcn, "gcd");
+     }
+ 
+   return retval;
+@@ -265,18 +265,18 @@
+     case btyp_double:
+       if (a.is_sparse_type () && b.is_sparse_type ())
+         {
+-          retval = do_simple_gcd<SparseMatrix> (a, b);
++          retval = do_simple_gcd<SparseMatrix> (a, b, simple_gcd);
+           break;
+         }
+       // fall through!
+ 
+     case btyp_float:
+-      retval = do_simple_gcd<NDArray> (a, b);
++      retval = do_simple_gcd<NDArray> (a, b, simple_gcd);
+       break;
+ 
+ #define MAKE_INT_BRANCH(X) \
+     case btyp_ ## X: \
+-      retval = do_simple_gcd<X ## NDArray> (a, b); \
++      retval = do_simple_gcd<X ## NDArray> (a, b, simple_gcd_int<X ## _t>); \
+       break
+ 
+     MAKE_INT_BRANCH (int8);
+@@ -291,11 +291,11 @@
+ #undef MAKE_INT_BRANCH
+ 
+     case btyp_complex:
+-      retval = do_simple_gcd<ComplexNDArray> (a, b);
++      retval = do_simple_gcd<ComplexNDArray> (a, b, simple_gcd_cplx<double>);
+       break;
+ 
+     case btyp_float_complex:
+-      retval = do_simple_gcd<FloatComplexNDArray> (a, b);
++      retval = do_simple_gcd<FloatComplexNDArray> (a, b, simple_gcd_cplx<float>);
+       break;
+ 
+     default:
+@@ -309,10 +309,10 @@
+   return retval;
+ }
+ 
+-template<class NDA>
++template<class NDA, class F>
+ static octave_value
+ do_extended_gcd (const octave_value& a, const octave_value& b,
+-                 octave_value& x, octave_value& y)
++                 octave_value& x, octave_value& y, F fcn)
+ {
+   typedef typename NDA::element_type T;
+   octave_value retval;
+@@ -323,7 +323,7 @@
+       T aa = octave_value_extract<T> (a);
+       T bb = octave_value_extract<T> (b);
+       T xx, yy;
+-      retval = extended_gcd (aa, bb, xx, yy);
++      retval = fcn (aa, bb, xx, yy);
+       x = xx;
+       y = yy;
+     }
+@@ -354,7 +354,7 @@
+         {
+           octave_quit ();
+ 
+-          *gptr++ = extended_gcd (*aptr, *bptr, *xptr++, *yptr++);
++          *gptr++ = fcn (*aptr, *bptr, *xptr++, *yptr++);
+ 
+           aptr += inca;
+           bptr += incb;
+@@ -382,12 +382,12 @@
+     {
+     case btyp_double:
+     case btyp_float:
+-      retval = do_extended_gcd<NDArray> (a, b, x, y);
++      retval = do_extended_gcd<NDArray> (a, b, x, y, extended_gcd);
+       break;
+ 
+ #define MAKE_INT_BRANCH(X) \
+     case btyp_ ## X: \
+-      retval = do_extended_gcd<X ## NDArray> (a, b, x, y); \
++      retval = do_extended_gcd<X ## NDArray> (a, b, x, y, extended_gcd_int<X ## _t>); \
+       break
+ 
+     MAKE_INT_BRANCH (int8);
+@@ -402,11 +402,11 @@
+ #undef MAKE_INT_BRANCH
+ 
+     case btyp_complex:
+-      retval = do_extended_gcd<ComplexNDArray> (a, b, x, y);
++      retval = do_extended_gcd<ComplexNDArray> (a, b, x, y, extended_gcd_cplx<double>);
+       break;
+ 
+     case btyp_float_complex:
+-      retval = do_extended_gcd<FloatComplexNDArray> (a, b, x, y);
++      retval = do_extended_gcd<FloatComplexNDArray> (a, b, x, y, extended_gcd_cplx<float>);
+       break;
+ 
+     default:
+diff -ur octave-3.7.7-orig/libinterp/corefcn/graphics.cc octave-3.7.7/libinterp/corefcn/graphics.cc
+--- octave-3.7.7-orig/libinterp/corefcn/graphics.cc	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/libinterp/corefcn/graphics.cc	2013-11-30 11:00:38 -0500
+@@ -10441,7 +10441,11 @@
+                     break;
+                 }
+ 
++#if defined (WIN32) && ! defined (__CYGWIN__)
++              Sleep (100);
++#else
+               octave_usleep (100000);
++#endif
+ 
+               OCTAVE_QUIT;
+ 
+diff -ur octave-3.7.7-orig/liboctave/array/CColVector.cc octave-3.7.7/liboctave/array/CColVector.cc
+--- octave-3.7.7-orig/liboctave/array/CColVector.cc	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/liboctave/array/CColVector.cc	2013-11-30 11:00:38 -0500
+@@ -236,13 +236,13 @@
+ ColumnVector
+ ComplexColumnVector::abs (void) const
+ {
+-  return do_mx_unary_map<double, Complex, std::abs> (*this);
++  return do_mx_unary_map_ref<double, Complex, std::abs> (*this);
+ }
+ 
+ ComplexColumnVector
+ conj (const ComplexColumnVector& a)
+ {
+-  return do_mx_unary_map<Complex, Complex, std::conj<double> > (a);
++  return do_mx_unary_map_ref<Complex, Complex, std::conj<double> > (a);
+ }
+ 
+ // resize is the destructive equivalent for this one
+diff -ur octave-3.7.7-orig/liboctave/array/CMatrix.cc octave-3.7.7/liboctave/array/CMatrix.cc
+--- octave-3.7.7-orig/liboctave/array/CMatrix.cc	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/liboctave/array/CMatrix.cc	2013-11-30 11:00:38 -0500
+@@ -921,7 +921,7 @@
+ ComplexMatrix
+ conj (const ComplexMatrix& a)
+ {
+-  return do_mx_unary_map<Complex, Complex, std::conj<double> > (a);
++  return do_mx_unary_map_ref<Complex, Complex, std::conj<double> > (a);
+ }
+ 
+ // resize is the destructive equivalent for this one
+@@ -3219,7 +3219,7 @@
+ 
+ Matrix ComplexMatrix::abs (void) const
+ {
+-  return do_mx_unary_map<double, Complex, std::abs> (*this);
++  return do_mx_unary_map_ref<double, Complex, std::abs> (*this);
+ }
+ 
+ ComplexMatrix
+diff -ur octave-3.7.7-orig/liboctave/array/CNDArray.cc octave-3.7.7/liboctave/array/CNDArray.cc
+--- octave-3.7.7-orig/liboctave/array/CNDArray.cc	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/liboctave/array/CNDArray.cc	2013-11-30 11:00:38 -0500
+@@ -720,31 +720,31 @@
+ NDArray
+ ComplexNDArray::abs (void) const
+ {
+-  return do_mx_unary_map<double, Complex, std::abs> (*this);
++  return do_mx_unary_map_ref<double, Complex, std::abs> (*this);
+ }
+ 
+ boolNDArray
+ ComplexNDArray::isnan (void) const
+ {
+-  return do_mx_unary_map<bool, Complex, xisnan> (*this);
++  return do_mx_unary_map_ref<bool, Complex, xisnan> (*this);
+ }
+ 
+ boolNDArray
+ ComplexNDArray::isinf (void) const
+ {
+-  return do_mx_unary_map<bool, Complex, xisinf> (*this);
++  return do_mx_unary_map_ref<bool, Complex, xisinf> (*this);
+ }
+ 
+ boolNDArray
+ ComplexNDArray::isfinite (void) const
+ {
+-  return do_mx_unary_map<bool, Complex, xfinite> (*this);
++  return do_mx_unary_map_ref<bool, Complex, xfinite> (*this);
+ }
+ 
+ ComplexNDArray
+ conj (const ComplexNDArray& a)
+ {
+-  return do_mx_unary_map<Complex, Complex, std::conj<double> > (a);
++  return do_mx_unary_map_ref<Complex, Complex, std::conj<double> > (a);
+ }
+ 
+ ComplexNDArray&
+diff -ur octave-3.7.7-orig/liboctave/array/CRowVector.cc octave-3.7.7/liboctave/array/CRowVector.cc
+--- octave-3.7.7-orig/liboctave/array/CRowVector.cc	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/liboctave/array/CRowVector.cc	2013-11-30 11:00:38 -0500
+@@ -234,7 +234,7 @@
+ ComplexRowVector
+ conj (const ComplexRowVector& a)
+ {
+-  return do_mx_unary_map<Complex, Complex, std::conj<double> > (a);
++  return do_mx_unary_map_ref<Complex, Complex, std::conj<double> > (a);
+ }
+ 
+ // resize is the destructive equivalent for this one
+diff -ur octave-3.7.7-orig/liboctave/array/fCColVector.cc octave-3.7.7/liboctave/array/fCColVector.cc
+--- octave-3.7.7-orig/liboctave/array/fCColVector.cc	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/liboctave/array/fCColVector.cc	2013-11-30 11:00:38 -0500
+@@ -236,13 +236,13 @@
+ FloatColumnVector
+ FloatComplexColumnVector::abs (void) const
+ {
+-  return do_mx_unary_map<float, FloatComplex, std::abs> (*this);
++  return do_mx_unary_map_ref<float, FloatComplex, std::abs> (*this);
+ }
+ 
+ FloatComplexColumnVector
+ conj (const FloatComplexColumnVector& a)
+ {
+-  return do_mx_unary_map<FloatComplex, FloatComplex, std::conj<float> > (a);
++  return do_mx_unary_map_ref<FloatComplex, FloatComplex, std::conj<float> > (a);
+ }
+ 
+ // resize is the destructive equivalent for this one
+diff -ur octave-3.7.7-orig/liboctave/array/fCMatrix.cc octave-3.7.7/liboctave/array/fCMatrix.cc
+--- octave-3.7.7-orig/liboctave/array/fCMatrix.cc	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/liboctave/array/fCMatrix.cc	2013-11-30 11:00:38 -0500
+@@ -923,7 +923,7 @@
+ FloatComplexMatrix
+ conj (const FloatComplexMatrix& a)
+ {
+-  return do_mx_unary_map<FloatComplex, FloatComplex, std::conj<float> > (a);
++  return do_mx_unary_map_ref<FloatComplex, FloatComplex, std::conj<float> > (a);
+ }
+ 
+ // resize is the destructive equivalent for this one
+@@ -3215,7 +3215,7 @@
+ 
+ FloatMatrix FloatComplexMatrix::abs (void) const
+ {
+-  return do_mx_unary_map<float, FloatComplex, std::abs> (*this);
++  return do_mx_unary_map_ref<float, FloatComplex, std::abs> (*this);
+ }
+ 
+ FloatComplexMatrix
+diff -ur octave-3.7.7-orig/liboctave/array/fCNDArray.cc octave-3.7.7/liboctave/array/fCNDArray.cc
+--- octave-3.7.7-orig/liboctave/array/fCNDArray.cc	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/liboctave/array/fCNDArray.cc	2013-11-30 11:00:38 -0500
+@@ -717,31 +717,31 @@
+ FloatNDArray
+ FloatComplexNDArray::abs (void) const
+ {
+-  return do_mx_unary_map<float, FloatComplex, std::abs> (*this);
++  return do_mx_unary_map_ref<float, FloatComplex, std::abs> (*this);
+ }
+ 
+ boolNDArray
+ FloatComplexNDArray::isnan (void) const
+ {
+-  return do_mx_unary_map<bool, FloatComplex, xisnan> (*this);
++  return do_mx_unary_map_ref<bool, FloatComplex, xisnan> (*this);
+ }
+ 
+ boolNDArray
+ FloatComplexNDArray::isinf (void) const
+ {
+-  return do_mx_unary_map<bool, FloatComplex, xisinf> (*this);
++  return do_mx_unary_map_ref<bool, FloatComplex, xisinf> (*this);
+ }
+ 
+ boolNDArray
+ FloatComplexNDArray::isfinite (void) const
+ {
+-  return do_mx_unary_map<bool, FloatComplex, xfinite> (*this);
++  return do_mx_unary_map_ref<bool, FloatComplex, xfinite> (*this);
+ }
+ 
+ FloatComplexNDArray
+ conj (const FloatComplexNDArray& a)
+ {
+-  return do_mx_unary_map<FloatComplex, FloatComplex, std::conj<float> > (a);
++  return do_mx_unary_map_ref<FloatComplex, FloatComplex, std::conj<float> > (a);
+ }
+ 
+ FloatComplexNDArray&
+diff -ur octave-3.7.7-orig/liboctave/array/fCRowVector.cc octave-3.7.7/liboctave/array/fCRowVector.cc
+--- octave-3.7.7-orig/liboctave/array/fCRowVector.cc	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/liboctave/array/fCRowVector.cc	2013-11-30 11:00:38 -0500
+@@ -234,7 +234,7 @@
+ FloatComplexRowVector
+ conj (const FloatComplexRowVector& a)
+ {
+-  return do_mx_unary_map<FloatComplex, FloatComplex, std::conj<float> > (a);
++  return do_mx_unary_map_ref<FloatComplex, FloatComplex, std::conj<float> > (a);
+ }
+ 
+ // resize is the destructive equivalent for this one
+diff -ur octave-3.7.7-orig/liboctave/numeric/dbleQR.cc octave-3.7.7/liboctave/numeric/dbleQR.cc
+--- octave-3.7.7-orig/liboctave/numeric/dbleQR.cc	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/liboctave/numeric/dbleQR.cc	2013-11-30 11:00:38 -0500
+@@ -95,7 +95,9 @@
+ #endif
+ }
+ 
+-const QR::type QR::raw, QR::std, QR::economy;
++const QR::type QR::raw = qr_type_raw;
++const QR::type QR::std = qr_type_std;
++const QR::type QR::economy = qr_type_economy;
+ 
+ QR::QR (const Matrix& a, qr_type_t qr_type)
+ {
+diff -ur octave-3.7.7-orig/liboctave/numeric/dbleQR.h octave-3.7.7/liboctave/numeric/dbleQR.h
+--- octave-3.7.7-orig/liboctave/numeric/dbleQR.h	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/liboctave/numeric/dbleQR.h	2013-11-30 11:00:38 -0500
+@@ -40,9 +40,9 @@
+   // Import them here to allow the QR:: prefix.
+   typedef qr_type_t type;
+ 
+-  static const type std = qr_type_std;
+-  static const type raw = qr_type_raw;
+-  static const type economy = qr_type_economy;
++  static const type std;
++  static const type raw;
++  static const type economy;
+ 
+   QR (void) : base_qr<Matrix> () { }
+ 
+diff -ur octave-3.7.7-orig/liboctave/operators/mx-inlines.cc octave-3.7.7/liboctave/operators/mx-inlines.cc
+--- octave-3.7.7-orig/liboctave/operators/mx-inlines.cc	2013-09-23 13:49:55 -0400
++++ octave-3.7.7/liboctave/operators/mx-inlines.cc	2013-11-30 11:00:38 -0500
+@@ -316,7 +316,7 @@
+ { for (size_t i = 0; i < n; i++) r[i] = fun (x[i]); }
+ 
+ template <class R, class X, R fun (const X& x)>
+-inline void mx_inline_map (size_t n, R *r, const X *x) throw ()
++inline void mx_inline_map_ref (size_t n, R *r, const X *x) throw ()
+ { for (size_t i = 0; i < n; i++) r[i] = fun (x[i]); }
+ 
+ // Appliers. Since these call the operation just once, we pass it as
+@@ -343,9 +343,9 @@
+ 
+ template <class R, class X, R fun (const X&)>
+ inline Array<R>
+-do_mx_unary_map (const Array<X>& x)
++do_mx_unary_map_ref (const Array<X>& x)
+ {
+-  return do_mx_unary_op<R, X> (x, mx_inline_map<R, X, fun>);
++  return do_mx_unary_op<R, X> (x, mx_inline_map_ref<R, X, fun>);
+ }
+ 
+ template <class R>

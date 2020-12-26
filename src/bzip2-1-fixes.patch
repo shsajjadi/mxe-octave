@@ -1,0 +1,39 @@
+diff -ur bzip2-1.0.8.orig/bzlib.h bzip2-1.0.8/bzlib.h
+--- bzip2-1.0.8.orig/bzlib.h	2020-01-06 13:24:42.229947041 -0500
++++ bzip2-1.0.8/bzlib.h	2020-01-06 13:27:27.946095881 -0500
+@@ -75,7 +75,7 @@
+ #include <stdio.h>
+ #endif
+ 
+-#ifdef _WIN32
++#if 0
+ #   include <windows.h>
+ #   ifdef small
+       /* windows.h define small to char */
+@@ -116,7 +116,7 @@
+ BZ_EXTERN int BZ_API(BZ2_bzDecompressInit) ( 
+       bz_stream *strm, 
+       int       verbosity, 
+-      int       small
++      int       small_
+    );
+ 
+ BZ_EXTERN int BZ_API(BZ2_bzDecompress) ( 
+@@ -140,7 +140,7 @@
+       int*  bzerror,   
+       FILE* f, 
+       int   verbosity, 
+-      int   small,
++      int   small_,
+       void* unused,    
+       int   nUnused 
+    );
+@@ -216,7 +216,7 @@
+       unsigned int* destLen,
+       char*         source, 
+       unsigned int  sourceLen,
+-      int           small, 
++      int           small_, 
+       int           verbosity 
+    );
+ 

@@ -1,0 +1,22 @@
+diff -ur itstool-1.2.0-orig/itstool.in itstool-1.2.0/itstool.in
+--- itstool-1.2.0-orig/itstool.in	2012-05-16 11:19:34 -0400
++++ itstool-1.2.0/itstool.in	2013-07-25 19:25:40 -0400
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python -s
++#!python -s
+ #
+ # Copyright (c) 2010-2011 Shaun McCance <shaunm@gnome.org>
+ #
+@@ -559,9 +559,9 @@
+         ddir = os.getenv('XDG_DATA_DIRS', '')
+         if ddir == '':
+             if DATADIR not in ('/usr/local/share', '/usr/share'):
+-                ddir += DATADIR + ':'
+-            ddir += '/usr/local/share:/usr/share'
+-        dirs.extend(ddir.split(':'))
++                ddir += DATADIR + os.pathsep
++            ddir += '/usr/local/share' + os.pathsep + '/usr/share'
++        dirs.extend(ddir.split(os.pathsep))
+         ddone = {}
+         for ddir in dirs:
+             itsdir = os.path.join(ddir, 'itstool', 'its')

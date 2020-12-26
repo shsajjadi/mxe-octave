@@ -1,0 +1,232 @@
+diff -ur gnuplot-5.2.2.orig/config/mingw/Makefile gnuplot-5.2.2/config/mingw/Makefile
+--- gnuplot-5.2.2.orig/config/mingw/Makefile	2018-03-25 07:03:19.453562126 -0400
++++ gnuplot-5.2.2/config/mingw/Makefile	2018-03-25 07:24:23.502361443 -0400
+@@ -107,23 +107,24 @@
+ # Uncomment the following lines to compile it.
+ #WXT=1
+ #CAIROLIBS=1
++WX_CONFIG ?= wx-config
+ 
+ # Build qt terminal?
+ #QT=1
+ # specify QT installation directory
+ #QT_DIR = /c/Qt/5.2.1/mingw48_32
+ ifndef MINGW64
+-QT_DIR = /d/Source/Qt-5.2.1-mingw/5.2.1/mingw48_32
++QT_DIR ?= /d/Source/Qt-5.2.1-mingw/5.2.1/mingw48_32
+ else
+ ifdef M32
+-QT_DIR = /mingw32
++QT_DIR ?= /mingw32
+ else
+-QT_DIR = /mingw64
++QT_DIR ?= /mingw64
+ endif
+ endif
+ 
+ # Uncomment the following line to select the lua/tikz terminal
+-#LUA=lua
++LUA=lua
+ 
+ # Uncomment the following line to select the caca terminal
+ # Requires libcaca version 0.99.beta15 or newer. A post-beta18
+@@ -136,7 +137,7 @@
+ 
+ # Uncomment if you have libcerf
+ # http://sourceforge.net/projects/libcerf/
+-CERF=1
++#CERF=1
+ 
+ # Uncomment if console mode gnuplot should use GNU readline
+ # (not recommended)
+@@ -165,10 +166,10 @@
+ 
+ # Destination directory, used in 'make install':
+ #DESTDIR = /local/opt/gnuplot-4.5
+-DESTDIR = "$(PROGRAMFILES)/gnuplot"
++DESTDIR ?= "$(PROGRAMFILES)/gnuplot"
+ 
+ # Do you want some special optimization / flags?
+-#CFLAGS +=
++CFLAGS += -DDISABLE_SPACE_RAISES_CONSOLE
+ CWFLAGS += -Wno-unused-function
+ ifdef CLANG
+ CFLAGS += -fcolor-diagnostics -fansi-escape-codes
+@@ -186,8 +187,8 @@
+ # http://go.microsoft.com/fwlink/?LinkId=154968
+ # We need to explicitly set the correct path here since we also need
+ # adjust the include and library paths.
+-HHWPATH = $(PROGRAMFILES32)/HTML\ Help\ Workshop/
+-HHC = $(HHWPATH)hhc
++#HHWPATH = $(PROGRAMFILES32)/HTML\ Help\ Workshop/
++#HHC = $(HHWPATH)hhc
+ 
+ # Choose which resource compiler you want to use (GNU windres or MS rc):
+ GNU_RC = 1
+@@ -203,7 +204,7 @@
+ # get it from: http://www.jrsoftware.org/isdl.php
+ # Use unicode version of Inno Setup Compiler but not Standard version
+ # because the setup file of gnuplot installer is now encoded utf-8 with BOM.
+-ISCC = $(PROGRAMFILES32)/Inno\ Setup\ 5/iscc
++#ISCC = $(PROGRAMFILES32)/Inno\ Setup\ 5/iscc
+ 
+ # Directory that might contain extra files to be shipped with the installer.
+ # This should include dependencies like DLLs, but also fontconfig configuration files.
+@@ -453,9 +454,9 @@
+ 
+ ifdef WXT
+ 	CFLAGS += -DWXWIDGETS
+-	WXT_CXXFLAGS := $(shell wx-config --cxxflags)
++	WXT_CXXFLAGS := $(shell $(WX_CONFIG) --cxxflags)
+ 	CXXFLAGS += $(WXT_CXXFLAGS)
+-	WX_LIBS := $(shell wx-config --libs | sed -e "s+-Wl,--subsystem,windows++g" -e "s+-mwindows++g")
++	WX_LIBS := $(shell $(WX_CONFIG) --libs | sed -e "s+-Wl,--subsystem,windows++g" -e "s+-mwindows++g")
+ 	WX_OBJS = wxt_gui.$(O)
+ endif
+ 
+@@ -479,10 +480,12 @@
+ 		moc_QtGnuplotWidget.o moc_QtGnuplotScene.o \
+ 		moc_QtGnuplotEvent.o qrc_QtGnuplotResource.o
+ #
+-	MOC = $(QT_DIR)/bin/moc
+-	UIC = $(QT_DIR)/bin/uic
+-	RCC = $(QT_DIR)/bin/rcc
+-	LRELEASE = $(QT_DIR)/bin/lrelease
++	QT_BIN_DIR ?= $(QT_DIR)/bin
++	MOC ?= $(QT_BIN_DIR)/moc
++	UIC ?= $(QT_BIN_DIR)/uic
++	RCC ?= $(QT_BIN_DIR)/rcc
++	LRELEASE ?= $(QT_BIN_DIR)/lrelease
++ 
+ 	QT_FILES_TARGETS  = qrc_QtGnuplotResource.cpp ui_QtGnuplotSettings.h moc_QtGnuplotWindow.cpp moc_QtGnuplotApplication.cpp 
+ 	QT_FILES_TARGETS += moc_QtGnuplotWidget.cpp moc_QtGnuplotScene.cpp moc_QtGnuplotEvent.cpp
+ 	QT_TRANSLATION = qtgnuplot_fr.qm qtgnuplot_ja.qm
+@@ -556,7 +559,7 @@
+ FULLVERSION := $(MAINVERSION) patchlevel $(PATCHLEVEL)
+ 
+ 
+-default: $(TARGET) $(MENUFILE) support
++default: $(TARGET) $(MENUFILE) #support
+ 
+ console: 
+ 	$(MAKE) TARGET=gnuplot.exe default
+@@ -598,8 +601,8 @@
+ 	$(CC) -c $(CFLAGS) $(CFLAGSEXTRA) -MMD -MT '$*.$$(O)' -MF $*.d -o $@ $<
+ 
+ LDLIBS = -lkernel32 -lgdi32 -lwinspool -lcomdlg32 -lcomctl32 -ladvapi32 -lshell32 -lmsimg32 -lgdiplus -lshlwapi -ld2d1 -ldwrite -lole32
+-LDLIBS += -lhtmlhelp
+-LDFLAGS2 += -L$(HHWPATH)lib
++#LDLIBS += -lhtmlhelp
++#LDFLAGS2 += -L$(HHWPATH)lib
+ ifdef MINGW64
+ LDFLAGS2 += -L.
+ endif
+@@ -609,7 +612,7 @@ $(TARGET): $(VERSIONING) $(OBJS) $(WINOBJS) wgplt_res.$(O) Makefile htmlhelp.lib
+ else
+ $(TARGET): $(VERSIONING) $(OBJS) $(WINOBJS) wgplt_res.$(O) Makefile
+ endif
+-	$(LDX) $(LDFLAGS) $(LDFLAGS2) -o $@ $(OBJS) $(WINOBJS) wgplt_res.$(O) $(LDLIBS)\
++	$(LDX) $(LDFLAGS) $(LDFLAGS2) -o $@ $(OBJS) $(WINOBJS) wgplt_res.$(O) $(LDLIBS) \
+ 	$(TERMLIBS) $(WX_LIBS) $(PANGOCAIRO_LIBS)
+ 
+ pgnuplot.exe: $(W)/pgnuplot.c version.$(O)
+
+diff -ur gnuplot-5.2.2.orig/src/command.c gnuplot-5.2.2/src/command.c
+--- gnuplot-5.2.2.orig/src/command.c	2018-03-25 07:03:19.367562832 -0400
++++ gnuplot-5.2.2/src/command.c	2018-03-25 07:11:31.376521306 -0400
+@@ -121,7 +121,7 @@
+ # include "help.h"
+ #endif /* _Windows */
+ 
+-#ifdef _Windows
++#ifdef IGNORE_Windows
+ # include <windows.h>
+ # ifdef __MSC__
+ #  include <malloc.h>
+@@ -2861,6 +2861,7 @@
+ void
+ help_command()
+ {
++#ifndef __MINGW32__
+     HWND parent;
+ 
+     c_token++;
+@@ -2904,6 +2905,7 @@
+ 	link.fIndexOnFail = TRUE;
+ 	HtmlHelp(parent, winhelpname, HH_KEYWORD_LOOKUP, (DWORD_PTR)&link);
+     }
++#endif
+ }
+ #else  /* !_Windows */
+ #ifndef VMS
+diff -ur gnuplot-5.2.2.orig/src/syscfg.h gnuplot-5.2.2/src/syscfg.h
+--- gnuplot-5.2.2.orig/src/syscfg.h	2018-03-25 07:03:19.380562726 -0400
++++ gnuplot-5.2.2/src/syscfg.h	2018-03-25 07:13:12.163693406 -0400
+@@ -362,7 +362,11 @@
+ #endif
+ 
+ #ifndef GP_MATHERR
+-# define GP_MATHERR matherr
++# if __MINGW32__
++#  define GP_MATHERR _matherr
++#else
++#  define GP_MATHERR matherr
++# endif
+ #endif
+ 
+ #ifdef HAVE_STRUCT_EXCEPTION_IN_MATH_H
+diff -ur gnuplot-5.2.8.orig/config/mingw/Makefile gnuplot-5.2.8/config/mingw/Makefile
+--- gnuplot-5.2.8.orig/config/mingw/Makefile	2020-05-28 19:30:10.109744146 -0400
++++ gnuplot-5.2.8/config/mingw/Makefile	2020-05-28 19:33:01.256347682 -0400
+@@ -44,6 +44,8 @@
+ #CCPATH = g:/mingw32/bin/
+ #CCPATH = c:/apps/mingw/bin/
+ 
++PKG_CONFIG ?= pkg-config
++
+ # Path to 32bit programms
+ # On 32bit machines:
+ #PROGRAMFILES32="$(PROGRAMFILES)"
+@@ -388,7 +390,7 @@
+ ifdef NEWGD
+   CFLAGS += -DHAVE_LIBGD -DHAVE_GD_H -DHAVE_GD_GIF -DGIF_ANIMATION -DHAVE_GD_PNG
+ ifdef GDPKGCONFIG
+-  CFLAGS += $(shell pkg-config --cflags gdlib)
++  CFLAGS += $(shell $(PKG_CONFIG) --cflags gdlib)
+ endif
+ ifdef JPEG
+   CFLAGS += -DHAVE_GD_JPEG
+@@ -414,7 +416,7 @@
+   TERMLIBS += $(shell gdlib-config --libs)
+ endif
+ ifdef GDPKGCONFIG
+-  TERMLIBS += $(shell pkg-config --libs gdlib)
++  TERMLIBS += $(shell $(PKG_CONFIG) --libs gdlib)
+ endif
+ endif
+ 
+@@ -440,9 +442,9 @@
+ endif
+ 
+ ifdef CAIROLIBS
+-	CAIRO_CFLAGS := $(shell pkg-config --cflags cairo | sed s_-Ic:_-I/c_g)
+-	PANGOCAIRO_CFLAGS := $(shell pkg-config --cflags glib-2.0 gobject-2.0 pangocairo cairo | sed s_-Ic:_-I/c_g)
+-	PANGOCAIRO_LIBS := $(shell pkg-config --libs glib-2.0 gobject-2.0 pangocairo cairo | sed s_-Lc:_-L/c_g)
++	CAIRO_CFLAGS := $(shell $(PKG_CONFIG) --cflags cairo | sed s_-Ic:_-I/c_g)
++	PANGOCAIRO_CFLAGS := $(shell $(PKG_CONFIG) --cflags glib-2.0 gobject-2.0 pangocairo cairo | sed s_-Ic:_-I/c_g)
++	PANGOCAIRO_LIBS := $(shell $(PKG_CONFIG) --libs glib-2.0 gobject-2.0 pangocairo cairo | sed s_-Lc:_-L/c_g)
+ 	CAIRO_OBJS := gp_cairo.$(O) gp_cairo_helpers.$(O)
+ 	TERMFLAGS += $(PANGOCAIRO_CFLAGS)
+ endif
+diff -ur gnuplot-5.2.8.orig/config/mingw/Makefile gnuplot-5.2.8/config/mingw/Makefile
+--- gnuplot-5.2.8.orig/config/mingw/Makefile	2020-05-28 19:43:45.027724850 -0400
++++ gnuplot-5.2.8/config/mingw/Makefile	2020-05-28 19:46:47.102198835 -0400
+@@ -444,7 +444,7 @@
+ ifdef CAIROLIBS
+ 	CAIRO_CFLAGS := $(shell $(PKG_CONFIG) --cflags cairo | sed s_-Ic:_-I/c_g)
+ 	PANGOCAIRO_CFLAGS := $(shell $(PKG_CONFIG) --cflags glib-2.0 gobject-2.0 pangocairo cairo | sed s_-Ic:_-I/c_g)
+-	PANGOCAIRO_LIBS := $(shell $(PKG_CONFIG) --libs glib-2.0 gobject-2.0 pangocairo cairo | sed s_-Lc:_-L/c_g)
++	PANGOCAIRO_LIBS := $(shell $(PKG_CONFIG) --libs glib-2.0 gobject-2.0 pangocairo cairo pangowin32 --static | sed s_-Lc:_-L/c_g)
+ 	CAIRO_OBJS := gp_cairo.$(O) gp_cairo_helpers.$(O)
+ 	TERMFLAGS += $(PANGOCAIRO_CFLAGS)
+ endif

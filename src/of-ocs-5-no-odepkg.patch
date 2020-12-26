@@ -1,0 +1,12 @@
+diff --git a/DESCRIPTION b/DESCRIPTION
+index 4b6f0f7..0c710dd 100644
+--- a/DESCRIPTION
++++ b/DESCRIPTION
+@@ -5,6 +5,6 @@ Author: Carlo de Falco, Culpo Massimiliano, Marco Merlin
+ Maintainer: Carlo de Falco, Culpo Massimiliano
+ Title: Octave Circuit Simulator
+ Description: Package for solving DC and transient electrical circuit equations 
+-Depends: octave (>= 3.0.0), odepkg
++Depends: octave (>= 4.4.0)
+ Autoload: no
+ License: GPLv2+

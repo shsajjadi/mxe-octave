@@ -1,0 +1,38 @@
+diff -ur harfbuzz-0.9.19-orig/src/Makefile.in harfbuzz-0.9.19/src/Makefile.in
+--- harfbuzz-0.9.19-orig/src/Makefile.in	2013-07-16 16:04:27 -0400
++++ harfbuzz-0.9.19/src/Makefile.in	2013-07-22 21:31:44 -0400
+@@ -1749,9 +1749,9 @@
+ %.pc: %.pc.in $(top_builddir)/config.status
+ 	$(AM_V_GEN) \
+ 	$(SED)	-e 's@%prefix%@$(prefix)@g' \
+-		-e 's@%exec_prefix%@$(exec_prefix)@g' \
+-		-e 's@%libdir%@$(libdir)@g' \
+-		-e 's@%includedir%@$(includedir)@g' \
++		-e 's@%exec_prefix%@$${prefix}@g' \
++		-e 's@%libdir%@$${exec_prefix}/lib@g' \
++		-e 's@%includedir%@$${prefix}/include@g' \
+ 		-e 's@%VERSION%@$(VERSION)@g' \
+ 	"$<" \
+ 	> "$@.tmp" && mv "$@.tmp" "$@" || ( $(RM) "$@.tmp"; false )
+@@ -1761,7 +1761,6 @@
+ 	$(EGREP) '^hb_.* \(' | \
+ 	sed -e 's/ (.*//' | \
+ 	LANG=C sort; \
+-	echo LIBRARY libharfbuzz-$(HB_VERSION_MAJOR).dll; \
+ 	) >"$@.tmp"
+ 	@ ! grep -q hb_ERROR "$@.tmp" && mv "$@.tmp" "$@" || ($(RM) "$@"; false)
+ 
+diff -ur harfbuzz-0.9.19-orig/util/helper-cairo.cc harfbuzz-0.9.19/util/helper-cairo.cc
+--- harfbuzz-0.9.19-orig/util/helper-cairo.cc	2013-04-04 21:15:59 -0400
++++ harfbuzz-0.9.19/util/helper-cairo.cc	2013-07-22 21:30:28 -0400
+@@ -60,6 +60,10 @@
+ #  endif
+ #endif
+ 
++#if defined (_MSC_VER) && ! defined (strcasecmp)
++#  define strcasecmp stricmp
++#endif
++
+ cairo_scaled_font_t *
+ helper_cairo_create_scaled_font (const font_options_t *font_opts,
+ 				 double font_size)

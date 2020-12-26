@@ -1,0 +1,23 @@
+diff -ur nsis-3.03-src.orig/SCons/Config/gnu nsis-3.03-src/SCons/Config/gnu
+--- nsis-3.03-src.orig/SCons/Config/gnu	2018-03-03 19:38:08.620291177 -0500
++++ nsis-3.03-src/SCons/Config/gnu	2018-03-03 19:38:20.109576191 -0500
+@@ -45,11 +45,6 @@
+ defenv['MSVCRT_FLAG'] = ''
+ defenv['STDCALL'] = '"__attribute__((__stdcall__))"'
+ 
+-# Don't allow mingw to link with LIBGCC*.DLL and LIBSTDC++-*.DLL 
+-if defenv['PLATFORM'] == 'win32':
+-	defenv.Append(LINKFLAGS = ['-static-libgcc'])
+-	defenv.Append(LINKFLAGS = ['-static-libstdc++'])
+-
+ ### defines
+ 
+ defenv.Append(CPPDEFINES = [('NSISCALL', '$STDCALL')])
+@@ -141,7 +136,6 @@
+ plugin_env.Append(LINKFLAGS = ['$ALIGN_FLAG'])      # 512 bytes align
+ plugin_env.Append(LINKFLAGS = ['$MAP_FLAG'])        # generate map file
+ plugin_env.Append(LINKFLAGS = ['-static-libgcc'])   # remove libgcc*.dll dependency
+-plugin_env.Append(LINKFLAGS = ['-static-libstdc++']) # remove libstdc++*.dll dependency
+ 
+ plugin_uenv = plugin_env.Clone()
+ plugin_uenv.Append(CPPDEFINES = ['_UNICODE', 'UNICODE'])
