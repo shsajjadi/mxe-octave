@@ -3,8 +3,8 @@
 
 PKG             := libproxy
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.4.16
-$(PKG)_CHECKSUM := a8b40df6803b8b066e9d6c06583440feca7b61ea
+$(PKG)_VERSION  := 0.4.17
+$(PKG)_CHECKSUM := cded2be341aa15bb1dc4ba574c0687e2ba8d59b2
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz
 $(PKG)_URL      := https://github.com/libproxy/libproxy/archive/$($(PKG)_VERSION).tar.gz
