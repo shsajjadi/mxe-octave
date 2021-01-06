@@ -552,6 +552,7 @@ SRC_FILES_1 := \
   opencv-1-fixes.patch \
   opencv.mk \
   openexr.mk \
+  openjpeg.mk \
   openscenegraph-1-fixes.patch \
   openscenegraph.mk \
   openssl-1-fixes.patch \
