@@ -557,6 +557,7 @@ SRC_FILES_1 := \
   openscenegraph.mk \
   openssl-1-fixes.patch \
   openssl.mk \
+  opus.mk \
   pango-1-fixes.patch \
   pango.mk \
   pangomm.mk \
