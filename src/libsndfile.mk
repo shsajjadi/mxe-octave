@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 494b427f814858d1e4092c1767ab5652080fcffe
 $(PKG)_SUBDIR   := libsndfile-$($(PKG)_VERSION)
 $(PKG)_FILE     := libsndfile-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://github.com/$(PKG)/$(PKG)/archive/v$($(PKG)_VERSION).tar.gz
-$(PKG)_DEPS     := sqlite flac ogg vorbis
+$(PKG)_DEPS     := sqlite flac ogg opus vorbis
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://github.com/libsndfile/libsndfile/tags' | \
@@ -23,7 +23,7 @@ define $(PKG)_BUILD
         -DBUILD_PROGRAMS=no \
         -DBUILD_EXAMPLES=no \
         -DINSTALL_MANPAGES=no \
-        -DENABLE_EXTERNAL_LIBS=no \
+        -DENABLE_EXTERNAL_LIBS=yes \
         $(CMAKE_CCACHE_FLAGS) \
         $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
