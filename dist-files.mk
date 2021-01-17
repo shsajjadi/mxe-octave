@@ -309,6 +309,7 @@ SRC_FILES_1 := \
   libsndfile.mk \
   libssh2-test.c \
   libssh2.mk \
+  libsodium.mk \
   libtasn1.mk \
   libtool.mk \
   libunistring.mk \
