@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := d78bc504194d6908df40a2b9e41849b181b02491
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://github.com/$(PKG)/libzmq/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := pthreads
+$(PKG)_DEPS     := pthreads libsodium
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://github.com/zeromq/libzmq/tags' | \
@@ -21,7 +21,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         --disable-perf \
-        --without-libsodium \
+        --with-libsodium \
         $(ENABLE_SHARED_OR_STATIC) 
 
     $(MAKE) -C '$(1)' -j '$(JOBS)'
