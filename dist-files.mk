@@ -353,6 +353,7 @@ SRC_FILES_1 := \
   mingw-utils-1-portability-fix.patch \
   mingw-w64-1-float-h.patch \
   mingw-w64.mk \
+  mingw-zeromq-1-fixes.patch \
   mingwrt.mk \
   mman-win32-1-include_name_change.patch \
   mman-win32.mk \
