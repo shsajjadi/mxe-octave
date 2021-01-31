@@ -1,0 +1,28 @@
+# HG changeset patch
+# User Markus Mützel <markus.muetzel@gmx.de>
+# Date 1612087592 -3600
+#      Sun Jan 31 11:06:32 2021 +0100
+# Node ID f08191da8e416c32d950679a78fe194e2753372e
+# Parent  fea266f67443b890a67f80336aee03c40d3a1faa
+Don't use short paths (bug #59923).
+
+diff -r fea266f67443 -r f08191da8e41 cmdshell.bat
+--- a/cmdshell.bat	Sun Jan 31 10:59:32 2021 +0100
++++ b/cmdshell.bat	Sun Jan 31 11:06:32 2021 +0100
+@@ -2,16 +2,11 @@
+ 
+ set OCTAVE_HOME=%~dp0
+ Rem NOTE: OCTAVE_HOME has a end \
+-Rem convert to 8.3 format
+-for %%I in ("%OCTAVE_HOME%") do set OCTAVE_HOME=%%~sI
+ 
+ Rem set home if not already set
+ if "%HOME%"=="" set HOME=%USERPROFILE%
+ if "%HOME%"=="" set HOME=%HOMEDRIVE%%HOMEPATH%
+ 
+-Rem set HOME to 8.3 format
+-for %%I in ("%HOME%") do set HOME=%%~sI
+-
+ set MSYSDIR=%OCTAVE_HOME%
+ set MSYSTEM=MSYS
+ 

@@ -1072,15 +1072,18 @@ FILES := \
 
 INSTALL_FILES_1 := \
   cmdshell.bat \
+  cmdshell-no-short-path.patch \
   post-install.bat \
   fc_update.bat \
   gpl-3.0.txt \
   octave.bat \
   octave.bmp \
   octave.vbs \
+  octave-bat-no-short-path.patch \
   octave-firsttime.vbs \
   octave-hdr.bmp \
   octave-logo.ico \
+  octave-no-short-path.patch \
   post-install.bat \
   README.html
 INSTALL_FILES := $(addprefix installer-files/, $(INSTALL_FILES_1))
