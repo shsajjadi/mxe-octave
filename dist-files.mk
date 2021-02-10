@@ -217,7 +217,6 @@ SRC_FILES_1 := \
   lame.mk \
   lapack-test.f \
   lapack.mk \
-  lcms-1-fixes.patch \
   lcms.mk \
   lcms1-1-fixes.patch \
   lcms1.mk \
