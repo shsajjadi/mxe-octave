@@ -3,8 +3,8 @@
 
 PKG             := zeromq
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 4.3.3
-$(PKG)_CHECKSUM := d78bc504194d6908df40a2b9e41849b181b02491
+$(PKG)_VERSION  := 4.3.4
+$(PKG)_CHECKSUM := 47277a64749049123d1401600e8cfbab10a3ae28
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://github.com/$(PKG)/libzmq/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
