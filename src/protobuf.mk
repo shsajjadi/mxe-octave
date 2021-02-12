@@ -3,16 +3,17 @@
 
 PKG             := protobuf
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := df5867e37a4b51fb69f53a8baf5b994938691d6d
+$(PKG)_VERSION  := 2.4.1
+$(PKG)_CHECKSUM := e0138dd2d8fd2433508838bb4aab4db926a0d6fe
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://protobuf.googlecode.com/files/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
+$(PKG)_URL      := https://github.com/google/$(PKG)/archive/v$($(PKG)_VERSION).tar.gz
 $(PKG)_DEPS     := zlib
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://code.google.com/p/protobuf/downloads/list?sort=-uploaded' | \
-    $(SED) -n 's,.*protobuf-\([0-9][^<]*\)\.tar.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://github.com/google/protobuf/tags' | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

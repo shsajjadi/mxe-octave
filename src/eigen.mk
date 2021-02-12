@@ -3,21 +3,27 @@
 
 PKG             := eigen
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 7e1674420a8eef7e90e1875ef5b9e828fb9db381
-$(PKG)_SUBDIR   := $(PKG)-$(PKG)-b23437e61a07
+$(PKG)_VERSION  := 3.3.7
+$(PKG)_CHECKSUM := f13a31c7ec3b87cf6e58b6fb05aa8b887091b71c
+$(PKG)_SUBDIR   := $(PKG)-$(PKG)-323c052e1731
 $(PKG)_FILE     := $($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := https://bitbucket.org/$(PKG)/$(PKG)/get/$($(PKG)_FILE)
+$(PKG)_URL      := https://gitlab.com/libeigen/$(PKG)/-/archive/$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://eigen.tuxfamily.org/index.php?title=Main_Page#Download' | \
-    grep 'eigen/get/' | \
-    $(SED) -n 's,.*eigen/get/\(2[^>]*\)\.tar.*,\1,p' | \
+    $(WGET) -q -O- 'https://eigen.tuxfamily.org/index.php?title=Main_Page#Download' | \
+    $(GREP) 'eigen/get/' | \
+    $(SED) -n 's,.*eigen/get/\(3[^>]*\)\.tar.*,\1,p' | \
     head -1
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && \
-    cmake . -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+    mkdir '$(1).build'
+    cd '$(1).build' && \
+    cmake \
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+        '$(1)'
+    $(MAKE) -C '$(1).build' -j '$(JOBS)' DESTDIR='$(3)' install
 endef

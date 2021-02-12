@@ -3,6 +3,7 @@
 
 PKG             := id3lib
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.8.3
 $(PKG)_CHECKSUM := c92c880da41d1ec0b242745a901702ae87970838
 $(PKG)_SUBDIR   := id3lib-$($(PKG)_VERSION)
 $(PKG)_FILE     := id3lib-$($(PKG)_VERSION).tar.gz
@@ -11,7 +12,7 @@ $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/id3lib/files/id3lib/' | \
-    $(SED) -n 's,.*/\([0-9][^"]*\)/".*,\1,p' | \
+    $(SED) -n 's,.*tr title="\([0-9][^"]*\)".*,\1,p' | \
     head -1
 endef
 

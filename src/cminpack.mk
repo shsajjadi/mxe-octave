@@ -3,6 +3,7 @@
 
 PKG             := cminpack
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.3.0
 $(PKG)_CHECKSUM := 8bf19ce37b486707c402a046c33d823c9e359410
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
@@ -17,6 +18,8 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && cmake \
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'
     $(MAKE) -C '$(1)' -j $(JOBS)
 

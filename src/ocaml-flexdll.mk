@@ -4,6 +4,7 @@
 # zlib
 PKG				:= ocaml-flexdll
 $(PKG)_IGNORE	:=
+$(PKG)_VERSION  := 0.30
 $(PKG)_CHECKSUM := 585f066f890c7dca95be7541b4647128335f7df9
 $(PKG)_SUBDIR	:= flexdll
 $(PKG)_FILE		:= flexdll-$($(PKG)_VERSION).tar.gz

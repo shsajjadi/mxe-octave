@@ -3,15 +3,17 @@
 
 PKG             := hunspell
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.3.2
 $(PKG)_CHECKSUM := 902c76d2b55a22610e2227abc4fd26cbe606a51c
 $(PKG)_SUBDIR   := hunspell-$($(PKG)_VERSION)
 $(PKG)_FILE     := hunspell-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/hunspell/Hunspell/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/hunspell/hunspell/archive/v$($(PKG)_VERSION).tar.gz
 $(PKG)_DEPS     := libiconv gettext readline pthreads
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://sourceforge.net/projects/hunspell/files/Hunspell/' | \
-    $(SED) -n 's,.*/\([0-9][^"]*\)/".*,\1,p' | \
+    $(WGET) -q -O- 'https://github.com/hunspell/hunspell/tags' | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | \
+    $(SORT) -Vr | \
     head -1
 endef
 

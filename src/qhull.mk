@@ -3,24 +3,35 @@
 
 PKG             := qhull
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 108d59efa60b2ebaf94b121414c8f8b7b76a7409
+$(PKG)_VERSION  := 2020.1
+$(PKG)_CHECKSUM := a938aa73a8964f81786a05fc4c98044878e09f07
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := qhull-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://download.savannah.gnu.org/releases/qhull/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/qhull/$(PKG)/archive/$($(PKG)_VERSION).tar.gz
 $(PKG)_DEPS     :=
 
+$(PKG)_CMAKE_OPTS :=
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+    ifeq ($(MXE_SYSTEM),mingw)
+        $(PKG)_CMAKE_OPTS := -G "MSYS Makefiles" 
+    endif
+endif
+
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package qhull.' >&2;
-    echo $(qhull_VERSION)
+    $(WGET) -q -O- 'https://github.com/qhull/qhull/tags' | \
+    $(SED) -n 's|.*releases/tag/\([0-9][^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && aclocal && libtoolize && autoreconf
-    mkdir '$(1)/.build'
-    cd '$(1)/.build' && '$(1)/configure' \
-        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-        $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
+    mkdir '$(1)/../.build'
+    cd '$(1)/../.build' && cmake \
+        $($(PKG)_CMAKE_OPTS) \
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+        -DDOC_INSTALL_DIR='$(1)' \
+        ../$($(PKG)_SUBDIR)
+    make -C $(1)/../.build -j $(JOBS) 
+    make -C $(1)/../.build -j 1 install DESTDIR=$(3)
 endef

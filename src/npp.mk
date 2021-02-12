@@ -3,15 +3,18 @@
 
 PKG             := npp
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := e246ebb89c10b71ed483b866ea90385a661092e6
-$(PKG)_SUBDIR   := unicode
+$(PKG)_VERSION  := 7.8.9
+$(PKG)_CHECKSUM := 26297d8c55833a6c43d16f3b0fa842ecd5153e20
+$(PKG)_SUBDIR   := 
 $(PKG)_FILE     := $(PKG).$($(PKG)_VERSION).bin.zip
-$(PKG)_URL      := http://download.tuxfamily.org/notepadplus/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package Notepad++.' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'https://notepad-plus-plus.org/downloads/' | \
+    $(GREP) 'Current' | \
+    $(SED) -n 's|.*/v\([^/]*\).*|\1|p' | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

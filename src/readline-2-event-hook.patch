@@ -1,19 +1,7 @@
-diff -ur readline-6.2-orig/input.c readline-6.2/input.c
---- readline-6.2-orig/input.c	2013-11-24 19:19:30 -0500
-+++ readline-6.2/input.c	2013-11-29 11:19:59 -0500
-@@ -54,6 +54,11 @@
- #include <stdio.h>
- #include <errno.h>
- 
-+#if defined (__MINGW32__)
-+#  define WIN32_LEAN_AND_MEAN
-+#  include <windows.h>
-+#endif
-+
- #if !defined (errno)
- extern int errno;
- #endif /* !errno */
-@@ -96,6 +101,11 @@
+diff -ur readline-8.0.sigwinch/input.c readline-8.0/input.c
+--- readline-8.0.sigwinch/input.c	2019-03-20 08:15:55.450361377 -0400
++++ readline-8.0/input.c	2019-03-20 08:30:58.059756179 -0400
+@@ -140,6 +140,11 @@
  static unsigned char ibuffer[512];
  static int ibuffer_len = sizeof (ibuffer) - 1;
  
@@ -25,25 +13,21 @@ diff -ur readline-6.2-orig/input.c readline-6.2/input.c
  #define any_typein (push_index != pop_index)
  
  int
-@@ -219,8 +229,8 @@
+@@ -266,7 +271,7 @@
  #if defined (__MINGW32__)
    /* Use getch/_kbhit to check for available console input, in the same way
       that we read it normally. */
 -   chars_avail = isatty (tty) ? _kbhit () : 0;
--   result = 0;
-+  chars_avail = isatty (tty) ? _win32_kbhit () : 0;
-+  result = 0;
++   chars_avail = isatty (tty) ? _win32_kbhit () : 0;
+    result = 0;
  #endif
  
-   /* If there's nothing available, don't waste time trying to read
-@@ -457,6 +467,123 @@
+@@ -501,6 +506,120 @@
    return (c);
  }
  
 +#if defined (__MINGW32__)
-+
 +#define _WIN32_READ_NOCHAR (-2)
-+
 +static char _win32_buf[16] = {'0'};
 +static int _win32_bufidx = 0;
 +
@@ -74,11 +58,11 @@ diff -ur readline-6.2-orig/input.c readline-6.2/input.c
 +        {
 +          case KEY_EVENT:
 +            if ((rec.Event.KeyEvent.bKeyDown &&
-+                 (rec.Event.KeyEvent.wVirtualKeyCode < VK_SHIFT ||
-+                  rec.Event.KeyEvent.wVirtualKeyCode > VK_MENU)) ||
-+                (!rec.Event.KeyEvent.bKeyDown &&
-+                 rec.Event.KeyEvent.wVirtualKeyCode == VK_MENU &&
-+                 rec.Event.KeyEvent.uChar.AsciiChar))
++               (rec.Event.KeyEvent.wVirtualKeyCode < VK_SHIFT ||
++                rec.Event.KeyEvent.wVirtualKeyCode > VK_MENU)) ||
++               (!rec.Event.KeyEvent.bKeyDown &&
++                rec.Event.KeyEvent.wVirtualKeyCode == VK_MENU &&
++                rec.Event.KeyEvent.uChar.AsciiChar))
 +              {
 +                if (rec.Event.KeyEvent.uChar.AsciiChar)
 +                  {
@@ -131,7 +115,7 @@ diff -ur readline-6.2-orig/input.c readline-6.2/input.c
 +          default:
 +            break;
 +        }
-+    }
++   }
 +  while (1);
 +}
 +
@@ -154,13 +138,12 @@ diff -ur readline-6.2-orig/input.c readline-6.2/input.c
 +{
 +  return _win32_getch_internal (1);
 +}
-+
 +#endif
 +
  int
- rl_getc (stream)
-      FILE *stream;
-@@ -471,9 +598,9 @@
+ rl_getc (FILE *stream)
+ {
+@@ -520,9 +639,9 @@
  #if defined (__MINGW32__)
        if (isatty (fileno (stream)))
          {

@@ -3,7 +3,8 @@
 
 PKG             := geos
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 791e2b36a9a6114c7f213fae3fc995960c35a428
+$(PKG)_VERSION  := 3.8.1
+$(PKG)_CHECKSUM := dbd165752dd4c48d81a84aa51c99d04410d96c67
 $(PKG)_SUBDIR   := geos-$($(PKG)_VERSION)
 $(PKG)_FILE     := geos-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := http://download.osgeo.org/geos/$($(PKG)_FILE)
@@ -11,9 +12,9 @@ $(PKG)_URL_2    := ftp://ftp.remotesensing.org/geos/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://geos.refractions.net/' | \
+    $(WGET) -q -O- 'http://download.osgeo.org/geos/?C=M&O=A' | \
     $(SED) -n 's,.*geos-\([0-9][^>]*\)\.tar.*,\1,p' | \
-    head -1
+    tail -1
 endef
 
 define $(PKG)_BUILD
@@ -21,10 +22,6 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-
-    '$(MXE_CC)' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_BINDIR)/test-geos.exe' \
-        -lgeos_c `'$(HOST_BINDIR)/geos-config' --cflags --libs` -lstdc++
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS)
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
 endef

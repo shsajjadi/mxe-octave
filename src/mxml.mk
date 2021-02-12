@@ -3,6 +3,7 @@
 
 PKG             := mxml
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.7
 $(PKG)_CHECKSUM := a3bdcab48307794c297e790435bcce7becb9edae
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
@@ -10,9 +11,8 @@ $(PKG)_URL      := http://ftp.easysw.com/pub/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_F
 $(PKG)_DEPS     := pthreads
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://ftp.easysw.com/pub/mxml/?C=M;O=D' | \
-    $(SED) -n 's,.*<a href="\([0-9][^"]*\)/.*,\1,p' | \
-    head -1
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
 endef
 
 define $(PKG)_BUILD

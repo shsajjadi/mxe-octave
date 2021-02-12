@@ -3,15 +3,16 @@
 
 PKG             := fribidi
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 23d1adf1e929a3fb159345d509918ad109e925ad
+$(PKG)_VERSION  := 1.0.10
+$(PKG)_CHECKSUM := e22d6cf070966d2735b8e1a6d961a87f1e828a99
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://fribidi.org/download/$($(PKG)_FILE)
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
+$(PKG)_URL      := https://github.com/fribidi/fribidi/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := glib
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://fribidi.org/download/?C=M;O=D' | \
-    $(SED) -n 's,.*<a href="fribidi-\([0-9][^"]*\)\.tar.*,\1,p' | \
+    $(WGET) -q -O- https://github.com/fribidi/fribidi/tags | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | \
     head -1
 endef
 
@@ -25,5 +26,5 @@ define $(PKG)_BUILD
         --disable-deprecated \
         --enable-charsets \
         --with-glib
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= dist_man_MANS=
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
 endef

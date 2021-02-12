@@ -3,6 +3,7 @@
 
 PKG             := msys-libiconv
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.14-1
 $(PKG)_CHECKSUM := 056d16bfb7a91c3e3b1acf8adb20edea6fceecdd
 $(PKG)_REMOTE_SUBDIR := libiconv/libiconv-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
@@ -11,8 +12,9 @@ $(PKG)_URL      := $(MSYS_BASE_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/downl
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_BASE_URL)/libiconv' | \
+    $(SED) -n 's,.*title="libiconv-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

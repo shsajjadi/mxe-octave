@@ -3,6 +3,7 @@
 
 PKG             := msys-diffutils
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.8.7.20071206cvs-3
 $(PKG)_CHECKSUM := 674d3e0be4c8ffe84290f48ed1dd8eb21bc3f805
 $(PKG)_REMOTE_SUBDIR := diffutils/diffutils-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
@@ -11,8 +12,9 @@ $(PKG)_URL      := $(MSYS_BASE_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/downl
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_BASE_URL)/diffutils' | \
+    $(SED) -n 's,.*title="diffutils-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

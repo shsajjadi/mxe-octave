@@ -1,21 +1,27 @@
-diff -uNr a/readline.c b/readline.c
---- a/readline.c	2010-07-25 17:07:40.000000000 -0400
-+++ b/readline.c	2013-04-17 16:11:52.932653458 -0400
-@@ -970,6 +970,11 @@
-       rl_initialized++;
+Common subdirectories: readline-8.0.input/doc and readline-8.0/doc
+Common subdirectories: readline-8.0.input/examples and readline-8.0/examples
+diff -u readline-8.0.input/readline.c readline-8.0/readline.c
+--- readline-8.0.input/readline.c	2019-03-20 08:02:03.533512025 -0400
++++ readline-8.0/readline.c	2019-03-20 08:06:59.117185446 -0400
+@@ -1103,8 +1103,12 @@
        RL_SETSTATE(RL_STATE_INITIALIZED);
      }
+   else
+-    (void)_rl_init_locale ();	/* check current locale */
+-
++    {
++      (void)_rl_init_locale ();	/* check current locale */
 +#if defined (__MINGW32__)
-+  else
-+    /* In case the console window has been resized outside of readline */
-+    rl_reset_screen_size ();
-+#endif
- 
-   /* Initalize the current line information. */
++      rl_reset_screen_size ();
++#endif      
++    }
+   /* Initialize the current line information. */
    _rl_init_line_state ();
-diff -uNr a/signals.c b/signals.c
---- a/signals.c	2011-02-11 10:53:33.000000000 -0500
-+++ b/signals.c	2013-04-17 16:07:57.476121748 -0400
+ 
+Common subdirectories: readline-8.0.input/shlib and readline-8.0/shlib
+diff -u readline-8.0.input/signals.c readline-8.0/signals.c
+--- readline-8.0.input/signals.c	2019-03-20 08:02:03.529511918 -0400
++++ readline-8.0/signals.c	2019-03-20 08:13:44.347195350 -0400
 @@ -46,6 +46,11 @@
  
  #include "rlprivate.h"
@@ -28,16 +34,16 @@ diff -uNr a/signals.c b/signals.c
  #if defined (HANDLE_SIGNALS)
  
  #if !defined (RETSIGTYPE)
-@@ -91,7 +96,7 @@
+@@ -92,7 +97,7 @@
  int rl_catch_signals = 1;
  
  /* If non-zero, readline will install a signal handler for SIGWINCH. */
 -#ifdef SIGWINCH
-+#if defined (SIGWINCH) || defined (__MINGW32__)
++#if defined (SIGWINCH) || defined(__MINGW32__)
  int rl_catch_sigwinch = 1;
  #else
  int rl_catch_sigwinch = 0;	/* for the readline state struct in readline.c */
-@@ -422,6 +427,21 @@
+@@ -495,6 +500,21 @@
      }
  #endif /* SIGWINCH */
  
@@ -59,10 +65,10 @@ diff -uNr a/signals.c b/signals.c
    return 0;
  }
  
-@@ -467,6 +487,21 @@
+@@ -545,6 +565,20 @@
+       sigwinch_set_flag = 0;
      }
  #endif
- 
 +#if defined (__MINGW32__)
 +  if (rl_catch_sigwinch && sigwinch_set_flag == 1)
 +    {
@@ -77,7 +83,7 @@ diff -uNr a/signals.c b/signals.c
 +        }
 +    }
 +#endif
-+
+ 
    return 0;
  }
- 
+Common subdirectories: readline-8.0.input/support and readline-8.0/support

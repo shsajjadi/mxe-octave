@@ -3,15 +3,16 @@
 
 PKG             := agg
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.5
 $(PKG)_CHECKSUM := 08f23da64da40b90184a0414369f450115cdb328
 $(PKG)_SUBDIR   := agg-$($(PKG)_VERSION)
 $(PKG)_FILE     := agg-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://www.antigrain.com/$($(PKG)_FILE)
+$(PKG)_URL      := https://web.archive.org/20150812005010/http://www.antigrain.com/$($(PKG)_FILE)
 $(PKG)_DEPS     := freetype sdl
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.antigrain.com/download/index.html' | \
-    $(SED) -n 's,.*<A href="http://www.antigrain.com/agg-\([0-9.]*\).tar.gz".*,\1,p' | \
+    $(WGET) -q -O- 'https://web.archive.org/20150812005010/http://www.antigrain.com/download/index.html' | \
+    $(SED) -n 's,.*www.antigrain.com/agg-\([0-9.]*\).tar.gz".*,\1,p' | \
     head -1
 endef
 

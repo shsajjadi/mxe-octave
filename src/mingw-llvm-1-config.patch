@@ -1,0 +1,64 @@
+diff --git "a/tools/llvm-config/llvm-config.cpp" "b/tools/llvm-config/llvm-config.cpp"
+index 08b096a..a35422e 100644
+--- "a/tools/llvm-config/llvm-config.cpp"	
++++ "b/tools/llvm-config/llvm-config.cpp"
+@@ -352,14 +352,16 @@ int main(int argc, char **argv) {
+   StringRef SharedExt, SharedVersionedExt, SharedDir, SharedPrefix, StaticExt,
+       StaticPrefix, StaticDir = "lib", DirSep = "/";
+   const Triple HostTriple(Triple::normalize(LLVM_HOST_TRIPLE));
+-  if (HostTriple.isOSWindows()) {
++  const Triple TargetTriple(Triple::normalize(LLVM_DEFAULT_TARGET_TRIPLE));
++  if (TargetTriple.isOSWindows()) {
+     SharedExt = "dll";
+     SharedVersionedExt = LLVM_DYLIB_VERSION ".dll";
+-    if (HostTriple.isOSCygMing()) {
++    if (TargetTriple.isOSCygMing()) {
+       StaticExt = "a";
+       StaticPrefix = "lib";
+     } else {
+       StaticExt = "lib";
++      if (HostTriple.isOSWindows()) {
+       DirSep = "\\";
+       std::replace(ActiveObjRoot.begin(), ActiveObjRoot.end(), '/', '\\');
+       std::replace(ActivePrefix.begin(), ActivePrefix.end(), '/', '\\');
+@@ -368,10 +370,11 @@ int main(int argc, char **argv) {
+       std::replace(ActiveCMakeDir.begin(), ActiveCMakeDir.end(), '/', '\\');
+       std::replace(ActiveIncludeOption.begin(), ActiveIncludeOption.end(), '/',
+                    '\\');
++      }
+     }
+     SharedDir = ActiveBinDir;
+     StaticDir = ActiveLibDir;
+-  } else if (HostTriple.isOSDarwin()) {
++  } else if (TargetTriple.isOSDarwin()) {
+     SharedExt = "dylib";
+     SharedVersionedExt = LLVM_DYLIB_VERSION ".dylib";
+     StaticExt = "a";
+@@ -386,7 +389,7 @@ int main(int argc, char **argv) {
+     StaticPrefix = SharedPrefix = "lib";
+   }
+ 
+-  const bool BuiltDyLib = !!LLVM_ENABLE_DYLIB;
++  const bool BuiltDyLib = true;
+ 
+   /// CMake style shared libs, ie each component is in a shared library.
+   const bool BuiltSharedLibs = !!LLVM_ENABLE_SHARED;
+@@ -398,7 +401,7 @@ int main(int argc, char **argv) {
+   // If LLVM_LINK_DYLIB is ON, the single shared library will be returned
+   // for "--libs", etc, if they exist. This behaviour can be overridden with
+   // --link-static or --link-shared.
+-  bool LinkDyLib = !!LLVM_LINK_DYLIB;
++  bool LinkDyLib = true;
+ 
+   if (BuiltDyLib) {
+     std::string path((SharedDir + DirSep + DyLibName).str());
+@@ -670,7 +673,7 @@ int main(int argc, char **argv) {
+         } else if (PrintLibs) {
+           // On Windows, output full path to library without parameters.
+           // Elsewhere, if this is a typical library name, include it using -l.
+-          if (HostTriple.isWindowsMSVCEnvironment()) {
++          if (TargetTriple.isWindowsMSVCEnvironment()) {
+             OS << GetComponentLibraryPath(Lib, Shared);
+           } else {
+             StringRef LibName;
+

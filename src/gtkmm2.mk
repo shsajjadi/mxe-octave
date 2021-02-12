@@ -3,6 +3,7 @@
 
 PKG             := gtkmm2
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.24.0
 $(PKG)_CHECKSUM := 9b9e68360fb3f5faa7f221acba56f0d75a8198d2
 $(PKG)_SUBDIR   := gtkmm-$($(PKG)_VERSION)
 $(PKG)_FILE     := gtkmm-$($(PKG)_VERSION).tar.bz2
@@ -10,12 +11,9 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/gtkmm/$(call SHORT_PKG
 $(PKG)_DEPS     := gtk2 libsigc++ pangomm cairomm atkmm
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/gtkmm/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n 's,.*<a[^>]*>\([0-9]*\.[0-9]*[02468]\.[^<]*\)<.*,\1,p' | \
-    grep -v '^2\.9' | \
-    grep '^2\.' | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/gtkmm/tags | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

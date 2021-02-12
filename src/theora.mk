@@ -3,6 +3,7 @@
 
 PKG             := theora
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.1.1
 $(PKG)_CHECKSUM := 0b91be522746a29351a5ee592fd8160940059303
 $(PKG)_SUBDIR   := libtheora-$($(PKG)_VERSION)
 $(PKG)_FILE     := libtheora-$($(PKG)_VERSION).tar.gz
@@ -16,9 +17,15 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
+   if [ "$(MXE_SYSTEM)" == "mingw" ]; then \
+       $(SED) -i 's,EXPORTS,,' '$(1)/win32/xmingw32/libtheoradec-all.def'; \
+       $(SED) -i 's,EXPORTS,,' '$(1)/win32/xmingw32/libtheoraenc-all.def'; \
+   fi
+
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(HOST_PREFIX)'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= doc_DATA=
+        --prefix='$(HOST_PREFIX)' \
+        --disable-spec --datadir='$(1)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS)
 endef

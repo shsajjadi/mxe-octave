@@ -3,16 +3,18 @@
 
 PKG             := msys-msys-core
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 36d52ca7066eb6ad0da68c6f31214416f4c9dcec
+$(PKG)_VERSION  := 1.0.19-1
+$(PKG)_CHECKSUM := 9200450ad3df8c83be323c9b14ae344d5c1ca784
 $(PKG)_REMOTE_SUBDIR := msys-core/msys-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
-$(PKG)_FILE     := msysCORE-$($(PKG)_VERSION)-msys-1.0.18-bin.tar.lzma
+$(PKG)_FILE     := msysCORE-$($(PKG)_VERSION)-msys-1.0.19-bin.tar.xz
 $(PKG)_URL      := $(MSYS_BASE_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/download
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_BASE_URL)/msys-core' | \
+    $(SED) -n 's,.*title="msys-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

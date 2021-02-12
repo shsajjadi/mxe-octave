@@ -3,7 +3,8 @@
 
 PKG             := libssh2
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 7fc084254dabe14a9bc90fa3d569faa7ee943e19
+$(PKG)_VERSION  := 1.9.0
+$(PKG)_CHECKSUM := 21e98282b103307a16792e5e2d4c99beaf0b3b9c
 $(PKG)_SUBDIR   := libssh2-$($(PKG)_VERSION)
 $(PKG)_FILE     := libssh2-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.libssh2.org/download/$($(PKG)_FILE)
@@ -23,10 +24,11 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
+        --disable-examples-build \
         --without-openssl \
         --with-libgcrypt \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= html_DATA= DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
 
 ##    '$(MXE_CC)' \
 ##        -W -Wall -Werror -ansi -pedantic \

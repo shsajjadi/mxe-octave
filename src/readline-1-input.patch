@@ -1,11 +1,11 @@
-diff -uNr a/input.c b/input.c
---- a/input.c	2010-05-30 18:33:01.000000000 -0400
-+++ b/input.c	2013-04-17 23:50:34.759675631 -0400
-@@ -466,7 +466,12 @@
+diff -ur readline-8.0.disp/input.c readline-8.0/input.c
+--- readline-8.0.disp/input.c	2019-03-20 07:56:04.897036396 -0400
++++ readline-8.0/input.c	2019-03-20 08:00:45.403401856 -0400
+@@ -519,7 +519,12 @@
  
  #if defined (__MINGW32__)
        if (isatty (fileno (stream)))
--	return (getch ());
+-	return (_getch ());	/* "There is no error return." */
 +        {
 +          int c = _getch ();
 +          if (c == 0xe0)
@@ -13,5 +13,5 @@ diff -uNr a/input.c b/input.c
 +          return (c);
 +        }
  #endif
-       result = read (fileno (stream), &c, sizeof (unsigned char));
- 
+       result = 0;
+ #if defined (HAVE_PSELECT)

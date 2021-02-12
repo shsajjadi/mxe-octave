@@ -1,0 +1,78 @@
+Only in video-2.0.0/src: aclocal.m4
+diff -ur video-2.0.0.orig/src/configure video-2.0.0/src/configure
+--- video-2.0.0.orig/src/configure	2020-03-04 11:23:26.508419633 -0500
++++ video-2.0.0/src/configure	2020-03-04 12:19:15.552103743 -0500
+@@ -588,7 +588,7 @@
+ PKG_CONFIG_LIBDIR
+ PKG_CONFIG_PATH
+ PKG_CONFIG
+-HAVE_MKOCTFILE
++MKOCTFILE
+ OBJEXT
+ EXEEXT
+ ac_ct_CXX
+@@ -2280,11 +2280,11 @@
+ set dummy mkoctfile; ac_word=$2
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+ $as_echo_n "checking for $ac_word... " >&6; }
+-if ${ac_cv_prog_HAVE_MKOCTFILE+:} false; then :
++if ${ac_cv_prog_MKOCTFILE+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+-  if test -n "$HAVE_MKOCTFILE"; then
+-  ac_cv_prog_HAVE_MKOCTFILE="$HAVE_MKOCTFILE" # Let the user override the test.
++  if test -n "$MKOCTFILE"; then
++  ac_cv_prog_MKOCTFILE="$MKOCTFILE" # Let the user override the test.
+ else
+ as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+ for as_dir in $PATH
+@@ -2293,7 +2293,7 @@
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+-    ac_cv_prog_HAVE_MKOCTFILE="yes"
++    ac_cv_prog_MKOCTFILE="yes"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+   fi
+@@ -2301,20 +2301,20 @@
+   done
+ IFS=$as_save_IFS
+ 
+-  test -z "$ac_cv_prog_HAVE_MKOCTFILE" && ac_cv_prog_HAVE_MKOCTFILE="no"
++  test -z "$ac_cv_prog_MKOCTFILE" && ac_cv_prog_MKOCTFILE="no"
+ fi
+ fi
+-HAVE_MKOCTFILE=$ac_cv_prog_HAVE_MKOCTFILE
+-if test -n "$HAVE_MKOCTFILE"; then
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $HAVE_MKOCTFILE" >&5
+-$as_echo "$HAVE_MKOCTFILE" >&6; }
++MKOCTFILE=$ac_cv_prog_MKOCTFILE
++if test -n "$MKOCTFILE"; then
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $MKOCTFILE" >&5
++$as_echo "$MKOCTFILE" >&6; }
+ else
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+ fi
+ 
+ 
+-if test $HAVE_MKOCTFILE = "no"; then
++if test "$MKOCTFILE" = "no"; then
+   as_fn_error $? "mkoctfile required to install $PACKAGE_NAME" "$LINENO" 5
+ fi
+ 
+diff -ur video-2.0.0.orig/src/configure.ac video-2.0.0/src/configure.ac
+--- video-2.0.0.orig/src/configure.ac	2020-03-04 11:23:26.508419633 -0500
++++ video-2.0.0/src/configure.ac	2020-03-04 12:18:54.007562316 -0500
+@@ -12,8 +12,8 @@
+ # Define macros needed for libav
+ #AC_DEFINE(__STDC_CONSTANT_MACROS, [], [workaround for C++ programs to use C99 macros])
+ 
+-AC_CHECK_PROG([HAVE_MKOCTFILE], [mkoctfile], [yes], [no])
+-if [test $HAVE_MKOCTFILE = "no"]; then
++AC_CHECK_PROG([MKOCTFILE], [mkoctfile], [yes], [no])
++if [test "$MKOCTFILE" = "no"]; then
+   AC_MSG_ERROR([mkoctfile required to install $PACKAGE_NAME])
+ fi
+ 

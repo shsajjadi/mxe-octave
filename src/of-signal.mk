@@ -3,16 +3,20 @@
 
 PKG             := of-signal
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 87ed51b878ac49d32c328032500dff452132240b
+$(PKG)_VERSION  := 1.4.1
+$(PKG)_CHECKSUM := 67519c28868659a54363420d5bfc2621c31f8fdb
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := signal
+$(PKG)_SUBDIR   := signal-$($(PKG)_VERSION)
 $(PKG)_FILE     := signal-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
-$(PKG)_DEPS     := of-specfun of-control of-general
+$(PKG)_DEPS     := of-control
+
+ifeq ($(ENABLE_BINARY_PACKAGES),yes)
+    $(PKG)_DEPS += $(OCTAVE_TARGET)
+endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(OCTAVE_FORGE_PKG_UPDATE)
 endef
 
 define $(PKG)_BUILD

@@ -3,6 +3,7 @@
 
 PKG             := msys-termcap
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.20050421_1-2
 $(PKG)_CHECKSUM := e4273ccfde8ecf3a7631446fb2b01971a24ff9f7
 $(PKG)_REMOTE_SUBDIR := termcap/termcap-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
@@ -11,8 +12,9 @@ $(PKG)_URL      := $(MSYS_BASE_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/downl
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_BASE_URL)/termcap' | \
+    $(SED) -n 's,.*title="termcap-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

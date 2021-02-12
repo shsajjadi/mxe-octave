@@ -3,6 +3,7 @@
 
 PKG             := vigra
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.9.0
 $(PKG)_CHECKSUM := 6e4981f4ce75932ec62df6523f577c327f885ba0
 $(PKG)_SUBDIR   := vigra-$(word 1,$(subst -, ,$($(PKG)_VERSION)))
 $(PKG)_FILE     := vigra-$($(PKG)_VERSION)-src.tar.gz
@@ -10,11 +11,8 @@ $(PKG)_URL      := http://hci.iwr.uni-heidelberg.de/vigra/$($(PKG)_FILE)
 $(PKG)_DEPS     := jpeg tiff libpng openexr
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://hci.iwr.uni-heidelberg.de/vigra/' | \
-    grep 'Sources' | \
-    grep '<a href="vigra' | \
-    $(SED) -n 's,.*"vigra-\([0-9][^"]*\)-src.*,\1,p' | \
-    head
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
 endef
 
 define $(PKG)_BUILD
@@ -25,6 +23,8 @@ define $(PKG)_BUILD
     $(SED) -i 's,\bSHARED\b,STATIC,' '$(1)/vigranumpy/test/CMakeLists.txt'
     mkdir '$(1)/build'
     cd '$(1)/build' && cmake .. \
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DLIBTYPE=STATIC \
         -DVIGRA_STATIC_LIB=1 \

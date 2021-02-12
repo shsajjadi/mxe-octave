@@ -3,6 +3,7 @@
 
 PKG             := sdl_image
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.2.12
 $(PKG)_CHECKSUM := 5e3e393d4e366638048bbb10d6a269ea3f4e4cf2
 $(PKG)_SUBDIR   := SDL_image-$($(PKG)_VERSION)
 $(PKG)_FILE     := SDL_image-$($(PKG)_VERSION).tar.gz
@@ -12,6 +13,7 @@ $(PKG)_DEPS     := sdl jpeg libpng tiff
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://hg.libsdl.org/SDL_image/tags' | \
     $(SED) -n 's,.*release-\([0-9][^<]*\).*,\1,p' | \
+    $(GREP) "^1" | \
     head -1
 endef
 

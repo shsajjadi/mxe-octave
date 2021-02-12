@@ -3,6 +3,7 @@
 
 PKG             := cppunit
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.12.1
 $(PKG)_CHECKSUM := f1ab8986af7a1ffa6760f4bacf5622924639bf4a
 $(PKG)_SUBDIR   := cppunit-$($(PKG)_VERSION)
 $(PKG)_FILE     := cppunit-$($(PKG)_VERSION).tar.gz
@@ -11,7 +12,7 @@ $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/cppunit/files/cppunit/' | \
-    $(SED) -n 's,.*/\([0-9][^"]*\)/".*,\1,p' | \
+    $(SED) -n 's,.*tr title="\([0-9][^"]*\)".*,\1,p' | \
     head -1
 endef
 

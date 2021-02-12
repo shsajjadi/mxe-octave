@@ -3,21 +3,30 @@
 
 PKG             := units
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := e460371dc97034d17ce452e6b64991f7fd2d1409
+$(PKG)_VERSION  := 2.19
+$(PKG)_CHECKSUM := 8c241b04046cafa4a4503dc3567d8d869b46329c
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'http://ftp.gnu.org/gnu/$(PKG)/?C=M;O=D' | \
+    $(SED) -n 's,.*<a href="$(PKG)-\([0-9][^"]*\)\.tar.*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         --prefix='$(HOST_PREFIX)' \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) 
+
+    # override units and localalemap from what configure detected for cross mingw
+    if [ "$(MXE_SYSTEM)$(MXE_NATIVE_BUILD)" == "mingwno" ]; then \
+        $(SED) -i -e 's,UNITSFILE=\\\".*definitions.units\\\",UNITSFILE=\\\"definitions.units\\\",g' \
+	    -e 's,LOCALEMAP=\\\".*locale_map.txt\\\",LOCALEMAP=\\\"locale_map.txt\\\",g' \
+	    '$(1)/Makefile'; \
+    fi
 
     $(MAKE) -C '$(1)' -j '$(JOBS)' 
     $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'

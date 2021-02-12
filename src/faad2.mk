@@ -3,16 +3,17 @@
 
 PKG             := faad2
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 80eaaa5cc576c35dd28863767b795c50cbcc0511
+$(PKG)_VERSION  := 2.8.8
+$(PKG)_CHECKSUM := 0d49c516d4a83c39053a9bd214fddba72cbc34ad
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/faac/$(PKG)-src/$(PKG)-$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := https://$(SOURCEFORGE_MIRROR)/project/faac/$(PKG)-src/$(PKG)-2.8.0/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://sourceforge.net/projects/faac/files/faad2-src/' | \
-    $(SED) -n 's,.*faad2-\([0-9][^"]*\)/".*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://sourceforge.net/projects/faac/files/faad2-src/faad2-2.8.0/' | \
+    $(SED) -n 's,.*title=\"faad2-\([0-9\.]*\)\.tar\.gz\".*,\1,p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
@@ -20,7 +21,7 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         $(ENABLE_SHARED_OR_STATIC)
-    $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' LDFLAGS='-no-undefined'
+    $(MAKE) -C '$(1)' -j 1 install LDFLAGS='-no-undefined'
 endef
 

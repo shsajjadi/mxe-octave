@@ -3,7 +3,8 @@
 
 PKG             := lua
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 6bb1b0a39b6a5484b71a83323c690154f86b2021
+$(PKG)_VERSION  := 5.3.5
+$(PKG)_CHECKSUM := 112eb10ff04d1b4c9898e121d6bdf54a81482447
 $(PKG)_SUBDIR   := lua-$($(PKG)_VERSION)
 $(PKG)_FILE     := lua-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.lua.org/ftp/$($(PKG)_FILE)
@@ -30,8 +31,8 @@ define $(PKG)_BUILD
         INSTALL='$(INSTALL)' \
         install
 
-    '$(MXE_CC)' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_BINDIR)/test-lua.exe' \
-        -llua
+    #'$(MXE_CC)' \
+    #    -W -Wall -Werror -ansi -pedantic \
+    #    '$(2).c' -o '$(HOST_BINDIR)/test-lua.exe' \
+    #    -llua
 endef

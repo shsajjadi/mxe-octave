@@ -3,6 +3,7 @@
 
 PKG             := msys-tar
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.23-1
 $(PKG)_CHECKSUM := 1791b71ad8573612049a8a4821d93e870fb2ae38
 $(PKG)_REMOTE_SUBDIR := tar/tar-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
@@ -11,8 +12,9 @@ $(PKG)_URL      := $(MSYS_BASE_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/downl
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_BASE_URL)/tar' | \
+    $(SED) -n 's,.*title="tar-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

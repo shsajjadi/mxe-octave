@@ -3,10 +3,11 @@
 
 PKG             := gmp
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 12a662456033e21aed3e318aef4177f4000afe3b
+$(PKG)_VERSION  := 6.2.0
+$(PKG)_CHECKSUM := 5e9341d3807bc7505376f9ed9f5c1c6c57050aa6
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := ftp://ftp.gmplib.org/pub/$(PKG)-$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := https://gmplib.org/download/gmp/$($(PKG)_FILE)
 $(PKG)_URL_2    := ftp://ftp.cs.tu-berlin.de/pub/gnu/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 

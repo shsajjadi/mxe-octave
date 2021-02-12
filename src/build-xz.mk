@@ -3,9 +3,10 @@
 
 PKG             := build-xz
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 3e976d7715fde43422572c70f927bfdae56a94c3
+$(PKG)_VERSION  := 5.2.5
+$(PKG)_CHECKSUM := 0b9d1e06b59f7fe0796afe1d93851b9306b4a3b6
 $(PKG)_SUBDIR   := xz-$($(PKG)_VERSION)
-$(PKG)_FILE     := xz-$($(PKG)_VERSION).tar.gz
+$(PKG)_FILE     := xz-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://tukaani.org/xz/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
@@ -20,5 +21,5 @@ define $(PKG)_BUILD
         --prefix='$(BUILD_TOOLS_PREFIX)' \
         --disable-threads \
         --disable-nls
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 endef

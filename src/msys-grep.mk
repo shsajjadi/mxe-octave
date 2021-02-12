@@ -3,6 +3,7 @@
 
 PKG             := msys-grep
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.5.4-2
 $(PKG)_CHECKSUM := 69d03c4415c55b9617850a4991d0708fbe3788f6
 $(PKG)_REMOTE_SUBDIR := grep/grep-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
@@ -11,8 +12,9 @@ $(PKG)_URL      := $(MSYS_BASE_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/downl
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_BASE_URL)/grep' | \
+    $(SED) -n 's,.*title="grep-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

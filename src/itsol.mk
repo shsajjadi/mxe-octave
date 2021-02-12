@@ -3,18 +3,20 @@
 
 PKG             := itsol
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2
 $(PKG)_CHECKSUM := c7af215aaa6ab377521ba317eccf6859165ebefb
 $(PKG)_SUBDIR   := ITSOL_2
 $(PKG)_FILE     := ITSOL_2.tar.gz
 $(PKG)_URL      := http://www-users.cs.umn.edu/~saad/software/ITSOL/itsol.php
 $(PKG)_DEPS     := blas
 
-ifeq ($(ENABLE_64),yes)
+ifeq ($(ENABLE_FORTRAN_INT64),yes)
   $(PKG)_DEFAULT_INTEGER_8_FLAG := -fdefault-integer-8
 endif
 
 define $(PKG)_UPDATE
-    echo 1
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
 endef
 
 define $(PKG)_BUILD

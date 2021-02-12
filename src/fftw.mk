@@ -3,17 +3,27 @@
 
 PKG             := fftw
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 11487180928d05746d431ebe7a176b52fe205cf9
+$(PKG)_VERSION  := 3.3.8
+$(PKG)_CHECKSUM := 59831bd4b2705381ee395e54aa6e0069b10c3626
 $(PKG)_SUBDIR   := fftw-$($(PKG)_VERSION)
 $(PKG)_FILE     := fftw-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.fftw.org/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
+$(PKG)_CONFIG_OPTS :=
+
 ifeq ($(MXE_SYSTEM),msvc)
     $(PKG)_HAVE_LONG_DOUBLE := false
 else
     $(PKG)_HAVE_LONG_DOUBLE := true
-    $(PKG)_CONFIG_OPTS := --with-our-malloc
+    $(PKG)_CONFIG_OPTS += --with-our-malloc
+endif
+
+# some suggested mingw fftw settings from www.fftw.org
+ifeq ($(MXE_SYSTEM),mingw)
+    $(PKG)_CONFIG_OPTS += \
+      --with-combined-threads \
+      --with-incoming-stack-boundary=2
 endif
 
 define $(PKG)_UPDATE
@@ -28,6 +38,8 @@ define $(PKG)_BUILD
     if [ $(MXE_SYSTEM) = msvc ]; then \
         $(SED) -i -e 's,-lm\>,,' '$(1)/fftw.pc.in'; \
     fi
+
+    # default is double
     cd '$(1)' && ./configure \
         F77=$(MXE_F77) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
@@ -36,9 +48,9 @@ define $(PKG)_BUILD
         --enable-threads \
         --enable-sse2 \
         $($(PKG)_CONFIG_OPTS) \
-        --enable-double && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
+        && $(CONFIGURE_POST_HOOK)
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DISABLE_PROGS)
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS)  DESTDIR='$(3)'
 
     if $($(PKG)_HAVE_LONG_DOUBLE); then \
         cd '$(1)' && ./configure \
@@ -50,8 +62,8 @@ define $(PKG)_BUILD
             --enable-sse2 \
             $($(PKG)_CONFIG_OPTS) \
             --enable-long-double && $(CONFIGURE_POST_HOOK) ; \
-        $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= ; \
-        $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)' ; \
+        $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DISABLE_PROGS) ; \
+        $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS) DESTDIR='$(3)' ; \
     fi
 
     cd '$(1)' && ./configure \
@@ -63,6 +75,6 @@ define $(PKG)_BUILD
         --enable-sse2 \
         $($(PKG)_CONFIG_OPTS) \
         --enable-float && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DISABLE_PROGS) 
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
 endef

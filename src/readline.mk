@@ -3,15 +3,21 @@
 
 PKG             := readline
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := a9761cd9c3da485eb354175fcc2fe35856bc43ac
+$(PKG)_VERSION  := 8.0
+$(PKG)_CHECKSUM := d58041c2143595dc001d2777ae9a200be30198b0
 $(PKG)_SUBDIR   := readline-$($(PKG)_VERSION)
 $(PKG)_FILE     := readline-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/readline/$($(PKG)_FILE)
 
 ifeq ($(MXE_SYSTEM),mingw)
   $(PKG)_TERMCAP_LIB := termcap
+  $(PKG)_CONFIGURE_OPTIONS := --without-curses
 else
   $(PKG)_TERMCAP_LIB := ncurses
+  ifeq ($(MXE_NATIVE_BUILD),yes)
+    $(PKG)_CONFIGURE_OPTIONS := --with-curses bash_cv_termcap_lib="-lncurses"
+    $(PKG)_MAKE_OPTIONS := SHLIB_LIBS="-lncurses"
+  endif
 endif
 
 $(PKG)_DEPS := $($(PKG)_TERMCAP_LIB)
@@ -30,12 +36,14 @@ define $(PKG)_BUILD
                       -e 's/@@LIBRARY_SUFFIX@@/$(LIBRARY_SUFFIX)/g' $$f; \
         done; \
     fi
-    cd '$(1)' && ./configure \
+    cd '$(1)' &&  bash_cv_wcwidth_broken=no \
+        ./configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
+        $($(PKG)_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
         --enable-multibyte \
         --without-purify
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $($(PKG)_MAKE_OPTIONS) install DESTDIR='$(3)'
 endef

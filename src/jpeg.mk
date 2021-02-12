@@ -3,7 +3,8 @@
 
 PKG             := jpeg
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := f080b2fffc7581f7d19b968092ba9ebc234556ff
+$(PKG)_VERSION  := 9d
+$(PKG)_CHECKSUM := 0bf0fbc3f6f1b5f7d5ad4734eae8cbb148517d6f
 $(PKG)_SUBDIR   := jpeg-$($(PKG)_VERSION)
 $(PKG)_FILE     := jpegsrc.v$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.ijg.org/files/$($(PKG)_FILE)

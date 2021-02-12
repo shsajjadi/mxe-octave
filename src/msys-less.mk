@@ -3,6 +3,7 @@
 
 PKG             := msys-less
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 436-2
 $(PKG)_CHECKSUM := 30373c5a85ebd9846e84aed5e147ced56b1e685c
 $(PKG)_REMOTE_SUBDIR := less/less-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
@@ -11,8 +12,9 @@ $(PKG)_URL      := $(MSYS_BASE_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/downl
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_BASE_URL)/less' | \
+    $(SED) -n 's,.*title="less-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

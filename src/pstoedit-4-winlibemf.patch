@@ -1,0 +1,30 @@
+diff -ur pstoedit-3.62/configure.ac pstoedit-3.62.new/configure.ac
+--- pstoedit-3.62/configure.ac	2013-03-10 14:45:43.000000000 -0400
++++ pstoedit-3.62.new/configure.ac	2015-02-28 14:34:33.000000000 -0500
+@@ -324,6 +324,9 @@
+ OLD_CPPFLAGS=
+ OLD_LIBS=
+ 
++dnl if windows we can just enable emf/wmf support
++AC_CHECK_HEADER(windows.h,
++ [have_windows_h=yes])
+ 
+ AC_ARG_WITH(libemf-src,
+ [  --with-libemf-src=DIR           look for libEMF src in dir (e.g. /usr/local/lib)],
+@@ -382,8 +385,14 @@
+ if test -n "${LIBEMF_LDFLAGS}" && test -n "${LIBEMF_CFLAGS}"; then
+    HAVE_LIBEMF=yes
+ else
+-   LIBEMF_CFLAGS=
+-   LIBEMF_LDFLAGS=
++   if test "${have_windows_h}" = "yes"; then
++     HAVE_LIBEMF=yes
++     LIBEMF_CFLAGS=
++     LIBEMF_LDFLAGS=-lgdi32
++   else
++     LIBEMF_CFLAGS=
++     LIBEMF_LDFLAGS=
++   fi
+ fi
+ 
+ AC_SUBST(LIBEMF_LDFLAGS)

@@ -3,6 +3,7 @@
 
 PKG             := cgal
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 4.0.2
 $(PKG)_CHECKSUM := 20c58ebc021754e8be35237bcda43b0084f60617
 $(PKG)_SUBDIR   := CGAL-$($(PKG)_VERSION)
 $(PKG)_FILE     := CGAL-$($(PKG)_VERSION).tar.xz
@@ -24,6 +25,8 @@ define $(PKG)_BUILD
         -DCGAL_INSTALL_BIN_DIR:STRING="bin" \
         -DBOOST_LIB_DIAGNOSTIC_DEFINITIONS:STRING="-DBOOST_LIB_DIAGNOSTIC" \
         -DWITH_CGAL_Qt3:BOOL="0" \
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DBOOST_COMPILER=_win32 \
         -DBOOST_THREAD_USE_LIB=1 \
@@ -31,9 +34,12 @@ define $(PKG)_BUILD
         -DBUILD_SHARED_LIBS=0 \
         -C TryRunResults.cgal.cmake .
     $(MAKE) -C '$(1)' -j $(JOBS)
+
     cd '$(1)/examples/AABB_tree' && cmake \
         -DBOOST_LIB_DIAGNOSTIC_DEFINITIONS:STRING="-DBOOST_LIB_DIAGNOSTIC" \
         -DWITH_CGAL_Qt3:BOOL="0" \
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DBOOST_COMPILER=_win32 \
         -DBOOST_THREAD_USE_LIB=1 \

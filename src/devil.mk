@@ -3,6 +3,7 @@
 
 PKG             := devil
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.7.8
 $(PKG)_CHECKSUM := bc27e3e830ba666a3af03548789700d10561fcb1
 $(PKG)_SUBDIR   := devil-$($(PKG)_VERSION)
 $(PKG)_FILE     := DevIL-$($(PKG)_VERSION).tar.gz
@@ -10,10 +11,10 @@ $(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/openil/DevIL/$($(PKG)_VE
 $(PKG)_DEPS     := freeglut zlib openexr jpeg jasper lcms libmng libpng tiff sdl
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://openil.svn.sourceforge.net/viewvc/openil/tags/?sortby=date' | \
-    grep '<a name="' | \
-    $(SED) -n 's,.*<a name="release-\([0-9][^"]*\)".*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'http://sourceforge.net/p/openil/svn/HEAD/tree/tags/' | \
+    grep 'href="' | \
+    $(SED) -n 's,.*href="release-\([0-9][^"]*\)".*,\1,p' | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

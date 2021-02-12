@@ -3,22 +3,23 @@
 
 PKG             := freetds
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 3ab06c8e208e82197dc25d09ae353d9f3be7db52
+$(PKG)_VERSION  := 1.2.5
+$(PKG)_CHECKSUM := 50b326d67ca88269d95c129bac5ea5c6f11fee91
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
-$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
+$(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.freetds.org/pub/$(PKG)/stable/$($(PKG)_FILE)
 $(PKG)_DEPS     := libiconv gnutls
 
+$(PKG)_CONFIG_OPTS :=
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+    $(PKG)_CONFIG_OPTS += --disable-threadsafe
+endif
+
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package freetds.' >&2;
-    echo $(freetds_VERSION)
-endef
-define $(PKG)_UPDATE_orig
-    $(WGET) -q -O- 'http://freetds.cvs.sourceforge.net/viewvc/freetds/freetds/' | \
-    grep '<option>R' | \
-    $(SED) -n 's,.*R\([0-9][0-9_]*\)<.*,\1,p' | \
-    $(SED) 's,_,.,g' | \
-    head -1
+    $(WGET) -q -O- 'ftp://ftp.freetds.org/pub/freetds/stable/' | \
+    $(SED) -n 's,.*freetds-\([0-9.]*\)\.tar.*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
@@ -29,13 +30,13 @@ define $(PKG)_BUILD
         --disable-rpath \
         --disable-dependency-tracking \
         $(ENABLE_SHARED_OR_STATIC) \
+        $($(PKG)_CONFIG_OPTS) \
         --enable-libiconv \
         --enable-msdblib \
         --enable-sspi \
-        --disable-threadsafe \
         --with-tdsver=7.2 \
         --with-gnutls \
         $($(PKG)_CONFIG_OPTS) \
         PKG_CONFIG='$(MXE_PKG_CONFIG)'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install man_MANS=
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_DOCS) TARGET_DOCDIR='$(1)' DESTDIR='$(3)'
 endef

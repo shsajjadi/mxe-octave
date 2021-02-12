@@ -1,0 +1,47 @@
+diff -ur fig2dev-3.2.7a.orig/fig2dev/dev/genbitmaps.c fig2dev-3.2.7a/fig2dev/dev/genbitmaps.c
+--- fig2dev-3.2.7a.orig/fig2dev/dev/genbitmaps.c	2018-10-19 15:28:40.513608360 -0400
++++ fig2dev-3.2.7a/fig2dev/dev/genbitmaps.c	2018-10-19 15:30:51.900907004 -0400
+@@ -232,8 +232,9 @@
+ 		if (to)
+ 			sprintf(com + n, " >'%s'", to);
+ 	}
+-
++#if !defined (__WIN32__) || defined (__CYGWIN__)
+ 	(void) signal(SIGPIPE, bitmaps_broken_pipe);
++#endif
+ 	if ((tfp = popen(com, "w")) == 0) {
+ 		fprintf(stderr, "fig2dev: Can't open pipe to ghostscript\n");
+ 		fprintf(stderr, "command was: %s\n", com);
+@@ -275,7 +276,9 @@
+ 
+ 	status = pclose(tfp);
+ 	tfp = 0;	/* Otherwise main() tries to close tfp again */
++#if ! defined (__WIN32__) || defined (__CYGWIN__)
+ 	(void) signal(SIGPIPE, SIG_DFL);
++#endif
+ 
+ 	if (status != 0) {
+ 		fputs("Error in ghostcript or netpbm command\n", stderr);
+diff -ur fig2dev-3.2.7a.orig/fig2dev/dev/genpdf.c fig2dev-3.2.7a/fig2dev/dev/genpdf.c
+--- fig2dev-3.2.7a.orig/fig2dev/dev/genpdf.c	2018-10-19 15:28:40.509608259 -0400
++++ fig2dev-3.2.7a/fig2dev/dev/genpdf.c	2018-10-19 15:31:31.761906076 -0400
+@@ -95,7 +95,9 @@
+ 		"-dAutoFilterColorImages=false -dColorImageFilter=/DCTEncode "
+ 		"-sDEVICE=pdfwrite -dPDFSETTINGS=/prepress -o '%s' -",
+ 		GSEXE, ofile);
++#if !defined (__WIN32__) || defined (__CYGWIN__)
+ 	(void) signal(SIGPIPE, pdf_broken_pipe);
++#endif
+ 	if ((tfp = popen(com, "w")) == 0) {
+ 		fprintf(stderr, "fig2dev: Cannot open pipe to ghostscript\n");
+ 		fprintf(stderr, "command was: %s\n", com);
+@@ -125,7 +127,9 @@
+ 		free(com);
+ 		return -1;
+ 	}
++#if !defined (__WIN32__) || defined (__CYGWIN__)
+ 	(void) signal(SIGPIPE, SIG_DFL);
++#endif
+ 	free(com);
+ 
+ 	return 0;

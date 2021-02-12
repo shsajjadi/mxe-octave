@@ -3,6 +3,7 @@
 
 PKG             := imagemagick
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 6.7.2-7
 $(PKG)_CHECKSUM := 13198d502e95abb305c23c3d56378e9139fcb7c3
 $(PKG)_SUBDIR   := ImageMagick-$($(PKG)_VERSION)
 $(PKG)_FILE     := ImageMagick-$($(PKG)_VERSION).tar.xz
@@ -10,9 +11,9 @@ $(PKG)_URL      := http://ftp.nluug.nl/ImageMagick/$($(PKG)_FILE)
 $(PKG)_DEPS     := bzip2 ffmpeg fftw freetype jasper jpeg lcms libpng libtool openexr pthreads tiff
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.imagemagick.org/' | \
-    $(SED) -n 's,.*<p>The current release is ImageMagick \([0-9][^<]*\).</p>.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://github.com/ImageMagick/ImageMagick/tags' | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

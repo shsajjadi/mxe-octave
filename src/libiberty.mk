@@ -3,6 +3,7 @@
 
 PKG             := libiberty
 $(PKG)_IGNORE    = $(build-binutils_IGNORE)
+$(PKG)_VERSION  := 2.34
 $(PKG)_CHECKSUM  = $(build-binutils_CHECKSUM)
 $(PKG)_SUBDIR    = $(build-binutils_SUBDIR)/libiberty
 $(PKG)_FILE      = $(build-binutils_FILE)
@@ -23,8 +24,8 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)'
     $(MAKE) -C '$(1)' -j 1 install target_header_dir=libiberty
 
-    '$(MXE_CC)' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_BINDIR)/test-libiberty.exe' \
-        -I$(HOST_INCDIR)/libiberty -liberty
+    #'$(MXE_CC)' \
+    #    -W -Wall -Werror -ansi -pedantic \
+    #    '$(2).c' -o '$(HOST_BINDIR)/test-libiberty.exe' \
+    #    -I$(HOST_INCDIR)/libiberty -liberty
 endef

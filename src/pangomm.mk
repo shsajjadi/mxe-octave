@@ -3,6 +3,7 @@
 
 PKG             := pangomm
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.28.4
 $(PKG)_CHECKSUM := ee83497485e180708dffbf2e68d633ae8d5a36b4
 $(PKG)_SUBDIR   := pangomm-$($(PKG)_VERSION)
 $(PKG)_FILE     := pangomm-$($(PKG)_VERSION).tar.bz2
@@ -10,10 +11,9 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/pangomm/$(call SHORT_P
 $(PKG)_DEPS     := cairomm glibmm pango
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/pangomm/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?id=\\([0-9][^']*\\)'.*,\\1,p" | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/pangomm/tags | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

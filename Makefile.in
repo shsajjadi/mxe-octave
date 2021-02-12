@@ -1,34 +1,93 @@
 # This file is part of MXE.
 # See index.html for further information.
 
+OCTAVE_TARGET := @ENABLE_OCTAVE@octave
+
 PWD := $(shell pwd)
+TOP_BUILD_DIR := @abs_builddir@
+TOP_DIR := @abs_srcdir@
+
+STRIP_DIST_FILES := @STRIP_DIST_FILES@
+
+DATE := $(shell date +%Y-%m-%d-%H-%M)
 
 ## Configuration variables.
 
 # Set the following configuration variables with a configure script?
 
-# Current valid values are mingw (cross) and gnu-linux (native).
+# Current valid values are mingw (cross or native), msvc (native)
+# and gnu-linux (native).
 MXE_SYSTEM := @MXE_SYSTEM@
+ifeq ($(MXE_SYSTEM),mingw)
+else ifeq ($(MXE_SYSTEM),msvc)
+else ifeq ($(MXE_SYSTEM),gnu-linux)
+else
+$(error "$(MXE_SYSTEM)" is not a valid value for MXE_SYSTEM)
+endif
 
 # Set to "no" if doing a cross compile build.
 MXE_NATIVE_BUILD := @MXE_NATIVE_BUILD@
+
+# Set to "yes" to use ccache
+USE_CCACHE := @USE_CCACHE@
+CCACHE := @CCACHE@
 
 # Set to "yes" to use the versions of GCC and binutils already
 # installed on your system (default is yes if doing native build).
 USE_SYSTEM_GCC := @USE_SYSTEM_GCC@
 
 # Set to "yes" to use the version of fontconfig already installed
-# on your system (default is yes if doing native build). 
+# on your system (default is yes if doing native build).
 USE_SYSTEM_FONTCONFIG := @USE_SYSTEM_FONTCONFIG@
 
+# Set to "yes" to use the OpenGL libraries already installed
+# on your system (default is yes).
+USE_SYSTEM_OPENGL := @USE_SYSTEM_OPENGL@
+
+# Set to "yes" to use the X11 libraries already installed
+# on your system (default is yes if doing native build).
+USE_SYSTEM_X11_LIBS := @USE_SYSTEM_X11_LIBS@
+
+# Build compiler for 64-bit Windows.  Using this option will build
+# binaries that require a 64-bit Windows system.
+ENABLE_WINDOWS_64 := @ENABLE_WINDOWS_64@
+
+# Build Octave with 64-bit indexing enabled (This is the default).
+ENABLE_64 := @ENABLE_64@
+
+# Build Fortran (and other) numerical library dependencies with
+# 64-bit indexing enabled (experimental; requires 64-bit system and
+# compiler).  The usual configuration is to build with ENABLE_64 but
+# not ENABLE_FORTRAN_INT64.
+ENABLE_FORTRAN_INT64 := @ENABLE_FORTRAN_INT64@
+
+# create binary octave forge tools.
+# if cross, compiling, this also means we will attempt to create cross mkoctfile
+ENABLE_BINARY_PACKAGES := @ENABLE_BINARY_PACKAGES@
+
+# Set to "no" to build a minimal Octave that runs on the build system.
+# That version can be used for cross-building binary packages that depend
+# on Octave as a build tool. If "yes", it is tried to use an Octave that
+# is already installed on the build system (default is "yes").
+USE_SYSTEM_OCTAVE := @USE_SYSTEM_OCTAVE@
+
+# create and install devel tools (default no)
+ENABLE_DEVEL_TOOLS := @ENABLE_DEVEL_TOOLS@
+
+# use qt5 instead of qt4
+ENABLE_QT5 := @ENABLE_QT5@
+
+# Set to "yes" to use msys2
+USE_MSYS2 := @USE_MSYS2@
+
 # Should match what config.guess prints for your system.
-# If cross compiling, you must set it manually.
+# If cross compiling, you must set it manually (defaults are set by configure).
 ifeq ($(MXE_NATIVE_BUILD),yes)
-  TARGET := $(shell tools/config.guess)
+  TARGET := $(shell $(TOP_DIR)/tools/config.guess)
 else
-  TARGET := i686-pc-mingw32
+  TARGET := @MXE_TARGET@
 endif
-BUILD_SYSTEM := $(shell tools/config.guess)
+BUILD_SYSTEM := $(shell $(TOP_DIR)/tools/config.guess)
 
 # Enable shared or static libs, or perhaps both.  Probably it doesn't
 # make sense to disable both...
@@ -37,9 +96,8 @@ BUILD_STATIC := @BUILD_STATIC@
 
 USE_PIC_FLAG := @USE_PIC_FLAG@
 
-# Attempt to build Octave and dependencies with 64-bit indexing
-# enabled (experimental; requires 64-bit system and compiler).
-ENABLE_64 := @ENABLE_64@
+# Compile Qhull with -fno-strict-aliasing flag.
+ENABLE_QHULL_NO_STRICT_ALIASING_FLAG := @ENABLE_QHULL_NO_STRICT_ALIASING_FLAG@
 
 # Attempt to build with support for Java.
 ENABLE_JAVA := @ENABLE_JAVA@
@@ -47,8 +105,14 @@ ENABLE_JAVA := @ENABLE_JAVA@
 # Attempt to build LLVM and enable Octave's experimental JIT compiler.
 ENABLE_JIT := @ENABLE_JIT@
 
+# Build octave docs 
+ENABLE_DOCS := @ENABLE_DOCS@
+
 # Use openblas for octave
 ENABLE_OPENBLAS := @ENABLE_OPENBLAS@
+
+# Install dependancy pkg docs
+ENABLE_DEP_DOCS := @ENABLE_DEP_DOCS@
 
 # Look in lib64 directory.
 MXE_USE_LIB64_DIRECTORY := @ENABLE_LIB64_DIRECTORY@
@@ -82,7 +146,7 @@ endif
 # and it's not clear to me how to change that.
 #
 # For native builds, dump everything all together in one directory tree.
-ROOT_PREFIX := $(PWD)/usr
+ROOT_PREFIX := $(TOP_BUILD_DIR)/usr
 BUILD_TOOLS_PREFIX := $(ROOT_PREFIX)
 ifeq ($(MXE_NATIVE_BUILD),yes)
   HOST_PREFIX := $(ROOT_PREFIX)
@@ -95,19 +159,55 @@ $(shell mkdir -p $(ROOT_PREFIX))
 $(shell mkdir -p $(BUILD_TOOLS_PREFIX))
 $(shell mkdir -p $(HOST_PREFIX))
 
-# At least one package uses --with instead of --enable.  
+## The mk-hg-id.sh script will be executed each time Make runs.  It will
+## update the HG-ID file in the build tree.
+$(shell $(TOP_DIR)/tools/mk-hg-id.sh "$(TOP_DIR)")
+
+## At least one package uses --with instead of --enable.
+## Some cmake packages use BUILD_STATIC_LIBS and at least
+## one uses ONLY_SHARED_LIBS
 ifeq ($(BUILD_SHARED),yes)
   ifeq ($(BUILD_STATIC),yes)
     ENABLE_SHARED_OR_STATIC := --enable-shared --enable-static
     WITH_SHARED_OR_STATIC := --with-shared --with-static
+    CMAKE_BUILD_SHARED_OR_STATIC := -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=ON -DONLY_SHARED_LIBS=OFF
   else
     ENABLE_SHARED_OR_STATIC := --enable-shared --disable-static
     WITH_SHARED_OR_STATIC := --with-shared --without-static
+    CMAKE_BUILD_SHARED_OR_STATIC := -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DONLY_SHARED_LIBS=ON
   endif
 else
   ENABLE_SHARED_OR_STATIC := --disable-shared --enable-static
   WITH_SHARED_OR_STATIC := --without-shared --with-static
+  CMAKE_BUILD_SHARED_OR_STATIC := -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DONLY_SHARED_LIBS=OFF
 endif
+
+ifeq ($(ENABLE_DEP_DOCS),no)
+  MXE_DISABLE_DOCS := \
+    man_MANS= \
+    dist_man_MANS= \
+    man1_MANS= \
+    dist_man1_MANS= \
+    man2_MANS= \
+    man3_MANS= \
+    dist_man3_MANS= \
+    man4_MANS= \
+    man5_MANS= \
+    dist_man5_MANS= \
+    doc_DATA= \
+    dist_doc_DATA= \
+    html_DATA= \
+    dist_html_DATA= \
+    pkghtml_DATA= \
+    examples_DATA= \
+    dist_examples_SCRIPTS= \
+    dist_apidoc_DATA= \
+    INFO_DEPS= 
+else
+  MXE_DISABLE_DOCS :=
+endif
+
+MXE_DISABLE_PROGS := bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= 
 
 ifeq ($(USE_PIC_FLAG),yes)
   MXE_CC_PICFLAG := -fPIC
@@ -116,18 +216,31 @@ ifeq ($(USE_PIC_FLAG),yes)
 endif
 
 JOBS               := 1
-SOURCEFORGE_MIRROR := freefr.dl.sourceforge.net
-PKG_MIRROR         := s3.amazonaws.com/mxe-pkg
-PKG_CDN            := d1yihgixbnrglp.cloudfront.net
+SOURCEFORGE_MIRROR := downloads.sourceforge.net
+MXE_MIRROR         := https://mirror.mxe.cc/pkg
+MXE_OCTAVE_MIRROR  := https://octave.org/mxe-pkg-src
+PKG_MIRROR         := https://s3.amazonaws.com/mxe-pkg
+PKG_CDN            := http://d1yihgixbnrglp.cloudfront.net
+GITLAB_BACKUP      := https://gitlab.com/starius/mxe-backup2/raw/master
+# reorder as required, ensuring final one is a http fallback
+MIRROR_SITES       := GITLAB_BACKUP MXE_MIRROR PKG_MIRROR PKG_CDN MXE_OCTAVE_MIRROR
 
 SHELL := @SHELL@
 
+GREP       ?= grep
 INSTALL    := $(shell ginstall --help >/dev/null 2>&1 && echo g)install
 PATCH      := $(shell gpatch --help >/dev/null 2>&1 && echo g)patch
 SED        := $(shell gsed --help >/dev/null 2>&1 && echo g)sed
-WGET       := wget --no-check-certificate \
-                   --user-agent=$(shell wget --version | \
-                   $(SED) -n 's,GNU \(Wget\) \([0-9.]*\).*,\1/\2,p')
+SORT       := $(shell gsort --help >/dev/null 2>&1 && echo g)sort
+## The --compression option for wget is new in 1.19.2 and now without
+## using --compression=none, wget seems to uncompress .gz archives
+## automatically?!?
+WGET_TOOL   = wget
+WGET_COMP  := $(shell $(WGET_TOOL) --compression=none --help >/dev/null 2>&1 && echo x--compression=none | $(SED) 's/x//')
+DEFAULT_UA := $(shell $(WGET_TOOL) --version | $(SED) -n 's,GNU \(Wget\) \([0-9.]*\).*,\1/\2,p')
+WGET        = $(WGET_TOOL) $(WGET_COMP) --no-check-certificate \
+                 --user-agent='$(or $($(1)_UA),$(DEFAULT_UA))'
+
 # The MSYS GNU tar does not support long uid/gid, leading to unpacking
 # errors for some archives. Bsdtar does not have that limitation, so
 # use it on Win32 platform if GNU tar fails to unpack the archive.
@@ -138,16 +251,11 @@ else
     TAR  := tar
 endif
 
-REQUIREMENTS := bash bzip2 $(MAKE) openssl $(PATCH) $(PERL) \
+REQUIREMENTS := bash bzip2 $(MAKE) $(PATCH) $(PERL) \
                 $(SED) tar unzip wget
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   REQUIREMENTS += bsdtar
-endif
-
-# if we want jit (llvm) we need python
-ifeq ($(ENABLE_JIT),yes)
-  REQUIREMENTS += python
 endif
 
 LIBTOOL     := libtool
@@ -156,9 +264,16 @@ LIBTOOLIZE  := libtoolize
 ## Build tools are tools that we need to build everything else.
 ## They run on the build system.  Some, like gcc and binutils may
 ## generate output that runs on the host system (TARGET in MXE terms).
-ALL_BUILD_TOOLS := $(patsubst src/%.mk, %, $(wildcard src/build-*.mk))
+ALL_BUILD_TOOLS := $(shell $(SED) -n 's/^.* class="package">\(build-[^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html')
+
 BUILD_COMPILER_TOOLS := build-gcc build-binutils
 BUILD_TOOLS := $(ALL_BUILD_TOOLS)
+# some build tools are optional and added as explicit dependencies
+# to packages that need them
+BUILD_TOOLS_OPT := \
+  build-mako build-markupsafe build-meson build-ninja build-python3 \
+  build-python build-octave build-setuptools build-scons
+BUILD_TOOLS := $(filter-out $(BUILD_TOOLS_OPT), $(BUILD_TOOLS))
 # Building flex for native mingw fails, so disable it.
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   REQUIREMENTS += flex
@@ -180,7 +295,18 @@ ifeq ($(MXE_SYSTEM),msvc)
   REQUIREMENTS += makeinfo xz
   BUILD_TOOLS := $(filter-out build-texinfo build-xz, $(BUILD_TOOLS))
 endif
+# use the a native python in native mingw
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  REQUIREMENTS += python3
+  BUILD_TOOLS := $(filter-out build-python3, $(BUILD_TOOLS))
+endif
+PYTHON3 ?= python3
 
+# use the a native awk in native mingw
+ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
+  REQUIREMENTS += awk
+  BUILD_TOOLS := $(filter-out build-gawk, $(BUILD_TOOLS))
+endif
 
 ifeq ($(USE_SYSTEM_GCC),yes)
   BUILD_TOOLS := $(filter-out $(BUILD_COMPILER_TOOLS), $(BUILD_TOOLS))
@@ -189,25 +315,47 @@ ifneq ($(MXE_SYSTEM),msvc)
   BUILD_TOOLS := $(filter-out build-msvctools, $(BUILD_TOOLS))
 endif
 
-STAMP_DIR  := $(PWD)/installed-packages
-MSYS_INFO_DIR := $(PWD)/msys-info
-LOG_DIR    := $(PWD)/log
+STAMP_DIR  := $(TOP_BUILD_DIR)/installed-packages
+BUILT_PKGS_DIR := $(TOP_BUILD_DIR)/built-packages
+MSYS_INFO_DIR := $(TOP_BUILD_DIR)/msys-info
+LOG_DIR    := $(TOP_BUILD_DIR)/log
 TIMESTAMP  := $(shell date +%Y%m%d_%H%M%S)
-PKG_DIR    := $(PWD)/pkg
-TMP_DIR     = $(PWD)/tmp-$(1)
-TOP_DIR    := $(PWD)
-MAKEFILE   := $(TOP_DIR)/Makefile
-PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* id="\([^"]*\)-package">.*$$/\1/p' '$(TOP_DIR)/index.html'))
+PKG_DIR    := @PKG_DIR@
+TMP_DIR     = $(TOP_BUILD_DIR)/tmp-$(1)
+MAKEFILE   := $(TOP_BUILD_DIR)/Makefile
+PKGS       := $(filter-out $(ALL_BUILD_TOOLS), $(shell $(SED) -n 's/^.* class="package">\([^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html'))
+PKGS += $(BUILD_TOOLS_OPT)
 
+ENV_PATH := $(PATH)
 PATH := $(BUILD_TOOLS_PREFIX)/bin:$(PATH)
+ifeq ($(USE_CCACHE),yes)
+  PATH := $(BUILD_TOOLS_PREFIX)/bin/ccache:$(PATH)
+  CCACHE_LINKS_TARGET := ccache-links
+endif
+
+ENV_PKG_CONFIG_PATH := $(PKG_CONFIG_PATH)
+
+BUILD_PKG_CONFIG_PATH ?= @BUILD_PKG_CONFIG_PATH@
 
 CONFIGURE_CPPFLAGS := CPPFLAGS='-I$(HOST_PREFIX)/include'
 ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
   CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX)/lib -L$(HOST_PREFIX)/lib64'
+  PKG_CONFIG_PATH := $(HOST_PREFIX)/lib/pkgconfig:$(HOST_PREFIX)/lib64/pkgconfig
+  export PKG_CONFIG_PATH
 else
   CONFIGURE_LDFLAGS := LDFLAGS='-L$(HOST_PREFIX)/lib'
+  PKG_CONFIG_PATH := $(HOST_PREFIX)/lib/pkgconfig
+  export PKG_CONFIG_PATH
 endif
 CONFIGURE_POST_HOOK := true
+
+HOST_BINDIR := $(HOST_PREFIX)/bin
+HOST_LIBDIR := $(HOST_PREFIX)/lib
+HOST_LIB64DIR := $(HOST_PREFIX)/lib64
+HOST_INCDIR := $(HOST_PREFIX)/include
+
+CMAKE_HOST_PREFIX := $(HOST_PREFIX)
+CMAKE_ROOT_PREFIX := $(ROOT_PREFIX)
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   MXE_TOOL_PREFIX := 
@@ -263,6 +411,14 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     MXE_PKG_CONFIG := pkg-config
     MXE_QMAKE := qmake
   endif
+
+  MXE_MOC := $(HOST_BINDIR)/moc
+  MXE_UIC := $(HOST_BINDIR)/uic
+  MXE_LRELEASE := $(HOST_BINDIR)/lrelease
+  MXE_RCC := $(HOST_BINDIR)/rcc
+
+  MXE_MKOCTFILE := $(HOST_BINDIR)/mkoctfile
+  MXE_OCTAVECONFIG := $(HOST_BINDIR)/octave-config
 else
   MXE_TOOL_PREFIX := $(TARGET)-
   MXE_AR := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)ar'
@@ -280,32 +436,59 @@ else
     MXE_WINDRES := true
   endif
   MXE_PKG_CONFIG := '$(BUILD_TOOLS_PREFIX)/bin/pkg-config'
-  MXE_QMAKE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
+  ifeq ($(ENABLE_QT5),yes)
+    MXE_QMAKE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake-qt5'
+  else
+    MXE_QMAKE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
+  endif
+
+  MXE_MOC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
+  MXE_UIC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
+  MXE_LRELEASE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'
+  MXE_RCC := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
+
+  MXE_MKOCTFILE := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)mkoctfile'
+  MXE_OCTAVECONFIG := '$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)octave-config'
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)
   MAKE_SHARED_FROM_STATIC_OPTIONS := --windowsdll
 endif
 
-HOST_BINDIR := $(HOST_PREFIX)/bin
-HOST_LIBDIR := $(HOST_PREFIX)/lib
-HOST_LIB64DIR := $(HOST_PREFIX)/lib64
-HOST_INCDIR := $(HOST_PREFIX)/include
+ENV_LD_LIBRARY_PATH := $(LD_LIBRARY_PATH)
 
 ifeq ($(MXE_SYSTEM),mingw)
+  MXE_WINDOWS_BUILD := yes
   ifneq ($(MXE_NATIVE_BUILD),yes)
     MSYS_URL := http://sourceforge.net/projects/mingw/files/MSYS
     MSYS_BASE_URL := $(MSYS_URL)/Base
     MSYS_EXTENSION_URL := $(MSYS_URL)/Extension
     MSYS_BASE_VER := 1.0.13
     MSYS_EXTENSION_VER := 1.0.13
-    MSYS_BASE_DIR := $(TOP_DIR)/msys-base
-    MSYS_EXTENSION_DIR := $(TOP_DIR)/msys-extension
-    MSYS_BASE_PACKAGES := $(addprefix msys-,bash coreutils diffutils dos2unix file findutils gawk grep gzip less libiconv libintl libmagic make msys-core regex sed tar termcap unzip wget)
+    MSYS_BASE_DIR := $(TOP_BUILD_DIR)/msys-base
+    MSYS_EXTENSION_DIR := $(TOP_BUILD_DIR)/msys-extension
+    MSYS_BASE_PACKAGES := $(addprefix msys-,bash coreutils diffutils dos2unix file findutils gawk grep gzip less libcrypt libiconv libintl libmagic libopenssl make msys-core patch perl regex sed tar termcap unzip zip wget zlib)
 
-    NOTEPAD_BASE_DIR := $(TOP_DIR)/notepad++
+    MSYS_BASE_SOURCES := $(addprefix src-,$(MSYS_BASE_PACKAGES))
+    PKGS += $(MSYS_BASE_SOURCES)
+
+    NOTEPAD_BASE_DIR := $(TOP_BUILD_DIR)/notepad++
+
+    MSYS2_ARCH ?= $(shell echo $(TARGET) | $(SED) -n 's|\([^-]*\).*|\1|p')
+    MSYS2_PACKAGES := $(shell $(SED) -n 's/^.* class="package">\([^<]*\)<.*$$/\1/p' '$(TOP_DIR)/index.html' | $(GREP) msys2-)
+    MSYS2_SOURCES := $(addprefix src-,$(MSYS2_PACKAGES))
+    PKGS += $(MSYS2_SOURCES)
+    MSYS2_BASE_URL := http://repo.msys2.org/msys
+    MSYS2_URL := $(MSYS2_BASE_URL)/$(MSYS2_ARCH)
+    MSYS2_SRC_URL := $(MSYS2_BASE_URL)/sources
+    MSYS2_DIR := $(TOP_BUILD_DIR)/msys2
+
+    MSYS2_UPDATE_TMP_FILE := $(TOP_BUILD_DIR)/msys_updates.html
   endif
-else ifneq ($(MXE_SYSTEM),msvc)
+else ifeq ($(MXE_SYSTEM),msvc)
+  MXE_WINDOWS_BUILD := yes
+else
+  MXE_WINDOWS_BUILD := no
   MXE_CPPFLAGS := '-I$(HOST_INCDIR)'
   ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
     MXE_LDFLAGS := '-L$(HOST_LIBDIR) -L$(HOST_LIB64DIR)'
@@ -346,19 +529,44 @@ ifeq ($(MXE_SYSTEM),msvc)
   MAKE_SHARED_FROM_STATIC_OPTIONS := --windowsdll --msvc --libprefix '$(LIBRARY_PREFIX)' --libsuffix '$(LIBRARY_SUFFIX)'
 endif
 
-OCTAVE_FORGE_BASE_URL := 'http://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
-OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim specfun general signal communications image io statistics control)
+OCTAVE_FORGE_BASE_URL := 'https://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
+## Packages removed from list because build is broken:
+## None.
+OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim general signal communications image io statistics control geometry windows linear-algebra sockets data-smoothing fuzzy-logic-toolkit quaternion fits tsa netcdf ltfat database instrument-control generate_html nurbs strings financial stk splines dataframe lssa queueing ga interval nan ocs mapping tisean video zeromq gsl optiminterp dicom sparsersb audio symbolic matgeom)
+# get ALL deps for all of- packages, regardless of whether building the actual forge package in the installer
+OCTAVE_FORGE_DEPS:= $(sort $(foreach p,$(addprefix $(TOP_DIR)/src/,$(addsuffix .mk,$(OCTAVE_FORGE_PACKAGES))),$(shell $(SED) -n 's/.*_DEPS.*:=\(.*\)/\1/p' $p)))
+
+BLAS_PACKAGES := blas
+ifeq ($(ENABLE_OPENBLAS),yes)
+  BLAS_PACKAGES += openblas
+endif
+
+DEVEL_PACKAGES := 
+ifeq ($(ENABLE_DEVEL_TOOLS),yes)
+  DEVEL_PACKAGES += gdb
+  DEVEL_PACKAGES += cmake
+endif
+
 
 MAKE_SHARED_FROM_STATIC := \
   $(TOP_DIR)/tools/make-shared-from-static $(MAKE_SHARED_FROM_STATIC_OPTIONS)
 
+ifeq ($(USE_CCACHE),yes)
+  CMAKE_CCACHE_FLAGS := \
+    -DCMAKE_CXX_COMPILER_LAUNCHER='$(CCACHE)' \
+    -DCMAKE_C_COMPILER_LAUNCHER='$(CCACHE)' \
+    -DCMAKE_Fortran_COMPILER_LAUNCHER='$(CCACHE)'
+endif
+
 CMAKE_TOOLCHAIN_FILE := $(HOST_PREFIX)/share/cmake/mxe-conf.cmake
+CMAKE_NATIVE_TOOLCHAIN_FILE := $(TOP_BUILD_DIR)/usr/share/cmake/native-conf.cmake
 
 # unexport any environment variables that might cause trouble
 unexport AR CC CFLAGS C_INCLUDE_PATH CPATH CPLUS_INCLUDE_PATH CPP F77 FFLAGS
 unexport CPPFLAGS CROSS CXX CXXCPP CXXFLAGS EXEEXT EXTRA_CFLAGS
 unexport EXTRA_LDFLAGS LD LDFLAGS LIBRARY_PATH LIBS NM
 unexport OBJC_INCLUDE_PATH PKG_CONFIG QMAKESPEC RANLIB STRIP
+unexport CONFIG_SITE
 
 SHORT_PKG_VERSION = \
     $(word 1,$(subst ., ,$($(1)_VERSION))).$(word 2,$(subst ., ,$($(1)_VERSION)))
@@ -367,68 +575,147 @@ UNPACK_ARCHIVE = \
     $(if $(filter %.tgz,     $(1)),$(3) xzf '$(1)', \
     $(if $(filter %.tar.gz,  $(1)),$(3) xzf '$(1)', \
     $(if $(filter %.tar.bz2, $(1)),$(3) xjf '$(1)', \
+    $(if $(filter %.tar.lz, $(1)),$(3) xaf '$(1)', \
     $(if $(filter %.tar.lzma,$(1)),xz -dc -F lzma '$(1)' | $(3) xf -, \
     $(if $(filter %.tar.xz,$(1)),xz -dc '$(1)' | $(3) xf -, \
     $(if $(filter %.zip,     $(1)),unzip -q '$(1)', \
-    $(error Unknown archive format for $(2): $(1))))))))
+    $(error Unknown archive format for $(2): $(1)))))))))
 
 UNPACK_PKG_ARCHIVE = \
     $(if $(value $(1)_FILE),$(call UNPACK_ARCHIVE,$(PKG_DIR)/$($(1)_FILE),$(1),$(2)),true)
 
 PKG_CHECKSUM = \
-    openssl sha1 '$(PKG_DIR)/$($(1)_FILE)' 2>/dev/null | $(SED) -n 's,^.*\([0-9a-f]\{40\}\)$$,\1,p'
+    openssl sha1 $(or $(2),'$(PKG_DIR)/$($(1)_FILE)') 2>/dev/null | $(SED) -n 's,^.*\([0-9a-f]\{40\}\)$$,\1,p'
 
 CHECK_PKG_ARCHIVE = \
-    [ -z "$($(1)_CHECKSUM)" -o '$($(1)_CHECKSUM)' == "`$$(call PKG_CHECKSUM,$(1))`" ]
+    $(if $($(1)_SOURCE_TREE),\
+        echo '[local]' '$(1)' '$($(1)_SOURCE_TREE)' \
+    $(else),$(if $(SKIP_CHECHSUM),true, \
+        [ -z "$($(1)_CHECKSUM)" -o '$($(1)_CHECKSUM)' == "`$$(call PKG_CHECKSUM,$(1),$(2))`" ]\
+    ))
+
+ESCAPE_PKG = \
+	echo '$($(1)_FILE)' | perl -lpe 's/([^A-Za-z0-9])/sprintf("%%%02X", ord($$$$1))/seg'
+
+BACKUP_DOWNLOAD = \
+    (echo "MXE Warning! Downloading $(1) from backup." >&2 && \
+    ($(foreach SITE,$(MIRROR_SITES), \
+        $(WGET) -O '$(TMP_FILE)' $($(SITE))/`$(call ESCAPE_PKG,$(1))` || ) false))
 
 DOWNLOAD_PKG_ARCHIVE = \
-    mkdir -p '$(PKG_DIR)' && \
-    $(if $($(1)_URL_2), \
-        ( $(WGET) -T 30 -t 3 -O- '$($(1)_URL)' || \
-          $(WGET) -O- '$($(1)_URL_2)' || \
-          $(WGET) -O- '$(PKG_MIRROR)/$($(1)_FILE)' || \
-          $(WGET) -O- '$(PKG_CDN)/$($(1)_FILE)' ), \
-        ( $(WGET) -O- '$($(1)_URL)' || \
-          $(WGET) -O- '$(PKG_MIRROR)/$($(1)_FILE)' || \
-          $(WGET) -O- '$(PKG_CDN)/$($(1)_FILE)' )) \
-    $(if $($(1)_FIX_GZIP), \
-        | gzip -d | gzip -9n, \
-        ) \
-    > '$(PKG_DIR)/$($(1)_FILE)' || rm -f '$(PKG_DIR)/$($(1)_FILE)'
+    $(eval TMP_FILE := $(PKG_DIR)/.tmp-$($(1)_FILE)) \
+    $(if $($(1)_SOURCE_TREE),\
+        true\
+    $(else),\
+        mkdir -p '$(PKG_DIR)' && ( \
+            ($(WGET) -T 30 -t 3 -O '$(TMP_FILE)' '$($(1)_URL)' && \
+             $(call CHECK_PKG_ARCHIVE,$(1),'$(TMP_FILE)')) \
+            $(if $($(1)_URL_2), \
+                || (echo "MXE Warning! Downloading $(1) from second URL." >&2 && \
+                    $(WGET) -T 30 -t 3 -O '$(TMP_FILE)' '$($(1)_URL_2)' && \
+                    $(call CHECK_PKG_ARCHIVE,$(1),'$(TMP_FILE)'))) \
+            $(if $(MXE_NO_BACKUP_DL),, \
+                || $(BACKUP_DOWNLOAD)) \
+        ) && cat '$(TMP_FILE)' \
+        $(if $($(1)_FIX_GZIP), \
+            | gzip -d | gzip -9n, \
+            ) \
+        > '$(PKG_DIR)/$($(1)_FILE)' && \
+        $(if $(CREATE_SUFFIXED_ARCHIVE),cp '$(PKG_DIR)/$($(1)_FILE)' '$(PKG_DIR)/$($(1)_FILE)_$($(1)_CHECKSUM)' &&) \
+        rm '$(TMP_FILE)' || \
+        ( echo; \
+          echo 'Download failed!'; \
+          echo; \
+          rm -f '$(PKG_DIR)/$($(1)_FILE)' '$(TMP_FILE)'; )\
+    )
 
 ifeq ($(IGNORE_SETTINGS),yes)
     $(info [ignore settings.mk])
-else ifeq ($(wildcard $(PWD)/settings.mk),$(PWD)/settings.mk)
-    include $(PWD)/settings.mk
+else ifeq ($(wildcard $(TOP_BUILD_DIR)/settings.mk),$(TOP_BUILD_DIR)/settings.mk)
+    include $(TOP_BUILD_DIR)/settings.mk
 else
     $(info [create settings.mk])
     $(shell { \
         echo '#JOBS = $(JOBS)'; \
         echo '#PKGS ='; \
-    } >'$(PWD)/settings.mk')
+    } >'$(TOP_BUILD_DIR)/settings.mk')
 endif
 
 .PHONY: all
-all: configure Makefile octave
+all:
+	$(MAKE) prerequisites
+	$(MAKE) all-targets
+
+.PHONY: prerequisites
+prerequisites: $(TOP_DIR)/configure Makefile $(CCACHE_LINKS_TARGET)
+
+.PHONY: ccache-links
+ccache-links:
+	@echo "creating ccache links"
+	@mkdir -p usr/bin/ccache && \
+	for f in gcc g++ gfortran; do \
+	  if test ! -e usr/bin/ccache/$(MXE_TOOL_PREFIX)$$f; then \
+	    ln -s "$(CCACHE)" usr/bin/ccache/$(MXE_TOOL_PREFIX)$$f; \
+	  fi; \
+	done && \
+	for f in gcc g++ gfortran; do \
+	  if test ! -e usr/bin/ccache/$$f; then \
+	    ln -s "$(CCACHE)" usr/bin/ccache/$$f; \
+	  fi; \
+	done
+
+.PHONY: all-targets
+all-targets: $(OCTAVE_TARGET)
 
 .PHONY: all-packages
 all-packages: $(PKGS)
 
-$(PKGS): $(BUILD_TOOLS) cmake-toolchain-file.stamp
+$(PKGS): $(BUILD_TOOLS) cmake-toolchain-file.stamp cmake-native-toolchain-file.stamp
 
 .PHONY: msys-base
 msys-base:  $(MSYS_BASE_PACKAGES)
 
+.PHONY: msys-base-sources
+msys-base-sources:  $(MSYS_BASE_SOURCES)
+
+define MSYS2_PKG_BUILD
+  cd '$(1)/' && \
+  mkdir -p '$(3)' && \
+  (tar cf $(3)/$($(PKG)_FILE) '.') && \
+  (TMP="$(3)" \
+  $(PYTHON3) $(TOP_DIR)/tools/msys2-install.py --verbose --msys-dir="$(MSYS2_DIR)" "$(3)/$($(PKG)_FILE)")
+endef
+
+define MSYS2_PKG_UPDATE
+  $(WGET) -q -O- '$(MSYS2_URL)/' | \
+  $(GREP) $($(PKG)_NAME) | $(GREP) "$($(PKG)_FILTER)" | \
+  $(SED) -n 's,.*href="$($(PKG)_NAME)-\(r\?[0-9][^-]*-[0-9]*\)-[^\.]*\.pkg\.tar\.xz".*,\1,p' | \
+  $(SORT) -V | \
+  tail -1
+endef
+
+.PHONY: msys2
+msys2:  $(MSYS2_PACKAGES)
+
+.PHONY: msys2-sources
+msys2-sources:  $(MSYS2_SOURCES)
+
 .PHONY: octave-forge-packages
-octave-forge-packages: $(OCTAVE_FORGE_PACKAGES)
+octave-forge-packages: $(OCTAVE_FORGE_DEPS) $(OCTAVE_FORGE_PACKAGES)
 
-configure: configure.ac
-	autoconf
+.PHONY: blas-packages
+blas-packages: $(BLAS_PACKAGES)
 
-config.status: configure
+.PHONY: devel-packages
+devel-packages: $(DEVEL_PACKAGES)
+
+$(TOP_DIR)/configure: $(TOP_DIR)/configure.ac
+	cd $(TOP_DIR) && autoconf
+
+config.status: $(TOP_DIR)/configure
 	$(SHELL) ./config.status --recheck
 
-Makefile: Makefile.in config.status
+Makefile: $(TOP_DIR)/Makefile.in config.status
 	$(SHELL) ./config.status Makefile
 
 .PHONY: check-requirements
@@ -460,11 +747,20 @@ check-requirements: $(STAMP_DIR)/check-requirements
 $(STAMP_DIR)/check-requirements: $(MAKEFILE)
 	@echo '[check requirements]'
 	$(foreach REQUIREMENT,$(REQUIREMENTS),$(call CHECK_REQUIREMENT,$(REQUIREMENT)))
+ifneq ($(MXE_NATIVE_BUILD),yes)
+  ifeq ($(USE_SYSTEM_OCTAVE),yes)
+    ifeq ($(ENABLE_BINARY_PACKAGES),yes)
+	@if ! octave -W --version | head -1 | grep ' \($($(OCTAVE_TARGET)_VERSION)\)$$' >/dev/null; then \
+	  echo "Warning - could not find native build version $($(OCTAVE_TARGET)_VERSION) of Octave - some packages may fail, but continuing"; \
+	fi
+    endif
+  endif
+endif
 	@[ -d '$(STAMP_DIR)' ] || mkdir -p '$(STAMP_DIR)'
 	@if test "$(USE_SYSTEM_GCC)" = yes; then \
 	  $(INSTALL) -d '$(BUILD_TOOLS_PREFIX)/bin' ; \
-	  $(INSTALL) -m 755 tools/config.guess '$(BUILD_TOOLS_PREFIX)/bin/config.guess' ; \
-	  $(INSTALL) -m 755 tools/config.sub '$(BUILD_TOOLS_PREFIX)/bin/config.sub' ; \
+	  $(INSTALL) -m 755 $(TOP_DIR)/tools/config.guess '$(BUILD_TOOLS_PREFIX)/bin/config.guess' ; \
+	  $(INSTALL) -m 755 $(TOP_DIR)/tools/config.sub '$(BUILD_TOOLS_PREFIX)/bin/config.sub' ; \
 	fi
 	@touch '$@'
 
@@ -472,11 +768,6 @@ define newline
 
 
 endef
-$(eval $(subst #,$(newline),$(shell \
-    $(SED) -n \
-        's/^.* id="\([A-Za-z0-9_+-]*\)-version">\([^<]*\)<.*$$/\1_VERSION := \2#/p' \
-        '$(TOP_DIR)/index.html' \
-)))
 
 include $(patsubst %,$(TOP_DIR)/src/%.mk,$(ALL_BUILD_TOOLS))
 include $(patsubst %,$(TOP_DIR)/src/%.mk,$(PKGS))
@@ -505,13 +796,45 @@ define GENERATE_FILE_LIST
     fi
 endef
 
-define INSTALL_DESTDIR
-    if [ -d '$(1)$(ROOT_PREFIX)' ]; then \
-        (cd '$(1)$(ROOT_PREFIX)' && tar c .) | (cd '$(ROOT_PREFIX)' && tar x -p); \
+define CREATE_PKG
+    [ -d '$(BUILT_PKGS_DIR)' ] || mkdir -p '$(BUILT_PKGS_DIR)'; \
+    if [ -d '$(2)$(ROOT_PREFIX)' ]; then \
+        (cd '$(2)$(ROOT_PREFIX)' && tar caf '$(BUILT_PKGS_DIR)/$(1).tar.xz' .); \
     fi; \
-    if [ "$(ROOT_PREFIX)" != "$(CMAKE_ROOT_PREFIX)" ] && [ -d '$(1)$(CMAKE_ROOT_PREFIX)' ]; then \
-        (cd '$(1)$(CMAKE_ROOT_PREFIX)' && tar c .) | (cd '$(ROOT_PREFIX)' && tar x -p); \
+    if [ "$(ROOT_PREFIX)" != "$(CMAKE_ROOT_PREFIX)" ] && [ -d '$(2)$(CMAKE_ROOT_PREFIX)' ]; then \
+        (cd '$(2)$(CMAKE_ROOT_PREFIX)' && tar caf '$(BUILT_PKGS_DIR)/$(1).tar.xz' .); \
     fi
+endef
+
+define INSTALL_PKG_TO_DESTDIR
+    (cd '$(ROOT_PREFIX)' && tar xaf '$(BUILT_PKGS_DIR)/$(1).tar.xz')
+endef
+
+define OCTAVE_FORGE_PKG_COMPILE
+  if [ -d '$(1)/src' ]; then \
+    if [ -f '$(1)/src/configure' ]; then \
+      cd '$(1)/src' && ./configure $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) MKOCTFILE='$(MXE_MKOCTFILE)' \
+        OCTAVE_CONFIG='$(MXE_OCTAVECONFIG)' \
+        $(4); \
+    fi; \
+    if [ -f '$(1)/src/Makefile' ]; then \
+      $(MAKE) -C '$(1)/src' MKOCTFILE='$(MXE_MKOCTFILE) --verbose' \
+        OCTAVE_CONFIG='$(MXE_OCTAVECONFIG)' || exit 1; \
+      rm -f $(1)/src/Makefile; \
+    fi; \
+    if [ -f '$(1)/src/configure' ]; then \
+      rm -f $(1)/src/configure; \
+    fi; \
+    find '$(1)/src' -type f -name "*.o" -exec rm -f {} \; ; \
+  fi
+endef
+
+define OCTAVE_FORGE_PKG_BUILD_NOCOMPILE
+    mkdir -p '$(3)$(HOST_PREFIX)/src'
+    cd '$(1)/..' \
+      && tar cvfz $($(PKG)_FILE) $($(PKG)_SUBDIR) \
+      && $(INSTALL) -m644 '$($(PKG)_FILE)' '$(3)$(HOST_PREFIX)/src'
 endef
 
 ifeq ($(MXE_SYSTEM),msvc)
@@ -526,20 +849,69 @@ define OCTAVE_FORGE_PKG_BUILD
 endef
 else
 define OCTAVE_FORGE_PKG_BUILD
-    mkdir -p '$(3)$(HOST_PREFIX)/src'
-    cd '$(1)/..' \
-      && tar cvfz $($(PKG)_FILE) $($(PKG)_SUBDIR) \
-      && $(INSTALL) -m644 '$(PKG_DIR)/$($(PKG)_FILE)' '$(3)$(HOST_PREFIX)/src'
+    if [ $(ENABLE_BINARY_PACKAGES) = no ]; then \
+      mkdir -p '$(3)$(HOST_PREFIX)/src'; \
+      cd '$(1)/..' \
+        && tar cvfz $($(PKG)_FILE) $($(PKG)_SUBDIR) \
+        && $(INSTALL) -m644 '$($(PKG)_FILE)' '$(3)$(HOST_PREFIX)/src'; \
+    else \
+      cd '$(1)/..' && \
+      tar cfz $($(PKG)_FILE) $($(PKG)_SUBDIR) && \
+        OCTAVE_CONFIG=$(MXE_OCTAVECONFIG) TMP="$(1)/.." \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
+        MKOCTFILE=$(MXE_MKOCTFILE) MAKE=$(MAKE) \
+        CONFIGURE_OPTIONS="$(HOST_AND_BUILD_CONFIGURE_OPTIONS)" $(4) \
+        $(PYTHON3) $(TOP_DIR)/tools/pkg-install.py install -verbose "$($(PKG)_FILE)"; \
+     fi
 endef
 endif
 
+define OCTAVE_FORGE_PKG_UPDATE
+    $(WGET) -q -O- 'https://sourceforge.net/projects/octave/files/Octave%20Forge%20Packages/Individual%20Package%20Releases/' | \
+    $(SED) -n 's,.*title="$(subst of-,,$(PKG))-\([0-9][^"]*\).tar.gz".*,\1,p' | \
+    head -1
+endef
+
+define PREPARE_PKG_SOURCE
+    ( cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1),$(TAR)) ) || \
+	    $(if $(TAR2), \
+		 ( rm -rf '$(2)'; mkdir -p '$(2)'; \
+		   cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1),$(TAR2)) ), \
+		 false )
+    test ! -d '$(TOP_DIR)/src/$(1)' || cp -a '$(TOP_DIR)/src/$(1)' '$(2)'
+    cd '$(2)/$($(1)_SUBDIR)'
+    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(1)-*.patch)),
+	(cd '$(2)/$($(1)_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
+    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(MXE_SYSTEM)-$(1)-*.patch)),
+	(cd '$(2)/$($(1)_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
+endef
+
 define PKG_RULE
 .PHONY: download-$(1)
-download-$(1): $(addprefix download-,$($(1)_DEPS))
-	if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
-	    $(call DOWNLOAD_PKG_ARCHIVE,$(1)); \
-	    $(call CHECK_PKG_ARCHIVE,$(1)) || { echo 'Wrong checksum!'; exit 1; }; \
-	fi
+.PHONY: download-$($(1)_FILE)
+download-$(1): download-$($(1)_FILE)
+download-$($(1)_FILE)::
+	$(and $($(1)_URL),
+	@$$(if $$(REMOVE_DOWNLOAD),rm -f '$(PKG_DIR)/$($(1)_FILE)')
+	@if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
+	    echo '[download]' '$($(1)_FILE)'; \
+	    [ -d '$(LOG_DIR)/$(TIMESTAMP)' ] || mkdir -p '$(LOG_DIR)/$(TIMESTAMP)'; \
+	    ($(call DOWNLOAD_PKG_ARCHIVE,$(1))) &> '$(LOG_DIR)/$(TIMESTAMP)/$(1)-download'; \
+	    grep 'MXE Warning' '$(LOG_DIR)/$(TIMESTAMP)/$(1)-download'; \
+	    ln -sf '$(TIMESTAMP)/$(1)-download' '$(LOG_DIR)/$(1)-download'; \
+	    if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
+	        echo; \
+	        echo 'Download failed or wrong checksum of package $(1)!'; \
+	        echo '------------------------------------------------------------'; \
+	        $(if $(findstring undefined, $(origin MXE_VERBOSE)),\
+	            tail -n 10 '$(LOG_DIR)/$(1)-download' | $(SED) -n '/./p';, \
+	            $(SED) -n '/./p' '$(LOG_DIR)/$(1)-download';) \
+	        echo '------------------------------------------------------------'; \
+	        echo '[log]      $(LOG_DIR)/$(1)-download'; \
+	        echo; \
+	        exit 1; \
+	    fi; \
+	fi)
 
 .PHONY: $(1)
 $(1): $(STAMP_DIR)/$(1)
@@ -549,34 +921,19 @@ $(STAMP_DIR)/$(1): $(TOP_DIR)/src/$(1).mk \
                           $(wildcard $(TOP_DIR)/src/$(1)-test*) \
 			  $(shell test -d $(TOPDIR)/src/$(1) && find $(TOPDIR)/src/$(1) -type f) \
                           $(addprefix $(STAMP_DIR)/,$($(1)_DEPS)) \
-                          | check-requirements
-	@[ -d '$(LOG_DIR)/$(TIMESTAMP)' ] || mkdir -p '$(LOG_DIR)/$(TIMESTAMP)'
-	@if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
-	    echo '[download] $(1)'; \
-	    touch '$(LOG_DIR)/$(TIMESTAMP)/$(1)-download'; \
-	    ln -sf '$(TIMESTAMP)/$(1)-download' '$(LOG_DIR)/$(1)-download'; \
-	    ($(call DOWNLOAD_PKG_ARCHIVE,$(1))) &> '$(LOG_DIR)/$(1)-download'; \
-	    if ! $(call CHECK_PKG_ARCHIVE,$(1)); then \
-	        echo; \
-	        echo 'Wrong checksum of package $(1)!'; \
-	        echo '------------------------------------------------------------'; \
-	        tail -n 10 '$(LOG_DIR)/$(1)-download' | $(SED) -n '/./p'; \
-	        echo '------------------------------------------------------------'; \
-	        echo '[log]      $(LOG_DIR)/$(1)-download'; \
-	        echo; \
-	        exit 1; \
-	    fi; \
-	fi
+                          | check-requirements \
+                          $(addprefix download-,$(1))
 	$(if $(value $(1)_BUILD),
 	    @echo '[build]    $(1)'
 	    ,)
+	@[ -d '$(LOG_DIR)/$(TIMESTAMP)' ] || mkdir -p '$(LOG_DIR)/$(TIMESTAMP)'
 	@touch '$(LOG_DIR)/$(TIMESTAMP)/$(1)'
 	@ln -sf '$(TIMESTAMP)/$(1)' '$(LOG_DIR)/$(1)'
 	@if ! (time $(MAKE) -f '$(MAKEFILE)' 'build-only-$(1)') &> '$(LOG_DIR)/$(1)'; then \
 	    echo; \
 	    echo 'Failed to build package $(1)!'; \
 	    echo '------------------------------------------------------------'; \
-	    tail -n 10 '$(LOG_DIR)/$(1)' | $(SED) -n '/./p'; \
+	    tail -n 30 '$(LOG_DIR)/$(1)' | $(SED) -n '/./p'; \
 	    echo '------------------------------------------------------------'; \
 	    echo '[log]      $(LOG_DIR)/$(1)'; \
 	    echo; \
@@ -590,24 +947,15 @@ build-only-$(1):
 	$(if $(value $(1)_BUILD),
 	    rm -rf   '$(2)' '$(2)-install'
 	    mkdir -p '$(2)'
-	    ( cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1),$(TAR)) ) || \
-		    $(if $(TAR2), \
-		         ( rm -rf '$(2)'; mkdir -p '$(2)'; \
-		           cd '$(2)' && $(call UNPACK_PKG_ARCHIVE,$(1),$(TAR2)) ), \
-			 false )
-	    test ! -d '$(TOP_DIR)/src/$(1)' || cp -a '$(TOP_DIR)/src/$(1)' '$(2)'
-	    cd '$(2)/$($(1)_SUBDIR)'
-	    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(1)-*.patch)),
-	        (cd '$(2)/$($(1)_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
-	    $(foreach PKG_PATCH,$(sort $(wildcard $(TOP_DIR)/src/$(MXE_SYSTEM)-$(1)-*.patch)),
-	        (cd '$(2)/$($(1)_SUBDIR)' && $(PATCH) -p1 -u) < $(PKG_PATCH))
+	    $$(call PREPARE_PKG_SOURCE,$(1),$(2))
 	    $$(call $(1)_BUILD,$(2)/$($(1)_SUBDIR),$(TOP_DIR)/src/$(1)-test,$(2)-install)
 	    if [ -d '$(2)-install' ]; then \
                 $(call GENERATE_FILE_LIST,$(1),$(2)-install); \
-                $(call INSTALL_DESTDIR,$(2)-install); \
+                $(call CREATE_PKG,$(1),$(2)-install); \
+                $(call INSTALL_PKG_TO_DESTDIR,$(1),$(2)-install); \
 		(du -k -d 0 '$(2)-install' 2>/dev/null || du -k --max-depth 0 '$(2)-install') | \
 			$(SED) -n 's/^\(\S*\).*/du: \1 KiB/p'; \
-		rm -rfv  '$(2)-install'; \
+		[ '$(KEEP_BUILD)' = '1' ] || rm -rfv  '$(2)-install'; \
 	    fi
 	    (du -k -d 0 '$(2)' 2>/dev/null || du -k --max-depth 0 '$(2)') | $(SED) -n 's/^\(\S*\).*/du: \1 KiB/p'
 	    [ '$(KEEP_BUILD)' = '1' ] || rm -rfv  '$(2)'
@@ -622,9 +970,16 @@ $(foreach TOOL,$(BUILD_TOOLS),$(eval $(call PKG_RULE,$(TOOL),$(call TMP_DIR,$(TO
 clean:
 	rm -rf $(call TMP_DIR,*) $(BUILD_TOOLS_PREFIX)
 	rm -rf $(STAMP_DIR) $(MSYS_INFO_DIR) $(LOG_DIR)
-	rm -rf $(MSYS_BASE_DIR) $(NOTEPAD_BASE_DIR)
+	rm -rf $(MSYS_BASE_DIR) $(MSYS_EXTENSION_DIR) $(NOTEPAD_BASE_DIR)
+	rm -rf $(MSYS2_DIR)
+	rm -f $(MSYS2_UPDATE_TMP_FILE)
 	rm -rf native-tools cross-tools octave gnuplot
-	rm -f Makefile cmake-toolchain-file.stamp
+	rm -f Makefile cmake-toolchain-file.stamp cmake-native-toolchain-file.stamp
+	rm -f tools/set-mxe-env.sh
+
+.PHONY: realclean
+realclean: clean
+	rm -rf $(BUILT_PKGS_DIR)
 
 .PHONY: clean-pkg
 clean-pkg:
@@ -641,19 +996,80 @@ define UPDATE
             $(if $(filter $(2),$($(1)_VERSION)),
                 $(info .        $(1)  $(2)),
                 $(info NEW      $(1)  $($(1)_VERSION) --> $(2))
-                $(SED) -i 's/\( id="$(1)-version"\)>[^<]*/\1>$(2)/' '$(TOP_DIR)/index.html'
+                $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $(2)/' '$(TOP_DIR)/src/$(1).mk'
                 $(MAKE) -f '$(MAKEFILE)' 'update-checksum-$(1)' \
-                    || { $(SED) -i 's/\( id="$(1)-version"\)>[^<]*/\1>$($(1)_VERSION)/' '$(TOP_DIR)/index.html'; \
+                    || { $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $($(1)_VERSION)/' '$(TOP_DIR)/src/$(1).mk'; \
                          exit 1; })),
         $(error Unable to update version number of package $(1)))
 
 endef
 update:
-	$(foreach PKG,$(PKGS),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))))
+	$(foreach PKG,$(PKGS),\
+		$(if $($(PKG)_UPDATE),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))),$(info Warning: No update rule for $(PKG))))
+
+.PHONY: update-octaveforge
+update-octaveforge:
+	$(foreach PKG,$(OCTAVE_FORGE_PACKAGES),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))))
+
+.PHONY: update-build-tools
+update-build-tools:
+	$(foreach PKG,$(BUILD_TOOLS),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))))
 
 update-checksum-%:
 	$(call DOWNLOAD_PKG_ARCHIVE,$*)
 	$(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1 '"`$(call PKG_CHECKSUM,$*)`"'/' '$(TOP_DIR)/src/$*.mk'
+
+.PHONY: update-msys2 update-msys2-filelist
+PKG_MK_CHECKSUM = \
+    $(GREP) _CHECKSUM '$(TOP_DIR)/src/$(1).mk' 2>/dev/null | $(SED) -n 's,^.*\([0-9a-f]\{40\}\)$$,\1,p'
+define MSYS2_UPDATE
+    $(if $(2),
+        $(if $(filter $(2),$($(1)_IGNORE)),
+            $(info IGNORED  $(1)  $(2)),
+            $(if $(filter $(2),$($(1)_VERSION)),
+                $(info .        $(1)  $(2)),
+                $(info NEW      $(1)  $($(1)_VERSION) --> $(2))
+                $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $(2)/' '$(TOP_DIR)/src/$(1).mk'
+                $(SED) -i 's/^\([^ ]*_i686_CS *:=\).*/\1/' '$(TOP_DIR)/src/$(1).mk'
+                $(SED) -i 's/^\([^ ]*_x86_64_CS *:=\).*/\1/' '$(TOP_DIR)/src/$(1).mk'
+                $(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1/' '$(TOP_DIR)/src/$(1).mk'
+                MSYS2_ARCH=x86_64 $(MAKE) -f '$(MAKEFILE)' 'update-checksum-$(1)' \
+                    || { $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $($(1)_VERSION)/' '$(TOP_DIR)/src/$(1).mk'; \
+		         $(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1 $$($$(PKG)_CS)/' '$(TOP_DIR)/src/$(1).mk'; \
+			 $(SED) -i 's/^\([^ ]*_i686_CS *:=\).*/\1 $($(1)_i686_CS)' '$(TOP_DIR)/src/$(1).mk'; \
+			 $(SED) -i 's/^\([^ ]*_x86_64_CS *:=\).*/\1 $($(1)_x86_64_CS)' '$(TOP_DIR)/src/$(1).mk'; \
+                         exit 1; }
+	        $(SED) -i 's/^\([^ ]*_x86_64_CS *:=\).*/\1 '"`$(call PKG_MK_CHECKSUM,$(1))`"'/' '$(TOP_DIR)/src/$(1).mk'
+                $(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1/' '$(TOP_DIR)/src/$(1).mk'
+                MSYS2_ARCH=i686 $(MAKE) -f '$(MAKEFILE)' 'update-checksum-$(1)' \
+                    || { $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $($(1)_VERSION)/' '$(TOP_DIR)/src/$(1).mk'; \
+		         $(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1 $$($$(PKG)_CS)/' '$(TOP_DIR)/src/$(1).mk'; \
+			 $(SED) -i 's/^\([^ ]*_i686_CS *:=\).*/\1 $($(1)_i686_CS)' '$(TOP_DIR)/src/$(1).mk'; \
+                         exit 1; }
+	        $(SED) -i 's/^\([^ ]*_i686_CS *:=\).*/\1 '"`$(call PKG_MK_CHECKSUM,$(1))`"'/' '$(TOP_DIR)/src/$(1).mk'
+		$(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1 $$($$(PKG)_CS)/' '$(TOP_DIR)/src/$(1).mk'
+                $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $(2)/' '$(TOP_DIR)/src/src-$(1).mk'
+                $(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1/' '$(TOP_DIR)/src/src-$(1).mk'
+                $(MAKE) -f '$(MAKEFILE)' 'update-checksum-src-$(1)' \
+                    || { $(SED) -i 's/^\([^ ]*_VERSION *:=\).*/\1 $(src-$(1)_VERSION)/' '$(TOP_DIR)/src/src-$(1).mk'; \
+                         exit 1; }
+		)),
+        $(error Unable to update version number of package $(1)))
+endef
+
+define MSYS2_PKG_UPDATE_FILE
+  cat $(MSYS2_UPDATE_TMP_FILE) | \
+  $(GREP) $($(PKG)_NAME) | $(GREP) "$($(PKG)_FILTER)" | \
+  $(SED) -n 's,.*href="$($(PKG)_NAME)-\(r\?[0-9][^-]*-[0-9]*\)-[^\.]*\.pkg\.tar\.xz".*,\1,p' | \
+  $(SORT) -V | \
+  tail -1
+endef
+
+update-msys2-filelist:
+	$(shell $(WGET) -q -O$(MSYS2_UPDATE_TMP_FILE) '$(MSYS2_URL)/')
+
+update-msys2: update-msys2-filelist
+	$(foreach PKG,$(MSYS2_PACKAGES),$(call MSYS2_UPDATE,$(PKG),$(shell $(MSYS2_PKG_UPDATE_FILE))))
 
 cleanup-style:
 	@$(foreach FILE,$(wildcard $(addprefix $(TOP_DIR)/,Makefile index.html CNAME src/*.mk src/*test.* tools/*)),\
@@ -681,16 +1097,6 @@ define build-cmake-toolchain-file
      if [ $(MXE_SYSTEM) = msvc ]; then \
        echo 'set(MSVC 1)'; \
      fi; \
-     if [ $(BUILD_SHARED) = yes ]; then \
-       echo 'set(BUILD_SHARED_LIBS ON)'; \
-     else \
-       echo 'set(BUILD_SHARED_LIBS OFF)'; \
-     fi; \
-     if [ $(BUILD_STATIC) = yes ]; then \
-       echo 'set(BUILD_STATIC_LIBS ON)'; \
-     else \
-       echo 'set(BUILD_STATIC_LIBS OFF)'; \
-     fi; \
      echo 'set(CMAKE_BUILD_TYPE Release)'; \
      if [ $(MXE_SYSTEM) = msvc ]; then \
          echo 'set(CMAKE_FIND_ROOT_PATH $(HOST_PREFIX_NATIVE))'; \
@@ -717,20 +1123,45 @@ define build-cmake-toolchain-file
 endef
 
 cmake-toolchain-file.stamp:
-	$(build-cmake-toolchain-file)
-	touch cmake-toolchain-file.stamp
+	@echo [creating CMake toolchain file]
+	@$(build-cmake-toolchain-file)
+	@touch cmake-toolchain-file.stamp
+	@echo [done]
+
+define build-native-cmake-toolchain-file
+    # create the native CMake toolchain file
+    [ -d '$(dir $(CMAKE_NATIVE_TOOLCHAIN_FILE))' ] || mkdir -p '$(dir $(CMAKE_NATIVE_TOOLCHAIN_FILE))'
+    (echo 'set(CMAKE_C_COMPILER $(CC))'; \
+     echo 'set(CMAKE_CXX_COMPILER $(CXX))'; \
+     echo 'set(CMAKE_Fortran_COMPILER $(F77))'; \
+     echo 'set(CMAKE_RC_COMPILER $(WINDRES))'; \
+     echo 'set(CMAKE_BUILD_TYPE Release CACHE STRING "Debug|Release|RelWithDebInfo|MinSizeRel")') \
+    > '$(CMAKE_NATIVE_TOOLCHAIN_FILE)'
+endef
+
+cmake-native-toolchain-file.stamp:
+	@echo [creating native CMake toolchain file]
+	@$(build-native-cmake-toolchain-file)
+	@touch cmake-native-toolchain-file.stamp
+	@echo [done]
 
 # Files to distribute
-include dist-files.mk
+include $(TOP_DIR)/dist-files.mk
 
 PACKAGE_VERSION := @PACKAGE_VERSION@
 PACKAGE_TARNAME := @PACKAGE_TARNAME@
 
-distdir := $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)
+DIST_FILE_VERSION := $(shell if [ -f HG-ID ]; then cat HG-ID; else echo $(PACKAGE_VERSION); fi)
+
+distdir := $(PACKAGE_TARNAME)-$(DIST_FILE_VERSION)
 
 .PHONY: dist
 dist:
 	rm -rf $(distdir)
 	mkdir $(distdir)
-	$(TAR) cf - $(DIST_FILES) | ( cd $(distdir) ; $(TAR) xpf - )
+	( cd $(TOP_DIR) ; $(TAR) cf - $(DIST_FILES) ) | ( cd $(distdir) ; $(TAR) xpf - )
 	$(TAR) czf $(distdir).tar.gz $(distdir)
+
+include $(TOP_DIR)/binary-dist-rules.mk
+
+include $(TOP_DIR)/hg-octave-dist.mk

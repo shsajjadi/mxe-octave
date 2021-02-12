@@ -3,18 +3,19 @@
 
 PKG             := mpfr
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 7527c322b91fe8e6055ead551e1b46b9f1712ccd
+$(PKG)_VERSION  := 4.0.2
+$(PKG)_CHECKSUM := 52c1f2a4c9a202f46cf3275a8d46b562aa584208
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
-$(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/$(PKG)/$($(PKG)_FILE)
+$(PKG)_URL      := ftp://ftp.gnu.org/gnu/mpfr/$($(PKG)_FILE)
 $(PKG)_URL_2    := http://www.mpfr.org/mpfr-$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := gmp
+$(PKG)_DEPS     := build-gcc gmp
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.mpfr.org/mpfr-current/#download' | \
-    grep 'mpfr-' | \
-    $(SED) -n 's,.*mpfr-\([0-9][^>]*\)\.tar.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://gforge.inria.fr/scm/viewvc.php/mpfr/tags/' | \
+    $(SED) -n 's,.*tags/\([0-9][^/]*\).*,\1,p' |
+    $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
