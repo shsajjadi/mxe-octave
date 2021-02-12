@@ -2,6 +2,7 @@
 # See index.html for further information.
 
 PKG             := libical
+$(PKG)_VERSION  := 0.48
 $(PKG)_CHECKSUM := 4693cd0438be9f3727146ac1a46aa5b1b93b8c86
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
@@ -17,6 +18,8 @@ endef
 define $(PKG)_BUILD
     cd '$(1)' && mkdir build
     cd '$(1)/build' && cmake .. \
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DSTATIC_LIBRARY=true \
         -DHAVE_PTHREAD_H=false \

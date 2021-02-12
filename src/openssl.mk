@@ -3,7 +3,8 @@
 
 PKG             := openssl
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 3f1b1223c9e8189bfe4e186d86449775bd903460
+$(PKG)_VERSION  := 1.0.2m
+$(PKG)_CHECKSUM := 27fb00641260f97eaa587eb2b80fab3647f6013b
 $(PKG)_SUBDIR   := openssl-$($(PKG)_VERSION)
 $(PKG)_FILE     := openssl-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.openssl.org/source/$($(PKG)_FILE)
@@ -25,6 +26,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
 else
   $(PKG)_CROSS_COMPILE_MAKE_ARG := CROSS_COMPILE='$(MXE_TOOL_PREFIX)'
   $(PKG)_CC := $(MXE_CC)
+  $(PKG)_RC := $(MXE_WINDRES)
   ifeq ($(TARGET),x86_64-w64-mingw32)
     $(PKG)_CONFIGURE := ./Configure mingw64
   else
@@ -40,7 +42,7 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && CC='$($(PKG)_CC)' \
+    cd '$(1)' && CC='$($(PKG)_CC)' RC='$($(PKG)_RC)' \
         $($(PKG)_CONFIGURE) \
         zlib \
         shared \

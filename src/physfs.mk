@@ -3,6 +3,7 @@
 
 PKG             := physfs
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.0.3
 $(PKG)_CHECKSUM := 327308c777009a41bbabb9159b18c4c0ac069537
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.bz2
@@ -17,6 +18,8 @@ endef
 
 define $(PKG)_BUILD
     cd '$(1)' && cmake . \
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DPHYSFS_BUILD_SHARED=FALSE \
         -DPHYSFS_INTERNAL_ZLIB=FALSE \

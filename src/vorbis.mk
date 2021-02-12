@@ -3,7 +3,8 @@
 
 PKG             := vorbis
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 8dae60349292ed76db0e490dc5ee51088a84518b
+$(PKG)_VERSION  := 1.3.7
+$(PKG)_CHECKSUM := 2b415495f89b103138a23da5017a2a00837c6c94
 $(PKG)_SUBDIR   := libvorbis-$($(PKG)_VERSION)
 $(PKG)_FILE     := libvorbis-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://downloads.xiph.org/releases/vorbis/$($(PKG)_FILE)
@@ -21,5 +22,5 @@ define $(PKG)_BUILD
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         PKG_CONFIG='$(MXE_PKG_CONFIG)'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j '$(JOBS)' install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS)
 endef

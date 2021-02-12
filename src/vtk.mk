@@ -3,6 +3,7 @@
 
 PKG             := vtk
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 5.8.0
 $(PKG)_CHECKSUM := ece52f4fa92811fe927581e60ecb39a8a5f68cd9
 $(PKG)_SUBDIR   := VTK
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
@@ -21,6 +22,9 @@ define $(PKG)_BUILD
     # first we need a native build to create the compile tools
     mkdir '$(1)/native_build'
     cd '$(1)/native_build' && cmake \
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_NATIVE_TOOLCHAIN_FILE)' \
         -DBUILD_TESTING=FALSE \
         -DOPENGL_INCLUDE_DIR='$(1)/Utilities/ParseOGLExt/headers' \
         -DVTK_USE_RENDERING=FALSE \
@@ -36,6 +40,8 @@ define $(PKG)_BUILD
     mkdir '$(1)/cross_build'
     cd '$(1)/cross_build' && cmake \
         -C '$(1)/TryRunResults.cmake'\
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'\
         -DBUILD_TESTING=FALSE\
         -DVTKCompileTools_DIR='$(1)/native_build'\
@@ -50,5 +56,6 @@ define $(PKG)_BUILD
         -DVTK_USE_POSTGRES=TRUE\
         -DVTK_USE_ODBC=TRUE\
         ..
+
     $(MAKE) -C '$(1)/cross_build' -j '$(JOBS)' install VERBOSE=1
 endef

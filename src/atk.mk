@@ -3,6 +3,7 @@
 
 PKG             := atk
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.8.0
 $(PKG)_CHECKSUM := e8a9dacd22b31a6cb733ce66fb1c220cc6720970
 $(PKG)_SUBDIR   := atk-$($(PKG)_VERSION)
 $(PKG)_FILE     := atk-$($(PKG)_VERSION).tar.xz
@@ -10,11 +11,10 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/atk/$(call SHORT_PKG_V
 $(PKG)_DEPS     := glib gettext
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/atk/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?id=ATK_\\([0-9]*_[0-9]*[02468]_[^<]*\\)'.*,\\1,p" | \
-    $(SED) 's,_,.,g' | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/atk/tags | \
+    $(SED) -n 's|.*releases/tag/ATK_\([^"]*\).*|\1|p' | \
+    $(SED) 's,_,.,g' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

@@ -3,37 +3,36 @@
 
 PKG             := pango
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := a6c224424eb3f0dcc231a8000591c05a85df689c
+$(PKG)_VERSION  := 1.42.1
+$(PKG)_CHECKSUM := 6dbec02a6a35e4cf0be8e1d6748c3d07cd11b7c3
 $(PKG)_SUBDIR   := pango-$($(PKG)_VERSION)
 $(PKG)_FILE     := pango-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/pango/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
-$(PKG)_DEPS     := fontconfig freetype cairo glib harfbuzz
+ifeq ($(USE_SYSTEM_FONTCONFIG),no)
+  $(PKG)_FONTCONFIG := fontconfig
+endif
+$(PKG)_DEPS     := $($(PKG)_FONTCONFIG) freetype cairo glib fribidi
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/pango/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?id=\\([0-9][^']*\\)'.*,\\1,p" | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/pango/tags | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD
-    if [ $(MXE_SYSTEM) = mingw ]; then \
-        rm '$(1)'/docs/Makefile.am && \
-        cd '$(1)' && NOCONFIGURE=1 ./autogen.sh; \
-    fi
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
         --disable-gtk-doc \
-        --without-x \
-        --enable-explicit-deps \
-        --with-included-modules \
-        --without-dynamic-modules \
         CXX='$(MXE_CXX)' \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
-        PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig' \
+        PKG_CONFIG_PATH='$(PKG_CONFIG_PATH)' \
         && $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)' noinst_PROGRAMS=
-    $(MAKE) -C '$(1)' -j 1 install noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j 1 install noinst_PROGRAMS= DESTDIR='$(3)'
+
+    if [ "$(ENABLE_DEP_DOCS)" == "no" ]; then \
+      rm -rf "$(3)$(HOST_PREFIX)/share/gtk-doc"; \
+    fi
 endef

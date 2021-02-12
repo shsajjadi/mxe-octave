@@ -1,0 +1,13 @@
+diff -ur QScintilla_gpl-2.11.1.orig/Qt4Qt5/qscintilla.pro QScintilla_gpl-2.11.1/Qt4Qt5/qscintilla.pro
+--- QScintilla_gpl-2.11.1.orig/Qt4Qt5/qscintilla.pro	2019-02-26 13:51:51.426342211 -0500
++++ QScintilla_gpl-2.11.1/Qt4Qt5/qscintilla.pro	2019-02-26 13:52:39.639554334 -0500
+@@ -23,7 +23,7 @@
+ !win32:VERSION = 15.0.0
+ 
+ TEMPLATE = lib
+-CONFIG += qt warn_off thread exceptions hide_symbols
++CONFIG += qt warn_off release thread exceptions
+ 
+ CONFIG(debug, debug|release) {
+     mac: {
+Only in QScintilla_gpl-2.11.1/Qt4Qt5: qscintilla.pro.orig

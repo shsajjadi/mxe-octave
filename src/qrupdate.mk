@@ -3,22 +3,19 @@
 
 PKG             := qrupdate
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.1.2
 $(PKG)_CHECKSUM := f7403b646ace20f4a2b080b4933a1e9152fac526
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := qrupdate-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://sourceforge.net/projects/qrupdate/files/$($(PKG)_FILE)
-ifeq ($(ENABLE_OPENBLAS),yes)
-  $(PKG)_DEPS     := openblas lapack
-else
-  $(PKG)_DEPS     := blas lapack
+$(PKG)_DEPS     := blas lapack
+
+ifeq ($(ENABLE_FORTRAN_INT64),yes)
+  $(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS := FFLAGS="-g -O2 -fdefault-integer-8"
 endif
 
-ifeq ($(ENABLE_OPENBLAS),yes)
-  $(PKG)_BLAS_OPTION := --with-blas=openblas
-endif
-
-ifeq ($(ENABLE_64),yes)
-  $(PKG)_ENABLE_64_CONFIGURE_OPTIONS := FFLAGS="-g -O2 -fdefault-integer-8"
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_XERBLA_LIB_MAKE_OPTION := XERBLA_LIB="-lxerbla"
 endif
 
 define $(PKG)_UPDATE
@@ -29,7 +26,7 @@ endef
 define $(PKG)_BUILD
     mkdir '$(1)/.build'
     touch '$(1)/NEWS' '$(1)/AUTHORS'
-    cd '$(1)' && autoreconf -W none
+    cd '$(1)' && autoreconf -fi -I m4 -W none
     chmod a+rx '$(1)/configure'
     cd '$(1)/.build' && '$(1)/configure' \
         F77=$(MXE_F77) \
@@ -37,8 +34,9 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
 	$(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
-        $($(PKG)_BLAS_OPTION) \
-        $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) && $(CONFIGURE_POST_HOOK)
+        $($(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS) \
+          && $(CONFIGURE_POST_HOOK)
 
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' \
+        $($(PKG)_XERBLA_LIB_MAKE_OPTION) install DESTDIR='$(3)'
 endef

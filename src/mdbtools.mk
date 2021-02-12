@@ -4,6 +4,7 @@
 # mdbtools
 PKG             := mdbtools
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.7
 $(PKG)_CHECKSUM := 62fe0703fd8691e4536e1012317406bdb72594cf
 $(PKG)_SUBDIR   := brianb-mdbtools-004cc9f
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
@@ -12,8 +13,7 @@ $(PKG)_DEPS     := glib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://github.com/brianb/mdbtools/tags' | \
-    grep '<a href="/brianb/mdbtools/tarball/' | \
-    $(SED) -n 's,.*href="/brianb/mdbtools/tarball/\([0-9][^"_]*\)".*,\1,p' | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | \
     head -1
 endef
 

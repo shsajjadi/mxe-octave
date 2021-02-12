@@ -3,7 +3,8 @@
 
 PKG             := libsndfile
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := e95d9fca57f7ddace9f197071cbcfb92fa16748e
+$(PKG)_VERSION  := 1.0.28
+$(PKG)_CHECKSUM := 85aa967e19f6b9bf975601d79669025e5f8bc77d
 $(PKG)_SUBDIR   := libsndfile-$($(PKG)_VERSION)
 $(PKG)_FILE     := libsndfile-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.mega-nerd.com/libsndfile/files/$($(PKG)_FILE)
@@ -16,15 +17,24 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+$(PKG)_EXTRA_CONFIGURE_OPTIONS :=
+ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
+    $(PKG)_EXTRA_CONFIGURE_OPTIONS += --enable-stack-smash-protection
+endif
+
 define $(PKG)_BUILD
+    cd '$(1)' && autoreconf -fi -IM4
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)' \
+	$(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --enable-sqlite \
         --enable-external-libs \
         --disable-octave \
         --disable-alsa \
-        --disable-shave
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS= man_MANS= html_DATA=
+	--disable-full-suite \
+        $($(PKG)_EXTRA_CONFIGURE_OPTIONS)
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DISABLE_PROGS)  $(MXE_DISABLE_DOCS)
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS)  $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
 endef

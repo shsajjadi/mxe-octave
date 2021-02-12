@@ -1,0 +1,32 @@
+#!/bin/bash
+MXEDIR=@MXE_ROOTDIR@
+
+if [ -z "$MXE_OCTAVE_ENV" ]; then
+
+  if [ "@MXE_NATIVE_BUILD@" = "yes" ]; then
+    MXE_PATH="$MXEDIR/usr/bin"
+    MXE_INC_PATH="$MXEDIR/usr/include"
+    MXE_LIB_PATH="$MXEDIR/usr/lib"
+  else
+    HOST=$(@abs_top_srcdir@/tools/config.guess)
+
+    MXE_PATH="$MXEDIR/usr/$HOST/bin:$MXEDIR/usr/bin"
+    MXE_INC_PATH="$MXEDIR/usr/$HOST/include"
+    MXE_LIB_PATH="$MXEDIR/usr/$HOST/lib"
+  fi
+
+  if [ "@ENABLE_LIB64_DIRECTORY@" = "yes" ]; then
+    MXE_LIB_PATH="$MXE_LIB_PATH:${MXE_LIB_PATH}64"
+  fi
+
+  export PATH="$MXE_PATH:$PATH"
+  export CPPFLAGS="-I$MXE_INC_PATH"
+  export LDFLAGS="-L$MXE_LIB_PATH"
+  export LD_LIBRARY_PATH="$MXE_LIB_PATH:$LD_LIBRARY_PATH"
+  export PKG_CONFIG_PATH="$MXE_LIB_PATH/pkgconfig"
+  export PKG_CONFIG="$MXEDIR/usr/bin/pkg-config@EXEEXT@"
+
+  export MXE_OCTAVE_ENV=$MXEDIR
+
+fi
+

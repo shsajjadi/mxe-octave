@@ -3,6 +3,7 @@
 
 PKG             := zenity
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.8.0
 $(PKG)_CHECKSUM := af083691820970ef1e79590df35ea5c59a7491f3
 $(PKG)_SUBDIR   := zenity-$($(PKG)_VERSION)
 $(PKG)_FILE     := zenity-$($(PKG)_VERSION).tar.xz

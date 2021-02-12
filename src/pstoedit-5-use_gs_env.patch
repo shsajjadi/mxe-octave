@@ -1,0 +1,20 @@
+diff -ur pstoedit-3.70.orig/src/callgs.cpp pstoedit-3.70/src/callgs.cpp
+--- pstoedit-3.70.orig/src/callgs.cpp	2016-07-27 13:04:53.173499210 -0400
++++ pstoedit-3.70/src/callgs.cpp	2016-07-27 13:56:54.686649091 -0400
+@@ -364,7 +364,15 @@
+ 		} else {
+ 		    if (verbose) errstream<< "nothing found in gsview32.ini file - using find_gs to lookup latest version of Ghostscript in registry " << endl;
+ 			static char buf[1000];
+-			if (find_gs(buf, sizeof(buf), 550 /* min ver*/ , getPstoeditsetDLLUsage() , gsregbase)) { 
++
++
++	                gstocall = getenv("GS");
++
++                        if(gstocall) {
++		                if (verbose)
++			                errstream << "GS is set to:" << gstocall << endl;
++
++                        } else if (find_gs(buf, sizeof(buf), 550 /* min ver*/ , getPstoeditsetDLLUsage() , gsregbase)) { 
+ 				if (verbose) {
+ 					(void)dumpgsvers(gsregbase);
+ 					if (getPstoeditsetDLLUsage()) errstream << "Latest GS DLL is " << buf << endl;

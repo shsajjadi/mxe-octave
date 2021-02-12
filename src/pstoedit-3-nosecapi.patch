@@ -1,0 +1,46 @@
+diff -ur pstoedit-3.62.orig/src/lexyy.cpp pstoedit-3.62/src/lexyy.cpp
+--- pstoedit-3.62.orig/src/lexyy.cpp	2014-07-25 09:19:14 -0400
++++ pstoedit-3.62/src/lexyy.cpp	2014-07-25 09:20:00 -0400
+@@ -14,6 +14,7 @@
+ #endif
+ 
+ /* First, we deal with  platform-specific or compiler-specific issues. */
++#include "cppcomp.h"
+ 
+ /* begin standard C headers. */
+ #include <stdio.h>
+diff -ur pstoedit-3.70.orig/src/fillpoly.cpp pstoedit-3.70/src/fillpoly.cpp
+--- pstoedit-3.70.orig/src/fillpoly.cpp	2015-06-13 07:21:31.042850400 -0400
++++ pstoedit-3.70/src/fillpoly.cpp	2015-06-13 07:28:44.826540800 -0400
+@@ -1,6 +1,6 @@
+ /* this file is taken from the hp2xx project (http://www.gnu.org/software/hp2xx/hp2xx.html) 
+    and slightly adapted to fit into pstoedit s framework */ 
+-
++#include "cppcomp.h"
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+diff -ur pstoedit-3.70.orig/src/drvwmf.cpp pstoedit-3.70/src/drvwmf.cpp
+--- pstoedit-3.70.orig/src/drvwmf.cpp	2015-06-13 08:02:48.035020200 -0400
++++ pstoedit-3.70/src/drvwmf.cpp	2015-06-13 08:03:33.555528400 -0400
+@@ -22,6 +22,8 @@
+     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ 
+ */
++#include "cppcomp.h"
++
+ #include "drvwmf.h"
+ 
+ #include I_string_h
+diff -ur pstoedit-3.75.orig/src/cppcomp.h pstoedit-3.75/src/cppcomp.h
+--- pstoedit-3.75.orig/src/cppcomp.h	2020-05-29 11:11:05.064392865 -0400
++++ pstoedit-3.75/src/cppcomp.h	2020-05-29 11:20:09.056541850 -0400
+@@ -230,7 +230,7 @@
+ 
+ 
+ //{
+-#if defined(_MSC_VER) && (_MSC_VER >= 1400)
++#if (defined(_MSC_VER) && (_MSC_VER >= 1400)) || defined(__MINGW32__)
+ // for MS VS 8 (== cl version 14) we can use the new secure *_s string functions
+ // for other systems we have to "emulate" them
+ #define TARGETWITHLEN(str,len) str,len

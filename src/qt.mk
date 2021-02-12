@@ -3,22 +3,29 @@
 
 PKG             := qt
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := bc352a283610e0cd2fe0dbedbc45613844090fcb
+$(PKG)_VERSION  := 4.8.7
+$(PKG)_CHECKSUM := 76aef40335c0701e5be7bb3a9101df5d22fe3666
 $(PKG)_SUBDIR   := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://download.qt-project.org/archives/qt/4.8/$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := openssl zlib libpng jpeg libmng tiff dbus
+$(PKG)_URL      := http://download.qt.io/official_releases/qt/4.8/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_DEPS     := postgresql freetds zlib libpng jpeg libmng tiff sqlite dbus
+ifeq ($(MXE_WINDOWS_BUILD),no)
+  ifeq ($(USE_SYSTEM_X11_LIBS),no)
+    $(PKG)_DEPS += xdamage xdmcp xext xfixes xi xrender xt xxf86vm x11 xcb xcb-util xcb-util-cursor xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm
+  endif
+endif
 
 $(PKG)_CONFIGURE_CMD :=
 $(PKG)_CONFIGURE_CROSS_COMPILE_OPTION :=
 $(PKG)_CONFIGURE_DATABASE_OPTION :=
 $(PKG)_CONFIGURE_ENV := PKG_CONFIG_PATH='$(HOST_PREFIX)/lib/pkgconfig'
 $(PKG)_CONFIGURE_EXTRA_OPTION :=
-$(PKG)_CONFIGURE_INCLUDE_OPTION :=
+$(PKG)_CONFIGURE_INCLUDE_OPTION := -I '$(HOST_INCDIR)/freetype2'
 $(PKG)_CONFIGURE_LIBPATH_OPTION :=
 $(PKG)_CONFIGURE_PLATFORM_OPTION :=
 $(PKG)_PREFIX := $(HOST_PREFIX)
 $(PKG)_MKSPECS := $($(PKG)_PREFIX)
+$(PKG)_INSTALL_ROOT := $(3)
 
 ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
   ifeq ($(MXE_NATIVE_BUILD),yes)
@@ -27,23 +34,40 @@ ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
       # make. These need to be unset even when running configure script, as
       # this will run NMAKE to compile QMAKE.
       $(PKG)_CONFIGURE_ENV += MAKE= MAKEFLAGS=
+    else
+      # native mingw doesnt like using install root mixed with prefix
+      # and instead attempts to install to c:\INSTALL_ROOT\prefix
+      # so dont use it if compiling native mingw
+      $(PKG)_INSTALL_ROOT :=
     endif
   else
     $(PKG)_CONFIGURE_ENV := \
-      OPENSSL_LIBS="`'$(MXE_PKG_CONFIG)' --libs-only-l openssl`" \
-      PSQL_LIBS="-lpq -lsecur32 `'$(MXE_PKG_CONFIG)' --libs-only-l openssl` -lws2_32" \
-      SYBASE_LIBS="-lsybdb `'$(MXE_PKG_CONFIG)' --libs-only-l gnutls` -liconv -lws2_32"
+      PSQL_LIBS="-lpq -lsecur32 `'$(MXE_PKG_CONFIG)'` -lws2_32" \
+      SYBASE_LIBS="-lsybdb `'$(MXE_PKG_CONFIG)' --libs-only-l gnutls` -liconv -lws2_32" \
+      CXXFLAGS="-std=gnu++98"
+    $(PKG)_CONFIGURE_DATABASE_OPTION += -system-sqlite
   endif
   # compile-in generic ODBC driver under Windows
   $(PKG)_CONFIGURE_DATABASE_OPTION += -plugin-sql-odbc
 else
-  $(PKG)_CONFIGURE_ENV += \
-    LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
+  ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
+    $(PKG)_CONFIGURE_ENV += \
+      LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR) -Wl,-rpath-link,$(HOST_LIB64DIR) -L$(HOST_LIB64DIR)'
+  else
+    $(PKG)_CONFIGURE_ENV += \
+      LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR)'
+  endif
+  $(PKG)_CONFIGURE_DATABASE_OPTION += -system-sqlite
 endif
 
 ifeq ($(MXE_NATIVE_BUILD),yes)
   $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)'
   $(PKG)_CONFIGURE_LIBPATH_OPTION += -L '$(HOST_LIBDIR)'
+  ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
+    $(PKG)_CONFIGURE_LIBPATH_OPTION += -L '$(HOST_LIB64DIR)'
+  endif
+  $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)/dbus-1.0'
+  $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_LIBDIR)/dbus-1.0/include'
 endif
 
 ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
@@ -64,11 +88,6 @@ ifeq ($(MXE_NATIVE_MINGW_BUILD),yes)
   else
     $(PKG)_CONFIGURE_PLATFORM_OPTION := -platform win32-g++
   endif
-  # OPENSSL_LIBS needs to be specified here, specifying it as environment
-  # variables *before* "configure.exe" doesn't work. Also compile-in D-BUS
-  # support, for what it's worth...
-  $(PKG)_CONFIGURE_EXTRA_OPTION += \
-      OPENSSL_LIBS="`PKG_CONFIG_PATH='$(HOST_PREFIX)/lib/pkgconfig' '$(MXE_PKG_CONFIG)' --libs-only-l openssl`"
 else
   $(PKG)_CONFIGURE_CMD := configure
   $(PKG)_CONFIGURE_EXTRA_OPTION := \
@@ -76,9 +95,12 @@ else
       -make libs \
       -no-glib \
       -no-gstreamer \
+      -no-javascript-jit \
+      -no-openssl \
       -no-reduce-exports \
-      -no-ssse3 \
       -no-rpath \
+      -make translations \
+      -translationdir '$($(PKG)_PREFIX)/translations' \
       -device-option PKG_CONFIG='$(MXE_PKG_CONFIG)' \
       -force-pkg-config  \
       -v
@@ -88,13 +110,12 @@ else
       -device-option CROSS_COMPILE=$(MXE_TOOL_PREFIX)
     $(PKG)_CONFIGURE_PLATFORM_OPTION := -xplatform win32-g++-4.6
   endif
+
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://qt.gitorious.org/qt/qt/commits' | \
-    grep '<li><a href="/qt/qt/commit/' | \
-    $(SED) -n 's,.*<a[^>]*>v\([0-9][^<-]*\)<.*,\1,p' | \
-    tail -1
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
 endef
 
 define $(PKG)_BUILD
@@ -118,11 +139,14 @@ define $(PKG)_BUILD
         -prefix $($(PKG)_PREFIX) \
         -script \
         -no-iconv \
+        -no-icu \
         -opengl desktop \
-        -openssl-linked \
         -no-webkit \
+        -no-pch \
         -no-phonon \
         -no-phonon-backend \
+        -no-xinerama \
+        -no-xrandr \
         -accessibility \
         -nomake demos \
         -nomake docs \
@@ -132,8 +156,7 @@ define $(PKG)_BUILD
         -system-libpng \
         -system-libjpeg \
         -system-libtiff \
-        -system-libmng \
-        -no-sse2 
+        -system-libmng 
 
     if test x$(MXE_SYSTEM) = xmsvc; then \
         for f in $(1)/mkspecs/win32-msvc*/qmake.conf; do \
@@ -143,9 +166,17 @@ define $(PKG)_BUILD
     fi
 
     # need to 'install' mkspecs for the native mingw to build during its build
+    # also need build tools qmake 
     if [ "$(MXE_NATIVE_MINGW_BUILD)" = yes ]; then \
       mkdir -p '$($(PKG)_MKSPECS)'; \
       cp -r '$(1)/mkspecs' '$($(PKG)_MKSPECS)'; \
+      $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin'; \
+      $(INSTALL) -m755 '$(1)/bin/qmake.exe' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/'; \
+    elif [ "$(MXE_NATIVE_BUILD)" = "yes" ]; then \
+      mkdir -p '$($(PKG)_MKSPECS)'; \
+      cp -r '$(1)/mkspecs' '$($(PKG)_MKSPECS)'; \
+      $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin'; \
+      $(INSTALL) $(1)/bin/qmake '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/'; \
     fi
 
     # compilation under MSVC requires the use of NMAKE, which does not
@@ -159,10 +190,10 @@ define $(PKG)_BUILD
           INSTALL_ROOT=`cd $(3) && pwd -W | sed -e 's,^[a-zA-Z]:,,' -e 's,/,\\\\,g'` install && \
       rm -f $(3)$(CMAKE_HOST_PREFIX)/lib/$(LIBRARY_PREFIX)Qt*.dll; \
     else \
-      make -C '$(1)' -j '$(JOBS)' && \
-      make -C '$(1)' -j 1 install INSTALL_ROOT='$(3)'; \
+      make -C '$(1)' -j '$(JOBS)'; \
+      make -C '$(1)' -j 1 install INSTALL_ROOT=$($(PKG)_INSTALL_ROOT); \
       if [ "$(MXE_SYSTEM)" = mingw ]; then \
-        rm -f $(3)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)Qt*$(LIBRARY_SUFFIX).dll; \
+        rm -f $($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/$(LIBRARY_PREFIX)Qt*$(LIBRARY_SUFFIX).dll; \
       fi \
     fi
 
@@ -173,21 +204,39 @@ define $(PKG)_BUILD
          -e 's,\(.*\)_location=.*,\1_location=$${prefix}/bin/\1,g' \
          -e 's,\(Libs:.* -l\).*[\\/]\([A-Za-z0-9]*\),\1\2,g' \
          '{}' ';' ; \
-       $(INSTALL) -d '$(3)$(HOST_LIBDIR)/pkgconfig'; \
-       cp -f '$(1)/lib/pkgconfig/'*.pc '$(3)$(HOST_LIBDIR)/pkgconfig/';  \
+       $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/pkgconfig'; \
+       cp -f '$(1)/lib/pkgconfig/'*.pc '$($(PKG)_INSTALL_ROOT)$(HOST_LIBDIR)/pkgconfig/';  \
     fi
 
     $(if $(filter-out msvc, $(MXE_SYSTEM)),
       $(if $(filter-out yes, $(MXE_NATIVE_BUILD)),
-        $(INSTALL) -d '$(3)$(BUILD_TOOLS_PREFIX)/bin'
-        $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/moc' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
-        $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/rcc' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
-        $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/uic' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
-        $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/qmake' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
+        $(INSTALL) -d '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin'
+        mv '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/moc' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)moc'
+        mv '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/rcc' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)rcc'
+        mv '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/uic' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)uic'
+        mv '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/qmake' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)qmake'
       )
 
       # lrelease (from linguist) needed by octave for GUI build
-      $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' install INSTALL_ROOT='$(3)'
+      $(MAKE) -C '$(1)/tools/linguist/lrelease' -j '$(JOBS)' 
+      $(MAKE) -C '$(1)/tools/linguist/lrelease' -j 1 install INSTALL_ROOT='$($(PKG)_INSTALL_ROOT)'
       $(if $(filter-out yes, $(MXE_NATIVE_BUILD)),
-        $(INSTALL) -m755 '$(3)$($(PKG)_PREFIX)/bin/lrelease' '$(3)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'))
+        mv '$($(PKG)_INSTALL_ROOT)$($(PKG)_PREFIX)/bin/lrelease' '$($(PKG)_INSTALL_ROOT)$(BUILD_TOOLS_PREFIX)/bin/$(MXE_TOOL_PREFIX)lrelease'))
+
+    # if mingw cross compiling, and want devel tools, create cross compiles uic, moc, rcc and lrelease
+    if [ "$(MXE_NATIVE_BUILD)" = "no" -a "$(MXE_SYSTEM)" = "mingw" ]; then \
+      if [ "$(ENABLE_DEVEL_TOOLS)" = "yes" ]; then \
+        for f in bootstrap moc uic rcc; do \
+          echo "do make in $$f"; \
+          make -C "$(1)/src/tools/$$f" distclean; \
+          cd "$(1)/src/tools/$$f" && $(MXE_QMAKE) -makefile -spec '$(1)/mkspecs/win32-g++'; \
+          make -C "$(1)/src/tools/$$f"; \
+          make -C "$(1)/src/tools/$$f" -j 1 install INSTALL_ROOT='$($(PKG)_INSTALL_ROOT)'; \
+        done; \
+        make -C '$(1)/tools/linguist/lrelease' distclean; \
+        cd '$(1)/tools/linguist/lrelease' && $(MXE_QMAKE) -makefile -spec '$(1)/mkspecs/win32-g++'; \
+        make -C '$(1)/tools/linguist/lrelease'; \
+        make -C '$(1)/tools/linguist/lrelease' -j 1 install INSTALL_ROOT='$($(PKG)_INSTALL_ROOT)'; \
+      fi; \
+    fi
 endef

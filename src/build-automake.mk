@@ -3,15 +3,18 @@
 
 PKG             := build-automake
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 29d7832b148e2157e03ad0d3620fbb7f5a13bc21
+$(PKG)_VERSION  := 1.16.2
+$(PKG)_CHECKSUM := dbfc7e802a2f4a333cc406abe6f9e4df6260f0e3
 $(PKG)_SUBDIR   := automake-$($(PKG)_VERSION)
 $(PKG)_FILE     := automake-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/automake/$($(PKG)_FILE)
 $(PKG)_DEPS     := build-autoconf
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'http://ftp.gnu.org/gnu/automake/?C=M;O=D' | \
+    $(SED) -n 's,.*<a href="automake-\([0-9\.]*\)\.tar.*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

@@ -3,6 +3,7 @@
 
 PKG             := qwtplot3d
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.2.7
 $(PKG)_CHECKSUM := 4463fafb8420a91825e165da7a296aaabd70abea
 $(PKG)_SUBDIR   := $(PKG)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tgz
@@ -11,7 +12,7 @@ $(PKG)_DEPS     := qt zlib
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/$(PKG)/files/$(PKG)/' | \
-    $(SED) -n 's,.*/\([0-9][^"]*\)/".*,\1,p' | \
+    $(SED) -n 's,.*tr title="\([0-9][^"]*\)".*,\1,p' | \
     head -1
 endef
 

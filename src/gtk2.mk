@@ -3,6 +3,7 @@
 
 PKG             := gtk2
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.24.10
 $(PKG)_CHECKSUM := baf5c73e186352cad767392a6b55840be0326ddc
 $(PKG)_SUBDIR   := gtk+-$($(PKG)_VERSION)
 $(PKG)_FILE     := gtk+-$($(PKG)_VERSION).tar.xz
@@ -10,11 +11,11 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/gtk+/$(call SHORT_PKG_
 $(PKG)_DEPS     := gettext libpng jpeg tiff jasper glib atk pango cairo gdk-pixbuf
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/gtk+/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n 's,.*<a[^>]*>\([0-9]*\.[0-9]*[02468]\.[^<]*\)<.*,\1,p' | \
+    $(WGET) -q -O- 'https://github.com/GNOME/gtk/tags?after=3.23.0' | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | \
     grep -v '^2\.9' | \
     grep '^2\.' | \
+    $(SORT) -Vr | \
     head -1
 endef
 

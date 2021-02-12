@@ -3,7 +3,8 @@
 
 PKG             := libiconv
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := be7d67e50d72ff067b2c0291311bc283add36965
+$(PKG)_VERSION  := 1.16
+$(PKG)_CHECKSUM := 2d9d1d8fa9f7859b181de984d60eacd2499a5701
 $(PKG)_SUBDIR   := libiconv-$($(PKG)_VERSION)
 $(PKG)_FILE     := libiconv-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/pub/gnu/libiconv/$($(PKG)_FILE)
@@ -25,5 +26,9 @@ define $(PKG)_BUILD
 	CC='$(MXE_CC)' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --disable-nls && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)' -j '$(JOBS)'
+    $(MAKE) -C '$(1)' -j 1 install DESTDIR='$(3)'
+    if [ "$(ENABLE_DEP_DOCS)" == "no" ]; then \
+      rm -rf '$(3)$(HOST_PREFIX)/share'; \
+    fi
 endef

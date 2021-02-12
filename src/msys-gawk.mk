@@ -3,6 +3,7 @@
 
 PKG             := msys-gawk
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.1.7-2
 $(PKG)_CHECKSUM := 421ecc23e764ed87291796501189cc92fa905c0d
 $(PKG)_REMOTE_SUBDIR := gawk/gawk-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
@@ -11,8 +12,9 @@ $(PKG)_URL      := $(MSYS_BASE_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/downl
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_BASE_URL)/gawk' | \
+    $(SED) -n 's,.*title="gawk-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

@@ -3,6 +3,7 @@
 
 PKG             := msys-unzip
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 6.0-1
 $(PKG)_CHECKSUM := 38efa45dd20dde43a2911782e796e906a4e9a1cb
 $(PKG)_REMOTE_SUBDIR := unzip/unzip-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
@@ -11,8 +12,9 @@ $(PKG)_URL      := $(MSYS_EXTENSION_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_EXTENSION_URL)/unzip' | \
+    $(SED) -n 's,.*title="unzip-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

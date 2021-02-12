@@ -3,34 +3,56 @@
 
 PKG             := openblas
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := d012ebc2b8dcd3e95f667dff08318a81479a47c3
+$(PKG)_VERSION  := 0.3.12
+$(PKG)_CHECKSUM := ae647fed597ae891a7f122b9ddc6b15d4b7e0656
 $(PKG)_SUBDIR   := OpenBLAS-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.gz
-$(PKG)_URL      := http://github.com/xianyi/OpenBLAS/archive/v$($(PKG)_VERSION).tar.gz
-$(PKG)_DEPS     :=
-
-$(PKG)_MAKE_OPTS := PREFIX=$(HOST_PREFIX) DYNAMIC_ARCH=1 NO_LAPACK=1
-
-ifneq ($(MXE_NATIVE_BUILD),yes)
-  $(PKG)_MAKE_OPTS += NO_CBLAS=1 USE_THREAD=0 CC=$(MXE_CC) FC=$(MXE_F77) HOSTCC=gcc HOSTFC=gfortran CROSS=1
-endif
-
-ifeq ($(ENABLE_64),yes)
-  $(PKG)_MAKE_OPTS += BINARY=64
-else
-  $(PKG)_MAKE_OPTS += BINARY=32
-endif
+$(PKG)_URL      := https://github.com/xianyi/OpenBLAS/archive/v$($(PKG)_VERSION).tar.gz
+$(PKG)_DEPS     := blas
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'https://github.com/xianyi/OpenBLAS/tags' | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | $(SORT) -Vr | \
+    head -1
 endef
+
+ifeq ($(USE_CCACHE),yes)
+  $(PKG)_MXE_CC := $(shell basename $(MXE_CC))
+  $(PKG)_MXE_F77 := $(shell basename $(MXE_F77))
+else
+  $(PKG)_MXE_CC := $(MXE_CC)
+  $(PKG)_MXE_F77 := $(MXE_F77)
+endif
+
+$(PKG)_MAKE_OPTS := \
+  PREFIX=$(HOST_PREFIX) \
+  DYNAMIC_ARCH=1 DYNAMIC_OLDER=1 \
+  NO_LAPACK=1 NO_CBLAS=1 \
+  USE_THREAD=1 NUM_THREADS=24 \
+  CC=$($(PKG)_MXE_CC) FC=$($(PKG)_MXE_F77)
+## This may also be needed on some systems: NO_AVX2=1
+
+ifneq ($(MXE_NATIVE_BUILD),yes)
+  $(PKG)_MAKE_OPTS += HOSTCC=gcc HOSTFC=gfortran CROSS=1 CROSS_SUFFIX=$(MXE_TOOL_PREFIX)
+endif
+
+## Assume that native builds are for a 64bit target
+$(PKG)_TARGET := PRESCOTT
+
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_MAKE_OPTS += EXTRALIB=-lxerbla
+  ifneq ($(ENABLE_WINDOWS_64),yes)
+    $(PKG)_TARGET := KATMAI
+  endif
+endif
+
+$(PKG)_MAKE_OPTS += TARGET=$($(PKG)_TARGET)
+
+ifeq ($(ENABLE_FORTRAN_INT64),yes)
+  $(PKG)_MAKE_OPTS += BINARY=64 INTERFACE64=1
+endif
 
 define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' $($(PKG)_MAKE_OPTS)  
-    $(MAKE) -C '$(1)' -j 1 PREFIX='$(HOST_PREFIX)' $($(PKG)_MAKE_OPTS) install
-    if [ $(BUILD_SHARED) = yes ]; then \
-      $(INSTALL) -d $(HOST_BINDIR); \
-      $(INSTALL) $(HOST_LIBDIR)/libopenblas.dll $(HOST_BINDIR)/; \
-    fi
+    $(MAKE) -C '$(1)' -j 1 $($(PKG)_MAKE_OPTS) install
 endef

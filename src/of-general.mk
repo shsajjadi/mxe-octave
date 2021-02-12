@@ -3,16 +3,20 @@
 
 PKG             := of-general
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 1662d97f0bf1be957e1a30a287d9c0aff7b5ecdd
+$(PKG)_VERSION  := 2.1.1
+$(PKG)_CHECKSUM := 56e4c3aca7ad7cfc95aee52f680a2978da9465ad
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := general
+$(PKG)_SUBDIR   := general-$($(PKG)_VERSION)
 $(PKG)_FILE     := general-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
 
+ifeq ($(ENABLE_BINARY_PACKAGES),yes)
+    $(PKG)_DEPS += $(OCTAVE_TARGET)
+endif
+
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(OCTAVE_FORGE_PKG_UPDATE)
 endef
 
 define $(PKG)_BUILD

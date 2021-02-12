@@ -3,6 +3,7 @@
 
 PKG             := gdk-pixbuf
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.28.2
 $(PKG)_CHECKSUM := 9876d0a20f592f8fb2a52d4a86ec43d607661beb
 $(PKG)_SUBDIR   := gdk-pixbuf-$($(PKG)_VERSION)
 $(PKG)_FILE     := gdk-pixbuf-$($(PKG)_VERSION).tar.xz
@@ -13,11 +14,9 @@ ifneq ($(MXE_SYSTEM),msvc)
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/gdk-pixbuf/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n 's,.*<a[^>]*>\([0-9]*\.[0-9]*[02468]\.[^<]*\)<.*,\1,p' | \
-    grep -v '^2\.9' | \
-    head -1
+    $(WGET) -q -O- 'https://github.com/GNOME/gdk-pixbuf/tags' | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 $(PKG)_EXTRA_CONFIGURE_OPTIONS :=

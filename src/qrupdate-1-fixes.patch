@@ -44477,7 +44477,7 @@ diff -uNr a/src/Makefile.am b/src/Makefile.am
 +
 +libqrupdate_la_LIBADD = \
 + $(LAPACK_LIBS) \
-+ $(BLAS_LIBS)
++ $(BLAS_LIBS) $(XERBLA_LIB)
 +
 +libqrupdate_la_SOURCES = \
 +caxcpy.f cch1dn.f cch1up.f cchdex.f cchinx.f cchshx.f cgqvec.f   \

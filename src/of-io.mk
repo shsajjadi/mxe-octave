@@ -3,16 +3,20 @@
 
 PKG             := of-io
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 3744a01b45cb8519ba1a5477ab1ce7a16ead889f
+$(PKG)_VERSION  := 2.6.3
+$(PKG)_CHECKSUM := 6ed3e70e3ef108204bff87c9b9d29019b844d273
 $(PKG)_REMOTE_SUBDIR := 
-$(PKG)_SUBDIR   := io
+$(PKG)_SUBDIR   := io-$($(PKG)_VERSION)
 $(PKG)_FILE     := io-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := '$(OCTAVE_FORGE_BASE_URL)/$($(PKG)_FILE)/download'
 $(PKG)_DEPS     := 
 
+ifeq ($(ENABLE_BINARY_PACKAGES),yes)
+    $(PKG)_DEPS += $(OCTAVE_TARGET)
+endif
+
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(OCTAVE_FORGE_PKG_UPDATE)
 endef
 
 define $(PKG)_BUILD

@@ -1,87 +1,30 @@
-diff -ur a/examples/Makefile.in b/examples/Makefile.in
---- a/examples/Makefile.in	2013-04-24 09:26:53.000000000 -0400
-+++ b/examples/Makefile.in	2013-10-16 18:30:20.579120010 -0400
-@@ -117,8 +117,8 @@
- 	-lhogweed -lnettle $(BENCH_LIBS) $(LIBS) $(OPENSSL_LIBFLAGS) \
- 	-o hogweed-benchmark$(EXEEXT)
+This file is part of MXE. See LICENSE.md for licensing information.
+
+From c5836bef883966beb9b5be562ef0a6d0c6048879 Mon Sep 17 00:00:00 2001
+From: Mark Brand <mabrand@mabrand.nl>
+Date: Sun, 12 Apr 2015 10:07:58 +0200
+Subject: [PATCH] Revert "Include private dependencies automatically in
+ pkg-config for non-shared builds"
+
+This reverts commit c8b1d2fafff16c57ec50d413c999796ec2085413.
+
+diff --git a/hogweed.pc.in b/hogweed.pc.in
+index 97fb9d4..839f7d0 100644
+--- a/hogweed.pc.in
++++ b/hogweed.pc.in
+@@ -11,9 +11,8 @@ Name: Hogweed
+ Description: Nettle low-level cryptographic library (public-key algorithms)
+ URL: http://www.lysator.liu.se/~nisse/nettle
+ Version: @PACKAGE_VERSION@
+-Requires: @IF_NOT_SHARED@ nettle
+-Requires.private: @IF_SHARED@ nettle
+-Libs: -L${libdir} -lhogweed @IF_NOT_SHARED@ @LIBS@
+-Libs.private: @IF_SHARED@ @LIBS@
++Requires.private: nettle
++Libs: -L${libdir} -lhogweed
++Libs.private: @LIBS@
+ Cflags: -I${includedir}
  
--$(TARGETS) : io.$(OBJEXT) ../libnettle.a
--$(HOGWEED_TARGETS): ../libhogweed.a
-+$(TARGETS) : io.$(OBJEXT) ../libnettle.stamp
-+$(HOGWEED_TARGETS): ../libhogweed.stamp
- 
- check: $(TS_ALL)
- 	LD_LIBRARY_PATH=../.lib PATH="../.lib:$$PATH" srcdir="$(srcdir)" \
-diff -ur a/Makefile.in b/Makefile.in
---- a/Makefile.in	2013-04-24 09:26:53.000000000 -0400
-+++ b/Makefile.in	2013-10-16 18:48:59.141790433 -0400
-@@ -22,8 +22,19 @@
- 
- PRE_CPPFLAGS = -I.
- # FIXME: Add configuration of LIBEXT?
--LIBTARGETS = @IF_STATIC@ libnettle.a @IF_HOGWEED@ libhogweed.a
--SHLIBTARGETS = @IF_SHARED@ $(LIBNETTLE_FORLINK) @IF_HOGWEED@ $(LIBHOGWEED_FORLINK)
-+LIBTARGETS = libnettle.stamp libhogweed.stamp
-+
-+LIBNETTLE_STATIC = @IF_STATIC@ libnettle.a
-+LIBNETTLE_SHARED = @IF_SHARED@ $(LIBNETTLE_FORLINK)
-+
-+LIBHOGWEED_STATIC = @IF_STATIC@ libhogweed.a
-+LIBHOGWEED_SHARED = @IF_SHARED@ $(LIBHOGWEED_FORLINK)
-+
-+libnettle.stamp: $(LIBNETTLE_STATIC) $(LIBNETTLE_SHARED)
-+	touch $@
-+
-+libhogweed.stamp: $(LIBHOGWEED_STATIC) $(LIBHOGWEED_SHARED)
-+	touch $@
- 
- getopt_SOURCES = getopt.c getopt1.c
- getopt_TARGETS = $(getopt_SOURCES:.c=.$(OBJEXT))
-@@ -35,7 +46,7 @@
-           twofishdata$(EXEEXT_FOR_BUILD) shadata$(EXEEXT_FOR_BUILD) \
-           gcmdata$(EXEEXT_FOR_BUILD) \
- 	  $(getopt_TARGETS) $(internal_TARGETS) \
--	  $(LIBTARGETS) $(SHLIBTARGETS)
-+	  $(LIBTARGETS)
- IMPLICIT_TARGETS = @IF_DLL@ $(LIBNETTLE_FILE) $(LIBHOGWEED_FILE)
- 
- DOCTARGETS = @IF_DOCUMENTATION@ nettle.info nettle.html nettle.pdf
-diff -ur a/testsuite/Makefile.in b/testsuite/Makefile.in
---- a/testsuite/Makefile.in	2013-04-24 09:26:53.000000000 -0400
-+++ b/testsuite/Makefile.in	2013-10-16 18:29:47.328230002 -0400
-@@ -96,7 +96,7 @@
- include $(srcdir)/.test-rules.make
- 
- $(TARGETS) $(EXTRA_TARGETS): testutils.$(OBJEXT) ../nettle-internal.$(OBJEXT) \
--	../libnettle.a @IF_HOGWEED@ ../libhogweed.a
-+	../libnettle.stamp @IF_HOGWEED@ ../libhogweed.stamp
- 
- # For use as, e.g.,
- #
-diff -ur a/tools/Makefile.in b/tools/Makefile.in
---- a/tools/Makefile.in	2013-04-24 09:26:53.000000000 -0400
-+++ b/tools/Makefile.in	2013-10-16 18:44:52.366014240 -0400
-@@ -34,19 +34,19 @@
- DISTFILES = $(SOURCES) Makefile.in input.h misc.h output.h parse.h
- 
- sexp_conv_OBJS = $(sexp_conv_SOURCES:.c=.$(OBJEXT)) $(getopt_OBJS)
--sexp-conv$(EXEEXT): $(sexp_conv_OBJS) ../libnettle.a
-+sexp-conv$(EXEEXT): $(sexp_conv_OBJS) ../libnettle.stamp
- 	$(LINK) $(sexp_conv_OBJS) -lnettle $(LIBS) -o $@
- 
--nettle-lfib-stream$(EXEEXT): nettle-lfib-stream.$(OBJEXT) ../libnettle.a
-+nettle-lfib-stream$(EXEEXT): nettle-lfib-stream.$(OBJEXT) ../libnettle.stamp
- 	$(LINK) nettle-lfib-stream.$(OBJEXT) -lnettle $(LIBS) -o $@
- 
- pkcs1_conv_OBJS = $(pkcs1_conv_SOURCES:.c=.$(OBJEXT)) $(getopt_OBJS)
--pkcs1-conv$(EXEEXT): $(pkcs1_conv_OBJS) ../libnettle.a ../libhogweed.a
-+pkcs1-conv$(EXEEXT): $(pkcs1_conv_OBJS) ../libnettle.stamp ../libhogweed.stamp
- 	$(LINK) $(pkcs1_conv_OBJS) -lhogweed -lnettle $(LIBS) -o $@
- 
- # FIXME: Avoid linking with gmp
- nettle_hash_OBJS = $(nettle_hash_SOURCES:.c=.$(OBJEXT)) $(getopt_OBJS)
--nettle-hash$(EXEEXT): $(nettle_hash_OBJS) ../libnettle.a
-+nettle-hash$(EXEEXT): $(nettle_hash_OBJS) ../libnettle.stamp
- 	$(LINK) $(nettle_hash_OBJS) -lnettle $(LIBS) -o $@
- 
- 
+-- 
+2.5.0
+

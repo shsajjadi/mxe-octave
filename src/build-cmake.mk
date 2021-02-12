@@ -3,15 +3,22 @@
 
 PKG             := build-cmake
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := b96663c0757a5edfbddc410aabf7126a92131e2b
+$(PKG)_VERSION  := 3.18.4
+$(PKG)_CHECKSUM := 73ab5348c881f1a53c250b66848b6ee101c9fe1f
 $(PKG)_SUBDIR   := cmake-$($(PKG)_VERSION)
 $(PKG)_FILE     := cmake-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://www.cmake.org/files/v2.8/$($(PKG)_FILE)
-$(PKG)_DEPS     := 
+$(PKG)_URL      := http://www.cmake.org/files/v$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
+ifeq ($(USE_SYSTEM_GCC),yes)
+  $(PKG)_DEPS   :=
+else
+  $(PKG)_DEPS   := build-gcc
+endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'https://www.cmake.org/cmake/resources/software.html' | \
+    $(SED) -n 's,.*cmake-\([0-9.]*\)\.tar.*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

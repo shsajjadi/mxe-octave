@@ -3,6 +3,7 @@
 
 PKG             := build-msvctools
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 
 $(PKG)_CHECKSUM := 4e655032cda30e1928fcc3f00962f4238b502169
 $(PKG)_FILE     := gcc-$(build-gcc_VERSION).tar.bz2
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$(build-gcc_VERSION)/$($(PKG)_FILE)

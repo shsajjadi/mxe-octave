@@ -3,71 +3,97 @@
 
 PKG             := hdf5
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 867a91b75ee0bbd1f1b13aecd52e883be1507a2c
+$(PKG)_VERSION  := 1.12.0
+$(PKG)_CHECKSUM := 6020131b6e18e6866816b1fe68980512c696c2bf
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.bz2
-$(PKG)_URL      := http://www.hdfgroup.org/ftp/HDF5/current/src/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
-ifeq ($(MXE_SYSTEM),mingw)
-  ifneq ($(MXE_NATIVE_BUILD),yes)
-    $(PKG)_CROSS_CONFIG_OPTIONS := \
-      --disable-largefile \
-      LIBS=-lws2_32 \
-      hdf5_cv_gettimeofday_tz=no \
-      hdf5_cv_vsnprintf_works=yes \
-      hdf5_cv_printf_ll=l \
-      hdf5_cv_system_scope_threads=yes \
-      hdf5_cv_ldouble_to_integer_works=yes \
-      hdf5_cv_ulong_to_float_accurate=yes \
-      hdf5_cv_ulong_to_fp_bottom_bit_accurate=no \
-      hdf5_cv_fp_to_ullong_accurate=yes \
-      hdf5_cv_fp_to_ullong_right_maximum=no \
-      hdf5_cv_fp_to_ullong_right_maximum=no \
-      hdf5_cv_ldouble_to_uint_accurate=yes \
-      hdf5_cv_ullong_to_ldouble_precision=yes \
-      hdf5_cv_fp_to_integer_overflow_works=yes \
-      hdf5_cv_ldouble_to_long_special=no \
-      hdf5_cv_long_to_ldouble_special=no \
-      hdf5_cv_ldouble_to_llong_accurate=yes \
-      hdf5_cv_llong_to_ldouble_correct=yes
-  endif
-endif
-
-ifeq ($(MXE_NATIVE_BUILD),yes)
-  $(PKG)_CONFIGURE_ENV := LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
-endif
+$(PKG)_URL      := https://support.hdfgroup.org/ftp/HDF5/releases/$(PKG)-$(call SHORT_PKG_VERSION,$(PKG))/$(PKG)-$($(PKG)_VERSION)/src/$($(PKG)_FILE)
+$(PKG)_DEPS     := zlib
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package hdf5.' >&2;
     echo $(hdf5_VERSION)
 endef
 
+ifeq ($(MXE_SYSTEM),mingw)
+    ifneq ($(MXE_NATIVE_BUILD),yes)
+        $(PKG)_CROSS_CONFIG_OPTIONS := \
+            -DHDF5_USE_PREGEN=ON \
+            -DHAVE_IOEO_EXITCODE=0 \
+            -DH5_LDOUBLE_TO_LONG_SPECIAL_RUN=1 \
+            -DH5_LDOUBLE_TO_LONG_SPECIAL_RUN__TRYRUN_OUTPUT="" \
+            -DH5_LONG_TO_LDOUBLE_SPECIAL_RUN=1 \
+            -DH5_LONG_TO_LDOUBLE_SPECIAL_RUN__TRYRUN_OUTPUT="" \
+            -DH5_LDOUBLE_TO_LLONG_ACCURATE_RUN=0 \
+            -DH5_LDOUBLE_TO_LLONG_ACCURATE_RUN__TRYRUN_OUTPUT="" \
+            -DH5_LLONG_TO_LDOUBLE_CORRECT_RUN=0 \
+            -DH5_LLONG_TO_LDOUBLE_CORRECT_RUN__TRYRUN_OUTPUT="" \
+            -DH5_DISABLE_SOME_LDOUBLE_CONV_RUN=1 \
+            -DH5_DISABLE_SOME_LDOUBLE_CONV_RUN__TRYRUN_OUTPUT="" \
+            -DH5_NO_ALIGNMENT_RESTRICTIONS_RUN=0 \
+            -DH5_NO_ALIGNMENT_RESTRICTIONS_RUN__TRYRUN_OUTPUT="" \
+            -DH5_PRINTF_LL_TEST_RUN=1 \
+            -DH5_PRINTF_LL_TEST_RUN__TRYRUN_OUTPUT="" \
+            -DTEST_LFS_WORKS_RUN=0
+    endif
+endif
+
 define $(PKG)_BUILD
-    # build GCC and support libraries
-    cd '$(1)' && autoreconf
+    if test x$(MXE_SYSTEM) = xmingw; then \
+        mkdir '$(1)/pregen'; \
+        case '$(TARGET)' in \
+            x86_64-w64-mingw32) \
+                cp '$(1)/src/H5Tinit.c.mingw64' '$(1)/pregen/H5Tinit.c' & \
+                cp '$(1)/src/H5lib_settings.c.mingw64' '$(1)/pregen/H5lib_settings.c' \
+            ;; \
+            i686-w64-mingw32) \
+                cp '$(1)/src/H5Tinit.c.mingw32' '$(1)/pregen/H5Tinit.c' & \
+                cp '$(1)/src/H5lib_settings.c.mingw32' '$(1)/pregen/H5lib_settings.c' \
+            ;; \
+            i686-pc-mingw32) \
+                cp '$(1)/src/H5Tinit.c.mingw32' '$(1)/pregen/H5Tinit.c' & \
+                cp '$(1)/src/H5lib_settings.c.mingw32' '$(1)/pregen/H5lib_settings.c' \
+            ;; \
+        esac; \
+    fi
+
     mkdir '$(1)/.build'
-    cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
-        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-        $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(HOST_PREFIX)' \
-        --disable-direct-vfd \
-        $($(PKG)_CROSS_CONFIG_OPTIONS) && $(CONFIGURE_POST_HOOK)
 
-    case '$(MXE_SYSTEM)' in \
-      *mingw*) \
-        echo "#define H5_HAVE_WIN32_API 1" >> $(1)/.build/src/H5pubconf.h; \
-        echo "#define H5_HAVE_MINGW 1" >> $(1)/.build/src/H5pubconf.h; \
-        echo "#define HAVE_WINDOWS_PATH 1" >> $(1)/.build/src/H5pubconf.h; \
-      ;; \
-      *msvc*) \
-        sed -i -e 's/^\(#define H5_SIZEOF_SSIZE_T\) .*/\1 0/' \
-	    '$(1)/.build/src/H5pubconf.h'; \
-        echo "#define H5_HAVE_WIN32_API 1" >> $(1)/.build/src/H5pubconf.h; \
-        echo "#define H5_HAVE_VISUAL_STUDIO 1" >> $(1)/.build/src/H5pubconf.h; \
-        echo "#define HAVE_WINDOWS_PATH 1" >> $(1)/.build/src/H5pubconf.h; \
-      ;; \
-    esac
+    cd '$(1)/.build' && cmake .. -G "Unix Makefiles" \
+        -DCMAKE_INSTALL_PREFIX=${prefix} \
+        $($(PKG)_CMAKE_FLAGS) \
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+        -DHDF5_INSTALL_BIN_DIR='$(HOST_BINDIR)' \
+        -DHDF5_INSTALL_LIB_DIR='$(HOST_LIBDIR)' \
+        -DHDF5_INSTALL_INCLUDE_DIR='$(HOST_INCDIR)' \
+        -DHDF5_INSTALL_DATA_DIR='$(HOST_PREFIX)/share' \
+        -DHDF5_BUILD_CPP_LIB=OFF \
+        -DHDF5_BUILD_HL_LIB=ON \
+        -DHDF5_ENABLE_Z_LIB_SUPPORT=ON \
+        -DHDF5_ENABLE_SZIP_SUPPORT=OFF \
+        -DHDF5_ENABLE_SZIP_ENCODING=OFF \
+        -DBUILD_TESTING=OFF \
+        $($(PKG)_CROSS_CONFIG_OPTIONS) \
+        -DHDF5_USE_PREGEN_DIR='$(1)/pregen'
 
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' 
+    $(MAKE) -C '$(1)/.build' -j 1 install DESTDIR='$(3)'
+
+    # FIXME: Change the build rule to create the shared libs with the prefix
+    if test x$(MXE_SYSTEM) = xmingw; then \
+        mv '$(3)/$(HOST_LIBDIR)/hdf5.lib' '$(3)/$(HOST_LIBDIR)/libhdf5.lib'; \
+        mv '$(3)/$(HOST_LIBDIR)/hdf5_tools.lib' '$(3)/$(HOST_LIBDIR)/libhdf5_tools.lib'; \
+        mv '$(3)/$(HOST_LIBDIR)/hdf5_hl.lib' '$(3)/$(HOST_LIBDIR)/libhdf5_hl.lib'; \
+    fi
+    
+    # Remove version suffix from pkg-config files
+    mv '$(3)/$(HOST_LIBDIR)/pkgconfig/hdf5-$($(PKG)_VERSION).pc' '$(3)/$(HOST_LIBDIR)/pkgconfig/hdf5.pc'
+    mv '$(3)/$(HOST_LIBDIR)/pkgconfig/hdf5_hl-$($(PKG)_VERSION).pc' '$(3)/$(HOST_LIBDIR)/pkgconfig/hdf5_hl.pc'
+
+    if [ "$(ENABLE_DEP_DOCS)" == "no" ]; then \
+        rm -rf '$(3)$(HOST_PREFIX)/share/hdf5_examples'; \
+    fi
 endef
+

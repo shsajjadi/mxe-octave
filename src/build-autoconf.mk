@@ -3,6 +3,7 @@
 
 PKG             := build-autoconf
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.69
 $(PKG)_CHECKSUM := e891c3193029775e83e0534ac0ee0c4c711f6d23
 $(PKG)_SUBDIR   := autoconf-$($(PKG)_VERSION)
 $(PKG)_FILE     := autoconf-$($(PKG)_VERSION).tar.xz
@@ -17,8 +18,10 @@ ifneq ($(MXE_SYSTEM),msvc)
 endif
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- 'http://ftp.gnu.org/gnu/autoconf/?C=M;O=D' | \
+    $(SED) -n 's,.*<a href="autoconf-\([0-9\.]*\)\.tar.*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

@@ -3,7 +3,8 @@
 
 PKG             := ogg
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := a900af21b6d7db1c7aa74eb0c39589ed9db991b8
+$(PKG)_VERSION  := 1.3.4
+$(PKG)_CHECKSUM := 851cef020b346d44893e5d1c3dab83c675d479d9
 $(PKG)_SUBDIR   := libogg-$($(PKG)_VERSION)
 $(PKG)_FILE     := libogg-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://downloads.xiph.org/releases/ogg/$($(PKG)_FILE)
@@ -20,6 +21,6 @@ define $(PKG)_BUILD
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
         --prefix='$(HOST_PREFIX)'
-    $(MAKE) -C '$(1)' -j '$(JOBS)' bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
-    $(MAKE) -C '$(1)' -j 1 install bin_PROGRAMS= sbin_PROGRAMS= noinst_PROGRAMS=
+    $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS)
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS) $(MXE_DISABLE_DOCS)
 endef

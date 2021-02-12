@@ -3,24 +3,28 @@
 
 PKG             := glpk
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 63fd6788f95adb52789767b19e38cfb58dda331e
+$(PKG)_VERSION  := 4.65
+$(PKG)_CHECKSUM := d9b607a9cf3a25b754a0cd9a842ea5043f8604db
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := glpk-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := ftp://ftp.gnu.org/gnu/glpk/$($(PKG)_FILE)
-$(PKG)_DEPS     :=
+$(PKG)_DEPS     := gmp suitesparse zlib
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package glpk.' >&2;
-    echo $(glpk_VERSION)
+    $(WGET) -q -O- 'http://ftp.gnu.org/gnu/glpk/?C=M;O=D' | \
+    $(SED) -n 's,.*<a href="glpk-\([0-9][^"]*\)\.tar.*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && aclocal && libtoolize && autoreconf
     mkdir '$(1)/.build'
+    cd '$(1)' && autoreconf -fi -I m4
     cd '$(1)/.build' && '$(1)/configure' \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
+        --with-gmp \
         --prefix='$(HOST_PREFIX)' && $(CONFIGURE_POST_HOOK)
-    $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)'
+    $(MAKE) -C '$(1)/.build' -j 1 install DESTDIR='$(3)'
 endef

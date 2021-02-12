@@ -3,23 +3,29 @@
 
 PKG             := fltk
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 717242e8aa118020cc05aa788015a2933895b99c
+$(PKG)_VERSION  := 1.3.5
+$(PKG)_CHECKSUM := d0ea44a68a9424d9e7d1ff9985d9c510b9ee2b75
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR)-source.tar.gz
 $(PKG)_URL      := http://fltk.org/pub/fltk/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_DEPS     := zlib jpeg libpng
 ifeq ($(MXE_SYSTEM),mingw)
-  $(PKG)_DEPS   := zlib jpeg libpng pthreads uuid
+  $(PKG)_DEPS   += pthreads uuid
+else ifeq ($(MXE_SYSTEM),msvc)
+  $(PKG)_DEPS   += freetype
 else
-ifeq ($(MXE_SYSTEM),msvc)
-  $(PKG)_DEPS   := zlib jpeg libpng freetype
-else
-  $(PKG)_DEPS   := zlib jpeg libpng pthreads freetype
+  $(PKG)_DEPS   += pthreads freetype
+  ifeq ($(USE_SYSTEM_X11_LIBS),no)
+    $(PKG)_DEPS += x11 xcursor xext xrender xdmcp
+  endif
 endif
+ifeq ($(USE_SYSTEM_OPENGL),no)
+  $(PKG)_DEPS += mesa glu
 endif
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://www.fltk.org/' | \
-    $(SED) -n 's,.*>v\([0-9][^<]*\)<.*,\1,p' | \
+    $(SED) -n 's,.*>\([0-9][^<]*\)<.*,\1,p' | \
     grep -v '^1\.1\.' | \
     head -1
 endef
@@ -42,7 +48,7 @@ define $(PKG)_BUILD
         --enable-threads
 ##        LIBS='-lws2_32'
     # enable exceptions, because disabling them doesn't make any sense on PCs
-    $(SED) -i 's,-fno-exceptions,,' '$(1)/makeinclude'
+    $(SED) -i 's/-fno-exceptions//; s/-Wl,-gc-sections//; s/-fvisibility=hidden//' '$(1)/makeinclude'
     $(MAKE) -C '$(1)' -j '$(JOBS)' install \
         DIRS=src \
         LIBCOMMAND='$(MXE_AR) cr' \

@@ -3,6 +3,7 @@
 
 PKG             := libxml++
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.36.0
 $(PKG)_CHECKSUM := 446714be0becb1d1bca914a9a545af96a24de26e
 $(PKG)_SUBDIR   := libxml++-$($(PKG)_VERSION)
 $(PKG)_FILE     := libxml++-$($(PKG)_VERSION).tar.xz
@@ -10,10 +11,9 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/GNOME/sources/libxml++/$(call SHORT_
 $(PKG)_DEPS     := libxml2 glibmm
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/libxml++/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?id=\\([0-9][^']*\\)'.*,\\1,p" | \
-    head -1
+    $(WGET) -q -O- https://gitlab.gnome.org/GNOME/libxmlplusplus/tags | \
+    $(SED) -n 's|.*/tags/\([0-9][^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

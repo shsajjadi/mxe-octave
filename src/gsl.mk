@@ -3,17 +3,18 @@
 
 PKG             := gsl
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := d914f84b39a5274b0a589d9b83a66f44cd17ca8e
+$(PKG)_VERSION  := 2.6
+$(PKG)_CHECKSUM := 9273164b6bdf60d0577518a1c1310eff6659e3dd
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.savannah.gnu.org/gitweb/?p=$(PKG).git;a=tags' | \
-    grep '<a class="list subject"' | \
-    $(SED) -n 's,.*<a[^>]*>[^0-9>]*\([0-9][^<]*\)<.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://ftp.gnu.org/gnu/$(PKG)/' | \
+    $(SED) -n 's,.*<a href="gsl-\([0-9.]\+\).tar.gz".*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
 ifeq ($(MXE_SYSTEM),msvc)
@@ -34,5 +35,5 @@ define $(PKG)_BUILD
 	$($(PKG)_EXTRA_CONFIGURE_OPTIONS) \
 	&& $(CONFIGURE_POST_HOOK)
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_DOCS) $(MXE_DISABLE_PROGS)  DESTDIR='$(3)'
 endef

@@ -3,6 +3,7 @@
 
 PKG             := gcab
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.4
 $(PKG)_CHECKSUM := d81dfe35125e611e3a94c0d4def37ebf62b9187c
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.xz
@@ -10,9 +11,8 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/$(PKG)/$(call SHORT_PK
 $(PKG)_DEPS     := glib zlib intltool
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/$(PKG)/refs/tags' | \
-    $(SED) -n "s,.*tag/?id=\([0-9]\+\.[0-9]*[02468]\.[^']*\).*,\1,p" | \
-    head -1
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
 endef
 
 define $(PKG)_BUILD

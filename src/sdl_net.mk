@@ -3,6 +3,7 @@
 
 PKG             := sdl_net
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.2.8
 $(PKG)_CHECKSUM := fd393059fef8d9925dc20662baa3b25e02b8405d
 $(PKG)_SUBDIR   := SDL_net-$($(PKG)_VERSION)
 $(PKG)_FILE     := SDL_net-$($(PKG)_VERSION).tar.gz
@@ -10,8 +11,9 @@ $(PKG)_URL      := http://www.libsdl.org/projects/SDL_net/release/$($(PKG)_FILE)
 $(PKG)_DEPS     := sdl
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.libsdl.org/projects/SDL_net/release/?C=M;O=D' | \
-    $(SED) -n 's,.*SDL_net-\([0-9][^>]*\)\.tar.*,\1,p' | \
+    $(WGET) -q -O- 'http://hg.libsdl.org/SDL_net/tags' | \
+    $(SED) -n 's,.*release-\([0-9][^<]*\).*,\1,p' | \
+    $(GREP) "^1" | \
     head -1
 endef
 

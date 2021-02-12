@@ -3,6 +3,7 @@
 
 PKG             := gtksourceviewmm2
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.10.3
 $(PKG)_CHECKSUM := 17d5daf33d2b6bc21c48c5c730abaae70e027566
 $(PKG)_SUBDIR   := gtksourceviewmm-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).tar.xz
@@ -10,12 +11,9 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/gtksourceviewmm/$(call
 $(PKG)_DEPS     := gtkmm2 gtksourceview
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/cgit/gtksourceviewmm/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?id=gtksourceviewmm-\\([0-9][^']*\\)'.*,\\1,p" | \
-    grep -v '^2\.9[0-9]\.' | \
-    grep '^2\.' | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/gtksourceviewmm/tags | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | grep -v '^2\.9[0-9]\.' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

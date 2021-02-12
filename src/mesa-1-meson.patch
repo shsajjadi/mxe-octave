@@ -1,0 +1,15 @@
+Don't link to Win32 library libstdc++
+
+diff --git "a/meson.build" "b/meson.build"
+index eaaca7f..9b9d2d3 100644
+--- "a/meson.build"	
++++ "b/meson.build"
+@@ -1030,8 +1030,7 @@ if host_machine.system() == 'windows'
+     add_project_link_arguments(
+       '-Wl,--nxcompat',
+       '-Wl,--dynamicbase',
+       '-static-libgcc',
+-      '-static-libstdc++',
+       language : ['c', 'cpp'],
+     )
+   endif

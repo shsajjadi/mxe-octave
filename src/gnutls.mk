@@ -2,32 +2,35 @@
 # See index.html for further information.
 
 PKG             := gnutls
-$(PKG)_CHECKSUM := 18f5fffd1a0384944cb76cbedc0720c4726470f4
+$(PKG)_VERSION  := 3.6.15
+$(PKG)_CHECKSUM := 00ef7d93347df586c3d1a00f13c326706c0c59ba
 $(PKG)_SUBDIR   := gnutls-$($(PKG)_VERSION)
 $(PKG)_FILE     := gnutls-$($(PKG)_VERSION).tar.xz
-$(PKG)_URL      := http://ftp.gnu.org/gnu/gnutls/$($(PKG)_FILE)
-$(PKG)_DEPS     := gettext nettle pcre zlib
+$(PKG)_URL      := ftp://ftp.gnutls.org/gcrypt/gnutls/v3.6/$($(PKG)_FILE)
+$(PKG)_URL_2    := https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v3.6/$($(PKG)_FILE)
+$(PKG)_DEPS     := gettext gmp libidn2 libtasn1 libunistring nettle zlib
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.savannah.gnu.org/gitweb/?p=gnutls.git;a=tags' | \
-    grep '<a class="list name"' | \
-    $(SED) -n 's,.*<a[^>]*>gnutls_\([0-9]*_[0-9]*[012468]_[^<]*\)<.*,\1,p' | \
-    $(SED) 's,_,.,g' | \
-    grep -v '^2\.' | \
-    head -1
+    $(WGET) -q -O- https://gnupg.org/ftp/gcrypt/gnutls/v3.6/ | \
+    $(SED) -n 's,.*gnutls-\([1-9]\+\.[0-9]\+.[0-9]\+\)\..*,\1,p' | \
+    $(SORT) -V | \
+    tail -1
 endef
 
+$(PKG)_WINDOWS_CONFIGURE_OPTIONS := \
+   CPPFLAGS='-D_WIN32_WINNT=0x0600' --disable-rpath 
+
+ifeq ($(MXE_SYSTEM),mingw)
+  $(PKG)_CONFIGURE_OPTIONS := $($(PKG)_WINDOWS_CONFIGURE_OPTIONS)
+endif
+ifeq ($(MXE_SYSTEM),msvc)
+  $(PKG)_CONFIGURE_OPTIONS := $($(PKG)_WINDOWS_CONFIGURE_OPTIONS)
+endif
+
 define $(PKG)_BUILD
-    $(SED) -i 's, sed , $(SED) ,g' '$(1)/gl/tests/Makefile.am'
-    cd '$(1)' && aclocal -I m4 -I gl/m4 -I src/libopts/m4 --install
-    cd '$(1)' && autoconf
-    cd '$(1)' && automake --add-missing
-    if [ "$(MXE_NATIVE_BUILD)" = no ]; then \
-      $(SED) -i 's/libopts_cv_with_libregex=no/libopts_cv_with_libregex=yes/g;' '$(1)/configure'; \
-    fi
-    # AI_ADDRCONFIG referenced by src/serv.c but not provided by mingw.
-    # Value taken from http://msdn.microsoft.com/en-us/library/windows/desktop/ms737530%28v=vs.85%29.aspx
-    cd '$(1)' && ./configure \
+    mkdir '$(1)/.build'
+    cd '$(1)' && autoreconf -fi 
+    cd '$(1)/.build' && ../configure \
         $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
@@ -35,17 +38,13 @@ define $(PKG)_BUILD
         --disable-nls \
         --disable-guile \
         --disable-doc \
-        --with-included-libtasn1 \
-        --with-libregex='$(HOST_PREFIX)' \
-        --with-regex-header=pcreposix.h \
-        --with-libregex-cflags="`$(MXE_PKG_CONFIG) libpcreposix --cflags`" \
-        --with-libregex-libs="`$(MXE_PKG_CONFIG) libpcreposix --libs`" \
-        --with-included-libcfg \
+        --disable-tests \
+        --enable-local-libopts \
         --without-p11-kit \
         --disable-silent-rules \
-        CPPFLAGS='-DWINVER=0x0501 -DAI_ADDRCONFIG=0x0400 -DIPV6_V6ONLY=27' \
-        LIBS='-lws2_32' \
-        ac_cv_prog_AR='$(MXE_AR)' && $(CONFIGURE_POST_HOOK)
+        $($(PKG)_CONFIGURE_OPTIONS) \
+        && $(CONFIGURE_POST_HOOK)
 
-    $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
+    $(MAKE) -C '$(1)/.build' -j '$(JOBS)'
+    $(MAKE) -C '$(1)/.build' -j 1 install DESTDIR='$(3)'
 endef

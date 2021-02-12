@@ -3,6 +3,7 @@
 
 PKG             := pdflib_lite
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 7.0.5p3
 $(PKG)_CHECKSUM := 42e0605ae21f4b6d25fa2d20e78fed6df36fbaa9
 $(PKG)_SUBDIR   := PDFlib-Lite-$($(PKG)_VERSION)
 $(PKG)_FILE     := PDFlib-Lite-$($(PKG)_VERSION).tar.gz
@@ -10,9 +11,8 @@ $(PKG)_URL      := http://www.pdflib.com/binaries/PDFlib/$(subst .,,$(word 1,$(s
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.pdflib.com/download/free-software/pdflib-lite-7/' | \
-    $(SED) -n 's,.*PDFlib-Lite-\([0-9][^>]*\)\.tar.*,\1,p' | \
-    head -1
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
 endef
 
 define $(PKG)_BUILD

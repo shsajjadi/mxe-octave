@@ -3,6 +3,7 @@
 
 PKG             := liboauth
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.0.0
 $(PKG)_CHECKSUM := cc936a440084f159cc46dab9018f1353f8bee80a
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz

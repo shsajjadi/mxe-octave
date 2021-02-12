@@ -3,16 +3,18 @@
 
 PKG             := msys-dos2unix
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := bab553c740877d02311bfc5d0be3acadbcc375d0
+$(PKG)_VERSION  := 7.4.0-1
+$(PKG)_CHECKSUM := 837734cd2a51c06dbb764f04986ebe30e31a4c15
 $(PKG)_REMOTE_SUBDIR := dos2unix/dos2unix-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
-$(PKG)_FILE     := dos2unix-$($(PKG)_VERSION)-msys-1.0.17-bin.tar.lzma
+$(PKG)_FILE     := dos2unix-$($(PKG)_VERSION)-msys-1.0.19-bin.tar.lzma
 $(PKG)_URL      := $(MSYS_EXTENSION_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/download
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_EXTENSION_URL)/dos2unix' | \
+    $(SED) -n 's,.*title="dos2unix-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

@@ -3,7 +3,8 @@
 
 PKG             := zlib
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := b598beb7acc96347cbd1020b71aef7871d374677
+$(PKG)_VERSION  := 1.2.11
+$(PKG)_CHECKSUM := e1cb0d5c92da8e9a8c2635dfa249c341dfd00322
 $(PKG)_SUBDIR   := zlib-$($(PKG)_VERSION)
 $(PKG)_FILE     := zlib-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://zlib.net/$($(PKG)_FILE)
@@ -48,6 +49,7 @@ define $(PKG)_BUILD
     $(MAKE) -C '$(1)' -j '$(JOBS)' install DESTDIR='$(3)'
 
     if [ "$(BUILD_SHARED)" = yes ]; then \
+      rm -r $(3)$(HOST_LIBDIR)/libz.a; \
       $(MAKE_SHARED_FROM_STATIC) --ar '$(MXE_AR)' --ld '$(MXE_CC)' '$(1)/libz.a' --install '$(INSTALL)' --libdir '$(3)$(HOST_LIBDIR)' --bindir '$(3)$(HOST_BINDIR)'; \
     fi
 endef

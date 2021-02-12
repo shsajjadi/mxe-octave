@@ -3,6 +3,7 @@
 
 PKG             := exiv2
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.23
 $(PKG)_CHECKSUM := 5f342bf642477526f41add11d6ee7787cdcd639f
 $(PKG)_SUBDIR   := exiv2-$($(PKG)_VERSION)
 $(PKG)_FILE     := exiv2-$($(PKG)_VERSION).tar.gz
@@ -10,8 +11,8 @@ $(PKG)_URL      := http://www.exiv2.org/$($(PKG)_FILE)
 $(PKG)_DEPS     := libiconv zlib expat
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.exiv2.org/download.html' | \
-    grep 'href="exiv2-' | \
+    $(WGET) -q -O- 'http://www.exiv2.org/archive.html' | \
+    grep 'href="/releases/exiv2-' | \
     $(SED) -n 's,.*exiv2-\([0-9][^>]*\)\.tar.*,\1,p' | \
     head -1
 endef

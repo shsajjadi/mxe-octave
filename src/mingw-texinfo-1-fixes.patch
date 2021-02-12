@@ -1,0 +1,92 @@
+diff -ur texinfo-6.6.orig/info/man.c texinfo-6.6/info/man.c
+--- texinfo-6.6.orig/info/man.c	2019-03-08 16:34:38.634930145 -0500
++++ texinfo-6.6/info/man.c	2019-03-08 16:41:52.845293995 -0500
+@@ -414,7 +414,7 @@
+   int bsize = 0;
+   int bindex = 0;
+   int select_result;
+-#if defined (FD_SET)
++#if defined (FD_SET) && !defined(__MINGW32__)
+   fd_set read_fds;
+ 
+   timeout.tv_sec = 15;
+diff -ur texinfo-6.6.orig/info/pcterm.c texinfo-6.6/info/pcterm.c
+--- texinfo-6.6.orig/info/pcterm.c	2019-03-08 16:34:38.630930050 -0500
++++ texinfo-6.6/info/pcterm.c	2019-03-08 16:41:52.845293995 -0500
+@@ -1679,7 +1679,7 @@
+ }
+ 
+ /* These should never be called, but they make the linker happy.  */
+-
++#ifndef __MINGW32__
+ int       tputs (const char *a, int b, int (*c)(int))
+ {
+   perror ("tputs"); return 0; /* here and below, added dummy retvals */
+@@ -1719,3 +1719,4 @@
+ {
+   perror ("tcsetattr"); return 0;
+ }
++#endif
+Only in texinfo-6.6/info: pcterm.c.orig
+diff -ur texinfo-6.6.orig/info/session.c texinfo-6.6/info/session.c
+--- texinfo-6.6.orig/info/session.c	2019-03-08 16:34:38.634930145 -0500
++++ texinfo-6.6/info/session.c	2019-03-08 16:41:52.849294091 -0500
+@@ -453,7 +453,7 @@
+     space_avail = sizeof (info_input_buffer) - (push_index - pop_index);
+ 
+   /* If we can just find out how many characters there are to read, do so. */
+-#if defined (FIONREAD)
++#if defined (FIONREAD) && !defined(__MINGW32__)
+   {
+     ioctl (tty, FIONREAD, &chars_avail);
+ 
+@@ -645,7 +645,7 @@
+       if (in_map && pop_index == push_index)
+         {
+           int ready = 0;
+-#if defined (FD_SET)
++#if defined (FD_SET) && !defined(__MINGW32__)
+           struct timeval timer, *timerp = 0;
+           fd_set readfds;
+ 
+@@ -750,7 +750,7 @@
+ void
+ pause_or_input (void)
+ {
+-#ifdef FD_SET
++#if defined (FD_SET) && !defined(__MINGW32__)
+   struct timeval timer;
+   fd_set readfds;
+ #endif
+@@ -758,7 +758,7 @@
+   if (pop_index != push_index)
+     return; /* Input is already waiting. */
+ 
+-#ifdef FD_SET
++#if defined (FD_SET) && !defined(__MINGW32__)
+   FD_ZERO (&readfds);
+   FD_SET (fileno (stdin), &readfds);
+   timer.tv_sec = 2;
+@@ -5433,7 +5433,7 @@
+       ready = 1;
+       if (!info_any_buffered_input_p ())
+         {
+-#if defined (FD_SET)
++#if defined (FD_SET) && !defined(__MINGW32__)
+           struct timeval timer;
+           fd_set readfds;
+ 
+Only in texinfo-6.6/info: session.c.orig
+diff -ur texinfo-6.6.orig/tp/texi2any.pl texinfo-6.6/tp/texi2any.pl
+--- texinfo-6.6.orig/tp/texi2any.pl	2019-03-08 16:34:38.490926704 -0500
++++ texinfo-6.6/tp/texi2any.pl	2019-03-08 16:41:52.849294091 -0500
+@@ -54,7 +54,7 @@
+   my $updir = File::Spec->updir();
+ 
+   # These are substituted by the Makefile to create "texi2any".
+-  my $datadir = '@datadir@';
++  my $datadir = '/usr/share';
+   my $package = '@PACKAGE@';
+   my $packagedir = '@pkglibdir@';
+ 
+Only in texinfo-6.6/tp: texi2any.pl.orig

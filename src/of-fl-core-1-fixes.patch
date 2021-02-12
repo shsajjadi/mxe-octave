@@ -1,0 +1,179 @@
+diff -ur fl-core.orig/src/fl_compose.cc fl-core/src/fl_compose.cc
+--- fl-core.orig/src/fl_compose.cc	2015-10-02 10:13:53.044225859 -0400
++++ fl-core/src/fl_compose.cc	2015-10-02 10:22:05.635130470 -0400
+@@ -63,14 +63,14 @@
+ // Structure for thread arguments. Each thread will perform the computation between the start_index and end_index row.
+ struct threadArg
+ {
+-	int start_index;
+-	int end_index;
++	octave_idx_type start_index;
++	octave_idx_type end_index;
+ };
+ 
+ 
+ // Functions prototype declaration
+-float get_elem(float vec[], int row, int col,int numCols);
+-void set_elem(float vec[], int row, int col, int numCols, float elem);
++float get_elem(float vec[], octave_idx_type row, octave_idx_type col,octave_idx_type numCols);
++void set_elem(float vec[], octave_idx_type row, octave_idx_type col, octave_idx_type numCols, float elem);
+ int is_valid_function(octave_function *func);
+ void *thread_function(void *arg);
+ int get_available_cpus();
+@@ -110,13 +110,13 @@
+ SparseMatrix sparseC;
+ 
+ // Matrices dimensions
+-long int rowsA,rowsB,colsA,colsB,rowsC,colsC;
++octave_idx_type rowsA,rowsB,colsA,colsB,rowsC,colsC;
+ 
+ // Lock option. 1 = calculation executed only for the diagonal of the matrix
+ int lock_option;
+ 
+ // The increment 
+-int col_index_increment;
++octave_idx_type col_index_increment;
+ 
+ // Number of threads that will be created
+ int num_threads;
+@@ -357,8 +357,9 @@
+ 	else
+ 	{	
+ 		Matrix outMatrix(rowsC,colsC);
+-		for(int i=0;i<rowsC;i++)
+-			for(int j=0;j<colsC;j++)
++
++		for(octave_idx_type i=0;i<rowsC;i++)
++			for(octave_idx_type j=0;j<colsC;j++)
+ 				outMatrix(i,j) = get_elem(c,i,j,colsC);
+ 		
+ 		if(sparse_res)
+@@ -390,15 +391,15 @@
+ 	// Initialize the first matrix
+ 	Matrix tempMatrix = args(0).matrix_value();
+ 	a = new float[rowsA*colsA];
+-	for (int i=0; i<rowsA; i++)
+-		for(int j=0; j<colsA;j++)
++	for (octave_idx_type i=0; i<rowsA; i++)
++		for(octave_idx_type j=0; j<colsA;j++)
+ 			a[i*colsA+j] = tempMatrix(i,j);
+ 
+ 	// Initialize the second matrix
+ 	tempMatrix = args(1).matrix_value();
+ 	b = new float[rowsB*colsB];
+-	for (int i=0; i<rowsB; i++)
+-		for(int j=0; j<colsB;j++)
++	for (octave_idx_type i=0; i<rowsB; i++)
++		for(octave_idx_type j=0; j<colsB;j++)
+ 			b[i*colsB+j] = tempMatrix(i,j);
+ 	
+ 
+@@ -418,7 +419,7 @@
+ 	}
+ 
+ 	// Define the number interval of rows for each thread		
+-	int interval = rowsA / num_threads;	
++	octave_idx_type interval = rowsA / num_threads;	
+ 			
+ 	int i;
+ 	// Define the threads
+@@ -465,22 +466,22 @@
+ 	float tnorm_val;	
+ 
+ 	// Initialize the result sparse matrix
+-	sparseC = SparseMatrix((int)colsB, (int)rowsA, (int)(colsB*rowsA));
++	sparseC = SparseMatrix(colsB, rowsA, (colsB*rowsA));
+ 
+         // Initialize the number of nonzero elements in the sparse matrix c
+         int nel = 0;
+         sparseC.xcidx(0) = 0;
+ 
+ 	// Calculate the composition for each element
+-        for (int i = 0; i < rowsC; i++)
++        for (octave_idx_type i = 0; i < rowsC; i++)
+         {
+-            for(int j = 0; j < colsC; j++)
++            for(octave_idx_type j = 0; j < colsC; j++)
+             {
+                 
+ 		// Get the index of the first element of the i-th column of a transpose (i-th row of a)
+ 		// and the index of the first element of the j-th column of b
+-		int ka = a.cidx(i);
+-		int kb = b.cidx(j);
++		octave_idx_type ka = a.cidx(i);
++		octave_idx_type kb = b.cidx(j);
+ 		snorm_val = 0;
+ 	
+ 		// Check if the values of the matrix are really not 0 (it happens if the column of a or b hasn't any value)
+@@ -549,18 +550,18 @@
+ 	float tnorm_val;	
+ 	
+ 	// Get the row start_index and end_index 
+-	int start_index = thread_args->start_index;
+-	int end_index = thread_args->end_index;
++	octave_idx_type start_index = thread_args->start_index;
++	octave_idx_type end_index = thread_args->end_index;
+ 	
+ 
+ 	// Calculate the composition for the specified rows (between start_index and end_index)
+-	for (int i=start_index; i<end_index; i++)
++	for (octave_idx_type i=start_index; i<end_index; i++)
+ 	{		
+-		for(int j=lock_option*i; j<colsB; j=j+col_index_increment)
++		for(octave_idx_type j=lock_option*i; j<colsB; j=j+col_index_increment)
+ 		{
+ 			snorm_val = calc_tnorm(get_elem(a,i,0,colsA),get_elem(b,0,j,colsB));
+ 
+-			for(int k=1; k<colsA; k++)
++			for(octave_idx_type k=1; k<colsA; k++)
+ 			{					
+ 				tnorm_val = calc_tnorm(get_elem(a,i,k,colsA),get_elem(b,k,j,colsB)); 
+ 				snorm_val = calc_snorm(snorm_val,tnorm_val);
+@@ -767,7 +768,7 @@
+ 
+ 
+ /* Get the (i,j)-th element from the vector vec. The column number of the original matrix (numCols) is required */
+-float get_elem(float vec[], int row, int col,int numCols)
++float get_elem(float vec[], octave_idx_type row, octave_idx_type col,octave_idx_type numCols)
+ {
+ 	return vec[row*numCols+col];
+ }
+@@ -775,7 +776,7 @@
+ 
+ 
+ /* Set the (i,j)-th element from the vector vec. The column number of the original matrix (numCols) is required */
+-void set_elem(float vec[], int row, int col, int numCols, float elem)
++void set_elem(float vec[], octave_idx_type row, octave_idx_type col, octave_idx_type numCols, float elem)
+ {
+ 	vec[row*numCols+col] = elem;
+ 	return;
+diff -ur fl-core.orig/src/Makefile fl-core/src/Makefile
+--- fl-core.orig/src/Makefile	2015-10-02 10:13:53.044225859 -0400
++++ fl-core/src/Makefile	2015-10-02 10:16:20.899198805 -0400
+@@ -1,15 +1,23 @@
+ OCT = fl_compose.oct
+ SRC := $(OCT:.oct=.cc)
+ BASE := $(OCT:.oct=)
+-ifdef COMSPEC 
+-	ADDPARAM := -lpthreadVC2
++
++MKOCTFILE ?= mkoctfile
++OCTAVE_CONFIG ?= octave-config
++
++ifneq (,$(findstring mingw,$(shell $(OCTAVE_CONFIG) -p CANONICAL_HOST_TYPE)))
++	ADDPARAM := -lpthread
++else
++ ifdef COMSPEC 
++ 	ADDPARAM := -lpthreadVC2
++ endif
+ endif
+ 
+ .phony: all
+ all: $(OCT)
+ 
+ %.oct: %.cc
+-	mkoctfile -s $< $(ADDPARAM)
++	$(MKOCTFILE) -s $< $(ADDPARAM)
+ 
+ .phony: clean
+ clean: 

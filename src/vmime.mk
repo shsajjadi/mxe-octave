@@ -3,20 +3,24 @@
 
 PKG             := vmime
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := fc9bc26
 $(PKG)_CHECKSUM := 670aaecfbab41747e3a8f1d80dd757eb01ac93cb
 $(PKG)_SUBDIR   := kisli-vmime-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := https://github.com/kisli/vmime/tarball/$($(PKG)_VERSION)/$(PKG)_FILE
+$(PKG)_URL      := https://github.com/kisli/vmime/archive/v$($(PKG)_VERSION).tar.gz
 $(PKG)_DEPS     := libiconv gnutls libgsasl pthreads zlib
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'https://github.com/kisli/vmime/commits/master' | \
-    $(SED) -n 's#.*<span class="sha">\([^<]\{7\}\)[^<]\{3\}<.*#\1#p' | \
+    $(WGET) -q -O- 'https://github.com/kisli/vmime/tags' | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | \
+    $(SORT) -Vr | \
     head -1
 endef
 
 define $(PKG)_BUILD
     cd '$(1)' && cmake \
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
         -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
         -DCMAKE_AR='$(MXE_AR)' \
         -DCMAKE_RANLIB='$(MXE_RANLIB)' \

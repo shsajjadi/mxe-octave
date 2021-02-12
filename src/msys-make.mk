@@ -3,6 +3,7 @@
 
 PKG             := msys-make
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 3.81-3
 $(PKG)_CHECKSUM := c7264eb13b05cf2e1a982a3c2619837b96203a27
 $(PKG)_REMOTE_SUBDIR := make/make-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
@@ -11,8 +12,9 @@ $(PKG)_URL      := $(MSYS_BASE_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/downl
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_BASE_URL)/make' | \
+    $(SED) -n 's,.*title="make-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

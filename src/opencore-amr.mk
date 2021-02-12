@@ -3,15 +3,16 @@
 
 PKG             := opencore-amr
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := 289478d49701213255e9d63a93aae9ad472125cc
+$(PKG)_VERSION  := 0.1.5
+$(PKG)_CHECKSUM := bef4d1e3a8a155b47569b6691a223843b33e279e
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_VERSION)/$($(PKG)_FILE)
+$(PKG)_URL      := http://$(SOURCEFORGE_MIRROR)/project/$(PKG)/$(PKG)/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/opencore-amr/files/opencore-amr/' | \
-    $(SED) -n 's,.*/\([0-9][^"]*\)/".*,\1,p' | \
+    $(SED) -n 's,.*<tr title="opencore-amr-\([0-9\.]*\)\.tar.gz".*,\1,p' | \
     head -1
 endef
 

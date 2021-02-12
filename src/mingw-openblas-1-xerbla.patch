@@ -1,0 +1,53 @@
+diff -ur OpenBLAS-0.3.8.orig/driver/others/Makefile OpenBLAS-0.3.8/driver/others/Makefile
+--- OpenBLAS-0.3.8.orig/driver/others/Makefile	2020-02-14 10:39:58.164130459 -0500
++++ OpenBLAS-0.3.8/driver/others/Makefile	2020-02-14 10:46:23.254020333 -0500
+@@ -1,7 +1,7 @@
+ TOPDIR	= ../..
+ include ../../Makefile.system
+ 
+-COMMONOBJS	 = memory.$(SUFFIX) xerbla.$(SUFFIX) c_abs.$(SUFFIX) z_abs.$(SUFFIX) openblas_set_num_threads.$(SUFFIX) openblas_get_num_threads.$(SUFFIX) openblas_get_num_procs.$(SUFFIX) openblas_get_config.$(SUFFIX) openblas_get_parallel.$(SUFFIX) openblas_error_handle.$(SUFFIX) openblas_env.$(SUFFIX)
++COMMONOBJS	 = memory.$(SUFFIX) c_abs.$(SUFFIX) z_abs.$(SUFFIX) openblas_set_num_threads.$(SUFFIX) openblas_get_num_threads.$(SUFFIX) openblas_get_num_procs.$(SUFFIX) openblas_get_config.$(SUFFIX) openblas_get_parallel.$(SUFFIX) openblas_error_handle.$(SUFFIX) openblas_env.$(SUFFIX)
+ 
+ #COMMONOBJS	+= slamch.$(SUFFIX) slamc3.$(SUFFIX) dlamch.$(SUFFIX)  dlamc3.$(SUFFIX)
+ 
+@@ -84,25 +84,22 @@
+ 
+ ifeq ($(DYNAMIC_ARCH), 1)
+ ifeq ($(ARCH),arm64)
+-HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) dynamic_arm64.$(SUFFIX)
++HPLOBJS = memory.$(SUFFIX) dynamic_arm64.$(SUFFIX)
+ else
+ ifeq ($(ARCH),power)
+-HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) dynamic_power.$(SUFFIX)
++HPLOBJS = memory.$(SUFFIX) dynamic_power.$(SUFFIX)
+ else
+ ifeq ($(ARCH),zarch)
+-HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) dynamic_zarch.$(SUFFIX)
++HPLOBJS = memory.$(SUFFIX) dynamic_zarch.$(SUFFIX)
+ else
+-HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) dynamic.$(SUFFIX)
++HPLOBJS = memory.$(SUFFIX) dynamic.$(SUFFIX)
+ endif
+ endif
+ endif
+ else
+-HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) parameter.$(SUFFIX)
++HPLOBJS = memory.$(SUFFIX) parameter.$(SUFFIX)
+ endif
+ 
+-xerbla.$(SUFFIX) : xerbla.c
+-	$(CC) $(CFLAGS) -c $< -o $(@F)
+-
+ dynamic.$(SUFFIX) : dynamic.c
+ 	$(CC) $(CFLAGS) -c $< -o $(@F)
+ 
+@@ -190,9 +187,6 @@
+ mulx.$(SUFFIX) : $(ARCH)/mulx.c
+ 	$(CC) $(CFLAGS) -c -DXDOUBLE -UCOMPLEX $< -o $(@F)
+ 
+-xerbla.$(PSUFFIX) : xerbla.c
+-	$(CC) $(PFLAGS) -c $< -o $(@F)
+-
+ parameter.$(PSUFFIX) : parameter.c ../../param.h
+ 	$(CC) $(PFLAGS) -c $< -o $(@F)
+ 

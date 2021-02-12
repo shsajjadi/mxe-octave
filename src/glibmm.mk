@@ -3,6 +3,7 @@
 
 PKG             := glibmm
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 2.32.0
 $(PKG)_CHECKSUM := 2928a334664433186d92d9099b9bbf3f051a2645
 $(PKG)_SUBDIR   := glibmm-$($(PKG)_VERSION)
 $(PKG)_FILE     := glibmm-$($(PKG)_VERSION).tar.xz
@@ -10,10 +11,9 @@ $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/glibmm/$(call SHORT_PK
 $(PKG)_DEPS     := glib libsigc++
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/glibmm/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n 's,.*<a[^>]*>\([0-9]*\.[0-9]*[02468]\.[^<]*\)<.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/glibmm/tags | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

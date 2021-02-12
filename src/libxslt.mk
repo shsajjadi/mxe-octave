@@ -3,6 +3,7 @@
 
 PKG             := libxslt
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.1.27
 $(PKG)_CHECKSUM := f8072177f1ffe1b9bb8759a9e3e6349e1eac1f66
 $(PKG)_SUBDIR   := libxslt-$($(PKG)_VERSION)
 $(PKG)_FILE     := libxslt-$($(PKG)_VERSION).tar.gz
@@ -10,10 +11,9 @@ $(PKG)_URL      := ftp://xmlsoft.org/libxslt/$($(PKG)_FILE)
 $(PKG)_DEPS     := libxml2 libgcrypt
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://git.gnome.org/browse/libxslt/refs/tags' | \
-    grep '<a href=' | \
-    $(SED) -n "s,.*<a href='[^']*/tag/?id=v\\([0-9][^']*\\)'.*,\\1,p" | \
-    head -1
+    $(WGET) -q -O- https://github.com/GNOME/libxslt/tags | \
+    $(SED) -n 's|.*releases/tag/\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
 define $(PKG)_BUILD

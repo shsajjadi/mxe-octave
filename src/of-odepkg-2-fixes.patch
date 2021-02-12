@@ -1,0 +1,88 @@
+diff -uNr a/src/odepkg_auxiliary_functions.cc b/src/odepkg_auxiliary_functions.cc
+--- a/src/odepkg_auxiliary_functions.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_auxiliary_functions.cc	2018-01-09 17:46:39.117869675 -0500
+@@ -16,7 +16,6 @@
+ along with this program; If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+-#include "config.h"
+ #include "oct.h"
+ #include "oct-map.h"
+ #include "parse.h"
+diff -uNr a/src/odepkg_octsolver_ddaskr.cc b/src/odepkg_octsolver_ddaskr.cc
+--- a/src/odepkg_octsolver_ddaskr.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_ddaskr.cc	2018-01-09 17:46:46.701547105 -0500
+@@ -35,7 +35,6 @@
+     test 'odepkg_octsolver_ddaskr.cc'"
+ */
+ 
+-#include <config.h>
+ #include <oct.h>
+ #include <oct-map.h>
+ #include <f77-fcn.h>
+diff -uNr a/src/odepkg_octsolver_mebdfdae.cc b/src/odepkg_octsolver_mebdfdae.cc
+--- a/src/odepkg_octsolver_mebdfdae.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_mebdfdae.cc	2018-01-09 17:46:52.229311233 -0500
+@@ -39,7 +39,6 @@
+ similiar to the implementation of this file.
+ */
+ 
+-#include <config.h>
+ #include <oct.h>
+ #include <oct-map.h>
+ #include <f77-fcn.h>
+diff -uNr a/src/odepkg_octsolver_mebdfi.cc b/src/odepkg_octsolver_mebdfi.cc
+--- a/src/odepkg_octsolver_mebdfi.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_mebdfi.cc	2018-01-09 17:46:44.797628090 -0500
+@@ -35,7 +35,6 @@
+     test 'odepkg_octsolver_mebdfi.cc'"
+ */
+ 
+-#include <config.h>
+ #include <oct.h>
+ #include <oct-map.h>
+ #include <f77-fcn.h>
+diff -uNr a/src/odepkg_octsolver_radau5.cc b/src/odepkg_octsolver_radau5.cc
+--- a/src/odepkg_octsolver_radau5.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_radau5.cc	2018-01-09 17:46:54.189227434 -0500
+@@ -30,7 +30,6 @@
+ similiar to the implementation of this file.
+ */
+ 
+-#include <config.h>
+ #include <oct.h>
+ #include <f77-fcn.h>
+ #include <oct-map.h>
+diff -uNr a/src/odepkg_octsolver_radau.cc b/src/odepkg_octsolver_radau.cc
+--- a/src/odepkg_octsolver_radau.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_radau.cc	2018-01-09 17:46:42.733715876 -0500
+@@ -30,7 +30,6 @@
+ similiar to the implementation of this file.
+ */
+ 
+-#include <config.h>
+ #include <oct.h>
+ #include <f77-fcn.h>
+ #include <oct-map.h>
+diff -uNr a/src/odepkg_octsolver_rodas.cc b/src/odepkg_octsolver_rodas.cc
+--- a/src/odepkg_octsolver_rodas.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_rodas.cc	2018-01-09 17:46:35.670016331 -0500
+@@ -26,7 +26,6 @@
+     test 'odepkg_octsolver_rodas.cc'"
+ */
+ 
+-#include <config.h>
+ #include <oct.h>
+ #include <f77-fcn.h>
+ #include <oct-map.h>
+diff -uNr a/src/odepkg_octsolver_seulex.cc b/src/odepkg_octsolver_seulex.cc
+--- a/src/odepkg_octsolver_seulex.cc	2015-05-19 09:48:44.000000000 -0400
++++ b/src/odepkg_octsolver_seulex.cc	2018-01-09 17:46:48.661463743 -0500
+@@ -30,7 +30,6 @@
+ similiar to the implementation of this file.
+ */
+ 
+-#include <config.h>
+ #include <oct.h>
+ #include <f77-fcn.h>
+ #include <oct-map.h>

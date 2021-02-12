@@ -4,6 +4,7 @@
 # libmodplug
 PKG             := libmodplug
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 0.8.8.4
 $(PKG)_CHECKSUM := df4deffe542b501070ccb0aee37d875ebb0c9e22
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-$($(PKG)_VERSION).tar.gz
@@ -12,7 +13,7 @@ $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://sourceforge.net/projects/modplug-xmms/files/libmodplug/' | \
-    $(SED) -n 's,.*/\([0-9][^"]*\)/".*,\1,p' | \
+    $(SED) -n 's,.*tr title="\([0-9][^"]*\)".*,\1,p' | \
     head -1
 endef
 

@@ -3,7 +3,8 @@
 
 PKG             := gta
 $(PKG)_IGNORE   :=
-$(PKG)_CHECKSUM := dffeb65b0dad66860ab62df1cf8570ea23517c2c
+$(PKG)_VERSION  := 1.0.8
+$(PKG)_CHECKSUM := 795832a042be4102321d862246cc4afdb929dc57
 $(PKG)_SUBDIR   := libgta-$($(PKG)_VERSION)
 $(PKG)_FILE     := libgta-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://download.savannah.gnu.org/releases/gta/$($(PKG)_FILE)
@@ -20,13 +21,9 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         $(ENABLE_SHARED_OR_STATIC) \
+        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
         --disable-reference \
         --prefix='$(HOST_PREFIX)'
     $(MAKE) -C '$(1)' -j '$(JOBS)'
-    $(MAKE) -C '$(1)' -j 1 install dist_doc_DATA=
-
-    '$(MXE_CC)' \
-        -W -Wall -Werror -ansi -pedantic \
-        '$(2).c' -o '$(HOST_BINDIR)/test-gta.exe' \
-        `'$(MXE_PKG_CONFIG)' gta --cflags --libs`
+    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
 endef

@@ -3,6 +3,7 @@
 
 PKG             := termcap
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.3.1
 $(PKG)_CHECKSUM := 42dd1e6beee04f336c884f96314f0c96cc2578be
 $(PKG)_SUBDIR   := termcap-$($(PKG)_VERSION)
 $(PKG)_FILE     := termcap-$($(PKG)_VERSION).tar.gz
@@ -10,8 +11,9 @@ $(PKG)_URL      := ftp://ftp.gnu.org/gnu/termcap/$($(PKG)_FILE)
 $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package termcap.' >&2;
-    echo $(termcap_VERSION)
+    $(WGET) -q -O- 'http://ftp.gnu.org/gnu/termcap/?C=M;O=D' | \
+    $(SED) -n 's,.*<a href="termcap-\([0-9][^"]*\)\.tar.*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

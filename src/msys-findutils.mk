@@ -3,6 +3,7 @@
 
 PKG             := msys-findutils
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 4.4.2-2
 $(PKG)_CHECKSUM := fbdf7bae277f02f4189fa1d9ebf92fba6852dbce
 $(PKG)_REMOTE_SUBDIR := findutils/findutils-$($(PKG)_VERSION)
 $(PKG)_SUBDIR   := 
@@ -11,8 +12,9 @@ $(PKG)_URL      := $(MSYS_BASE_URL)/$($(PKG)_REMOTE_SUBDIR)/$($(PKG)_FILE)/downl
 $(PKG)_DEPS     := 
 
 define $(PKG)_UPDATE
-    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
-    echo $($(PKG)_VERSION)
+    $(WGET) -q -O- '$(MSYS_BASE_URL)/findutils' | \
+    $(SED) -n 's,.*title="findutils-\([0-9][^"]*\)".*,\1,p' | \
+    head -1
 endef
 
 define $(PKG)_BUILD

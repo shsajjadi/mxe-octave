@@ -3,6 +3,7 @@
 
 PKG             := itstool
 $(PKG)_IGNORE   :=
+$(PKG)_VERSION  := 1.2.0
 $(PKG)_CHECKSUM := dc6b766c2acec32d3c5d016b0a33e9268d274f63
 $(PKG)_SUBDIR   := itstool-$($(PKG)_VERSION)
 $(PKG)_FILE     := itstool-$($(PKG)_VERSION).tar.bz2

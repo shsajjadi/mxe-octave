@@ -3,6 +3,7 @@
 
 PKG             := apr-util
 $(PKG)_IGNORE   := 1.4.1
+$(PKG)_VERSION  := 1.3.10
 $(PKG)_CHECKSUM := f5aaf15542209fee479679299dc4cb1ac0924a59
 $(PKG)_SUBDIR   := apr-util-$($(PKG)_VERSION)
 $(PKG)_FILE     := apr-util-$($(PKG)_VERSION).tar.gz

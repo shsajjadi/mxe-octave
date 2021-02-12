@@ -1,0 +1,34 @@
+diff -ur pango-1.40.3.orig/pango/Makefile.am pango-1.40.3/pango/Makefile.am
+--- pango-1.40.3.orig/pango/Makefile.am	2019-01-25 08:50:50.848933403 -0500
++++ pango-1.40.3/pango/Makefile.am	2019-01-25 08:52:32.440937173 -0500
+@@ -389,7 +389,7 @@
+ libpangowin32_1_0_la_LIBADD =			\
+ 	libpango-$(PANGO_API_VERSION).la	\
+ 	$(GLIB_LIBS)				\
+-	-lgdi32 -lusp10
++	-lusp10 -lgdi32
+ libpangowin32_1_0_la_DEPENDENCIES =		\
+ 	libpango-$(PANGO_API_VERSION).la
+ libpangowin32_1_0_la_SOURCES =	\
+diff -ur pango-1.40.3.orig/pango/Makefile.in pango-1.40.3/pango/Makefile.in
+--- pango-1.40.3.orig/pango/Makefile.in	2019-01-25 08:50:50.852933403 -0500
++++ pango-1.40.3/pango/Makefile.in	2019-01-25 08:55:59.660944864 -0500
+@@ -867,7 +867,7 @@
+ libpangowin32_1_0_la_LIBADD = \
+ 	libpango-$(PANGO_API_VERSION).la	\
+ 	$(GLIB_LIBS)				\
+-	-lgdi32 -lusp10
++	-lusp10 -lgdi32
+ 
+ libpangowin32_1_0_la_DEPENDENCIES = libpango-$(PANGO_API_VERSION).la \
+ 	$(am__append_33)
+diff -ur pango-1.40.3.orig/pangowin32.pc.in pango-1.40.3/pangowin32.pc.in
+--- pango-1.40.3.orig/pangowin32.pc.in	2019-01-25 08:50:50.848933403 -0500
++++ pango-1.40.3/pangowin32.pc.in	2019-01-25 08:51:20.696934510 -0500
+@@ -8,5 +8,5 @@
+ Version: @VERSION@
+ Requires: pango
+ Libs: -L${libdir} -lpangowin32-@PANGO_API_VERSION@
+-Libs.private: -lgdi32 -lusp10
++Libs.private: -lusp10 -lgdi32
+ Cflags: -I${includedir}/pango-1.0
