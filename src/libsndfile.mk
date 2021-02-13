@@ -3,38 +3,37 @@
 
 PKG             := libsndfile
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.0.28
-$(PKG)_CHECKSUM := 85aa967e19f6b9bf975601d79669025e5f8bc77d
+$(PKG)_VERSION  := 1.0.30
+$(PKG)_CHECKSUM := 494b427f814858d1e4092c1767ab5652080fcffe
 $(PKG)_SUBDIR   := libsndfile-$($(PKG)_VERSION)
 $(PKG)_FILE     := libsndfile-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := http://www.mega-nerd.com/libsndfile/files/$($(PKG)_FILE)
-$(PKG)_DEPS     := sqlite flac ogg vorbis
+$(PKG)_URL      := https://github.com/$(PKG)/$(PKG)/archive/v$($(PKG)_VERSION).tar.gz
+$(PKG)_DEPS     := sqlite flac ogg opus vorbis
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.mega-nerd.com/libsndfile/' | \
-    grep '<META NAME="Version"' | \
-    $(SED) -n 's,.*CONTENT="libsndfile-\([0-9][^"]*\)">.*,\1,p' | \
-    head -1
+    $(WGET) -q -O- 'https://github.com/libsndfile/libsndfile/tags' | \
+    $(SED) -n 's|.*releases/tag/v\([^"]*\).*|\1|p' | $(SORT) -V | \
+    tail -1
 endef
 
-$(PKG)_EXTRA_CONFIGURE_OPTIONS :=
-ifneq ($(filter mingw msvc,$(MXE_SYSTEM)),)
-    $(PKG)_EXTRA_CONFIGURE_OPTIONS += --enable-stack-smash-protection
-endif
-
 define $(PKG)_BUILD
-    cd '$(1)' && autoreconf -fi -IM4
-    cd '$(1)' && ./configure \
-        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-        $(ENABLE_SHARED_OR_STATIC) \
-        --prefix='$(HOST_PREFIX)' \
-	$(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
-        --enable-sqlite \
-        --enable-external-libs \
-        --disable-octave \
-        --disable-alsa \
-	--disable-full-suite \
-        $($(PKG)_EXTRA_CONFIGURE_OPTIONS)
-    $(MAKE) -C '$(1)' -j '$(JOBS)' $(MXE_DISABLE_PROGS)  $(MXE_DISABLE_DOCS)
-    $(MAKE) -C '$(1)' -j 1 install $(MXE_DISABLE_PROGS)  $(MXE_DISABLE_DOCS) DESTDIR='$(3)'
+    cd '$(1)' && cmake \
+        $($(PKG)_CMAKE_FLAGS) \
+        -DBUILD_TESTING=no \
+        -DBUILD_PROGRAMS=no \
+        -DBUILD_EXAMPLES=no \
+        -DINSTALL_MANPAGES=no \
+        -DENABLE_EXTERNAL_LIBS=yes \
+        $(CMAKE_CCACHE_FLAGS) \
+        $(CMAKE_BUILD_SHARED_OR_STATIC) \
+        -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
+        .
+
+    $(MAKE) -C '$(1)' -j '$(JOBS)' VERBOSE=1
+    $(MAKE) -C '$(1)' -j '1' VERBOSE=1 DESTDIR='$(3)' install
+
+    if [ "$(ENABLE_DEP_DOCS)" == "no" ]; then \
+        rm -rf '$(3)$(HOST_PREFIX)/share/doc/$(PKG)'; \
+    fi
+
 endef

@@ -2,8 +2,8 @@
 # See index.html for further information.
 
 PKG             := mesa
-$(PKG)_VERSION  := 20.1.10
-$(PKG)_CHECKSUM := 151d5edff5caeead98f428698cf02ddb0cf66d4b
+$(PKG)_VERSION  := 20.2.6
+$(PKG)_CHECKSUM := fba97064824a3645c5b00bd55618098483f21678
 $(PKG)_SUBDIR   := mesa-$($(PKG)_VERSION)
 $(PKG)_FILE     := mesa-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.freedesktop.org/pub/mesa/$($(PKG)_FILE)
@@ -26,6 +26,7 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
 else
   ifeq ($(USE_SYSTEM_X11_LIBS),no)
     $(PKG)_DEPS += dri2proto glproto libdrm libxshmfence x11 xdamage xext xfixes
+    $(PKG)_BUILD_X11_LIBS_FLAGS = -Dxlib-lease=disabled
   else
     $(PKG)_PKG_CONFIG_PATH := $(PKG_CONFIG_PATH):$(BUILD_PKG_CONFIG_PATH)
   endif
@@ -36,7 +37,8 @@ else
 
   $(PKG)_X11_FLAGS := -Dplatforms='x11' \
       -Dglx=gallium-xlib \
-      -Ddri-drivers=''
+      -Ddri-drivers='' \
+      $($(PKG)_BUILD_X11_LIBS_FLAGS)
 endif
 
 define $(PKG)_BUILD
@@ -52,6 +54,12 @@ define $(PKG)_BUILD
       -Dshared-llvm=true
 
   cd '$(1)/.build' && DESTDIR=$(3) ninja -j $(JOBS) install
+
+  #  install headers
+  for i in EGL GLES GLES2 GLES3 KHR; do \
+      $(INSTALL) -d "$(HOST_INCDIR)/$$i"; \
+      $(INSTALL) -m 644 "$(1)/include/$$i/"* "$(HOST_INCDIR)/$$i/"; \
+  done
   
   # opengl32.dll.a shadows libopengl32.a from mingw. They export slightly
   # different symbols which causes problems for some packages. So don't install

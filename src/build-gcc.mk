@@ -3,8 +3,8 @@
 
 PKG             := build-gcc
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 9.3.0
-$(PKG)_CHECKSUM := b746688bf045a316fc92c3528138ad10d0822b6b
+$(PKG)_VERSION  := 10.2.0
+$(PKG)_CHECKSUM := 8de0aecd3a52bb92b43082df8a9256356d1f03be
 $(PKG)_SUBDIR   := gcc-$($(PKG)_VERSION)
 $(PKG)_FILE     := gcc-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := ftp://ftp.gnu.org/pub/gnu/gcc/gcc-$($(PKG)_VERSION)/$($(PKG)_FILE)
