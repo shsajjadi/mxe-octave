@@ -8,19 +8,25 @@
 Thank you for installing GNU Octave!
 </p>
 <p>
-Octave 6.1 is a major release with many new features and improvements. Among
-other things, it brings updates for Matlab compatibility, better graphics, and
-many general improvements since version 5.2.
+Octave 6.2 is a minor release which mainly fixes bugs and regressions found
+since the release of version 6.1.
 </p>
 <p>
 A full list of changes can be found in the Release Notes from the News menu.
 </p>
 
 <h2>Changed default installation location</h2>
-<p>By default, Octave now installs to the system wide default program installation
-location (likely inside <code>C:\Program Files\GNU Octave</code>).</p>
+<p>Since version 6.1, Octave installs to the system wide default program
+installation location (likely inside <code>C:\Program Files\GNU Octave</code>)
+by default.<br />
+It is a known issue that some operations might fail if Octave is installed in
+a location containing spaces if short file names have been disabled for the file
+system of the installation folder. Some systems seem to have disabled that
+feature for some partitions (e.g., on <code>D:</code>). If you are unsure
+whether your file system supports short file names, chose an installation folder
+that doesn't contain spaces.</p>
 <p>It is now also possible to install Octave without administrative privileges.
-<br>In that case (or if an admin choses to install for the "local user" only),
+<br />In that case (or if an admin choses to install for the "local user" only),
 the default installation location is inside
 <code>%LOCALAPPDATA%\Programs\GNU Octave</code>.</p>
 
