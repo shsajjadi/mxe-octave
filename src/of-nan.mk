@@ -3,8 +3,8 @@
 
 PKG             := of-nan
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 3.5.0
-$(PKG)_CHECKSUM := e3da003f05220dd2898244a2f7ba3d3436f0c16a
+$(PKG)_VERSION  := 3.5.3
+$(PKG)_CHECKSUM := 55bc7e0c92602c388365d8c3b0ce90c725d8d23a
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := nan-$($(PKG)_VERSION)
 $(PKG)_FILE     := nan-$($(PKG)_VERSION).tar.gz
