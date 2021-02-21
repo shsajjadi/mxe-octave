@@ -3,8 +3,8 @@
 
 PKG             := readline
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 8.0
-$(PKG)_CHECKSUM := d58041c2143595dc001d2777ae9a200be30198b0
+$(PKG)_VERSION  := 8.1
+$(PKG)_CHECKSUM := 48c5e0c3a212449e206e21ba82856accac842c6f
 $(PKG)_SUBDIR   := readline-$($(PKG)_VERSION)
 $(PKG)_FILE     := readline-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://ftp.gnu.org/gnu/readline/$($(PKG)_FILE)

@@ -1,6 +1,6 @@
-diff -ur OpenBLAS-0.3.8.orig/driver/others/Makefile OpenBLAS-0.3.8/driver/others/Makefile
---- OpenBLAS-0.3.8.orig/driver/others/Makefile	2020-02-14 10:39:58.164130459 -0500
-+++ OpenBLAS-0.3.8/driver/others/Makefile	2020-02-14 10:46:23.254020333 -0500
+diff -ur OpenBLAS-0.3.13.orig/driver/others/Makefile OpenBLAS-0.3.13/driver/others/Makefile
+--- OpenBLAS-0.3.13.orig/driver/others/Makefile	2020-12-27 09:18:47.133825725 -0500
++++ OpenBLAS-0.3.13/driver/others/Makefile	2020-12-27 09:22:06.676660536 -0500
 @@ -1,7 +1,7 @@
  TOPDIR	= ../..
  include ../../Makefile.system
@@ -10,7 +10,7 @@ diff -ur OpenBLAS-0.3.8.orig/driver/others/Makefile OpenBLAS-0.3.8/driver/others
  
  #COMMONOBJS	+= slamch.$(SUFFIX) slamc3.$(SUFFIX) dlamch.$(SUFFIX)  dlamc3.$(SUFFIX)
  
-@@ -84,25 +84,22 @@
+@@ -88,29 +88,26 @@
  
  ifeq ($(DYNAMIC_ARCH), 1)
  ifeq ($(ARCH),arm64)
@@ -25,8 +25,13 @@ diff -ur OpenBLAS-0.3.8.orig/driver/others/Makefile OpenBLAS-0.3.8/driver/others
 -HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) dynamic_zarch.$(SUFFIX)
 +HPLOBJS = memory.$(SUFFIX) dynamic_zarch.$(SUFFIX)
  else
+ ifeq ($(ARCH),mips64)
+-HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) dynamic_mips64.$(SUFFIX)
++HPLOBJS = memory.$(SUFFIX) dynamic_mips64.$(SUFFIX)
+ else
 -HPLOBJS = memory.$(SUFFIX) xerbla.$(SUFFIX) dynamic.$(SUFFIX)
 +HPLOBJS = memory.$(SUFFIX) dynamic.$(SUFFIX)
+ endif
  endif
  endif
  endif
@@ -41,7 +46,7 @@ diff -ur OpenBLAS-0.3.8.orig/driver/others/Makefile OpenBLAS-0.3.8/driver/others
  dynamic.$(SUFFIX) : dynamic.c
  	$(CC) $(CFLAGS) -c $< -o $(@F)
  
-@@ -190,9 +187,6 @@
+@@ -198,9 +195,6 @@
  mulx.$(SUFFIX) : $(ARCH)/mulx.c
  	$(CC) $(CFLAGS) -c -DXDOUBLE -UCOMPLEX $< -o $(@F)
  
