@@ -1015,6 +1015,11 @@ update-octaveforge:
 update-build-tools:
 	$(foreach PKG,$(BUILD_TOOLS),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))))
 
+.PHONY: update-general-pkgs
+update-general-pkgs:
+	$(foreach PKG,$(filter-out $(MSYS2_PACKAGES) $(MSYS_BASE_PACKAGES) $(OCTAVE_FORGE_PACKAGES), $(PKGS)),\
+		$(if $($(PKG)_UPDATE),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))),$(info Warning: No update rule for $(PKG))))
+
 update-checksum-%:
 	$(call DOWNLOAD_PKG_ARCHIVE,$*)
 	$(SED) -i 's/^\([^ ]*_CHECKSUM *:=\).*/\1 '"`$(call PKG_CHECKSUM,$*)`"'/' '$(TOP_DIR)/src/$*.mk'
