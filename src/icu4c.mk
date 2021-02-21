@@ -1,7 +1,7 @@
 PKG             := icu4c
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 67.1
-$(PKG)_CHECKSUM := 6822a4a94324d1ba591b3e8ef084e4491af253c1
+$(PKG)_VERSION  := 68.2
+$(PKG)_CHECKSUM := 07c8fc9de703b7af3c6a9fe12433771d6c7d659f
 $(PKG)_SUBDIR   := icu
 $(PKG)_FILE     := $(PKG)-$(subst .,_,$($(PKG)_VERSION))-src.tgz
 $(PKG)_URL      := https://github.com/unicode-org/icu/releases/download/release-$(subst .,-,$($(PKG)_VERSION))/$($(PKG)_FILE)

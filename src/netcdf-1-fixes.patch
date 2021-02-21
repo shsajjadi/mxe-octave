@@ -1,14 +1,36 @@
-diff --git "a/netcdf/ncdump/ncvalidator.c" "b/netcdf/ncdump/ncvalidator.c"
-index a0e4acb..2a7c5af 100644
---- "a/ncdump/ncvalidator.c"	
-+++ "b/ncdump/ncvalidator.c"
-@@ -76,7 +76,9 @@ THIS SOFTWARE.
+diff -ur netcdf-c-4.7.4.orig/include/XGetopt.h netcdf-c-4.7.4/include/XGetopt.h
+--- netcdf-c-4.7.4.orig/include/XGetopt.h	2020-12-02 07:32:11.168214023 -0500
++++ netcdf-c-4.7.4/include/XGetopt.h	2020-12-02 07:33:54.920018162 -0500
+@@ -20,6 +20,7 @@
+ #include <stdio.h>
+ #include <tchar.h>
+ 
++#if !defined(HAVE_GETOPT_H)
+ #if defined(DLL_NETCDF)
+ # if defined(DLL_EXPORT)
+ #  define GTOPT_EXTRA __declspec(dllexport)
+@@ -36,5 +37,6 @@
+ extern TCHAR *optarg;
+ 
+ int getopt(int argc, TCHAR *argv[], TCHAR *optstring);
++#endif
+ 
+ #endif //XGETOPT_H
+diff -ur netcdf-c-4.7.4.orig/ncdump/ncvalidator.c netcdf-c-4.7.4/ncdump/ncvalidator.c
+--- netcdf-c-4.7.4.orig/ncdump/ncvalidator.c	2020-12-02 07:32:11.204216037 -0500
++++ netcdf-c-4.7.4/ncdump/ncvalidator.c	2020-12-02 07:41:06.753176006 -0500
+@@ -76,10 +76,14 @@
  #ifdef _WIN32
  #include <io.h>
  #define snprintf _snprintf
 +#ifndef HAVE_UNISTD_H
  #include "XGetopt.h"
 +#endif
++#if !defined(HAVE_GETOPT_H)
  int opterr;
  int optind;
  #endif
++#endif
+ 
+ #define X_ALIGN         4
+ #define X_INT_MAX       2147483647

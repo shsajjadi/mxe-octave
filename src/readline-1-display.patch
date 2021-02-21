@@ -1,6 +1,6 @@
-diff -ur readline-8.0.orig/display.c readline-8.0.disp/display.c
---- readline-8.0.orig/display.c	2019-03-20 07:41:37.573786782 -0400
-+++ readline-8.0.disp/display.c	2019-03-20 17:00:29.866659451 -0400
+diff -ur readline-8.1.orig/display.c readline-8.1/display.c
+--- readline-8.1.orig/display.c	2020-12-19 07:41:44.122860975 -0500
++++ readline-8.1/display.c	2020-12-19 07:52:09.009050414 -0500
 @@ -59,6 +59,11 @@
  #include "rlprivate.h"
  #include "xmalloc.h"
@@ -13,7 +13,7 @@ diff -ur readline-8.0.orig/display.c readline-8.0.disp/display.c
  #if !defined (strchr) && !defined (__STDC__)
  extern char *strchr (), *strrchr ();
  #endif /* !strchr && !__STDC__ */
-@@ -2367,6 +2372,20 @@
+@@ -2686,6 +2691,20 @@
    int in_invisline;
    int mb_cur_max = MB_CUR_MAX;
  
@@ -34,7 +34,7 @@ diff -ur readline-8.0.orig/display.c readline-8.0.disp/display.c
    woff = WRAP_OFFSET (_rl_last_v_pos, wrap_offset);
    cpos = _rl_last_c_pos;
  
-@@ -2519,6 +2538,20 @@
+@@ -2832,6 +2851,20 @@
  {
    register int delta, i;
  
@@ -55,7 +55,7 @@ diff -ur readline-8.0.orig/display.c readline-8.0.disp/display.c
    if (_rl_last_v_pos == to || to > _rl_screenheight)
      return;
  
-@@ -2848,6 +2881,17 @@
+@@ -3157,6 +3190,17 @@
  void
  _rl_clear_to_eol (int count)
  {
@@ -73,9 +73,9 @@ diff -ur readline-8.0.orig/display.c readline-8.0.disp/display.c
  #ifndef __MSDOS__
    if (_rl_term_clreol)
      tputs (_rl_term_clreol, 1, _rl_output_character_function);
-@@ -2873,6 +2917,33 @@
+@@ -3182,6 +3226,33 @@
  void
- _rl_clear_screen (void)
+ _rl_clear_screen (int clrscr)
  {
 +#if defined (_WIN32)
 +  COORD coordScreen = { 0, 0 };

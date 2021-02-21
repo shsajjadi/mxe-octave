@@ -1,0 +1,70 @@
+# HG changeset patch
+# User Markus Mützel <markus.muetzel@gmx.de>
+# Date 1612087592 -3600
+#      Sun Jan 31 11:06:32 2021 +0100
+# Node ID f08191da8e416c32d950679a78fe194e2753372e
+# Parent  fea266f67443b890a67f80336aee03c40d3a1faa
+Don't use short paths (bug #59923).
+
+diff -r fea266f67443 -r f08191da8e41 octave-firsttime.vbs
+--- a/octave-firsttime.vbs	Sun Jan 31 10:59:32 2021 +0100
++++ b/octave-firsttime.vbs	Sun Jan 31 11:06:32 2021 +0100
+@@ -21,11 +21,6 @@
+   OctavePath = OctavePath & "\mingw32" 
+ End If
+ 
+-' get path as a 8.3 path
+-Set fo = fso.GetFolder(OctavePath)
+-OctavePath = fo.ShortPath
+-Set fo = Nothing
+-
+ ' set up path to ensure octave bin comes first
+ Set wshSystemEnv = wshShell.Environment( "PROCESS" )
+ if OctavePath <> MSysPath Then
+@@ -42,9 +37,6 @@
+ 
+ If wshShell.ExpandEnvironmentStrings("%HOME%") = "%HOME%" Then
+   Home = wshSystemEnv("USERPROFILE")
+-  Set fo = fso.GetFolder(Home)
+-  wshSystemEnv("HOME") = fo.ShortPath
+-  Set fo = Nothing
+ End If
+ 
+ ' set Qt plugin directory and path 
+diff -r fea266f67443 -r f08191da8e41 octave.vbs
+--- a/octave.vbs	Sun Jan 31 10:59:32 2021 +0100
++++ b/octave.vbs	Sun Jan 31 11:06:32 2021 +0100
+@@ -21,11 +21,6 @@
+   OctavePath = OctavePath & "\mingw32" 
+ End If
+ 
+-' get path as a 8.3 path
+-Set fo = fso.GetFolder(OctavePath)
+-OctavePath = fo.ShortPath
+-Set fo = Nothing
+-
+ ' set up path to ensure octave bin comes first
+ Set wshSystemEnv = wshShell.Environment( "PROCESS" )
+ if OctavePath <> MSysPath Then
+@@ -43,9 +38,6 @@
+ 
+ If wshShell.ExpandEnvironmentStrings("%HOME%") = "%HOME%" Then
+   Home = wshSystemEnv("USERPROFILE")
+-  Set fo = fso.GetFolder(Home)
+-  wshSystemEnv("HOME") = fo.ShortPath
+-  Set fo = Nothing
+ End If
+ 
+ ' set Qt plugin directory and path 
+diff -r fea266f67443 -r 64ff1a717a28 post-install.bat
+--- a/post-install.bat	Sun Jan 31 10:59:32 2021 +0100
++++ b/post-install.bat	Sun Jan 31 11:16:33 2021 +0100
+@@ -1,8 +1,6 @@
+ @echo off
+ Rem   Run on initial install /update
+ set ROOT_DIR=%~dp0
+-Rem Convert to 8.3 format so we don't have to worry about spaces.
+-for %%I in ("%ROOT_DIR%") do set ROOT_DIR=%%~sI
+ 
+ set MSYSDIR=%ROOT_DIR%
+ set MSYSTEM=MSYS

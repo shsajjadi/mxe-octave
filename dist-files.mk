@@ -126,6 +126,7 @@ SRC_FILES_1 := \
   gdal.mk \
   gdb.mk \
   gdcm-1-nosecapi.patch \
+  gdcm-2-getopt.patch \
   gdcm.mk \
   gdk-pixbuf-1-fixes.patch \
   gdk-pixbuf.mk \
@@ -142,6 +143,7 @@ SRC_FILES_1 := \
   glew-test.c \
   glew.mk \
   glib-1-fixes.patch \
+  glib-2-fixes.patch \
   glib.mk \
   glibmm.mk \
   glpk-1-fixes.patch \
@@ -156,6 +158,7 @@ SRC_FILES_1 := \
   gnutls.mk \
   graphicsmagick-1-fix-xml2-config.patch \
   graphicsmagick-2-dynamicpath.patch \
+  graphicsmagick-3-user32.patch \
   graphicsmagick-test.cpp \
   graphicsmagick.mk \
   gsl-test.c \
@@ -214,7 +217,6 @@ SRC_FILES_1 := \
   lame.mk \
   lapack-test.f \
   lapack.mk \
-  lcms-1-fixes.patch \
   lcms.mk \
   lcms1-1-fixes.patch \
   lcms1.mk \
@@ -306,6 +308,7 @@ SRC_FILES_1 := \
   libsndfile.mk \
   libssh2-test.c \
   libssh2.mk \
+  libsodium.mk \
   libtasn1.mk \
   libtool.mk \
   libunistring.mk \
@@ -350,6 +353,7 @@ SRC_FILES_1 := \
   mingw-utils-1-portability-fix.patch \
   mingw-w64-1-float-h.patch \
   mingw-w64.mk \
+  mingw-zeromq-1-fixes.patch \
   mingwrt.mk \
   mman-win32-1-include_name_change.patch \
   mman-win32.mk \
@@ -549,10 +553,12 @@ SRC_FILES_1 := \
   opencv-1-fixes.patch \
   opencv.mk \
   openexr.mk \
+  openjpeg.mk \
   openscenegraph-1-fixes.patch \
   openscenegraph.mk \
   openssl-1-fixes.patch \
   openssl.mk \
+  opus.mk \
   pango-1-fixes.patch \
   pango.mk \
   pangomm.mk \
@@ -628,16 +634,11 @@ SRC_FILES_1 := \
   qwtplot3d.mk \
   rapidjson-1-prettywriter.patch \
   rapidjson.mk \
-  readline-0-001.patch \
-  readline-0-002.patch \
-  readline-0-003.patch \
-  readline-0-004.patch \
   readline-1-display.patch \
   readline-1-fixes.patch \
   readline-1-input.patch \
   readline-1-sigwinch.patch \
   readline-2-event-hook.patch \
-  readline-2-history.patch \
   readline.mk \
   release-octave-1-gnulib.patch \
   release-octave.mk \
@@ -744,6 +745,7 @@ SRC_FILES_1 := \
   winpcap.mk \
   wt-1-fixes.patch \
   wt.mk \
+  wxwidgets-1-fixes.patch \
   wxwidgets-test.cpp \
   wxwidgets.mk \
   x11.mk \
@@ -1069,15 +1071,18 @@ FILES := \
 
 INSTALL_FILES_1 := \
   cmdshell.bat \
+  cmdshell-no-short-path.patch \
   post-install.bat \
   fc_update.bat \
   gpl-3.0.txt \
   octave.bat \
   octave.bmp \
   octave.vbs \
+  octave-bat-no-short-path.patch \
   octave-firsttime.vbs \
   octave-hdr.bmp \
   octave-logo.ico \
+  octave-no-short-path.patch \
   post-install.bat \
   README.html
 INSTALL_FILES := $(addprefix installer-files/, $(INSTALL_FILES_1))
