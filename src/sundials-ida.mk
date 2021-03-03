@@ -3,8 +3,8 @@
 
 PKG             := sundials-ida
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.3.0
-$(PKG)_CHECKSUM := a33d5a9f19fad4e4a257a8c9ae1c321550885996
+$(PKG)_VERSION  := 5.7.0
+$(PKG)_CHECKSUM := df88a771aaa01f92b6bbc516c4ab5d5493f1e362
 $(PKG)_SUBDIR   := sundials-$($(PKG)_VERSION)
 $(PKG)_FILE     := sundials-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://computation.llnl.gov/projects/sundials/download/$($(PKG)_FILE)
