@@ -510,6 +510,7 @@ SRC_FILES_1 := \
   of-ocs-5-no-odepkg.patch \
   of-ocs.mk \
   of-octcdf.mk \
+  of-octproj.mk \
   of-odepkg-1-fixes.patch \
   of-odepkg-2-fixes.patch \
   of-odepkg-3-deprecated.patch \
