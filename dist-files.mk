@@ -485,6 +485,7 @@ SRC_FILES_1 := \
   of-image.mk \
   of-instrument-control.mk \
   of-interval-1-cross-fixes.patch \
+  of-interval-2-subsref.patch \
   of-interval.mk \
   of-io.mk \
   of-linear-algebra.mk \
