@@ -1,0 +1,38 @@
+# HG changeset patch
+# User Markus Mützel <markus.muetzel@gmx.de>
+# Date 1608537445 -3600
+#      Mon Dec 21 08:57:25 2020 +0100
+# Node ID 9014fec674bdbac46727ca3e3f25d57bf06a2115
+# Parent  4628637d02b8327eabbe4b0716b8338096f00610
+Use "/" in names for class methods (bug #59334).
+
+* @infsup/subsref.m, @infsupdec/subsref.m: Use "/" as separator between class
+  and method name on all platforms.
+
+diff -r 4628637d02b8 -r 9014fec674bd inst/@infsup/subsref.m
+--- a/inst/@infsup/subsref.m	Tue Jul 03 00:03:48 2018 +0200
++++ b/inst/@infsup/subsref.m	Mon Dec 21 08:57:25 2020 +0100
+@@ -69,7 +69,7 @@
+       if (not (any (strcmp (S(1).subs, methods (A)))))
+         error (["interval property ‘", S(1).subs, "’ is unknown"])
+       endif
+-      functionname = ["@infsup", filesep(), S(1).subs];
++      functionname = ["@infsup/", S(1).subs];
+       if (nargin (functionname) ~= 1)
+         error (["‘", S(1).subs, "’ is not a valid interval property"])
+       endif
+diff -r 4628637d02b8 -r 9014fec674bd inst/@infsupdec/subsref.m
+--- a/inst/@infsupdec/subsref.m	Tue Jul 03 00:03:48 2018 +0200
++++ b/inst/@infsupdec/subsref.m	Mon Dec 21 08:57:25 2020 +0100
+@@ -68,9 +68,9 @@
+       error ("interval cannot be indexed with {}")
+     case "."
+       if (any (strcmp (S(1).subs, methods ("infsupdec"))))
+-        functionname = ["@infsupdec", filesep(),  S(1).subs];
++        functionname = ["@infsupdec/",  S(1).subs];
+       elseif (any (strcmp (S(1).subs, methods ("infsup"))))
+-        functionname = ["@infsup", filesep(), S(1).subs];
++        functionname = ["@infsup/", S(1).subs];
+       else
+         error (["interval property ‘", S(1).subs, "’ is unknown"])
+       endif
