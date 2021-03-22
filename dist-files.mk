@@ -7,7 +7,6 @@ SRC_FILES_1 := \
   armadillo-1-staticlib.patch \
   armadillo-test.cpp \
   armadillo.mk \
-  arpack-1-gcc10.patch \
   arpack.mk \
   atk-1-DllMain.patch \
   atk.mk \
