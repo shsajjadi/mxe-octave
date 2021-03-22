@@ -28,8 +28,8 @@ ifeq ($(ENABLE_FORTRAN_INT64),yes)
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'https://github.com/opencollab/arpack-ng/releases' | \
-    $(SED) -n 's,.*href="/opencollab/arpack-ng/archive/\([0-9][^"]*\)\.tar.*,\1,p' | \
+    $(WGET) -q -O- 'https://github.com/opencollab/arpack-ng/tags' | \
+    $(SED) -n 's,.*releases/tag/\([^"]*\).*,\1,p' | \
     head -1
 endef
 
