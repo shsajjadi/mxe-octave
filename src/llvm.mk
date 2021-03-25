@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := 1a911295260d4e41116b72788eb602702b4bb252
 $(PKG)_SUBDIR   := llvm-$($(PKG)_VERSION).src
 $(PKG)_FILE     := llvm-$($(PKG)_VERSION).src.tar.xz
 $(PKG)_URL      := https://github.com/llvm/llvm-project/releases/download/llvmorg-$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := build-python3
+$(PKG)_DEPS     := build-cmake build-ninja build-python3
 
 define $(PKG)_UPDATE
     wget -q -O- 'http://releases.llvm.org/download.html?' | \
@@ -24,6 +24,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
     ifeq ($(MXE_SYSTEM),gnu-linux)
         define $(PKG)_BUILD
             mkdir '$(1)/.build' && cd '$(1)/.build' && cmake .. \
+                -GNinja \
                 $($(PKG)_CMAKE_FLAGS) \
                 $(CMAKE_CCACHE_FLAGS) \
                 $($(PKG)_CMAKE_PYTHON_FLAGS) \
@@ -44,7 +45,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
                 -DLLVM_ENABLE_DOXYGEN=OFF \
                 -DLLVM_ENABLE_BACKTRACES=OFF
 
-            $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
+            cd '$(1)/.build' && DESTDIR=$(3) ninja -j $(JOBS) install
         endef
     else
         define $(PKG)_BUILD
@@ -68,6 +69,7 @@ else
     define $(PKG)_BUILD
         mkdir '$(1)/.build'
         cd '$(1)/.build' && 'cmake' .. \
+            -GNinja \
             $($(PKG)_CMAKE_FLAGS) \
             $(CMAKE_CCACHE_FLAGS) \
             $($(PKG)_CMAKE_PYTHON_FLAGS) \
@@ -98,11 +100,8 @@ else
             -DLLVM_INCLUDE_RUNTIMES=OFF \
             $($(PKG)_CCACHE_OPTIONS)
 
-        $(MAKE) -C '$(1)/.build' -j $(JOBS) LLVMSupport
-        $(MAKE) -C '$(1)/.build' -j $(JOBS) CONFIGURE_LLVM_NATIVE
-        $(MAKE) -C '$(1)/.build/NATIVE' -j $(JOBS) LLVMSupport
-        $(MAKE) -C '$(1)/.build' -j $(JOBS) llvm-config
-        $(MAKE) -C '$(1)/.build' -j $(JOBS) install DESTDIR='$(3)'
+        cd '$(1)/.build' && DESTDIR=$(3) ninja -j $(JOBS) llvm-config
+        cd '$(1)/.build' && DESTDIR=$(3) ninja -j $(JOBS) install
 
         # create symlink for shared library so that llvm-config can find it
         cd '$(3)/$(HOST_BINDIR)' && ln -s LLVM.dll LLVM-$(word 1,$(subst ., ,$($(PKG)_VERSION))).dll
