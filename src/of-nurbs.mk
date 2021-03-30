@@ -3,8 +3,8 @@
 
 PKG             := of-nurbs
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.3.13
-$(PKG)_CHECKSUM := ae884f4edf4ee121928ff40e2e06372d2ef8f50a
+$(PKG)_VERSION  := 1.4.3
+$(PKG)_CHECKSUM := 8edd88cc9e6930704e4c98fb5c894ce302e342ce
 $(PKG)_REMOTE_SUBDIR := 
 $(PKG)_SUBDIR   := nurbs-$($(PKG)_VERSION)
 $(PKG)_FILE     := nurbs-$($(PKG)_VERSION).tar.gz
