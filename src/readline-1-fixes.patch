@@ -1,16 +1,7 @@
-This file is part of MXE. See LICENSE.md for licensing information.
-
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Timothy Gu <timothygu99@gmail.com>
-Date: Tue, 30 Sep 2014 17:16:32 -0700
-Subject: [PATCH 1/1] Handle missing S_IS* macros more gracefully
-
-
-diff --git a/colors.c b/colors.c
-index 1111111..2222222 100644
---- a/colors.c
-+++ b/colors.c
-@@ -200,8 +200,10 @@ _rl_print_color_indicator (const char *f)
+diff -ur readline-8.1/colors.c readline-8.1.1/colors.c
+--- readline-8.1/colors.c	2019-11-19 10:30:54.000000000 -0500
++++ readline-8.1.1/colors.c	2020-12-19 07:54:28.888704198 -0500
+@@ -207,8 +207,10 @@
  #endif
            if (is_colored (C_CAP) && 0) //f->has_capability)
              colored_filetype = C_CAP;
@@ -21,7 +12,7 @@ index 1111111..2222222 100644
            else if ((1 < astat.st_nlink) && is_colored (C_MULTIHARDLINK))
              colored_filetype = C_MULTIHARDLINK;
          }
-@@ -215,8 +217,10 @@ _rl_print_color_indicator (const char *f)
+@@ -222,8 +224,10 @@
              colored_filetype = C_STICKY_OTHER_WRITABLE;
            else
  #endif
@@ -32,11 +23,11 @@ index 1111111..2222222 100644
  #if defined (S_ISVTX)
            else if ((mode & S_ISVTX) != 0 && is_colored (C_STICKY))
              colored_filetype = C_STICKY;
-diff --git a/colors.h b/colors.h
-index 1111111..2222222 100644
---- a/colors.h
-+++ b/colors.h
-@@ -96,7 +96,7 @@ enum indicator_no
+Only in readline-8.1.1: colors.c.orig
+diff -ur readline-8.1/colors.h readline-8.1.1/colors.h
+--- readline-8.1/colors.h	2016-01-25 10:38:11.000000000 -0500
++++ readline-8.1.1/colors.h	2020-12-19 07:54:28.888704198 -0500
+@@ -96,7 +96,7 @@
    };
  
  
@@ -45,10 +36,9 @@ index 1111111..2222222 100644
  # define S_IXUGO (S_IXUSR | S_IXGRP | S_IXOTH)
  #endif
  
-diff --git a/posixstat.h b/posixstat.h
-index 1111111..2222222 100644
---- a/posixstat.h
-+++ b/posixstat.h
+diff -ur readline-8.1/posixstat.h readline-8.1.1/posixstat.h
+--- readline-8.1/posixstat.h	2019-12-19 11:24:37.000000000 -0500
++++ readline-8.1.1/posixstat.h	2020-12-19 07:54:28.888704198 -0500
 @@ -78,30 +78,44 @@
  
  #if defined (S_IFBLK) && !defined (S_ISBLK)
@@ -94,7 +84,7 @@ index 1111111..2222222 100644
  #endif
  
  /*
-@@ -137,6 +151,8 @@
+@@ -157,6 +171,8 @@
  /* These are non-standard, but are used in builtins.c$symbolic_umask() */
  #define S_IRUGO		(S_IRUSR | S_IRGRP | S_IROTH)
  #define S_IWUGO		(S_IWUSR | S_IWGRP | S_IWOTH)
@@ -103,4 +93,3 @@ index 1111111..2222222 100644
 +#endif
  
  #endif /* _POSIXSTAT_H_ */
-
