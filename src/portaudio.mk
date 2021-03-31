@@ -19,7 +19,7 @@ ifeq ($(MXE_SYSTEM),mingw)
 endif
 
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://www.portaudio.com/download.html' | \
+    $(WGET) -q -O- 'http://files.portaudio.com/download.html' | \
     $(SED) -n 's,.*pa_stable_v\([0-9][^>]*\)\.tgz.*,\1,p' | \
     head -1
 endef
