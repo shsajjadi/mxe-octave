@@ -1,0 +1,16 @@
+"perl" cannot run scripts in paths with non-ASCII characters on Windows.
+To work around that, change to the directory containing the script first,
+then call it without path.
+FIXME: Could changing the directory have negative side effects for the
+"makeinfo" script?
+
+diff --git "a/util/makeinfo.bat" "b/util/makeinfo.bat"
+index 5ae4286..6a51502 100644
+--- "a/util/makeinfo.bat"	
++++ "b/util/makeinfo.bat"	
+@@ -1,2 +1,4 @@
+ @echo off
+-perl "%~dpn0" %*
++%~d0
++cd "%~dp0"
++perl "%~n0" %*
