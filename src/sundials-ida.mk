@@ -3,11 +3,11 @@
 
 PKG             := sundials-ida
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.3.0
-$(PKG)_CHECKSUM := a33d5a9f19fad4e4a257a8c9ae1c321550885996
+$(PKG)_VERSION  := 5.7.0
+$(PKG)_CHECKSUM := c04ecc9102851955b62e626a43ad5f604e890ab0
 $(PKG)_SUBDIR   := sundials-$($(PKG)_VERSION)
 $(PKG)_FILE     := sundials-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := https://computation.llnl.gov/projects/sundials/download/$($(PKG)_FILE)
+$(PKG)_URL      := https://github.com/LLNL/sundials/releases/download/v$($(PKG)_VERSION)/$($(PKG)_FILE)
 $(PKG)_DEPS     := lapack suitesparse
 ifeq ($(USE_SYSTEM_GCC),no)
   $(PKG)_DEPS += libgomp

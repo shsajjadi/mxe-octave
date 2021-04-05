@@ -3,8 +3,8 @@
 
 PKG             := qhull
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2020.1
-$(PKG)_CHECKSUM := a938aa73a8964f81786a05fc4c98044878e09f07
+$(PKG)_VERSION  := 2020.2
+$(PKG)_CHECKSUM := 739346b5d6b3fe3675243b156c7ffe55f60cc3c9
 $(PKG)_SUBDIR   := $(PKG)-$($(PKG)_VERSION)
 $(PKG)_FILE     := qhull-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://github.com/qhull/$(PKG)/archive/$($(PKG)_VERSION).tar.gz
@@ -23,6 +23,9 @@ define $(PKG)_UPDATE
     tail -1
 endef
 
+# FIXME: Building and installing the deprecated target "libqhull" can be
+#        removed when Octave switches to using "libqhull_r" (see bug #60016).
+
 define $(PKG)_BUILD
     mkdir '$(1)/../.build'
     cd '$(1)/../.build' && cmake \
@@ -33,5 +36,12 @@ define $(PKG)_BUILD
         -DDOC_INSTALL_DIR='$(1)' \
         ../$($(PKG)_SUBDIR)
     make -C $(1)/../.build -j $(JOBS) 
+    make -C $(1)/../.build libqhull -j $(JOBS) 
     make -C $(1)/../.build -j 1 install DESTDIR=$(3)
+    if [ x$(MXE_WINDOWS_BUILD) == xyes ]; then \
+      $(INSTALL) '$(1)/../.build/libqhull.dll.a' '$(3)$(HOST_LIBDIR)/'; \
+      $(INSTALL) '$(1)/../.build/libqhull.dll' '$(3)$(HOST_BINDIR)/'; \
+    else \
+      $(INSTALL) $(1)/../.build/libqhull.so* '$(3)$(HOST_LIBDIR)/'; \
+    fi
 endef

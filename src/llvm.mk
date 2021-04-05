@@ -3,12 +3,12 @@
 
 PKG             := llvm
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 7.1.0
-$(PKG)_CHECKSUM := d43bfea58a35e058b93a6af36a728cfc64add33d
+$(PKG)_VERSION  := 11.0.1
+$(PKG)_CHECKSUM := 1a911295260d4e41116b72788eb602702b4bb252
 $(PKG)_SUBDIR   := llvm-$($(PKG)_VERSION).src
 $(PKG)_FILE     := llvm-$($(PKG)_VERSION).src.tar.xz
 $(PKG)_URL      := https://github.com/llvm/llvm-project/releases/download/llvmorg-$($(PKG)_VERSION)/$($(PKG)_FILE)
-$(PKG)_DEPS     := build-python
+$(PKG)_DEPS     := build-cmake build-ninja build-python3
 
 define $(PKG)_UPDATE
     wget -q -O- 'http://releases.llvm.org/download.html?' | \
@@ -17,12 +17,17 @@ define $(PKG)_UPDATE
     head -1
 endef
 
+$(PKG)_CMAKE_PYTHON_FLAGS := \
+    -DPYTHON_EXECUTABLE:FILEPATH='$(ROOT_PREFIX)/bin/python3'
+
 ifeq ($(MXE_NATIVE_BUILD),yes)
     ifeq ($(MXE_SYSTEM),gnu-linux)
         define $(PKG)_BUILD
             mkdir '$(1)/.build' && cd '$(1)/.build' && cmake .. \
+                -GNinja \
                 $($(PKG)_CMAKE_FLAGS) \
                 $(CMAKE_CCACHE_FLAGS) \
+                $($(PKG)_CMAKE_PYTHON_FLAGS) \
                 -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
                 -DLLVM_BUILD_LLVM_DYLIB=ON \
                 -DLLVM_LINK_LLVM_DYLIB=ON \
@@ -40,7 +45,7 @@ ifeq ($(MXE_NATIVE_BUILD),yes)
                 -DLLVM_ENABLE_DOXYGEN=OFF \
                 -DLLVM_ENABLE_BACKTRACES=OFF
 
-            $(MAKE) -C '$(1)/.build' -j '$(JOBS)' install DESTDIR='$(3)'
+            cd '$(1)/.build' && DESTDIR=$(3) ninja -j $(JOBS) install
         endef
     else
         define $(PKG)_BUILD
@@ -64,8 +69,10 @@ else
     define $(PKG)_BUILD
         mkdir '$(1)/.build'
         cd '$(1)/.build' && 'cmake' .. \
+            -GNinja \
             $($(PKG)_CMAKE_FLAGS) \
             $(CMAKE_CCACHE_FLAGS) \
+            $($(PKG)_CMAKE_PYTHON_FLAGS) \
             -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)' \
             -DLLVM_BUILD_TOOLS=OFF \
             -DLLVM_BUILD_LLVM_DYLIB=ON \
@@ -93,14 +100,11 @@ else
             -DLLVM_INCLUDE_RUNTIMES=OFF \
             $($(PKG)_CCACHE_OPTIONS)
 
-        $(MAKE) -C '$(1)/.build' -j $(JOBS) LLVMSupport
-        $(MAKE) -C '$(1)/.build' -j $(JOBS) CONFIGURE_LLVM_NATIVE
-        $(MAKE) -C '$(1)/.build/NATIVE' -j $(JOBS) LLVMSupport
-        $(MAKE) -C '$(1)/.build' -j $(JOBS) llvm-config
-        $(MAKE) -C '$(1)/.build' -j $(JOBS) install DESTDIR='$(3)'
+        cd '$(1)/.build' && DESTDIR=$(3) ninja -j $(JOBS) llvm-config
+        cd '$(1)/.build' && DESTDIR=$(3) ninja -j $(JOBS) install
 
         # create symlink for shared library so that llvm-config can find it
-        cd '$(3)/$(HOST_BINDIR)' && ln -s LLVM.dll LLVM-$(word 1,$(subst ., ,$($(PKG)_VERSION))).$(word 2,$(subst ., ,$($(PKG)_VERSION))).dll
+        cd '$(3)/$(HOST_BINDIR)' && ln -s LLVM.dll LLVM-$(word 1,$(subst ., ,$($(PKG)_VERSION))).dll
 
         # install native llvm-config in HOST_BINDIR because it won't find the libs otherwise
         $(INSTALL) -d '$(HOST_BINDIR)'
