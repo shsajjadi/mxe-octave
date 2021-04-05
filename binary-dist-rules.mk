@@ -118,11 +118,21 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       cp $(TOP_DIR)/installer-files/octave-firsttime.vbs $(OCTAVE_DIST_DIR)/
       cp $(TOP_DIR)/installer-files/fc_update.bat $(OCTAVE_DIST_DIR)/
       cp $(TOP_DIR)/installer-files/post-install.bat $(OCTAVE_DIST_DIR)/
+      # This patch can be dropped as soon as those lines are removed from
+      # the startup scripts for all targets (including stable and release).
+      if [ "$(OCTAVE_TARGET)" = "default-octave" ]; then \
+        (cd '$(OCTAVE_DIST_DIR)' && $(PATCH) -p1 -u) < $(TOP_DIR)/installer-files/octave-no-short-path.patch; \
+      fi
       cp $(TOP_BUILD_DIR)/HG-ID $(OCTAVE_DIST_DIR)/
       echo "  updating octave .exe to script files..."
       rm -f $(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin/octave.exe
       rm -f $(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin/octave-$($(OCTAVE_TARGET)_VERSION).exe
       cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin/octave.bat
+      # This patch can be dropped as soon as those lines are removed from
+      # "octave.bat" for all targets (including stable and release).
+      if [ "$(OCTAVE_TARGET)" = "default-octave" ]; then \
+        (cd '$(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin' && $(PATCH) -p1 -u) < $(TOP_DIR)/installer-files/octave-bat-no-short-path.patch; \
+      fi
       cp $(TOP_DIR)/installer-files/octave.bat $(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin/octave-$($(OCTAVE_TARGET)_VERSION).bat
       echo "  updating libtool references..."
       find '$(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/' -type f -name "*.la" \
@@ -132,6 +142,9 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
         -exec $(SED) -i 's|$(HOST_PREFIX)|/usr|g;s|$(BUILD_TOOLS_PREFIX)|/usr|g' {} \; ;
       if [ "$(ENABLE_DEVEL_TOOLS)" = "yes" ]; then \
         cp $(TOP_DIR)/installer-files/cmdshell.bat $(OCTAVE_DIST_DIR)/; \
+        if [ "$(OCTAVE_TARGET)" = "default-octave" ]; then \
+          (cd '$(OCTAVE_DIST_DIR)' && $(PATCH) -p1 -u) < $(TOP_DIR)/installer-files/cmdshell-no-short-path.patch; \
+        fi; \
       fi
       echo "  updating script tool references..."
       #find '$(OCTAVE_DIST_DIR)$(OCTAVE_ADD_PATH)/bin' -type f ! -name "*.*" \
