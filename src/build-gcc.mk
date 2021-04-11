@@ -32,6 +32,7 @@ ifeq ($(MXE_SYSTEM),mingw)
     --without-x \
     --disable-win32-registry \
     --enable-threads=posix
+
   ifneq ($(TARGET),x86_64-w64-mingw32)
     $(PKG)_SYSDEP_CONFIGURE_OPTIONS += \
     --libdir='$(BUILD_TOOLS_PREFIX)/lib' \
@@ -47,41 +48,48 @@ ifeq ($(MXE_SYSTEM),mingw)
       fi
     endef
   endif
+
+  ifeq ($(OCTAVE_TARGET),default-octave)
+    # FIXME: Adapt condition when Octave 7 moves to stable or it is released.
+    $(PKG)_WINAPI_VERSION_FLAGS := --with-default-win32-winnt=0x0601
+  endif
+
   define $(PKG)_INSTALL_SYSTEM_HEADERS
     $($(PKG)_PRE_BUILD)
     # install mingw-w64 headers
     $(call PREPARE_PKG_SOURCE,mingw-w64,$(1))
     mkdir '$(1).headers'
     cd '$(1).headers' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-headers/configure' \
-        --host='$(TARGET)' \
-        --prefix='$(HOST_PREFIX)' \
-        --enable-sdk=all \
-        --enable-idl \
-        --enable-secure-api \
-        $(mingw-w64-headers_CONFIGURE_OPTS)
+      --host='$(TARGET)' \
+      --prefix='$(HOST_PREFIX)' \
+      --enable-sdk=all \
+      --enable-idl \
+      --enable-secure-api \
+      $($(PKG)_WINAPI_VERSION_FLAGS) \
+      $(mingw-w64-headers_CONFIGURE_OPTS)
     $(MAKE) -C '$(1).headers' install
   endef
+  
   define $(PKG)_BUILD_SYSTEM_RUNTIME
     # build standalone gcc
     $(MAKE) -C '$(1).build' -j '$(JOBS)' all-gcc
     $(MAKE) -C '$(1).build' -j 1 install-gcc
-
     # build mingw-w64-crt
     mkdir '$(1).crt-build'
     cd '$(1).crt-build' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-crt/configure' \
-	--host='$(TARGET)' \
-	--prefix='$(HOST_PREFIX)' \
-	$(if $(filter $(TARGET), x86_64-w64-mingw32),--disable-lib32) \
-	--with-sysroot='$(HOST_PREFIX)'
+      --host='$(TARGET)' \
+      --prefix='$(HOST_PREFIX)' \
+      $(if $(filter $(TARGET), x86_64-w64-mingw32),--disable-lib32) \
+      --with-sysroot='$(HOST_PREFIX)'
     $(MAKE) -C '$(1).crt-build' -j '$(JOBS)' || $(MAKE) -C '$(1).crt-build' -j '$(JOBS)'
     $(MAKE) -C '$(1).crt-build' -j 1 install
 
     # build posix threads
     mkdir '$(1).pthreads'
     cd '$(1).pthreads' && '$(1)/$(mingw-w64_SUBDIR)/mingw-w64-libraries/winpthreads/configure' \
-        $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
-        --prefix='$(HOST_PREFIX)' \
-        $(ENABLE_SHARED_OR_STATIC)
+      $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+      --prefix='$(HOST_PREFIX)' \
+      $(ENABLE_SHARED_OR_STATIC)
     $(MAKE) -C '$(1).pthreads' -j '$(JOBS)' || $(MAKE) -C '$(1).pthreads' -j '$(JOBS)'
     $(MAKE) -C '$(1).pthreads' -j 1 install
   endef
