@@ -165,7 +165,7 @@ index 1111111..2222222 100644
  Requires.private: gmodule-no-export-2.0
 -Libs: -L${libdir} -lgio-2.0
 +Libs: -L${libdir} -lgio-2.0 -ldnsapi -liphlpapi
- Libs.private: @ZLIB_LIBS@ @NETWORK_LIBS@ @SELINUX_LIBS@ @COCOA_LIBS@ @CARBON_LIBS@
+ Libs.private: @ZLIB_LIBS@ @NETWORK_LIBS@ @SELINUX_LIBS@ @COCOA_LIBS@ @CARBON_LIBS@ @LIBMOUNT_LIBS@
  Cflags:
 
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
@@ -597,52 +597,6 @@ index 1111111..2222222 100644
  dnl definitions in terms of our private definitions.
 
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Tony Theodore <tonyt@logyst.com>
-Date: Mon, 26 Feb 2018 16:09:53 +1100
-Subject: [PATCH 9/9] darwin: disable g_cocoa_notification_backend
-
-
-diff --git a/gio/Makefile.am b/gio/Makefile.am
-index 1111111..2222222 100644
---- a/gio/Makefile.am
-+++ b/gio/Makefile.am
-@@ -279,10 +279,6 @@ unix_sources = \
- 
- appinfo_sources += $(unix_appinfo_sources)
- 
--if OS_COCOA
--unix_sources += gcocoanotificationbackend.c
--endif
--
- giounixincludedir=$(includedir)/gio-unix-2.0/gio
- giounixinclude_HEADERS = \
- 	gdesktopappinfo.h	\
-diff --git a/gio/giomodule.c b/gio/giomodule.c
-index 1111111..2222222 100644
---- a/gio/giomodule.c
-+++ b/gio/giomodule.c
-@@ -918,9 +918,6 @@ extern GType g_proxy_resolver_portal_get_type (void);
- extern GType g_network_monitor_portal_get_type (void);
- #endif
- 
--#ifdef HAVE_COCOA
--extern GType g_cocoa_notification_backend_get_type (void);
--#endif
- 
- #ifdef G_PLATFORM_WIN32
- 
-@@ -1117,9 +1114,6 @@ _g_io_modules_ensure_loaded (void)
-       g_type_ensure (g_network_monitor_portal_get_type ());
-       g_type_ensure (g_proxy_resolver_portal_get_type ());
- #endif
--#ifdef HAVE_COCOA
--      g_type_ensure (g_cocoa_notification_backend_get_type ());
--#endif
- #ifdef G_OS_WIN32
-       g_type_ensure (_g_winhttp_vfs_get_type ());
-#endif
-
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Ernestas Kulik <ekulik@redhat.com>
 Date: Tue, 29 Jan 2019 09:50:46 +0100
 Subject: [PATCH 10/10] gdbus: Avoid printing null strings
@@ -692,7 +646,7 @@ index 1111111..2222222 100644
            g_set_error (error,
 @@ -2703,10 +2702,10 @@ g_dbus_message_to_blob (GDBusMessage          *message,
                         G_IO_ERROR_INVALID_ARGUMENT,
-                        _("Message body has signature '%s' but there is no signature header"),
+                        _("Message body has signature “%s” but there is no signature header"),
                         signature_str);
 -          g_free (tupled_signature_str);
            goto out;
