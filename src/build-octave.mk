@@ -58,11 +58,10 @@ define $(PKG)_BUILD
         --without-fltk --without-fontconfig --without-framework-opengl \
         --without-freetype --without-glpk --without-hdf5 --without-klu \
         --without-magick --without-opengl --without-openssl \
-        --without-osmesa --without-portaudio --without-qhull \
-        --without-qrupdate --without-qscintilla --without-qt \
-        --without-sndfile --without-sundials_ida \
-        --without-sundials_nvecserial --without-umfpack --without-x \
-        --without-z
+        --without-portaudio --without-qhull  --without-qrupdate\
+        --without-qscintilla --without-qt --without-sndfile \
+        --without-sundials_ida --without-sundials_nvecserial \
+        --without-umfpack --without-x --without-z
 
     $($(PKG)_ENV_FLAGS) $(MAKE) -C '$(1)/.build' all -j '$(JOBS)'
     $($(PKG)_ENV_FLAGS) $(MAKE) -C '$(1)/.build' install
