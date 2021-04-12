@@ -179,32 +179,32 @@ diff --git a/glib/gmain.c b/glib/gmain.c
 index 1111111..2222222 100644
 --- a/glib/gmain.c
 +++ b/glib/gmain.c
-@@ -2657,12 +2657,15 @@ g_get_real_time (void)
- #if defined (G_OS_WIN32)
- static ULONGLONG (*g_GetTickCount64) (void) = NULL;
- static guint32 g_win32_tick_epoch = 0;
+@@ -2688,12 +2688,15 @@ g_get_real_time (void)
+  * So for now we calculate (usec_per_sec / ticks_per_sec) and use floating point
+  */
+ static gdouble g_monotonic_usec_per_tick = 0;
 +static gboolean g_win32_clock_is_initialized;
  
  void
  g_clock_win32_init (void)
  {
-   HMODULE kernel32;
+   LARGE_INTEGER freq;
  
 +  g_win32_clock_is_initialized = TRUE;
 +
-   g_GetTickCount64 = NULL;
-   kernel32 = GetModuleHandle ("KERNEL32.DLL");
-   if (kernel32 != NULL)
-@@ -2721,6 +2724,9 @@ g_get_monotonic_time (void)
-    *    timeBeginPeriod() to increase it as much as they want
-    */
- 
+   if (!QueryPerformanceFrequency (&freq) || freq.QuadPart == 0)
+     {
+       /* The documentation says that this should never happen */
+@@ -2707,6 +2709,9 @@ g_get_monotonic_time (void)
+ gint64
+ g_get_monotonic_time (void)
+ {
 +  if (!g_win32_clock_is_initialized)
 +    g_clock_win32_init ();
 +
-   if (g_GetTickCount64 != NULL)
+   if (G_LIKELY (g_monotonic_usec_per_tick != 0))
      {
-       guint32 ticks_as_32bit;
+       LARGE_INTEGER ticks;
 diff --git a/glib/gthread-win32.c b/glib/gthread-win32.c
 index 1111111..2222222 100644
 --- a/glib/gthread-win32.c
