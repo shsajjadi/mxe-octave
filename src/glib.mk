@@ -3,8 +3,8 @@
 
 PKG             := glib
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.54.0
-$(PKG)_CHECKSUM := 96b434a9ca142344b93f38ed0cd88d36196b68ae
+$(PKG)_VERSION  := 2.58.0
+$(PKG)_CHECKSUM := c00e433c56e0ba3541abc5222aeca4136de10fb8
 $(PKG)_SUBDIR   := glib-$($(PKG)_VERSION)
 $(PKG)_FILE     := glib-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://ftp.gnome.org/pub/gnome/sources/glib/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_FILE)
@@ -41,7 +41,8 @@ define $(PKG)_BUILD
         --disable-libmount \
         --with-libiconv=gnu \
         --with-pcre=internal \
-	&& $(CONFIGURE_POST_HOOK)
+        --disable-compile-warnings \
+        && $(CONFIGURE_POST_HOOK)
 
     $(SED) -i 's,#define G_ATOMIC.*,,' '$(1)/config.h'
     $(MAKE) -C '$(1)/glib'    -j '$(JOBS)'
@@ -68,6 +69,7 @@ define $(PKG)_BUILD
         --with-pcre=system \
         --with-libiconv=gnu \
         --disable-inotify \
+        --disable-compile-warnings \
         PKG_CONFIG='$(MXE_PKG_CONFIG)' \
         PKG_CONFIG_PATH='$(PKG_CONFIG_PATH)' 
 
