@@ -49,16 +49,13 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
       native-gcc \
       npp
   endif
-
-  # other packages we want to include
-  WINDOWS_BINARY_DIST_DEPS += \
-    biosig
 endif
 
 BINARY_DIST_DEPS := \
   $(OCTAVE_TARGET) \
   blas-packages \
   octave-forge-packages \
+  octave-other-packages \
   devel-packages \
   units \
   transfig \
