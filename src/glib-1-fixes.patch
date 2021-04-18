@@ -165,7 +165,7 @@ index 1111111..2222222 100644
  Requires.private: gmodule-no-export-2.0
 -Libs: -L${libdir} -lgio-2.0
 +Libs: -L${libdir} -lgio-2.0 -ldnsapi -liphlpapi
- Libs.private: @ZLIB_LIBS@ @NETWORK_LIBS@ @SELINUX_LIBS@ @COCOA_LIBS@ @CARBON_LIBS@
+ Libs.private: @ZLIB_LIBS@ @NETWORK_LIBS@ @SELINUX_LIBS@ @COCOA_LIBS@ @CARBON_LIBS@ @LIBMOUNT_LIBS@
  Cflags:
 
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
@@ -179,73 +179,65 @@ diff --git a/glib/gmain.c b/glib/gmain.c
 index 1111111..2222222 100644
 --- a/glib/gmain.c
 +++ b/glib/gmain.c
-@@ -2657,12 +2657,15 @@ g_get_real_time (void)
- #if defined (G_OS_WIN32)
- static ULONGLONG (*g_GetTickCount64) (void) = NULL;
- static guint32 g_win32_tick_epoch = 0;
+@@ -2688,12 +2688,15 @@ g_get_real_time (void)
+  * So for now we calculate (usec_per_sec / ticks_per_sec) and use floating point
+  */
+ static gdouble g_monotonic_usec_per_tick = 0;
 +static gboolean g_win32_clock_is_initialized;
  
  void
  g_clock_win32_init (void)
  {
-   HMODULE kernel32;
+   LARGE_INTEGER freq;
  
 +  g_win32_clock_is_initialized = TRUE;
 +
-   g_GetTickCount64 = NULL;
-   kernel32 = GetModuleHandle ("KERNEL32.DLL");
-   if (kernel32 != NULL)
-@@ -2721,6 +2724,9 @@ g_get_monotonic_time (void)
-    *    timeBeginPeriod() to increase it as much as they want
-    */
- 
+   if (!QueryPerformanceFrequency (&freq) || freq.QuadPart == 0)
+     {
+       /* The documentation says that this should never happen */
+@@ -2707,6 +2709,9 @@ g_get_monotonic_time (void)
+ gint64
+ g_get_monotonic_time (void)
+ {
 +  if (!g_win32_clock_is_initialized)
 +    g_clock_win32_init ();
 +
-   if (g_GetTickCount64 != NULL)
+   if (G_LIKELY (g_monotonic_usec_per_tick != 0))
      {
-       guint32 ticks_as_32bit;
+       LARGE_INTEGER ticks;
 diff --git a/glib/gthread-win32.c b/glib/gthread-win32.c
 index 1111111..2222222 100644
 --- a/glib/gthread-win32.c
 +++ b/glib/gthread-win32.c
-@@ -116,18 +116,28 @@ typedef struct
-   void     (__stdcall * WakeConditionVariable)       (gpointer cond);
- } GThreadImplVtable;
- 
+@@ -60,6 +60,10 @@ g_thread_abort (gint         status,
+            strerror (status), function);
+   g_abort ();
+ }
 +/* Needed for static builds where DllMain initializer doesn't get called */
 +static gboolean g_threads_is_initialized;
 +G_GNUC_INTERNAL void g_thread_win32_init (void);
 +
- static GThreadImplVtable g_thread_impl_vtable;
  
- /* {{{1 GMutex */
+ /* Starting with Vista and Windows 2008, we have access to the
+  * CONDITION_VARIABLE and SRWLock primatives on Windows, which are
+@@ -79,6 +83,9 @@ g_thread_abort (gint         status,
  void
  g_mutex_init (GMutex *mutex)
  {
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   g_thread_impl_vtable.InitializeSRWLock (mutex);
+   InitializeSRWLock ((gpointer) mutex);
  }
  
- void
- g_mutex_clear (GMutex *mutex)
- {
-+  if (!g_threads_is_initialized)
-+    g_thread_win32_init ();
-+
-   if (g_thread_impl_vtable.DeleteSRWLock != NULL)
-     g_thread_impl_vtable.DeleteSRWLock (mutex);
- }
-@@ -135,18 +145,27 @@ g_mutex_clear (GMutex *mutex)
+@@ -90,18 +97,27 @@ g_mutex_clear (GMutex *mutex)
  void
  g_mutex_lock (GMutex *mutex)
  {
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   g_thread_impl_vtable.AcquireSRWLockExclusive (mutex);
+   AcquireSRWLockExclusive ((gpointer) mutex);
  }
  
  gboolean
@@ -254,7 +246,7 @@ index 1111111..2222222 100644
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   return g_thread_impl_vtable.TryAcquireSRWLockExclusive (mutex);
+   return TryAcquireSRWLockExclusive ((gpointer) mutex);
  }
  
  void
@@ -263,10 +255,10 @@ index 1111111..2222222 100644
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   g_thread_impl_vtable.ReleaseSRWLockExclusive (mutex);
+   ReleaseSRWLockExclusive ((gpointer) mutex);
  }
  
-@@ -157,6 +176,9 @@ g_rec_mutex_impl_new (void)
+@@ -112,6 +128,9 @@ g_rec_mutex_impl_new (void)
  {
    CRITICAL_SECTION *cs;
  
@@ -276,7 +268,7 @@ index 1111111..2222222 100644
    cs = g_slice_new (CRITICAL_SECTION);
    InitializeCriticalSection (cs);
  
-@@ -167,6 +189,10 @@ static void
+@@ -122,6 +141,10 @@ static void
  g_rec_mutex_impl_free (CRITICAL_SECTION *cs)
  {
    DeleteCriticalSection (cs);
@@ -287,7 +279,7 @@ index 1111111..2222222 100644
    g_slice_free (CRITICAL_SECTION, cs);
  }
  
-@@ -175,6 +201,9 @@ g_rec_mutex_get_impl (GRecMutex *mutex)
+@@ -130,6 +153,9 @@ g_rec_mutex_get_impl (GRecMutex *mutex)
  {
    CRITICAL_SECTION *impl = mutex->p;
  
@@ -297,7 +289,7 @@ index 1111111..2222222 100644
    if G_UNLIKELY (mutex->p == NULL)
      {
        impl = g_rec_mutex_impl_new ();
-@@ -189,30 +218,45 @@ g_rec_mutex_get_impl (GRecMutex *mutex)
+@@ -144,30 +170,45 @@ g_rec_mutex_get_impl (GRecMutex *mutex)
  void
  g_rec_mutex_init (GRecMutex *mutex)
  {
@@ -343,33 +335,24 @@ index 1111111..2222222 100644
    return TryEnterCriticalSection (g_rec_mutex_get_impl (mutex));
  }
  
-@@ -221,12 +265,18 @@ g_rec_mutex_trylock (GRecMutex *mutex)
+@@ -176,6 +217,9 @@ g_rec_mutex_trylock (GRecMutex *mutex)
  void
  g_rw_lock_init (GRWLock *lock)
  {
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   g_thread_impl_vtable.InitializeSRWLock (lock);
+   InitializeSRWLock ((gpointer) lock);
  }
  
- void
- g_rw_lock_clear (GRWLock *lock)
- {
-+  if (!g_threads_is_initialized)
-+    g_thread_win32_init ();
-+
-   if (g_thread_impl_vtable.DeleteSRWLock != NULL)
-     g_thread_impl_vtable.DeleteSRWLock (lock);
- }
-@@ -234,36 +284,54 @@ g_rw_lock_clear (GRWLock *lock)
+@@ -187,36 +231,54 @@ g_rw_lock_clear (GRWLock *lock)
  void
  g_rw_lock_writer_lock (GRWLock *lock)
  {
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   g_thread_impl_vtable.AcquireSRWLockExclusive (lock);
+   AcquireSRWLockExclusive ((gpointer) lock);
  }
  
  gboolean
@@ -378,7 +361,7 @@ index 1111111..2222222 100644
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   return g_thread_impl_vtable.TryAcquireSRWLockExclusive (lock);
+   return TryAcquireSRWLockExclusive ((gpointer) lock);
  }
  
  void
@@ -387,7 +370,7 @@ index 1111111..2222222 100644
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   g_thread_impl_vtable.ReleaseSRWLockExclusive (lock);
+   ReleaseSRWLockExclusive ((gpointer) lock);
  }
  
  void
@@ -396,7 +379,7 @@ index 1111111..2222222 100644
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   g_thread_impl_vtable.AcquireSRWLockShared (lock);
+   AcquireSRWLockShared ((gpointer) lock);
  }
  
  gboolean
@@ -405,7 +388,7 @@ index 1111111..2222222 100644
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   return g_thread_impl_vtable.TryAcquireSRWLockShared (lock);
+   return TryAcquireSRWLockShared ((gpointer) lock);
  }
  
  void
@@ -414,36 +397,27 @@ index 1111111..2222222 100644
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   g_thread_impl_vtable.ReleaseSRWLockShared (lock);
+   ReleaseSRWLockShared ((gpointer) lock);
  }
  
-@@ -271,12 +339,18 @@ g_rw_lock_reader_unlock (GRWLock *lock)
+@@ -224,6 +286,9 @@ g_rw_lock_reader_unlock (GRWLock *lock)
  void
  g_cond_init (GCond *cond)
  {
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   g_thread_impl_vtable.InitializeConditionVariable (cond);
+   InitializeConditionVariable ((gpointer) cond);
  }
  
- void
- g_cond_clear (GCond *cond)
- {
-+  if (!g_threads_is_initialized)
-+    g_thread_win32_init ();
-+
-   if (g_thread_impl_vtable.DeleteConditionVariable)
-     g_thread_impl_vtable.DeleteConditionVariable (cond);
- }
-@@ -284,12 +358,18 @@ g_cond_clear (GCond *cond)
+@@ -235,12 +300,18 @@ g_cond_clear (GCond *cond)
  void
  g_cond_signal (GCond *cond)
  {
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   g_thread_impl_vtable.WakeConditionVariable (cond);
+   WakeConditionVariable ((gpointer) cond);
  }
  
  void
@@ -452,30 +426,30 @@ index 1111111..2222222 100644
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   g_thread_impl_vtable.WakeAllConditionVariable (cond);
+   WakeAllConditionVariable ((gpointer) cond);
  }
  
-@@ -297,6 +377,9 @@ void
+@@ -248,6 +319,9 @@ void
  g_cond_wait (GCond  *cond,
               GMutex *entered_mutex)
  {
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   g_thread_impl_vtable.SleepConditionVariableSRW (cond, entered_mutex, INFINITE, 0);
+   SleepConditionVariableSRW ((gpointer) cond, (gpointer) entered_mutex, INFINITE, 0);
  }
  
-@@ -307,6 +390,9 @@ g_cond_wait_until (GCond  *cond,
- {
-   gint64 span;
+@@ -260,6 +334,9 @@ g_cond_wait_until (GCond  *cond,
+   DWORD span_millis;
+   gboolean signalled;
  
 +  if (!g_threads_is_initialized)
 +    g_thread_win32_init ();
 +
-   span = end_time - g_get_monotonic_time ();
- 
-   if G_UNLIKELY (span < 0)
-@@ -339,6 +425,9 @@ g_private_get_impl (GPrivate *key)
+   start_time = g_get_monotonic_time ();
+   do
+     {
+@@ -311,6 +388,9 @@ g_private_get_impl (GPrivate *key)
  
    if G_UNLIKELY (impl == 0)
      {
@@ -485,7 +459,7 @@ index 1111111..2222222 100644
        EnterCriticalSection (&g_private_lock);
        impl = (DWORD) key->p;
        if (impl == 0)
-@@ -432,6 +521,9 @@ g_system_thread_free (GRealThread *thread)
+@@ -404,6 +484,9 @@ g_system_thread_free (GRealThread *thread)
  {
    GThreadWin32 *wt = (GThreadWin32 *) thread;
  
@@ -495,7 +469,7 @@ index 1111111..2222222 100644
    win32_check_for_error (CloseHandle (wt->handle));
    g_slice_free (GThreadWin32, wt);
  }
-@@ -439,6 +531,9 @@ g_system_thread_free (GRealThread *thread)
+@@ -411,6 +494,9 @@ g_system_thread_free (GRealThread *thread)
  void
  g_system_thread_exit (void)
  {
@@ -505,7 +479,7 @@ index 1111111..2222222 100644
    _endthreadex (0);
  }
  
-@@ -447,6 +542,9 @@ g_thread_win32_proxy (gpointer data)
+@@ -419,6 +505,9 @@ g_thread_win32_proxy (gpointer data)
  {
    GThreadWin32 *self = data;
  
@@ -515,7 +489,7 @@ index 1111111..2222222 100644
    self->proxy (self);
  
    g_system_thread_exit ();
-@@ -464,6 +562,9 @@ g_system_thread_new (GThreadFunc   func,
+@@ -436,6 +525,9 @@ g_system_thread_new (GThreadFunc   func,
    GThreadWin32 *thread;
    guint ignore;
  
@@ -525,7 +499,7 @@ index 1111111..2222222 100644
    thread = g_slice_new0 (GThreadWin32);
    thread->proxy = func;
  
-@@ -493,6 +594,9 @@ g_system_thread_wait (GRealThread *thread)
+@@ -465,6 +557,9 @@ g_system_thread_wait (GRealThread *thread)
  {
    GThreadWin32 *wt = (GThreadWin32 *) thread;
  
@@ -535,15 +509,16 @@ index 1111111..2222222 100644
    win32_check_for_error (WAIT_FAILED != WaitForSingleObject (wt->handle, INFINITE));
  }
  
-@@ -1041,6 +1145,8 @@ g_thread_lookup_native_funcs (void)
+@@ -536,6 +631,8 @@ g_system_thread_set_name (const gchar *name)
  void
  g_thread_win32_init (void)
  {
 +  g_threads_is_initialized = TRUE;
 +
-   if (!g_thread_lookup_native_funcs ())
-     g_thread_xp_init ();
+   InitializeCriticalSection (&g_private_lock);
  
+ #ifndef _MSC_VER
+
 
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Gerardo Ballabio <gerardo.ballabio@gmail.com>
@@ -597,52 +572,6 @@ index 1111111..2222222 100644
  dnl definitions in terms of our private definitions.
 
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Tony Theodore <tonyt@logyst.com>
-Date: Mon, 26 Feb 2018 16:09:53 +1100
-Subject: [PATCH 9/9] darwin: disable g_cocoa_notification_backend
-
-
-diff --git a/gio/Makefile.am b/gio/Makefile.am
-index 1111111..2222222 100644
---- a/gio/Makefile.am
-+++ b/gio/Makefile.am
-@@ -279,10 +279,6 @@ unix_sources = \
- 
- appinfo_sources += $(unix_appinfo_sources)
- 
--if OS_COCOA
--unix_sources += gcocoanotificationbackend.c
--endif
--
- giounixincludedir=$(includedir)/gio-unix-2.0/gio
- giounixinclude_HEADERS = \
- 	gdesktopappinfo.h	\
-diff --git a/gio/giomodule.c b/gio/giomodule.c
-index 1111111..2222222 100644
---- a/gio/giomodule.c
-+++ b/gio/giomodule.c
-@@ -918,9 +918,6 @@ extern GType g_proxy_resolver_portal_get_type (void);
- extern GType g_network_monitor_portal_get_type (void);
- #endif
- 
--#ifdef HAVE_COCOA
--extern GType g_cocoa_notification_backend_get_type (void);
--#endif
- 
- #ifdef G_PLATFORM_WIN32
- 
-@@ -1117,9 +1114,6 @@ _g_io_modules_ensure_loaded (void)
-       g_type_ensure (g_network_monitor_portal_get_type ());
-       g_type_ensure (g_proxy_resolver_portal_get_type ());
- #endif
--#ifdef HAVE_COCOA
--      g_type_ensure (g_cocoa_notification_backend_get_type ());
--#endif
- #ifdef G_OS_WIN32
-       g_type_ensure (_g_winhttp_vfs_get_type ());
-#endif
-
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Ernestas Kulik <ekulik@redhat.com>
 Date: Tue, 29 Jan 2019 09:50:46 +0100
 Subject: [PATCH 10/10] gdbus: Avoid printing null strings
@@ -692,7 +621,7 @@ index 1111111..2222222 100644
            g_set_error (error,
 @@ -2703,10 +2702,10 @@ g_dbus_message_to_blob (GDBusMessage          *message,
                         G_IO_ERROR_INVALID_ARGUMENT,
-                        _("Message body has signature '%s' but there is no signature header"),
+                        _("Message body has signature “%s” but there is no signature header"),
                         signature_str);
 -          g_free (tupled_signature_str);
            goto out;

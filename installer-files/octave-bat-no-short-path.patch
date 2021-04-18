@@ -1,0 +1,30 @@
+# HG changeset patch
+# User Markus Mützel <markus.muetzel@gmx.de>
+# Date 1612087592 -3600
+#      Sun Jan 31 11:06:32 2021 +0100
+# Node ID f08191da8e416c32d950679a78fe194e2753372e
+# Parent  fea266f67443b890a67f80336aee03c40d3a1faa
+Don't use short paths (bug #59923).
+
+diff -r fea266f67443 -r f08191da8e41 octave.bat
+--- a/octave.bat	Sun Jan 31 10:59:32 2021 +0100
++++ b/octave.bat	Sun Jan 31 11:06:32 2021 +0100
+@@ -8,9 +8,6 @@
+ Rem   Note: the result ends with a backslash.
+ set OCT_HOME=%~dp0\.\..\
+ set ROOT_PATH=%~dp0\.\..\..\
+-Rem Convert to 8.3 format so we don't have to worry about spaces.
+-for %%I in ("%OCT_HOME%") do set OCT_HOME=%%~sI
+-for %%I in ("%ROOT_PATH%") do set ROOT_PATH=%%~sI
+ 
+ set MSYSTEM=MSYS
+ set MSYSPATH=%OCT_HOME%
+@@ -44,8 +41,6 @@
+ Rem set home if not already set
+ if "%HOME%"=="" set HOME=%USERPROFILE%
+ if "%HOME%"=="" set HOME=%HOMEDRIVE%%HOMEPATH%
+-Rem set HOME to 8.3 format
+-for %%I in ("%HOME%") do set HOME=%%~sI
+ 
+ Rem   Check for args to determine if GUI (--gui, --force-gui)
+ Rem   or CLI (--no-gui) should be started.

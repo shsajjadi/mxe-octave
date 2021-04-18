@@ -117,6 +117,21 @@ else
   $(PKG)_ENABLE_FORTRAN_INT64_CONFIGURE_OPTIONS := ax_blas_f77_func_ok=yes ax_blas_integer_size=4 octave_cv_sizeof_fortran_integer=4
 endif
 
+ifeq ($(MXE_SYSTEM),mingw)
+  # This is very similar to CONFIGURE_CPPFLAGS and CONFIGURE_LDFLAGS but with
+  # double quoted paths.
+  $(PKG)_CONFIGURE_CPPFLAGS := CPPFLAGS='-I"$(HOST_PREFIX)/include"'
+  ifeq ($(MXE_USE_LIB64_DIRECTORY),yes)
+    $(PKG)_CONFIGURE_LDFLAGS := LDFLAGS='-L"$(HOST_PREFIX)/lib" -L"$(HOST_PREFIX)/lib64"'
+  else
+    $(PKG)_CONFIGURE_LDFLAGS := LDFLAGS='-L"$(HOST_PREFIX)/lib"'
+  endif
+else
+  $(PKG)_CONFIGURE_CPPFLAGS := $(CONFIGURE_CPPFLAGS)
+  $(PKG)_CONFIGURE_LDFLAGS := $(CONFIGURE_LDFLAGS)
+endif
+
+
 ifeq ($(MXE_SYSTEM),msvc)
   $(PKG)_PREFIX := '$(HOST_PREFIX)/local/$($(PKG)_SUBDIR)'
   # - Enable atomic refcount (required for QtHandles)
@@ -131,8 +146,13 @@ ifeq ($(MXE_SYSTEM),msvc)
     CXXFLAGS='-O2 -wd4244 -wd4003 -wd4005 -wd4068'
 else
   $(PKG)_PREFIX := '$(HOST_PREFIX)'
-  $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
-    LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR) -L$($(PKG)_QTDIR)/lib'
+  ifeq ($(MXE_SYSTEM),mingw)
+    $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
+      LDFLAGS='-Wl,-rpath-link,"$(HOST_LIBDIR)" -L"$(HOST_LIBDIR)" -L"$($(PKG)_QTDIR)/lib"'
+  else
+    $(PKG)_EXTRA_CONFIGURE_OPTIONS := \
+      LDFLAGS='-Wl,-rpath-link,$(HOST_LIBDIR) -L$(HOST_LIBDIR) -L$($(PKG)_QTDIR)/lib'
+  endif
 endif
 
 ifeq ($(MXE_SYSTEM),mingw)
@@ -174,7 +194,8 @@ define $(PKG)_BUILD
 
     mkdir '$(1)/.build'
     cd '$(1)/.build' && $($(PKG)_CONFIGURE_ENV) '$(1)/configure' \
-        $(CONFIGURE_CPPFLAGS) $(CONFIGURE_LDFLAGS) \
+        $($(PKG)_CONFIGURE_CPPFLAGS) \
+        $($(PKG)_CONFIGURE_LDFLAGS) \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$($(PKG)_PREFIX)' \
         --disable-silent-rules \
@@ -199,6 +220,7 @@ define $(PKG)_BUILD
     if [ "x$(MXE_SYSTEM)" == "xmingw" ]; then \
       $(INSTALL) '$(3)/$(HOST_BINDIR)/libxerbla.dll' '$(3)$(HOST_BINDIR)/libxerbla-octave.dll'; \
       cp '$(1)/.build/src/.libs/octave-gui.exe' '$(3)$(HOST_BINDIR)'; \
+      cp '$(1)/.build/src/.libs/octave-svgconvert.exe' '$(3)$(HOST_BINDIR)'; \
       if [ "x$(ENABLE_BINARY_PACKAGES)" == "xyes" ]; then \
         mkdir -p '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \
         $(INSTALL) '$(1)/.build/src/$(MXE_TOOL_PREFIX)mkoctfile' '$(3)$(BUILD_TOOLS_PREFIX)/bin'; \

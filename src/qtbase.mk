@@ -3,8 +3,8 @@
 
 PKG             := qtbase
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 5.14.2
-$(PKG)_CHECKSUM := 9de814d3b9005bf984a78e4b564fbb9413e043c4
+$(PKG)_VERSION  := 5.15.2
+$(PKG)_CHECKSUM := b5ad67fc6381ad7fae0296944734198488d096a3
 $(PKG)_SUBDIR   := $(PKG)-everywhere-src-$($(PKG)_VERSION)
 $(PKG)_FILE     := $(PKG)-everywhere-src-$($(PKG)_VERSION).tar.xz
 $(PKG)_URL      := http://download.qt.io/official_releases/qt/$(call SHORT_PKG_VERSION,$(PKG))/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
@@ -56,8 +56,9 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
   ## there are a number of other places that will need to be adjusted.
   ## --jwe
   $(PKG)_CONFIGURE_PREFIX_OPTION := -prefix '$(HOST_PREFIX)/qt5'
-  $(PKG)_CONFIGURE_OPTS += -no-xcb
+  $(PKG)_CONFIGURE_OPTS += -no-xcb -opengl dynamic
 else
+  $(PKG)_CONFIGURE_OPTS += -opengl desktop
   $(PKG)_CONFIGURE_PREFIX_OPTION := -prefix '$(HOST_PREFIX)'
   $(PKG)_CONFIGURE_INCLUDE_OPTION += -I '$(HOST_INCDIR)/freetype2'
 ifeq ($(USE_SYSTEM_OPENGL),no)
@@ -124,7 +125,6 @@ define $(PKG)_BUILD
             -shared \
             $($(PKG)_CONFIGURE_PREFIX_OPTION) \
             -hostprefix '$(BUILD_TOOLS_PREFIX)' \
-            -opengl desktop \
             -no-glib \
             -accessibility \
             -nomake examples \

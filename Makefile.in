@@ -532,7 +532,7 @@ endif
 OCTAVE_FORGE_BASE_URL := 'https://sourceforge.net/projects/octave/files/Octave Forge Packages/Individual Package Releases'
 ## Packages removed from list because build is broken:
 ## None.
-OCTAVE_FORGE_PACKAGES := $(addprefix of-,miscellaneous struct optim general signal communications image io statistics control geometry windows linear-algebra sockets data-smoothing fuzzy-logic-toolkit quaternion fits tsa netcdf ltfat database instrument-control generate_html nurbs strings financial stk splines dataframe lssa queueing ga interval nan ocs mapping tisean video zeromq gsl optiminterp dicom sparsersb audio symbolic matgeom octproj)
+OCTAVE_FORGE_PACKAGES := $(addprefix of-,audio communications control database dataframe data-smoothing dicom financial fits fuzzy-logic-toolkit ga general generate_html geometry gsl image instrument-control interval io linear-algebra lssa ltfat mapping matgeom miscellaneous nan netcdf nurbs ocs octproj optim optiminterp quaternion queueing signal sockets sparsersb splines statistics stk strings struct symbolic tisean tsa video windows zeromq)
 # get ALL deps for all of- packages, regardless of whether building the actual forge package in the installer
 OCTAVE_FORGE_DEPS:= $(sort $(foreach p,$(addprefix $(TOP_DIR)/src/,$(addsuffix .mk,$(OCTAVE_FORGE_PACKAGES))),$(shell $(SED) -n 's/.*_DEPS.*:=\(.*\)/\1/p' $p)))
 
@@ -1014,6 +1014,11 @@ update-octaveforge:
 .PHONY: update-build-tools
 update-build-tools:
 	$(foreach PKG,$(BUILD_TOOLS),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))))
+
+.PHONY: update-general-pkgs
+update-general-pkgs:
+	$(foreach PKG,$(filter-out $(MSYS2_PACKAGES) $(MSYS_BASE_PACKAGES) $(OCTAVE_FORGE_PACKAGES), $(PKGS)),\
+		$(if $($(PKG)_UPDATE),$(call UPDATE,$(PKG),$(shell $($(PKG)_UPDATE))),$(info Warning: No update rule for $(PKG))))
 
 update-checksum-%:
 	$(call DOWNLOAD_PKG_ARCHIVE,$*)

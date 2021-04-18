@@ -3,8 +3,8 @@
 
 PKG             := build-meson
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.54.3
-$(PKG)_CHECKSUM := 741e42a3c8237abe74eb9f189cd8978897ef144d
+$(PKG)_VERSION  := 0.55.3
+$(PKG)_CHECKSUM := a20e5112130d8fc8763323f5c2cc1011b44e27b1
 $(PKG)_SUBDIR   := meson-$($(PKG)_VERSION)
 $(PKG)_FILE     := meson-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://github.com/mesonbuild/meson/archive/$($(PKG)_VERSION).tar.gz

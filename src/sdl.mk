@@ -10,11 +10,11 @@ $(PKG)_FILE     := SDL-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := http://www.libsdl.org/release/$($(PKG)_FILE)
 $(PKG)_DEPS     := libiconv
 
+# SDL1 is no longer updated, so wont see any new versions
+# TODO: create a SDL2 target if we want to use that
 define $(PKG)_UPDATE
-    $(WGET) -q -O- 'http://hg.libsdl.org/SDL/tags' | \
-    $(SED) -n 's,.*release-\([0-9][^<]*\).*,\1,p' | \
-    $(GREP) "^1" | \
-    head -1
+    echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
+    echo $($(PKG)_VERSION)
 endef
 
 ifeq ($(MXE_NATIVE_BUILD),no)
