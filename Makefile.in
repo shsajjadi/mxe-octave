@@ -533,8 +533,10 @@ OCTAVE_FORGE_BASE_URL := 'https://sourceforge.net/projects/octave/files/Octave F
 ## Packages removed from list because build is broken:
 ## None.
 OCTAVE_FORGE_PACKAGES := $(addprefix of-,audio communications control database dataframe data-smoothing dicom financial fits fuzzy-logic-toolkit ga general generate_html geometry gsl image instrument-control interval io linear-algebra lssa ltfat mapping matgeom miscellaneous nan netcdf nurbs ocs octproj optim optiminterp quaternion queueing signal sockets sparsersb splines statistics stk strings struct symbolic tisean tsa video windows zeromq)
+OCTAVE_OTHER_PACKAGES := $(addprefix opkg-,biosig)
 # get ALL deps for all of- packages, regardless of whether building the actual forge package in the installer
 OCTAVE_FORGE_DEPS:= $(sort $(foreach p,$(addprefix $(TOP_DIR)/src/,$(addsuffix .mk,$(OCTAVE_FORGE_PACKAGES))),$(shell $(SED) -n 's/.*_DEPS.*:=\(.*\)/\1/p' $p)))
+OCTAVE_OTHER_PKG_DEPS:= $(sort $(foreach p,$(addprefix $(TOP_DIR)/src/,$(addsuffix .mk,$(OCTAVE_OTHER_PACKAGES))),$(shell $(SED) -n 's/.*_DEPS.*:=\(.*\)/\1/p' $p)))
 
 BLAS_PACKAGES := blas
 ifeq ($(ENABLE_OPENBLAS),yes)
@@ -703,6 +705,9 @@ msys2-sources:  $(MSYS2_SOURCES)
 .PHONY: octave-forge-packages
 octave-forge-packages: $(OCTAVE_FORGE_DEPS) $(OCTAVE_FORGE_PACKAGES)
 
+.PHONY: octave-other-packages
+octave-other-packages: $(OCTAVE_OTHER_PKG_DEPS) $(OCTAVE_OTHER_PACKAGES)
+
 .PHONY: blas-packages
 blas-packages: $(BLAS_PACKAGES)
 
@@ -837,18 +842,20 @@ define OCTAVE_FORGE_PKG_BUILD_NOCOMPILE
       && $(INSTALL) -m644 '$($(PKG)_FILE)' '$(3)$(HOST_PREFIX)/src'
 endef
 
+# FIXME: The OCTAVE_FORGE_PKG_BUILD build rule probably works for *any* valid
+# Octave package (not only Octave Forge packages).  Consider renaming it.
 ifeq ($(MXE_SYSTEM),msvc)
-define OCTAVE_FORGE_PKG_BUILD
+  define OCTAVE_FORGE_PKG_BUILD
     $(INSTALL) -d '$(3)$(HOST_PREFIX)/local/octave-$(octave_VERSION)/share/octave'
     $(INSTALL) -d '$(3)$(HOST_PREFIX)/local/octave-$(octave_VERSION)/lib/octave'
     cd '$(1)/..' && tar cvfz $($(PKG)_FILE) $($(PKG)_SUBDIR)
     cd '$(1)/..' && $(HOST_PREFIX)/local/octave-$(octave_VERSION)/bin/octave-cli.exe -H -f -q \
-        --eval "more off;" \
-        --eval "pkg('prefix', '`cd "$(3)" && pwd -W`$(HOST_PREFIX)/local/octave-$(octave_VERSION)/share/octave/packages', '`cd "$(3)" && pwd -W`$(HOST_PREFIX)/local/octave-$(octave_VERSION)/lib/octave/packages');" \
-	--eval "pkg('install', '-verbose', '$($(PKG)_FILE)');"
+      --eval "more off;" \
+      --eval "pkg('prefix', '`cd "$(3)" && pwd -W`$(HOST_PREFIX)/local/octave-$(octave_VERSION)/share/octave/packages', '`cd "$(3)" && pwd -W`$(HOST_PREFIX)/local/octave-$(octave_VERSION)/lib/octave/packages');" \
+      --eval "pkg('install', '-verbose', '$($(PKG)_FILE)');"
 endef
 else
-define OCTAVE_FORGE_PKG_BUILD
+  define OCTAVE_FORGE_PKG_BUILD
     if [ $(ENABLE_BINARY_PACKAGES) = no ]; then \
       mkdir -p '$(3)$(HOST_PREFIX)/src'; \
       cd '$(1)/..' \
@@ -863,7 +870,7 @@ define OCTAVE_FORGE_PKG_BUILD
         CONFIGURE_OPTIONS="$(HOST_AND_BUILD_CONFIGURE_OPTIONS)" $(4) \
         $(PYTHON3) $(TOP_DIR)/tools/pkg-install.py install -verbose "$($(PKG)_FILE)"; \
      fi
-endef
+  endef
 endif
 
 define OCTAVE_FORGE_PKG_UPDATE
