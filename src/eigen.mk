@@ -12,8 +12,8 @@ $(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'https://eigen.tuxfamily.org/index.php?title=Main_Page#Download' | \
-    $(GREP) 'eigen/get/' | \
-    $(SED) -n 's,.*eigen/get/\(3[^>]*\)\.tar.*,\1,p' | \
+    $(GREP) 'released!' | \
+    $(SED) -n 's,.*>Eigen \([0-9.]*\) released!.*,\1,p' | \
     head -1
 endef
 
