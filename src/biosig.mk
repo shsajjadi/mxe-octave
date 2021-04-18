@@ -4,8 +4,8 @@
 PKG             := biosig
 $(PKG)_WEBSITE  := http://biosig.sf.net/
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 2.1.0
-$(PKG)_CHECKSUM := 160df29da4007404fb79d9746a6f2c85a176a804
+$(PKG)_VERSION  := 2.2.1
+$(PKG)_CHECKSUM := f16bfc7e0f05901e09283020d7cd565bed13c75e
 $(PKG)_SUBDIR   := biosig-$($(PKG)_VERSION)
 $(PKG)_FILE     := biosig-$($(PKG)_VERSION).src.tar.gz
 $(PKG)_URL      := https://sourceforge.net/projects/biosig/files/BioSig%20for%20C_C%2B%2B/src/$($(PKG)_FILE)
@@ -33,7 +33,7 @@ define $(PKG)_BUILD
     # build mexbiosig package (does not install package)
     # TARGET='$(TARGET)' $(MAKE) -C '$(1)'/biosig4c++ mexbiosig
 
-    # install files
+    # install library files
     $(INSTALL) -m644 '$(1)/biosig4c++/biosig.h'             '$(HOST_INCDIR)/'
     $(INSTALL) -m644 '$(1)/biosig4c++/biosig2.h'            '$(HOST_INCDIR)/'
     $(INSTALL) -m644 '$(1)/biosig4c++/gdftime.h'            '$(HOST_INCDIR)/'
