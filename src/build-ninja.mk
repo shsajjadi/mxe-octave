@@ -3,12 +3,12 @@
 
 PKG             := build-ninja
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 1.10.0
-$(PKG)_CHECKSUM := 7134bca607e17238d272e281ce1cae05d04be970
+$(PKG)_VERSION  := 1.10.2
+$(PKG)_CHECKSUM := 8d2e8c1c070c27fb9dc46b4a6345bbb1de7ccbaf
 $(PKG)_SUBDIR   := ninja-$($(PKG)_VERSION)
 $(PKG)_FILE     := ninja-$($(PKG)_VERSION).tar.gz
-$(PKG)_URL      := https://codeload.github.com/ninja-build/ninja/tar.gz/v$($(PKG)_VERSION)
-$(PKG)_DEPS     := build-python3
+$(PKG)_URL      := https://github.com/ninja-build/ninja/archive/refs/tags/v$($(PKG)_VERSION).tar.gz
+$(PKG)_DEPS     :=
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
@@ -16,8 +16,12 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && $(PYTHON3) configure.py --bootstrap
+  mkdir '$(1)/.build' && cd '$(1)/.build' && cmake .. \
+    $($(PKG)_CMAKE_FLAGS) \
+    $(CMAKE_CCACHE_FLAGS) \
+    -DCMAKE_INSTALL_PREFIX='$(3)$(BUILD_TOOLS_PREFIX)' \
+    -DBUILD_TESTING=Off
 
-    $(INSTALL) -d '$(3)$(BUILD_TOOLS_PREFIX)/bin'
-    $(INSTALL) -m755 '$(1)/ninja' '$(3)$(BUILD_TOOLS_PREFIX)/bin';
+  cmake --build '$(1)/.build' -j '$(JOBS)'
+  cmake --install '$(1)/.build'
 endef
