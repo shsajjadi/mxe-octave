@@ -3,12 +3,12 @@
 
 PKG             := build-meson
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 0.55.3
-$(PKG)_CHECKSUM := a20e5112130d8fc8763323f5c2cc1011b44e27b1
+$(PKG)_VERSION  := 0.56.2
+$(PKG)_CHECKSUM := 88f30be08c968b0b8b9d2c6d3fe950fecff2658f
 $(PKG)_SUBDIR   := meson-$($(PKG)_VERSION)
 $(PKG)_FILE     := meson-$($(PKG)_VERSION).tar.gz
 $(PKG)_URL      := https://github.com/mesonbuild/meson/archive/$($(PKG)_VERSION).tar.gz
-$(PKG)_DEPS     := build-python3 build-ninja
+$(PKG)_DEPS     := build-python3
 
 define $(PKG)_UPDATE
     echo 'Warning: Updates are temporarily disabled for package $(PKG).' >&2;
