@@ -14,7 +14,6 @@ SRC_FILES_1 := \
   aubio-1-fix-pkg-config.patch \
   aubio.mk \
   bfd.mk \
-  biosig.mk \
   blas.mk \
   blas_switch.mk \
   boost-1-intrinsics-fix.patch \
@@ -227,6 +226,7 @@ SRC_FILES_1 := \
   libass-test.c \
   libass.mk \
   libb64.mk \
+  libbiosig.mk \
   libcdio.mk \
   libcroco.mk \
   libdnet-1-fixes.patch \

@@ -8,7 +8,7 @@ $(PKG)_CHECKSUM := bfcc2095b59bebfd3d7a8de40fb6855256e4af1c
 $(PKG)_SUBDIR   := biosig4octave-$($(PKG)_VERSION)
 $(PKG)_FILE     := $($(PKG)_SUBDIR).src.tar.gz
 $(PKG)_URL      := https://pub.ist.ac.at/~schloegl/biosig/prereleases/$($(PKG)_FILE)
-$(PKG)_DEPS     := biosig
+$(PKG)_DEPS     := libbiosig
 
 ifeq ($(ENABLE_BINARY_PACKAGES),yes)
   $(PKG)_DEPS += $(OCTAVE_TARGET)
