@@ -1,7 +1,7 @@
 # This file is part of MXE.
 # See index.html for further information.
 
-PKG             := biosig
+PKG             := libbiosig
 $(PKG)_WEBSITE  := http://biosig.sf.net/
 $(PKG)_IGNORE   :=
 $(PKG)_VERSION  := 2.2.1
