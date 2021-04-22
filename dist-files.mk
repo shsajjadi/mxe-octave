@@ -710,6 +710,7 @@ SRC_FILES_1 := \
   texinfo.mk \
   theora.mk \
   tiff.mk \
+  tinyxml-1-cmakelists.patch \
   tinyxml-test.cpp \
   tinyxml.mk \
   transfig-1-fixes.patch \

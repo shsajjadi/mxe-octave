@@ -17,13 +17,23 @@ define $(PKG)_UPDATE
 endef
 
 define $(PKG)_BUILD
-    cd '$(1)' && $(MXE_CXX) -c -O3 -Wall -Wno-unknown-pragmas -Wno-format -D TIXML_USE_STL '$(1)'/*.cpp
-    cd '$(1)' && $(MXE_AR) cr libtinyxml.a *.o
-    $(MXE_RANLIB) '$(1)/libtinyxml.a'
-    $(INSTALL) -d               '$(HOST_LIBDIR)'
-    $(INSTALL) -m644 '$(1)'/*.a '$(HOST_LIBDIR)'
-    $(INSTALL) -d               '$(HOST_INCDIR)'
-    $(INSTALL) -m644 '$(1)'/*.h '$(HOST_INCDIR)'
+    mkdir '$(1)/.build'
+    cd '$(1)/.build' && cmake '$(1)' \
+      -DCMAKE_INSTALL_PREFIX=$(HOST_PREFIX) \
+      $($(PKG)_CMAKE_FLAGS) \
+      $(CMAKE_CCACHE_FLAGS) \
+      $(CMAKE_BUILD_SHARED_OR_STATIC) \
+      -DCMAKE_TOOLCHAIN_FILE='$(CMAKE_TOOLCHAIN_FILE)'
+
+    $(MAKE) -C '$(1)/.build' install
+
+#    cd '$(1)' && $(MXE_CXX) -c -O3 -Wall -Wno-unknown-pragmas -Wno-format -D TIXML_USE_STL '$(1)'/*.cpp
+#    cd '$(1)' && $(MXE_AR) cr libtinyxml.a *.o
+#    $(MXE_RANLIB) '$(1)/libtinyxml.a'
+#    $(INSTALL) -d               '$(HOST_LIBDIR)'
+#    $(INSTALL) -m644 '$(1)'/*.a '$(HOST_LIBDIR)'
+#    $(INSTALL) -d               '$(HOST_INCDIR)'
+#    $(INSTALL) -m644 '$(1)'/*.h '$(HOST_INCDIR)'
 
     #'$(MXE_CXX)' \
     #    -W -Wall -D TIXML_USE_STL -Werror -ansi -pedantic \
