@@ -17,52 +17,44 @@ define $(PKG)_UPDATE
         head -1
 endef
 
+ifeq ($(MXE_WINDOWS_BUILD),yes)
+  $(PKG)_MAKE_FLAGS := TARGET=$(TARGET) CROSS=$(TARGET)
+  $(PKG)_AUTOCONF_CROSS_FLAGS := \
+    ac_cv_func_malloc_0_nonnull=yes \
+    ac_cv_func_realloc_0_nonnull=yes
+else
+  $(PKG)_MAKE_FLAGS := LDLIBS='-liconv -lm -ltinyxml'
+endif
+
 
 define $(PKG)_BUILD
-    cd '$(1)' && ./configure \
-        ac_cv_func_malloc_0_nonnull=yes \
-        ac_cv_func_realloc_0_nonnull=yes \
-        --prefix=$(HOST_PREFIX) \
-        $(HOST_AND_BUILD_CONFIGURE_OPTIONS)
+  cd '$(1)' && ./configure \
+    $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
+    $($(PKG)_AUTOCONF_CROSS_FLAGS) \
+    --prefix=$(HOST_PREFIX) \
+    CC='$(MXE_CC)' \
+    CXX='$(MXE_CXX)' \
+    RANLIB='$(MXE_RANLIB)' \
+    AR='$(MXE_AR)' \
+    ARFLAGS=rcs \
+    LIBTOOL=$(LIBTOOL) \
+    PKG_CONFIG='$(MXE_PKG_CONFIG)' \
+    PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig'
 
-    # make sure NDEBUG is defined
-    $(SED) -i '/NDEBUG/ s|#||g' '$(1)'/biosig4c++/Makefile
+  # make sure NDEBUG is defined
+  $(SED) -i '/NDEBUG/ s|#||g' '$(1)'/biosig4c++/Makefile
 
-    TARGET=$(TARGET) CROSS=$(TARGET) $(MAKE) -C '$(1)' lib tools
+  $($(PKG)_MAKE_FLAGS) $(MAKE) -C '$(1)' lib tools
+  $($(PKG)_MAKE_FLAGS) $(MAKE) -C '$(1)/biosig4c++' install DESTDIR='$(3)'
 
-    # build mexbiosig package (does not install package)
-    # TARGET='$(TARGET)' $(MAKE) -C '$(1)'/biosig4c++ mexbiosig
-
-    # install library files
-    $(INSTALL) -m644 '$(1)/biosig4c++/biosig.h'             '$(HOST_INCDIR)/'
-    $(INSTALL) -m644 '$(1)/biosig4c++/biosig2.h'            '$(HOST_INCDIR)/'
-    $(INSTALL) -m644 '$(1)/biosig4c++/gdftime.h'            '$(HOST_INCDIR)/'
-    $(INSTALL) -m644 '$(1)/biosig4c++/biosig-dev.h'         '$(HOST_INCDIR)/'
-
-    $(INSTALL) -m644 '$(1)/biosig4c++/libbiosig.a'          '$(HOST_LIBDIR)/'
-    #$(INSTALL) -m644 '$(1)/biosig4c++/libbiosig.def'        '$(HOST_LIBDIR)/'
-    $(INSTALL) -m644 '$(1)/biosig4c++/libbiosig.dll.a'      '$(HOST_LIBDIR)/'
-    $(INSTALL) -m644 '$(1)/biosig4c++/libbiosig.dll'        '$(HOST_BINDIR)/'
-
-    $(INSTALL) -m644 '$(1)/biosig4c++/libgdf.a'             '$(HOST_LIBDIR)/'
-    #$(INSTALL) -m644 '$(1)/biosig4c++/libgdf.def'           '$(HOST_LIBDIR)/'
-    $(INSTALL) -m644 '$(1)/biosig4c++/libgdf.dll.a'         '$(HOST_LIBDIR)/'
-    $(INSTALL) -m644 '$(1)/biosig4c++/libgdf.dll'           '$(HOST_BINDIR)/'
-
-
-    $(INSTALL) -m644 '$(1)/biosig4c++/physicalunits.h'      '$(HOST_INCDIR)/'
-    $(INSTALL) -m644 '$(1)/biosig4c++/libphysicalunits.a'   '$(HOST_LIBDIR)/'
-    #$(INSTALL) -m644 '$(1)/biosig4c++/libphysicalunits.def' '$(HOST_LIBDIR)/'
-    $(INSTALL) -m644 '$(1)/biosig4c++/libphysicalunits.dll.a' '$(HOST_LIBDIR)/'
-    $(INSTALL) -m644 '$(1)/biosig4c++/libphysicalunits.dll' '$(HOST_BINDIR)/'
-
-    if [ "$(MXE_WINDOWS_BUILD)" == "yes" ]; then \
-        $(SED) -i '/^Libs:/ s/$$/ -liconv -lws2_32/' $(1)/biosig4c++/libbiosig.pc; \
-    fi
-    $(INSTALL) -m644 '$(1)/biosig4c++/libbiosig.pc'         '$(HOST_LIBDIR)/pkgconfig/'
-
-    # install biosig4matlab
-    # $(INSTALL) -d $(HOST_PREFIX)/share/biosig/matlab
-    # cp -r '$(1)'/biosig4matlab/* $(HOST_PREFIX)/share/biosig/matlab/
+  # FIXME: These files aren't installed by the Makefile rule.
+  # Do we really need them?
+  if [ "x$(MXE_SYSTEM)" == "xmingw" ]; then \
+    $(INSTALL) '$(1)/biosig4c++/libbiosig.dll.a' '$(3)$(HOST_LIBDIR)'; \
+    $(INSTALL) '$(1)/biosig4c++/libgdf.dll' '$(3)$(HOST_BINDIR)'; \
+    $(INSTALL) '$(1)/biosig4c++/libgdf.dll.a' '$(3)$(HOST_LIBDIR)'; \
+    $(INSTALL) '$(1)/biosig4c++/libphysicalunits.dll' '$(3)$(HOST_BINDIR)'; \
+    $(INSTALL) '$(1)/biosig4c++/libphysicalunits.dll.a' '$(3)$(HOST_LIBDIR)'; \
+  fi
 endef
 

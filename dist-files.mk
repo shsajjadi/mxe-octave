@@ -225,6 +225,7 @@ SRC_FILES_1 := \
   libass-test.c \
   libass.mk \
   libb64.mk \
+  libbiosig-1-mingw-install.patch \
   libbiosig.mk \
   libcdio.mk \
   libcroco.mk \
