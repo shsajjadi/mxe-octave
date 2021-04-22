@@ -75,7 +75,6 @@ SRC_FILES_1 := \
   dcmtk-1-fixes.patch \
   dcmtk-2-mingw-w64.patch \
   dcmtk-3-pointer-fixes.patch \
-  dcmtk-4-c++11-related-fixes.patch \
   dcmtk.mk \
   default-octave-1-gnulib.patch \
   default-octave.mk \

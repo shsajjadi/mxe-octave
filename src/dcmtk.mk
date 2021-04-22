@@ -23,14 +23,13 @@ define $(PKG)_BUILD
     cd '$(1)' && ./configure \
         $(HOST_AND_BUILD_CONFIGURE_OPTIONS) \
         --prefix='$(HOST_PREFIX)' \
-        --with-openssl \
+        --without-openssl \
         --with-libtiff \
         --with-libpng \
         --with-libxml \
         --with-libxmlinc='$(HOST_PREFIX)' \
         --with-zlib \
         --without-libwrap \
-	--without-openssl \
         CXX='$(MXE_CXX)' \
         RANLIB='$(MXE_RANLIB)' \
         AR='$(MXE_AR)' \
