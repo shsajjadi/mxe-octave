@@ -18,7 +18,7 @@ endef
 
 define $(PKG)_BUILD
 
-    CC=$(MXE_CC) CXX=$(MXE_CXX) PKG_CONFIG=$(MXE_PKG_CONFIG) AR=$(MXE_AR) $(MAKE) -C '$(1)/src'
+    CC=$(MXE_CC) CXX=$(MXE_CXX) PKG_CONFIG=$(MXE_PKG_CONFIG) AR=$(MXE_AR) CFLAGS='-fPIE' $(MAKE) -C '$(1)/src'
 
     $(INSTALL) -d '$(3)$(HOST_LIBDIR)'
     $(INSTALL) -d '$(3)$(HOST_INCDIR)/b64'
