@@ -23,7 +23,10 @@ ifeq ($(MXE_WINDOWS_BUILD),yes)
     ac_cv_func_malloc_0_nonnull=yes \
     ac_cv_func_realloc_0_nonnull=yes
 else
-  $(PKG)_MAKE_FLAGS := LDLIBS='-liconv -lm -ltinyxml'
+  $(PKG)_MAKE_FLAGS := \
+  LDLIBS='-liconv -lm -ltinyxml' \
+  LDFLAGS=$(MXE_LDFLAGS) \
+  CFLAGS=$(MXE_CFLAGS)
 endif
 
 
@@ -37,6 +40,8 @@ define $(PKG)_BUILD
     RANLIB='$(MXE_RANLIB)' \
     AR='$(MXE_AR)' \
     ARFLAGS=rcs \
+    LDFLAGS=$(MXE_LDFLAGS) \
+    CFLAGS=$(MXE_CFLAGS) \
     LIBTOOL=$(LIBTOOL) \
     PKG_CONFIG='$(MXE_PKG_CONFIG)' \
     PKG_CONFIG_PATH='$(HOST_LIBDIR)/pkgconfig'
