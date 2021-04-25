@@ -179,6 +179,7 @@ define $(PKG)_BUILD
         --prefix='$($(PKG)_PREFIX)' \
         --disable-silent-rules \
         --enable-install-build-logs \
+        --enable-relocate-all \
         $($(PKG)_CROSS_CONFIG_OPTIONS) \
         $($(PKG)_WITH_BLAS_CONFIGURE_OPTIONS) \
         $($(PKG)_ENABLE_64_CONFIGURE_OPTIONS) \
