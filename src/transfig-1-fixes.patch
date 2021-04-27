@@ -23,19 +23,6 @@ diff -ur fig2dev-3.2.8.orig/fig2dev/dev/genbitmaps.c fig2dev-3.2.8/fig2dev/dev/g
  	if (status != 0) {
  		FILE	*f;
  
-diff -ur fig2dev-3.2.8.orig/fig2dev/dev/genemf.h fig2dev-3.2.8/fig2dev/dev/genemf.h
---- fig2dev-3.2.8.orig/fig2dev/dev/genemf.h	2020-12-24 07:58:17.831822681 -0500
-+++ fig2dev-3.2.8/fig2dev/dev/genemf.h	2020-12-24 08:06:13.519929445 -0500
-@@ -30,7 +30,9 @@
- #include "config.h"
- #endif
- 
-+#if !defined (__WIN32__) || defined (__CYGWIN__)
- #include <endian.h>
-+#endif
- 
- typedef unsigned char  uchar;
- typedef unsigned short TCHAR;
 diff -ur fig2dev-3.2.8.orig/fig2dev/dev/genpdf.c fig2dev-3.2.8/fig2dev/dev/genpdf.c
 --- fig2dev-3.2.8.orig/fig2dev/dev/genpdf.c	2020-12-24 07:58:17.831822681 -0500
 +++ fig2dev-3.2.8/fig2dev/dev/genpdf.c	2020-12-24 08:01:13.368456502 -0500
