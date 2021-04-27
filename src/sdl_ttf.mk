@@ -12,7 +12,7 @@ $(PKG)_DEPS     := sdl freetype
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://hg.libsdl.org/SDL_ttf/tags' | \
-    $(SED) -n 's,.*release-\([0-9][^<]*\).*,\1,p' | \
+    $(SED) -n 's,.*release-\([0-9][^<"]*\).*,\1,p' | \
     head -1
 endef
 

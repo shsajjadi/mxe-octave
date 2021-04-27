@@ -12,7 +12,7 @@ $(PKG)_DEPS     := sdl jpeg libpng tiff
 
 define $(PKG)_UPDATE
     $(WGET) -q -O- 'http://hg.libsdl.org/SDL_image/tags' | \
-    $(SED) -n 's,.*release-\([0-9][^<]*\).*,\1,p' | \
+    $(SED) -n 's,.*release-\([0-9][^<"]*\).*,\1,p' | \
     $(GREP) "^1" | \
     head -1
 endef
