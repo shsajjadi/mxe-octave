@@ -3,11 +3,11 @@
 
 PKG             := portaudio
 $(PKG)_IGNORE   :=
-$(PKG)_VERSION  := 190600_20161030
-$(PKG)_CHECKSUM := 56c596bba820d90df7d057d8f6a0ec6bf9ab82e8
+$(PKG)_VERSION  := 190700_20210406
+$(PKG)_CHECKSUM := b7e9b9c53d993f6d110487ef56a3d4529d21b2f1
 $(PKG)_SUBDIR   := portaudio
 $(PKG)_FILE     := pa_stable_v$($(PKG)_VERSION).tgz
-$(PKG)_URL      := http://www.portaudio.com/archives/$($(PKG)_FILE)
+$(PKG)_URL      := http://files.portaudio.com/archives/$($(PKG)_FILE)
 $(PKG)_DEPS     := 
 
 $(PKG)_SYSDEP_OPTIONS :=
