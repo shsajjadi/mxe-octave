@@ -587,7 +587,6 @@ SRC_FILES_1 := \
   poppler.mk \
   popt-1-win32.patch \
   popt.mk \
-  portaudio-1-win32.patch \
   portaudio-test.c \
   portaudio.mk \
   postgresql.mk \
