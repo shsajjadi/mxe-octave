@@ -20,7 +20,7 @@ diff -ur a/input.c b/input.c
    else if (_rl_strnicmp (args, "version", 7) == 0)
      {
 -      int rlversion, versionarg, op, previ, major, minor;
-+       int rlversion, versionarg, op, previ, major, minor, opresult;
++      int rlversion, versionarg, op, previ, major, minor, opresult;
  
        _rl_parsing_conditionalized_out = 1;
 @@ -1295,22 +1295,23 @@
@@ -53,26 +53,6 @@ diff -ur a/input.c b/input.c
 +       _rl_parsing_conditionalized_out = 1 - opresult;
      }
    /* Check to see if the first word in ARGS is the same as the
-
-- 	  _rl_parsing_conditionalized_out = rlversion > versionarg;
-+ 	  opresult = rlversion > versionarg;
-  	  break;
-  	case OP_GE:
-- 	  _rl_parsing_conditionalized_out = rlversion >= versionarg;
-+ 	  opresult = rlversion >= versionarg;
-  	  break;
-  	case OP_LT:
-- 	  _rl_parsing_conditionalized_out = rlversion < versionarg;
-+ 	  opresult = rlversion < versionarg;
-  	  break;
-  	case OP_LE:
-- 	  _rl_parsing_conditionalized_out = rlversion <= versionarg;
-+ 	  opresult = rlversion <= versionarg;
-  	  break;
-  	}
-+      _rl_parsing_conditionalized_out = 1 - opresult;
-      }
-    /* Check to see if the first word in ARGS is the same as the
 
 diff -ur a/patchlevel b/patchlevel
 --- a/patchlevel	2013-11-15 08:11:11.000000000 -0500
